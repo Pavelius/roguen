@@ -17,7 +17,9 @@ enum tile_s : unsigned char {
 };
 enum feature_s : unsigned char {
 	NoFeature,
-	Tree, FootMud, FootHill,
+	Tree, FootMud, FootHill, Grave,
+	HiveHole, Hive, Hole, Plant, Herbs,
+	Trap,
 };
 inline indext m2i(point v) { return v.x + v.y * mps; }
 inline point i2m(indext v) { return point{(short)(v % mps), (short)(v / mps)}; }

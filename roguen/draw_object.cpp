@@ -211,11 +211,15 @@ static size_t getobjects(object** pb, object** pe) {
 static int compare(const void* v1, const void* v2) {
 	auto p1 = *((object**)v1);
 	auto p2 = *((object**)v2);
-	if(p1->priority != p2->priority)
-		return p1->priority - p2->priority;
+	auto r1 = p1->priority / 5;
+	auto r2 = p2->priority / 5;
+	if(r1 != r2)
+		return r1 - r2;
 	if(p1->position.y != p2->position.y)
 		return p1->position.y - p2->position.y;
-	return p1->position.x - p2->position.x;
+	if(p1->position.x != p2->position.x)
+		return p1->position.x - p2->position.x;
+	return p1->priority - p2->priority;
 }
 
 static void sortobjects(object** pb, size_t count) {

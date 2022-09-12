@@ -5,7 +5,6 @@ using namespace draw;
 
 void main_util();
 void paint_floor();
-void add_feature(indext i, void* data, unsigned char priority = 10);
 int start_application(fnevent proc, fnevent initializing);
 
 static void initializating() {
@@ -57,7 +56,12 @@ static void main_start() {
 	area.set(m2i({6, 3}), Tree);
 	area.set(m2i({7, 7}), Tree);
 	area.set(m2i({6, 6}), FootHill);
-	area.set(m2i({4, 7}), FootMud);
+	area.set(m2i({7, 3}), FootMud);
+	area.set(m2i({4, 7}), Grave);
+	area.set(m2i({7, 2}), HiveHole);
+	area.set(m2i({8, 2}), Plant);
+	area.set(m2i({5, 3}), Herbs);
+	area.set(m2i({5, 5}), Trap);
 	//scene(test_bitmap);
 	adventure_mode();
 }

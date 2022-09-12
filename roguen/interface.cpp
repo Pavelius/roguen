@@ -9,7 +9,7 @@ using namespace draw;
 
 const int tsx = 64;
 const int tsy = 48;
-const int mst = 150;
+const int mst = 200;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -19,7 +19,7 @@ point m2s(point v) {
 	return point{(short)(v.x * tsx), (short)(v.y * tsy)};
 }
 
-void posable::fixmovement() const {
+void movable::fixmovement() const {
 	auto po = draw::findobject(this);
 	if(!po)
 		return;
@@ -30,26 +30,26 @@ void posable::fixmovement() const {
 	pr->position = pt;
 }
 
-void posable::fixappear() const {
+void movable::fixappear() const {
 	auto po = draw::findobject(this);
 	if(po)
 		return;
 	po = addobject(getposition());
 	po->data = this;
 	po->alpha = 0;
-	po->priority = 10;
+	po->priority = 11;
 	auto pr = po->add(mst);
 	pr->alpha = 0xFF;
 }
 
-void posable::fixattack() const {
+void movable::fixattack() const {
 	auto po = draw::findobject(this);
 	if(!po)
 		return;
 	auto p1 = po->position;
 	auto p2 = po->position;
 	auto pr = po->add(mst / 2);
-	p1.x += 8;
+	p1.x += 4;
 	pr->position = p1;
 	pr = pr->add(mst / 2);
 	pr->position = p2;

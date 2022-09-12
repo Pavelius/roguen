@@ -55,7 +55,7 @@ struct nameable {
 	gender_s	getgender() const;
 	const char*	getname() const { return kind.getname(); }
 };
-struct posable : nameable {
+struct movable : nameable {
 	indext		index;
 	void		fixappear() const;
 	void		fixattack() const;
@@ -67,7 +67,7 @@ struct monsteri : idable, statable {
 	const char*	avatar;
 	gender_s	gender;
 };
-struct creature : posable, statable {
+struct creature : movable, statable {
 	gender_s	gender;
 	direction_s	direction;
 	statable	basic;

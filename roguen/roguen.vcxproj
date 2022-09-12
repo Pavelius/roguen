@@ -176,7 +176,7 @@
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="png.cpp" />
     <ClCompile Include="point.cpp" />
-    <ClCompile Include="posable.cpp" />
+    <ClCompile Include="moveable.cpp" />
     <ClCompile Include="race.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="resource_static.cpp" />
