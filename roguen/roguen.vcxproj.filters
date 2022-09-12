@@ -183,6 +183,9 @@
     <ClCompile Include="sprite_util.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="areaf.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

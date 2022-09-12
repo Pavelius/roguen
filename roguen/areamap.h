@@ -36,9 +36,14 @@ struct areamap {
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
 };
 struct framerange {
-	unsigned char start;
-	unsigned char count;
+	unsigned char	start;
+	unsigned char	count;
+	int				get(int s) { return start + s % count; }
 	explicit constexpr operator bool() const { return count != 0; }
+};
+struct areafi {
+	const char*		id;
+	framerange		features;
 };
 struct tilei {
 	const char*		id;
@@ -47,6 +52,6 @@ struct tilei {
 };
 struct featurei {
 	const char*		id;
-	framerange		frames;
+	framerange		features;
 };
 indext				to(indext i, direction_s v);

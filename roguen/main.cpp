@@ -45,8 +45,12 @@ static void main_start() {
 	area.set(0, Grass, mps, mps);
 	player = create_monster(m2i({5, 5}), "Ettin");
 	create_monster(m2i({3, 3}), "Goblin");
-	auto i = m2i({4, 4});
-	area.set(i, Webbed);
+	area.set(m2i({4, 4}), Webbed);
+	area.set(m2i({4, 4}), Iced);
+	area.set(m2i({4, 5}), Iced);
+	area.set(m2i({5, 5}), Blooded);
+	area.set(m2i({6, 5}), Blooded);
+	area.set(m2i({6, 6}), Blooded);
 	//scene(test_bitmap);
 	adventure_mode();
 }

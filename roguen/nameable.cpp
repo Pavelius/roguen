@@ -1,8 +1,14 @@
 #include "stringact.h"
-#include "nameable.h"
+#include "main.h"
 
 void nameable::actv(stringbuilder& sb, const char* format, const char* format_param) {
-	stringact sa(sb, getname(), gender);
+	stringact sa(sb, getname(), getgender());
 	sa.addv(format, format_param);
 	sb = sa;
+}
+
+gender_s nameable::getgender() const {
+	if(bsdata<creature>::have(this))
+		return static_cast<const creature*>(this)->gender;
+	return Male;
 }

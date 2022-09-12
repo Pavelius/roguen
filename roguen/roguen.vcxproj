@@ -144,6 +144,7 @@
     <ClCompile Include="ability.cpp" />
     <ClCompile Include="answers.cpp" />
     <ClCompile Include="archive.cpp" />
+    <ClCompile Include="areaf.cpp" />
     <ClCompile Include="areamap.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />

@@ -54,9 +54,14 @@ void posable::fixattack() const {
 	pr->position = p2;
 }
 
-static void remove_temp_objects() {
+static void remove_temp_objects(array* source) {
 	for(auto& e : bsdata<object>()) {
+		if(source->have(e.data))
+			e.clear();
 	}
+}
+
+static void add_features() {
 }
 
 static void paint_floor() {
@@ -87,8 +92,13 @@ static void paint_floor() {
 						image(pd, fw, 0);
 				}
 			}
-			if(area.is(i, Webbed))
-				image(pf, r % 3, 0);
+			for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {
+				if(!area.is(i, f))
+					continue;
+				auto& ei = bsdata<areafi>::elements[f];
+				if(ei.features)
+					image(pf, ei.features.get(r), 0);
+			}
 		}
 	}
 }

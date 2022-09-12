@@ -1,7 +1,8 @@
 #include "areamap.h"
+#include "gender.h"
 #include "crt.h"
-#include "nameable.h"
 #include "script.h"
+#include "variant.h"
 
 #pragma once
 
@@ -48,6 +49,12 @@ struct hotkey {
 	unsigned	key;
 	fnevent		proc;
 };
+struct nameable {
+	variant		kind; // Race or monster
+	void		actv(stringbuilder& sb, const char* format, const char* format_param);
+	gender_s	getgender() const;
+	const char*	getname() const { return kind.getname(); }
+};
 struct posable : nameable {
 	indext		index;
 	void		fixappear() const;
@@ -61,6 +68,7 @@ struct monsteri : idable, statable {
 	gender_s	gender;
 };
 struct creature : posable, statable {
+	gender_s	gender;
 	direction_s	direction;
 	statable	basic;
 	short		hp, mp;
