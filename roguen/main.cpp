@@ -8,7 +8,7 @@ void paint_floor();
 int start_application(fnevent proc, fnevent initializing);
 
 static void initializating() {
-	main_util();
+	//main_util();
 }
 
 static creature* create_monster(indext index, const char* id) {

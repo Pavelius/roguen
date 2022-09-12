@@ -126,17 +126,8 @@
     <ClCompile Include="win_time.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="sprite_util.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="font_util.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="main_util.cpp">
-      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="metadata.cpp">
       <Filter>Logic</Filter>
@@ -259,9 +250,6 @@
     </ClInclude>
     <ClInclude Include="win.h">
       <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="sprite_util.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Logic</Filter>
