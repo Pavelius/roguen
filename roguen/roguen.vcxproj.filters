@@ -150,7 +150,7 @@
     <ClCompile Include="creature.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="nameable.cpp">
+    <ClCompile Include="actable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="io_bsreq.cpp">
@@ -270,9 +270,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="areamap.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="nameable.h">
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="logparse.h">

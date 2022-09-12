@@ -42,17 +42,26 @@ void movable::fixappear() const {
 	pr->alpha = 0xFF;
 }
 
-void movable::fixattack() const {
+point to(point pt, direction_s d, int sx, int sy) {
+	if(d == North || d == NorthEast || d == NorthWest)
+		pt.y -= sy;
+	if(d == South || d == SouthEast || d == SouthWest)
+		pt.y += sy;
+	if(d == East || d == SouthEast || d == NorthEast)
+		pt.x += sx;
+	if(d == West || d == SouthWest || d == NorthWest)
+		pt.x -= sx;
+	return pt;
+}
+
+void movable::fixaction() const {
 	auto po = draw::findobject(this);
 	if(!po)
 		return;
-	auto p1 = po->position;
-	auto p2 = po->position;
 	auto pr = po->add(mst / 2);
-	p1.x += 4;
-	pr->position = p1;
+	pr->position = to(po->position, direction, tsx / 8, tsy / 8);
 	pr = pr->add(mst / 2);
-	pr->position = p2;
+	pr->position = po->position;
 }
 
 static void remove_temp_objects(array* source) {
@@ -117,15 +126,8 @@ static void paint_floor() {
 	}
 }
 
-static unsigned getflags(direction_s v) {
-	switch(v) {
-	case West: case NorthWest: case SouthWest: return ImageMirrorH;
-	default: return 0;
-	}
-}
-
 void creature::paint() const {
-	auto flags = getflags(direction);
+	auto flags = mirror ? ImageMirrorH : 0;
 	if(kind.iskind<monsteri>()) {
 		auto pi = gres(res::Monsters);
 		image(pi, kind.value, flags);
@@ -140,7 +142,7 @@ void featurei::paint(int r) const {
 	auto pi = gres(res::Features);
 	image(pi, features.get(r), 0);
 	if(overlay)
-		image(pi, overlay.get(r>>4), 0);
+		image(pi, overlay.get(r >> 4), 0);
 }
 
 static void object_afterpaint(const object* p) {
@@ -228,7 +230,7 @@ static void move_down_right() {
 }
 
 static void attack_forward() {
-	player->fixattack();
+	player->fixaction();
 	adventure_mode();
 }
 

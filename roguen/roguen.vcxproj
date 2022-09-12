@@ -173,7 +173,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="metadata.cpp" />
-    <ClCompile Include="nameable.cpp" />
+    <ClCompile Include="actable.cpp" />
     <ClCompile Include="png.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="moveable.cpp" />
@@ -216,7 +216,6 @@
     <ClInclude Include="log.h" />
     <ClInclude Include="logparse.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="nameable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
     <ClInclude Include="rect.h" />

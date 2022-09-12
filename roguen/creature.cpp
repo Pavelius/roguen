@@ -12,9 +12,10 @@ creature* creature::create(indext index, const monsteri* pv) {
 }
 
 void creature::movestep(direction_s i) {
+	direction = i;
 	switch(i) {
-	case West: case NorthWest: case SouthWest: direction = West; break;
-	case East: case NorthEast: case SouthEast: direction = East; break;
+	case West: case NorthWest: case SouthWest: mirror = true; break;
+	case East: case NorthEast: case SouthEast: mirror = false; break;
 	}
 	movestep(to(index, i));
 }

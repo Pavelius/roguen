@@ -4,6 +4,7 @@
 BSDATA(areafi) = {
 	{"Explored"},
 	{"Visible"},
+	{"Activated"},
 	{"Searched"},
 	{"Blooded", {4, 3}},
 	{"Iced", {3, 1}},

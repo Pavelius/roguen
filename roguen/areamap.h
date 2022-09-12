@@ -10,7 +10,7 @@ enum direction_s : unsigned char {
 	North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest
 };
 enum mapf_s : unsigned char {
-	Explored, Visible, Searched, Blooded, Iced, Webbed,
+	Explored, Visible, Activated, Searched, Blooded, Iced, Webbed,
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Grass, GrassCorupted, Lava, Water
