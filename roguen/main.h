@@ -29,7 +29,7 @@ enum tag_s : unsigned char {
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
 	MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon, Ammunition,
-	Head, Torso, Legs, Gloves, FingerRight, FingerLeft, Elbows,
+	Head, Torso, Backward, Legs, Gloves, FingerRight, FingerLeft, Elbows,
 };
 enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
@@ -146,6 +146,7 @@ struct creature : wearable, statable {
 	unsigned	experience;
 	operator bool() const { return hp > 0; }
 	static creature* create(indext index, const monsteri* p);
+	static creature* create(indext index, const racei* p, gender_s gender);
 	void		aimove();
 	void		finish();
 	void		movestep(direction_s i);

@@ -22,6 +22,13 @@ static creature* create_monster(indext index, const char* id) {
 	return creature::create(index, pm);
 }
 
+static creature* create_character(indext index, const char* id) {
+	auto pm = bsdata<racei>::find(id);
+	if(!pm)
+		return 0;
+	return creature::create(index, pm, Male);
+}
+
 static void paint_character() {
 	auto pa = gres(res::PCArms);
 	auto pc = gres(res::PCAccessories);
@@ -47,7 +54,7 @@ static void test_bitmap() {
 static void main_start() {
 	area.clear();
 	area.set(0, Grass, mps, mps);
-	player = create_monster(m2i({5, 5}), "Bartender");
+	player = create_character(m2i({5, 5}), "DarkElf");
 	create_monster(m2i({3, 3}), "Goblin");
 	area.set(m2i({4, 4}), Webbed);
 	area.set(m2i({4, 4}), Iced);

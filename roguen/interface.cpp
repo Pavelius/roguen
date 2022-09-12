@@ -126,6 +126,10 @@ static void paint_floor() {
 	}
 }
 
+static int getavatar(int race, gender_s gender, int armor) {
+	return race * 6 + ((gender == Female) ? 1 : 0) + armor * 2;
+}
+
 void creature::paint() const {
 	auto flags = mirror ? ImageMirrorH : 0;
 	if(kind.iskind<monsteri>()) {
@@ -136,18 +140,20 @@ void creature::paint() const {
 		auto pa = gres(res::PCArms);
 		auto pc = gres(res::PCAccessories);
 		if(wears[RangedWeapon]) // Missile
-			image(pc, wears[RangedWeapon].getavatar(), 0);
-		image(pc, 1, 0); // Cloack
+			image(pc, wears[RangedWeapon].getavatar(), flags);
+		if(wears[Backward])
+			image(pc, wears[Backward].getavatar(), flags); // Cloack
 		if(wears[MeleeWeapon].is(TwoHanded)) {
-			image(pa, 9, 0); // Arm
-			image(pa, 4, 0); // Left Arms
+			image(pa, 9, flags); // Arm
+			image(pa, 4, flags); // Left Arms
 		} else {
-			image(pa, 10 + wears[MeleeWeapon].getavatar(), 0); // Arm
-			image(pa, 36 + wears[MeleeWeaponOffhand].getavatar(), 0); // Left Arms
+			image(pa, 10 + wears[MeleeWeapon].getavatar(), flags); // Arm
+			image(pa, 36 + wears[MeleeWeaponOffhand].getavatar(), flags); // Left Arms
 		}
-		image(pb, wears[Torso].getavatar(), 0); // Body
-		image(pc, 3, 0); // Throwing
-		image(pa, 4, 0); // Left Arms
+		image(pb, getavatar(kind.value, gender, wears[Torso].getavatar()), flags); // Body
+		//if(wears[ThrownWeapon])
+		//	image(pc, 3, 0); // Throwing
+		//image(pa, 4, 0); // Left Arms
 	}
 }
 

@@ -11,6 +11,15 @@ creature* creature::create(indext index, const monsteri* pv) {
 	return p;
 }
 
+creature* creature::create(indext index, const racei* pv, gender_s gender) {
+	auto p = bsdata<creature>::add();
+	p->kind = pv;
+	p->gender = gender;
+	p->index = index;
+	p->finish();
+	return p;
+}
+
 void creature::movestep(direction_s i) {
 	direction = i;
 	switch(i) {
