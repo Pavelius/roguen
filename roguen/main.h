@@ -51,6 +51,7 @@ struct hotkey {
 struct posable : nameable {
 	indext		index;
 	void		fixappear() const;
+	void		fixattack() const;
 	void		fixmovement() const;
 	point		getposition() const { return m2s(i2m(index)); }
 	void		setindex(indext i);

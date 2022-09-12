@@ -18,7 +18,7 @@ struct draworder : drawable {
 	draworder*		depend;
 	unsigned long	tick_start, tick_stop;
 	explicit operator bool() const { return parent != 0; }
-	draworder*		add(int milliseconds = 1000, draworder* depend = 0);
+	draworder*		add(int milliseconds = 1000);
 	void			clear();
 	void			setduration(int v) { tick_stop = tick_start + v; }
 	void			update();

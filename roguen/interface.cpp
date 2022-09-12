@@ -9,7 +9,7 @@ using namespace draw;
 
 const int tsx = 64;
 const int tsy = 48;
-const int mst = 300;
+const int mst = 150;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -26,7 +26,7 @@ void posable::fixmovement() const {
 	auto pt = getposition();
 	if(po->position == pt)
 		return;
-	auto pr = po->add(mps);
+	auto pr = po->add(mst);
 	pr->position = pt;
 }
 
@@ -37,8 +37,21 @@ void posable::fixappear() const {
 	po = addobject(getposition());
 	po->data = this;
 	po->alpha = 0;
-	auto pr = po->add(mps);
+	auto pr = po->add(mst);
 	pr->alpha = 0xFF;
+}
+
+void posable::fixattack() const {
+	auto po = draw::findobject(this);
+	if(!po)
+		return;
+	auto p1 = po->position;
+	auto p2 = po->position;
+	auto pr = po->add(mst / 2);
+	p1.x += 8;
+	pr->position = p1;
+	pr = pr->add(mst / 2);
+	pr->position = p2;
 }
 
 static void remove_temp_objects() {
@@ -181,7 +194,13 @@ static void move_down_right() {
 	adventure_mode();
 }
 
+static void attack_forward() {
+	player->fixattack();
+	adventure_mode();
+}
+
 static hotkey adventure_keys[] = {
+	{"AttackForward", 'A', attack_forward},
 	{"MoveDown", KeyDown, move_down},
 	{"MoveDownLeft", KeyEnd, move_down_left},
 	{"MoveDownRight", KeyPageDown, move_down_right},

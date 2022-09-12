@@ -98,18 +98,11 @@ void draworder::update() {
 	}
 }
 
-draworder* draworder::add(int milliseconds, draworder* depend) {
+draworder* draworder::add(int milliseconds) {
 	auto p = bsdata<draworder>::addz();
-	if(depend) {
-		copy(*p, *depend);
-		copy(p->start, *depend);
-		p->tick_start = depend->tick_stop;
-		p->depend = depend;
-	} else {
-		copy(*p, *this);
-		copy(p->start, *this);
-		p->tick_start = timestamp;
-	}
+	copy(*p, *this);
+	copy(p->start, *this);
+	p->tick_start = timestamp;
 	p->parent = parent;
 	p->tick_stop = p->tick_start + milliseconds;
 	return p;

@@ -161,6 +161,7 @@
     <ClCompile Include="draw_textf.cpp" />
     <ClCompile Include="draw_theme.cpp" />
     <ClCompile Include="feature.cpp" />
+    <ClCompile Include="font_util.cpp" />
     <ClCompile Include="gender.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_util.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="png.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="screenshoot.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="scripting.cpp" />
+    <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="stringact.cpp" />
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
@@ -219,6 +222,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="sprite_util.h" />
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />
