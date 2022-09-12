@@ -1,0 +1,89 @@
+#include "areamap.h"
+#include "crt.h"
+
+void areamap::clear() {
+	memset(tiles, 0, sizeof(tiles));
+	memset(flags, 0, sizeof(flags));
+	for(auto& e : random)
+		e = (unsigned char)(rand() % 256);
+}
+
+indext to(indext i, direction_s v) {
+	if(i == Blocked)
+		return Blocked;
+	auto m = i2m(i);
+	switch(v) {
+	case North:
+		if(m.y <= 0)
+			return Blocked;
+		return i - mps;
+	case NorthWest:
+		if(m.y <= 0 || m.x <= 0)
+			return Blocked;
+		return i - mps - 1;
+	case NorthEast:
+		if(m.y <= 0 || m.x >= mps - 1)
+			return Blocked;
+		return i - mps + 1;
+	case South:
+		if(m.y >= mps - 1)
+			return Blocked;
+		return i + mps;
+	case SouthWest:
+		if(m.y >= mps - 1 || m.x <= 0)
+			return Blocked;
+		return i + mps - 1;
+	case SouthEast:
+		if(m.y >= mps - 1 || m.x >= mps - 1)
+			return Blocked;
+		return i + mps + 1;
+	case West:
+		if(m.x <= 0)
+			return Blocked;
+		return i - 1;
+	case East:
+		if(m.x >= mps - 1)
+			return Blocked;
+		return i + 1;
+	default:
+		return i;
+	}
+}
+
+point areamap::correct(point v) {
+	if(v.x < 0)
+		v.x = 0;
+	if(v.y < 0)
+		v.y = 0;
+	if(v.x >= mps)
+		v.x = mps - 1;
+	if(v.y >= mps)
+		v.y = mps - 1;
+	return v;
+}
+
+void areamap::set(indext i, tile_s v) {
+	if(i == Blocked)
+		return;
+	tiles[i] = v;
+}
+
+void areamap::set(indext i, tile_s v, short w, short h) {
+	if(i == Blocked)
+		return;
+	auto p1 = i2m(i);
+	auto p2 = p1 + point{w, h};
+	for(auto y = p1.y; y < p2.y; y++) {
+		if(y < 0)
+			continue;
+		if(y >= mps - 1)
+			break;
+		for(auto x = p1.x; x < p2.x; x++) {
+			if(x < 0)
+				continue;
+			if(x >= mps - 1)
+				break;
+			set(m2i({x, y}), v);
+		}
+	}
+}

@@ -1,0 +1,31 @@
+#include "main.h"
+
+BSDATA(abilityi) = {
+	{"Strenght"},
+	{"Dexterity"},
+	{"Constitution"},
+	{"Intellect"},
+	{"Wisdow"},
+	{"Charisma"},
+	{"ToHit"},
+	{"ToHitMelee"},
+	{"ToHitRanged"},
+	{"ToHitThrown"},
+	{"Damage"},
+	{"DamageMelee"},
+	{"DamageRanged"},
+	{"DamageThrown"},
+	{"ParryValue"},
+	{"DamageReduciton"},
+	{"Speed"},
+	{"FightLight"},
+	{"FightHeavy"},
+	{"Markship"},
+	{"Concentration"},
+	{"Healing"},
+	{"HitsMaximum"},
+	{"Hits"},
+	{"ManaMaximum"},
+	{"Mana"},
+};
+assert_enum(abilityi, Mana)
