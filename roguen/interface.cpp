@@ -135,6 +135,19 @@ void creature::paint() const {
 		auto pb = gres(res::PCBody);
 		auto pa = gres(res::PCArms);
 		auto pc = gres(res::PCAccessories);
+		if(wears[RangedWeapon]) // Missile
+			image(pc, wears[RangedWeapon].getavatar(), 0);
+		image(pc, 1, 0); // Cloack
+		if(wears[MeleeWeapon].is(TwoHanded)) {
+			image(pa, 9, 0); // Arm
+			image(pa, 4, 0); // Left Arms
+		} else {
+			image(pa, 10 + wears[MeleeWeapon].getavatar(), 0); // Arm
+			image(pa, 36 + wears[MeleeWeaponOffhand].getavatar(), 0); // Left Arms
+		}
+		image(pb, wears[Torso].getavatar(), 0); // Body
+		image(pc, 3, 0); // Throwing
+		image(pa, 4, 0); // Left Arms
 	}
 }
 

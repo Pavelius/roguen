@@ -34,6 +34,7 @@ BSMETA(itemi) = {
 	BSENM(wear, weari),
 	BSREQ(weapon),
 	BSREQ(bonus),
+	BSREQ(wear_index),
 	{}};
 BSMETA(itemi::weaponi) = {
 	BSREQ(damage),

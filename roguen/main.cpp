@@ -47,7 +47,7 @@ static void test_bitmap() {
 static void main_start() {
 	area.clear();
 	area.set(0, Grass, mps, mps);
-	player = create_monster(m2i({5, 5}), "Ettin");
+	player = create_monster(m2i({5, 5}), "Bartender");
 	create_monster(m2i({3, 3}), "Goblin");
 	area.set(m2i({4, 4}), Webbed);
 	area.set(m2i({4, 4}), Iced);

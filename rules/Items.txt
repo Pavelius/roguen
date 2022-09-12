@@ -33,15 +33,15 @@ CoralAmulet cost(600) weight(8)
 SilverAmulet cost(1000) weight(4)
 GoldAmulet cost(1600) weight(5)
 
-BattleAxe cost(7) weight(50) wear(MeleeWeapon)
+BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0)
  flags Martial Slow TwoHanded
  weapon damage(1 8)
-Club cost(3) weight(50) wear(MeleeWeapon)
+Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2)
  flags Martial Blunt
  weapon damage(1 4)
-Dagger cost(3) weight(10) wear(MeleeWeapon)
+Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3)
  weapon damage(1 4)
-Halberd cost(7) weight(150) wear(MeleeWeapon)
+Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2)
  flags Martial Slow TwoHanded WearLarge
  weapon damage(1 10)
 HandAxe cost(4) weight(30) wear(MeleeWeapon)
@@ -67,11 +67,11 @@ LongBow cost(40) weight(30) wear(RangedWeapon)
  flags Martial TwoHanded WearLarge
  weapon damage(1 6) ammunition(Arrow)
 
-LeatherArmor cost(20) weight(200) wear(Torso)  bonus(2)
+LeatherArmor cost(20) weight(200) wear(Torso) bonus(2) wear_index(1)
  flags WearLeather
-ChainArmor cost(40) weight(400) wear(Torso) bonus(4)
+ChainArmor cost(40) weight(400) wear(Torso) bonus(4) wear_index(2)
  flags WearIron
-PlateArmor cost(60) weight(500) wear(Torso) bonus(6)
+PlateArmor cost(60) weight(500) wear(Torso) bonus(6) wear_index(2)
  flags WearIron
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) bonus(1)
  flags WearShield

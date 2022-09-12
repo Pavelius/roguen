@@ -195,6 +195,9 @@
     <ClCompile Include="game.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

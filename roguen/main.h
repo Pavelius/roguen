@@ -121,6 +121,7 @@ struct item {
 	void		clear() { type = count = 0; }
 	void		create(const char* id, int count = 1);
 	void		create(const itemi* pi, int count = 1);
+	int			getavatar() const { return geti().wear_index; }
 	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
 	int			getcost() const;
 	int			getcount() const;
@@ -128,6 +129,7 @@ struct item {
 	const char*	getname() const { return geti().getname(); }
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
+	bool		is(feat_s v) const { return geti().flags.is(v); }
 	void		setcount(int v);
 };
 struct wearable : movable {

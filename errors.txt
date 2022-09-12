@@ -1,2 +1,3 @@
 ﻿In file `rules/Items.txt`:
- Line 62: Unknown type in requisit ``
+ Line 36: Not found requisit `wear_index`
+ Line 39: Not found requisit `wear_index`
