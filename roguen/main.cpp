@@ -5,7 +5,7 @@ using namespace draw;
 
 void main_util();
 void paint_floor();
-void add_feature(indext i, void* data);
+void add_feature(indext i, void* data, unsigned char priority = 10);
 int start_application(fnevent proc, fnevent initializing);
 
 static void initializating() {
@@ -52,10 +52,12 @@ static void main_start() {
 	area.set(m2i({5, 5}), Blooded);
 	area.set(m2i({6, 5}), Blooded);
 	area.set(m2i({6, 6}), Blooded);
-	add_feature(m2i({2, 4}), bsdata<featurei>::elements + Tree);
-	add_feature(m2i({5, 5}), bsdata<featurei>::elements + Tree);
-	add_feature(m2i({6, 3}), bsdata<featurei>::elements + Tree);
-	add_feature(m2i({7, 7}), bsdata<featurei>::elements + Tree);
+	area.set(m2i({2, 4}), Tree);
+	area.set(m2i({5, 5}), Tree);
+	area.set(m2i({6, 3}), Tree);
+	area.set(m2i({7, 7}), Tree);
+	area.set(m2i({6, 6}), FootHill);
+	area.set(m2i({4, 7}), FootMud);
 	//scene(test_bitmap);
 	adventure_mode();
 }

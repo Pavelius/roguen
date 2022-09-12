@@ -37,6 +37,7 @@ void posable::fixappear() const {
 	po = addobject(getposition());
 	po->data = this;
 	po->alpha = 0;
+	po->priority = 10;
 	auto pr = po->add(mst);
 	pr->alpha = 0xFF;
 }
@@ -55,20 +56,24 @@ void posable::fixattack() const {
 }
 
 static void remove_temp_objects(array* source) {
+	if(!source)
+		return;
 	for(auto& e : bsdata<object>()) {
 		if(source->have(e.data))
 			e.clear();
 	}
 }
 
-void add_feature(indext i, void* data) {
-	auto po = addobject(m2s(i2m(i)));
+static void add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
+	auto po = addobject(pt);
 	po->data = data;
 	po->alpha = 0xFF;
-	po->random = rand() % 256;
+	po->priority = priority;
+	po->random = random;
 }
 
 static void paint_floor() {
+	remove_temp_objects(bsdata<featurei>::source_ptr);
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
@@ -85,7 +90,8 @@ static void paint_floor() {
 			if(x >= mps)
 				break;
 			auto i = m2i({x, y});
-			setcaret(m2s({x, y}));
+			auto pt = m2s({x, y});
+			setcaret(pt);
 			auto r = area.random[i];
 			auto& ei = bsdata<tilei>::elements[area.tiles[i]];
 			if(ei.floor) {
@@ -102,6 +108,10 @@ static void paint_floor() {
 				auto& ei = bsdata<areafi>::elements[f];
 				if(ei.features)
 					image(pf, ei.features.get(r), 0);
+			}
+			if(area.features[i]) {
+				auto& ei = bsdata<featurei>::elements[area.features[i]];
+				add_object(pt, &ei, r, ei.priority);
 			}
 		}
 	}

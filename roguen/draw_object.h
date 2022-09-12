@@ -28,6 +28,7 @@ struct object : drawable {
 	const void*		data;
 	const char*		string;
 	unsigned char	priority, random;
+	constexpr explicit operator bool() const { return data != 0 || string != 0; }
 	static object	def;
 	static fnevent	afterpaintall;
 	static fnpaint	afterpaint;

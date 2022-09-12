@@ -258,7 +258,7 @@ void draw::showobjects() {
 }
 
 object*	draw::addobject(point pt) {
-	auto p = bsdata<object>::add();
+	auto p = bsdata<object>::addz();
 	*p = object::def;
 	p->position = pt;
 	return p;
