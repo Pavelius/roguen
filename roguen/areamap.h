@@ -38,7 +38,7 @@ struct areamap {
 struct framerange {
 	unsigned char	start;
 	unsigned char	count;
-	int				get(int s) { return start + s % count; }
+	int				get(int s) const { return start + s % count; }
 	explicit constexpr operator bool() const { return count != 0; }
 };
 struct areafi {
@@ -52,6 +52,7 @@ struct tilei {
 };
 struct featurei {
 	const char*		id;
-	framerange		features;
+	framerange		features, overlay;
+	void			paint(int random) const;
 };
 indext				to(indext i, direction_s v);

@@ -27,7 +27,7 @@ struct draworder : drawable {
 struct object : drawable {
 	const void*		data;
 	const char*		string;
-	unsigned char	priority;
+	unsigned char	priority, random;
 	static object	def;
 	static fnevent	afterpaintall;
 	static fnpaint	afterpaint;

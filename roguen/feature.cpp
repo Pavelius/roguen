@@ -2,5 +2,6 @@
 
 BSDATA(featurei) = {
 	{"NoFeature"},
-	{"Tree", {0, 2}},
+	{"Tree", {7, 4}, {11, 3}},
 };
+assert_enum(featurei, Tree)

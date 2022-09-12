@@ -61,7 +61,11 @@ static void remove_temp_objects(array* source) {
 	}
 }
 
-static void add_features() {
+void add_feature(indext i, void* data) {
+	auto po = addobject(m2s(i2m(i)));
+	po->data = data;
+	po->alpha = 0xFF;
+	po->random = rand() % 256;
 }
 
 static void paint_floor() {
@@ -122,9 +126,18 @@ void creature::paint() const {
 	}
 }
 
+void featurei::paint(int r) const {
+	auto pi = gres(res::Features);
+	image(pi, features.get(r), 0);
+	if(overlay)
+		image(pi, overlay.get(r>>4), 0);
+}
+
 static void object_afterpaint(const object* p) {
 	if(bsdata<creature>::have(p->data))
 		((creature*)p->data)->paint();
+	else if(bsdata<featurei>::have(p->data))
+		((featurei*)p->data)->paint(p->random);
 }
 
 static void fieldh(const char* format) {

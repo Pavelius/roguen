@@ -5,6 +5,7 @@ using namespace draw;
 
 void main_util();
 void paint_floor();
+void add_feature(indext i, void* data);
 int start_application(fnevent proc, fnevent initializing);
 
 static void initializating() {
@@ -31,7 +32,7 @@ static void paint_character() {
 }
 
 static surface& testsurface() {
-	static surface bitmap("D:/games/adom/gfx/adom/maps/dungeon/features/web_2.png");
+	static surface bitmap("D:/games/adom/gfx/adom/maps/dungeon/features/tree.png");
 	return bitmap;
 }
 
@@ -51,6 +52,10 @@ static void main_start() {
 	area.set(m2i({5, 5}), Blooded);
 	area.set(m2i({6, 5}), Blooded);
 	area.set(m2i({6, 6}), Blooded);
+	add_feature(m2i({2, 4}), bsdata<featurei>::elements + Tree);
+	add_feature(m2i({5, 5}), bsdata<featurei>::elements + Tree);
+	add_feature(m2i({6, 3}), bsdata<featurei>::elements + Tree);
+	add_feature(m2i({7, 7}), bsdata<featurei>::elements + Tree);
 	//scene(test_bitmap);
 	adventure_mode();
 }
