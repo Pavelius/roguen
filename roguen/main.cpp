@@ -1,5 +1,8 @@
+#include "bsreq.h"
 #include "draw.h"
 #include "main.h"
+
+static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
 using namespace draw;
 
@@ -8,6 +11,7 @@ void paint_floor();
 int start_application(fnevent proc, fnevent initializing);
 
 static void initializating() {
+	bsreq::read("rules/Items.txt");
 	main_util();
 }
 

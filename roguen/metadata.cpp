@@ -2,19 +2,42 @@
 #include "main.h"
 #include "widget.h"
 
+NOBSDATA(dice)
+NOBSDATA(itemi::weaponi)
+
 BSDATAD(variant)
 BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
+BSDATAC(itemi, 512);
 BSDATAC(monsteri, 512);
 
 BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};
+BSMETA(dice) = {
+	BSREQ(min),
+	BSREQ(max),
+	{}};
+BSMETA(feati) = {
+	BSREQ(id),
+	{}};
 BSMETA(genderi) = {
 	BSREQ(id),
+	{}};
+BSMETA(itemi) = {
+	BSREQ(id),
+	BSREQ(cost), BSREQ(weight), BSREQ(count),
+	BSFLG(flags, feati),
+	BSENM(wear, weari),
+	BSREQ(weapon),
+	BSREQ(bonus),
+	{}};
+BSMETA(itemi::weaponi) = {
+	BSREQ(damage),
+	BSENM(ammunition, itemi),
 	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
@@ -25,9 +48,13 @@ BSMETA(monsteri) = {
 BSMETA(racei) = {
 	BSREQ(id),
 	{}};
+BSMETA(weari) = {
+	BSREQ(id),
+	{}};
 
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
+	{"Item", VAR(itemi), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
 	{"Script", VAR(script), 1},

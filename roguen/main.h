@@ -1,4 +1,5 @@
 #include "areamap.h"
+#include "flagable.h"
 #include "gender.h"
 #include "crt.h"
 #include "script.h"
@@ -30,6 +31,17 @@ enum wear_s : unsigned char {
 	MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon, Ammunition,
 	Head, Torso, Legs, Gloves, FingerRight, FingerLeft, Elbows,
 };
+enum magic_s : unsigned char {
+	Mudane, Blessed, Cursed, Artifact,
+};
+enum feat_s : unsigned char {
+	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
+	SunSensitive, Slow, NormalWeaponImmunity,
+	Blunt, Martial, TwoHanded,
+	WearLeather, WearIron, WearLarge, WearShield, Countable,
+	Undead, Summoned, Player, Enemy,
+};
+struct featable : flagable<4> {};
 extern point m2s(point v);
 struct nameable {
 	const char* id;
@@ -41,8 +53,12 @@ struct racei : nameable {
 };
 struct classi : nameable {
 };
+struct feati : nameable {
+};
+struct weari : nameable {
+};
 struct statable {
-	char		abilities[Mana+1];
+	char		abilities[Mana + 1];
 };
 struct dice {
 	char		min, max;
@@ -80,41 +96,48 @@ struct itemi : nameable {
 	};
 	int			cost, weight, count;
 	wear_s		wear;
-	char		bonus; // ToHitMelee, ToHitRange, ToHitThrown, ParryValue
+	ability_s	ability;
+	char		bonus;
 	weaponi		weapon;
+	featable	flags;
+	char		wear_index;
 };
 struct item {
-	unsigned char type, subtype;
+	unsigned short type;
 	union {
 		unsigned short count;
 		struct {
+			magic_s	magic : 2;
+			unsigned char broken : 2;
 			unsigned char identified : 1;
-			unsigned char broken : 1;
-			unsigned char charge : 5;
-			unsigned char count_nocountable;
+			unsigned char charges : 3;
+			unsigned char subtype;
 		};
 	};
 	explicit operator bool() const { return type != 0; }
-	void			add(item& v);
-	void			addname(stringbuilder& sb) const;
-	bool			canequip(wear_s v) const;
-	void			clear() { memset(this, 0, sizeof(*this)); }
-	void			create(const char* id, int count = 1);
-	void			create(const itemi* pi, int count = 1);
-	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
-	int				getcost() const;
-	int				getcount() const;
-	dice			getdamage() const;
-	const char*		getname() const { return geti().getname(); }
-	void			getstatus(stringbuilder& sb) const;
-	int				getweight() const;
-	void			setcount(int v);
+	void		add(item& v);
+	void		addname(stringbuilder& sb) const;
+	bool		canequip(wear_s v) const;
+	void		clear() { type = count = 0; }
+	void		create(const char* id, int count = 1);
+	void		create(const itemi* pi, int count = 1);
+	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
+	int			getcost() const;
+	int			getcount() const;
+	dice		getdamage() const;
+	const char*	getname() const { return geti().getname(); }
+	void		getstatus(stringbuilder& sb) const;
+	int			getweight() const;
+	void		setcount(int v);
+};
+struct wearable : movable {
+	item		wears[Elbows + 1];
 };
 struct monsteri : nameable, statable {
 	const char*	avatar;
 	gender_s	gender;
 };
-struct creature : movable, statable {
+struct creature : wearable, statable {
 	gender_s	gender;
 	statable	basic;
 	short		hp, mp;
@@ -127,5 +150,11 @@ struct creature : movable, statable {
 	void		movestep(indext i);
 	void		paint() const;
 };
+struct gamei {
+	unsigned	minutes;
+	void		pass(unsigned minutes);
+	void		playminute();
+};
+extern gamei game;
 extern creature* player;
 void adventure_mode();

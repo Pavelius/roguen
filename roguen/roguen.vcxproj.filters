@@ -186,6 +186,15 @@
     <ClCompile Include="areaf.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="wear.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="feat.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -284,6 +293,9 @@
       <Filter>Data</Filter>
     </Text>
     <Text Include="..\errors.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\rules\Items.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

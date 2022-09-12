@@ -161,8 +161,10 @@
     <ClCompile Include="draw_text.cpp" />
     <ClCompile Include="draw_textf.cpp" />
     <ClCompile Include="draw_theme.cpp" />
+    <ClCompile Include="feat.cpp" />
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="gender.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
@@ -191,6 +193,7 @@
     <ClCompile Include="szdup.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="variant.cpp" />
+    <ClCompile Include="wear.cpp" />
     <ClCompile Include="widget.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />
@@ -232,6 +235,7 @@
   <ItemGroup>
     <Text Include="..\errors.txt" />
     <Text Include="..\rules\Basic.txt" />
+    <Text Include="..\rules\Items.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
