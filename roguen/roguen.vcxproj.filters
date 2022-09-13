@@ -198,6 +198,15 @@
     <ClCompile Include="item.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="list.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="nameable.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="wearable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -290,6 +299,12 @@
     <ClInclude Include="sprite_util.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="nameable.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -299,6 +314,9 @@
       <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Items.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\rules\Advancement.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

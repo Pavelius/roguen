@@ -1,0 +1,4 @@
+#Advancement
+
+DarkElf 0
+ elements LeatherArmor Dagger

@@ -12,6 +12,7 @@ int start_application(fnevent proc, fnevent initializing);
 
 static void initializating() {
 	bsreq::read("rules/Items.txt");
+	bsreq::read("rules/Advancement.txt");
 	main_util();
 }
 

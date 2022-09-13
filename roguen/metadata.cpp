@@ -12,6 +12,7 @@ BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(itemi, 512);
+BSDATAD(advancement);
 BSDATAC(monsteri, 512);
 
 BSMETA(abilityi) = {
@@ -40,6 +41,11 @@ BSMETA(itemi::weaponi) = {
 	BSREQ(damage),
 	BSENM(ammunition, itemi),
 	{}};
+BSMETA(advancement) = {
+	BSREQ(type),
+	BSREQ(level),
+	BSREQ(elements),
+	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
@@ -56,6 +62,8 @@ BSMETA(weari) = {
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
 	{"Item", VAR(itemi), 1},
+	{"Advancement", VAR(advancement), 2},
+	{"List", VAR(listi), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
 	{"Script", VAR(script), 1},

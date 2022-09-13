@@ -1,3 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 36: Not found requisit `wear_index`
- Line 39: Not found requisit `wear_index`
+﻿In file `rules/Advancement.txt`:
+ Line 4: Can't find variant `ShortSword`

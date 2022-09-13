@@ -170,6 +170,7 @@
     <ClCompile Include="io_bsreq.cpp" />
     <ClCompile Include="io_stream.cpp" />
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="list.cpp" />
     <ClCompile Include="location.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
+    <ClCompile Include="nameable.cpp" />
     <ClCompile Include="png.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="moveable.cpp" />
@@ -195,6 +197,7 @@
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="wear.cpp" />
+    <ClCompile Include="wearable.cpp" />
     <ClCompile Include="widget.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />
@@ -217,9 +220,11 @@
     <ClInclude Include="flagable.h" />
     <ClInclude Include="gender.h" />
     <ClInclude Include="io_stream.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="logparse.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="nameable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
     <ClInclude Include="rect.h" />
@@ -235,6 +240,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\errors.txt" />
+    <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Items.txt" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "flagable.h"
 #include "gender.h"
 #include "crt.h"
+#include "list.h"
 #include "script.h"
 #include "variant.h"
 
@@ -43,10 +44,6 @@ enum feat_s : unsigned char {
 };
 struct featable : flagable<4> {};
 extern point m2s(point v);
-struct nameable {
-	const char* id;
-	const char*	getname() const { return getnm(id); }
-};
 struct abilityi : nameable {
 };
 struct racei : nameable {
@@ -73,20 +70,29 @@ struct hotkey : nameable {
 	unsigned	key;
 	fnevent		proc;
 };
-struct actable {
+class actable {
 	variant		kind; // Race or monster
+	gender_s	gender;
+public:
 	void		actv(stringbuilder& sb, const char* format, const char* format_param);
-	gender_s	getgender() const;
+	gender_s	getgender() const { return gender; }
+	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
+	void		setgender(gender_s v) { gender = v; }
+	void		setkind(variant v) { kind = v; }
 };
-struct movable : actable {
+class movable : public actable {
 	indext		index;
 	direction_s	direction;
 	bool		mirror;
+public:
 	void		fixaction() const;
 	void		fixappear() const;
 	void		fixmovement() const;
+	bool		ismirror() const { return mirror; }
+	indext		getindex() const { return index; }
 	point		getposition() const { return m2s(i2m(index)); }
+	void		setdirection(direction_s v);
 	void		setindex(indext i);
 };
 struct itemi : nameable {
@@ -130,20 +136,28 @@ struct item {
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(feat_s v) const { return geti().flags.is(v); }
+	bool		iscountable() const { return is(Countable); }
 	void		setcount(int v);
 };
 struct wearable : movable {
 	item		wears[Elbows + 1];
+	void		additem(item& v);
+	void		equip(item& v);
+	const char*	getwearname(wear_s id) const;
+	bool		isitem(const void* pv) const;
 };
 struct monsteri : nameable, statable {
 	const char*	avatar;
 	gender_s	gender;
 };
-struct creature : wearable, statable {
-	gender_s	gender;
+class creature : public wearable, public statable {
 	statable	basic;
 	short		hp, mp;
 	unsigned	experience;
+	void		advance(variant kind, int level);
+	void		advance(variants elements);
+	void		advance(variant element);
+public:
 	operator bool() const { return hp > 0; }
 	static creature* create(indext index, const monsteri* p);
 	static creature* create(indext index, const racei* p, gender_s gender);
@@ -153,11 +167,18 @@ struct creature : wearable, statable {
 	void		movestep(indext i);
 	void		paint() const;
 };
+struct advancement {
+	variant		type;
+	char		level;
+	variants	elements;
+};
 struct gamei {
 	unsigned	minutes;
 	void		pass(unsigned minutes);
 	void		playminute();
 };
+
 extern gamei game;
 extern creature* player;
+
 void adventure_mode();
