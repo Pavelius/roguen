@@ -21,5 +21,7 @@ BSDATA(feati) = {
 	{"Summoned"},
 	{"Player"},
 	{"Enemy"},
+	{"Stun"},
+	{"Unaware"},
 };
-assert_enum(feati, Enemy)
+assert_enum(feati, Unaware)

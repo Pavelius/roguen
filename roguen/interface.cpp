@@ -117,8 +117,8 @@ static void paint_floor() {
 			auto i = m2i({x, y});
 			auto pt = m2s({x, y});
 			setcaret(pt);
-			auto r = area.random[i];
-			auto& ei = bsdata<tilei>::elements[area.tiles[i]];
+			auto r = game.random[i];
+			auto& ei = bsdata<tilei>::elements[game.tiles[i]];
 			if(ei.floor) {
 				image(pi, ei.floor.start + (r % ei.floor.count), 0);
 				if(ei.decals) {
@@ -128,14 +128,14 @@ static void paint_floor() {
 				}
 			}
 			for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {
-				if(!area.is(i, f))
+				if(!game.is(i, f))
 					continue;
 				auto& ei = bsdata<areafi>::elements[f];
 				if(ei.features)
 					image(pf, ei.features.get(r), 0);
 			}
-			if(area.features[i]) {
-				auto& ei = bsdata<featurei>::elements[area.features[i]];
+			if(game.features[i]) {
+				auto& ei = bsdata<featurei>::elements[game.features[i]];
 				add_object(pt, &ei, r, ei.priority);
 			}
 		}
@@ -245,47 +245,39 @@ static void presskey(const slice<hotkey>& source) {
 
 static void move_left() {
 	player->movestep(West);
-	adventure_mode();
 }
 
 static void move_right() {
 	player->movestep(East);
-	adventure_mode();
 }
 
 static void move_up() {
 	player->movestep(North);
-	adventure_mode();
 }
 
 static void move_down() {
 	player->movestep(South);
-	adventure_mode();
 }
 
 static void move_up_left() {
 	player->movestep(NorthWest);
-	adventure_mode();
 }
 
 static void move_up_right() {
 	player->movestep(NorthEast);
-	adventure_mode();
 }
 
 static void move_down_left() {
 	player->movestep(SouthWest);
-	adventure_mode();
 }
 
 static void move_down_right() {
 	player->movestep(SouthEast);
-	adventure_mode();
 }
 
 static void attack_forward() {
 	player->fixaction();
-	adventure_mode();
+	player->wait();
 }
 
 static hotkey adventure_keys[] = {
@@ -300,19 +292,16 @@ static hotkey adventure_keys[] = {
 	{"MoveUpLeft", KeyHome, move_up_left},
 };
 
-static void run_adventure_mode() {
+void adventure_mode() {
 	waitall();
-	while(ismodal()) {
+	auto start = player->getwait();
+	while(player && start==player->getwait() && ismodal()) {
 		paintstart();
 		paintobjects();
 		presskey(adventure_keys);
 		paintfinish();
 		domodal();
 	}
-}
-
-void adventure_mode() {
-	setnext(run_adventure_mode);
 }
 
 int start_application(fnevent proc, fnevent initializing) {

@@ -144,9 +144,6 @@
     <ClCompile Include="areamap.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="location.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="creature.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -205,6 +202,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="wearable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="statable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>

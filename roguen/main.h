@@ -21,8 +21,8 @@ enum ability_s : unsigned char {
 	Speed,
 	FightLight, FightHeavy, Markship,
 	Concentration, Healing,
-	HitsMaximum, Hits,
-	ManaMaximum, Mana,
+	HitsMaximum, ManaMaximum,
+	Hits, Mana,
 };
 enum tag_s : unsigned char {
 	FireResistance,
@@ -35,14 +35,22 @@ enum wear_s : unsigned char {
 enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
+enum condition_s : unsigned char {
+	Busy,
+};
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity,
 	Blunt, Martial, TwoHanded,
 	WearLeather, WearIron, WearLarge, WearShield, Countable,
 	Undead, Summoned, Player, Enemy,
+	Stun, Unaware,
+};
+enum spell_s : unsigned char {
+	Sleep,
 };
 struct featable : flagable<4> {};
+struct spellf : flagable<8> {};
 extern point m2s(point v);
 struct abilityi : nameable {
 };
@@ -56,16 +64,13 @@ struct weari : nameable {
 };
 struct statable {
 	char		abilities[Mana + 1];
+	featable	feats;
+	void		update();
 };
 struct dice {
 	char		min, max;
 	int			roll() const;
 };
-struct location : areamap {
-	indext		overland;
-	short		level;
-};
-extern location area;
 struct hotkey : nameable {
 	unsigned	key;
 	fnevent		proc;
@@ -156,35 +161,64 @@ struct monsteri : nameable, statable {
 	const char*	avatar;
 	gender_s	gender;
 };
-class creature : public wearable, public statable {
+struct spellable {
+	char		spells[Sleep + 1];
+};
+class creature : public wearable, public statable, public spellable {
 	statable	basic;
-	short		hp, mp;
+	spellf		active_spells;
 	unsigned	experience;
+	int			wait_seconds;
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
+	void		update();
 public:
-	operator bool() const { return hp > 0; }
+	typedef void (creature::*fnupdate)();
+	operator bool() const { return abilities[Hits] > 0; }
 	static creature* create(indext index, const monsteri* p);
 	static creature* create(indext index, const racei* p, gender_s gender);
 	void		aimove();
+	void		checkmood() {}
+	void		checkpoison() {}
+	void		checksick() {}
 	void		finish();
+	int			get(ability_s v) const { return abilities[v]; }
+	int			get(spell_s v) const { return spells[v]; }
+	int			getwait() const { return wait_seconds; }
+	bool		is(condition_s v) const { return false; }
+	bool		is(spell_s v) const { return active_spells.is(v); }
+	bool		is(feat_s v) const { return feats.is(v); }
+	bool		isalive() const { return abilities[Hits] > 0; }
+	bool		isactive() const;
+	void		makemove();
 	void		movestep(direction_s i);
 	void		movestep(indext i);
 	void		paint() const;
+	void		restoration() {}
+	void		remove(feat_s v) { feats.remove(v); }
+	bool		roll(ability_s v) const;
+	void		wait() { wait_seconds += 100; }
 };
 struct advancement {
 	variant		type;
 	char		level;
 	variants	elements;
 };
-struct gamei {
+class gamei : public areamap {
 	unsigned	minutes;
+	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
+public:
+	static void	all(creature::fnupdate proc);
 	void		pass(unsigned minutes);
+	void		passminute();
+	static void	play();
 	void		playminute();
 };
+namespace draw {
+bool			isnext();
+}
+inline int		d100() { return rand() % 100; }
 
-extern gamei game;
+extern gamei	game;
 extern creature* player;
-
-void adventure_mode();

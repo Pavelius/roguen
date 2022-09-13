@@ -171,7 +171,6 @@
     <ClCompile Include="io_stream.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="list.cpp" />
-    <ClCompile Include="location.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="main.cpp" />
@@ -190,6 +189,7 @@
     <ClCompile Include="script.cpp" />
     <ClCompile Include="scripting.cpp" />
     <ClCompile Include="sprite_util.cpp" />
+    <ClCompile Include="statable.cpp" />
     <ClCompile Include="stringact.cpp" />
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />

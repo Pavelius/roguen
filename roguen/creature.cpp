@@ -21,6 +21,10 @@ creature* creature::create(indext index, const racei* pv, gender_s gender) {
 	return p;
 }
 
+bool creature::isactive() const {
+	return this == player;
+}
+
 void creature::movestep(direction_s v) {
 	setdirection(v);
 	movestep(to(getindex(), v));
@@ -31,14 +35,21 @@ void creature::movestep(indext ni) {
 		return;
 	setindex(ni);
 	fixmovement();
+	wait();
 }
 
 void creature::finish() {
-	hp = 10;
+	update();
+	abilities[Hits] = get(HitsMaximum);
 	fixappear();
 }
 
 void creature::aimove() {
+	// When stay on ground you do some work
+	if(d100() < 60) {
+		wait();
+		return;
+	}
 	static direction_s allaround[] = {North, South, East, West};
 	movestep(maprnd(allaround));
 }
@@ -63,4 +74,55 @@ void creature::advance(variant v) {
 		it.create(bsdata<itemi>::elements + v.value, 1);
 		equip(it);
 	}
+}
+
+bool creature::roll(ability_s v) const {
+	auto value = get(v);
+	auto result = 1 + rand() % 20;
+	return result <= value;
+}
+
+void adventure_mode();
+
+void creature::makemove() {
+	// Recoil form action
+	if(wait_seconds > 0) {
+		wait_seconds -= get(Speed);
+		return;
+	}
+	update();
+	// Dazzled creature don't make turn
+	if(is(Stun)) {
+		if(roll(Constitution))
+			remove(Stun);
+		else {
+			wait();
+			return;
+		}
+	}
+	// Sleeped creature don't move
+	if(is(Sleep))
+		return;
+	if(is(Unaware))
+		remove(Unaware);
+	// Get nearest creatures
+	//creaturea creatures;
+	//creatures.select(getposition(), getlos());
+	//creaturea enemies = creatures;
+	//enemies.match(*this, Hostile, false);
+	//creature* enemy = 0;
+	//if(enemies) {
+	//	// Combat situation - need eliminate enemy
+	//	enemies.sort(getposition());
+	//	enemy = enemies[0];
+	//}
+	if(isactive())
+		adventure_mode();
+	else
+		aimove();
+}
+
+void creature::update() {
+	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
+	statable::update();
 }

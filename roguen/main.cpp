@@ -55,32 +55,32 @@ static void test_bitmap() {
 }
 
 static void main_start() {
-	area.clear();
-	area.set(0, Grass, mps, mps);
-	player = create_character(m2i({5, 5}), "DarkElf");
+	game.clear();
+	game.set(0, Grass, mps, mps);
+	player = create_character(m2i({5, 5}), "Troll");
 	create_monster(m2i({3, 3}), "Goblin");
-	area.set(m2i({4, 4}), Webbed);
-	area.set(m2i({4, 4}), Iced);
-	area.set(m2i({4, 5}), Iced);
-	area.set(m2i({5, 5}), Blooded);
-	area.set(m2i({6, 5}), Blooded);
-	area.set(m2i({6, 6}), Blooded);
-	area.set(m2i({2, 4}), Tree);
-	area.set(m2i({5, 5}), Tree);
-	area.set(m2i({6, 3}), Tree);
-	area.set(m2i({7, 7}), Tree);
-	area.set(m2i({6, 6}), FootHill);
-	area.set(m2i({7, 3}), FootMud);
-	area.set(m2i({4, 7}), Grave);
-	area.set(m2i({7, 2}), HiveHole);
-	area.set(m2i({8, 2}), Plant);
-	area.set(m2i({5, 3}), Herbs);
-	area.set(m2i({5, 5}), Trap);
+	game.set(m2i({4, 4}), Webbed);
+	game.set(m2i({4, 4}), Iced);
+	game.set(m2i({4, 5}), Iced);
+	game.set(m2i({5, 5}), Blooded);
+	game.set(m2i({6, 5}), Blooded);
+	game.set(m2i({6, 6}), Blooded);
+	game.set(m2i({2, 4}), Tree);
+	game.set(m2i({5, 5}), Tree);
+	game.set(m2i({6, 3}), Tree);
+	game.set(m2i({7, 7}), Tree);
+	game.set(m2i({6, 6}), FootHill);
+	game.set(m2i({7, 3}), FootMud);
+	game.set(m2i({4, 7}), Grave);
+	game.set(m2i({7, 2}), HiveHole);
+	game.set(m2i({8, 2}), Plant);
+	game.set(m2i({5, 3}), Herbs);
+	game.set(m2i({5, 5}), Trap);
 	auto p1 = bsdata<itemground>::add();
 	p1->index = m2i({8, 3});
 	p1->create(bsdata<itemi>::find("Sword"), 1);
 	//scene(test_bitmap);
-	adventure_mode();
+	setnext(game.play);
 }
 
 int start_application(fnevent proc, fnevent initializing);
