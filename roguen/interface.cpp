@@ -117,8 +117,8 @@ static void paint_floor() {
 			auto i = m2i({x, y});
 			auto pt = m2s({x, y});
 			setcaret(pt);
-			auto r = game.random[i];
-			auto& ei = bsdata<tilei>::elements[game.tiles[i]];
+			auto r = area.random[i];
+			auto& ei = bsdata<tilei>::elements[area.tiles[i]];
 			if(ei.floor) {
 				image(pi, ei.floor.start + (r % ei.floor.count), 0);
 				if(ei.decals) {
@@ -128,14 +128,14 @@ static void paint_floor() {
 				}
 			}
 			for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {
-				if(!game.is(i, f))
+				if(!area.is(i, f))
 					continue;
 				auto& ei = bsdata<areafi>::elements[f];
 				if(ei.features)
 					image(pf, ei.features.get(r), 0);
 			}
-			if(game.features[i]) {
-				auto& ei = bsdata<featurei>::elements[game.features[i]];
+			if(area.features[i]) {
+				auto& ei = bsdata<featurei>::elements[area.features[i]];
 				add_object(pt, &ei, r, ei.priority);
 			}
 		}

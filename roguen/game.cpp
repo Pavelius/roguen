@@ -1,6 +1,9 @@
 #include "main.h"
 
-gamei game;
+areamap			area;
+static char		console_text[4096];
+stringbuilder	console(console_text);
+gamei			game;
 
 static void update_los() {
 	if(!player)
@@ -8,7 +11,7 @@ static void update_los() {
 	// Set fog of war
 	auto max_count = mps * mps;
 	for(auto i = 0; i < max_count; i++)
-		game.remove(i, Visible);
+		area.remove(i, Visible);
 	//loc.setlos(player->getposition(), player->getlos());
 }
 
@@ -39,6 +42,7 @@ void gamei::passminute() {
 	while(restore_half_turn < minutes) {
 		all(&creature::checkpoison);
 		restore_half_turn += 5;
+		area.removechance(Iced, 20);
 	}
 	while(restore_turn < minutes) {
 		all(&creature::checkmood);

@@ -37,6 +37,7 @@ struct areamap {
 	void			set(indext i, feature_s v) { features[i] = v; }
 	void			set(indext i, tile_s v, short w, short h);
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
+	void			removechance(mapf_s v, int chance);
 };
 struct framerange {
 	unsigned char	start;

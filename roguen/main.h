@@ -49,6 +49,7 @@ enum feat_s : unsigned char {
 enum spell_s : unsigned char {
 	Sleep,
 };
+extern stringbuilder console;
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
 extern point m2s(point v);
@@ -80,6 +81,7 @@ class actable {
 	gender_s	gender;
 public:
 	void		actv(stringbuilder& sb, const char* format, const char* format_param);
+	void		act(const char* format, ...) { actv(console, format, xva_start(format)); }
 	gender_s	getgender() const { return gender; }
 	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
@@ -176,8 +178,7 @@ class creature : public wearable, public statable, public spellable {
 public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
-	static creature* create(indext index, const monsteri* p);
-	static creature* create(indext index, const racei* p, gender_s gender);
+	static creature* create(indext index, variant v);
 	void		aimove();
 	void		checkmood() {}
 	void		checkpoison() {}
@@ -205,7 +206,7 @@ struct advancement {
 	char		level;
 	variants	elements;
 };
-class gamei : public areamap {
+class gamei {
 	unsigned	minutes;
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:
@@ -220,5 +221,6 @@ bool			isnext();
 }
 inline int		d100() { return rand() % 100; }
 
+extern areamap	area;
 extern gamei	game;
 extern creature* player;

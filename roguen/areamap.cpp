@@ -1,6 +1,10 @@
 #include "areamap.h"
 #include "crt.h"
 
+static int d100() {
+	return rand() % 100;
+}
+
 void areamap::clear() {
 	memset(tiles, 0, sizeof(tiles));
 	memset(flags, 0, sizeof(flags));
@@ -85,5 +89,15 @@ void areamap::set(indext i, tile_s v, short w, short h) {
 				break;
 			set(m2i({x, y}), v);
 		}
+	}
+}
+
+void areamap::removechance(mapf_s v, int chance) {
+	for(auto i = 0; i < mps * mps; i++) {
+		if(!is(i, v))
+			continue;
+		if(d100() >= chance)
+			continue;
+		remove(i, v);
 	}
 }

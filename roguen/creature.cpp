@@ -2,22 +2,21 @@
 
 creature* player;
 
-creature* creature::create(indext index, const monsteri* pv) {
+creature* creature::create(indext index, variant kind) {
+	if(!kind)
+		return 0;
 	auto p = bsdata<creature>::add();
 	p->setindex(index);
-	p->setkind(pv);
-	p->setgender(pv->gender);
+	p->setkind(kind);
+	monsteri* pm = kind;
+	if(pm) {
+		p->setgender(pm->gender);
+		memcpy(&p->basic, static_cast<statable*>(pm), sizeof(p->basic));
+	}
+	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i+1))
+		p->basic.abilities[i] = 8 + rand() % 5;
 	p->finish();
-	return p;
-}
-
-creature* creature::create(indext index, const racei* pv, gender_s gender) {
-	auto p = bsdata<creature>::add();
-	p->setindex(index);
-	p->setkind(pv);
-	p->setgender(gender);
-	p->finish();
-	p->advance(p->getkind(), 0);
+	p->advance(kind, 0);
 	return p;
 }
 
@@ -33,6 +32,15 @@ void creature::movestep(direction_s v) {
 void creature::movestep(indext ni) {
 	if(ni == Blocked)
 		return;
+	auto index = getindex();
+	if(area.is(index, Webbed)) {
+		if(!roll(Strenght)) {
+			wait();
+			act(getnm("WebEntagled"));
+			return;
+		}
+		area.remove(index, Webbed);
+	}
 	setindex(ni);
 	fixmovement();
 	wait();
@@ -78,7 +86,7 @@ void creature::advance(variant v) {
 
 bool creature::roll(ability_s v) const {
 	auto value = get(v);
-	auto result = 1 + rand() % 20;
+	auto result = 1 + (rand() % 20);
 	return result <= value;
 }
 
