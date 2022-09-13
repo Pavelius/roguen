@@ -19,6 +19,10 @@ point m2s(point v) {
 	return point{(short)(v.x * tsx), (short)(v.y * tsy)};
 }
 
+point s2m(point v) {
+	return point{(short)(v.x / tsx), (short)(v.y / tsy)};
+}
+
 void movable::fixmovement() const {
 	auto po = draw::findobject(this);
 	if(!po)
@@ -79,6 +83,18 @@ static void add_object(point pt, void* data, unsigned char random, unsigned char
 	po->alpha = 0xFF;
 	po->priority = priority;
 	po->random = random;
+}
+
+static void paint_items() {
+	remove_temp_objects(bsdata<itemi>::source_ptr);
+	auto p1 = s2m(camera);
+	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx, p1.y + getheight() / tsy};
+	for(auto& e : bsdata<itemground>()) {
+		auto pt = i2m(e.index);
+		if(!pt.in(rc))
+			continue;
+		add_object(m2s(pt), &const_cast<itemi&>(e.geti()), 0, 6);
+	}
 }
 
 static void paint_floor() {
@@ -175,11 +191,18 @@ void featurei::paint(int r) const {
 		image(pi, overlay.get(r >> 4), 0);
 }
 
+void itemi::paint() const {
+	auto pi = gres(res::Items);
+	image(pi, this - bsdata<itemi>::elements, 0);
+}
+
 static void object_afterpaint(const object* p) {
 	if(bsdata<creature>::have(p->data))
 		((creature*)p->data)->paint();
 	else if(bsdata<featurei>::have(p->data))
 		((featurei*)p->data)->paint(p->random);
+	else if(bsdata<itemi>::have(p->data))
+		((itemi*)p->data)->paint();
 }
 
 static void fieldh(const char* format) {
@@ -208,6 +231,7 @@ static void paint_map_background() {
 	rectpush push;
 	setclipall();
 	paint_floor();
+	paint_items();
 }
 
 static void presskey(const slice<hotkey>& source) {

@@ -12,6 +12,7 @@ BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(itemi, 512);
+BSDATAC(itemground, 1024);
 BSDATAD(advancement);
 BSDATAC(monsteri, 512);
 
@@ -31,6 +32,7 @@ BSMETA(genderi) = {
 BSMETA(itemi) = {
 	BSREQ(id),
 	BSREQ(cost), BSREQ(weight), BSREQ(count),
+	BSREQ(avatar),
 	BSFLG(flags, feati),
 	BSENM(wear, weari),
 	BSREQ(weapon),

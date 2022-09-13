@@ -1,83 +1,79 @@
 #Item
 
-NoItem
+NoItem avatar("item-1")
 
-CP cost(1) count(100)
+SP cost(1) avatar("items37")
  flags Countable
-SP cost(1) count(10)
+GP cost(10) avatar("items37")
  flags Countable
-EP cost(1) count(5)
- flags Countable
-GP cost(1)
- flags Countable
-PP cost(10)
+PP cost(100) avatar("items37")
  flags Countable
 
-OrnamentalStones cost(10)
+OrnamentalStones cost(10) avatar("item401")
  flags Countable
-SemiPreciousStones cost(50)
+SemiPreciousStones cost(50) avatar("item395")
  flags Countable
-FancyStones cost(100)
+FancyStones cost(100) avatar("item396")
  flags Countable
-PreciousStones cost(500)
+PreciousStones cost(500) avatar("item399")
  flags Countable
-GemStones cost(1000)
+GemStones cost(1000) avatar("item392")
  flags Countable
 
-IronRing cost(300) weight(1)
-SilverRing cost(500) weight(1)
-GoldenRing cost(800) weight(1)
+IronRing cost(300) weight(1) avatar("item44")
+SilverRing cost(500) weight(1) avatar("item45")
+GoldenRing cost(800) weight(1) avatar("item48")
 
-LeadAmulet cost(400) weight(7)
-CoralAmulet cost(600) weight(8)
-SilverAmulet cost(1000) weight(4)
-GoldAmulet cost(1600) weight(5)
+LeadAmulet cost(400) weight(7) avatar("item166")
+CoralAmulet cost(600) weight(8) avatar("item167")
+SilverAmulet cost(1000) weight(4) avatar("item168")
+GoldAmulet cost(1600) weight(5) avatar("item175")
 
-BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0)
+BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar("item189")
  flags Martial Slow TwoHanded
  weapon damage(1 8)
-Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2)
+Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1")
  flags Martial Blunt
  weapon damage(1 4)
-Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3)
+Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0")
  weapon damage(1 4)
-Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2)
+Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345")
  flags Martial Slow TwoHanded WearLarge
  weapon damage(1 10)
-HandAxe cost(4) weight(30) wear(MeleeWeapon)
+HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5")
  flags Martial
  weapon damage(1 6)
-Mace cost(5) weight(30) wear(MeleeWeapon)
+Mace cost(5) weight(30) wear(MeleeWeapon) avatar("item24")
  flags Martial Blunt
  weapon damage(1 6)
-Sword cost(10) weight(60) wear(MeleeWeapon)
+Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4")
  flags Martial
  weapon damage(1 8)
 
-Arrow wear(Ammunition) count(30)
-Bolt wear(Ammunition) count(20)
+Arrow wear(Ammunition) count(30) avatar("item51")
+Bolt wear(Ammunition) count(20) avatar("item34")
 
-Crossbow cost(30) weight(50) wear(RangedWeapon)
+Crossbow cost(30) weight(50) wear(RangedWeapon) avatar("item67")
  flags Martial Slow TwoHanded
  weapon damage(2 7)
-ShortBow cost(25) weight(30) wear(RangedWeapon)
+ShortBow cost(25) weight(30) wear(RangedWeapon) avatar("item50")
  flags Martial TwoHanded
  weapon damage(1 6) ammunition(Arrow)
-LongBow cost(40) weight(30) wear(RangedWeapon)
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar("item76")
  flags Martial TwoHanded WearLarge
  weapon damage(1 6) ammunition(Arrow)
 
-LeatherArmor cost(20) weight(200) wear(Torso) bonus(2) wear_index(1)
+LeatherArmor cost(20) weight(200) wear(Torso) bonus(2) wear_index(1) avatar("item10")
  flags WearLeather
-ChainArmor cost(40) weight(400) wear(Torso) bonus(4) wear_index(2)
+ChainArmor cost(40) weight(400) wear(Torso) bonus(4) wear_index(2) avatar("item12")
  flags WearIron
-PlateArmor cost(60) weight(500) wear(Torso) bonus(6) wear_index(2)
+PlateArmor cost(60) weight(500) wear(Torso) bonus(6) wear_index(2) avatar("item13")
  flags WearIron
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) bonus(1)
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) bonus(1) avatar("item17")
  flags WearShield
 
-AquaPotion cost(10) weight(10) wear(Potion)
-BlackPotion cost(50) weight(10) wear(Potion)
-BluePotion cost(60) weight(10) wear(Potion)
-GreenPotion cost(70) weight(10) wear(Potion)
-YellowPotion cost(100) weight(10) wear(Potion)
+AquaPotion cost(10) weight(10) wear(Potion) avatar("item102")
+BlackPotion cost(50) weight(10) wear(Potion) avatar("item64")
+BluePotion cost(60) weight(10) wear(Potion) avatar("item49")
+GreenPotion cost(70) weight(10) wear(Potion) avatar("item309")
+YellowPotion cost(100) weight(10) wear(Potion) avatar("item63")

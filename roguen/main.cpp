@@ -6,14 +6,16 @@ static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
 using namespace draw;
 
+#ifdef _DEBUG
 void main_util();
-void paint_floor();
-int start_application(fnevent proc, fnevent initializing);
+#endif
 
 static void initializating() {
 	bsreq::read("rules/Items.txt");
 	bsreq::read("rules/Advancement.txt");
+#ifdef _DEBUG
 	main_util();
+#endif
 }
 
 static creature* create_monster(indext index, const char* id) {
@@ -74,9 +76,14 @@ static void main_start() {
 	area.set(m2i({8, 2}), Plant);
 	area.set(m2i({5, 3}), Herbs);
 	area.set(m2i({5, 5}), Trap);
+	auto p1 = bsdata<itemground>::add();
+	p1->index = m2i({8, 3});
+	p1->create(bsdata<itemi>::find("Sword"), 1);
 	//scene(test_bitmap);
 	adventure_mode();
 }
+
+int start_application(fnevent proc, fnevent initializing);
 
 int main(int argc, char *argv[]) {
 	return start_application(main_start, initializating);

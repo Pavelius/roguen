@@ -10,7 +10,7 @@
 
 enum class res {
 	Monsters,
-	Floor, Decals, Features,
+	Floor, Decals, Features, Items,
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
@@ -107,8 +107,10 @@ struct itemi : nameable {
 	weaponi		weapon;
 	featable	flags;
 	char		wear_index;
+	const char*	avatar;
+	void		paint() const;
 };
-struct item {
+class item {
 	unsigned short type;
 	union {
 		unsigned short count;
@@ -120,6 +122,7 @@ struct item {
 			unsigned char subtype;
 		};
 	};
+public:
 	explicit operator bool() const { return type != 0; }
 	void		add(item& v);
 	void		addname(stringbuilder& sb) const;
@@ -138,6 +141,9 @@ struct item {
 	bool		is(feat_s v) const { return geti().flags.is(v); }
 	bool		iscountable() const { return is(Countable); }
 	void		setcount(int v);
+};
+struct itemground : item {
+	indext		index;
 };
 struct wearable : movable {
 	item		wears[Elbows + 1];
