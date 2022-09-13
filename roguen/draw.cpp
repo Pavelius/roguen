@@ -2494,10 +2494,8 @@ void draw::fillwindow() {
 
 void draw::strokeout(fnevent proc, int dx, int dy) {
 	rectpush push;
-	caret.x -= metrics::border;
-	caret.y -= metrics::border;
-	width += metrics::border * 2 + dx;
-	height += metrics::border * 2 + dy;
+	caret.x -= dx; caret.y -= dy;
+	width += 2 * dx; height += 2 * dy;
 	proc();
 }
 

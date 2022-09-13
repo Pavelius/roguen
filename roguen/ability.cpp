@@ -18,6 +18,7 @@ BSDATA(abilityi) = {
 	{"ParryValue"},
 	{"DamageReduciton"},
 	{"Speed"},
+	{"LineOfSight"},
 	{"FightLight"},
 	{"FightHeavy"},
 	{"Markship"},

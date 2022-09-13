@@ -1,0 +1,12 @@
+DarkElf: Темный эльф
+Drake: Ящер
+Dwarf: Дварф
+GoldElf: Золотой эльф
+Gnome: Гном
+HightElf: Высший эльф
+Human: Человек
+Hurtling: Хоббит
+MistElf: Туманный эльф
+Orc: Орк
+Ratling: Крысолюд
+Troll: Тролль

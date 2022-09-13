@@ -19,6 +19,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Locale">
+      <UniqueIdentifier>{81120db4-ed34-452d-a87a-05f6a5bbf804}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="answers.cpp">
@@ -207,6 +210,9 @@
     <ClCompile Include="statable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="creaturea.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -318,6 +324,15 @@
     </Text>
     <Text Include="..\rules\Advancement.txt">
       <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Names.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\NamesNewbe.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\RaceNames.txt">
+      <Filter>Locale</Filter>
     </Text>
   </ItemGroup>
 </Project>

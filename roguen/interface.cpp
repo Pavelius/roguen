@@ -11,6 +11,8 @@ const int tsx = 64;
 const int tsy = 48;
 const int mst = 200;
 
+static unsigned long last_tick_message;
+
 void set_dark_theme();
 void initialize_translation(const char* locale);
 void initialize_png();
@@ -234,6 +236,36 @@ static void paint_map_background() {
 	paint_items();
 }
 
+static void paint_message() {
+	auto p = console.begin();
+	if(!p || !p[0])
+		return;
+	rectpush push;
+	width = 320;
+	textfs(p);
+	caret.y = metrics::padding*2;
+	caret.x = (getwidth() - width) / 2;
+	strokeout(fillform, metrics::padding, metrics::padding);
+	strokeout(strokeborder, metrics::padding, metrics::padding);
+	textf(p);
+}
+
+static void reset_message() {
+	auto current_tick = getcputime();
+	if(!last_tick_message)
+		last_tick_message = current_tick;
+	auto delay = (current_tick - last_tick_message);
+	if(delay >= 4000) {
+		last_tick_message = current_tick;
+		console.clear();
+	}
+}
+
+static void paint_console() {
+	paint_message();
+	reset_message();
+}
+
 static void presskey(const slice<hotkey>& source) {
 	for(auto& e : source) {
 		if(hot.key == e.key) {
@@ -276,6 +308,7 @@ static void move_down_right() {
 }
 
 static void attack_forward() {
+	player->act("%герой успешно атаковал%а.");
 	player->fixaction();
 	player->wait();
 }
@@ -319,6 +352,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	metrics::border = 1;
 	metrics::padding = 4;
 	object::afterpaint = object_afterpaint;
+	object::afterpaintall = paint_console;
 	//answers::paintcell = menubutton;
 	//answers::beforepaint = menubeforepaint;
 	draw::width = 640;

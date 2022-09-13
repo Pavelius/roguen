@@ -15,6 +15,7 @@ creature* creature::create(indext index, variant kind) {
 	}
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i+1))
 		p->basic.abilities[i] = 8 + rand() % 5;
+	p->basic.abilities[LineOfSight] = 4;
 	p->finish();
 	p->advance(kind, 0);
 	return p;
@@ -30,8 +31,14 @@ void creature::movestep(direction_s v) {
 }
 
 void creature::movestep(indext ni) {
-	if(ni == Blocked)
+	if(ni == Blocked) {
+		if(isactive()) {
+			fixaction();
+			act(getnm("CantGoThisWay"));
+		}
+		wait();
 		return;
+	}
 	auto index = getindex();
 	if(area.is(index, Webbed)) {
 		wait(2);
@@ -39,6 +46,7 @@ void creature::movestep(indext ni) {
 			act(getnm("WebEntagled"));
 			return;
 		}
+		act(getnm("WebBreak"));
 		area.remove(index, Webbed);
 	}
 	setindex(ni);
@@ -92,6 +100,12 @@ bool creature::roll(ability_s v) const {
 
 void adventure_mode();
 
+void creature::lookcreatures() {
+	creatures.select(getindex(), getlos());
+	enemies = creatures;
+	//enemies.match(*this, Hostile, false);
+}
+
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {
@@ -114,10 +128,6 @@ void creature::makemove() {
 	if(is(Unaware))
 		remove(Unaware);
 	// Get nearest creatures
-	//creaturea creatures;
-	//creatures.select(getposition(), getlos());
-	//creaturea enemies = creatures;
-	//enemies.match(*this, Hostile, false);
 	//creature* enemy = 0;
 	//if(enemies) {
 	//	// Combat situation - need eliminate enemy

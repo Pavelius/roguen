@@ -18,7 +18,7 @@ enum ability_s : unsigned char {
 	ToHit, ToHitMelee, ToHitRanged, ToHitThrown,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	ParryValue, DamageReduciton,
-	Speed,
+	Speed, LineOfSight,
 	FightLight, FightHeavy, Markship,
 	Concentration, Healing,
 	HitsMaximum, ManaMaximum,
@@ -80,7 +80,7 @@ class actable {
 	variant		kind; // Race or monster
 	gender_s	gender;
 public:
-	void		actv(stringbuilder& sb, const char* format, const char* format_param);
+	void		actv(stringbuilder& sb, const char* format, const char* format_param, char separator = ' ');
 	void		act(const char* format, ...) { actv(console, format, xva_start(format)); }
 	gender_s	getgender() const { return gender; }
 	variant		getkind() const { return kind; }
@@ -96,6 +96,7 @@ public:
 	void		fixaction() const;
 	void		fixappear() const;
 	void		fixmovement() const;
+	bool		in(const rect& rc) const { return i2m(index).in(rc); }
 	bool		ismirror() const { return mirror; }
 	indext		getindex() const { return index; }
 	point		getposition() const { return m2s(i2m(index)); }
@@ -174,6 +175,7 @@ class creature : public wearable, public statable, public spellable {
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
+	void		lookcreatures();
 	void		update();
 public:
 	typedef void (creature::*fnupdate)();
@@ -186,6 +188,7 @@ public:
 	void		finish();
 	int			get(ability_s v) const { return abilities[v]; }
 	int			get(spell_s v) const { return spells[v]; }
+	int			getlos() const { return get(LineOfSight); }
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const { return false; }
 	bool		is(spell_s v) const { return active_spells.is(v); }
@@ -200,6 +203,9 @@ public:
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v) const;
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
+};
+struct creaturea : adat<creature*> {
+	void		select(indext index, int los);
 };
 struct advancement {
 	variant		type;
@@ -221,6 +227,8 @@ bool			isnext();
 }
 inline int		d100() { return rand() % 100; }
 
-extern areamap	area;
-extern gamei	game;
-extern creature* player;
+extern areamap		area;
+extern creaturea	creatures, enemies;
+extern creature*	last_enemy;
+extern gamei		game;
+extern creature*	player;
