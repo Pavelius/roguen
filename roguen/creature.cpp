@@ -34,8 +34,8 @@ void creature::movestep(indext ni) {
 		return;
 	auto index = getindex();
 	if(area.is(index, Webbed)) {
+		wait(2);
 		if(!roll(Strenght)) {
-			wait();
 			act(getnm("WebEntagled"));
 			return;
 		}

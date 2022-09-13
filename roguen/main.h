@@ -199,7 +199,7 @@ public:
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v) const;
-	void		wait() { wait_seconds += 100; }
+	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct advancement {
 	variant		type;
