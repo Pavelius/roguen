@@ -204,10 +204,10 @@
     <ClCompile Include="wearable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="statable.cpp">
+    <ClCompile Include="creaturea.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="creaturea.cpp">
+    <ClCompile Include="statable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>

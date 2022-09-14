@@ -23,9 +23,6 @@ enum ability_s : unsigned char {
 	HitsMaximum, ManaMaximum,
 	Hits, Mana,
 };
-enum tag_s : unsigned char {
-	FireResistance,
-};
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
 	MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon, Ammunition,
@@ -39,7 +36,7 @@ enum condition_s : unsigned char {
 };
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
-	SunSensitive, Slow, NormalWeaponImmunity,
+	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
 	Blunt, Martial, TwoHanded,
 	WearLeather, WearIron, WearLarge, WearShield, Countable,
 	Female, Undead, Summoned, Player, Enemy,
@@ -65,7 +62,7 @@ struct weari : nameable {
 struct statable {
 	char		abilities[Mana + 1];
 	featable	feats;
-	void		update();
+	void		create();
 };
 struct dice {
 	char		min, max;
@@ -111,6 +108,7 @@ struct itemi : nameable {
 	featable	flags;
 	char		wear_index;
 	const char*	avatar;
+	variant		dress, use;
 	void		paint() const;
 };
 class item {
@@ -138,11 +136,13 @@ public:
 	int			getcost() const;
 	int			getcount() const;
 	dice		getdamage() const;
+	magic_s		getmagic() const { return magic; }
 	const char*	getname() const { return geti().getname(); }
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(feat_s v) const { return geti().flags.is(v); }
 	bool		iscountable() const { return is(Countable); }
+	bool		isidentified() const { return identified != 0; }
 	void		setcount(int v);
 };
 struct itemground : item {
@@ -169,8 +169,13 @@ class creature : public wearable, public statable, public spellable {
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
+	void		dress(variant v, int multiplier);
+	void		dress(variants v, int multiplier = 1);
 	void		lookcreatures();
 	void		update();
+	void		update_abilities();
+	void		update_basic();
+	void		update_wears();
 public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }

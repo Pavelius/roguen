@@ -2,6 +2,10 @@
 
 creature* player;
 
+static void copy(statable& v1, const statable& v2) {
+	v1 = v2;
+}
+
 creature* creature::create(indext index, variant kind) {
 	if(!kind)
 		return 0;
@@ -10,10 +14,8 @@ creature* creature::create(indext index, variant kind) {
 	p->setkind(kind);
 	monsteri* pm = kind;
 	if(pm)
-		memcpy(&p->basic, static_cast<statable*>(pm), sizeof(p->basic));
-	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i+1))
-		p->basic.abilities[i] = 8 + rand() % 5;
-	p->basic.abilities[LineOfSight] = 4;
+		copy(p->basic, *pm);
+	p->basic.create();
 	p->finish();
 	p->advance(kind, 0);
 	return p;
@@ -138,7 +140,50 @@ void creature::makemove() {
 		aimove();
 }
 
-void creature::update() {
+static int getmultiplier(magic_s v) {
+	switch(v) {
+	case Cursed: return -2;
+	case Blessed: return 2;
+	case Artifact: return 4;
+	default: return 1;
+	}
+}
+
+void creature::dress(variant v, int multiplier) {
+	if(v.iskind<abilityi>())
+		abilities[v.value] += v.counter * multiplier;
+	else if(v.iskind<listi>())
+		dress(bsdata<listi>::elements[v.value].elements, multiplier);
+}
+
+void creature::dress(variants source, int multiplier) {
+	for(auto v : source)
+		dress(v, multiplier);
+}
+
+void creature::update_wears() {
+	for(auto i = MeleeWeapon; i <= Elbows; i = (wear_s)(i + 1)) {
+		const auto& it = wears[i];
+		if(!wears[i])
+			continue;
+		auto& ei = it.geti();
+		feats.add(ei.flags);
+		if(ei.dress && it.isidentified())
+			dress(ei.dress, getmultiplier(it.getmagic()));
+	}
+}
+
+void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
-	statable::update();
+}
+
+void creature::update_abilities() {
+	abilities[Speed] += 20;
+	abilities[HitsMaximum] += 10;
+}
+
+void creature::update() {
+	update_basic();
+	update_wears();
+	update_abilities();
 }
