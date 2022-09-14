@@ -2,23 +2,15 @@
 
 NoItem avatar("item-1")
 
-SP cost(1) avatar("items37")
- flags Countable
-GP cost(10) avatar("items37")
- flags Countable
-PP cost(100) avatar("items37")
- flags Countable
+SP cost(1) avatar("items37") count(1)
+GP cost(10) avatar("items37") count(1)
+PP cost(100) avatar("items37") count(1)
 
-OrnamentalStones cost(10) avatar("item401")
- flags Countable
-SemiPreciousStones cost(50) avatar("item395")
- flags Countable
-FancyStones cost(100) avatar("item396")
- flags Countable
-PreciousStones cost(500) avatar("item399")
- flags Countable
-GemStones cost(1000) avatar("item392")
- flags Countable
+OrnamentalStones cost(10) avatar("item401") count(1)
+SemiPreciousStones cost(50) avatar("item395") count(1)
+FancyStones cost(100) avatar("item396") count(1)
+PreciousStones cost(500) avatar("item399") count(1)
+GemStones cost(1000) avatar("item392") count(1)
 
 IronRing cost(300) weight(1) avatar("item44")
 SilverRing cost(500) weight(1) avatar("item45")

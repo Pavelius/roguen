@@ -10,6 +10,8 @@ using namespace draw;
 const int tsx = 64;
 const int tsy = 48;
 const int mst = 200;
+const int window_width = 420;
+const int window_height = 280;
 
 static unsigned long last_tick_message;
 
@@ -241,11 +243,13 @@ static void paint_message() {
 	if(!p || !p[0])
 		return;
 	rectpush push;
-	width = 320;
+	width = window_width;
 	textfs(p);
 	caret.y = metrics::padding*2;
 	caret.x = (getwidth() - width) / 2;
-	strokeout(fillform, metrics::padding, metrics::padding);
+	auto push_alpha = alpha; alpha = 0xE0;
+	strokeout(fillwindow, metrics::padding, metrics::padding);
+	alpha = push_alpha;
 	strokeout(strokeborder, metrics::padding, metrics::padding);
 	textf(p);
 }
@@ -313,6 +317,14 @@ static void attack_forward() {
 	player->wait();
 }
 
+static void test_answers() {
+	answers::header = "Предметы в рюкзаке";
+	//answers::prompt = "This is a prompt";
+	answers an;
+	an.add((void*)1, "Play");
+	an.choose("Test answers data", "Cancel");
+}
+
 static hotkey adventure_keys[] = {
 	{"AttackForward", 'A', attack_forward},
 	{"MoveDown", KeyDown, move_down},
@@ -323,6 +335,7 @@ static hotkey adventure_keys[] = {
 	{"MoveUp", KeyUp, move_up},
 	{"MoveUpRight", KeyPageUp, move_up_right},
 	{"MoveUpLeft", KeyHome, move_up_left},
+	{"Information", 'I', test_answers},
 };
 
 void adventure_mode() {
@@ -335,6 +348,50 @@ void adventure_mode() {
 		paintfinish();
 		domodal();
 	}
+}
+
+static void answer_before_paint() {
+	paintobjects();
+	caret.x = (getwidth() - window_width - metrics::padding) / 2;
+	caret.y = 40;
+	width = window_width;
+	height = window_height;
+	auto push_alpha = alpha; alpha = 0xE0;
+	strokeout(fillwindow, metrics::padding, metrics::padding);
+	alpha = push_alpha;
+	strokeout(strokeborder, metrics::padding, metrics::padding);
+	if(answers::header) {
+		auto push_font = font;
+		auto push_fore = fore;
+		font = metrics::h3;
+		fore = colors::h3;
+		texta(answers::header, AlignCenter);
+		caret.y += texth();
+		fore = push_fore;
+		font = push_font;
+	}
+}
+
+static unsigned answer_key(int index) {
+	switch(index) {
+	case 0: case 1: case 2:
+	case 3: case 4: case 5:
+	case 6: case 7: case 8:
+		return '1' + index;
+	case 9:
+		return '0';
+	default:
+		return 'A' + (index - 10);
+	}
+}
+
+static void answer_paint_cell(int index, const void* value, const char* format, fnevent proc) {
+	unsigned key = value ? answer_key(index) : KeyEscape;
+	auto need_execute = (key == hot.key);
+	text(format);
+	caret.y += texth();
+	if(need_execute)
+		execute(proc, (long)value);
 }
 
 int start_application(fnevent proc, fnevent initializing) {
@@ -351,10 +408,11 @@ int start_application(fnevent proc, fnevent initializing) {
 	pbackground = paint_map_background;
 	metrics::border = 1;
 	metrics::padding = 4;
+	//pfinish = paint_console;
 	object::afterpaint = object_afterpaint;
 	object::afterpaintall = paint_console;
-	//answers::paintcell = menubutton;
-	//answers::beforepaint = menubeforepaint;
+	answers::paintcell = answer_paint_cell;
+	answers::beforepaint = answer_before_paint;
 	draw::width = 640;
 	draw::height = 360;
 	initialize(getnm("AppTitle"));

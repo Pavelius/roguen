@@ -1,8 +1,8 @@
 #pragma once
 
 struct script {
-	typedef void(*fnscript)(int bonus);
+	typedef void(*fnrun)(int bonus);
 	const char*		id;
-	fnscript		proc;
+	fnrun			proc;
 	static bool		stop;
 };

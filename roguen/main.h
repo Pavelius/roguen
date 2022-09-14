@@ -1,3 +1,4 @@
+#include "answers.h"
 #include "areamap.h"
 #include "flagable.h"
 #include "crt.h"
@@ -38,7 +39,7 @@ enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
 	Blunt, Martial, TwoHanded,
-	WearLeather, WearIron, WearLarge, WearShield, Countable,
+	WearLeather, WearIron, WearLarge, WearShield,
 	Female, Undead, Summoned, Player, Enemy,
 	Stun, Unaware,
 };
@@ -120,7 +121,6 @@ class item {
 			unsigned char broken : 2;
 			unsigned char identified : 1;
 			unsigned char charges : 3;
-			unsigned char subtype;
 		};
 	};
 public:
@@ -141,7 +141,7 @@ public:
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(feat_s v) const { return geti().flags.is(v); }
-	bool		iscountable() const { return is(Countable); }
+	bool		iscountable() const { return geti().count != 0; }
 	bool		isidentified() const { return identified != 0; }
 	void		setcount(int v);
 };

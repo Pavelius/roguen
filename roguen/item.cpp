@@ -14,7 +14,7 @@ int item::getcount() const {
 }
 
 void item::add(item& v) {
-	if(type != v.type || subtype != v.subtype)
+	if(type != v.type)
 		return;
 	if(iscountable()) {
 		unsigned n1 = count + v.count + 1;
