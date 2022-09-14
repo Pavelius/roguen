@@ -1,6 +1,2 @@
-﻿In file `rules/Advancement.txt`:
-Item `AquaPotion` don't filled avatar
-Item `BlackPotion` don't filled avatar
-Item `BluePotion` don't filled avatar
-Item `GreenPotion` don't filled avatar
-Item `YellowPotion` don't filled avatar
+﻿In file `rules/Basic.txt`:
+ Line 5: Not found requisit `gender`

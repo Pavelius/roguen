@@ -9,10 +9,8 @@ creature* creature::create(indext index, variant kind) {
 	p->setindex(index);
 	p->setkind(kind);
 	monsteri* pm = kind;
-	if(pm) {
-		p->setgender(pm->gender);
+	if(pm)
 		memcpy(&p->basic, static_cast<statable*>(pm), sizeof(p->basic));
-	}
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i+1))
 		p->basic.abilities[i] = 8 + rand() % 5;
 	p->basic.abilities[LineOfSight] = 4;

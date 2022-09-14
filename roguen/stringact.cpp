@@ -35,9 +35,7 @@ void stringact::addidentifier(const char* identifier) {
 		for(auto& e : player_gender) {
 			if(strcmp(e.female, identifier) != 0)
 				continue;
-			if(gender == NoGender)
-				add(e.multiply);
-			else if(gender == Female)
+			if(female)
 				add(e.female);
 			else
 				add(e.male);

@@ -2,8 +2,9 @@
 
 Goblin avatar("0")
  abilities Strenght(-2) Dexterity(4)
-GoblinFemale avatar("0_f") gender(Female)
+GoblinFemale avatar("0_f")
  abilities Strenght(-2) Dexterity(4)
+ feats Female
 OrcWarrior avatar("1")
 Ettin avatar("47")
  abilities Strenght(11) Dexterity(-3)

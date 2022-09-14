@@ -54,9 +54,6 @@
     <ClCompile Include="dice.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="gender.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="io_stream.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -243,9 +240,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="flagable.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="gender.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="io_stream.h">

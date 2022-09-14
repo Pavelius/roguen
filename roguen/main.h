@@ -1,6 +1,5 @@
 #include "areamap.h"
 #include "flagable.h"
-#include "gender.h"
 #include "crt.h"
 #include "list.h"
 #include "script.h"
@@ -43,7 +42,7 @@ enum feat_s : unsigned char {
 	SunSensitive, Slow, NormalWeaponImmunity,
 	Blunt, Martial, TwoHanded,
 	WearLeather, WearIron, WearLarge, WearShield, Countable,
-	Undead, Summoned, Player, Enemy,
+	Female, Undead, Summoned, Player, Enemy,
 	Stun, Unaware,
 };
 enum spell_s : unsigned char {
@@ -78,14 +77,10 @@ struct hotkey : nameable {
 };
 class actable {
 	variant		kind; // Race or monster
-	gender_s	gender;
 public:
-	void		actv(stringbuilder& sb, const char* format, const char* format_param, char separator = ' ');
-	void		act(const char* format, ...) { actv(console, format, xva_start(format)); }
-	gender_s	getgender() const { return gender; }
+	void		actv(stringbuilder& sb, const char* format, const char* format_param, bool female = false, char separator = ' ');
 	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
-	void		setgender(gender_s v) { gender = v; }
 	void		setkind(variant v) { kind = v; }
 };
 class movable : public actable {
@@ -162,7 +157,6 @@ struct wearable : movable {
 };
 struct monsteri : nameable, statable {
 	const char*	avatar;
-	gender_s	gender;
 };
 struct spellable {
 	char		spells[Sleep + 1];
@@ -181,6 +175,7 @@ public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
 	static creature* create(indext index, variant v);
+	void		act(const char* format, ...) { actv(console, format, xva_start(format), is(Female)); }
 	void		aimove();
 	void		checkmood() {}
 	void		checkpoison() {}

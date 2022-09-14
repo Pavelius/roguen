@@ -144,8 +144,8 @@ static void paint_floor() {
 	}
 }
 
-static int getavatar(int race, gender_s gender, int armor) {
-	return race * 6 + ((gender == Female) ? 1 : 0) + armor * 2;
+static int getavatar(int race, bool female, int armor) {
+	return race * 6 + (female ? 1 : 0) + armor * 2;
 }
 
 void creature::paint() const {
@@ -172,7 +172,7 @@ void creature::paint() const {
 		else
 			image(pa, 36 + 25, flags);
 		// Torso and armor
-		image(pb, getavatar(kind.value, getgender(), wears[Torso].getavatar()), flags);
+		image(pb, getavatar(kind.value, is(Female), wears[Torso].getavatar()), flags);
 		// Thrown weapon
 		//if(wears[ThrownWeapon])
 		//	image(pc, 3, 0); // Throwing

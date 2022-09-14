@@ -166,7 +166,6 @@
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="gender.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
     <ClCompile Include="io_stream.cpp" />
@@ -219,7 +218,6 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="flagable.h" />
-    <ClInclude Include="gender.h" />
     <ClInclude Include="io_stream.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />

@@ -26,9 +26,6 @@ BSMETA(dice) = {
 BSMETA(feati) = {
 	BSREQ(id),
 	{}};
-BSMETA(genderi) = {
-	BSREQ(id),
-	{}};
 BSMETA(itemi) = {
 	BSREQ(id),
 	BSREQ(cost), BSREQ(weight), BSREQ(count),
@@ -51,7 +48,7 @@ BSMETA(advancement) = {
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
-	BSENM(gender, genderi),
+	BSFLG(feats, feati),
 	BSREQ(avatar),
 	{}};
 BSMETA(racei) = {
