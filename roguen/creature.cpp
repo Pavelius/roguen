@@ -163,13 +163,22 @@ void creature::dress(variants source, int multiplier) {
 
 void creature::update_wears() {
 	for(auto i = MeleeWeapon; i <= Elbows; i = (wear_s)(i + 1)) {
-		const auto& it = wears[i];
 		if(!wears[i])
 			continue;
-		auto& ei = it.geti();
+		auto& ei = wears[i].geti();
+		auto magic = wears[i].getmagic();
 		feats.add(ei.flags);
-		if(ei.dress && it.isidentified())
-			dress(ei.dress, getmultiplier(it.getmagic()));
+		if(wears[i].isidentified()) {
+			if(ei.dress)
+				dress(ei.dress, getmultiplier(magic));
+		}
+		if(ei.ability) {
+			switch(magic) {
+			case Cursed: abilities[ei.ability] -= 2; break;
+			case Blessed: case Artifact: abilities[ei.ability] += 1; break;
+			default: break;
+			}
+		}
 	}
 }
 
