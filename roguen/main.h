@@ -41,7 +41,7 @@ enum feat_s : unsigned char {
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
 	Blunt, Martial, TwoHanded,
 	WearLeather, WearIron, WearLarge, WearShield,
-	Female, Undead, Summoned, Player, Enemy,
+	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
 enum target_s : unsigned char {
@@ -185,6 +185,7 @@ public:
 	static creature* create(indext index, variant v);
 	void		act(const char* format, ...) { actv(console, format, xva_start(format), is(Female)); }
 	void		aimove();
+	void		attackmelee(creature& enemy);
 	void		checkmood() {}
 	void		checkpoison() {}
 	void		checksick() {}
@@ -196,8 +197,10 @@ public:
 	bool		is(condition_s v) const { return false; }
 	bool		is(spell_s v) const { return active_spells.is(v); }
 	bool		is(feat_s v) const { return feats.is(v); }
-	bool		isalive() const { return abilities[Hits] > 0; }
+	//bool		isalive() const { return abilities[Hits] > 0; }
 	bool		isactive() const;
+	bool		isenemy(const creature& opponent) const;
+	void		interaction(creature& opponent);
 	void		makemove();
 	void		movestep(direction_s i);
 	void		movestep(indext i);
@@ -205,6 +208,7 @@ public:
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v, int bonus = 0) const;
+	void		setbasic(feat_s v) { basic.feats.set(v); }
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {

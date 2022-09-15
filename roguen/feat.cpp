@@ -20,7 +20,7 @@ BSDATA(feati) = {
 	{"Female"},
 	{"Undead"},
 	{"Summoned"},
-	{"Player"},
+	{"Ally"},
 	{"Enemy"},
 	{"Stun"},
 	{"Unaware"},

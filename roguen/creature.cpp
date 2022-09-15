@@ -6,6 +6,16 @@ static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
 
+static creature* findalive(indext index) {
+	for(auto& e : bsdata<creature>()) {
+		if(!e)
+			continue;
+		if(e.getindex() == index)
+			return &e;
+	}
+	return 0;
+}
+
 creature* creature::create(indext index, variant kind) {
 	if(!kind)
 		return 0;
@@ -25,12 +35,25 @@ bool creature::isactive() const {
 	return this == player;
 }
 
+bool creature::isenemy(const creature& opponent) const {
+	return opponent.is(is(Enemy) ? Ally : Enemy);
+}
+
 void creature::movestep(direction_s v) {
 	setdirection(v);
 	movestep(to(getindex(), v));
 }
 
 void creature::interaction(indext index) {
+}
+
+void creature::interaction(creature& opponent) {
+	if(opponent.isenemy(*this))
+		attackmelee(opponent);
+}
+
+void creature::attackmelee(creature& enemy) {
+	fixaction();
 }
 
 void creature::movestep(indext ni) {
@@ -53,7 +76,20 @@ void creature::movestep(indext ni) {
 		act(getnm("WebBreak"));
 		area.remove(index, Webbed);
 	}
-	if(area.isfree(ni)) {
+	if(area.is(index, Iced)) {
+		wait(2);
+		if(!roll(Strenght, -2)) {
+			act(getnm("WebEntagled"));
+			wait();
+			return;
+		}
+		act(getnm("WebBreak"));
+		area.remove(index, Webbed);
+	}
+	auto opponent = findalive(ni);
+	if(opponent)
+		interaction(*opponent);
+	else if(area.isfree(ni)) {
 		setindex(ni);
 		fixmovement();
 	} else {
@@ -203,6 +239,7 @@ void creature::update_wears() {
 
 void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
+	feats = basic.feats;
 }
 
 void creature::update_abilities() {

@@ -65,4 +65,5 @@ struct featurei {
 	void			paint(int random) const;
 	bool			is(areaf v) const { return (flags & (1 << v)) != 0; }
 };
-indext				to(indext i, direction_s v);
+indext				to(indext d, direction_s v);
+direction_s			round(direction_s i, direction_s v);

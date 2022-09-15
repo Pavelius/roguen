@@ -22,7 +22,7 @@ static void growth_plant() {
 }
 
 static bool checkalive() {
-	if(!player || !player->isalive())
+	if(!player || !(*player))
 		return false;
 	return true;
 }
