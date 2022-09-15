@@ -1,7 +1,7 @@
 #include "main.h"
 
-creaturea creatures, enemies;
-creature* last_enemy;
+creaturea creatures, enemies, targets;
+creature* enemy;
 
 static void choose_creature(int bonus) {
 }

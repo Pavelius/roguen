@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "areamap.h"
 #include "flagable.h"
+#include "hotkey.h"
 #include "crt.h"
 #include "list.h"
 #include "script.h"
@@ -49,7 +50,7 @@ enum target_s : unsigned char {
 	EnemyClose, EnemyNear,
 };
 enum spell_s : unsigned char {
-	Sleep,
+	Sleep, Web
 };
 extern stringbuilder console;
 struct featable : flagable<4> {};
@@ -73,9 +74,6 @@ struct statable {
 struct dice {
 	char		min, max;
 	int			roll() const;
-};
-struct hotkey : nameable {
-	unsigned	key;
 };
 class actable {
 	variant		kind; // Race or monster
@@ -205,7 +203,7 @@ public:
 	void		paint() const;
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
-	bool		roll(ability_s v) const;
+	bool		roll(ability_s v, int bonus = 0) const;
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {

@@ -1,4 +1,5 @@
 AppTitle: Тестовое приложение
 CantGoThisWay: Сюда не пройти.
+Inventory: Одетые предметы
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.

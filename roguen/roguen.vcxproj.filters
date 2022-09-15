@@ -210,6 +210,12 @@
     <ClCompile Include="statable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="spells.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="hotkey.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -304,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="nameable.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="hotkey.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

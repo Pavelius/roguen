@@ -166,6 +166,7 @@
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
     <ClCompile Include="io_stream.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="screenshoot.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="scripting.cpp" />
+    <ClCompile Include="spells.cpp" />
     <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="statable.cpp" />
     <ClCompile Include="stringact.cpp" />
@@ -218,6 +220,7 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="flagable.h" />
+    <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />

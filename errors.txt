@@ -1,2 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 65: Not found identifier `WearShield`
+﻿In file `rules/Advancement.txt`:
+Can't find script named 'MoveNorth' in hotkey mapping

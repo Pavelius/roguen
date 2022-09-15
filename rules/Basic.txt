@@ -15,3 +15,16 @@ ChaosHydra avatar("33")
 Minotaur avatar("83")
  abilities Strenght(11)
 Bartender avatar("130")
+
+#HotkeyList
+
+AdventureKeys
+ elements AttackForward A
+ elements MoveUp Up
+ elements MoveUpLeft Home
+ elements MoveUpRight PageUp
+ elements MoveDown Down
+ elements MoveDownLeft End
+ elements MoveDownRight PageDown
+ elements MoveRight Right
+ elements MoveLeft Left

@@ -60,8 +60,10 @@ BSMETA(weari) = {
 
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
-	{"Item", VAR(itemi), 1},
 	{"Advancement", VAR(advancement), 2},
+	{"Hotkey", VAR(hotkey), 2},
+	{"HotkeyList", VAR(hotkeylist), 1},
+	{"Item", VAR(itemi), 1},
 	{"List", VAR(listi), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},

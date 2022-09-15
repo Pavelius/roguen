@@ -1,6 +1,7 @@
 #include "bsreq.h"
 #include "draw.h"
 #include "main.h"
+#include "hotkey.h"
 
 static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
@@ -13,6 +14,7 @@ void main_util();
 static void initializating() {
 	bsreq::read("rules/Items.txt");
 	bsreq::read("rules/Advancement.txt");
+	hotkey::initialize();
 #ifdef _DEBUG
 	main_util();
 #endif

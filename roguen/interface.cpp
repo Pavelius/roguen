@@ -271,43 +271,30 @@ static void paint_console() {
 }
 
 static void execute_script() {
-	auto pn = (const char*)hot.object;
-	if(!pn)
-		return;
-	auto ps = bsdata<script>::find(pn);
-	if(ps)
-		ps->proc(hot.param);
+	auto pn = (hotkey::fnevent)hot.object;
+	if(pn)
+		pn(hot.param);
 }
 
-static void presskey(const slice<hotkey>& source) {
+static void presskey(const sliceu<hotkey>& source) {
 	for(auto& e : source) {
 		if(hot.key == e.key) {
-			execute(execute_script, 0, 0, e.id);
+			execute(execute_script, 0, 0, e.proc);
 			return;
 		}
 	}
 }
 
-static hotkey adventure_keys[] = {
-	{"AttackForward", 'A'},
-	{"MoveDown", KeyDown},
-	{"MoveDownLeft", KeyEnd},
-	{"MoveDownRight", KeyPageDown},
-	{"MoveLeft", KeyLeft},
-	{"MoveRight", KeyRight},
-	{"MoveUp", KeyUp},
-	{"MoveUpRight", KeyPageUp},
-	{"MoveUpLeft", KeyHome},
-	{"Inventory", 'I'},
-};
-
 void adventure_mode() {
 	waitall();
+	auto pk = bsdata<hotkeylist>::find("AdventureKeys");
+	if(!pk)
+		return;
 	auto start = player->getwait();
 	while(player && start==player->getwait() && ismodal()) {
 		paintstart();
 		paintobjects();
-		presskey(adventure_keys);
+		presskey(pk->elements);
 		paintfinish();
 		domodal();
 	}

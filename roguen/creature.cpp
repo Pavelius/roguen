@@ -42,7 +42,7 @@ void creature::movestep(indext ni) {
 	auto index = getindex();
 	if(area.is(index, Webbed)) {
 		wait(2);
-		if(!roll(Strenght)) {
+		if(!roll(Strenght, -2)) {
 			act(getnm("WebEntagled"));
 			return;
 		}
@@ -92,10 +92,14 @@ void creature::advance(variant v) {
 	}
 }
 
-bool creature::roll(ability_s v) const {
+bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	auto result = 1 + (rand() % 20);
-	return result <= value;
+	if(result == 1)
+		return true;
+	else if(result == 20)
+		return false;
+	return result <= (value + bonus);
 }
 
 void adventure_mode();
@@ -155,9 +159,9 @@ void creature::dress(variant v, int multiplier) {
 	else if(v.iskind<listi>())
 		dress(bsdata<listi>::elements[v.value].elements, multiplier);
 	else if(v.iskind<feati>()) {
-		if(v.counter>0)
+		if(v.counter > 0)
 			feats.set(v.value);
-		else if(v.counter<0)
+		else if(v.counter < 0)
 			feats.remove(v.value);
 	}
 }
