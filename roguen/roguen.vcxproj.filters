@@ -141,9 +141,6 @@
     <ClCompile Include="resource.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
-    <ClCompile Include="areamap.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="creature.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -214,6 +211,9 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="hotkey.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="areamap.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -296,9 +296,6 @@
     <ClInclude Include="resource.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="areamap.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="logparse.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -312,6 +309,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="hotkey.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="areamap.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

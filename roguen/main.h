@@ -173,6 +173,7 @@ class creature : public wearable, public statable, public spellable {
 	void		advance(variant element);
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
+	void		interaction(indext index);
 	void		lookcreatures();
 	void		update();
 	void		update_abilities();

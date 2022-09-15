@@ -20,6 +20,7 @@ Bartender avatar("130")
 
 AdventureKeys
  elements AttackForward A
+ elements Inventory I
  elements MoveUp Up
  elements MoveUpLeft Home
  elements MoveUpRight PageUp

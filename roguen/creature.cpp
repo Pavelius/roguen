@@ -30,6 +30,9 @@ void creature::movestep(direction_s v) {
 	movestep(to(getindex(), v));
 }
 
+void creature::interaction(indext index) {
+}
+
 void creature::movestep(indext ni) {
 	if(ni == Blocked) {
 		if(isactive()) {
@@ -44,13 +47,19 @@ void creature::movestep(indext ni) {
 		wait(2);
 		if(!roll(Strenght, -2)) {
 			act(getnm("WebEntagled"));
+			wait();
 			return;
 		}
 		act(getnm("WebBreak"));
 		area.remove(index, Webbed);
 	}
-	setindex(ni);
-	fixmovement();
+	if(area.isfree(ni)) {
+		setindex(ni);
+		fixmovement();
+	} else {
+		interaction(ni);
+		fixaction();
+	}
 	wait();
 }
 

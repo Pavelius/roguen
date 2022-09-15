@@ -101,3 +101,11 @@ void areamap::removechance(mapf_s v, int chance) {
 		remove(i, v);
 	}
 }
+
+bool areamap::isfree(indext i) const {
+	if(i == Blocked)
+		return false;
+	if(features[i] && bsdata<featurei>::elements[features[i]].is(Impassable))
+		return false;
+	return true;
+}

@@ -6,6 +6,17 @@ creature* enemy;
 static void choose_creature(int bonus) {
 }
 
+static void choose_targets(target_s target) {
+	targets.clear();
+	switch(target) {
+	case You:
+		targets.add(player);
+		break;
+	case YouOrAlly:
+		break;
+	}
+}
+
 static void move_left(int bonus) {
 	player->movestep(West);
 }

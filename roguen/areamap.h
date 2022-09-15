@@ -21,6 +21,9 @@ enum feature_s : unsigned char {
 	HiveHole, Hive, Hole, Plant, Herbs,
 	Trap,
 };
+enum areaf : unsigned char {
+	Impassable,
+};
 inline indext m2i(point v) { return v.x + v.y * mps; }
 inline point i2m(indext v) { return point{(short)(v % mps), (short)(v / mps)}; }
 struct areamap {
@@ -31,7 +34,7 @@ struct areamap {
 	void			clear();
 	static point	correct(point v);
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
-	bool			isfreenw(indext i) const { return true; }
+	bool			isfree(indext i) const;
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
 	void			set(indext i, tile_s v);
 	void			set(indext i, feature_s v) { features[i] = v; }
@@ -58,6 +61,8 @@ struct featurei {
 	const char*		id;
 	framerange		features, overlay;
 	unsigned char	priority = 10;
+	unsigned		flags = 0;
 	void			paint(int random) const;
+	bool			is(areaf v) const { return (flags & (1 << v)) != 0; }
 };
 indext				to(indext i, direction_s v);

@@ -2,7 +2,7 @@
 
 BSDATA(featurei) = {
 	{"NoFeature"},
-	{"Tree", {7, 4}, {11, 3}},
+	{"Tree", {7, 4}, {11, 3}, 10, FG(Impassable)},
 	{"FootMud", {14, 1}, {}, 5},
 	{"FootHill", {15, 1}, {}, 5},
 	{"Grave", {16, 2}},
