@@ -270,72 +270,35 @@ static void paint_console() {
 	reset_message();
 }
 
+static void execute_script() {
+	auto pn = (const char*)hot.object;
+	if(!pn)
+		return;
+	auto ps = bsdata<script>::find(pn);
+	if(ps)
+		ps->proc(hot.param);
+}
+
 static void presskey(const slice<hotkey>& source) {
 	for(auto& e : source) {
 		if(hot.key == e.key) {
-			execute(e.proc);
+			execute(execute_script, 0, 0, e.id);
 			return;
 		}
 	}
 }
 
-static void move_left() {
-	player->movestep(West);
-}
-
-static void move_right() {
-	player->movestep(East);
-}
-
-static void move_up() {
-	player->movestep(North);
-}
-
-static void move_down() {
-	player->movestep(South);
-}
-
-static void move_up_left() {
-	player->movestep(NorthWest);
-}
-
-static void move_up_right() {
-	player->movestep(NorthEast);
-}
-
-static void move_down_left() {
-	player->movestep(SouthWest);
-}
-
-static void move_down_right() {
-	player->movestep(SouthEast);
-}
-
-static void attack_forward() {
-	player->act("%герой успешно атаковал%а.");
-	player->fixaction();
-	player->wait();
-}
-
-static void test_answers() {
-	answers::header = "Предметы в рюкзаке";
-	//answers::prompt = "This is a prompt";
-	answers an;
-	an.add((void*)1, "Play");
-	an.choose("Test answers data", "Cancel");
-}
-
 static hotkey adventure_keys[] = {
-	{"AttackForward", 'A', attack_forward},
-	{"MoveDown", KeyDown, move_down},
-	{"MoveDownLeft", KeyEnd, move_down_left},
-	{"MoveDownRight", KeyPageDown, move_down_right},
-	{"MoveLeft", KeyLeft, move_left},
-	{"MoveRight", KeyRight, move_right},
-	{"MoveUp", KeyUp, move_up},
-	{"MoveUpRight", KeyPageUp, move_up_right},
-	{"MoveUpLeft", KeyHome, move_up_left},
-	{"Information", 'I', test_answers},
+	{"AttackForward", 'A'},
+	{"MoveDown", KeyDown},
+	{"MoveDownLeft", KeyEnd},
+	{"MoveDownRight", KeyPageDown},
+	{"MoveLeft", KeyLeft},
+	{"MoveRight", KeyRight},
+	{"MoveUp", KeyUp},
+	{"MoveUpRight", KeyPageUp},
+	{"MoveUpLeft", KeyHome},
+	{"Inventory", 'I'},
 };
 
 void adventure_mode() {
@@ -363,8 +326,8 @@ static void answer_before_paint() {
 	if(answers::header) {
 		auto push_font = font;
 		auto push_fore = fore;
-		font = metrics::h3;
-		fore = colors::h3;
+		font = metrics::h2;
+		fore = colors::h2;
 		texta(answers::header, AlignCenter);
 		caret.y += texth();
 		fore = push_fore;

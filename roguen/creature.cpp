@@ -154,6 +154,12 @@ void creature::dress(variant v, int multiplier) {
 		abilities[v.value] += v.counter * multiplier;
 	else if(v.iskind<listi>())
 		dress(bsdata<listi>::elements[v.value].elements, multiplier);
+	else if(v.iskind<feati>()) {
+		if(v.counter>0)
+			feats.set(v.value);
+		else if(v.counter<0)
+			feats.remove(v.value);
+	}
 }
 
 void creature::dress(variants source, int multiplier) {

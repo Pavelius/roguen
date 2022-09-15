@@ -43,6 +43,11 @@ enum feat_s : unsigned char {
 	Female, Undead, Summoned, Player, Enemy,
 	Stun, Unaware,
 };
+enum target_s : unsigned char {
+	You, YouOrAlly,
+	EnemyOrAllyClose, EnemyOrAllyNear,
+	EnemyClose, EnemyNear,
+};
 enum spell_s : unsigned char {
 	Sleep,
 };
@@ -71,7 +76,6 @@ struct dice {
 };
 struct hotkey : nameable {
 	unsigned	key;
-	fnevent		proc;
 };
 class actable {
 	variant		kind; // Race or monster
