@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "areamap.h"
+#include "dice.h"
 #include "flagable.h"
 #include "hotkey.h"
 #include "crt.h"
@@ -71,10 +72,6 @@ struct statable {
 	featable	feats;
 	void		create();
 };
-struct dice {
-	char		min, max;
-	int			roll() const;
-};
 class actable {
 	variant		kind; // Race or monster
 public:
@@ -90,7 +87,10 @@ class movable : public actable {
 public:
 	void		fixaction() const;
 	void		fixappear() const;
+	void		fixdisappear() const;
 	void		fixmovement() const;
+	void		fixvalue(const char* v, int color = 0) const;
+	void		fixvalue(int v) const;
 	bool		in(const rect& rc) const { return i2m(index).in(rc); }
 	bool		ismirror() const { return mirror; }
 	indext		getindex() const { return index; }
@@ -189,15 +189,16 @@ public:
 	void		checkmood() {}
 	void		checkpoison() {}
 	void		checksick() {}
+	void		damage(int v);
 	void		finish();
 	int			get(ability_s v) const { return abilities[v]; }
 	int			get(spell_s v) const { return spells[v]; }
+	dice		getdamage(wear_s w) const;
 	int			getlos() const { return get(LineOfSight); }
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const { return false; }
 	bool		is(spell_s v) const { return active_spells.is(v); }
 	bool		is(feat_s v) const { return feats.is(v); }
-	//bool		isalive() const { return abilities[Hits] > 0; }
 	bool		isactive() const;
 	bool		isenemy(const creature& opponent) const;
 	void		interaction(creature& opponent);

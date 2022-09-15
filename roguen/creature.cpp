@@ -40,6 +40,13 @@ bool creature::isenemy(const creature& opponent) const {
 }
 
 void creature::movestep(direction_s v) {
+	if(area.is(getindex(), Iced)) {
+		if(!roll(Dexterity)) {
+			act(getnm("IcedSlice"));
+			v = round(v, (d100() < 50) ? West : East);
+			wait();
+		}
+	}
 	setdirection(v);
 	movestep(to(getindex(), v));
 }
@@ -52,8 +59,27 @@ void creature::interaction(creature& opponent) {
 		attackmelee(opponent);
 }
 
+dice creature::getdamage(wear_s v) const {
+	dice result = {1, 2};
+	switch(v) {
+	case MeleeWeapon: result += get(DamageMelee); break;
+	case RangedWeapon: result += get(DamageRanged); break;
+	case ThrownWeapon: result += get(DamageThrown); break;
+	}
+	result.correct();
+	return result;
+}
+
+void creature::damage(int v) {
+	fixvalue(-v);
+	abilities[Hits] -= v;
+	if(abilities[Hits] <= 0)
+		fixdisappear();
+}
+
 void creature::attackmelee(creature& enemy) {
 	fixaction();
+	enemy.damage(getdamage(MeleeWeapon).roll());
 }
 
 void creature::movestep(indext ni) {
@@ -67,16 +93,6 @@ void creature::movestep(indext ni) {
 	}
 	auto index = getindex();
 	if(area.is(index, Webbed)) {
-		wait(2);
-		if(!roll(Strenght, -2)) {
-			act(getnm("WebEntagled"));
-			wait();
-			return;
-		}
-		act(getnm("WebBreak"));
-		area.remove(index, Webbed);
-	}
-	if(area.is(index, Iced)) {
 		wait(2);
 		if(!roll(Strenght, -2)) {
 			act(getnm("WebEntagled"));

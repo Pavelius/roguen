@@ -38,6 +38,14 @@ void movable::fixmovement() const {
 	pr->position = pt;
 }
 
+void movable::fixdisappear() const {
+	auto po = draw::findobject(this);
+	if(po) {
+		auto pr = po->add(mst);
+		pr->alpha = 0;
+	}
+}
+
 void movable::fixappear() const {
 	auto po = draw::findobject(this);
 	if(po)
@@ -48,6 +56,34 @@ void movable::fixappear() const {
 	po->priority = 11;
 	auto pr = po->add(mst);
 	pr->alpha = 0xFF;
+}
+
+static color getcolor(int format_color) {
+	switch(format_color) {
+	case 1: return colors::red;
+	case 2: return colors::green;
+	case 3: return colors::blue;
+	case 4: return colors::yellow;
+	default: return colors::text;
+	}
+}
+
+void movable::fixvalue(const char* format, int format_color) const {
+	auto pt = getposition(); pt.y -= tsy;
+	auto pa = addobject(pt);
+	pa->alpha = 0xFF;
+	pa->string = szdup(format);
+	pa->priority = 20;
+	pa->fore = colors::red;
+	auto po = pa->add(mst);
+	pt.y -= tsy;
+	po->position = pt;
+}
+
+void movable::fixvalue(int v) const {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("%1i", v);
+	fixvalue(temp, (v > 0) ? 2 : 1);
 }
 
 point to(point pt, direction_s d, int sx, int sy) {
@@ -77,6 +113,13 @@ static void remove_temp_objects(array* source) {
 		return;
 	for(auto& e : bsdata<object>()) {
 		if(source->have(e.data))
+			e.clear();
+	}
+}
+
+static void remove_temp_objects() {
+	for(auto& e : bsdata<object>()) {
+		if(!e.data)
 			e.clear();
 	}
 }
@@ -287,6 +330,7 @@ static void presskey(const sliceu<hotkey>& source) {
 
 void adventure_mode() {
 	waitall();
+	remove_temp_objects();
 	auto pk = bsdata<hotkeylist>::find("AdventureKeys");
 	if(!pk)
 		return;

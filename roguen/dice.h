@@ -1,7 +1,8 @@
 #pragma once
 
 struct dice {
-	char			c, d, b, m;
-	int				roll() const;
-	explicit operator bool() const { return c || b; }
+	char		min, max;
+	void operator+=(int v) { min += v; max += v; }
+	void		correct();
+	int			roll() const;
 };

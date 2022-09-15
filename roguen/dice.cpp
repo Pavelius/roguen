@@ -2,8 +2,12 @@
 #include "dice.h"
 
 int dice::roll() const {
-	int r = b;
-	for(auto i = c; i >= 0; i--)
-		r += 1 + rand() % d;
-	return r;
+	return min + ((max == min) ? 0 : (rand() % (max - min + 1)));
+}
+
+void dice::correct() {
+	if(min < 0)
+		min = 1;
+	if(max < min)
+		max = min;
 }
