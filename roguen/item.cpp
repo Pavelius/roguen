@@ -48,3 +48,7 @@ void item::create(const itemi* pi, int count) {
 	else
 		setcount(count);
 }
+
+dice item::getdamage() const {
+	return geti().weapon.damage;
+}

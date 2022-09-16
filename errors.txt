@@ -1,2 +1,2 @@
-﻿In file `rules/Advancement.txt`:
-Can't find script named 'MoveNorth' in hotkey mapping
+﻿In file `rules/Basic.txt`:
+ Line 32: Invalid source array where read identifier `D`

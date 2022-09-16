@@ -89,6 +89,7 @@ public:
 	void		fixappear() const;
 	void		fixdisappear() const;
 	void		fixmovement() const;
+	void		fixremove() const;
 	void		fixvalue(const char* v, int color = 0) const;
 	void		fixvalue(int v) const;
 	bool		in(const rect& rc) const { return i2m(index).in(rc); }
@@ -185,6 +186,7 @@ public:
 	static creature* create(indext index, variant v);
 	void		act(const char* format, ...) { actv(console, format, xva_start(format), is(Female)); }
 	void		aimove();
+	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
 	void		checkmood() {}
 	void		checkpoison() {}

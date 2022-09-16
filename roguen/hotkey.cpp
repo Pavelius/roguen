@@ -32,6 +32,8 @@ hotname names[] = {
 	{"PageUp", KeyPageUp},
 	{"PageDown", KeyPageDown},
 	{"Up", KeyUp},
+	{"Ctrl", Ctrl},
+	{"Alt", Alt},
 };
 }
 

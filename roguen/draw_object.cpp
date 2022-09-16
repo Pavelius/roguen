@@ -136,6 +136,11 @@ void object::clear() {
 	*this = def;
 }
 
+void object::disappear(int milliseconds) {
+	auto pr = add(milliseconds);
+	pr->alpha = 0;
+}
+
 static void textcn(const char* string, int dy, unsigned flags) {
 	auto push_caret = caret;
 	caret.x -= textw(string) / 2;

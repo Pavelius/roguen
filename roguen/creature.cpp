@@ -16,6 +16,22 @@ static creature* findalive(indext index) {
 	return 0;
 }
 
+static ability_s attack_ability(wear_s v) {
+	switch(v) {
+	case RangedWeapon: return ToHitRanged;
+	case ThrownWeapon: return ToHitThrown;
+	default: return ToHitMelee;
+	}
+}
+
+static ability_s damage_ability(wear_s v) {
+	switch(v) {
+	case RangedWeapon: return DamageRanged;
+	case ThrownWeapon: return DamageThrown;
+	default: return DamageMelee;
+	}
+}
+
 creature* creature::create(indext index, variant kind) {
 	if(!kind)
 		return 0;
@@ -60,26 +76,38 @@ void creature::interaction(creature& opponent) {
 }
 
 dice creature::getdamage(wear_s v) const {
-	dice result = {1, 2};
-	switch(v) {
-	case MeleeWeapon: result += get(DamageMelee); break;
-	case RangedWeapon: result += get(DamageRanged); break;
-	case ThrownWeapon: result += get(DamageThrown); break;
-	}
+	dice result = wears[v].getdamage();
+	result += get(damage_ability(v));
 	result.correct();
 	return result;
+}
+
+void creature::attack(creature& enemy, wear_s v, int bonus, int damage_multiplier) {
+	bonus += get(attack_ability(v));
+	bonus -= enemy.get(ParryValue);
+	auto result = rand() % 20 + 1;
+	if(result == 1 || (result != 20 && result < (10 - bonus))) {
+		act(getnm("AttackMiss"));
+		return;
+	}
+	auto result_damage = getdamage(v).roll();
+	result_damage = result_damage * damage_multiplier / 100;
+	enemy.damage(result_damage);
 }
 
 void creature::damage(int v) {
 	fixvalue(-v);
 	abilities[Hits] -= v;
-	if(abilities[Hits] <= 0)
+	if(abilities[Hits] <= 0) {
+		act(getnm("ApplyKill"), v);
 		fixdisappear();
+	} else
+		act(getnm("ApplyDamage"), v);
 }
 
 void creature::attackmelee(creature& enemy) {
 	fixaction();
-	enemy.damage(getdamage(MeleeWeapon).roll());
+	attack(enemy, MeleeWeapon, 0, 100);
 }
 
 void creature::movestep(indext ni) {

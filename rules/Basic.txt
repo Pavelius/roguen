@@ -19,13 +19,14 @@ Bartender avatar("130")
 #HotkeyList
 
 AdventureKeys
- elements AttackForward A
- elements Inventory I
- elements MoveUp Up
- elements MoveUpLeft Home
- elements MoveUpRight PageUp
- elements MoveDown Down
- elements MoveDownLeft End
- elements MoveDownRight PageDown
- elements MoveRight Right
- elements MoveLeft Left
+ elements AttackForward "A"
+ elements Inventory "I"
+ elements MoveUp "Up"
+ elements MoveUpLeft "Home"
+ elements MoveUpRight "PageUp"
+ elements MoveDown "Down"
+ elements MoveDownLeft "End"
+ elements MoveDownRight "PageDown"
+ elements MoveRight "Right"
+ elements MoveLeft "Left"
+ elements DebugMessage "Ctrl+D"

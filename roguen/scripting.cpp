@@ -1,3 +1,4 @@
+#include "draw_object.h"
 #include "main.h"
 
 creaturea creatures, enemies, targets;
@@ -64,9 +65,14 @@ static void inventory(int bonus) {
 	answers::header = push_header;
 }
 
+static void debug_message(int bonus) {
+	console.adds("Sprites %1i", bsdata<draw::object>::source.count);
+}
+
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},
+	{"DebugMessage", debug_message},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},

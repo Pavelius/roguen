@@ -40,10 +40,8 @@ void movable::fixmovement() const {
 
 void movable::fixdisappear() const {
 	auto po = draw::findobject(this);
-	if(po) {
-		auto pr = po->add(mst);
-		pr->alpha = 0;
-	}
+	if(po)
+		po->disappear(mst);
 }
 
 void movable::fixappear() const {
@@ -56,6 +54,12 @@ void movable::fixappear() const {
 	po->priority = 11;
 	auto pr = po->add(mst);
 	pr->alpha = 0xFF;
+}
+
+void movable::fixremove() const {
+	auto po = draw::findobject(this);
+	if(po)
+		po->clear();
 }
 
 static color getcolor(int format_color) {

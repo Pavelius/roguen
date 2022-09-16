@@ -32,8 +32,10 @@ struct object : drawable {
 	static object	def;
 	static fnevent	afterpaintall;
 	static fnpaint	afterpaint;
+	static rect		cameralimit;
 	draworder*		add(int milliseconds = 1000, draworder* depend = 0);
 	void			clear();
+	void			disappear(int milliseconds);
 	static void		initialize();
 	void			move(point goal, int speed, int correct = 0);
 	void			paint() const;
