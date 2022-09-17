@@ -71,7 +71,7 @@ void gamei::playminute() {
 			if((i % 5) == 0)
 				update_los();
 			all(&creature::makemove);
-			if(draw::isnext()) {
+			if(!player || draw::isnext()) {
 				need_continue = false;
 				break;
 			}

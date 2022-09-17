@@ -2492,6 +2492,13 @@ void draw::fillwindow() {
 	fore = push_fore;
 }
 
+void draw::filldark() {
+	auto push_fore = fore;
+	fore = fore.mix(colors::black, 128);
+	rectf();
+	fore = push_fore;
+}
+
 void draw::strokeout(fnevent proc, int dx, int dy) {
 	rectpush push;
 	caret.x -= dx; caret.y -= dy;

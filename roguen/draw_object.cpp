@@ -11,6 +11,7 @@ BSDATAC(object, max_object_count)
 BSDATAC(draworder, max_object_count)
 
 fnevent				draw::object::afterpaintall;
+fnevent				draw::object::beforepaintall;
 fnpaint				draw::object::afterpaint;
 static rect			last_screen;
 static unsigned long timestamp;
@@ -240,6 +241,8 @@ void draw::paintobjects() {
 	auto push_clip = clipping;
 	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
 	setclip(last_screen);
+	if(object::beforepaintall)
+		object::beforepaintall();
 	object* source[max_object_count];
 	auto count = getobjects(source, source + sizeof(source) / sizeof(source[0]));
 	sortobjects(source, count);

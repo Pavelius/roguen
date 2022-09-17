@@ -190,6 +190,7 @@ void					dropshadow();
 void					execute(fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
 void					fhexagon();
 void					fillactive();
+void					filldark();
 void					fillform();
 void					fillwindow();
 int						getbpp();

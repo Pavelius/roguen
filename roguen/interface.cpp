@@ -29,6 +29,50 @@ point s2m(point v) {
 	return point{(short)(v.x / tsx), (short)(v.y / tsy)};
 }
 
+static color getcolor(int format_color) {
+	switch(format_color) {
+	case 1: return colors::red;
+	case 2: return colors::green;
+	case 3: return colors::blue;
+	case 4: return colors::yellow;
+	default: return colors::text;
+	}
+}
+
+static point to(point pt, direction_s d, int sx, int sy) {
+	if(d == North || d == NorthEast || d == NorthWest)
+		pt.y -= sy;
+	if(d == South || d == SouthEast || d == SouthWest)
+		pt.y += sy;
+	if(d == East || d == SouthEast || d == NorthEast)
+		pt.x += sx;
+	if(d == West || d == SouthWest || d == NorthWest)
+		pt.x -= sx;
+	return pt;
+}
+
+static void remove_temp_objects(const array& source) {
+	for(auto& e : bsdata<object>()) {
+		if(source.have(e.data))
+			e.clear();
+	}
+}
+
+static void remove_temp_objects() {
+	for(auto& e : bsdata<object>()) {
+		if(!e.data)
+			e.clear();
+	}
+}
+
+static void add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
+	auto po = addobject(pt);
+	po->data = data;
+	po->alpha = 0xFF;
+	po->priority = priority;
+	po->random = random;
+}
+
 void movable::fixmovement() const {
 	auto po = draw::findobject(this);
 	if(!po)
@@ -81,16 +125,6 @@ void movable::fixremove() const {
 		po->clear();
 }
 
-static color getcolor(int format_color) {
-	switch(format_color) {
-	case 1: return colors::red;
-	case 2: return colors::green;
-	case 3: return colors::blue;
-	case 4: return colors::yellow;
-	default: return colors::text;
-	}
-}
-
 void movable::fixvalue(const char* format, int format_color) const {
 	auto pt = getposition(); pt.y -= tsy;
 	auto pa = addobject(pt);
@@ -109,18 +143,6 @@ void movable::fixvalue(int v) const {
 	fixvalue(temp, (v > 0) ? 2 : 1);
 }
 
-point to(point pt, direction_s d, int sx, int sy) {
-	if(d == North || d == NorthEast || d == NorthWest)
-		pt.y -= sy;
-	if(d == South || d == SouthEast || d == SouthWest)
-		pt.y += sy;
-	if(d == East || d == SouthEast || d == NorthEast)
-		pt.x += sx;
-	if(d == West || d == SouthWest || d == NorthWest)
-		pt.x -= sx;
-	return pt;
-}
-
 void movable::fixaction() const {
 	auto po = draw::findobject(this);
 	if(!po)
@@ -131,34 +153,10 @@ void movable::fixaction() const {
 	pr->position = po->position;
 }
 
-static void remove_temp_objects(const array& source) {
-	if(!source)
-		return;
-	for(auto& e : bsdata<object>()) {
-		if(source.have(e.data))
-			e.clear();
-	}
-}
-
-static void remove_temp_objects() {
-	for(auto& e : bsdata<object>()) {
-		if(!e.data)
-			e.clear();
-	}
-}
-
-static void add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
-	auto po = addobject(pt);
-	po->data = data;
-	po->alpha = 0xFF;
-	po->priority = priority;
-	po->random = random;
-}
-
 static void paint_items() {
 	remove_temp_objects(bsdata<itemi>::source);
 	auto p1 = s2m(camera);
-	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx, p1.y + getheight() / tsy};
+	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx + 1, p1.y + getheight() / tsy + 1};
 	for(auto& e : bsdata<itemground>()) {
 		auto pt = i2m(e.index);
 		if(!pt.in(rc))
@@ -167,13 +165,21 @@ static void paint_items() {
 	}
 }
 
+static void link_camera() {
+	if(player) {
+		auto po = findobject(player);
+		if(po)
+			setcamera(po->position);
+	}
+}
+
 static void paint_floor() {
 	remove_temp_objects(bsdata<featurei>::source);
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
-	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth()) / tsx;
-	auto y1 = camera.y / tsy, y2 = (camera.y + getheight()) / tsy;
+	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth()) / tsx + 1;
+	auto y1 = camera.y / tsy, y2 = (camera.y + getheight()) / tsy + 1;
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;
@@ -216,6 +222,37 @@ static int getavatar(int race, bool female, int armor) {
 	return race * 6 + (female ? 1 : 0) + armor * 2;
 }
 
+static void fillbar(int value) {
+	rectpush push;
+	if(value > 0) {
+		auto push_width = width;
+		width = value;
+		rectf();
+		width = push_width - value;
+		caret.x += value;
+	}
+	filldark();
+}
+
+static void bar(int value, int maximum, color m) {
+	if(!maximum)
+		return;
+	auto push_fore = fore;
+	fore = m;
+	fillbar(value * width / maximum);
+	strokeborder();
+	fore = push_fore;
+}
+
+void creature::paintbars() const {
+	const int dy = 4;
+	rectpush push;
+	caret.y -= tsy*3/2; caret.x -= tsx / 4;
+	width = tsx / 2; height = 4;
+	bar(get(Hits), get(HitsMaximum), colors::red); caret.y += dy - 1;
+	bar(get(Mana), get(ManaMaximum), colors::blue);
+}
+
 void creature::paint() const {
 	auto flags = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
@@ -252,6 +289,8 @@ void creature::paint() const {
 		else
 			image(pa, 10 + 25, flags);
 	}
+	if(player == this)
+		paintbars();
 }
 
 void featurei::paint(int r) const {
@@ -316,6 +355,7 @@ static void player_info() {
 static void paint_map_background() {
 	rectpush push;
 	setclipall();
+	link_camera();
 	paint_floor();
 	paint_items();
 }

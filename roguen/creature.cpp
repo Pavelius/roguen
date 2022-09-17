@@ -156,6 +156,7 @@ void creature::movestep(indext ni) {
 void creature::finish() {
 	update();
 	abilities[Hits] = get(HitsMaximum);
+	abilities[Mana] = get(ManaMaximum);
 	fixappear();
 }
 
@@ -306,7 +307,8 @@ void creature::update_basic() {
 
 void creature::update_abilities() {
 	abilities[Speed] += 20;
-	abilities[HitsMaximum] += 10;
+	abilities[HitsMaximum] += abilities[Constitution];
+	abilities[ManaMaximum] += abilities[Intellect];
 }
 
 void creature::update() {
