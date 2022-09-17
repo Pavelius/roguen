@@ -4,16 +4,19 @@
 
 using namespace draw;
 
-const sprite* draw::gres(res id) {
-	auto p = bsdata<resource>::elements + (int)id;
-	if(p->notfound)
+const sprite* resource::get() {
+	if(notfound)
 		return 0;
-	if(!p->data) {
+	if(!data) {
 		char temp[260]; stringbuilder sb(temp);
-		sb.add("art/%1.pma", p->name);
-		p->data = (sprite*)loadb(temp);
+		sb.add("art/%1.pma", name);
+		data = (sprite*)loadb(temp);
 	}
-	if(!p->data)
-		p->notfound = true;
-	return p->data;
+	if(!data)
+		notfound = true;
+	return data;
+}
+
+const sprite* draw::gres(res id) {
+	return bsdata<resource>::elements[(int)id].get();
 }

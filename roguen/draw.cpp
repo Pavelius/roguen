@@ -2200,7 +2200,7 @@ const pma* pma::getheader(const char* id) const {
 	return 0;
 }
 
-int sprite::ganim(int index, int tick) {
+int sprite::ganim(int index, int tick) const {
 	if(!cicles)
 		return 0;
 	cicle* c = gcicle(index);

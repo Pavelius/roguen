@@ -7,6 +7,8 @@ BSDATA(resource) = {
 	{"decals"},
 	{"features"},
 	{"items"},
+	{"attack"},
+	{"splash"},
 	{"pc_body"},
 	{"pc_arms"},
 	{"pc_accessories"},

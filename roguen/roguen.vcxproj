@@ -229,6 +229,7 @@
     <ClInclude Include="nameable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
+    <ClInclude Include="pushvalue.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />

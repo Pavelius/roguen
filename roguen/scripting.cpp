@@ -53,6 +53,7 @@ static void move_down_right(int bonus) {
 static void attack_forward(int bonus) {
 	player->act("%герой успешно атаковал%а.");
 	player->fixaction();
+	player->fixeffect(res::Splash, 0);
 	player->wait();
 }
 

@@ -48,6 +48,7 @@ void				clearobjects();
 void				focusing(point goal);
 object*				findobject(const void* p);
 void				paintobjects();
+unsigned long		getobjectstamp();
 void				setcamera(point v);
 void				slidecamera(point v, int step = 16);
 void				splashscreen(unsigned milliseconds);

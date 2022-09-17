@@ -314,6 +314,9 @@
     <ClInclude Include="areamap.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="pushvalue.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

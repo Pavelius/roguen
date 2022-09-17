@@ -5,6 +5,7 @@
 #include "hotkey.h"
 #include "crt.h"
 #include "list.h"
+#include "pushvalue.h"
 #include "script.h"
 #include "variant.h"
 
@@ -13,6 +14,7 @@
 enum class res {
 	Monsters,
 	Floor, Decals, Features, Items,
+	Attack, Splash,
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
@@ -88,6 +90,7 @@ public:
 	void		fixaction() const;
 	void		fixappear() const;
 	void		fixdisappear() const;
+	void		fixeffect(res id, int frame) const;
 	void		fixmovement() const;
 	void		fixremove() const;
 	void		fixvalue(const char* v, int color = 0) const;

@@ -35,6 +35,10 @@ static void remove_depends(draworder* p) {
 	}
 }
 
+unsigned long draw::getobjectstamp() {
+	return timestamp;
+}
+
 void draworder::clear() {
 	remove_depends(this);
 	memset(this, 0, sizeof(*this));

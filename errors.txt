@@ -1,2 +1,12 @@
-﻿In file `rules/Basic.txt`:
- Line 32: Invalid source array where read identifier `D`
+﻿In file `rules/Advancement.txt`:
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame01.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame02.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame03.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame04.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame05.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame06.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame07.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame08.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame09.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame10.png
+Can't convert file d:/games/adom/gfx/adom/fx/area/fire - explosion/frame11.png

@@ -3,6 +3,7 @@
 struct sprite;
 struct resource {
 	const char*		name;
-	sprite*			data;
+	const sprite*	data;
 	bool			notfound;
+	const sprite*	get();
 };

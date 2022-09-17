@@ -4,16 +4,18 @@
 #include "draw_object.h"
 #include "log.h"
 #include "main.h"
+#include "resource.h"
 
 using namespace draw;
 
 const int tsx = 64;
 const int tsy = 48;
-const int mst = 200;
+const int mst = 260;
 const int window_width = 420;
 const int window_height = 280;
 
 static unsigned long last_tick_message;
+static unsigned long start_stamp;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -42,6 +44,16 @@ void movable::fixdisappear() const {
 	auto po = draw::findobject(this);
 	if(po)
 		po->disappear(mst);
+}
+
+void movable::fixeffect(res id, int frame) const {
+	auto po = draw::addobject(getposition());
+	po->position.y -= tsy / 2;
+	po->random = frame;
+	po->data = bsdata<resource>::elements + (int)id;
+	po->priority = 20;
+	po->alpha = 0xFF;
+	po->add(mst);
 }
 
 void movable::fixappear() const {
@@ -112,11 +124,11 @@ void movable::fixaction() const {
 	pr->position = po->position;
 }
 
-static void remove_temp_objects(array* source) {
+static void remove_temp_objects(const array& source) {
 	if(!source)
 		return;
 	for(auto& e : bsdata<object>()) {
-		if(source->have(e.data))
+		if(source.have(e.data))
 			e.clear();
 	}
 }
@@ -137,7 +149,7 @@ static void add_object(point pt, void* data, unsigned char random, unsigned char
 }
 
 static void paint_items() {
-	remove_temp_objects(bsdata<itemi>::source_ptr);
+	remove_temp_objects(bsdata<itemi>::source);
 	auto p1 = s2m(camera);
 	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx, p1.y + getheight() / tsy};
 	for(auto& e : bsdata<itemground>()) {
@@ -149,7 +161,7 @@ static void paint_items() {
 }
 
 static void paint_floor() {
-	remove_temp_objects(bsdata<featurei>::source_ptr);
+	remove_temp_objects(bsdata<featurei>::source);
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
@@ -247,6 +259,19 @@ void itemi::paint() const {
 	image(pi, this - bsdata<itemi>::elements, 0);
 }
 
+static void paint_resource(resource& e, int cicle, unsigned long current, unsigned long maximum) {
+	if(!maximum)
+		return;
+	auto pi = e.get();
+	auto pc = pi->gcicle(cicle);
+	if(!pc)
+		return;
+	auto tk = current * pc->count / maximum;
+	if(tk >= pc->count)
+		return;
+	image(pi, pc->start + tk, 0);
+}
+
 static void object_afterpaint(const object* p) {
 	if(bsdata<creature>::have(p->data))
 		((creature*)p->data)->paint();
@@ -254,6 +279,8 @@ static void object_afterpaint(const object* p) {
 		((featurei*)p->data)->paint(p->random);
 	else if(bsdata<itemi>::have(p->data))
 		((itemi*)p->data)->paint();
+	else if(bsdata<resource>::have(p->data))
+		paint_resource(*static_cast<resource*>((void*)p->data), p->random, getobjectstamp() - start_stamp, mst);
 }
 
 static void fieldh(const char* format) {
@@ -292,7 +319,7 @@ static void paint_message() {
 	rectpush push;
 	width = window_width;
 	textfs(p);
-	caret.y = metrics::padding*2;
+	caret.y = metrics::padding * 2;
 	caret.x = (getwidth() - width) / 2;
 	auto push_alpha = alpha; alpha = 0xE0;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
@@ -332,14 +359,20 @@ static void presskey(const sliceu<hotkey>& source) {
 	}
 }
 
-void adventure_mode() {
+static void animate_figures() {
+	start_stamp = getobjectstamp();
 	waitall();
 	remove_temp_objects();
+	remove_temp_objects(bsdata<resource>::source);
+}
+
+void adventure_mode() {
 	auto pk = bsdata<hotkeylist>::find("AdventureKeys");
 	if(!pk)
 		return;
+	animate_figures();
 	auto start = player->getwait();
-	while(player && start==player->getwait() && ismodal()) {
+	while(player && start == player->getwait() && ismodal()) {
 		paintstart();
 		paintobjects();
 		presskey(pk->elements);
