@@ -165,20 +165,43 @@ void areamap::clearpath() {
 	pop_counter = stack;
 }
 
-indext areamap::getnext(indext start) {
-	int cost = 0xFFFFFFF;
-	indext result = Blocked;
-	for(auto i = North; i <= NorthWest; i = (direction_s)(i + 1)) {
-		auto i1 = to(start, i);
-		if(i1 == Blocked)
-			continue;
-		auto c1 = movement_rate[i1];
-		if(c1 >= cost)
-			continue;
-		result = i1;
-		cost = c1;
+indext areamap::getnext(indext start, indext goal) {
+	auto n = getpath(start, goal, stack, sizeof(stack) / sizeof(stack[0]));
+	if(!n)
+		return Blocked;
+	return stack[n - 1];
+}
+
+unsigned areamap::getpath(indext start, indext goal, indext* result, unsigned maximum) {
+	auto pb = result;
+	auto pe = result + maximum;
+	auto curr = goal;
+	auto cost = Blocked;
+	if(pb == pe || curr == start)
+		return 0;
+	*pb++ = goal;
+	while(pb < pe) {
+		auto next = curr;
+		for(auto i = North; i <= NorthWest; i = (direction_s)(i + 1)) {
+			auto i1 = to(curr, i);
+			if(i1 == Blocked)
+				continue;
+			if(i1 == start) {
+				next = i1;
+				break;
+			}
+			auto c1 = movement_rate[i1];
+			if(c1 >= cost)
+				continue;
+			next = i1;
+			cost = c1;
+		}
+		if(next == curr || next == start)
+			break;
+		*pb++ = next;
+		curr = next;
 	}
-	return result;
+	return pb - result;
 }
 
 void areamap::blockzero() {
@@ -223,7 +246,7 @@ void areamap::makewavex() {
 			if(i1 == Blocked)
 				continue;
 			auto c1 = movement_rate[i1];
-			if(c1 == Blocked || (c1 < NotCalculatedMovement && c1 < cost))
+			if(c1 == Blocked || c1 <= cost)
 				continue;
 			movement_rate[i1] = cost;
 			addwave(i1);

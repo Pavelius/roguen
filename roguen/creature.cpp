@@ -323,5 +323,9 @@ void creature::moveto(indext ni) {
 	area.blockfeatures();
 	area.makewave(getindex());
 	area.blockzero();
-	movestep(area.getdirection(i2m(getindex()), i2m(ni)));
+	auto i0 = getindex();
+	auto i1 = area.getnext(i0, ni);
+	if(i1 == Blocked)
+		return;
+	movestep(area.getdirection(i2m(i0), i2m(i1)));
 }

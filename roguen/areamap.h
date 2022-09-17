@@ -44,7 +44,8 @@ struct areamap {
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
 	static direction_s getdirection(point s, point d);
-	static indext	getnext(indext start);
+	static indext	getnext(indext start, indext goal);
+	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
 	static int		getrange(indext start, indext target);
 	static indext	getwave();
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
