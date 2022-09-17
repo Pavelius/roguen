@@ -32,6 +32,12 @@ static ability_s damage_ability(wear_s v) {
 	}
 }
 
+void creature::clear() {
+	memset(this, 0, sizeof(*this));
+	if(player == this)
+		player = 0;
+}
+
 creature* creature::create(indext index, variant kind) {
 	if(!kind)
 		return 0;
@@ -39,8 +45,10 @@ creature* creature::create(indext index, variant kind) {
 	p->setindex(index);
 	p->setkind(kind);
 	monsteri* pm = kind;
-	if(pm)
+	if(pm) {
 		copy(p->basic, *pm);
+		p->feats = pm->feats;
+	}
 	p->basic.create();
 	p->finish();
 	p->advance(kind, 0);
@@ -100,7 +108,9 @@ void creature::damage(int v) {
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
 		act(getnm("ApplyKill"), v);
-		fixdisappear();
+		fixeffect("HitVisual");
+		fixremove();
+		clear();
 	} else
 		act(getnm("ApplyDamage"), v);
 }
@@ -195,8 +205,14 @@ void adventure_mode();
 
 void creature::lookcreatures() {
 	creatures.select(getindex(), getlos());
-	enemies = creatures;
-	//enemies.match(*this, Hostile, false);
+	if(is(Ally)) {
+		enemies = creatures;
+		enemies.match(Enemy, true);
+	} else if(is(Enemy)) {
+		enemies = creatures;
+		enemies.match(Ally, true);
+	} else
+		enemies.clear();
 }
 
 void creature::makemove() {
@@ -221,14 +237,17 @@ void creature::makemove() {
 	if(is(Unaware))
 		remove(Unaware);
 	// Get nearest creatures
-	//creature* enemy = 0;
-	//if(enemies) {
-	//	// Combat situation - need eliminate enemy
-	//	enemies.sort(getposition());
-	//	enemy = enemies[0];
-	//}
+	lookcreatures();
+	creature* enemy = 0;
+	if(enemies) {
+		// Combat situation - need eliminate enemy
+		enemies.sort(getindex());
+		enemy = enemies[0];
+	}
 	if(isactive())
 		adventure_mode();
+	else if(enemy)
+		moveto(enemy->getindex());
 	else
 		aimove();
 }
@@ -283,7 +302,6 @@ void creature::update_wears() {
 
 void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
-	feats = basic.feats;
 }
 
 void creature::update_abilities() {
@@ -295,4 +313,13 @@ void creature::update() {
 	update_basic();
 	update_wears();
 	update_abilities();
+}
+
+void creature::moveto(indext ni) {
+	area.clearpath();
+	area.blockwalls();
+	area.blockfeatures();
+	area.makewave(getindex());
+	area.blockzero();
+	movestep(area.getdirection(i2m(getindex()), i2m(ni)));
 }

@@ -14,7 +14,7 @@
 enum class res {
 	Monsters,
 	Floor, Decals, Features, Items,
-	Attack, Splash,
+	Attack, Conditions, Splash,
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
@@ -71,7 +71,6 @@ struct weari : nameable {
 };
 struct statable {
 	char		abilities[Mana + 1];
-	featable	feats;
 	void		create();
 };
 class actable {
@@ -90,7 +89,8 @@ public:
 	void		fixaction() const;
 	void		fixappear() const;
 	void		fixdisappear() const;
-	void		fixeffect(res id, int frame) const;
+	void		fixeffect(const char* id) const;
+	static void	fixeffect(point position, const char* id);
 	void		fixmovement() const;
 	void		fixremove() const;
 	void		fixvalue(const char* v, int color = 0) const;
@@ -163,6 +163,7 @@ struct wearable : movable {
 };
 struct monsteri : nameable, statable {
 	const char*	avatar;
+	featable	feats;
 };
 struct spellable {
 	char		spells[Sleep + 1];
@@ -170,8 +171,10 @@ struct spellable {
 class creature : public wearable, public statable, public spellable {
 	statable	basic;
 	spellf		active_spells;
+	featable	feats;
 	unsigned	experience;
 	int			wait_seconds;
+	void		clear();
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
@@ -210,20 +213,31 @@ public:
 	void		makemove();
 	void		movestep(direction_s i);
 	void		movestep(indext i);
+	void		moveto(indext i);
 	void		paint() const;
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v, int bonus = 0) const;
-	void		setbasic(feat_s v) { basic.feats.set(v); }
+	void		set(feat_s v) { feats.set(v); }
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
+	void		match(feat_s v, bool keep);
 	void		select(indext index, int los);
+	void		sort(indext start);
 };
 struct advancement {
 	variant		type;
 	char		level;
 	variants	elements;
+};
+struct visualeffect {
+	const char*	id;
+	res			resid;
+	int			frame;
+	unsigned char priority = 15;
+	int			dy;
+	void		paint() const;
 };
 class gamei {
 	unsigned	minutes;

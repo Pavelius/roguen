@@ -57,6 +57,9 @@ BSMETA(racei) = {
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
+BSMETA(visualeffect) = {
+	BSREQ(id),
+	{}};
 
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
@@ -68,6 +71,7 @@ BSDATA(varianti) = {
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
 	{"Script", VAR(script), 1},
+	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},
 };
 BSDATAF(varianti)

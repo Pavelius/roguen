@@ -216,6 +216,9 @@
     <ClCompile Include="areamap.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="visualeffect.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

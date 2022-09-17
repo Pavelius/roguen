@@ -5,9 +5,11 @@
 typedef short unsigned indext;
 const int mps = 96;
 const indext Blocked = 0xFFFF;
+const indext NotCalculatedMovement = 0xFFF0;
 
 enum direction_s : unsigned char {
-	North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest
+	North, East, South, West,
+	NorthEast, SouthEast, SouthWest, NorthWest
 };
 enum mapf_s : unsigned char {
 	Explored, Visible, Activated, Searched, Blooded, Iced, Webbed,
@@ -31,16 +33,28 @@ struct areamap {
 	feature_s		features[mps * mps];
 	unsigned char	random[mps * mps];
 	unsigned char	flags[mps * mps];
+	static void		addwave(indext i);
+	void			blockfeatures() const;
+	static void		blockrange(int range);
+	void			blockwalls() const;
+	static void		blockzero();
 	void			clear();
+	static void		clearpath();
 	static point	correct(point v);
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
+	static direction_s getdirection(point s, point d);
+	static indext	getnext(indext start);
+	static int		getrange(indext start, indext target);
+	static indext	getwave();
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
 	void			set(indext i, tile_s v);
 	void			set(indext i, feature_s v) { features[i] = v; }
 	void			set(indext i, tile_s v, short w, short h);
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
+	static void		makewave(indext start_index);
+	static void		makewavex();
 };
 struct framerange {
 	unsigned char	start;

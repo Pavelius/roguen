@@ -198,6 +198,7 @@
     <ClCompile Include="szdup.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="variant.cpp" />
+    <ClCompile Include="visualeffect.cpp" />
     <ClCompile Include="wear.cpp" />
     <ClCompile Include="wearable.cpp" />
     <ClCompile Include="widget.cpp" />

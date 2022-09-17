@@ -46,14 +46,21 @@ void movable::fixdisappear() const {
 		po->disappear(mst);
 }
 
-void movable::fixeffect(res id, int frame) const {
-	auto po = draw::addobject(getposition());
-	po->position.y -= tsy / 2;
-	po->random = frame;
-	po->data = bsdata<resource>::elements + (int)id;
-	po->priority = 20;
+void movable::fixeffect(point position, const char* id) {
+	auto pv = bsdata<visualeffect>::find(id);
+	if(!pv)
+		return;
+	position.y += pv->dy;
+	auto po = draw::addobject(position);
+	po->data = pv;
+	po->priority = pv->priority;
 	po->alpha = 0xFF;
 	po->add(mst);
+}
+
+void movable::fixeffect(const char* id) const {
+	auto pt = getposition(); pt.y -= tsy / 2;
+	fixeffect(pt, id);
 }
 
 void movable::fixappear() const {
@@ -259,14 +266,15 @@ void itemi::paint() const {
 	image(pi, this - bsdata<itemi>::elements, 0);
 }
 
-static void paint_resource(resource& e, int cicle, unsigned long current, unsigned long maximum) {
-	if(!maximum)
+void visualeffect::paint() const {
+	auto pi = gres(resid);
+	if(!pi)
 		return;
-	auto pi = e.get();
-	auto pc = pi->gcicle(cicle);
+	auto pc = pi->gcicle(frame);
 	if(!pc)
 		return;
-	auto tk = current * pc->count / maximum;
+	unsigned long current = getobjectstamp() - start_stamp;
+	auto tk = current * pc->count / mst;
 	if(tk >= pc->count)
 		return;
 	image(pi, pc->start + tk, 0);
@@ -279,8 +287,8 @@ static void object_afterpaint(const object* p) {
 		((featurei*)p->data)->paint(p->random);
 	else if(bsdata<itemi>::have(p->data))
 		((itemi*)p->data)->paint();
-	else if(bsdata<resource>::have(p->data))
-		paint_resource(*static_cast<resource*>((void*)p->data), p->random, getobjectstamp() - start_stamp, mst);
+	else if(bsdata<visualeffect>::have(p->data))
+		((visualeffect*)p->data)->paint();
 }
 
 static void fieldh(const char* format) {
@@ -363,7 +371,7 @@ static void animate_figures() {
 	start_stamp = getobjectstamp();
 	waitall();
 	remove_temp_objects();
-	remove_temp_objects(bsdata<resource>::source);
+	remove_temp_objects(bsdata<visualeffect>::source);
 }
 
 void adventure_mode() {
