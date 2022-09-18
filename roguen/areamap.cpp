@@ -292,3 +292,10 @@ int areamap::getindex(indext i, tile_s tile) const {
 	}
 	return m;
 }
+
+bool areamap::iswall(indext i, direction_s d) const {
+	auto i1 = to(i, d);
+	if(i1 == Blocked)
+		return false;
+	return bsdata<tilei>::elements[tiles[i1]].iswall();
+}

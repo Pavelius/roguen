@@ -30,3 +30,4 @@ AdventureKeys
  elements MoveRight "Right"
  elements MoveLeft "Left"
  elements DebugMessage "Ctrl+D"
+ elements OpenNearestDoor "O"

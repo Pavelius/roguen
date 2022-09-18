@@ -167,6 +167,7 @@
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="hotkey.cpp" />
+    <ClCompile Include="indexa.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
     <ClCompile Include="io_stream.cpp" />

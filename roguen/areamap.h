@@ -22,10 +22,10 @@ enum feature_s : unsigned char {
 	NoFeature,
 	Tree, FootMud, FootHill, Grave,
 	HiveHole, Hive, Hole, Plant, Herbs,
-	Trap,
+	Trap, Door,
 };
 enum areaf : unsigned char {
-	Impassable,
+	Impassable, BetweenWalls,
 };
 inline indext m2i(point v) { return v.x + v.y * mps; }
 inline indext m2i(int x, int y) { return x + y * mps; }
@@ -44,6 +44,7 @@ struct areamap {
 	static void		clearpath();
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
+	bool			iswall(indext i, direction_s d) const;
 	static direction_s getdirection(point s, point d);
 	int				getindex(indext i, tile_s e) const;
 	static indext	getnext(indext start, indext goal);

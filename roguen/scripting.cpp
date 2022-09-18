@@ -70,6 +70,17 @@ static void debug_message(int bonus) {
 	console.adds("Sprites %1i", bsdata<draw::object>::source.count);
 }
 
+static void open_nearest_door(int bonus) {
+	indexa source;
+	source.select(i2m(player->getindex()), 2);
+	for(auto i : source) {
+		if(!area.is(i, Activated))
+			area.set(i, Activated);
+		else
+			area.remove(i, Activated);
+	}
+}
+
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},
@@ -83,5 +94,6 @@ BSDATA(script) = {
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
 	{"Inventory", inventory},
+	{"OpenNearestDoor", open_nearest_door},
 };
 BSDATAF(script)

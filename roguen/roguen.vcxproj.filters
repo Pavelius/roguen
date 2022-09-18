@@ -219,6 +219,9 @@
     <ClCompile Include="visualeffect.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
+    <ClCompile Include="indexa.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

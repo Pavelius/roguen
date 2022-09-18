@@ -69,6 +69,9 @@ struct feati : nameable {
 };
 struct weari : nameable {
 };
+struct indexa : adat<indext> {
+	void		select(point pt, int range);
+};
 struct statable {
 	char		abilities[Mana + 1];
 	void		create();

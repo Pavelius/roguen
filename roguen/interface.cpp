@@ -258,11 +258,11 @@ static void paint_wall(point p0, indext i, unsigned char r, const tilei& ei) {
 	}
 	auto pu = up(p0);
 	if(!wn) {
-		add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 0, 16);
+		add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 0, 12);
 		if(!we)
-			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 7, 17);
+			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 7, 13);
 		if(!ww)
-			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 8, 17);
+			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 8, 13);
 		add_object(pu, bsdata<resource>::elements + (int)res::Shadows, bw + 1, 6);
 		ss = true;
 	}
@@ -325,9 +325,22 @@ static void paint_floor() {
 					if(ei.features)
 						image(pf, ei.features.get(r), 0);
 				}
-				if(area.features[i]) {
-					auto& ei = bsdata<featurei>::elements[area.features[i]];
-					add_object(pt, &ei, r, ei.priority);
+				auto f = area.features[i];
+				int a;
+				if(f) {
+					auto& ei = bsdata<featurei>::elements[f];
+					switch(f) {
+					case Door:
+						a = area.is(i, Activated) ? 1 : 0;
+						if(area.iswall(i, East) && area.iswall(i, West))
+							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
+						else if(area.iswall(i, North) && area.iswall(i, South))
+							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
+						break;
+					default:
+						add_object(pt, &ei, r, ei.priority);
+						break;
+					}
 				}
 			}
 		}

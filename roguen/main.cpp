@@ -50,6 +50,18 @@ static void random(int x1, int y1, int x2, tile_s tile) {
 	area.set(i, tile);
 }
 
+static void random(int x1, int y1, int x2, feature_s tile) {
+	auto x = xrand(x1, x2);
+	auto i = m2i(x, y1);
+	area.set(i, tile);
+}
+
+static void setdoor(indext i) {
+	area.set(i, Grass);
+	area.set(i, Door);
+	//area.set(i, Activated);
+}
+
 static void place_building(const rect& rc, tile_s wall) {
 	auto& ei = bsdata<tilei>::elements[wall];
 	if(!ei.iswall())
@@ -59,7 +71,8 @@ static void place_building(const rect& rc, tile_s wall) {
 	vert(rc.x1, rc.y1, rc.y2, wall);
 	horz(rc.x1, rc.y2, rc.x2, wall);
 	vert(rc.x2, rc.y1, rc.y2, wall);
-	random(rc.x1 + 1, rc.y2, rc.x2 - 1, WoodenFloor);
+	setdoor(m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y2));
+	setdoor(m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1)));
 }
 
 static void main_start() {
@@ -80,8 +93,6 @@ static void main_start() {
 	area.set(m2i({6, 5}), Blooded);
 	area.set(m2i({6, 6}), Blooded);
 	area.set(m2i({2, 4}), Tree);
-	area.set(m2i({5, 5}), Tree);
-	area.set(m2i({5, 7}), Tree);
 	area.set(m2i({6, 6}), FootHill);
 	area.set(m2i({6, 3}), FootMud);
 	area.set(m2i({4, 7}), Grave);
