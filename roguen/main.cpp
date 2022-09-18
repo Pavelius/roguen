@@ -57,7 +57,7 @@ static void random(int x1, int y1, int x2, feature_s tile) {
 }
 
 static void setdoor(indext i) {
-	area.set(i, Grass);
+	area.set(i, WoodenFloor);
 	area.set(i, Door);
 	//area.set(i, Activated);
 }
@@ -83,7 +83,7 @@ static void main_start() {
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
-	place_building({7, 2, 12, 7}, WallDungeon);
+	place_building({7, 2, 12, 7}, WallBuilding);
 	area.set(m2i({15, 1}), WoodenFloor);
 	area.set(m2i({0, 1}), Webbed);
 	area.set(m2i({4, 4}), Webbed);

@@ -25,7 +25,7 @@ enum feature_s : unsigned char {
 	Trap, Door,
 };
 enum areaf : unsigned char {
-	Impassable, BetweenWalls,
+	Impassable, ImpassableNonActive, AllowActivate, BetweenWalls,
 };
 inline indext m2i(point v) { return v.x + v.y * mps; }
 inline indext m2i(int x, int y) { return x + y * mps; }

@@ -139,8 +139,14 @@ bool areamap::isfree(indext i) const {
 		return false;
 	if(bsdata<tilei>::elements[tiles[i]].iswall())
 		return false;
-	if(features[i] && bsdata<featurei>::elements[features[i]].is(Impassable))
-		return false;
+	auto f = features[i];
+	if(f) {
+		auto& ei = bsdata<featurei>::elements[f];
+		if(ei.is(Impassable))
+			return false;
+		if(ei.is(ImpassableNonActive) && !is(i, Activated))
+			return false;
+	}
 	return true;
 }
 

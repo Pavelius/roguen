@@ -326,21 +326,16 @@ static void paint_floor() {
 						image(pf, ei.features.get(r), 0);
 				}
 				auto f = area.features[i];
-				int a;
 				if(f) {
 					auto& ei = bsdata<featurei>::elements[f];
-					switch(f) {
-					case Door:
-						a = area.is(i, Activated) ? 1 : 0;
+					if(ei.is(BetweenWalls)) {
+						auto a = area.is(i, Activated) ? 1 : 0;
 						if(area.iswall(i, East) && area.iswall(i, West))
 							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
 							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
-						break;
-					default:
+					} else
 						add_object(pt, &ei, r, ei.priority);
-						break;
-					}
 				}
 			}
 		}
