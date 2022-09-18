@@ -44,6 +44,12 @@ static void vert(int x1, int y1, int y2, tile_s tile) {
 	}
 }
 
+static void random(int x1, int y1, int x2, tile_s tile) {
+	auto x = xrand(x1, x2);
+	auto i = m2i(x, y1);
+	area.set(i, tile);
+}
+
 static void place_building(const rect& rc, tile_s wall) {
 	auto& ei = bsdata<tilei>::elements[wall];
 	if(!ei.iswall())
@@ -53,17 +59,18 @@ static void place_building(const rect& rc, tile_s wall) {
 	vert(rc.x1, rc.y1, rc.y2, wall);
 	horz(rc.x1, rc.y2, rc.x2, wall);
 	vert(rc.x2, rc.y1, rc.y2, wall);
+	random(rc.x1 + 1, rc.y2, rc.x2 - 1, WoodenFloor);
 }
 
 static void main_start() {
 	area.clear();
 	area.set({0, 0, mps, mps}, Grass);
-	player = creature::create(m2i({5, 5}), "Troll");
+	player = creature::create(m2i({5, 5}), "Human");
 	player->set(Ally);
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
-	place_building({7, 2, 12, 7}, WallBuilding);
+	place_building({7, 2, 12, 7}, WallDungeon);
 	area.set(m2i({15, 1}), WoodenFloor);
 	area.set(m2i({0, 1}), Webbed);
 	area.set(m2i({4, 4}), Webbed);
