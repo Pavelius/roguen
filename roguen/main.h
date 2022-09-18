@@ -13,7 +13,7 @@
 
 enum class res {
 	Monsters,
-	Floor, Decals, Features, Items,
+	Borders, Floor, Walls, Decals, Features, Shadows, Items,
 	Attack, Conditions, Splash,
 	PCBody, PCArms, PCAccessories,
 };

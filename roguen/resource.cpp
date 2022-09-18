@@ -3,9 +3,12 @@
 
 BSDATA(resource) = {
 	{"monsters"},
+	{"borders"},
 	{"floor"},
+	{"walls"},
 	{"decals"},
 	{"features"},
+	{"shadows"},
 	{"items"},
 	{"attack"},
 	{"conditions"},

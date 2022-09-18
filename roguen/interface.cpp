@@ -30,6 +30,22 @@ point s2m(point v) {
 	return point{(short)(v.x / tsx), (short)(v.y / tsy)};
 }
 
+static point right(point v) {
+	return {(short)(v.x - tsx), v.y};
+}
+
+static point left(point v) {
+	return {(short)(v.x + tsx), v.y};
+}
+
+static point up(point v) {
+	return {v.x, (short)(v.y - tsy)};
+}
+
+static point down(point v) {
+	return {v.x, (short)(v.y + tsy)};
+}
+
 static color getcolor(int format_color) {
 	switch(format_color) {
 	case 1: return colors::red;
@@ -69,9 +85,9 @@ static void remove_temp_objects() {
 static void add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
 	auto po = addobject(pt);
 	po->data = data;
-	po->alpha = 0xFF;
 	po->priority = priority;
 	po->random = random;
+	po->alpha = 0xFF;
 }
 
 void movable::fixmovement() const {
@@ -174,13 +190,106 @@ static void link_camera() {
 	}
 }
 
+static void paint_overlapped(indext i, tile_s tile) {
+	for(auto& ei : bsdata<tilei>()) {
+		if(ei.borders == -1)
+			continue;
+		auto t0 = (tile_s)(&ei - bsdata<tilei>::elements);
+		if(tile == t0)
+			return;
+		auto f = area.getindex(i, t0);
+		if(!f)
+			continue;
+		auto pi = gres(res::Borders);
+		image(pi, ei.borders * 15 + (f - 1), 0);
+	}
+}
+
+static bool iswall(indext i, direction_s d) {
+	auto i1 = to(i, d);
+	if(i1 == Blocked)
+		return true;
+	return bsdata<tilei>::elements[area.tiles[i1]].iswall();
+}
+
+static void fillwalls() {
+	rectpush push;
+	pushvalue push_fore(fore);
+	caret.x -= tsx / 2; caret.y -= tsy / 2;
+	width = tsx; height = tsy;
+	fore = color(39, 45, 47);
+	rectf();
+}
+
+static void paint_wall(point p0, indext i, unsigned char r, const tilei& ei) {
+	auto pi = gres(res::Walls);
+	auto bs = ei.walls.start + ei.walls.count;
+	auto bw = 0;
+	auto wn = iswall(i, North);
+	auto ws = iswall(i, South);
+	auto we = iswall(i, East);
+	auto ww = iswall(i, West);
+	auto ss = false;
+	auto sn = false;
+	if(ws) {
+		fillwalls();
+		if(!ww) {
+			if(iswall(i, SouthWest))
+				image(pi, bs + 5, 0);
+			else
+				image(pi, bs + 1, 0);
+		} else if(!iswall(i, SouthWest))
+			image(pi, bs + 3, 0);
+		if(!we) {
+			if(iswall(i, SouthEast))
+				image(pi, bs + 6, 0);
+			else
+				image(pi, bs + 2, 0);
+		} else if(!iswall(i, SouthEast))
+			image(pi, bs + 4, 0);
+	} else {
+		image(pi, ei.walls.get(r), 0);
+		if(!ww)
+			image(pi, bs + 10, 0);
+		if(!we)
+			image(pi, bs + 9, 0);
+		add_object(down(p0), bsdata<resource>::elements + (int)res::Shadows, bw + 0, 6);
+		sn = true;
+	}
+	auto pu = up(p0);
+	if(!wn) {
+		add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 0, 12);
+		if(!we)
+			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 7, 13);
+		if(!ww)
+			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 8, 13);
+		add_object(pu, bsdata<resource>::elements + (int)res::Shadows, bw + 1, 6);
+		ss = true;
+	}
+	if(!ww) {
+		add_object(right(p0), bsdata<resource>::elements + (int)res::Shadows, bw + 2, 6);
+		if(ss)
+			add_object(right(pu), bsdata<resource>::elements + (int)res::Shadows, bw + 6, 6);
+		if(sn)
+			add_object(right(down(p0)), bsdata<resource>::elements + (int)res::Shadows, bw + 4, 6);
+	}
+	if(!we) {
+		add_object(left(p0), bsdata<resource>::elements + (int)res::Shadows, bw + 3, 6);
+		if(ss)
+			add_object(left(pu), bsdata<resource>::elements + (int)res::Shadows, bw + 7, 6);
+		if(sn)
+			add_object(left(down(p0)), bsdata<resource>::elements + (int)res::Shadows, bw + 5, 6);
+	}
+}
+
 static void paint_floor() {
 	remove_temp_objects(bsdata<featurei>::source);
+	remove_temp_objects(bsdata<resource>::source);
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
-	auto x1 = (camera.x + tsx / 2) / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
-	auto y1 = (camera.y + tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy;
+	auto x1 = (camera.x - tsx / 2) / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
+	auto y1 = (camera.y - tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy;
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;
@@ -195,25 +304,31 @@ static void paint_floor() {
 			auto pt = m2s({x, y});
 			setcaret(pt);
 			auto r = area.random[i];
-			auto& ei = bsdata<tilei>::elements[area.tiles[i]];
-			if(ei.floor) {
-				image(pi, ei.floor.start + (r % ei.floor.count), 0);
-				if(ei.decals) {
-					auto fw = r >> 3;
-					if(fw < ei.decals.count)
-						image(pd, fw, 0);
+			auto t = area.tiles[i];
+			auto& ei = bsdata<tilei>::elements[t];
+			if(ei.iswall())
+				paint_wall(pt, i, r, ei);
+			else {
+				if(ei.floor) {
+					image(pi, ei.floor.start + (r % ei.floor.count), 0);
+					paint_overlapped(i, t);
+					if(ei.decals) {
+						auto fw = r >> 3;
+						if(fw < ei.decals.count)
+							image(pd, fw, 0);
+					}
 				}
-			}
-			for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {
-				if(!area.is(i, f))
-					continue;
-				auto& ei = bsdata<areafi>::elements[f];
-				if(ei.features)
-					image(pf, ei.features.get(r), 0);
-			}
-			if(area.features[i]) {
-				auto& ei = bsdata<featurei>::elements[area.features[i]];
-				add_object(pt, &ei, r, ei.priority);
+				for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {
+					if(!area.is(i, f))
+						continue;
+					auto& ei = bsdata<areafi>::elements[f];
+					if(ei.features)
+						image(pf, ei.features.get(r), 0);
+				}
+				if(area.features[i]) {
+					auto& ei = bsdata<featurei>::elements[area.features[i]];
+					add_object(pt, &ei, r, ei.priority);
+				}
 			}
 		}
 	}
@@ -329,6 +444,8 @@ static void object_afterpaint(const object* p) {
 		((itemi*)p->data)->paint();
 	else if(bsdata<visualeffect>::have(p->data))
 		((visualeffect*)p->data)->paint();
+	else if(bsdata<resource>::have(p->data))
+		image(((resource*)p->data)->get(), p->random, 0);
 }
 
 static void fieldh(const char* format) {
@@ -407,9 +524,7 @@ static void paint_message() {
 	textfs(p);
 	caret.y = metrics::padding * 2;
 	caret.x = (getwidth() - width) / 2;
-	auto push_alpha = alpha; alpha = 0xE0;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
-	alpha = push_alpha;
 	strokeout(strokeborder, metrics::padding, metrics::padding);
 	textf(p);
 }

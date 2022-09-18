@@ -108,17 +108,13 @@ void areamap::set(indext i, tile_s v) {
 	tiles[i] = v;
 }
 
-void areamap::set(indext i, tile_s v, short w, short h) {
-	if(i == Blocked)
-		return;
-	auto p1 = i2m(i);
-	auto p2 = p1 + point{w, h};
-	for(auto y = p1.y; y < p2.y; y++) {
+void areamap::set(rect rc, tile_s v) {
+	for(short y = rc.y1; y <= rc.y2; y++) {
 		if(y < 0)
 			continue;
 		if(y >= mps)
 			break;
-		for(auto x = p1.x; x < p2.x; x++) {
+		for(short x = rc.x1; x <= rc.x2; x++) {
 			if(x < 0)
 				continue;
 			if(x >= mps)
@@ -140,6 +136,8 @@ void areamap::removechance(mapf_s v, int chance) {
 
 bool areamap::isfree(indext i) const {
 	if(i == Blocked)
+		return false;
+	if(bsdata<tilei>::elements[tiles[i]].iswall())
 		return false;
 	if(features[i] && bsdata<featurei>::elements[features[i]].is(Impassable))
 		return false;
@@ -281,18 +279,16 @@ direction_s	areamap::getdirection(point s, point d) {
 	return orientations_7b7[(ay + (osize / 2)) * osize + ax + (osize / 2)];
 }
 
-rect areamap::getrect(indext i, int w, int h) {
-	rect r = {};
-	if(i == Blocked)
-		return r;
-	auto p = i2m(i);
-	r.x1 = p.x;
-	r.y1 = p.y;
-	r.x2 = r.x1 + w;
-	r.y2 = r.x2 + h;
-	if(r.x2 >= mps)
-		r.x2 = mps - 1;
-	if(r.y2 >= mps)
-		r.y2 = mps - 1;
-	return r;
+int areamap::getindex(indext i, tile_s tile) const {
+	static direction_s dir[] = {North, South, West, East};
+	auto m = 0;
+	auto f = 1;
+	for(auto d : dir) {
+		auto i1 = to(i, d);
+		auto t1 = tiles[i1];
+		if((i1 != Blocked) && ((t1 == tile) || bsdata<tilei>::elements[t1].tile==tile))
+			m |= f;
+		f = f << 1;
+	}
+	return m;
 }

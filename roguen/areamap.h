@@ -15,7 +15,8 @@ enum mapf_s : unsigned char {
 	Explored, Visible, Activated, Searched, Blooded, Iced, Webbed,
 };
 enum tile_s : unsigned char {
-	NoTile, WoodenFloor, Grass, GrassCorupted, Lava, Water
+	NoTile, WoodenFloor, Cave, Grass, GrassCorupted, Lava, Water,
+	WallCave,
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -43,15 +44,15 @@ struct areamap {
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
 	static direction_s getdirection(point s, point d);
+	int				getindex(indext i, tile_s e) const;
 	static indext	getnext(indext start, indext goal);
 	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
 	static int		getrange(indext start, indext target);
-	static rect		getrect(indext i, int w, int h);
 	static indext	getwave();
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
 	void			set(indext i, tile_s v);
 	void			set(indext i, feature_s v) { features[i] = v; }
-	void			set(indext i, tile_s v, short w, short h);
+	void			set(rect rc, tile_s v);
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
 	static void		makewave(indext start_index);
@@ -71,6 +72,10 @@ struct tilei {
 	const char*		id;
 	framerange		floor;
 	framerange		decals;
+	int				borders = -1;
+	tile_s			tile;
+	framerange		walls;
+	bool			iswall() const { return tile != NoTile; }
 };
 struct featurei {
 	const char*		id;
