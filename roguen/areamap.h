@@ -3,7 +3,7 @@
 #pragma once
 
 typedef short unsigned indext;
-const int mps = 96;
+const int mps = 16;
 const indext Blocked = 0xFFFF;
 const indext NotCalculatedMovement = 0xFFF0;
 
@@ -40,13 +40,13 @@ struct areamap {
 	static void		blockzero();
 	void			clear();
 	static void		clearpath();
-	static point	correct(point v);
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
 	static direction_s getdirection(point s, point d);
 	static indext	getnext(indext start, indext goal);
 	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
 	static int		getrange(indext start, indext target);
+	static rect		getrect(indext i, int w, int h);
 	static indext	getwave();
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
 	void			set(indext i, tile_s v);

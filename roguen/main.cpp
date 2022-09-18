@@ -25,8 +25,11 @@ static void main_start() {
 	area.set(0, Grass, mps, mps);
 	player = creature::create(m2i({5, 5}), "Troll");
 	player->set(Ally);
-	auto p2 = creature::create(m2i({3, 3}), "Goblin");
-	p2->set(Enemy);
+	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
+	//p2->set(Enemy);
+	area.set(m2i({1, 1}), WoodenFloor);
+	area.set(m2i({15, 1}), WoodenFloor);
+	area.set(m2i({0, 1}), Webbed);
 	area.set(m2i({4, 4}), Webbed);
 	area.set(m2i({4, 4}), Iced);
 	area.set(m2i({4, 5}), Iced);

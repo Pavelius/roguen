@@ -14,6 +14,7 @@ const int mst = 260;
 const int window_width = 420;
 const int window_height = 280;
 
+static const void* focus_pressed;
 static unsigned long last_tick_message;
 static unsigned long start_stamp;
 
@@ -178,8 +179,8 @@ static void paint_floor() {
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
-	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth()) / tsx + 1;
-	auto y1 = camera.y / tsy, y2 = (camera.y + getheight()) / tsy + 1;
+	auto x1 = (camera.x + tsx / 2) / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
+	auto y1 = (camera.y + tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy;
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;
@@ -247,7 +248,7 @@ static void bar(int value, int maximum, color m) {
 void creature::paintbars() const {
 	const int dy = 4;
 	rectpush push;
-	caret.y -= tsy*3/2; caret.x -= tsx / 4;
+	caret.y -= tsy * 3 / 2; caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
 	bar(get(Hits), get(HitsMaximum), colors::red); caret.y += dy - 1;
 	bar(get(Mana), get(ManaMaximum), colors::blue);
@@ -343,6 +344,43 @@ static void field(const char* id, int width, const char* format) {
 	text(format);
 	caret = push_caret;
 	caret.y += texth();
+}
+
+static void fillbuttonpress() {
+	auto push_fore = fore;
+	fore = colors::button.mix(colors::form, 96);
+	rectf();
+	fore = push_fore;
+}
+
+static bool button(const char* format, unsigned key) {
+	static point pressed_caret;
+	auto run = false;
+	if(hot.key == key)
+		pressed_caret = caret;
+	else if(hot.key == InputKeyUp && pressed_caret == caret) {
+		run = true;
+		pressed_caret.clear();
+	}
+	auto pressed = (pressed_caret == caret);
+	strokeout(pressed ? fillbuttonpress : fillbutton, 1, 1);
+	strokeout(strokeborder, 1, 1);
+	texta(format, AlignCenter);
+	return run;
+}
+
+static bool button(unsigned key, int format_width) {
+	if(!key)
+		return false;
+	char temp[2] = {(char)key, 0};
+	auto push_width = width;
+	auto push_height = height;
+	width = format_width; height = texth();
+	auto result = button(temp, key);
+	caret.x += width + 2 + 4;
+	width = push_width - width - 2 - 4;
+	height = push_height;
+	return result;
 }
 
 static void player_info() {
@@ -465,12 +503,27 @@ static unsigned answer_key(int index) {
 }
 
 static void answer_paint_cell(int index, const void* value, const char* format, fnevent proc) {
+	auto push_caret = caret;
 	unsigned key = value ? answer_key(index) : KeyEscape;
-	auto need_execute = (key == hot.key);
+	auto need_execute = button(key, 24);;
 	text(format);
-	caret.y += texth();
 	if(need_execute)
 		execute(proc, (long)value);
+	caret = push_caret;
+	caret.y += texth() + 4 + 2;
+}
+
+static void correctcamera() {
+	if(camera.x < -tsx / 2)
+		camera.x = -tsx / 2;
+	if(camera.y < -tsy / 2)
+		camera.y = -tsy / 2;
+	auto w = getwidth();
+	auto h = getheight();
+	if(camera.x > tsx * mps - w - tsx / 2)
+		camera.x = tsx * mps - w - tsx / 2;
+	if(camera.y > tsy * mps - h - tsy / 2)
+		camera.y = tsy * mps - h - tsy / 2;
 }
 
 int start_application(fnevent proc, fnevent initializing) {
@@ -490,6 +543,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	//pfinish = paint_console;
 	object::afterpaint = object_afterpaint;
 	object::afterpaintall = paint_console;
+	object::correctcamera = correctcamera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;
 	draw::width = 640;

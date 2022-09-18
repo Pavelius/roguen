@@ -102,18 +102,6 @@ indext to(indext i, direction_s v) {
 	}
 }
 
-point areamap::correct(point v) {
-	if(v.x < 0)
-		v.x = 0;
-	if(v.y < 0)
-		v.y = 0;
-	if(v.x >= mps)
-		v.x = mps - 1;
-	if(v.y >= mps)
-		v.y = mps - 1;
-	return v;
-}
-
 void areamap::set(indext i, tile_s v) {
 	if(i == Blocked)
 		return;
@@ -128,12 +116,12 @@ void areamap::set(indext i, tile_s v, short w, short h) {
 	for(auto y = p1.y; y < p2.y; y++) {
 		if(y < 0)
 			continue;
-		if(y >= mps - 1)
+		if(y >= mps)
 			break;
 		for(auto x = p1.x; x < p2.x; x++) {
 			if(x < 0)
 				continue;
-			if(x >= mps - 1)
+			if(x >= mps)
 				break;
 			set(m2i({x, y}), v);
 		}
@@ -291,4 +279,20 @@ direction_s	areamap::getdirection(point s, point d) {
 	int ax = dx / st;
 	int ay = dy / st;
 	return orientations_7b7[(ay + (osize / 2)) * osize + ax + (osize / 2)];
+}
+
+rect areamap::getrect(indext i, int w, int h) {
+	rect r = {};
+	if(i == Blocked)
+		return r;
+	auto p = i2m(i);
+	r.x1 = p.x;
+	r.y1 = p.y;
+	r.x2 = r.x1 + w;
+	r.y2 = r.x2 + h;
+	if(r.x2 >= mps)
+		r.x2 = mps - 1;
+	if(r.y2 >= mps)
+		r.y2 = mps - 1;
+	return r;
 }

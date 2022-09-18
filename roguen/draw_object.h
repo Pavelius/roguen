@@ -30,7 +30,7 @@ struct object : drawable {
 	unsigned char	priority, random;
 	constexpr explicit operator bool() const { return data != 0 || string != 0; }
 	static object	def;
-	static fnevent	beforepaintall, afterpaintall;
+	static fnevent	beforepaintall, afterpaintall, correctcamera;
 	static fnpaint	afterpaint;
 	draworder*		add(int milliseconds = 1000, draworder* depend = 0);
 	void			clear();

@@ -12,6 +12,7 @@ BSDATAC(draworder, max_object_count)
 
 fnevent				draw::object::afterpaintall;
 fnevent				draw::object::beforepaintall;
+fnevent				draw::object::correctcamera;
 fnpaint				draw::object::afterpaint;
 static rect			last_screen;
 static unsigned long timestamp;
@@ -338,7 +339,7 @@ void object::move(point goal, int speed, int correct) {
 	moving(position, goal, speed, correct);
 }
 
-static point getcameraorigin(point v) {
+void draw::setcamera(point v) {
 	auto w = last_screen.width();
 	if(!w)
 		w = getwidth();
@@ -347,11 +348,9 @@ static point getcameraorigin(point v) {
 		h = getheight();
 	v.x -= w / 2;
 	v.y -= h / 2;
-	return v;
-}
-
-void draw::setcamera(point v) {
-	camera = getcameraorigin(v);
+	camera = v;
+	if(object::correctcamera)
+		object::correctcamera();
 }
 
 bool draw::cameravisible(point goal, int border) {
@@ -361,7 +360,10 @@ bool draw::cameravisible(point goal, int border) {
 }
 
 void draw::slidecamera(point goal, int step) {
-	goal = getcameraorigin(goal);
+	auto push_camera = camera;
+	setcamera(goal);
+	goal = camera;
+	camera = push_camera;
 	auto start = camera;
 	auto maxds = distance(start, goal);
 	if(!maxds)

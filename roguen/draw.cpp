@@ -2485,6 +2485,13 @@ void draw::fillform() {
 	fore = push_fore;
 }
 
+void draw::fillbutton() {
+	auto push_fore = fore;
+	fore = colors::button;
+	rectf();
+	fore = push_fore;
+}
+
 void draw::fillwindow() {
 	auto push_fore = fore;
 	fore = colors::window;
