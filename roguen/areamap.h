@@ -16,7 +16,7 @@ enum mapf_s : unsigned char {
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, Grass, GrassCorupted, Lava, Water,
-	WallCave,
+	WallCave, WallBuilding,
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -28,6 +28,7 @@ enum areaf : unsigned char {
 	Impassable,
 };
 inline indext m2i(point v) { return v.x + v.y * mps; }
+inline indext m2i(int x, int y) { return x + y * mps; }
 inline point i2m(indext v) { return point{(short)(v % mps), (short)(v / mps)}; }
 struct areamap {
 	tile_s			tiles[mps * mps];

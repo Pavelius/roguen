@@ -20,6 +20,41 @@ static void initializating() {
 #endif
 }
 
+static void horz(int x1, int y1, int x2, tile_s tile) {
+	while(x1 <= x2) {
+		if(x1 < 0)
+			continue;
+		if(x1 >= mps)
+			continue;
+		auto i = m2i(x1, y1);
+		area.tiles[i] = tile;
+		x1++;
+	}
+}
+
+static void vert(int x1, int y1, int y2, tile_s tile) {
+	while(y1 <= y2) {
+		if(y1 < 0)
+			continue;
+		if(y1 >= mps)
+			continue;
+		auto i = m2i(x1, y1);
+		area.tiles[i] = tile;
+		y1++;
+	}
+}
+
+static void place_building(const rect& rc, tile_s wall) {
+	auto& ei = bsdata<tilei>::elements[wall];
+	if(!ei.iswall())
+		return;
+	area.set(rc, ei.tile);
+	horz(rc.x1, rc.y1, rc.x2, wall);
+	vert(rc.x1, rc.y1, rc.y2, wall);
+	horz(rc.x1, rc.y2, rc.x2, wall);
+	vert(rc.x2, rc.y1, rc.y2, wall);
+}
+
 static void main_start() {
 	area.clear();
 	area.set({0, 0, mps, mps}, Grass);
@@ -28,22 +63,7 @@ static void main_start() {
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
-	area.set({7, 2, 12, 7}, Cave);
-	area.set(m2i({10, 7}), WallCave);
-	area.set(m2i({9, 7}), WallCave);
-	area.set(m2i({7, 2}), WallCave);
-	area.set(m2i({7, 3}), WallCave);
-	area.set(m2i({7, 4}), WallCave);
-	area.set(m2i({8, 2}), WallCave);
-	area.set(m2i({9, 2}), WallCave);
-	area.set(m2i({10, 2}), WallCave);
-	area.set(m2i({11, 2}), WallCave);
-	area.set(m2i({12, 2}), WallCave);
-	area.set(m2i({12, 3}), WallCave);
-	area.set(m2i({12, 4}), WallCave);
-	area.set(m2i({12, 5}), WallCave);
-	area.set(m2i({12, 6}), WallCave);
-	area.set(m2i({12, 7}), WallCave);
+	place_building({7, 2, 12, 7}, WallBuilding);
 	area.set(m2i({15, 1}), WoodenFloor);
 	area.set(m2i({0, 1}), Webbed);
 	area.set(m2i({4, 4}), Webbed);

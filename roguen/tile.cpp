@@ -10,5 +10,6 @@ BSDATA(tilei) = {
 	{"Lava"},
 	{"Water"},
 	{"WallCave", {}, {}, -1, Cave, {0, 2}},
+	{"WallBuilding", {}, {}, -1, Grass, {13, 1}},
 };
-assert_enum(tilei, WallCave)
+assert_enum(tilei, WallBuilding)

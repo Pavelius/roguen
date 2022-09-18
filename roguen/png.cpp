@@ -58,7 +58,7 @@ static bool chunk_type_equals(const unsigned char* chunk, const char* type) {
 		&& chunk[7] == type[3]);
 }
 
-static int read_idat(unsigned char* out, const unsigned char* p, const unsigned char* pe, const unsigned char** single_input) {
+static int read_idat(unsigned char* out, const unsigned char* p, const unsigned char* pe, const unsigned char** single_input, color& transparent, bool& use_transparent) {
 	int size = 0;
 	int blocks = 0;
 	if(single_input)
@@ -88,6 +88,15 @@ static int read_idat(unsigned char* out, const unsigned char* p, const unsigned 
 					*single_input = 0;
 			}
 			size += chunk_length;
+		} else if(chunk_type_equals(p, "tRNS")) {
+			auto pn = get_chunk_data(p);
+			if(chunk_length == 6) {
+				transparent.r = pn[1];
+				transparent.g = pn[3];
+				transparent.b = pn[5];
+				transparent.a = 0;
+				use_transparent = true;
+			}
 		} else if(chunk_type_equals(p, "IEND"))
 			break;
 		p = (unsigned char*)get_chunk_next(p);
@@ -403,6 +412,16 @@ static void postprocess_scanlines(unsigned char* out, unsigned char* in, unsigne
 
 int decode_zip(unsigned char* output, const unsigned char* input, int input_size);
 
+static void apply_transparent(color* p, int w, int h, color transparent) {
+	for(auto y = 0; y < h; y++) {
+		for(auto x = 0; x < w; x++) {
+			auto pn = p + y * w + x;
+			if(pn->r == transparent.r && pn->g==transparent.g && pn->b==transparent.b)
+				pn->a = 0;
+		}
+	}
+}
+
 static struct png_bitmap_plugin : public draw::surface::plugin {
 
 	png_bitmap_plugin() : plugin("png", "PNG images\0*.png\0") {}
@@ -421,7 +440,9 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		input += 33;
 		// retrevie size
 		const unsigned char* single_input;
-		int size_compressed = read_idat(0, input, input + input_size, &single_input);
+		color transparent;
+		bool use_transparent = false;
+		int size_compressed = read_idat(0, input, input + input_size, &single_input, transparent, use_transparent);
 		if(!size_compressed)
 			return false;
 		// decompress image data
@@ -432,7 +453,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 				return false;
 		} else {
 			unsigned char* ptemp = new unsigned char[size_compressed];
-			if(!read_idat(ptemp, input, input + input_size, 0)) {
+			if(!read_idat(ptemp, input, input + input_size, 0, transparent, use_transparent)) {
 				delete ptemp;
 				return false;
 			}
@@ -445,6 +466,8 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		}
 		postprocess_scanlines(output, output, image_width, image_height, bpp, interlace);
 		color::convert(output, image_width, image_height, output_bpp, 0, output, input_bpp, 0);
+		if(output_bpp == 32 && use_transparent)
+			apply_transparent((color*)output, image_width, image_height, transparent);
 		return true;
 	}
 

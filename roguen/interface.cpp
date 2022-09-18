@@ -258,11 +258,11 @@ static void paint_wall(point p0, indext i, unsigned char r, const tilei& ei) {
 	}
 	auto pu = up(p0);
 	if(!wn) {
-		add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 0, 12);
+		add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 0, 16);
 		if(!we)
-			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 7, 13);
+			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 7, 17);
 		if(!ww)
-			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 8, 13);
+			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 8, 17);
 		add_object(pu, bsdata<resource>::elements + (int)res::Shadows, bw + 1, 6);
 		ss = true;
 	}
