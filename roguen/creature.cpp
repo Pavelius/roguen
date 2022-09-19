@@ -255,9 +255,10 @@ void creature::makemove() {
 		enemies.sort(getindex());
 		enemy = enemies[0];
 	}
-	if(isactive())
+	if(isactive()) {
+		update_fow(getlos());
 		adventure_mode();
-	else if(enemy)
+	} else if(enemy)
 		moveto(enemy->getindex());
 	else
 		aimove();
@@ -319,6 +320,19 @@ void creature::update_abilities() {
 	abilities[Speed] += 20;
 	abilities[HitsMaximum] += abilities[Constitution];
 	abilities[ManaMaximum] += abilities[Intellect];
+}
+
+void creature::update_fow(int los) {
+	auto pt = i2m(getindex());
+	for(auto y = pt.y - los; y <= pt.y + los; y++) {
+		if(y < 0 || y >= mps)
+			continue;
+		for(auto x = pt.x - los; x <= pt.x + los; x++) {
+			if(x < 0 || x >= mps)
+				continue;
+			area.set(m2i(x, y), Explored);
+		}
+	}
 }
 
 void creature::update() {

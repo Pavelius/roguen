@@ -43,9 +43,11 @@ struct areamap {
 	void			clear();
 	static void		clearpath();
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
+	bool			isb(indext i, mapf_s v) const { return i == Blocked || (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
 	bool			iswall(indext i, direction_s d) const;
 	static direction_s getdirection(point s, point d);
+	unsigned char	getfow(indext i) const;
 	int				getindex(indext i, tile_s e) const;
 	static indext	getnext(indext start, indext goal);
 	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);

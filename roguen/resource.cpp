@@ -13,6 +13,7 @@ BSDATA(resource) = {
 	{"attack"},
 	{"conditions"},
 	{"splash"},
+	{"fow"},
 	{"pc_body"},
 	{"pc_arms"},
 	{"pc_accessories"},

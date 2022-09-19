@@ -221,6 +221,15 @@ static void fillwalls() {
 	rectf();
 }
 
+static void fillfow() {
+	rectpush push;
+	pushvalue push_fore(fore);
+	caret.x -= tsx / 2; caret.y -= tsy / 2;
+	width = tsx; height = tsy;
+	fore = color(11, 12, 11);
+	rectf();
+}
+
 static void paint_wall(point p0, indext i, unsigned char r, const tilei& ei) {
 	auto pi = gres(res::Walls);
 	auto bs = ei.walls.start + ei.walls.count;
@@ -332,12 +341,59 @@ static void paint_floor() {
 						auto a = area.is(i, Activated) ? 1 : 0;
 						if(area.iswall(i, East) && area.iswall(i, West))
 							image(pf, ei.features.start + a, 0);
-							//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
+						//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
 							image(pf, ei.features.start + 2 + a, 0);
-							//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
+						//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
 					} else
 						add_object(pt, &ei, r, ei.priority);
+				}
+			}
+		}
+	}
+}
+
+static void paint_fow() {
+	rectpush push;
+	height = tsy; width = tsx;
+	auto pi = gres(res::Fow);
+	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
+	auto y1 = camera.y / tsy, y2 = (camera.y + getheight() + tsy / 2) / tsy;
+	for(short y = y1; y <= y2; y++) {
+		if(y < 0)
+			continue;
+		if(y >= mps)
+			break;
+		for(short x = x1; x <= x2; x++) {
+			if(x < 0)
+				continue;
+			if(x >= mps)
+				break;
+			auto i = m2i({x, y});
+			auto pt = m2s({x, y});
+			setcaret(pt);
+			if(!area.is(i, Explored))
+				fillfow();
+			else {
+				auto f = area.getfow(i);
+				if(f == 0) {
+					if(!area.isb(to(i, SouthEast), Explored))
+						image(pi, 2, ImageMirrorH);
+					if(!area.isb(to(i, NorthWest), Explored))
+						image(pi, 2, ImageMirrorV);
+					if(!area.isb(to(i, NorthEast), Explored))
+						image(pi, 2, ImageMirrorV | ImageMirrorH);
+					if(!area.isb(to(i, SouthWest), Explored))
+						image(pi, 2, 0);
+				} else {
+					if((f & 1) != 0)
+						image(pi, 0, ImageMirrorV);
+					if((f & 2) != 0)
+						image(pi, 0, 0);
+					if((f & 4) != 0)
+						image(pi, 1, 0);
+					if((f & 8) != 0)
+						image(pi, 1, ImageMirrorH);
 				}
 			}
 		}
@@ -551,6 +607,7 @@ static void reset_message() {
 }
 
 static void paint_console() {
+	paint_fow();
 	paint_message();
 	reset_message();
 }

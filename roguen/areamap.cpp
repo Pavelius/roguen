@@ -6,6 +6,9 @@ static indext* push_counter;
 static indext* pop_counter;
 static indext movement_rate[mps * mps];
 
+static direction_s straight_directions[] = {
+	North, South, West, East
+};
 static const direction_s orientations_7b7[49] = {
 	NorthWest, NorthWest, North, North, North, NorthEast, NorthEast,
 	NorthWest, NorthWest, NorthWest, North, NorthEast, NorthEast, NorthEast,
@@ -286,13 +289,24 @@ direction_s	areamap::getdirection(point s, point d) {
 }
 
 int areamap::getindex(indext i, tile_s tile) const {
-	static direction_s dir[] = {North, South, West, East};
 	auto m = 0;
 	auto f = 1;
-	for(auto d : dir) {
+	for(auto d : straight_directions) {
 		auto i1 = to(i, d);
 		auto t1 = tiles[i1];
-		if((i1 != Blocked) && ((t1 == tile) || bsdata<tilei>::elements[t1].tile==tile))
+		if((i1 != Blocked) && ((t1 == tile) || bsdata<tilei>::elements[t1].tile == tile))
+			m |= f;
+		f = f << 1;
+	}
+	return m;
+}
+
+unsigned char areamap::getfow(indext i) const {
+	unsigned char m = 0;
+	unsigned char f = 1;
+	for(auto d : straight_directions) {
+		auto i1 = to(i, d);
+		if(i1 != Blocked && !is(i1, Explored))
 			m |= f;
 		f = f << 1;
 	}

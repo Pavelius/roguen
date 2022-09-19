@@ -15,6 +15,7 @@ enum class res {
 	Monsters,
 	Borders, Floor, Walls, Decals, Features, Shadows, Items,
 	Attack, Conditions, Splash,
+	Fow,
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
@@ -187,6 +188,7 @@ class creature : public wearable, public statable, public spellable {
 	void		lookcreatures();
 	void		paintbars() const;
 	void		update();
+	void		update_fow(int los);
 	void		update_abilities();
 	void		update_basic();
 	void		update_wears();
