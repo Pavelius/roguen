@@ -188,7 +188,6 @@ class creature : public wearable, public statable, public spellable {
 	void		lookcreatures();
 	void		paintbars() const;
 	void		update();
-	void		update_fow(int los);
 	void		update_abilities();
 	void		update_basic();
 	void		update_wears();

@@ -145,6 +145,7 @@ void creature::movestep(indext ni) {
 		if(!roll(Strenght, -2)) {
 			act(getnm("WebEntagled"));
 			wait();
+			fixaction();
 			return;
 		}
 		act(getnm("WebBreak"));
@@ -256,7 +257,7 @@ void creature::makemove() {
 		enemy = enemies[0];
 	}
 	if(isactive()) {
-		update_fow(getlos());
+		area.setlos(getindex(), getlos());
 		adventure_mode();
 	} else if(enemy)
 		moveto(enemy->getindex());
@@ -320,20 +321,6 @@ void creature::update_abilities() {
 	abilities[Speed] += 20;
 	abilities[HitsMaximum] += abilities[Constitution];
 	abilities[ManaMaximum] += abilities[Intellect];
-}
-
-void creature::update_fow(int los) {
-	area.setlos(getindex(), los);
-	//auto pt = i2m(getindex());
-	//for(auto y = pt.y - los; y <= pt.y + los; y++) {
-	//	if(y < 0 || y >= mps)
-	//		continue;
-	//	for(auto x = pt.x - los; x <= pt.x + los; x++) {
-	//		if(x < 0 || x >= mps)
-	//			continue;
-	//		area.set(m2i(x, y), Explored);
-	//	}
-	//}
 }
 
 void creature::update() {

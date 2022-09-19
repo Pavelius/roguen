@@ -343,10 +343,8 @@ static void paint_floor() {
 						auto a = area.is(i, Activated) ? 1 : 0;
 						if(area.iswall(i, East) && area.iswall(i, West))
 							image(pf, ei.features.start + a, 0);
-						//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
 							image(pf, ei.features.start + 2 + a, 0);
-						//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
 					} else
 						add_object(pt, &ei, r, ei.priority);
 				}
@@ -523,12 +521,16 @@ static void fieldh(const char* format) {
 }
 
 static void field(const char* id, int width, const char* format) {
-	auto push_caret = caret;
 	fieldh(id);
 	caret.x += width;
 	text(format);
-	caret = push_caret;
-	caret.y += texth();
+	caret.x += width;
+}
+
+static void field(const char* id, int width, int value) {
+	char temp[32]; stringbuilder sb(temp);
+	sb.add("%1i", value);
+	field(id, width, temp);
 }
 
 static void fillbuttonpress() {
@@ -569,14 +571,27 @@ static bool button(unsigned key, int format_width) {
 }
 
 static void player_info() {
-	if(!player)
-		return;
-	field("ST", 20, "10");
-	field("DX", 20, "10");
+	for(auto i=Strenght; i<=Charisma; i=(ability_s)(i+1))
+		field("ST", 20, player->get(i));
+}
+
+static void paint_status() {
+	auto push_caret = caret;
+	auto push_height = height;
+	auto dy = texth() + metrics::border * 2;
+	height = dy;
+	caret.y = getheight() - height;
+	fillform();
+	setoffset(metrics::border, metrics::border);
+	if(player)
+		player_info();
+	caret = push_caret;
+	height = push_height - dy;
 }
 
 static void paint_map_background() {
 	rectpush push;
+	paint_status();
 	setclipall();
 	link_camera();
 	paint_floor();
@@ -657,9 +672,7 @@ static void answer_before_paint() {
 	caret.y = 40;
 	width = window_width;
 	height = window_height;
-	auto push_alpha = alpha; alpha = 0xE0;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
-	alpha = push_alpha;
 	strokeout(strokeborder, metrics::padding, metrics::padding);
 	if(answers::header) {
 		auto push_font = font;
@@ -722,9 +735,8 @@ int start_application(fnevent proc, fnevent initializing) {
 	if(log::geterrors())
 		return -1;
 	pbackground = paint_map_background;
-	metrics::border = 1;
+	metrics::border = 4;
 	metrics::padding = 4;
-	//pfinish = paint_console;
 	object::afterpaint = object_afterpaint;
 	object::afterpaintall = paint_console;
 	object::correctcamera = correctcamera;
