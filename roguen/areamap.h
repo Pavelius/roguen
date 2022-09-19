@@ -16,7 +16,7 @@ enum mapf_s : unsigned char {
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Lava, Water,
-	WallCave, WallBuilding, WallDungeon,
+	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
 enum feature_s : unsigned char {
 	NoFeature,

@@ -1,2 +1,2 @@
 ﻿In file `rules/Advancement.txt`:
-Can't find script named 'OpenNearestDoore' in hotkey mapping
+Can't convert file d:/games/adom/gfx/adom/maps/ice/walls/wall_S.png

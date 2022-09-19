@@ -56,8 +56,8 @@ static void random(int x1, int y1, int x2, feature_s tile) {
 	area.set(i, tile);
 }
 
-static void setdoor(indext i) {
-	area.set(i, WoodenFloor);
+static void setdoor(indext i, tile_s tile) {
+	area.set(i, tile);
 	area.set(i, Door);
 	//area.set(i, Activated);
 }
@@ -71,8 +71,8 @@ static void place_building(const rect& rc, tile_s wall) {
 	vert(rc.x1, rc.y1, rc.y2, wall);
 	horz(rc.x1, rc.y2, rc.x2, wall);
 	vert(rc.x2, rc.y1, rc.y2, wall);
-	setdoor(m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y2));
-	setdoor(m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1)));
+	setdoor(m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y2), ei.tile);
+	setdoor(m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1)), ei.tile);
 }
 
 static void main_start() {
@@ -83,7 +83,7 @@ static void main_start() {
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
-	place_building({7, 2, 12, 7}, WallBuilding);
+	place_building({7, 2, 12, 7}, WallIce);
 	area.set(m2i({15, 1}), WoodenFloor);
 	area.set(m2i({0, 1}), Webbed);
 	area.set(m2i({4, 4}), Webbed);
