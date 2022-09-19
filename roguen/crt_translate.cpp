@@ -237,3 +237,11 @@ const char* getnm(const char* id, int count) {
 		return getnm(id);
 	return getnmof(id);
 }
+
+void readl(const char* id, void(*proc)(const char* url)) {
+	if(!proc)
+		return;
+	char temp[260]; stringbuilder sb(temp);
+	sb.addlocalefile(id);
+	proc(temp);
+}

@@ -8,3 +8,10 @@ IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
+
+Charisma: Харизма
+Constitution: Телосложение
+Dexterity: Ловкость
+Intellect: Интеллект
+Strenght: Сила
+Wisdow: Мудрость

@@ -238,12 +238,12 @@ static void sortobjects(object** pb, size_t count) {
 }
 
 void draw::paintobjects() {
-	auto push_caret = caret;
+	rectpush push;
 	auto push_clip = clipping;
-	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
-	setclip(last_screen);
 	if(object::beforepaintall)
 		object::beforepaintall();
+	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
+	setclip(last_screen);
 	object* source[max_object_count];
 	auto count = getobjects(source, source + sizeof(source) / sizeof(source[0]));
 	sortobjects(source, count);
@@ -254,7 +254,6 @@ void draw::paintobjects() {
 	if(object::afterpaintall)
 		object::afterpaintall();
 	clipping = push_clip;
-	caret = push_caret;
 }
 
 void* draw::chooseobject() {

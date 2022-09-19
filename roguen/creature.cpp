@@ -79,12 +79,14 @@ void creature::interaction(indext index) {
 	if(index == Blocked)
 		return;
 	auto f = area.features[index];
-	auto& ei = bsdata<featurei>::elements[f];
-	if(ei.is(AllowActivate)) {
-		if(!area.is(index, Activated))
-			area.set(index, Activated);
-		else
-			area.remove(index, Activated);
+	if(f) {
+		auto& ei = bsdata<featurei>::elements[f];
+		if(ei.is(AllowActivate)) {
+			if(!area.is(index, Activated))
+				area.set(index, Activated);
+			else
+				area.remove(index, Activated);
+		}
 	}
 }
 
@@ -130,12 +132,15 @@ void creature::attackmelee(creature& enemy) {
 	attack(enemy, MeleeWeapon, 0, 100);
 }
 
+void creature::fixcantgo() const {
+	fixaction();
+	act(getnm("CantGoThisWay"));
+}
+
 void creature::movestep(indext ni) {
 	if(ni == Blocked) {
-		if(isactive()) {
-			fixaction();
-			act(getnm("CantGoThisWay"));
-		}
+		if(isactive())
+			fixcantgo();
 		wait();
 		return;
 	}

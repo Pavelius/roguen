@@ -31,3 +31,4 @@ AdventureKeys
  elements MoveLeft "Left"
  elements DebugMessage "Ctrl+D"
  elements OpenNearestDoor "O"
+ elements ChatSomeone "C"

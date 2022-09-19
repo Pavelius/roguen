@@ -222,6 +222,12 @@
     <ClCompile Include="indexa.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="information.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="speech.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -323,6 +329,9 @@
     <ClInclude Include="pushvalue.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="speech.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -344,6 +353,9 @@
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\locale\ru\RaceNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Chats.txt">
       <Filter>Locale</Filter>
     </Text>
   </ItemGroup>

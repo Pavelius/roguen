@@ -168,6 +168,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="indexa.cpp" />
+    <ClCompile Include="information.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
     <ClCompile Include="io_stream.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="screenshoot.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="scripting.cpp" />
+    <ClCompile Include="speech.cpp" />
     <ClCompile Include="spells.cpp" />
     <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="statable.cpp" />
@@ -236,6 +238,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="speech.h" />
     <ClInclude Include="sprite_util.h" />
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
@@ -245,6 +248,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\errors.txt" />
+    <Text Include="..\locale\ru\Chats.txt" />
     <Text Include="..\locale\ru\Names.txt" />
     <Text Include="..\locale\ru\NamesNewbe.txt" />
     <Text Include="..\locale\ru\RaceNames.txt" />

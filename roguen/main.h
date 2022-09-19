@@ -7,6 +7,7 @@
 #include "list.h"
 #include "pushvalue.h"
 #include "script.h"
+#include "speech.h"
 #include "variant.h"
 
 #pragma once
@@ -26,8 +27,10 @@ enum ability_s : unsigned char {
 	Speed, LineOfSight,
 	FightLight, FightHeavy, Markship,
 	Concentration, Healing,
+	Pickpockets, Stealth, OpenLocks, DisarmTraps,
+	Survival,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana,
+	Hits, Mana, Money,
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
@@ -44,7 +47,7 @@ enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
 	Blunt, Martial, TwoHanded,
-	WearLeather, WearIron, WearLarge, WearShield,
+	WearLeather, WearIron, WearLarge, WearShield, Coins,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
@@ -74,15 +77,16 @@ struct indexa : adat<indext> {
 	void		select(point pt, int range);
 };
 struct statable {
-	char		abilities[Mana + 1];
+	char		abilities[Money + 1];
 	void		create();
 };
 class actable {
 	variant		kind; // Race or monster
 public:
-	void		actv(stringbuilder& sb, const char* format, const char* format_param, bool female = false, char separator = ' ');
+	void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = ' ') const;
 	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
+	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void		setkind(variant v) { kind = v; }
 };
 class movable : public actable {
@@ -92,6 +96,7 @@ class movable : public actable {
 public:
 	void		fixaction() const;
 	void		fixappear() const;
+	void		fixcantgo() const;
 	void		fixdisappear() const;
 	void		fixeffect(const char* id) const;
 	static void	fixeffect(point position, const char* id);
@@ -160,8 +165,10 @@ struct itemground : item {
 };
 struct wearable : movable {
 	item		wears[Elbows + 1];
+	int			money;
 	void		additem(item& v);
 	void		equip(item& v);
+	int			getmoney() const { return money; }
 	const char*	getwearname(wear_s id) const;
 	bool		isitem(const void* pv) const;
 };
@@ -184,6 +191,7 @@ class creature : public wearable, public statable, public spellable {
 	void		advance(variant element);
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
+	void		fixcantgo() const;
 	void		interaction(indext index);
 	void		lookcreatures();
 	void		paintbars() const;
@@ -195,7 +203,7 @@ public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
 	static creature* create(indext index, variant v);
-	void		act(const char* format, ...) { actv(console, format, xva_start(format), is(Female)); }
+	void		act(const char* format, ...) const { actv(console, format, xva_start(format), getname(), is(Female)); }
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
@@ -207,6 +215,7 @@ public:
 	int			get(ability_s v) const { return abilities[v]; }
 	int			get(spell_s v) const { return spells[v]; }
 	dice		getdamage(wear_s w) const;
+	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const { return get(LineOfSight); }
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const { return false; }
@@ -223,6 +232,7 @@ public:
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v, int bonus = 0) const;
+	void		say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
 	void		set(feat_s v) { feats.set(v); }
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };

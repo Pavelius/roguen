@@ -81,9 +81,20 @@ static void open_nearest_door(int bonus) {
 	}
 }
 
+static const char* getspeech(const char* id) {
+	speecha source;
+	source.select(id);
+	return source.getrandom();
+}
+
+static void chat_someone(int bonus) {
+	player->say(getspeech("TestYouselfPlease"));
+}
+
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},
+	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},

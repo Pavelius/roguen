@@ -4,8 +4,11 @@ NoItem avatar("item-1")
  weapon damage(1 2)
 
 SP cost(1) avatar("items37") count(1)
+ flags Coins
 GP cost(10) avatar("items37") count(1)
+ flags Coins
 PP cost(100) avatar("items37") count(1)
+ flags Coins
 
 OrnamentalStones cost(10) avatar("item401") count(1)
 SemiPreciousStones cost(50) avatar("item395") count(1)

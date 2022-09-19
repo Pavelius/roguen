@@ -13,6 +13,7 @@ const int tsy = 48;
 const int mst = 260;
 const int window_width = 420;
 const int window_height = 280;
+const int panel_width = 120;
 
 static const void* focus_pressed;
 static unsigned long last_tick_message;
@@ -429,7 +430,7 @@ static void bar(int value, int maximum, color m) {
 void creature::paintbars() const {
 	const int dy = 4;
 	rectpush push;
-	caret.y -= tsy * 3 / 2; caret.x -= tsx / 4;
+	caret.y -= tsy * 7 / 4; caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
 	bar(get(Hits), get(HitsMaximum), colors::red); caret.y += dy - 1;
 	bar(get(Mana), get(ManaMaximum), colors::blue);
@@ -571,31 +572,41 @@ static bool button(unsigned key, int format_width) {
 }
 
 static void player_info() {
-	for(auto i=Strenght; i<=Charisma; i=(ability_s)(i+1))
-		field("ST", 20, player->get(i));
+	auto push_tab = tab_pixels;
+	tab_pixels = panel_width - 32;
+	char temp[260]; stringbuilder sb(temp);
+	sb.clear();
+	player->getinfo(sb);
+	textf(temp);
+	tab_pixels = push_tab;
 }
 
 static void paint_status() {
 	auto push_caret = caret;
 	auto push_height = height;
-	auto dy = texth() + metrics::border * 2;
-	height = dy;
-	caret.y = getheight() - height;
+	auto push_width = width;
+	caret.x = getwidth() - panel_width;
+	caret.y = 0;
+	width = panel_width;
 	fillform();
 	setoffset(metrics::border, metrics::border);
 	if(player)
 		player_info();
 	caret = push_caret;
-	height = push_height - dy;
+	height = push_height;
+	width = push_width - panel_width;
 }
 
-static void paint_map_background() {
-	rectpush push;
+static void before_paint_all() {
+	auto push_caret = caret;
+	auto push_clip = clipping;
 	paint_status();
 	setclipall();
 	link_camera();
 	paint_floor();
 	paint_items();
+	caret = push_caret;
+	clipping = push_clip;
 }
 
 static void paint_message() {
@@ -606,7 +617,7 @@ static void paint_message() {
 	width = window_width;
 	textfs(p);
 	caret.y = metrics::padding * 2;
-	caret.x = (getwidth() - width) / 2;
+	caret.x = (getwidth() - width - panel_width) / 2;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
 	strokeout(strokeborder, metrics::padding, metrics::padding);
 	textf(p);
@@ -668,11 +679,11 @@ void adventure_mode() {
 
 static void answer_before_paint() {
 	paintobjects();
-	caret.x = (getwidth() - window_width - metrics::padding) / 2;
-	caret.y = 40;
+	caret.x = (getwidth() - window_width - metrics::padding * 2 - panel_width) / 2;
+	caret.y = (getheight() - window_height - metrics::padding * 2) / 2;
 	width = window_width;
 	height = window_height;
-	strokeout(fillwindow, metrics::padding, metrics::padding);
+	strokeout(fillform, metrics::padding, metrics::padding);
 	strokeout(strokeborder, metrics::padding, metrics::padding);
 	if(answers::header) {
 		auto push_font = font;
@@ -710,12 +721,12 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 	caret.y += texth() + 4 + 2;
 }
 
-static void correctcamera() {
+static void correct_camera() {
 	if(camera.x < -tsx / 2)
 		camera.x = -tsx / 2;
 	if(camera.y < -tsy / 2)
 		camera.y = -tsy / 2;
-	auto w = getwidth();
+	auto w = getwidth() - panel_width;
 	auto h = getheight();
 	if(camera.x > tsx * mps - w - tsx / 2)
 		camera.x = tsx * mps - w - tsx / 2;
@@ -734,12 +745,12 @@ int start_application(fnevent proc, fnevent initializing) {
 		initializing();
 	if(log::geterrors())
 		return -1;
-	pbackground = paint_map_background;
 	metrics::border = 4;
 	metrics::padding = 4;
+	object::beforepaintall = before_paint_all;
 	object::afterpaint = object_afterpaint;
 	object::afterpaintall = paint_console;
-	object::correctcamera = correctcamera;
+	object::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;
 	draw::width = 640;

@@ -15,6 +15,7 @@ static void initializating() {
 	bsreq::read("rules/Items.txt");
 	bsreq::read("rules/Advancement.txt");
 	hotkey::initialize();
+	readl("Chats", speech::read);
 #ifdef _DEBUG
 	main_util();
 #endif

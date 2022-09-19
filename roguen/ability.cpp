@@ -24,9 +24,15 @@ BSDATA(abilityi) = {
 	{"Markship"},
 	{"Concentration"},
 	{"Healing"},
+	{"Pickpockets"},
+	{"Stealth"},
+	{"OpenLocks"},
+	{"DisarmTraps"},
+	{"Survival"},
 	{"HitsMaximum"},
 	{"ManaMaximum"},
 	{"Hits"},
 	{"Mana"},
+	{"Money"},
 };
-assert_enum(abilityi, Mana)
+assert_enum(abilityi, Money)
