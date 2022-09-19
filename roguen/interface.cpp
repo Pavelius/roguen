@@ -331,9 +331,11 @@ static void paint_floor() {
 					if(ei.is(BetweenWalls)) {
 						auto a = area.is(i, Activated) ? 1 : 0;
 						if(area.iswall(i, East) && area.iswall(i, West))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
+							image(pf, ei.features.start + a, 0);
+							//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
+							image(pf, ei.features.start + 2 + a, 0);
+							//add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
 					} else
 						add_object(pt, &ei, r, ei.priority);
 				}

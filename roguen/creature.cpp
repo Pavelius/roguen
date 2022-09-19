@@ -76,6 +76,16 @@ void creature::movestep(direction_s v) {
 }
 
 void creature::interaction(indext index) {
+	if(index == Blocked)
+		return;
+	auto f = area.features[index];
+	auto& ei = bsdata<featurei>::elements[f];
+	if(ei.is(AllowActivate)) {
+		if(!area.is(index, Activated))
+			area.set(index, Activated);
+		else
+			area.remove(index, Activated);
+	}
 }
 
 void creature::interaction(creature& opponent) {
