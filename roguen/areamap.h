@@ -42,10 +42,6 @@ struct areamap {
 	static void		blockzero();
 	void			clear();
 	static void		clearpath();
-	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
-	bool			isb(indext i, mapf_s v) const { return i == Blocked || (flags[i] & (1 << v)) != 0; }
-	bool			isfree(indext i) const;
-	bool			iswall(indext i, direction_s d) const;
 	static direction_s getdirection(point s, point d);
 	unsigned char	getfow(indext i) const;
 	int				getindex(indext i, tile_s e) const;
@@ -53,10 +49,18 @@ struct areamap {
 	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
 	static int		getrange(indext start, indext target);
 	static indext	getwave();
+	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
+	bool			isb(indext i, mapf_s v) const { return i == Blocked || (flags[i] & (1 << v)) != 0; }
+	bool			isfree(indext i) const;
+	bool			isfreelt(indext i) const;
+	bool			iswall(indext i, direction_s d) const;
+	bool			linelos(int x0, int y0, int x1, int y1) const;
+	bool			linelossv(int x0, int y0, int x1, int y1);
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
 	void			set(indext i, tile_s v);
 	void			set(indext i, feature_s v) { features[i] = v; }
 	void			set(rect rc, tile_s v);
+	void			setlos(indext index, int radius);
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
 	static void		makewave(indext start_index);

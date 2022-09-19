@@ -209,6 +209,8 @@ static bool iswall(indext i, direction_s d) {
 	auto i1 = to(i, d);
 	if(i1 == Blocked)
 		return true;
+	if(!area.is(i1, Explored))
+		return true;
 	return bsdata<tilei>::elements[area.tiles[i1]].iswall();
 }
 

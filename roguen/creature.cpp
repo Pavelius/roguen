@@ -323,16 +323,17 @@ void creature::update_abilities() {
 }
 
 void creature::update_fow(int los) {
-	auto pt = i2m(getindex());
-	for(auto y = pt.y - los; y <= pt.y + los; y++) {
-		if(y < 0 || y >= mps)
-			continue;
-		for(auto x = pt.x - los; x <= pt.x + los; x++) {
-			if(x < 0 || x >= mps)
-				continue;
-			area.set(m2i(x, y), Explored);
-		}
-	}
+	area.setlos(getindex(), los);
+	//auto pt = i2m(getindex());
+	//for(auto y = pt.y - los; y <= pt.y + los; y++) {
+	//	if(y < 0 || y >= mps)
+	//		continue;
+	//	for(auto x = pt.x - los; x <= pt.x + los; x++) {
+	//		if(x < 0 || x >= mps)
+	//			continue;
+	//		area.set(m2i(x, y), Explored);
+	//	}
+	//}
 }
 
 void creature::update() {

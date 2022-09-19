@@ -153,6 +153,10 @@ bool areamap::isfree(indext i) const {
 	return true;
 }
 
+bool areamap::isfreelt(indext i) const {
+	return isfree(i);
+}
+
 void areamap::clearpath() {
 	for(auto i = 0; i < mps * mps; i++)
 		movement_rate[i] = NotCalculatedMovement;
@@ -317,5 +321,69 @@ bool areamap::iswall(indext i, direction_s d) const {
 	auto i1 = to(i, d);
 	if(i1 == Blocked)
 		return false;
+	if(!is(i1, Explored))
+		return true;
 	return bsdata<tilei>::elements[tiles[i1]].iswall();
+}
+
+bool areamap::linelossv(int x0, int y0, int x1, int y1) {
+	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+	int err = (dx > dy ? dx : -dy) / 2, e2;
+	for(;;) {
+		if(x0 >= 0 && x0 < mps && y0 >= 0 && y0 < mps) {
+			auto i = m2i(x0, y0);
+			set(i, Visible);
+			set(i, Explored);
+			if(!isfreelt(i))
+				return false;
+		}
+		if(x0 == x1 && y0 == y1)
+			return true;
+		e2 = err;
+		if(e2 > -dx) {
+			err -= dy;
+			x0 += sx;
+		}
+		if(e2 < dy) {
+			err += dx;
+			y0 += sy;
+		}
+	}
+}
+
+bool areamap::linelos(int x0, int y0, int x1, int y1) const {
+	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+	int err = (dx > dy ? dx : -dy) / 2, e2;
+	for(;;) {
+		if(x0 >= 0 && x0 < mps && y0 >= 0 && y0 < mps) {
+			auto i = m2i(x0, y0);
+			if(!isfreelt(i))
+				return false;
+		}
+		if(x0 == x1 && y0 == y1)
+			return true;
+		e2 = err;
+		if(e2 > -dx) {
+			err -= dy;
+			x0 += sx;
+		}
+		if(e2 < dy) {
+			err += dx;
+			y0 += sy;
+		}
+	}
+}
+
+void areamap::setlos(indext index, int r) {
+	auto pt = i2m(index);
+	for(auto x = pt.x - r; x <= pt.x + r; x++) {
+		linelossv(pt.x, pt.y, x, pt.y - r);
+		linelossv(pt.x, pt.y, x, pt.y + r);
+	}
+	for(auto y = pt.y - r; y <= pt.y + r; y++) {
+		linelossv(pt.x, pt.y, pt.x - r, y);
+		linelossv(pt.x, pt.y, pt.x + r, y);
+	}
 }
