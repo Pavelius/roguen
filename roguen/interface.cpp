@@ -57,6 +57,16 @@ static color getcolor(int format_color) {
 	}
 }
 
+static void strokeup() {
+	rectpush push;
+	//fore = colors::w;
+	line(caret.x, caret.y + height);
+	line(caret.x + width, caret.y);
+	//fore = colors::light;
+	//line(rc.x2, rc.y1, rc.x2, rc.y2 - 1);
+	//line(rc.x1 + 1, rc.y1, rc.x2 - 1, rc.y1);
+}
+
 static point to(point pt, direction_s d, int sx, int sy) {
 	if(d == North || d == NorthEast || d == NorthWest)
 		pt.y -= sy;

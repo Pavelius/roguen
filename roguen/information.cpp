@@ -17,7 +17,12 @@ static void addf(stringbuilder& sb, ability_s i, int value) {
 }
 
 void creature::getinfo(stringbuilder& sb) const {
+	sb.addn("Кастор");
+	sb.addn("Эльф мужчина");
+	sb.addn("---");
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	addf(sb, Money, getmoney());
+	sb.addn("---");
+	sb.add("Test");
 }

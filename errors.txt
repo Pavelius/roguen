@@ -1,2 +1,2 @@
 ﻿In file `locale/ru/Chats.txt`:
- Line 0: Expected symbol line feed
+ Line 8: Unknown variant identifier `Ally`

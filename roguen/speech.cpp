@@ -24,7 +24,20 @@ const char* speecha::getrandom() const {
 	return data[rand() % count]->name;
 }
 
-static const char* read_line(const char* p, stringbuilder& sb) {
+void store_begin(sliceu<variant>& result);
+void store_end(sliceu<variant>& result);
+
+static const char* read_line(const char* p, stringbuilder& sb, variants& elements) {
+	if(*p == '{') {
+		p = p + 1;
+		store_begin(elements);
+		while(*p && *p != '}') {
+			auto pv = bsdata<variant>::add();
+			pv->clear();
+			p = readval(skipsp(p), sb, *pv);
+		}
+		store_end(elements);
+	}
 	sb.clear();
 	return sb.psstrlf(p);
 }
@@ -47,7 +60,7 @@ void speech::read(const char* url) {
 			auto pn = bsdata<speech>::add();
 			pn->clear();
 			pn->id = block_id;
-			p = read_line(skipwscr(p), sb);
+			p = read_line(skipwscr(p), sb, pn->condition);
 			p = skipwscr(p);
 			pn->name = szdup(temp);
 		}

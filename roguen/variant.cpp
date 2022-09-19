@@ -118,3 +118,13 @@ template<> variant::variant(const char* v) : u(0) {
 		}
 	}
 }
+
+void store_begin(sliceu<variant>& result) {
+	result.set(bsdata<variant>::source.getcount(), 0);
+}
+
+void store_end(sliceu<variant>& result) {
+	auto p1 = bsdata<variant>::source.indexof(result.begin());
+	auto p2 = bsdata<variant>::source.getcount();
+	result.set(p1, p2 - p1);
+}

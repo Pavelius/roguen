@@ -83,7 +83,7 @@ struct statable {
 class actable {
 	variant		kind; // Race or monster
 public:
-	void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = ' ') const;
+	void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n') const;
 	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;

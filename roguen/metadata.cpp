@@ -64,6 +64,7 @@ BSMETA(visualeffect) = {
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
 	{"Advancement", VAR(advancement), 2},
+	{"Feat", VAR(feati), 1},
 	{"Hotkey", VAR(hotkey), 2},
 	{"HotkeyList", VAR(hotkeylist), 1},
 	{"Item", VAR(itemi), 1},
