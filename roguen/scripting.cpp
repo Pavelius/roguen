@@ -62,8 +62,6 @@ static void inventory(int bonus) {
 		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon,
 		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
 	};
-	auto push_header = answers::header;
-	answers::header = getnm("Inventory");
 	answers an;
 	for(auto i : source) {
 		auto pi = player->getwear(i);
@@ -78,8 +76,7 @@ static void inventory(int bonus) {
 			an.add(pi, temp);
 		}
 	}
-	an.choose("Test answers data", 0);
-	answers::header = push_header;
+	an.choose(getnm("Inventory"), 0);
 }
 
 static void debug_message(int bonus) {
@@ -107,6 +104,14 @@ static void chat_someone(int bonus) {
 	player->say(getspeech("TestYouselfPlease"));
 }
 
+static void pickup(int bonus) {
+	itema items;
+	items.select(player->getindex());
+	if(!items)
+		return;
+	auto p = items.choose(getnm("PickItem"));
+}
+
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},
@@ -122,5 +127,6 @@ BSDATA(script) = {
 	{"MoveUpLeft", move_up_left},
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
+	{"PickUp", pickup},
 };
 BSDATAF(script)

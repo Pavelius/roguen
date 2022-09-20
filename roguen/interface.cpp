@@ -719,12 +719,12 @@ static void answer_before_paint() {
 	strokeout(strokeup, metrics::padding, metrics::padding);
 	strokeout(strokeup, metrics::padding - 1, metrics::padding - 1);
 	fore = push_fore;
-	if(answers::header) {
+	if(answers::prompa) {
 		auto push_font = font;
 		auto push_fore = fore;
 		font = metrics::h2;
 		fore = colors::h2;
-		texta(answers::header, AlignCenter);
+		texta(answers::prompa, AlignCenter);
 		caret.y += texth();
 		fore = push_fore;
 		font = push_font;

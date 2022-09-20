@@ -42,7 +42,7 @@ void creature::levelup() {
 	if(abilities[Level] == 0) {
 		while(true) {
 			auto hp = xrand(1, getclass().hd);
-			if(hp == 1 || hp == 2)
+			if(getclass().player && (hp == 1 || hp == 2))
 				continue;
 			basic.abilities[HitsMaximum] += hp;
 			break;
@@ -337,11 +337,15 @@ void creature::update_basic() {
 }
 
 void creature::update_abilities() {
+	auto& ci = getclass();
 	abilities[Speed] += 20;
-	abilities[HitsMaximum] += getbonus(Constitution);
-	abilities[ManaMaximum] += abilities[Intellect];
-	if(abilities[HitsMaximum] < 1)
-		abilities[HitsMaximum] = 1;
+	auto level = abilities[Level];
+	if(level > ci.cap)
+		level = ci.cap;
+	abilities[HitsMaximum] += getbonus(Constitution) * level;
+	if(abilities[HitsMaximum] < level)
+		abilities[HitsMaximum] = level;
+	abilities[ManaMaximum] += abilities[Intellect] + abilities[Concentration] * level;
 	if(abilities[ManaMaximum] < 0)
 		abilities[ManaMaximum] = 0;
 }

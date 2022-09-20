@@ -74,7 +74,7 @@ struct abilityi : nameable {
 struct racei : nameable {
 };
 struct classi : nameable {
-	char		hd, md;
+	char		hd;
 	char		cap, player;
 };
 struct feati : nameable {
@@ -165,6 +165,10 @@ public:
 	bool		iscountable() const { return geti().count != 0; }
 	bool		isidentified() const { return identified != 0; }
 	void		setcount(int v);
+};
+struct itema : adat<item*> {
+	item*		choose(const char* title) const;
+	void		select(indext index);
 };
 struct itemground : item {
 	indext		index;

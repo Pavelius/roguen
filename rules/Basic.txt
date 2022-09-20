@@ -1,11 +1,11 @@
 #Class
 
-Monster hd(8) md(4) cap(20)
-Commoner hd(6) md(6) cap(14)
-Fighter hd(8) md(4) cap(9) player(1)
-Cleric hd(6) md(6) cap(9) player(1)
-Rogue hd(4) md(6) cap(11) player(1)
-Mage hd(4) md(8) cap(9) player(1)
+Monster hd(8) cap(20)
+Commoner hd(6) cap(14)
+Fighter hd(8) cap(9) player(1)
+Cleric hd(6) cap(9) player(1)
+Rogue hd(4) cap(11) player(1)
+Mage hd(4) cap(9) player(1)
 
 #Monster
 
@@ -41,3 +41,4 @@ AdventureKeys
  elements DebugMessage "Ctrl+D"
  elements OpenNearestDoor "O"
  elements ChatSomeone "C"
+ elements PickUp "P"

@@ -228,6 +228,9 @@
     <ClCompile Include="speech.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="itema.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
