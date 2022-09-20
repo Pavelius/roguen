@@ -21,6 +21,8 @@ BSMETA(abilityi) = {
 	{}};
 BSMETA(classi) = {
 	BSREQ(id),
+	BSREQ(hd), BSREQ(cap), BSREQ(player),
+	BSREQ(md),
 	{}};
 BSMETA(dice) = {
 	BSREQ(min),

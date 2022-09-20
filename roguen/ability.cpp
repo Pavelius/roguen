@@ -29,6 +29,7 @@ BSDATA(abilityi) = {
 	{"OpenLocks"},
 	{"DisarmTraps"},
 	{"Survival"},
+	{"Level"},
 	{"HitsMaximum"},
 	{"ManaMaximum"},
 	{"Hits"},

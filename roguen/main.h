@@ -29,6 +29,7 @@ enum ability_s : unsigned char {
 	Concentration, Healing,
 	Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
+	Level,
 	HitsMaximum, ManaMaximum,
 	Hits, Mana, Money,
 };
@@ -66,12 +67,15 @@ extern point m2s(point v);
 struct statable {
 	char		abilities[Money + 1];
 	void		create();
+	int			getbonus(ability_s v) const;
 };
 struct abilityi : nameable {
 };
 struct racei : nameable {
 };
 struct classi : nameable {
+	char		hd, md;
+	char		cap, player;
 };
 struct feati : nameable {
 };
@@ -184,20 +188,21 @@ struct spellable {
 	char		spells[Sleep + 1];
 };
 class creature : public wearable, public statable, public spellable {
-	short unsigned class_id;
+	unsigned short class_id;
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
 	unsigned	experience;
 	int			wait_seconds;
-	void		clear();
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
+	void		clear();
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
 	void		fixcantgo() const;
 	void		interaction(indext index);
+	void		levelup();
 	void		lookcreatures();
 	void		paintbars() const;
 	void		update();
@@ -219,6 +224,7 @@ public:
 	void		finish();
 	int			get(ability_s v) const { return abilities[v]; }
 	int			get(spell_s v) const { return spells[v]; }
+	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
 	dice		getdamage(wear_s w) const;
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const { return get(LineOfSight); }

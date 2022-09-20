@@ -38,6 +38,19 @@ void creature::clear() {
 		player = 0;
 }
 
+void creature::levelup() {
+	if(abilities[Level] == 0) {
+		while(true) {
+			auto hp = xrand(1, getclass().hd);
+			if(hp == 1 || hp == 2)
+				continue;
+			basic.abilities[HitsMaximum] += hp;
+			break;
+		}
+		basic.abilities[Level]++;
+	}
+}
+
 creature* creature::create(indext index, variant kind) {
 	if(!kind)
 		return 0;
@@ -50,8 +63,9 @@ creature* creature::create(indext index, variant kind) {
 		p->feats = pm->feats;
 	}
 	p->basic.create();
-	p->finish();
 	p->advance(kind, 0);
+	p->levelup();
+	p->finish();
 	return p;
 }
 
@@ -324,8 +338,12 @@ void creature::update_basic() {
 
 void creature::update_abilities() {
 	abilities[Speed] += 20;
-	abilities[HitsMaximum] += abilities[Constitution];
+	abilities[HitsMaximum] += getbonus(Constitution);
 	abilities[ManaMaximum] += abilities[Intellect];
+	if(abilities[HitsMaximum] < 1)
+		abilities[HitsMaximum] = 1;
+	if(abilities[ManaMaximum] < 0)
+		abilities[ManaMaximum] = 0;
 }
 
 void creature::update() {

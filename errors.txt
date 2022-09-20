@@ -1,4 +1,5 @@
-﻿In file `rules/Advancement.txt`:
- Line 4: Can't find variant `Strenght`
- Line 4: Can't find variant `Dexterity`
- Line 4: Can't find variant `Constitution`
+﻿In file `rules/Basic.txt`:
+ Line 5: Not found requisit `player`
+ Line 6: Not found requisit `player`
+ Line 7: Not found requisit `player`
+ Line 8: Not found requisit `player`
