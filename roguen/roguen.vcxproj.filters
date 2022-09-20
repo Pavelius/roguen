@@ -358,5 +358,8 @@
     <Text Include="..\locale\ru\Chats.txt">
       <Filter>Locale</Filter>
     </Text>
+    <Text Include="..\locale\ru\ItemNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
   </ItemGroup>
 </Project>

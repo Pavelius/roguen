@@ -32,8 +32,16 @@ void wearable::equip(item& v) {
 	}
 }
 
-bool wearable::isitem(const void* pv) const {
-	return pv >= wears && pv < wears + sizeof(wears) / sizeof(wears[0]);
+const item*	wearable::getwear(const void* data) const {
+	if(data >= wears && data < wears + sizeof(wears) / sizeof(wears[0]))
+		return (item*)data;
+	return 0;
+}
+
+wear_s wearable::getwearslot(const item* data) const {
+	if(!data)
+		return Backpack;
+	return (wear_s)(data - wears);
 }
 
 const char* wearable::getwearname(wear_s id) const {

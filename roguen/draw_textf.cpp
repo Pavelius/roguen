@@ -225,116 +225,19 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 	return p;
 }
 
-static const char* text_block(const char* p, int original_x1, int original_x2);
-
-static const char* parse_parameters(const char* p, const char*& id, unsigned& align) {
-	memset(text_params, 0, sizeof(text_params));
-	stringbuilder sb(text_params_data);
-	auto count = 0; id = 0; align = AlignCenter;
-	while(*p && !(*p == 13 || *p == 10)) {
-		auto p1 = p;
-		auto is_text = false;
-		long value = 0;
-		p = stringbuilder::read(p, value);
-		if(p == p1) {
-			is_text = true;
-			value = (long)sb.get();
-			if(p[0] == '$' && p[1] == '{')
-				p = sb.psline(skipspcr(p + 2));
-			else if(p[0] == '\"' || p[0] == '\'')
-				p = sb.psstr(p + 1, p[0]);
-			else
-				p = sb.psidf(p);
-			sb.addsz();
-		}
-		p = skipsp(p);
-		if(p == p1)
-			break;
-		if(is_text) {
-			auto pid = (const char*)value;
-			if(!count) {
-				if(equal(pid, "left")) {
-					align = AlignLeftCenter;
-					continue;
-				} else if(equal(pid, "right")) {
-					align = AlignRightCenter;
-					continue;
-				}
-			}
-			if(!id) {
-				id = pid;
-				continue;
-			}
-		}
-		text_params[count++] = value;
-	}
-	return skipspcr(p);
-}
-
-static void execute_center() {
-	auto name = (const char*)text_params[0];
-	auto tips = (const char*)text_params[1];
-}
-
 static void execute_tab() {
 	tab_pixels = text_params[0];
 }
 
-static void execute_command(const char* id) {
-	if(equal(id, "center"))
-		execute_center();
-	else if(equal(id, "tab"))
-		execute_tab();
-}
-
 static const char* parse_command(const char* p, int x1, int x2) {
-	unsigned align; const char* id;
-	p = parse_parameters(p, id, align);
-	if(!id)
-		return p;
-	auto push_width = width;
-	auto push_height = height;
-	auto push_clipping = clipping;
-	width = x2 - x1; height = 0;
-	switch(align) {
-	case AlignLeftCenter:
-		execute_command(id);
-		if(height) {
-			auto y2 = caret.y + height;
-			caret.x += width + metrics::border;
-			p = text_block(p, caret.x, x2);
-			if(caret.y < y2)
-				caret.y = y2;
-			apply_line_feed(x1, 0);
-		}
-		break;
-	case AlignRightCenter:
-		clipping.clear();
-		execute_command(id);
-		clipping = push_clipping;
-		if(height && width) {
-			auto w = width;
-			caret.x = x2 - width;
-			execute_command(id);
-			caret.x = x1;
-			auto y2 = caret.y + height;
-			p = text_block(p, x1, x2 - w - metrics::border);
-			if(caret.y < y2)
-				caret.y = y2;
-			apply_line_feed(x1, 0);
-		}
-		break;
-	default:
-		execute_command(id);
-		if(height)
-			caret.y += height + metrics::border;
-		apply_line_feed(x1, 0);
-		height = push_height;
-		width = push_width;
-		break;
+	char temp[32]; stringbuilder sb(temp);
+	p = skipsp(sb.psidf(p));
+	if(equal(temp, "Tab")) {
+		p = sb.read(p, tab_pixels);
+		if(tab_pixels < 0)
+			tab_pixels = width + tab_pixels;
 	}
-	clipping = push_clipping;
-	return p;
+	return skipspcr(wholeline(p));
 }
 
 static const char* text_block(const char* p, int x1, int x2) {
@@ -360,8 +263,8 @@ static const char* text_block(const char* p, int x1, int x2) {
 		else if(match(&p, "---")) { // Line
 			p = skipspcr(p);
 			auto push_x = caret.x;
-			caret.y += 2;
 			caret.x = x1 - metrics::border;
+			caret.y += 2;
 			auto push_fore = fore;
 			fore = colors::border;
 			line(x2 + metrics::border, caret.y);

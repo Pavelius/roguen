@@ -72,6 +72,7 @@ struct classi : nameable {
 struct feati : nameable {
 };
 struct weari : nameable {
+	ability_s	bonus;
 };
 struct indexa : adat<indext> {
 	void		select(point pt, int range);
@@ -148,6 +149,7 @@ public:
 	void		create(const itemi* pi, int count = 1);
 	int			getavatar() const { return geti().wear_index; }
 	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
+	void		getinfo(stringbuilder& sb, bool need_name) const;
 	int			getcost() const;
 	int			getcount() const;
 	dice		getdamage() const;
@@ -169,8 +171,10 @@ struct wearable : movable {
 	void		additem(item& v);
 	void		equip(item& v);
 	int			getmoney() const { return money; }
+	item*		getwear(wear_s id) { return wears + id; }
 	const char*	getwearname(wear_s id) const;
-	bool		isitem(const void* pv) const;
+	wear_s		getwearslot(const item* data) const;
+	const item*	getwear(const void* data) const;
 };
 struct monsteri : nameable, statable {
 	const char*	avatar;

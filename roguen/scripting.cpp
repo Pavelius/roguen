@@ -58,11 +58,24 @@ static void attack_forward(int bonus) {
 }
 
 static void inventory(int bonus) {
+	static wear_s source[] = {
+		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon,
+		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
+	};
 	auto push_header = answers::header;
 	answers::header = getnm("Inventory");
 	answers an;
-	an.add((void*)1, "Play");
-	an.choose("Test answers data", "Cancel");
+	for(auto i : source) {
+		auto pi = player->getwear(i);
+		auto pn = player->getwearname(i);
+		if(!pn)
+			pn = "-";
+		char temp[512]; stringbuilder sb(temp);
+		sb.add(pn);
+		pi->getinfo(sb, false);
+		an.add(pi, temp);
+	}
+	an.choose("Test answers data", 0);
 	answers::header = push_header;
 }
 

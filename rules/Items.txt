@@ -1,6 +1,6 @@
 #Item
 
-NoItem avatar("item-1")
+NoItem avatar("item-1") wear(MeleeWeapon)
  weapon damage(1 2)
 
 SP cost(1) avatar("items37") count(1)

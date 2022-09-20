@@ -11,13 +11,14 @@ using namespace draw;
 const int tsx = 64;
 const int tsy = 48;
 const int mst = 260;
-const int window_width = 420;
+const int window_width = 480;
 const int window_height = 280;
 const int panel_width = 120;
 
 static const void* focus_pressed;
 static unsigned long last_tick_message;
 static unsigned long start_stamp;
+static int wears_offset = 80;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -57,14 +58,28 @@ static color getcolor(int format_color) {
 	}
 }
 
-static void strokeup() {
+static void strokedown() {
 	rectpush push;
-	//fore = colors::w;
+	auto push_fore = fore;
+	fore = push_fore.mix(colors::text, 216);
 	line(caret.x, caret.y + height);
 	line(caret.x + width, caret.y);
-	//fore = colors::light;
-	//line(rc.x2, rc.y1, rc.x2, rc.y2 - 1);
-	//line(rc.x1 + 1, rc.y1, rc.x2 - 1, rc.y1);
+	fore = push_fore.mix(colors::window, 128);
+	line(caret.x, caret.y - height);
+	line(caret.x - width, caret.y);
+	fore = push_fore;
+}
+
+static void strokeup() {
+	rectpush push;
+	auto push_fore = fore;
+	fore = push_fore.mix(colors::window, 128);
+	line(caret.x, caret.y + height);
+	line(caret.x + width, caret.y);
+	fore = push_fore.mix(colors::text, 216);
+	line(caret.x, caret.y - height);
+	line(caret.x - width + 1, caret.y);
+	fore = push_fore;
 }
 
 static point to(point pt, direction_s d, int sx, int sy) {
@@ -553,6 +568,7 @@ static void fillbuttonpress() {
 
 static bool button(const char* format, unsigned key) {
 	static point pressed_caret;
+	rectpush push;
 	auto run = false;
 	if(hot.key == key)
 		pressed_caret = caret;
@@ -561,9 +577,17 @@ static bool button(const char* format, unsigned key) {
 		pressed_caret.clear();
 	}
 	auto pressed = (pressed_caret == caret);
-	strokeout(pressed ? fillbuttonpress : fillbutton, 1, 1);
-	strokeout(strokeborder, 1, 1);
-	texta(format, AlignCenter);
+	auto push_fore = fore;
+	fore = colors::button;
+	strokeout(rectf, 1, 1);
+	strokeout(pressed ? strokedown : strokeup, 1, 1);
+	fore = push_fore;
+	caret.x += (width - textw(format) + 1) / 2;
+	if(pressed) {
+		caret.x += 0;
+		caret.y += 1;
+	}
+	text(format);
 	return run;
 }
 
@@ -582,13 +606,9 @@ static bool button(unsigned key, int format_width) {
 }
 
 static void player_info() {
-	auto push_tab = tab_pixels;
-	tab_pixels = panel_width - 32;
-	char temp[260]; stringbuilder sb(temp);
-	sb.clear();
+	char temp[1024]; stringbuilder sb(temp); sb.clear();
 	player->getinfo(sb);
 	textf(temp);
-	tab_pixels = push_tab;
 }
 
 static void paint_status() {
@@ -644,7 +664,7 @@ static void reset_message() {
 	}
 }
 
-static void paint_console() {
+static void after_paint_all() {
 	paint_fow();
 	paint_message();
 	reset_message();
@@ -689,12 +709,16 @@ void adventure_mode() {
 
 static void answer_before_paint() {
 	paintobjects();
-	caret.x = (getwidth() - window_width - metrics::padding * 2 - panel_width) / 2;
-	caret.y = (getheight() - window_height - metrics::padding * 2) / 2;
+	caret.x = (getwidth() - window_width - panel_width) / 2;
+	caret.y = (getheight() - window_height) / 2;
 	width = window_width;
 	height = window_height;
 	strokeout(fillform, metrics::padding, metrics::padding);
-	strokeout(strokeborder, metrics::padding, metrics::padding);
+	auto push_fore = fore;
+	fore = colors::form;
+	strokeout(strokeup, metrics::padding, metrics::padding);
+	strokeout(strokeup, metrics::padding - 1, metrics::padding - 1);
+	fore = push_fore;
 	if(answers::header) {
 		auto push_font = font;
 		auto push_fore = fore;
@@ -723,12 +747,21 @@ static unsigned answer_key(int index) {
 static void answer_paint_cell(int index, const void* value, const char* format, fnevent proc) {
 	auto push_caret = caret;
 	unsigned key = value ? answer_key(index) : KeyEscape;
-	auto need_execute = button(key, 24);;
+	auto need_execute = button(key, 24);
+	if(bsdata<creature>::have(value)) {
+		auto pc = bsdata<creature>::elements + bsdata<creature>::source.indexof(value);
+		auto pi = pc->getwear(value);
+		auto st = pc->getwearslot(pi);
+		if(pi && st >= MeleeWeapon && st <= Elbows) {
+			text(bsdata<weari>::elements[st].getname());
+			caret.x += wears_offset; width -= wears_offset;
+		}
+	}
 	text(format);
 	if(need_execute)
 		execute(proc, (long)value);
 	caret = push_caret;
-	caret.y += texth() + 4 + 2;
+	caret.y += texth() + 2 + 2;
 }
 
 static void correct_camera() {
@@ -759,7 +792,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	metrics::padding = 4;
 	object::beforepaintall = before_paint_all;
 	object::afterpaint = object_afterpaint;
-	object::afterpaintall = paint_console;
+	object::afterpaintall = after_paint_all;
 	object::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;

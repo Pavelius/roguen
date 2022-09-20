@@ -1881,6 +1881,8 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 				y2 - y);
 		break;
 	case sprite::RAW1:
+		if(flags & TextBold)
+			raw1(xo, y - 1, s, f.sx, y2 - 1);
 		raw1(xo, y, s, f.sx, y2);
 		break;
 	case sprite::RAW8:
@@ -1948,14 +1950,13 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	case sprite::ALC:
 		if(flags & TextBold)
 			alc32(ptr(x, sy - 1), wd, s, y2 - y,
-				ptr(clipping.x1, sy - 1),
-				ptr(clipping.x2, sy - 1),
+				ptr(clipping.x1, sy - 1), ptr(clipping.x2, sy - 1),
 				fore, (flags & TextItalic) != 0);
-		if(flags & TextBold)
-			alc32(ptr(x, sy - 1), wd, s, y2 - y,
-				ptr(clipping.x1, sy - 1),
-				ptr(clipping.x2, sy - 1),
-				fore, (flags & TextItalic) != 0);
+		//if(flags & TextBold)
+		//	alc32(ptr(x, sy - 1), wd, s, y2 - y,
+		//		ptr(clipping.x1, sy - 1),
+		//		ptr(clipping.x2, sy - 1),
+		//		fore, (flags & TextItalic) != 0);
 		alc32(ptr(x, sy), wd, s, y2 - y,
 			ptr(clipping.x1, sy), ptr(clipping.x2, sy),
 			fore, (flags & TextItalic) != 0);
