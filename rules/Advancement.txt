@@ -1,4 +1,7 @@
 #Advancement
 
+Fighter 0
+ elements Strenght+4 Dexterity+2 Constitution+2
+
 DarkElf 0
  elements LeatherArmor Dagger

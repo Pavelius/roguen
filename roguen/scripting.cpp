@@ -68,12 +68,15 @@ static void inventory(int bonus) {
 	for(auto i : source) {
 		auto pi = player->getwear(i);
 		auto pn = player->getwearname(i);
-		if(!pn)
+		if(!pn) {
 			pn = "-";
-		char temp[512]; stringbuilder sb(temp);
-		sb.add(pn);
-		pi->getinfo(sb, false);
-		an.add(pi, temp);
+			an.add(pi, pn);
+		} else {
+			char temp[512]; stringbuilder sb(temp);
+			sb.add(pn);
+			pi->getinfo(sb, false);
+			an.add(pi, temp);
+		}
 	}
 	an.choose("Test answers data", 0);
 	answers::header = push_header;

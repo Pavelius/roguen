@@ -1,4 +1,1 @@
-﻿Damage: 
-Hits: 
-Mana: 
-Money: 
+﻿

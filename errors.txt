@@ -1,2 +1,4 @@
-﻿In file `locale/ru/Chats.txt`:
- Line 8: Unknown variant identifier `Ally`
+﻿In file `rules/Advancement.txt`:
+ Line 4: Can't find variant `Strenght`
+ Line 4: Can't find variant `Dexterity`
+ Line 4: Can't find variant `Constitution`

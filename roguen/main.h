@@ -63,6 +63,10 @@ extern stringbuilder console;
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
 extern point m2s(point v);
+struct statable {
+	char		abilities[Money + 1];
+	void		create();
+};
 struct abilityi : nameable {
 };
 struct racei : nameable {
@@ -76,10 +80,6 @@ struct weari : nameable {
 };
 struct indexa : adat<indext> {
 	void		select(point pt, int range);
-};
-struct statable {
-	char		abilities[Money + 1];
-	void		create();
 };
 class actable {
 	variant		kind; // Race or monster
@@ -184,6 +184,7 @@ struct spellable {
 	char		spells[Sleep + 1];
 };
 class creature : public wearable, public statable, public spellable {
+	short unsigned class_id;
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;

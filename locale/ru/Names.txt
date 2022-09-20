@@ -16,6 +16,11 @@ Intellect: Интеллект
 Strenght: Сила
 Wisdow: Мудрость
 
+Damage: Урон
+Hits: Хиты
+Mana: Мана
+Money: Деньги
+
 Ammunition: Амуниция
 Backward: Спина
 Elbows: Локти

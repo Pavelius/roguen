@@ -19,6 +19,9 @@ BSDATAC(monsteri, 512);
 BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};
+BSMETA(classi) = {
+	BSREQ(id),
+	{}};
 BSMETA(dice) = {
 	BSREQ(min),
 	BSREQ(max),
@@ -63,7 +66,9 @@ BSMETA(visualeffect) = {
 
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
+	{"Ability", VAR(abilityi), 1},
 	{"Advancement", VAR(advancement), 2},
+	{"Class", VAR(classi), 1},
 	{"Feat", VAR(feati), 1},
 	{"Hotkey", VAR(hotkey), 2},
 	{"HotkeyList", VAR(hotkeylist), 1},

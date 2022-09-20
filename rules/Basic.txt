@@ -1,3 +1,8 @@
+#Class
+
+Monster
+Fighter
+
 #Monster
 
 Goblin avatar("0")
