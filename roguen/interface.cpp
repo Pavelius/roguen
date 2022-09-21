@@ -201,6 +201,8 @@ static void paint_items() {
 	auto p1 = s2m(camera);
 	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx + 1, p1.y + getheight() / tsy + 1};
 	for(auto& e : bsdata<itemground>()) {
+		if(!e)
+			continue;
 		auto pt = i2m(e.index);
 		if(!pt.in(rc))
 			continue;
@@ -566,9 +568,13 @@ static void fillbuttonpress() {
 	fore = push_fore;
 }
 
-static bool button(const char* format, unsigned key) {
+static bool button(const char* format, unsigned key, int button_width) {
 	static point pressed_caret;
 	rectpush push;
+	height = texth();
+	width = button_width;
+	if(width == -1)
+		width = textw(format) + 6;
 	auto run = false;
 	if(hot.key == key)
 		pressed_caret = caret;
@@ -583,25 +589,23 @@ static bool button(const char* format, unsigned key) {
 	strokeout(pressed ? strokedown : strokeup, 1, 1);
 	fore = push_fore;
 	caret.x += (width - textw(format) + 1) / 2;
-	if(pressed) {
-		caret.x += 0;
+	if(pressed)
 		caret.y += 1;
-	}
 	text(format);
 	return run;
 }
+
+const char* findkeyname(unsigned key);
 
 static bool button(unsigned key, int format_width) {
 	if(!key)
 		return false;
 	char temp[2] = {(char)key, 0};
-	auto push_width = width;
-	auto push_height = height;
-	width = format_width; height = texth();
-	auto result = button(temp, key);
-	caret.x += width + 2 + 4;
-	width = push_width - width - 2 - 4;
-	height = push_height;
+	auto pn = findkeyname(key);
+	if(!pn)
+		pn = temp;
+	auto result = button(pn, key, format_width);
+	caret.x += format_width + 2 + 4;
 	return result;
 }
 
@@ -707,10 +711,14 @@ void adventure_mode() {
 	}
 }
 
+static point answer_end;
+
 static void answer_before_paint() {
 	paintobjects();
 	caret.x = (getwidth() - window_width - panel_width) / 2;
 	caret.y = (getheight() - window_height) / 2;
+	answer_end = caret;
+	answer_end.y += window_height - texth() - 2;
 	width = window_width;
 	height = window_height;
 	strokeout(fillform, metrics::padding, metrics::padding);
@@ -729,6 +737,13 @@ static void answer_before_paint() {
 		fore = push_fore;
 		font = push_font;
 	}
+}
+
+static void answer_after_paint() {
+	auto push_caret = caret;
+	caret = answer_end;
+	button(getnm("Cancel"), KeyEscape, -1);
+	caret = push_caret;
 }
 
 static unsigned answer_key(int index) {
@@ -796,6 +811,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	object::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;
+	answers::afterpaint = answer_after_paint;
 	draw::width = 640;
 	draw::height = 360;
 	initialize(getnm("AppTitle"));

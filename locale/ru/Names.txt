@@ -2,10 +2,12 @@ ApplyDamage: %герой получил%а [%1i] урона.
 ApplyKill: %герой упал%а на землю.
 AppTitle: Приключения в забытых Королевствах
 AttackMiss: %герой промазал%а.
+Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Goblin: Гоблин
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
+PickupItem: %герой поднял%а %-1.
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 

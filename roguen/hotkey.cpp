@@ -45,6 +45,14 @@ static hotname* findname(const char* p) {
 	return 0;
 }
 
+const char* findkeyname(unsigned key) {
+	for(auto& e : names) {
+		if(e.key == key)
+			return e.id;
+	}
+	return 0;
+}
+
 static unsigned parse_key(const char* p) {
 	unsigned result = 0;
 	while(*p) {

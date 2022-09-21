@@ -57,7 +57,7 @@ static void attack_forward(int bonus) {
 	player->wait();
 }
 
-static void inventory(int bonus) {
+static item* choose_wear() {
 	static wear_s source[] = {
 		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon,
 		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
@@ -76,7 +76,11 @@ static void inventory(int bonus) {
 			an.add(pi, temp);
 		}
 	}
-	an.choose(getnm("Inventory"), 0);
+	return (item*)an.choose(getnm("Inventory"), 0);
+}
+
+static void inventory(int bonus) {
+	choose_wear();
 }
 
 static void debug_message(int bonus) {
@@ -110,6 +114,13 @@ static void pickup(int bonus) {
 	if(!items)
 		return;
 	auto p = items.choose(getnm("PickItem"));
+	if(p) {
+		player->act(getnm("PickupItem"), p->getname());
+		player->additem(*p);
+	}
+}
+
+static void view_stuff(int bonus) {
 }
 
 BSDATA(script) = {
@@ -128,5 +139,6 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"ViewStuff", view_stuff},
 };
 BSDATAF(script)

@@ -1,7 +1,2 @@
-﻿In file `rules/Basic.txt`:
- Line 3: Not found requisit `md`
- Line 4: Not found requisit `md`
- Line 5: Not found requisit `md`
- Line 6: Not found requisit `md`
- Line 7: Not found requisit `md`
- Line 8: Not found requisit `md`
+﻿In file `rules/Advancement.txt`:
+Can't find script named 'ViewStuff' in hotkey mapping

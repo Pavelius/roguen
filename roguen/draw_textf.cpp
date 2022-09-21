@@ -18,42 +18,6 @@ static bool match(const char** string, const char* name) {
 	return true;
 }
 
-static const char* glink(const char* p, char* result, unsigned result_maximum) {
-	result[0] = 0;
-	if(p[0] == '(' && p[1] == '{') {
-		p = skipspcr(p + 2);
-		auto ps = result;
-		auto pe = ps + result_maximum;
-		while(p[0]) {
-			if(p[0] == '}' && p[1] == ')') {
-				p = skipspcr(p + 2);
-				break;
-			}
-			if(ps < pe)
-				*ps++ = *p;
-			p++;
-		}
-		*ps++ = 0;
-	} else if(*p == '\"') {
-		auto sym = *p++;
-		stringbuilder sb(result, result + result_maximum);
-		p = sb.psstr(p, sym);
-	} else if(*p == '(') {
-		p = skipspcr(p + 1);
-		auto ps = result;
-		auto pe = ps + result_maximum;
-		while(*p && *p != ')') {
-			if(ps < pe)
-				*ps++ = *p;
-			p++;
-		}
-		*ps++ = 0;
-		if(*p == ')')
-			p++;
-	}
-	return p;
-}
-
 static int gettabwidth() {
 	return tab_pixels ? tab_pixels : textw(' ') * 4;
 }
@@ -180,7 +144,6 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 				fore = colors::special;
 				break;
 			}
-			p = glink(p, temp, sizeof(temp) / sizeof(temp[0]) - 1);
 		} else if(p[0] == ']') {
 			p++; temp[0] = 0;
 			flags &= ~TextUscope;
@@ -236,6 +199,8 @@ static const char* parse_command(const char* p, int x1, int x2) {
 		p = sb.read(p, tab_pixels);
 		if(tab_pixels < 0)
 			tab_pixels = width + tab_pixels;
+	} else if(equal(temp, "Button")) {
+
 	}
 	return skipspcr(wholeline(p));
 }
