@@ -47,7 +47,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
-	Blunt, Martial, TwoHanded,
+	Blunt, Martial, TwoHanded, CutWoods,
 	WearLeather, WearIron, WearLarge, WearShield, Coins,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
@@ -131,6 +131,7 @@ struct itemi : nameable {
 	const char*	avatar;
 	variant		dress, use;
 	void		paint() const;
+	bool		is(feat_s v) const { return flags.is(v); }
 };
 class item {
 	unsigned short type;
@@ -149,7 +150,7 @@ public:
 	void		addname(stringbuilder& sb) const;
 	bool		canequip(wear_s v) const;
 	void		clear() { type = count = 0; }
-	void		create(const char* id, int count = 1);
+	void		create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void		create(const itemi* pi, int count = 1);
 	void		drop(indext index);
 	int			getavatar() const { return geti().wear_index; }

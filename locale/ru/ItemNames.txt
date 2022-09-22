@@ -27,6 +27,8 @@ RedRing: Красное кольцо
 SilverAmulet: Серебрянный амулет
 SilverRing: Серебрянное кольцо
 
+BattleAxe: Боевой топор
+
 LeatherArmor: Кожанная броня
 Shield: Щит
 Sword: Меч

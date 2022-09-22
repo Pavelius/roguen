@@ -482,7 +482,7 @@ void creature::paint() const {
 			image(pc, wears[Backward].getavatar(), flags);
 		// Primary arm
 		if(wears[MeleeWeapon].is(TwoHanded))
-			image(pa, wears[MeleeWeapon].getavatar(), flags);
+			image(pa, 9, flags);
 		else if(wears[MeleeWeapon])
 			image(pa, 36 + wears[MeleeWeapon].getavatar(), flags);
 		else
@@ -494,7 +494,7 @@ void creature::paint() const {
 		//	image(pc, 3, 0); // Throwing
 		// Secondanary arm
 		if(wears[MeleeWeapon].is(TwoHanded))
-			image(pa, 9, flags);
+			image(pa, wears[MeleeWeapon].getavatar(), flags);
 		else if(wears[MeleeWeaponOffhand])
 			image(pa, 10 + wears[MeleeWeaponOffhand].getavatar(), flags);
 		else
@@ -615,8 +615,10 @@ static void paint_status() {
 	auto push_width = width;
 	caret.x = getwidth() - panel_width;
 	caret.y = 0;
-	width = panel_width;
+	width = panel_width - 1;
+	height = getheight() - 1;
 	fillform();
+	strokeborder();
 	setoffset(metrics::border, metrics::border);
 	if(player)
 		player_info();

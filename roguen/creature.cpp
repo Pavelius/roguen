@@ -100,6 +100,17 @@ void creature::interaction(indext index) {
 				area.set(index, Activated);
 			else
 				area.remove(index, Activated);
+		} else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
+			auto& wei = wears[MeleeWeapon].geti();
+			auto chance = wei.weapon.damage.max;
+			if(wei.is(TwoHanded))
+				chance += wei.weapon.damage.max;
+			if(d100() < chance) {
+				act(getnm("YouCutWood"), getnm(ei.id));
+				area.features[index] = NoFeature;
+				item lags; lags.create("Lags");
+				lags.drop(index);
+			}
 		}
 	}
 }

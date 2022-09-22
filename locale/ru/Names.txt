@@ -5,15 +5,17 @@ AttackMiss: %герой промазал%а.
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 DropItem: Избавиться от предмета
-DropdownItem: %герой положил%а %1.
+DropdownItem: %герой положил%а %-1.
 Goblin: Гоблин
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
 No: Нет
 PickupItem: %герой поднял%а %-1.
+Tree: Дерево
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
+YouCutWood: %герой срубил%а %-1.
 
 Charisma: Харизма
 Constitution: Телосложение

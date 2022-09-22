@@ -25,7 +25,7 @@ enum feature_s : unsigned char {
 	Trap, Door,
 };
 enum areaf : unsigned char {
-	Impassable, ImpassableNonActive, AllowActivate, BetweenWalls,
+	Impassable, ImpassableNonActive, AllowActivate, BetweenWalls, Woods,
 };
 inline indext m2i(point v) { return v.x + v.y * mps; }
 inline indext m2i(int x, int y) { return x + y * mps; }
@@ -59,7 +59,7 @@ struct areamap {
 	bool			linelossv(int x0, int y0, int x1, int y1);
 	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
 	void			set(indext i, tile_s v);
-	void			set(indext i, feature_s v) { features[i] = v; }
+	void			set(indext i, feature_s v);
 	void			set(rect rc, tile_s v);
 	void			set(rect rc, tile_s v, int random_count);
 	void			set(rect rc, feature_s v, int random_count);

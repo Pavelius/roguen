@@ -112,6 +112,12 @@ void areamap::set(indext i, tile_s v) {
 	features[i] = NoFeature;
 }
 
+void areamap::set(indext i, feature_s v) {
+	if(i == Blocked)
+		return;
+	features[i] = v;
+}
+
 void areamap::set(rect rc, tile_s v) {
 	for(short y = rc.y1; y <= rc.y2; y++) {
 		if(y < 0)

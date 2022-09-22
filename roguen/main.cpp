@@ -76,6 +76,12 @@ static void place_building(const rect& rc, tile_s wall) {
 	setdoor(m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1)), ei.tile);
 }
 
+static void create_item(indext index, const char* id) {
+	auto pi = bsdata<itemground>::add();
+	pi->index = index;
+	pi->create(id);
+}
+
 static void main_start() {
 	area.clear();
 	area.set({0, 0, mps, mps}, Grass);
@@ -103,9 +109,8 @@ static void main_start() {
 	area.set(m2i({8, 5}), Plant);
 	area.set(m2i({5, 3}), Herbs);
 	area.set(m2i({5, 5}), Trap);
-	auto p1 = bsdata<itemground>::add();
-	p1->index = m2i({8, 3});
-	p1->create(bsdata<itemi>::find("Sword"), 1);
+	create_item(m2i(4, 4), "Sword");
+	create_item(m2i(4, 4), "BattleAxe");
 	setnext(game.play);
 }
 

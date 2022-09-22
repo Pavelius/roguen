@@ -13,6 +13,7 @@ BSDATA(feati) = {
 	{"Blunt"},
 	{"Martial"},
 	{"TwoHanded"},
+	{"CutWoods"},
 	{"WearLeather"},
 	{"WearIron"},
 	{"WearLarge"},

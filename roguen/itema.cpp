@@ -4,6 +4,8 @@ void itema::select(indext index) {
 	auto pb = data;
 	auto pe = endof();
 	for(auto& e : bsdata<itemground>()) {
+		if(!e)
+			continue;
 		if(e.index != index)
 			continue;
 		if(pb < pe)

@@ -16,6 +16,8 @@ FancyStones cost(100) avatar("item396") count(1)
 PreciousStones cost(500) avatar("item399") count(1)
 GemStones cost(1000) avatar("item392") count(1)
 
+Lags cost(10) avatar("item452") count(1)
+
 IronRing cost(300) weight(1) avatar("item44")
 SilverRing cost(500) weight(1) avatar("item45")
 GoldenRing cost(800) weight(1) avatar("item48")
@@ -26,7 +28,7 @@ SilverAmulet cost(1000) weight(4) avatar("item168")
 GoldAmulet cost(1600) weight(5) avatar("item175")
 
 BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar("item189")
- flags Martial Slow TwoHanded
+ flags Martial Slow TwoHanded CutWoods
  weapon damage(1 8)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1")
  flags Martial Blunt
@@ -34,7 +36,7 @@ Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1")
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0")
  weapon damage(1 4)
 Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345")
- flags Martial Slow TwoHanded WearLarge
+ flags Martial Slow TwoHanded WearLarge CutWoods
  weapon damage(1 10)
 HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5")
  flags Martial
