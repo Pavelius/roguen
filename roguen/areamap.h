@@ -43,6 +43,7 @@ struct areamap {
 	void			clear();
 	static void		clearpath();
 	static direction_s getdirection(point s, point d);
+	feature_s		getfeature(indext i) const;
 	unsigned char	getfow(indext i) const;
 	int				getindex(indext i, tile_s e) const;
 	static indext	getnext(indext start, indext goal);
@@ -60,6 +61,9 @@ struct areamap {
 	void			set(indext i, tile_s v);
 	void			set(indext i, feature_s v) { features[i] = v; }
 	void			set(rect rc, tile_s v);
+	void			set(rect rc, tile_s v, int random_count);
+	void			set(rect rc, feature_s v, int random_count);
+	void			set(feature_s v, int bonus);
 	void			setlos(indext index, int radius);
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);

@@ -231,6 +231,9 @@
     <ClCompile Include="itema.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="generator.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

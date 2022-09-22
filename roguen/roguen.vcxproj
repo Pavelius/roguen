@@ -166,6 +166,7 @@
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="generator.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="indexa.cpp" />
     <ClCompile Include="information.cpp" />

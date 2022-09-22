@@ -201,7 +201,6 @@ class creature : public wearable, public statable, public spellable {
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
-	void		clear();
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
 	void		fixcantgo() const;
@@ -224,6 +223,7 @@ public:
 	void		checkmood() {}
 	void		checkpoison() {}
 	void		checksick() {}
+	void		clear();
 	void		damage(int v);
 	void		finish();
 	int			get(ability_s v) const { return abilities[v]; }

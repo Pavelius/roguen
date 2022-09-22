@@ -127,6 +127,24 @@ void areamap::set(rect rc, tile_s v) {
 	}
 }
 
+void areamap::set(rect rc, tile_s v, int random_count) {
+	while(random_count > 0) {
+		auto x = rc.x1 + rand() % (rc.width() + 1);
+		auto y = rc.y1 + rand() % (rc.height() + 1);
+		set(m2i(x, y), v);
+		random_count--;
+	}
+}
+
+void areamap::set(rect rc, feature_s v, int random_count) {
+	while(random_count > 0) {
+		auto x = rc.x1 + rand() % (rc.width() + 1);
+		auto y = rc.y1 + rand() % (rc.height() + 1);
+		set(m2i(x, y), v);
+		random_count--;
+	}
+}
+
 void areamap::removechance(mapf_s v, int chance) {
 	for(auto i = 0; i < mps * mps; i++) {
 		if(!is(i, v))
@@ -386,4 +404,19 @@ void areamap::setlos(indext index, int r) {
 		linelossv(pt.x, pt.y, pt.x - r, y);
 		linelossv(pt.x, pt.y, pt.x + r, y);
 	}
+}
+
+feature_s areamap::getfeature(indext i) const {
+	if(i == Blocked)
+		return NoFeature;
+	return features[i];
+}
+
+void areamap::set(feature_s v, int bonus) {
+	auto count = mps * mps;
+	rect rc = {0, 0, mps - 1, mps - 1};
+	if(bonus < 0)
+		set(rc, v, xrand(-bonus / 2, -bonus));
+	else
+		set(rc, v, count * bonus / 100);
 }
