@@ -230,7 +230,9 @@ static int compare(const void* v1, const void* v2) {
 		return p1->position.y - p2->position.y;
 	if(p1->priority != p2->priority)
 		return p1->priority - p2->priority;
-	return p1->position.x - p2->position.x;
+	if(p1->position.x != p2->position.x)
+		return p1->position.x - p2->position.x;
+	return p1 - p2;
 }
 
 static void sortobjects(object** pb, size_t count) {

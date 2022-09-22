@@ -35,6 +35,8 @@ void creature::getinfo(stringbuilder& sb) const {
 	addf(sb, Hits, abilities[Hits], abilities[HitsMaximum]);
 	addf(sb, Mana, abilities[Mana], abilities[ManaMaximum]);
 	addf(sb, Money, getmoney());
+	sb.addn("---");
+	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());
 }
 
 void item::getinfo(stringbuilder& sb, bool need_name) const {

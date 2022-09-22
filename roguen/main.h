@@ -282,6 +282,7 @@ class gamei {
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:
 	static void	all(creature::fnupdate proc);
+	unsigned	getminutes() const { return minutes; }
 	void		pass(unsigned minutes);
 	void		passminute();
 	static void	play();
