@@ -20,3 +20,32 @@ item* itema::choose(const char* title) const {
 		an.add(p, p->getname());
 	return (item*)an.choose(title, 0);
 }
+
+void itema::select(creature* p) {
+	auto pb = data;
+	auto pe = endof();
+	if(!p)
+		return;
+	for(auto& e : p->wears) {
+		if(!e)
+			continue;
+		if(pb < pe)
+			*pb++ = &e;
+	}
+	count = pb - data;
+}
+
+void itema::selectbackpack(creature* p) {
+	auto pb = data;
+	auto pe = endof();
+	if(!p)
+		return;
+	for(auto i = Backpack; i <= BackpackLast; i=(wear_s)(i+1)) {
+		auto& e = p->wears[i];
+		if(!e)
+			continue;
+		if(pb < pe)
+			*pb++ = &e;
+	}
+	count = pb - data;
+}

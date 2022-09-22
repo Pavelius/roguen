@@ -109,6 +109,7 @@ void areamap::set(indext i, tile_s v) {
 	if(i == Blocked)
 		return;
 	tiles[i] = v;
+	features[i] = NoFeature;
 }
 
 void areamap::set(rect rc, tile_s v) {

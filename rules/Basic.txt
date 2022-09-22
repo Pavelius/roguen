@@ -29,6 +29,7 @@ Bartender avatar("130")
 
 AdventureKeys
  elements AttackForward "A"
+ elements DropDown "D"
  elements Inventory "I"
  elements MoveUp "Up"
  elements MoveUpLeft "Home"

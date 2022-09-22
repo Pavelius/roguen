@@ -4,6 +4,8 @@ AppTitle: Приключения в забытых Королевствах
 AttackMiss: %герой промазал%а.
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
+DropItem: Избавиться от предмета
+DropdownItem: %герой положил%а %1.
 Goblin: Гоблин
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы

@@ -42,7 +42,7 @@ HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5")
 Mace cost(5) weight(30) wear(MeleeWeapon) avatar("item24")
  flags Martial Blunt
  weapon damage(1 6)
-Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4")
+Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4") wear_index(23)
  flags Martial
  weapon damage(1 8)
 

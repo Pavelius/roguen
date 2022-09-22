@@ -151,6 +151,7 @@ public:
 	void		clear() { type = count = 0; }
 	void		create(const char* id, int count = 1);
 	void		create(const itemi* pi, int count = 1);
+	void		drop(indext index);
 	int			getavatar() const { return geti().wear_index; }
 	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
 	void		getinfo(stringbuilder& sb, bool need_name) const;
@@ -171,9 +172,12 @@ public:
 struct itema : adat<item*> {
 	item*		choose(const char* title) const;
 	void		select(indext index);
+	void		select(creature* p);
+	void		selectbackpack(creature* p);
 };
 struct itemground : item {
 	indext		index;
+	static void dropitem(item& it);
 };
 struct wearable : movable {
 	item		wears[Elbows + 1];

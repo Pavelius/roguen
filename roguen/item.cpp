@@ -69,3 +69,12 @@ creature* item::getowner() const {
 		return 0;
 	return bsdata<creature>::elements + i;
 }
+
+void item::drop(indext index) {
+	if(index == Blocked)
+		return;
+	auto pi = bsdata<itemground>::add();
+	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
+	pi->index = index;
+	clear();
+}

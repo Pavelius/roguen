@@ -154,6 +154,18 @@ static void pickup(int bonus) {
 	}
 }
 
+static void dropdown(int bonus) {
+	itema items;
+	items.selectbackpack(player);
+	if(!items)
+		return;
+	auto p = items.choose(getnm("DropItem"));
+	if(p) {
+		player->act(getnm("DropdownItem"), p->getname());
+		p->drop(player->getindex());
+	}
+}
+
 static void view_stuff(int bonus) {
 }
 
@@ -162,6 +174,7 @@ BSDATA(script) = {
 	{"ChooseCreature", choose_creature},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
+	{"DropDown", dropdown},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},
