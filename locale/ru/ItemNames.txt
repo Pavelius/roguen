@@ -32,3 +32,6 @@ BattleAxe: Боевой топор
 LeatherArmor: Кожанная броня
 Shield: Щит
 Sword: Меч
+
+Lags: Древесина
+SmallLags: Маленькая ветка

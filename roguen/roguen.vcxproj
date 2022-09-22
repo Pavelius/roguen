@@ -166,6 +166,7 @@
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="generation.cpp" />
     <ClCompile Include="generator.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="indexa.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="flagable.h" />
+    <ClInclude Include="generator.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
     <ClInclude Include="keyname.h" />
@@ -260,6 +262,7 @@
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Items.txt" />
+    <Text Include="..\rules\Tables.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

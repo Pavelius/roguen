@@ -2,6 +2,7 @@
 #include "areamap.h"
 #include "dice.h"
 #include "flagable.h"
+#include "generator.h"
 #include "hotkey.h"
 #include "crt.h"
 #include "list.h"

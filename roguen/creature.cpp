@@ -89,6 +89,16 @@ void creature::movestep(direction_s v) {
 	movestep(to(getindex(), v));
 }
 
+static void drop_item(indext index, const char* id) {
+	if(index == Blocked || !id)
+		return;
+	itemi* pi = random_value(id);
+	if(!pi)
+		return;
+	item it; it.create(pi);
+	it.drop(index);
+}
+
 void creature::interaction(indext index) {
 	if(index == Blocked)
 		return;
@@ -108,8 +118,7 @@ void creature::interaction(indext index) {
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
 				area.features[index] = NoFeature;
-				item lags; lags.create("Lags");
-				lags.drop(index);
+				drop_item(index, "WoodenLagsTable");
 			}
 		}
 	}

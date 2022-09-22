@@ -231,11 +231,14 @@
     <ClCompile Include="itema.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="generator.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="keyname.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="generator.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="generation.cpp">
+      <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +347,9 @@
     <ClInclude Include="keyname.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="generator.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -372,6 +378,9 @@
     </Text>
     <Text Include="..\locale\ru\ItemNames.txt">
       <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\rules\Tables.txt">
+      <Filter>Data</Filter>
     </Text>
   </ItemGroup>
 </Project>

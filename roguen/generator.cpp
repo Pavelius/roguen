@@ -1,54 +1,122 @@
-#include "main.h"
+#include "bsreq.h"
+#include "generator.h"
+#include "list.h"
+#include "logparse.h"
 
-static int compare_rect(const void* p1, const void* p2) {
-	auto e1 = (rect*)p1;
-	auto e2 = (rect*)p2;
-	return e2->width() * e2->height() - e1->width() * e1->height();
+using namespace log;
+
+BSMETA(generatori) = {
+	BSREQ(id),
+	BSREQ(chance),
+	BSREQ(value),
+	{}};
+BSDATAC(generatori, 256)
+
+typedef slice<generatori> generatora;
+
+void generatori::clear() {
+	memset(this, 0, sizeof(*this));
 }
 
-static bool iswall(indext i, direction_s d1, direction_s d2) {
-	return area.iswall(i, d1)
-		&& area.iswall(i, d2);
+static generatora find_elements(const char* id) {
+	generatori* p1 = 0;
+	generatori* p2 = 0;
+	for(auto& e : bsdata<generatori>()) {
+		if(!p1) {
+			if(equal(e.id, id)) {
+				p1 = &e;
+				p2 = &e;
+			}
+		} else if(!equal(e.id, id))
+			break;
+		else
+			p2 = &e;
+	}
+	return generatora(p1, p2 + 1);
 }
 
-static bool isonewall(indext i, direction_s d1, direction_s d2) {
-	return area.iswall(i, d1)
-		|| area.iswall(i, d2);
+static int total_chance(const generatora& elements) {
+	auto result = 0;
+	for(auto& e : elements)
+		result += e.chance;
+	return result;
 }
 
-static bool isoneof(indext i, direction_s d1, direction_s d2, feature_s v) {
-	auto f1 = area.getfeature(to(i, d1));
-	auto f2 = area.getfeature(to(i, d1));
-	return f1 == v || f2 == v;
-}
-
-static void update_doors() {
-	for(indext i = 0; i <= mps * mps; i++) {
-		if(bsdata<featurei>::elements[area.features[i]].is(BetweenWalls)) {
-			if(iswall(i, West, East) && !isoneof(i, North, South, Door) && !isonewall(i, North, South))
-				continue;
-			if(iswall(i, North, South) && !isoneof(i, West, East, Door) && !isonewall(i, West, East))
-				continue;
-			area.set(i, NoFeature);
+static variant random_value_raw(const char* id) {
+	auto elements = find_elements(id);
+	auto total = total_chance(elements);
+	if(total) {
+		auto result = rand() % total;
+		for(auto& e : elements) {
+			if(result < e.chance)
+				return e.value;
+			result -= e.chance;
 		}
 	}
+	return variant();
 }
 
-static void update_creatures() {
-	for(auto& e : bsdata<creature>()) {
-		if(!e)
-			continue;
-		auto i = e.getindex();
-		if(area.getfeature(i) == Door)
-			e.clear();
+variant random_list_value(variant value) {
+	if(value.iskind<listi>()) {
+		auto pi = bsdata<listi>::elements + value.value;
+		if(!pi->elements)
+			return variant();
+		return random_list_value(pi->elements.begin()[(rand() % pi->elements.count)]);
 	}
+	return value;
 }
 
-static void update_items() {
-	for(auto& e : bsdata<itemground>()) {
-		if(!e || e.index == Blocked)
-			continue;
-		if(area.getfeature(e.index) == Door)
-			e.clear();
+variant random_value(const char* id) {
+	return random_list_value(random_value_raw(id));
+}
+
+static const char* readid(const char* p, const char*& result) {
+	result = 0;
+	char temp[260]; stringbuilder sb(temp);
+	p = sb.psidf(p);
+	result = szdup(temp);
+	return skipws(p);
+}
+
+static const char* readval(const char* p, char& value) {
+	int v;
+	p = stringbuilder::read(p, v);
+	value = v;
+	return skipws(p);
+}
+
+static const char* readval(const char* p, variant& value) {
+	char temp[260]; stringbuilder sb(temp);
+	p = readval(p, sb, value);
+	return skipws(p);
+}
+
+static const char* read_table(const char* p, const char* id) {
+	while(p && p[0] && p[0] != '#') {
+		auto pn = bsdata<generatori>::add();
+		pn->clear();
+		pn->id = id;
+		p = readval(p, pn->chance);
+		p = readval(p, pn->value);
+		p = skipspcr(p);
 	}
+	return p;
+}
+
+void generatori::read(const char* url) {
+	auto p = log::read(url);
+	if(!p)
+		return;
+	allowparse = true;
+	while(allowparse && *p) {
+		if(!checksym(p, '#'))
+			break;
+		const char* id;
+		p = readid(p + 1, id);
+		if(!checksym(p, '\n'))
+			break;
+		p = skipspcr(p);
+		p = read_table(p, id);
+	}
+	log::close();
 }

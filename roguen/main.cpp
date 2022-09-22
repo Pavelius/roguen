@@ -16,6 +16,7 @@ static void initializating() {
 	bsreq::read("rules/Advancement.txt");
 	hotkey::initialize();
 	readl("Chats", speech::read);
+	generatori::read("rules/Tables.txt");
 #ifdef _DEBUG
 	main_util();
 #endif

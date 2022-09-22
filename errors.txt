@@ -1,2 +1,1 @@
-﻿In file `rules/Advancement.txt`:
-Can't find script named 'ViewStuff' in hotkey mapping
+﻿Can't find file 'rules/Tables'

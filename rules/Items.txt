@@ -17,6 +17,7 @@ PreciousStones cost(500) avatar("item399") count(1)
 GemStones cost(1000) avatar("item392") count(1)
 
 Lags cost(10) avatar("item452") count(1)
+SmallLags cost(10) avatar("item467") count(1)
 
 IronRing cost(300) weight(1) avatar("item44")
 SilverRing cost(500) weight(1) avatar("item45")
