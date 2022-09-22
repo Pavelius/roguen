@@ -2,6 +2,7 @@
 #include "bsreq.h"
 #include "draw.h"
 #include "draw_object.h"
+#include "keyname.h"
 #include "log.h"
 #include "main.h"
 #include "resource.h"
@@ -581,20 +582,18 @@ static void paint_button(const char* format, bool pressed) {
 	else
 		strokeup();
 	fore = push_fore;
-	caret.x += (width - textw(format) + 1) / 2;
+	caret.x += 1 + (width - textw(format) + 1) / 2;
 	if(pressed)
 		caret.y += 1;
 	text(format);
 	caret = push_caret;
 }
 
-const char* findkeyname(unsigned key);
-
 static bool button(unsigned key, int format_width) {
 	if(!key)
 		return false;
 	char temp[2] = {(char)key, 0};
-	auto pn = findkeyname(key);
+	auto pn = findnamebykey(key);
 	if(!pn)
 		pn = temp;
 	auto push_width = width;

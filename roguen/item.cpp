@@ -52,3 +52,20 @@ void item::create(const itemi* pi, int count) {
 dice item::getdamage() const {
 	return geti().weapon.damage;
 }
+
+bool item::is(wear_s v) const {
+	auto wear = geti().wear;
+	switch(v) {
+	case FingerLeft: case FingerRight:
+		return (wear == FingerRight);
+	default:
+		return wear == v;
+	}
+}
+
+creature* item::getowner() const {
+	auto i = bsdata<creature>::source.indexof(this);
+	if(i == -1)
+		return 0;
+	return bsdata<creature>::elements + i;
+}

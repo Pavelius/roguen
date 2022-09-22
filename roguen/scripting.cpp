@@ -79,8 +79,40 @@ static item* choose_wear() {
 	return (item*)an.choose(getnm("Inventory"), getnm("Cancel"));
 }
 
+static item* choose_stuff(wear_s wear) {
+	answers an;
+	char temp[512]; stringbuilder sb(temp);
+	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i+1)) {
+		auto pi = player->getwear(i);
+		if(!(*pi))
+			continue;
+		if(wear && !pi->is(wear))
+			continue;
+		sb.clear();
+		pi->getinfo(sb, true);
+		an.add(pi, temp);
+	}
+	sb.clear();
+	sb.add("Choose %1", bsdata<weari>::elements[wear].getname());
+	return (item*)an.choose(temp, getnm("Cancel"));
+}
+
 static void inventory(int bonus) {
-	choose_wear();
+	while(true) {
+		auto pi = choose_wear();
+		if(!pi)
+			break;
+		auto owner = pi->getowner();
+		if(!owner)
+			break;
+		if((*pi))
+			player->additem(*pi);
+		else {
+			auto ni = choose_stuff(owner->getwearslot(pi));
+			if(ni)
+				iswap(*ni, *pi);
+		}
+	}
 }
 
 static void debug_message(int bonus) {

@@ -2,6 +2,7 @@
 #include "crt.h"
 #include "draw.h"
 #include "hotkey.h"
+#include "keyname.h"
 #include "log.h"
 #include "script.h"
 #include "stringbuilder.h"
@@ -17,42 +18,6 @@ BSMETA(hotkeylist) = {
 	BSREQ(elements),
 	{}};
 
-namespace {
-struct hotname {
-	const char*		id;
-	unsigned		key;
-};
-hotname names[] = {
-	{"Down", KeyDown},
-	{"End", KeyEnd},
-	{"Esc", KeyEscape},
-	{"Home", KeyHome},
-	{"Left", KeyLeft},
-	{"Right", KeyRight},
-	{"PageUp", KeyPageUp},
-	{"PageDown", KeyPageDown},
-	{"Up", KeyUp},
-	{"Ctrl", Ctrl},
-	{"Alt", Alt},
-};
-}
-
-static hotname* findname(const char* p) {
-	for(auto& e : names) {
-		if(equal(e.id, p))
-			return &e;
-	}
-	return 0;
-}
-
-const char* findkeyname(unsigned key) {
-	for(auto& e : names) {
-		if(e.key == key)
-			return e.id;
-	}
-	return 0;
-}
-
 static unsigned parse_key(const char* p) {
 	unsigned result = 0;
 	while(*p) {
@@ -62,12 +27,12 @@ static unsigned parse_key(const char* p) {
 			if(temp[1] == 0)
 				result |= temp[0];
 			else {
-				auto pn = findname(temp);
-				if(!pn) {
+				auto key = findkeybyname(temp);
+				if(!key) {
 					log::error(0, "Wrong key name '%1' in hotkey", temp);
 					return 0;
 				} else
-					result |= pn->key;
+					result |= key;
 			}
 		} else if(isnum(*p))
 			result |= *p++;

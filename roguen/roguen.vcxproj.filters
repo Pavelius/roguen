@@ -234,6 +234,9 @@
     <ClCompile Include="generator.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="keyname.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -336,6 +339,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="speech.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="keyname.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

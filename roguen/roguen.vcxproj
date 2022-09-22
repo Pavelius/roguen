@@ -175,6 +175,7 @@
     <ClCompile Include="io_stream.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="itema.cpp" />
+    <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="flagable.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
+    <ClInclude Include="keyname.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="logparse.h" />

@@ -159,9 +159,11 @@ public:
 	dice		getdamage() const;
 	magic_s		getmagic() const { return magic; }
 	const char*	getname() const { return geti().getname(); }
+	class creature* getowner() const;
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(feat_s v) const { return geti().flags.is(v); }
+	bool		is(wear_s v) const;
 	bool		iscountable() const { return geti().count != 0; }
 	bool		isidentified() const { return identified != 0; }
 	void		setcount(int v);
