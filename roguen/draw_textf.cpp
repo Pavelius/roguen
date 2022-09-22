@@ -8,6 +8,7 @@ int draw::tab_pixels = 0;
 long draw::text_params[16];
 static const char* text_start_string;
 static int text_start_horiz;
+static int button_index;
 static point maxcaret;
 
 static bool match(const char** string, const char* name) {
@@ -192,16 +193,40 @@ static void execute_tab() {
 	tab_pixels = text_params[0];
 }
 
+static const char* text_block(const char* p, int x1, int x2);
+
+static const char* paint_button(const char* p, int x1, int x2, stringbuilder& sb) {
+	auto push_width = width;
+	int pointer;
+	sb.clear();
+	p = sb.read(p, width);
+	p = sb.read(skipsp(p), pointer);
+	auto pn = sb.get();
+	p = sb.psidf(skipsp(p)); sb.addsz();
+	auto pk = sb.get();
+	p = sb.psidf(skipsp(p)); sb.addsz();
+	auto pt = sb.get();
+	p = sb.psstrlf(skipsp(p)); sb.addsz();
+	if(pbutton) {
+		button(pn, pk[0], pbutton, false);
+		if(pt[0]) {
+			text_block(pt, caret.x, x2);
+			caret.y += 2;
+		}
+	}
+	width = push_width;
+	return p;
+}
+
 static const char* parse_command(const char* p, int x1, int x2) {
-	char temp[32]; stringbuilder sb(temp);
+	char temp[1024]; stringbuilder sb(temp);
 	p = skipsp(sb.psidf(p));
 	if(equal(temp, "Tab")) {
 		p = sb.read(p, tab_pixels);
 		if(tab_pixels < 0)
 			tab_pixels = width + tab_pixels;
-	} else if(equal(temp, "Button")) {
-
-	}
+	} else if(equal(temp, "Button"))
+		p = paint_button(p, x1, x2, sb);
 	return skipspcr(wholeline(p));
 }
 
@@ -258,6 +283,7 @@ static const char* text_block(const char* p, int x1, int x2) {
 }
 
 void draw::textf(const char* p) {
+	button_index = 0;
 	auto push_width = width;
 	auto push_height = height;
 	auto push_tab = tab_pixels;

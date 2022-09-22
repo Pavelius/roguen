@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "draw.h"
+#include "pushvalue.h"
 
 using namespace draw;
 
@@ -49,12 +50,12 @@ void answers::paintanswers(int columns, const char* cancel_text) const {
 	}
 	caret.x = x1; caret.y = y2;
 	width = push_width_normal;
-	if(cancel_text) {
-		auto push_fore = fore;
-		fore = fore.mix(colors::h3, 128);
-		paintcell(elements.getcount(), 0, cancel_text, buttonparam);
-		fore = push_fore;
-	}
+	//if(cancel_text) {
+	//	auto push_fore = fore;
+	//	fore = fore.mix(colors::h3, 128);
+	//	paintcell(elements.getcount(), 0, cancel_text, buttonparam);
+	//	fore = push_fore;
+	//}
 }
 
 void* answers::choose(const char* title, const char* cancel_text, int cancel_mode) const {
@@ -69,11 +70,13 @@ void* answers::choose(const char* title, const char* cancel_text, int cancel_mod
 	auto columns = column_count;
 	if(columns == -1)
 		columns = getcolumns(*this);
-	auto push_title = prompa;
+	pushvalue push_title(prompa);
+	pushvalue push_cancel(answers::cancel_text);
+	pushvalue push_height(height);
 	auto push_caret = caret;
 	auto push_width = width;
-	auto push_height = height;
 	prompa = title;
+	answers::cancel_text = cancel_text;
 	while(ismodal()) {
 		paintstart();
 		if(beforepaint)
@@ -89,6 +92,5 @@ void* answers::choose(const char* title, const char* cancel_text, int cancel_mod
 		paintfinish();
 		domodal();
 	}
-	prompa = push_title;
 	return (void*)getresult();
 }

@@ -7,9 +7,11 @@ CantGoThisWay: Сюда не пройти.
 Goblin: Гоблин
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
+No: Нет
 PickupItem: %герой поднял%а %-1.
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
+Yes: Да
 
 Charisma: Харизма
 Constitution: Телосложение

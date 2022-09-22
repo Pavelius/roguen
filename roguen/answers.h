@@ -23,6 +23,7 @@ public:
 	static const char*	prompt;
 	static const char*	prompa;
 	static const char*	resid;
+	static const char*	cancel_text;
 	static bool			show_tips;
 	answers() : sc(buffer) {}
 	constexpr operator bool() const { return elements.count != 0; }

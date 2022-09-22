@@ -5,7 +5,7 @@
 #pragma once
 
 typedef void(*fnevent)();
-typedef bool(*fnbutton)(const char* title);
+typedef void(*fnbutton)(const char* title, bool pressed);
 
 enum draw_event_s : unsigned {
 	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 0x7F,
@@ -173,6 +173,7 @@ extern color*			palt;
 extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pfinish, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
+extern fnbutton			pbutton;
 struct rectpush {
 	point				caret;
 	int					width, height;

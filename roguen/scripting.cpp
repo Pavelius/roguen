@@ -76,7 +76,7 @@ static item* choose_wear() {
 			an.add(pi, temp);
 		}
 	}
-	return (item*)an.choose(getnm("Inventory"), 0);
+	return (item*)an.choose(getnm("Inventory"), getnm("Cancel"));
 }
 
 static void inventory(int bonus) {
@@ -84,7 +84,9 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	console.adds("Sprites %1i", bsdata<draw::object>::source.count);
+	console.addn("Some text message");
+	console.addn("$Button 20 2 (1) (1) Use your [artifact] with blinding matter.");
+	console.addn("$Button 20 4 (2) (2) Try to avoid danger and retreat from this forest.");
 }
 
 static void open_nearest_door(int bonus) {

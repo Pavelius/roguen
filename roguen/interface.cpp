@@ -568,31 +568,24 @@ static void fillbuttonpress() {
 	fore = push_fore;
 }
 
-static bool button(const char* format, unsigned key, int button_width) {
-	static point pressed_caret;
-	rectpush push;
+static void paint_button(const char* format, bool pressed) {
+	auto push_caret = caret;
 	height = texth();
-	width = button_width;
 	if(width == -1)
 		width = textw(format) + 6;
-	auto run = false;
-	if(hot.key == key)
-		pressed_caret = caret;
-	else if(hot.key == InputKeyUp && pressed_caret == caret) {
-		run = true;
-		pressed_caret.clear();
-	}
-	auto pressed = (pressed_caret == caret);
 	auto push_fore = fore;
 	fore = colors::button;
-	strokeout(rectf, 1, 1);
-	strokeout(pressed ? strokedown : strokeup, 1, 1);
+	rectf();
+	if(pressed)
+		strokedown();
+	else
+		strokeup();
 	fore = push_fore;
 	caret.x += (width - textw(format) + 1) / 2;
 	if(pressed)
 		caret.y += 1;
 	text(format);
-	return run;
+	caret = push_caret;
 }
 
 const char* findkeyname(unsigned key);
@@ -604,8 +597,10 @@ static bool button(unsigned key, int format_width) {
 	auto pn = findkeyname(key);
 	if(!pn)
 		pn = temp;
-	auto result = button(pn, key, format_width);
-	caret.x += format_width + 2 + 4;
+	auto push_width = width;
+	width = format_width;
+	auto result = draw::button(temp, key, draw::pbutton, false);
+	width = push_width;
 	return result;
 }
 
@@ -739,13 +734,6 @@ static void answer_before_paint() {
 	}
 }
 
-static void answer_after_paint() {
-	auto push_caret = caret;
-	caret = answer_end;
-	button(getnm("Cancel"), KeyEscape, -1);
-	caret = push_caret;
-}
-
 static unsigned answer_key(int index) {
 	switch(index) {
 	case 0: case 1: case 2:
@@ -776,7 +764,19 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 	if(need_execute)
 		execute(proc, (long)value);
 	caret = push_caret;
-	caret.y += texth() + 2 + 2;
+	caret.y += texth() + 2;
+}
+
+static void answer_after_paint() {
+	auto push_caret = caret;
+	caret = answer_end;
+	auto push_width = width; width = -1;
+	if(answers::cancel_text) {
+		if(draw::button(answers::cancel_text, KeyEscape, draw::pbutton, false))
+			execute(buttoncancel);
+	}
+	width = push_width;
+	caret = push_caret;
 }
 
 static void correct_camera() {
@@ -805,6 +805,7 @@ int start_application(fnevent proc, fnevent initializing) {
 		return -1;
 	metrics::border = 4;
 	metrics::padding = 4;
+	pbutton = paint_button;
 	object::beforepaintall = before_paint_all;
 	object::afterpaint = object_afterpaint;
 	object::afterpaintall = after_paint_all;

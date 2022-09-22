@@ -79,7 +79,7 @@ static void place_building(const rect& rc, tile_s wall) {
 static void main_start() {
 	area.clear();
 	area.set({0, 0, mps, mps}, Grass);
-	area.set(Tree, 2);
+	area.set(Tree, -10);
 	area.set(FootMud, 30);
 	player = creature::create(m2i({5, 5}), "Human");
 	player->set(Ally);

@@ -42,6 +42,7 @@ hoti				draw::hot;
 const void*			draw::hilite_object;
 point				draw::hilite_position;
 int					draw::hilite_size;
+fnbutton			draw::pbutton;
 // Hot keys and menus
 rect				sys_static_area;
 // Locale draw variables
@@ -2603,9 +2604,21 @@ void draw::scene() {
 }
 
 bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical) {
+	static point pressed_caret;
 	auto push_width = width;
 	auto push_height = height;
-	control_hilited = proc(title);
+	auto run_by_key = false;
+	if(key) {
+		if(caret.in(clipping)) {
+			if(hot.key == key) {
+				pressed_caret = caret;
+			} else if(hot.key == InputKeyUp && pressed_caret == caret) {
+				pressed_caret.clear();
+				run_by_key = true;
+			}
+		}
+	}
+	proc(title, (pressed_caret==caret));
 	if(vertical) {
 		width = push_width;
 		if(!height)
@@ -2617,8 +2630,7 @@ bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical)
 			return false;
 		caret.x += width + metrics::padding;
 	}
-	return (key && hot.key == key)
-		|| (hot.key == MouseLeft && control_hilited && !hot.pressed);
+	return run_by_key;
 }
 
 void draw::fire(bool run, fnevent proc, long value, long value2, const void* object) {

@@ -4,6 +4,7 @@ const char* answers::header;
 const char* answers::prompt;
 const char* answers::prompa;
 const char* answers::resid;
+const char* answers::cancel_text;
 bool answers::show_tips = true;
 bool answers::interactive = true;
 int answers::column_count = 1;
