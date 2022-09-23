@@ -48,8 +48,10 @@ struct areamap {
 	int				getindex(indext i, tile_s e) const;
 	static indext	getnext(indext start, indext goal);
 	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
+	static indext	getpoint(const rect& rc, direction_s dir);
 	static int		getrange(indext start, indext target);
 	static indext	getwave();
+	void			horz(int x1, int y1, int x2, tile_s tile);
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isb(indext i, mapf_s v) const { return i == Blocked || (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
@@ -69,6 +71,7 @@ struct areamap {
 	void			removechance(mapf_s v, int chance);
 	static void		makewave(indext start_index);
 	static void		makewavex();
+	void			vert(int x1, int y1, int y2, tile_s tile);
 };
 struct framerange {
 	unsigned char	start;

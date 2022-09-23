@@ -427,3 +427,28 @@ void areamap::set(feature_s v, int bonus) {
 	else
 		set(rc, v, count * bonus / 100);
 }
+
+indext areamap::getpoint(const rect& rc, direction_s dir) {
+	switch(dir) {
+	case East: return m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1));
+	case West: return m2i(rc.x2, xrand(rc.y1 + 1, rc.y2 - 1));
+	case North: return m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y1);
+	default: return m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y2);
+	}
+}
+
+void areamap::horz(int x1, int y1, int x2, tile_s tile) {
+	while(x1 <= x2) {
+		if(x1 >= 0 && x1 < mps)
+			set(m2i(x1, y1), tile);
+		x1++;
+	}
+}
+
+void areamap::vert(int x1, int y1, int y2, tile_s tile) {
+	while(y1 <= y2) {
+		if(y1 >= 0 && y1 < mps)
+			set(m2i(x1, y1), tile);
+		y1++;
+	}
+}

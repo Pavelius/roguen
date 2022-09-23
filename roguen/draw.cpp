@@ -2607,30 +2607,33 @@ bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical)
 	static point pressed_caret;
 	auto push_width = width;
 	auto push_height = height;
-	auto run_by_key = false;
+	auto need_execute = false;
 	if(key) {
 		if(caret.in(clipping)) {
 			if(hot.key == key) {
 				pressed_caret = caret;
 			} else if(hot.key == InputKeyUp && pressed_caret == caret) {
 				pressed_caret.clear();
-				run_by_key = true;
+				need_execute = true;
 			}
 		}
 	}
-	proc(title, (pressed_caret==caret));
+	if(proc)
+		proc(title, (pressed_caret==caret));
 	if(vertical) {
 		width = push_width;
 		if(!height)
 			return false;
 		caret.y += height + metrics::padding;
+		height = push_width;
 	} else {
 		height = push_height;
 		if(!width)
 			return false;
 		caret.x += width + metrics::padding;
+		width = push_width;
 	}
-	return run_by_key;
+	return need_execute;
 }
 
 void draw::fire(bool run, fnevent proc, long value, long value2, const void* object) {

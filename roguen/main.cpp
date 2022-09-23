@@ -22,30 +22,6 @@ static void initializating() {
 #endif
 }
 
-static void horz(int x1, int y1, int x2, tile_s tile) {
-	while(x1 <= x2) {
-		if(x1 < 0)
-			continue;
-		if(x1 >= mps)
-			continue;
-		auto i = m2i(x1, y1);
-		area.tiles[i] = tile;
-		x1++;
-	}
-}
-
-static void vert(int x1, int y1, int y2, tile_s tile) {
-	while(y1 <= y2) {
-		if(y1 < 0)
-			continue;
-		if(y1 >= mps)
-			continue;
-		auto i = m2i(x1, y1);
-		area.tiles[i] = tile;
-		y1++;
-	}
-}
-
 static void random(int x1, int y1, int x2, tile_s tile) {
 	auto x = xrand(x1, x2);
 	auto i = m2i(x, y1);
@@ -69,10 +45,10 @@ static void place_building(const rect& rc, tile_s wall) {
 	if(!ei.iswall())
 		return;
 	area.set(rc, ei.tile);
-	horz(rc.x1, rc.y1, rc.x2, wall);
-	vert(rc.x1, rc.y1, rc.y2, wall);
-	horz(rc.x1, rc.y2, rc.x2, wall);
-	vert(rc.x2, rc.y1, rc.y2, wall);
+	area.horz(rc.x1, rc.y1, rc.x2, wall);
+	area.vert(rc.x1, rc.y1, rc.y2, wall);
+	area.horz(rc.x1, rc.y2, rc.x2, wall);
+	area.vert(rc.x2, rc.y1, rc.y2, wall);
 	setdoor(m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y2), ei.tile);
 	setdoor(m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1)), ei.tile);
 }

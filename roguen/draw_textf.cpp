@@ -208,10 +208,12 @@ static const char* paint_button(const char* p, int x1, int x2, stringbuilder& sb
 	auto pt = sb.get();
 	p = sb.psstrlf(skipsp(p)); sb.addsz();
 	if(pbutton) {
-		button(pn, pk[0], pbutton, false);
+		auto result = button(pn, pk[0], pbutton, false);
 		if(pt[0]) {
 			text_block(pt, caret.x, x2);
 			caret.y += 2;
+		}
+		if(result) {
 		}
 	}
 	width = push_width;

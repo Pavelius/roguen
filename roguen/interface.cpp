@@ -63,11 +63,11 @@ static void strokedown() {
 	rectpush push;
 	auto push_fore = fore;
 	fore = push_fore.mix(colors::text, 216);
-	line(caret.x, caret.y + height);
-	line(caret.x + width, caret.y);
+	line(caret.x, caret.y + height - 1);
+	line(caret.x + width - 1, caret.y);
 	fore = push_fore.mix(colors::window, 128);
-	line(caret.x, caret.y - height);
-	line(caret.x - width, caret.y);
+	line(caret.x, caret.y - height + 1);
+	line(caret.x - width + 1, caret.y);
 	fore = push_fore;
 }
 
@@ -75,10 +75,10 @@ static void strokeup() {
 	rectpush push;
 	auto push_fore = fore;
 	fore = push_fore.mix(colors::window, 128);
-	line(caret.x, caret.y + height);
-	line(caret.x + width, caret.y);
+	line(caret.x, caret.y + height - 1);
+	line(caret.x + width -1, caret.y);
 	fore = push_fore.mix(colors::text, 216);
-	line(caret.x, caret.y - height);
+	line(caret.x, caret.y - height + 1);
 	line(caret.x - width + 1, caret.y);
 	fore = push_fore;
 }
@@ -765,7 +765,7 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 	if(need_execute)
 		execute(proc, (long)value);
 	caret = push_caret;
-	caret.y += texth() + 2;
+	caret.y += texth() + 1;
 }
 
 static void answer_after_paint() {
