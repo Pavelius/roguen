@@ -1,6 +1,8 @@
 #include "bsreq.h"
 #include "main.h"
 
+using namespace draw;
+
 BSDATA(visualeffect) = {
 	{"AcidSplash", res::Splash, 2},
 	{"BloodingVisual", res::Conditions, 1, 15, -32},

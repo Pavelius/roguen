@@ -3,7 +3,7 @@
 #pragma once
 
 typedef short unsigned indext;
-const int mps = 16;
+const int mps = 64;
 const indext Blocked = 0xFFFF;
 const indext NotCalculatedMovement = 0xFFF0;
 

@@ -43,3 +43,8 @@ AdventureKeys
  elements OpenNearestDoor "O"
  elements ChatSomeone "C"
  elements PickUp "P"
+
+#Site
+
+Forest
+ landscape Tree+20

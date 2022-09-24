@@ -9,12 +9,13 @@ BSDATAD(variant)
 BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 
+BSDATAD(advancement);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
-BSDATAD(advancement);
 BSDATAC(monsteri, 512);
+BSDATAC(sitei, 64);
 
 BSMETA(abilityi) = {
 	BSREQ(id),
@@ -28,6 +29,9 @@ BSMETA(dice) = {
 	BSREQ(max),
 	{}};
 BSMETA(feati) = {
+	BSREQ(id),
+	{}};
+BSMETA(featurei) = {
 	BSREQ(id),
 	{}};
 BSMETA(itemi) = {
@@ -58,6 +62,10 @@ BSMETA(monsteri) = {
 BSMETA(racei) = {
 	BSREQ(id),
 	{}};
+BSMETA(sitei) = {
+	BSREQ(id),
+	BSREQ(landscape),
+	{}};
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
@@ -71,6 +79,7 @@ BSDATA(varianti) = {
 	{"Advancement", VAR(advancement), 2},
 	{"Class", VAR(classi), 1},
 	{"Feat", VAR(feati), 1},
+	{"Feature", VAR(featurei), 1},
 	{"Hotkey", VAR(hotkey), 2},
 	{"HotkeyList", VAR(hotkeylist), 1},
 	{"Item", VAR(itemi), 1},
@@ -78,6 +87,7 @@ BSDATA(varianti) = {
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
 	{"Script", VAR(script), 1},
+	{"Site", VAR(sitei), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},
 };

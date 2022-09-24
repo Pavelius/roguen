@@ -1,5 +1,9 @@
 #include "main.h"
 
+static adat<rect, 32> locations;
+
+typedef void(*fnscene)(const rect& rc);
+
 static int compare_rect(const void* p1, const void* p2) {
 	auto e1 = (rect*)p1;
 	auto e2 = (rect*)p2;
@@ -50,5 +54,56 @@ static void update_items() {
 			continue;
 		if(area.getfeature(e.index) == Door)
 			e.clear();
+	}
+}
+
+static int getarea(const rect& rc) {
+	return (rc.width() + 1) * (rc.height() + 1);
+}
+
+static int compare_locations(const void* v1, const void* v2) {
+	return getarea(*((rect*)v1)) - getarea(*((rect*)v2));
+}
+
+static void sort_locations() {
+	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
+}
+
+static void create_location_areas() {
+	const int mpp = 4;
+	const int mp4 = mps / mpp;
+	const int mp8 = mp4 / 2;
+	locations.clear();
+	for(auto y = 0; y < 4; y++) {
+		for(auto x = 0; x < 4; x++) {
+			auto x1 = x * mp4 + xrand(2, mp4 - 2 - mp8);
+			auto y1 = y * mp4 + xrand(2, mp4 - 2 - mp8);
+			auto x2 = x1 + xrand(3, mp8);
+			auto y2 = y1 + xrand(3, mp8);
+			locations.add({x1, y1, x2, y2});
+		}
+	}
+	sort_locations();
+}
+
+static void remove_smalest() {
+	if(locations)
+		locations.count--;
+}
+
+static void create_building(const rect& rc) {
+}
+
+static void create_locations(fnscene proc) {
+	for(auto& e : locations)
+		proc(e);
+}
+
+void sitei::generate(const rect& rca) const {
+	for(auto v : landscape) {
+		if(v.iskind<featurei>())
+			area.set(rca, (feature_s)v.value, v.counter);
+		else if(v.iskind<tilei>())
+			area.set(rca, (tile_s)v.value, v.counter);
 	}
 }

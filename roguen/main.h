@@ -269,13 +269,16 @@ struct advancement {
 	char		level;
 	variants	elements;
 };
-struct visualeffect {
-	const char*	id;
+struct visualeffect : nameable {
 	res			resid;
 	int			frame;
 	unsigned char priority = 15;
 	int			dy;
 	void		paint() const;
+};
+struct sitei : nameable {
+	variants	landscape;
+	void		generate(const rect& rc) const;
 };
 class gamei {
 	unsigned	minutes;

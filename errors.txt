@@ -1,1 +1,2 @@
-﻿Can't find file 'rules/Tables'
+﻿In file `rules/Basic.txt`:
+ Line 50: Can't find variant `Tree`
