@@ -99,11 +99,13 @@ static void create_locations(fnscene proc) {
 		proc(e);
 }
 
-void sitei::generate(const rect& rca) const {
-	for(auto v : landscape) {
-		if(v.iskind<featurei>())
-			area.set(rca, (feature_s)v.value, v.counter);
-		else if(v.iskind<tilei>())
-			area.set(rca, (tile_s)v.value, v.counter);
+void create_area(const rect& rca, variant v) {
+	if(v.iskind<featurei>())
+		area.set(rca, (feature_s)v.value, v.counter);
+	else if(v.iskind<tilei>())
+		area.set(rca, (tile_s)v.value, v.counter);
+	else if(v.iskind<sitei>()) {
+		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
+			create_area(rca, ev);
 	}
 }

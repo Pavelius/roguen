@@ -278,7 +278,6 @@ struct visualeffect : nameable {
 };
 struct sitei : nameable {
 	variants	landscape;
-	void		generate(const rect& rc) const;
 };
 class gamei {
 	unsigned	minutes;

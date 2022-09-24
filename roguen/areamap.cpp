@@ -135,6 +135,12 @@ void areamap::set(rect rc, tile_s v) {
 }
 
 void areamap::set(rect rc, tile_s v, int random_count) {
+	if(random_count <= -100) {
+		set(rc, v);
+		return;
+	}
+	if(random_count < 0)
+		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
 	while(random_count > 0) {
 		auto x = rc.x1 + rand() % (rc.width() + 1);
 		auto y = rc.y1 + rand() % (rc.height() + 1);
@@ -144,6 +150,10 @@ void areamap::set(rect rc, tile_s v, int random_count) {
 }
 
 void areamap::set(rect rc, feature_s v, int random_count) {
+	if(random_count <= -100)
+		return;
+	if(random_count < 0)
+		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
 	while(random_count > 0) {
 		auto x = rc.x1 + rand() % (rc.width() + 1);
 		auto y = rc.y1 + rand() % (rc.height() + 1);

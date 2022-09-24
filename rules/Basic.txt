@@ -47,4 +47,6 @@ AdventureKeys
 #Site
 
 Forest
- landscape Tree+20
+ landscape Tree-20 Herbs+50 Plant+20 FootMud+20 FootHill+40
+Plains
+ landscape Tree+50 Herbs+50 Plant+20 FootMud+20 FootHill+90

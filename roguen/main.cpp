@@ -7,6 +7,8 @@ static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
 using namespace draw;
 
+void create_area(const rect& rca, variant v);
+
 #ifdef _DEBUG
 void main_util();
 #endif
@@ -69,23 +71,8 @@ static void main_start() {
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
-	place_building({7, 2, 12, 7}, WallCave);
-	area.set(m2i({15, 1}), WoodenFloor);
-	area.set(m2i({0, 1}), Webbed);
-	area.set(m2i({4, 4}), Webbed);
-	area.set(m2i({4, 4}), Iced);
-	area.set(m2i({4, 5}), Iced);
-	area.set(m2i({5, 5}), Blooded);
-	area.set(m2i({6, 5}), Blooded);
-	area.set(m2i({6, 6}), Blooded);
-	area.set(m2i({2, 4}), Tree);
-	area.set(m2i({6, 6}), FootHill);
-	area.set(m2i({6, 3}), FootMud);
-	area.set(m2i({4, 7}), Grave);
-	area.set(m2i({8, 4}), HiveHole);
-	area.set(m2i({8, 5}), Plant);
-	area.set(m2i({5, 3}), Herbs);
-	area.set(m2i({5, 5}), Trap);
+	//place_building({7, 2, 12, 7}, WallCave);
+	create_area({0, 0, mps - 1, mps - 1}, "Forest");
 	create_item(m2i(4, 4), "Sword");
 	create_item(m2i(4, 4), "BattleAxe");
 	setnext(game.play);
