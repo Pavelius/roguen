@@ -116,9 +116,11 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	console.addn("Some text message");
-	console.addn("$Button 20 2 (1) (1) Use your [artifact] with blinding matter.");
-	console.addn("$Button 20 4 (2) (2) Try to avoid danger and retreat from this forest.");
+	console.addn("Некоторый текст");
+	answers an;
+	an.add((void*)"Test1", "Выбор первого варианта.");
+	an.add((void*)"Test2", "Выбор второго варианта.");
+	an.choose();
 }
 
 static void open_nearest_door(int bonus) {

@@ -6,6 +6,7 @@
 #include "log.h"
 #include "main.h"
 #include "resource.h"
+#include "screenshoot.h"
 
 using namespace draw;
 
@@ -592,10 +593,8 @@ static void paint_button(const char* format, bool pressed) {
 static bool button(unsigned key, int format_width) {
 	if(!key)
 		return false;
-	char temp[2] = {(char)key, 0};
-	auto pn = findnamebykey(key);
-	if(!pn)
-		pn = temp;
+	char temp[32]; stringbuilder sb(temp);
+	addkeyname(sb, key);
 	auto push_width = width;
 	width = format_width;
 	auto result = draw::button(temp, key, draw::pbutton, false);
@@ -722,17 +721,15 @@ static void answer_before_paint() {
 	fore = colors::form;
 	strokeout(strokeup, metrics::padding, metrics::padding);
 	strokeout(strokeup, metrics::padding - 1, metrics::padding - 1);
-	fore = push_fore;
 	if(answers::prompa) {
 		auto push_font = font;
-		auto push_fore = fore;
 		font = metrics::h2;
 		fore = colors::h2;
 		texta(answers::prompa, AlignCenter);
 		caret.y += texth();
-		fore = push_fore;
 		font = push_font;
 	}
+	fore = push_fore;
 }
 
 static unsigned answer_key(int index) {
@@ -766,6 +763,75 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 		execute(proc, (long)value);
 	caret = push_caret;
 	caret.y += texth() + 1;
+}
+
+static void answer_paint_cell_small(int index, const void* value, const char* format, fnevent proc) {
+	auto push_caret = caret;
+	auto push_width = width;
+	unsigned key = value ? answer_key(index) : KeyEscape;
+	auto need_execute = button(key, 24);
+	width -= caret.x - push_caret.x;
+	textf(format);
+	if(need_execute)
+		execute(proc, (long)value);
+	width = push_width;
+	caret = push_caret;
+	caret.y += texth() + 1;
+}
+
+static void get_total_height(const answers& source) {
+	auto push_clipping = clipping;
+	const int window_width = 200;
+	auto total_height = 0;
+	width = window_width;
+	auto p = console.begin();
+	textfs(p);
+	total_height += height;
+	auto minimal_width = width;
+	auto minimal_height = texth() + 1;
+	for(auto& e : source) {
+		width = window_width - 24 - metrics::padding;
+		textfs(e.text);
+		width += 24 + metrics::padding;
+		if(minimal_width < width)
+			minimal_width = width;
+		if(height < minimal_height)
+			height = minimal_height;
+		total_height += height;
+	}
+	width = minimal_width;
+	height = total_height;
+}
+
+static void paint_message(const answers& source, int window_width) {
+	auto p = console.begin();
+	if(!p || !p[0])
+		return;
+	rectpush push;
+	width = 200;
+	caret.y = metrics::padding * 2;
+	caret.x = (getwidth() - window_width - panel_width) / 2;
+	textf(p);
+	auto index = 0;
+	for(auto& e : source)
+		answer_paint_cell_small(index++, e.value, e.text, buttonparam);
+}
+
+void* answers::choose() const {
+	rectpush push;
+	get_total_height(*this);
+	auto window_width = width;
+	caret.y = metrics::padding * 2;
+	caret.x = (getwidth() - window_width - panel_width) / 2;
+	strokeout(fillwindow, metrics::padding, metrics::padding);
+	strokeout(strokeborder, metrics::padding, metrics::padding);
+	screenshoot screen;
+	while(ismodal()) {
+		screen.restore();
+		paint_message(*this, window_width);
+		domodal();
+	}
+	return (void*)getresult();
 }
 
 static void answer_after_paint() {
