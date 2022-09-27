@@ -43,6 +43,7 @@ AdventureKeys
  elements OpenNearestDoor "O"
  elements ChatSomeone "C"
  elements PickUp "P"
+ elements ShowMinimap "M"
 
 #Site
 

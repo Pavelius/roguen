@@ -167,6 +167,8 @@ static void dropdown(int bonus) {
 static void view_stuff(int bonus) {
 }
 
+void show_area(int bonus);
+
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},
@@ -184,6 +186,7 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"ShowMinimap", show_area},
 	{"ViewStuff", view_stuff},
 };
 BSDATAF(script)

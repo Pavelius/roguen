@@ -1,3 +1,4 @@
+#include "color.h"
 #include "point.h"
 
 #pragma once
@@ -83,6 +84,7 @@ struct areafi {
 };
 struct tilei {
 	const char*		id;
+	color			minimap;
 	framerange		floor;
 	framerange		decals;
 	int				borders = -1;

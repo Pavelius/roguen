@@ -66,7 +66,7 @@ void show_worldmap();
 static void main_start() {
 	world.clear();
 	world.generate({world.mps/2, world.mps / 2}, 1);
-	show_worldmap();
+	//show_worldmap();
 	area.clear();
 	area.set({0, 0, mps, mps}, Grass);
 	area.set(Tree, -10);

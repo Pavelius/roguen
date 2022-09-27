@@ -626,10 +626,13 @@ static void paint_status() {
 	width = push_width - panel_width;
 }
 
+static void before_paint() {
+	paint_status();
+}
+
 static void before_paint_all() {
 	auto push_caret = caret;
 	auto push_clip = clipping;
-	paint_status();
 	setclipall();
 	link_camera();
 	paint_floor();
@@ -860,9 +863,9 @@ static void correct_camera() {
 		camera.y = tsy * mps - h - tsy / 2;
 }
 
-static void paint_area() {
+static void paint_world() {
 	rectpush push;
-	auto push_fore = fore;
+	pushvalue push_fore(fore);
 	const int z = 16;
 	point origin;
 	origin.x = (width - world.mps * z) / 2;
@@ -882,20 +885,75 @@ static void paint_area() {
 	}
 }
 
+static void fillfade(color cv, unsigned char av = 128) {
+	pushvalue push_fore(fore);
+	pushvalue push_alpha(alpha);
+	fore = cv;
+	alpha = av;
+	rectf();
+}
+
+static void paint_area() {
+	rectpush push;
+	pushvalue push_fore(fore);
+	const int z = 4;
+	point origin;
+	origin.x = (width - mps * z) / 2;
+	origin.y = (height - mps * z) / 2;
+	height = width = z;
+	for(auto y = 0; y < mps; y++) {
+		for(auto x = 0; x < mps; x++) {
+			auto i = m2i(x, y);
+			auto t = area.tiles[i];
+			if(!t || !area.is(i, Explored))
+				continue;
+			auto p = bsdata<tilei>::elements + t;
+			caret.x = origin.x + x * width;
+			caret.y = origin.y + y * height;
+			fore = p->minimap;
+			rectf();
+			switch(area.features[i]) {
+			case NoTile: break;
+			case Tree:
+				fillfade(color(35, 79, 31), 192);
+				break;
+			case FootMud: case FootHill:
+				fillfade(color(35, 79, 31), 192);
+				break;
+			case Herbs: case Plant:
+				fillfade(color(35, 79, 31), 64);
+				break;
+			default:
+				fillfade(color(255, 0, 0), 128);
+				break;
+			}
+		}
+	}
+}
+
 static void pause_keys() {
 	if(hot.key == KeySpace || hot.key == KeyEscape)
 		execute(buttoncancel);
 }
 
-static void paint_worldmap() {
-	paint_status();
+static void scene_world() {
+	fillwindow();
+	paint_world();
+	pause_keys();
+}
+
+static void scene_area() {
 	fillwindow();
 	paint_area();
 	pause_keys();
 }
 
 void show_worldmap() {
-	scene(paint_worldmap);
+	scene(scene_world);
+}
+
+void show_area(int bonus) {
+	scene(scene_area);
 }
 
 int start_application(fnevent proc, fnevent initializing) {
@@ -912,6 +970,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	metrics::border = 4;
 	metrics::padding = 4;
 	pbutton = paint_button;
+	pbackground = before_paint;
 	object::beforepaintall = before_paint_all;
 	object::afterpaint = object_afterpaint;
 	object::afterpaintall = after_paint_all;
