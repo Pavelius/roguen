@@ -46,7 +46,10 @@ AdventureKeys
 
 #Site
 
-Forest
- landscape Tree-15 Herbs+50 Plant+16 FootMud+10 FootHill+40
-Plains
+NoLocation
+LightForest overland(1)
+ landscape Tree-8 Herbs+45 Plant+18 FootMud+12 FootHill+40
+DeepForest overland(1)
+ landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
+Plains overland(3)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90

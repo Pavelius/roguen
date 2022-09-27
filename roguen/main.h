@@ -4,6 +4,7 @@
 #include "flagable.h"
 #include "generator.h"
 #include "hotkey.h"
+#include "color.h"
 #include "crt.h"
 #include "list.h"
 #include "pushvalue.h"
@@ -90,6 +91,7 @@ class actable {
 	variant		kind; // Race or monster
 public:
 	void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n') const;
+	static bool confirm(const char* format, ...);
 	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
@@ -257,6 +259,7 @@ public:
 	bool		roll(ability_s v, int bonus = 0) const;
 	void		say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
 	void		set(feat_s v) { feats.set(v); }
+	void		unlink();
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
@@ -277,9 +280,27 @@ struct visualeffect : nameable {
 	void		paint() const;
 };
 struct sitei : nameable {
+	char		overland;
 	variants	landscape;
 };
+struct boosti {
+	variant		parent;
+	spell_s		effect;
+	unsigned	stamp;
+	constexpr explicit operator bool() const { return parent.operator bool(); }
+	void		clear() { memset(this, 0, sizeof(*this)); }
+	static void	remove(variant parent);
+	static void	updateall();
+};
+struct geoposition {
+	indext		index;
+	short		level;
+};
+struct landscapei : nameable {
+	color		fore;
+};
 class gamei {
+	geoposition	positon;
 	unsigned	minutes;
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:
@@ -289,13 +310,15 @@ public:
 	void		passminute();
 	static void	play();
 	void		playminute();
+	void		read();
+	void		write();
 };
 namespace draw {
 bool			isnext();
 }
 inline int		d100() { return rand() % 100; }
 
-extern areamap		area;
+extern areamap		area, world;
 extern creaturea	creatures, enemies;
 extern creature*	last_enemy;
 extern gamei		game;

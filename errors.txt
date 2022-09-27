@@ -1,2 +1,4 @@
 ﻿In file `rules/Basic.txt`:
- Line 50: Can't find variant `Tree`
+ Line 50: Not found requisit `overland`
+ Line 52: Not found requisit `overland`
+ Line 54: Not found requisit `overland`

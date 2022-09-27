@@ -116,11 +116,7 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	console.addn("Некоторый текст");
-	answers an;
-	an.add((void*)"Test1", "Выбор первого варианта.");
-	an.add((void*)"Test2", "Выбор второго варианта.");
-	an.choose();
+	actable::confirm("Вы действительно хотите выйти?");
 }
 
 static void open_nearest_door(int bonus) {

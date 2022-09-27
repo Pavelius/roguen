@@ -1,9 +1,9 @@
 #include "main.h"
 
-areamap			area;
+areamap			area, world;
+gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);
-gamei			game;
 
 static void update_los() {
 	if(!player)
@@ -37,7 +37,7 @@ void gamei::all(creature::fnupdate proc) {
 
 void gamei::passminute() {
 	minutes++;
-	//boost_update();
+	boosti::updateall();
 	all(&creature::restoration);
 	while(restore_half_turn < minutes) {
 		all(&creature::checkpoison);

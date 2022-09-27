@@ -12,6 +12,7 @@ BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAD(advancement);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
+BSDATAC(boosti, 256);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
 BSDATAC(monsteri, 512);
@@ -65,6 +66,7 @@ BSMETA(racei) = {
 BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(landscape),
+	BSREQ(overland),
 	{}};
 BSMETA(weari) = {
 	BSREQ(id),

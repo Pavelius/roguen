@@ -19,3 +19,14 @@ void actable::sayv(stringbuilder& sb, const char* format, const char* format_par
 	sa.add("\"");
 	sb = sa;
 }
+
+bool actable::confirm(const char* format, ...) {
+	console.addsep('\n');
+	console.addv(format, xva_start(format));
+	answers an;
+	an.add((void*)1, getnm("Yes"));
+	an.add((void*)0, getnm("No"));
+	auto result = an.choose();
+	console.clear();
+	return result != 0;
+}

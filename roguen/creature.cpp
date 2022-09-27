@@ -112,9 +112,11 @@ void creature::interaction(indext index) {
 				area.remove(index, Activated);
 		} else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = wears[MeleeWeapon].geti();
-			auto chance = wei.weapon.damage.max;
+			int chance = 1;
 			if(wei.is(TwoHanded))
-				chance += wei.weapon.damage.max;
+				chance = wei.weapon.damage.max;
+			else
+				chance = wei.weapon.damage.max / 2;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
 				area.features[index] = NoFeature;
@@ -387,4 +389,8 @@ void creature::moveto(indext ni) {
 	if(i1 == Blocked)
 		return;
 	movestep(area.getdirection(i2m(i0), i2m(i1)));
+}
+
+void creature::unlink() {
+	boosti::remove(this);
 }

@@ -240,6 +240,15 @@
     <ClCompile Include="generation.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="serial.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="boost.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="landscape.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -348,6 +357,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="generator.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="colori.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

@@ -146,6 +146,7 @@
     <ClCompile Include="archive.cpp" />
     <ClCompile Include="areaf.cpp" />
     <ClCompile Include="areamap.cpp" />
+    <ClCompile Include="boost.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="color.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="itema.cpp" />
     <ClCompile Include="keyname.cpp" />
+    <ClCompile Include="landscape.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -195,6 +197,7 @@
     <ClCompile Include="screenshoot.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="scripting.cpp" />
+    <ClCompile Include="serial.cpp" />
     <ClCompile Include="speech.cpp" />
     <ClCompile Include="spells.cpp" />
     <ClCompile Include="sprite_util.cpp" />
@@ -221,6 +224,7 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="colori.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />

@@ -706,6 +706,24 @@ void adventure_mode() {
 	}
 }
 
+static void paint_area() {
+	const int z = 2;
+	auto push_caret = caret;
+	caret.x += (width - mps * z) / 2;
+	caret.y += (height - mps * z) / 2;
+	for(auto y = 0; y < mps; y++) {
+		for(auto x = 0; x < mps; x++) {
+			auto i = m2i(x, y);
+		}
+	}
+	caret = push_caret;
+}
+
+static void world_map() {
+	paint_status();
+	fillwindow();
+}
+
 static point answer_end;
 
 static void answer_before_paint() {
@@ -768,7 +786,7 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 static void answer_paint_cell_small(int index, const void* value, const char* format, fnevent proc) {
 	auto push_caret = caret;
 	auto push_width = width;
-	unsigned key = value ? answer_key(index) : KeyEscape;
+	unsigned key = answer_key(index);
 	auto need_execute = button(key, 24);
 	width -= caret.x - push_caret.x;
 	textf(format);
@@ -786,7 +804,7 @@ static void get_total_height(const answers& source) {
 	width = window_width;
 	auto p = console.begin();
 	textfs(p);
-	total_height += height;
+	total_height += height + metrics::padding;
 	auto minimal_width = width;
 	auto minimal_height = texth() + 1;
 	for(auto& e : source) {
@@ -812,6 +830,7 @@ static void paint_message(const answers& source, int window_width) {
 	caret.y = metrics::padding * 2;
 	caret.x = (getwidth() - window_width - panel_width) / 2;
 	textf(p);
+	caret.y += metrics::padding;
 	auto index = 0;
 	for(auto& e : source)
 		answer_paint_cell_small(index++, e.value, e.text, buttonparam);

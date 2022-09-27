@@ -193,33 +193,6 @@ static void execute_tab() {
 	tab_pixels = text_params[0];
 }
 
-static const char* text_block(const char* p, int x1, int x2);
-
-static const char* paint_button(const char* p, int x1, int x2, stringbuilder& sb) {
-	auto push_width = width;
-	int pointer;
-	sb.clear();
-	p = sb.read(p, width);
-	p = sb.read(skipsp(p), pointer);
-	auto pn = sb.get();
-	p = sb.psidf(skipsp(p)); sb.addsz();
-	auto pk = sb.get();
-	p = sb.psidf(skipsp(p)); sb.addsz();
-	auto pt = sb.get();
-	p = sb.psstrlf(skipsp(p)); sb.addsz();
-	if(pbutton) {
-		auto result = button(pn, pk[0], pbutton, false);
-		if(pt[0]) {
-			text_block(pt, caret.x, x2);
-			caret.y += 2;
-		}
-		if(result) {
-		}
-	}
-	width = push_width;
-	return p;
-}
-
 static const char* parse_command(const char* p, int x1, int x2) {
 	char temp[1024]; stringbuilder sb(temp);
 	p = skipsp(sb.psidf(p));
@@ -227,8 +200,7 @@ static const char* parse_command(const char* p, int x1, int x2) {
 		p = sb.read(p, tab_pixels);
 		if(tab_pixels < 0)
 			tab_pixels = width + tab_pixels;
-	} else if(equal(temp, "Button"))
-		p = paint_button(p, x1, x2, sb);
+	}
 	return skipspcr(wholeline(p));
 }
 
