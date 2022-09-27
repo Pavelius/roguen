@@ -66,7 +66,6 @@ BSMETA(racei) = {
 BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(landscape),
-	BSREQ(overland),
 	{}};
 BSMETA(weari) = {
 	BSREQ(id),

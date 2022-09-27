@@ -61,7 +61,17 @@ static void create_item(indext index, const char* id) {
 	pi->create(id);
 }
 
+static bool test_point(pointm v) {
+	auto i1 = v.to(North);
+	auto i2 = v.to(West);
+	auto i3 = v.to(East);
+	auto i4 = i1.to(North);
+	return i2;
+}
+
 static void main_start() {
+	world.clear();
+	world.generate({64, 64}, 1);
 	area.clear();
 	area.set({0, 0, mps, mps}, Grass);
 	area.set(Tree, -10);
@@ -81,6 +91,7 @@ static void main_start() {
 int start_application(fnevent proc, fnevent initializing);
 
 int main(int argc, char *argv[]) {
+	pointm::mps = mps;
 	srand(getcputime());
 	return start_application(main_start, initializating);
 }

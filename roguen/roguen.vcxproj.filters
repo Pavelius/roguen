@@ -246,7 +246,13 @@
     <ClCompile Include="boost.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="landscape.cpp">
+    <ClCompile Include="pointm.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="direction.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -361,6 +367,15 @@
     </ClInclude>
     <ClInclude Include="colori.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="direction.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="pointm.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

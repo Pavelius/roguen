@@ -32,6 +32,8 @@ static generatora find_elements(const char* id) {
 		else
 			p2 = &e;
 	}
+	if(!p1)
+		return generatora();
 	return generatora(p1, p2 + 1);
 }
 

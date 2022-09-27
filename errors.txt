@@ -1,4 +1,3 @@
-﻿In file `rules/Basic.txt`:
- Line 50: Not found requisit `overland`
- Line 52: Not found requisit `overland`
- Line 54: Not found requisit `overland`
+﻿In file `rules/Tables.txt`:
+ Line 10: Unknown variant identifier `Hills`
+ Line 11: Unknown variant identifier `Forest`

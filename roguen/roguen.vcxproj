@@ -157,6 +157,7 @@
     <ClCompile Include="crt_translate.cpp" />
     <ClCompile Include="dataset.cpp" />
     <ClCompile Include="dice.cpp" />
+    <ClCompile Include="direction.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_answers.cpp" />
     <ClCompile Include="draw_object.cpp" />
@@ -178,7 +179,6 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="itema.cpp" />
     <ClCompile Include="keyname.cpp" />
-    <ClCompile Include="landscape.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -190,6 +190,7 @@
     <ClCompile Include="png.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="moveable.cpp" />
+    <ClCompile Include="pointm.cpp" />
     <ClCompile Include="race.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="resource_static.cpp" />
@@ -215,6 +216,7 @@
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />
     <ClCompile Include="win_time.cpp" />
+    <ClCompile Include="world.cpp" />
     <ClCompile Include="zip.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +231,7 @@
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="dice.h" />
+    <ClInclude Include="direction.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="flagable.h" />
@@ -243,6 +246,7 @@
     <ClInclude Include="nameable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
+    <ClInclude Include="pointm.h" />
     <ClInclude Include="pushvalue.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resource.h" />
@@ -255,6 +259,7 @@
     <ClInclude Include="variant.h" />
     <ClInclude Include="widget.h" />
     <ClInclude Include="win.h" />
+    <ClInclude Include="world.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\errors.txt" />

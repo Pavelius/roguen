@@ -1,16 +1,19 @@
 #include "answers.h"
 #include "areamap.h"
 #include "dice.h"
+#include "direction.h"
 #include "flagable.h"
 #include "generator.h"
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
 #include "list.h"
+#include "pointm.h"
 #include "pushvalue.h"
 #include "script.h"
 #include "speech.h"
 #include "variant.h"
+#include "world.h"
 
 #pragma once
 
@@ -280,7 +283,6 @@ struct visualeffect : nameable {
 	void		paint() const;
 };
 struct sitei : nameable {
-	char		overland;
 	variants	landscape;
 };
 struct boosti {
@@ -295,9 +297,6 @@ struct boosti {
 struct geoposition {
 	indext		index;
 	short		level;
-};
-struct landscapei : nameable {
-	color		fore;
 };
 class gamei {
 	geoposition	positon;
@@ -318,7 +317,8 @@ bool			isnext();
 }
 inline int		d100() { return rand() % 100; }
 
-extern areamap		area, world;
+extern areamap		area;
+extern worldi		world;
 extern creaturea	creatures, enemies;
 extern creature*	last_enemy;
 extern gamei		game;

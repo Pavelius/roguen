@@ -7,10 +7,8 @@ const int mps = 64;
 const indext Blocked = 0xFFFF;
 const indext NotCalculatedMovement = 0xFFF0;
 
-enum direction_s : unsigned char {
-	North, East, South, West,
-	NorthEast, SouthEast, SouthWest, NorthWest
-};
+enum direction_s : unsigned char;
+
 enum mapf_s : unsigned char {
 	Explored, Visible, Activated, Searched, Blooded, Iced, Webbed,
 };
