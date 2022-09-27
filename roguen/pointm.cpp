@@ -1,9 +1,7 @@
 #include "direction.h"
 #include "pointm.h"
 
-unsigned pointm::mps;
-
-pointm pointm::to(direction_s v) const {
+pointm pointm::to(direction_s v, unsigned char mps) const {
 	if(!(*this))
 		return pointm();
 	switch(v) {

@@ -11,8 +11,6 @@ union pointm {
 	constexpr pointm(int x, int y) : x(x), y(y) {}
 	constexpr pointm(unsigned short u) : u(u) {}
 	explicit constexpr operator bool() const { return u != 0xFFFF; }
-	constexpr operator unsigned short() const { return u; }
-	static unsigned		mps;
-	unsigned short		get() const { return y * mps + x; }
-	pointm				to(direction_s v) const;
+	//constexpr operator unsigned short() const { return u; }
+	pointm				to(direction_s v, unsigned char mps) const;
 };

@@ -48,13 +48,13 @@ AdventureKeys
 
 NoLocation
 
-LightForest
+Plains minimap(60 176 67)
+ landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
+LightForest minimap(70 109 29)
  landscape Tree-8 Herbs+45 Plant+18 FootMud+12 FootHill+40
-DeepForest
+DeepForest minimap(35 79 31)
  landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
-Plains
+Mountains minimap(128 128 128)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
-Mountains
- landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
-Hills
+Hills minimap(152 191 100)
  landscape Tree+30 Herbs+35 Plant+5 FootMud+20 FootHill-5

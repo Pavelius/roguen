@@ -2,6 +2,7 @@
 #include "main.h"
 #include "widget.h"
 
+NOBSDATA(color)
 NOBSDATA(dice)
 NOBSDATA(itemi::weaponi)
 
@@ -24,6 +25,9 @@ BSMETA(abilityi) = {
 BSMETA(classi) = {
 	BSREQ(id),
 	BSREQ(hd), BSREQ(cap), BSREQ(player),
+	{}};
+BSMETA(color) = {
+	BSREQ(r), BSREQ(g), BSREQ(b),
 	{}};
 BSMETA(dice) = {
 	BSREQ(min),
@@ -66,6 +70,7 @@ BSMETA(racei) = {
 BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(landscape),
+	BSREQ(minimap),
 	{}};
 BSMETA(weari) = {
 	BSREQ(id),

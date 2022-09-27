@@ -706,24 +706,6 @@ void adventure_mode() {
 	}
 }
 
-static void paint_area() {
-	const int z = 2;
-	auto push_caret = caret;
-	caret.x += (width - mps * z) / 2;
-	caret.y += (height - mps * z) / 2;
-	for(auto y = 0; y < mps; y++) {
-		for(auto x = 0; x < mps; x++) {
-			auto i = m2i(x, y);
-		}
-	}
-	caret = push_caret;
-}
-
-static void world_map() {
-	paint_status();
-	fillwindow();
-}
-
 static point answer_end;
 
 static void answer_before_paint() {
@@ -876,6 +858,44 @@ static void correct_camera() {
 		camera.x = tsx * mps - w - tsx / 2;
 	if(camera.y > tsy * mps - h - tsy / 2)
 		camera.y = tsy * mps - h - tsy / 2;
+}
+
+static void paint_area() {
+	rectpush push;
+	auto push_fore = fore;
+	const int z = 16;
+	point origin;
+	origin.x = (width - world.mps * z) / 2;
+	origin.y = (height - world.mps * z) / 2;
+	height = width = z;
+	for(auto y = 0; y < world.mps; y++) {
+		for(auto x = 0; x < world.mps; x++) {
+			auto t = world.get({x, y});
+			if(!t)
+				continue;
+			auto p = bsdata<sitei>::elements + t;
+			fore = p->minimap;
+			caret.x = origin.x + x * width;
+			caret.y = origin.y + y * height;
+			rectf();
+		}
+	}
+}
+
+static void pause_keys() {
+	if(hot.key == KeySpace || hot.key == KeyEscape)
+		execute(buttoncancel);
+}
+
+static void paint_worldmap() {
+	paint_status();
+	fillwindow();
+	paint_area();
+	pause_keys();
+}
+
+void show_worldmap() {
+	scene(paint_worldmap);
 }
 
 int start_application(fnevent proc, fnevent initializing) {

@@ -284,6 +284,7 @@ struct visualeffect : nameable {
 };
 struct sitei : nameable {
 	variants	landscape;
+	color		minimap;
 };
 struct boosti {
 	variant		parent;

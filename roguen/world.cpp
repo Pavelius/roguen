@@ -7,17 +7,24 @@
 struct sitei;
 static pointm stack[256 * 256];
 static unsigned short push_stack, pop_stack;
-static direction_s all_around[] = {North, South, East, West, NorthEast, NorthWest, SouthEast, SouthWest};
+
+static slice<direction_s> random_directions() {
+	static direction_s table[][8] = {
+		{North, South, East, West},
+		{South, East, West, North},
+		{East, West, North, South},
+		{West, North, South, East},
+	};
+	return maprnd(table);
+}
 
 static int d100() {
 	return rand() % 100;
 }
 
 static void pushv(worldi* p, pointm i, unsigned char v) {
-	if(!p->get(i)) {
-		p->set(i, v);
-		stack[push_stack++] = v;
-	}
+	p->set(i, v);
+	stack[push_stack++] = i;
 }
 
 static pointm popv() {
@@ -29,17 +36,15 @@ void worldi::clear() {
 }
 
 void worldi::generate(pointm start, mpt v) {
-	pushvalue push(pointm::mps);
-	pointm::mps = mps;
 	if(!start)
 		return;
 	pushv(this, start, v);
 	while(pop_stack < push_stack) {
 		auto i = popv();
 		auto t = get(i);
-		for(auto d : all_around) {
-			auto n = i.to(d);
-			if(!n)
+		for(auto d : random_directions()) {
+			auto n = to(i, d);
+			if(!n || get(n))
 				continue;
 			if(d100() < 70)
 				pushv(this, n, t);
