@@ -1,3 +1,2 @@
-﻿In file `rules/Tables.txt`:
- Line 10: Unknown variant identifier `Hills`
- Line 11: Unknown variant identifier `Forest`
+﻿In file `rules/Basic.txt`:
+ Line 63: Can't find variant `Grav2e`

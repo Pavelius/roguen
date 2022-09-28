@@ -70,6 +70,8 @@ BSMETA(racei) = {
 BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(landscape),
+	BSREQ(sites),
+	BSREQ(site_count),
 	BSREQ(minimap),
 	{}};
 BSMETA(weari) = {

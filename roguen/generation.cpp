@@ -1,6 +1,7 @@
 #include "main.h"
 
 static adat<rect, 32> locations;
+static adat<sitei*, 32> sites;
 
 typedef void(*fnscene)(const rect& rc);
 

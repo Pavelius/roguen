@@ -283,7 +283,9 @@ struct visualeffect : nameable {
 	void		paint() const;
 };
 struct sitei : nameable {
+	char		site_count;
 	variants	landscape;
+	variants	sites, always;
 	color		minimap;
 };
 struct boosti {
