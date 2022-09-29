@@ -93,7 +93,7 @@ static item* choose_stuff(wear_s wear) {
 		an.add(pi, temp);
 	}
 	sb.clear();
-	sb.add("Choose %1", bsdata<weari>::elements[wear].getname());
+	sb.add("%Choose %1", bsdata<weari>::elements[wear].getname());
 	return (item*)an.choose(temp, getnm("Cancel"));
 }
 

@@ -343,6 +343,8 @@ static void paint_floor() {
 				break;
 			auto i = m2i({x, y});
 			auto pt = m2s({x, y});
+			if(!area.is(i, Explored))
+				continue;
 			setcaret(pt);
 			auto r = area.random[i];
 			auto t = area.tiles[i];
@@ -577,11 +579,13 @@ static void paint_button(const char* format, bool pressed) {
 		width = textw(format) + 6;
 	auto push_fore = fore;
 	fore = colors::button;
+	caret.y += 1;
 	rectf();
 	if(pressed)
 		strokedown();
 	else
 		strokeup();
+	caret.y -= 1;
 	fore = push_fore;
 	caret.x += 1 + (width - textw(format) + 1) / 2;
 	if(pressed)

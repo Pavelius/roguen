@@ -4,6 +4,7 @@ AppTitle: Приключения в забытых Королевствах
 AttackMiss: %герой промазал%а.
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
+Choose: Выбирайте
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Goblin: Гоблин
@@ -12,6 +13,7 @@ Inventory: Одетые предметы
 No: Нет
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
+Rounds: Раунды
 Tree: Дерево
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
