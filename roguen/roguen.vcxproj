@@ -199,6 +199,7 @@
     <ClCompile Include="script.cpp" />
     <ClCompile Include="scripting.cpp" />
     <ClCompile Include="serial.cpp" />
+    <ClCompile Include="shape.cpp" />
     <ClCompile Include="speech.cpp" />
     <ClCompile Include="spells.cpp" />
     <ClCompile Include="sprite_util.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="shape.h" />
     <ClInclude Include="speech.h" />
     <ClInclude Include="sprite_util.h" />
     <ClInclude Include="stringact.h" />
@@ -271,6 +273,7 @@
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Items.txt" />
+    <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Tables.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

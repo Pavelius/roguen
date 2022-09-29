@@ -12,5 +12,6 @@ union pointm {
 	constexpr pointm(unsigned short u) : u(u) {}
 	explicit constexpr operator bool() const { return u != 0xFFFF; }
 	//constexpr operator unsigned short() const { return u; }
+	size_t				maximum() const { return x * y; }
 	pointm				to(direction_s v, unsigned char mps) const;
 };

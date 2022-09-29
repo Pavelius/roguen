@@ -11,6 +11,7 @@
 #include "pointm.h"
 #include "pushvalue.h"
 #include "script.h"
+#include "shape.h"
 #include "speech.h"
 #include "variant.h"
 #include "world.h"

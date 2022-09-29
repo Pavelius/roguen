@@ -1,2 +1,2 @@
-﻿In file `rules/Basic.txt`:
- Line 63: Can't find variant `Grav2e`
+﻿In file `rules/Shapes.txt`:
+ Line 1: Expected symbol `#`

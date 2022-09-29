@@ -330,7 +330,7 @@ static void paint_floor() {
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
 	auto x1 = (camera.x - tsx / 2) / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
-	auto y1 = (camera.y - tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy;
+	auto y1 = (camera.y - tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy + 2;
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;

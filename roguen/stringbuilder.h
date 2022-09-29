@@ -59,6 +59,7 @@ public:
 	bool				ispos(const char* v) const { return p == v; }
 	static unsigned char lower(unsigned char sym);
 	void				lower();
+	size_t				maximum() const { return pe - pb; }
 	const char*			psidf(const char* pb);
 	const char*			psline(const char* pb);
 	const char*			psstr(const char* p, char end_symbol);

@@ -19,6 +19,7 @@ static void initializating() {
 	hotkey::initialize();
 	readl("Chats", speech::read);
 	generatori::read("rules/Tables.txt");
+	shapei::read("rules/Shapes.txt");
 #ifdef _DEBUG
 	main_util();
 #endif

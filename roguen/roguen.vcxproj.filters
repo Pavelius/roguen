@@ -255,6 +255,9 @@
     <ClCompile Include="world.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="shape.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -377,6 +380,9 @@
     <ClInclude Include="world.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -407,6 +413,9 @@
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\rules\Tables.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\rules\Shapes.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>
