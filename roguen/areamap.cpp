@@ -77,7 +77,7 @@ void areamap::set(indext i, tile_s v) {
 	if(i == Blocked)
 		return;
 	tiles[i] = v;
-	features[i] = NoFeature;
+	features[i] = (feature_s)0;
 }
 
 void areamap::set(indext i, feature_s v) {
@@ -99,6 +99,17 @@ void areamap::set(rect rc, tile_s v) {
 				break;
 			set(m2i({x, y}), v);
 		}
+	}
+}
+
+void areamap::set(rect rc, mapf_s v, int random_count) {
+	if(random_count < 0)
+		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
+	while(random_count > 0) {
+		auto x = rc.x1 + rand() % (rc.width() + 1);
+		auto y = rc.y1 + rand() % (rc.height() + 1);
+		set(m2i(x, y), v);
+		random_count--;
 	}
 }
 

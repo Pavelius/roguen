@@ -22,6 +22,9 @@ BSDATAC(sitei, 64);
 BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};
+BSMETA(areafi) = {
+	BSREQ(id),
+	{}};
 BSMETA(classi) = {
 	BSREQ(id),
 	BSREQ(hd), BSREQ(cap), BSREQ(player),
@@ -85,6 +88,7 @@ BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
 	{"Ability", VAR(abilityi), 1},
 	{"Advancement", VAR(advancement), 2},
+	{"AreaFlag", VAR(areafi), 1},
 	{"Class", VAR(classi), 1},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},

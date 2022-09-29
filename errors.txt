@@ -1,2 +1,2 @@
-﻿In file `rules/Shapes.txt`:
- Line 15: Expected symbol `#`, but you have string `sXXX  `
+﻿In file `rules/Basic.txt`:
+ Line 64: Can't find variant `Water`

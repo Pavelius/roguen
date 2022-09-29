@@ -7,7 +7,7 @@ static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
 using namespace draw;
 
-void create_area(const rect& rca, variant v);
+void create_area(const char* id);
 
 #ifdef _DEBUG
 void main_util();
@@ -78,7 +78,7 @@ static void main_start() {
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
-	create_area({0, 0, mps - 1, mps - 1}, "DeepForest");
+	create_area("DeepForest");
 	create_item(m2i(4, 4), "Sword");
 	create_item(m2i(4, 4), "BattleAxe");
 	setnext(game.play);

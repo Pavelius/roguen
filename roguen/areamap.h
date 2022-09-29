@@ -19,7 +19,7 @@ enum tile_s : unsigned char {
 };
 enum feature_s : unsigned char {
 	NoFeature,
-	Tree, FootMud, FootHill, Grave,
+	Tree, FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
 	Trap, Door,
 };
@@ -62,8 +62,9 @@ struct areamap {
 	void			set(indext i, tile_s v);
 	void			set(indext i, feature_s v);
 	void			set(rect rc, tile_s v);
-	void			set(rect rc, tile_s v, int random_count);
 	void			set(rect rc, feature_s v, int random_count);
+	void			set(rect rc, mapf_s v, int random_count);
+	void			set(rect rc, tile_s v, int random_count);
 	void			set(feature_s v, int bonus);
 	void			setlos(indext index, int radius);
 	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }

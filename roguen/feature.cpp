@@ -6,6 +6,7 @@ BSDATA(featurei) = {
 	{"FootMud", {14, 1}, {}, 5},
 	{"FootHill", {15, 1}, {}, 5},
 	{"Grave", {16, 2}},
+	{"Statue", {43, 2}},
 	{"HiveHole", {18, 1}, {}, 5},
 	{"Hive", {19, 1}},
 	{"Hole", {20, 1}},
