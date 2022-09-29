@@ -111,15 +111,6 @@ static void savel(const char* url, array& source, bool only_empthy) {
 	}
 }
 
-static void setfile(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
-	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.addlocalefile(id);
-	if(write_mode)
-		savel(temp, source, only_empthy);
-	else
-		readl(temp, source, required);
-}
-
 static void setlist(array& source, const char* id, const char* locale) {
 	char temp[260]; stringbuilder sb(temp);
 	sb.clear(); sb.addlocaleurl();
@@ -133,6 +124,17 @@ static void setlist(array& source, const char* id, const char* locale) {
 			continue;
 		char file[512];
 		readl(find.fullname(file), source, false);
+	}
+}
+
+static void setfile(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
+	char temp[260]; stringbuilder sb(temp);
+	sb.clear(); sb.addlocalefile(id);
+	if(write_mode)
+		savel(temp, source, only_empthy);
+	else {
+		readl(temp, source, required);
+		setlist(source, id, locale);
 	}
 }
 
@@ -163,7 +165,6 @@ void initialize_translation(const char* locale) {
 		return;
 	copy_locale(locale);
 	setfile(source_name, "Names", main_locale, false, true, false);
-	setlist(source_name, "Names", main_locale);
 	setfile(source_text, "Descriptions", main_locale, false, false, false);
 	setfile(source_nameof, "NamesOf", main_locale, false, false, false);
 	setfile(source_namepl, "NamesPl", main_locale, false, false, false);
