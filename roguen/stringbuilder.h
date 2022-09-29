@@ -51,15 +51,14 @@ public:
 	char*				get() const { return p; }
 	static const char*	getbycount(const char* id, int count);
 	static int			getnum(const char* v);
-	unsigned			getlenght() const { return p - pb; }
-	unsigned			getmaximum() const { return pe - pb - 1; }
-	bool				isempthy() const { return !pb || pb[0] == 0; }
+	size_t				getlenght() const { return p - pb; }
+	size_t				getmaximum() const { return pe - pb - 1; }
 	static bool			ischa(unsigned char sym) { return (sym >= 'A' && sym <= 'Z') || (sym >= 'a' && sym <= 'z') || sym >= 0xC0; }
+	bool				isfull() const { return p >= pe; }
 	static bool			isnum(unsigned char sym) { return sym >= '0' && sym <= '9'; }
 	bool				ispos(const char* v) const { return p == v; }
 	static unsigned char lower(unsigned char sym);
 	void				lower();
-	size_t				maximum() const { return pe - pb; }
 	const char*			psidf(const char* pb);
 	const char*			psline(const char* pb);
 	const char*			psstr(const char* p, char end_symbol);

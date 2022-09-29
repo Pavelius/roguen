@@ -10,6 +10,7 @@ struct shapei {
 	point			origin;
 	pointm			size;
 	pointm			points[10];
+	pointm			center(pointm c) const;
 	pointm			find(char sym) const;
 	size_t			maximum() const { return size.x * size.y; }
 	int				m2i(pointm v) const { return size.x * v.y + v.x; }

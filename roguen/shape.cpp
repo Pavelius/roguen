@@ -6,7 +6,7 @@ using namespace log;
 
 BSDATAC(shapei, 128)
 
-static const char* shape_symbols = {"UX.1234567890\r\n"};
+static const char* shape_symbols = {"UX.1234567890 "};
 
 pointm shapei::find(char sym) const {
 	auto m = size.maximum();
@@ -15,6 +15,10 @@ pointm shapei::find(char sym) const {
 			return i2m(i);
 	}
 	return pointm();
+}
+
+pointm shapei::center(pointm c) const {
+	return pointm(c.x + origin.x, c.y + origin.y);
 }
 
 pointm shapei::translate(pointm c, pointm v, direction_s d) const {
@@ -32,8 +36,10 @@ static bool isallowed(char sym) {
 }
 
 static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
+	while(*p == '\n' || *p == '\r')
+		p = skipcr(p);
 	sb.clear();
-	p = skipspcr(p);
+	auto ps = sb.get();
 	auto pb = p;
 	e.size.x = 0;
 	e.size.y = 1;
@@ -41,23 +47,25 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 	e.origin.y = 0;
 	if(!isallowed(*p))
 		error(p, "Expected shape data");
-	while(allowparse && *p && isallowed(*p)) {
+	while(allowparse && *p && (isallowed(*p) || *p=='\n' || *p=='\r')) {
 		if((*p == '\n') || (*p == '\r')) {
 			if(e.size.x == 0)
 				e.size.x = p - pb;
 			else {
 				auto n = p - pb;
 				if(n != e.size.x)
-					error(p, "Shape row must be %1i characters", e.size.x);
+					error(p, "Shape row '%2' must be %1i characters", e.size.x, ps);
 			}
-			p = skipspcr(p);
+			while(*p == '\n' || *p == '\r')
+				p = skipcr(p);
 			pb = p;
+			ps = sb.get();
 			e.size.y++;
 		} else
 			sb.add(*p++);
 	}
 	size_t mr = e.size.maximum();
-	size_t mn = sb.maximum();
+	size_t mn = sb.getmaximum();
 	if(mr > mn)
 		error(pb, "Shape size %1ix%2i is too big. Try make it smallest. Multiplied sized of shape must be not greater that %3i.", e.size.x, e.size.y, mn);
 	e.content = szdup(sb.begin());
@@ -65,7 +73,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 		e.points[sym - '0'] = e.find(sym);
 	e.origin.x = -e.points[0].x;
 	e.origin.y = -e.points[0].y;
-	return p;
+	return skipspcr(p);
 }
 
 void shapei::read(const char* url) {

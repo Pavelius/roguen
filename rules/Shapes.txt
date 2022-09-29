@@ -5,3 +5,11 @@ X...X
 X...X
 X...X
 XX0XX
+
+#CircleRoom
+
+  XXXXXXX  
+XXX.....XXX
+X.........X
+XXX.....XXX
+  XXX0XXX  

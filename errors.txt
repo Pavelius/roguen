@@ -1,2 +1,2 @@
 ﻿In file `rules/Shapes.txt`:
- Line 1: Expected symbol `#`
+ Line 15: Expected symbol `#`, but you have string `sXXX  `

@@ -100,6 +100,38 @@ static void create_locations(fnscene proc) {
 		proc(e);
 }
 
+static void place_shape(const shapei& e, pointm m, direction_s d, tile_s floor, tile_s wall) {
+	auto n = e.size.maximum();
+	auto c = e.center(m);
+	for(size_t i = 0; i < n; i++) {
+		auto pm = e.translate(c, e.i2m(i), d);
+		auto sm = e.content[i];
+		switch(sm) {
+		case ' ':
+			break;
+		case '.':
+			area.set(m2i(pm), floor);
+			break;
+		case 'X':
+			area.set(m2i(pm), wall);
+			break;
+		case '0':
+			area.set(m2i(pm), floor);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+static void place_features(pointm pm, const char* id) {
+	static direction_s direction[] = {North, South, West, East};
+	auto p = bsdata<shapei>::find(id);
+	if(!p)
+		return;
+	place_shape(*p, pm, maprnd(direction), Cave, WallCave);
+}
+
 void create_area(const rect& rca, variant v) {
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
@@ -108,5 +140,6 @@ void create_area(const rect& rca, variant v) {
 	else if(v.iskind<sitei>()) {
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_area(rca, ev);
+		place_features({16, 16}, "CircleRoom");
 	}
 }

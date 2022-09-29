@@ -48,6 +48,15 @@ const char* log::getstring(stringbuilder& sb) {
 	return szdup(p);
 }
 
+static const char* example(const char* p, stringbuilder& sb) {
+	while(*p && *p != '\n' && *p != '\r') {
+		if(sb.isfull())
+			break;
+		sb.add(*p++);
+	}
+	return sb.begin();
+}
+
 bool log::checksym(const char* p, char sym) {
 	if(sym == '\n') {
 		if(*p != '\n' && *p != '\r') {
@@ -57,7 +66,8 @@ bool log::checksym(const char* p, char sym) {
 		}
 	} else if(*p != sym) {
 		char result[] = {sym, 0};
-		log::error(p, "Expected symbol `%1`", result);
+		char string[16]; stringbuilder sb(string); sb.clear();
+		log::error(p, "Expected symbol `%1`, but you have string `%2`", result, example(p, sb));
 		allowparse = false;
 		return false;
 	}
