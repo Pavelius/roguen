@@ -35,7 +35,7 @@ void worldi::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-void worldi::generate(pointm start, mpt v) {
+void worldi::generate(pointm start, unsigned char v) {
 	if(!start)
 		return;
 	pushv(this, start, v);

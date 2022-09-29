@@ -2,6 +2,8 @@
 #include "direction.h"
 #include "crt.h"
 
+const indext NotCalculatedMovement = 0xFFF0;
+
 static indext stack[256 * 256];
 static indext* push_counter;
 static indext* pop_counter;
@@ -25,7 +27,7 @@ static int d100() {
 }
 
 void areamap::clear() {
-	memset(&tiles, 0, sizeof(tiles));
+	memset(tiles, 0, sizeof(tiles));
 	memset(flags, 0, sizeof(flags));
 	for(auto& e : random)
 		e = (unsigned char)(rand() % 256);
@@ -167,6 +169,12 @@ bool areamap::isfree(indext i) const {
 	return true;
 }
 
+bool areamap::isfree(int x, int y) const {
+	if(x < 0 || x >= mps || y < 0 || y >= mps)
+		return false;
+	return isfree(m2i({(short)x, (short)y}));
+}
+
 bool areamap::isfreelt(indext i) const {
 	return isfree(i);
 }
@@ -225,6 +233,13 @@ void areamap::blockzero() {
 }
 
 void areamap::blockwalls() const {
+	for(indext i = 0; i < mps * mps; i++) {
+		if(!tiles[i])
+			continue;
+		auto& ei = bsdata<tilei>::elements[tiles[i]];
+		if(ei.iswall())
+			movement_rate[i] = Blocked;
+	}
 }
 
 void areamap::blockfeatures() const {
@@ -440,4 +455,24 @@ void areamap::vert(int x1, int y1, int y2, tile_s tile) {
 			set(m2i(x1, y1), tile);
 		y1++;
 	}
+}
+
+point areamap::getfree(point m, short maximum) const {
+	if(isfree(m.x, m.y))
+		return m;
+	for(short r = 1; r < maximum; r++) {
+		for(short i = m.x - r + 1; i < m.x + r; i++) {
+			if(isfree(i, m.y - r))
+				return {i, m.y};
+			if(isfree(i, m.y + r))
+				return {i, m.y};
+		}
+		for(short i = m.y - r; i <= m.y + r; i++) {
+			if(isfree(m.x + r, i))
+				return {m.x, i};
+			if(isfree(m.x - r, i))
+				return {i, m.y};
+		}
+	}
+	return point();
 }

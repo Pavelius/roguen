@@ -5,9 +5,8 @@
 #pragma once
 
 typedef short unsigned indext;
-const int mps = 64;
 const indext Blocked = 0xFFFF;
-const indext NotCalculatedMovement = 0xFFF0;
+const int mps = 64;
 
 enum direction_s : unsigned char;
 
@@ -31,7 +30,6 @@ inline indext m2i(point v) { return v.x + v.y * mps; }
 inline indext m2i(int x, int y) { return x + y * mps; }
 inline point i2m(indext v) { return point{(short)(v % mps), (short)(v / mps)}; }
 struct areamap {
-	//anymap<tile_s, mps> tiles;
 	tile_s			tiles[mps * mps];
 	feature_s		features[mps * mps];
 	unsigned char	random[mps * mps];
@@ -47,6 +45,7 @@ struct areamap {
 	feature_s		getfeature(indext i) const;
 	unsigned char	getfow(indext i) const;
 	int				getindex(indext i, tile_s e) const;
+	point			getfree(point pt, short maximum) const;
 	static indext	getnext(indext start, indext goal);
 	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
 	static indext	getpoint(const rect& rc, direction_s dir);
@@ -56,6 +55,7 @@ struct areamap {
 	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
 	bool			isb(indext i, mapf_s v) const { return i == Blocked || (flags[i] & (1 << v)) != 0; }
 	bool			isfree(indext i) const;
+	bool			isfree(int x, int y) const;
 	bool			isfreelt(indext i) const;
 	bool			iswall(indext i, direction_s d) const;
 	bool			linelos(int x0, int y0, int x1, int y1) const;
