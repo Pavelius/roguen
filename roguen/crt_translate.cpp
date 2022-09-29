@@ -122,7 +122,10 @@ static void setlist(array& source, const char* id, const char* locale) {
 			continue;
 		if(!szpmatch(pn, filter))
 			continue;
-		char file[512];
+		char file[512]; stringbuilder st(file);
+		st.add("%1.txt", id);
+		if(equal(pn, file))
+			continue;
 		readl(find.fullname(file), source, false);
 	}
 }
