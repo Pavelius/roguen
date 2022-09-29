@@ -222,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h" />
+    <ClInclude Include="anymap.h" />
     <ClInclude Include="archive.h" />
     <ClInclude Include="areamap.h" />
     <ClInclude Include="bsreq.h" />

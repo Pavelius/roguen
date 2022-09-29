@@ -1,2 +1,2 @@
 ﻿In file `rules/Basic.txt`:
- Line 64: Can't find variant `Water`
+ Line 12: Not found requisit `treasue`

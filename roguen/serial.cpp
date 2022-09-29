@@ -66,26 +66,27 @@ static bool serial_area(const char* url, bool write_mode) {
 }
 
 static void create_area(geoposition v) {
-
 }
 
 static void serial_area(geoposition v, bool write_mode) {
 	char temp[260]; stringbuilder sb(temp);
-	auto m = i2m(v.index);
-	sb.add("AR%1.2h%2.2h%3.2h.sav", m.y, m.x, v.level);
-	if(!write_mode && !serial_area(temp, write_mode)) {
-		create_area(v);
-		if(!serial_area(temp, false))
-			return;
-	}
+	sb.add("AR%1.2h%2.2h%3.2h.sav", v.position.y, v.position.x, v.level);
+	if(!write_mode) {
+		if(!serial_area(temp, false)) {
+			create_area(v);
+			if(!serial_area(temp, false))
+				return;
+		}
+	} else
+		serial_area(temp, write_mode);
 }
 
 void gamei::write() {
 	serial_game(true);
-	serial_area(positon, true);
+	serial_area(*this, true);
 }
 
 void gamei::read() {
 	serial_game(false);
-	serial_area(positon, false);
+	serial_area(*this, false);
 }

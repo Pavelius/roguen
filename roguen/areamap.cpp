@@ -25,7 +25,7 @@ static int d100() {
 }
 
 void areamap::clear() {
-	memset(tiles, 0, sizeof(tiles));
+	memset(&tiles, 0, sizeof(tiles));
 	memset(flags, 0, sizeof(flags));
 	for(auto& e : random)
 		e = (unsigned char)(rand() % 256);

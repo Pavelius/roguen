@@ -1,3 +1,4 @@
+#include "anymap.h"
 #include "color.h"
 #include "point.h"
 
@@ -30,6 +31,7 @@ inline indext m2i(point v) { return v.x + v.y * mps; }
 inline indext m2i(int x, int y) { return x + y * mps; }
 inline point i2m(indext v) { return point{(short)(v % mps), (short)(v / mps)}; }
 struct areamap {
+	//anymap<tile_s, mps> tiles;
 	tile_s			tiles[mps * mps];
 	feature_s		features[mps * mps];
 	unsigned char	random[mps * mps];

@@ -383,6 +383,9 @@
     <ClInclude Include="shape.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="anymap.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

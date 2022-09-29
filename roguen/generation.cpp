@@ -142,7 +142,18 @@ static void create_location_general() {
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
 }
 
-static void create_area(const rect& rca, variant v) {
+static void place_monsters(const rect& rca, const monsteri& e, int count) {
+	if(count == 0) {
+		if(game.isoutdoor())
+			count = e.getbase().appear_outdoor.roll();
+		else
+			count = e.getbase().appear.roll();
+	}
+	for(auto i = 0; i < count; i++) {
+	}
+}
+
+static void create_landscape(const rect& rca, variant v) {
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -151,8 +162,9 @@ static void create_area(const rect& rca, variant v) {
 		area.set(rca, (mapf_s)v.value, v.counter);
 	else if(v.iskind<sitei>()) {
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
-			create_area(rca, ev);
-	}
+			create_landscape(rca, ev);
+	} else if(v.iskind<monsteri>())
+		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
 }
 
 static void add_area_sites(variant v) {
@@ -174,14 +186,17 @@ static void create_sites() {
 	if(sites.count > locations.count)
 		sites.count = locations.count;
 	for(size_t i = 0; i < locations.count; i++)
-		create_area(locations.data[i], sites.data[i]);
+		create_landscape(locations.data[i], sites.data[i]);
 }
 
 void create_area(const char* id) {
+	variant tile = id;
+	if(!tile)
+		return;
 	locations.clear();
 	sites.clear();
-	create_area({0, 0, mps - 1, mps - 1}, id);
-	add_area_sites(id);
+	create_landscape({0, 0, mps - 1, mps - 1}, tile);
+	add_area_sites(tile);
 	create_location_general();
 	create_sites();
 }

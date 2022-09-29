@@ -201,6 +201,10 @@ struct wearable : movable {
 struct monsteri : nameable, statable {
 	const char*	avatar;
 	featable	feats;
+	const char*	treasure;
+	dice		appear, appear_outdoor;
+	const monsteri* parent;
+	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 };
 struct spellable {
 	char		spells[Sleep + 1];
@@ -300,11 +304,11 @@ struct boosti {
 	static void	updateall();
 };
 struct geoposition {
-	indext		index;
+	pointm		position;
 	short		level;
+	bool		isoutdoor() const { return level == 0; }
 };
-class gamei {
-	geoposition	positon;
+class gamei : public geoposition {
 	unsigned	minutes;
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:

@@ -66,6 +66,9 @@ BSMETA(monsteri) = {
 	BSDST(abilities, abilityi),
 	BSFLG(feats, feati),
 	BSREQ(avatar),
+	BSREQ(parent),
+	BSREQ(treasure),
+	BSREQ(appear), BSREQ(appear_outdoor),
 	{}};
 BSMETA(racei) = {
 	BSREQ(id),

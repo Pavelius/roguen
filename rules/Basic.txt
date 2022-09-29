@@ -9,11 +9,12 @@ Mage hd(4) cap(9) player(1)
 
 #Monster
 
-Goblin avatar("0")
+Goblin avatar("0") treasure(RC) appear(2 8) appear_outdoor(6 60)
  abilities Strenght(-2) Dexterity(4)
-GoblinFemale avatar("0_f")
+ feats SunSensitive
+GoblinFemale avatar("0_f") parent(Goblin)
  abilities Strenght(-2) Dexterity(4)
- feats Female
+ feats SunSensitive Female
 CityGuard avatar("57")
  abilities Level(2)
 OrcWarrior avatar("1")
@@ -59,7 +60,7 @@ DeepAncientPlace
 Graveyard
  landscape Grave+4
 MonsterLair
- landscape Webbed+4 Blooded+3
+ landscape Webbed+4 Blooded+3 Goblin
 SwampyArea
  landscape FootMud-40 Herbs+3
 
