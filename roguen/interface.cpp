@@ -875,8 +875,8 @@ static void paint_world() {
 	origin.x = (width - world.mps * z) / 2;
 	origin.y = (height - world.mps * z) / 2;
 	height = width = z;
-	for(auto y = 0; y < world.mps; y++) {
-		for(auto x = 0; x < world.mps; x++) {
+	for(short y = 0; y < world.mps; y++) {
+		for(short x = 0; x < world.mps; x++) {
 			auto t = world.get({x, y});
 			if(!t)
 				continue;

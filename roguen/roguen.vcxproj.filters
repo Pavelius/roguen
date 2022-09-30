@@ -258,6 +258,9 @@
     <ClCompile Include="shape.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="anymap.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

@@ -5,7 +5,7 @@
 #include "world.h"
 
 struct sitei;
-static pointm stack[256 * 256];
+static point stack[256 * 256];
 static unsigned short push_stack, pop_stack;
 
 static slice<direction_s> random_directions() {
@@ -22,12 +22,12 @@ static int d100() {
 	return rand() % 100;
 }
 
-static void pushv(worldi* p, pointm i, unsigned char v) {
+static void pushv(worldi* p, point i, unsigned char v) {
 	p->set(i, v);
 	stack[push_stack++] = i;
 }
 
-static pointm popv() {
+static point popv() {
 	return stack[pop_stack++];
 }
 
@@ -35,7 +35,7 @@ void worldi::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-void worldi::generate(pointm start, unsigned char v) {
+void worldi::generate(point start, unsigned char v) {
 	if(!start)
 		return;
 	pushv(this, start, v);
@@ -43,7 +43,7 @@ void worldi::generate(pointm start, unsigned char v) {
 		auto i = popv();
 		auto t = get(i);
 		for(auto d : random_directions()) {
-			auto n = to(i, d);
+			auto n = to(i, d, mps);
 			if(!n || get(n))
 				continue;
 			if(d100() < 70)
