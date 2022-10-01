@@ -9,14 +9,6 @@ static point stack[256 * 256];
 static point* push_counter;
 static point* pop_counter;
 static anymap<short unsigned, areamap::mps> movement_rate;
-static point map_directions[] = {
-	{0, -1}, {1, 0}, {0, 1}, {-1, 0},
-	{1, -1}, {1, 1}, {-1, 1}, {-1, -1},
-};
-static point all_directions[] = {
-	{0, 1}, {0, -1}, {1, 0}, {-1, 0},
-	{1, 1}, {-1, 1}, {1, -1}, {-1, -1},
-};
 static point straight_directions[] = {
 	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
 };
@@ -29,10 +21,6 @@ static const direction_s orientations_7b7[49] = {
 	SouthWest, SouthWest, SouthWest, South, SouthEast, SouthEast, SouthEast,
 	SouthWest, SouthWest, South, South, South, SouthEast, SouthEast,
 };
-
-point to(point m, direction_s d) {
-	return m + map_directions[d];
-}
 
 static int d100() {
 	return rand() % 100;

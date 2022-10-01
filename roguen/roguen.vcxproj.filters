@@ -213,9 +213,6 @@
     <ClCompile Include="hotkey.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="areamap.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="visualeffect.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
@@ -256,6 +253,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="anymap.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="areamap.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -353,9 +353,6 @@
     <ClInclude Include="hotkey.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="areamap.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="pushvalue.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -381,6 +378,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="anymap.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="areamap.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

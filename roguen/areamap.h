@@ -84,5 +84,3 @@ struct areamap : anymap<tile_s, 64> {
 	static void		makewavex();
 	void			vert(int x1, int y1, int y2, tile_s tile);
 };
-direction_s			round(direction_s i, direction_s v);
-point				to(point, direction_s d);

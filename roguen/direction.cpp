@@ -1,5 +1,10 @@
 #include "direction.h"
 
+point all_directions[] = {
+	{0, -1}, {1, 0}, {0, 1}, {-1, 0},
+	{1, -1}, {1, 1}, {-1, 1}, {-1, -1},
+};
+
 direction_s round(direction_s d, direction_s v) {
 	switch(v) {
 	case East:
@@ -31,4 +36,8 @@ direction_s round(direction_s d, direction_s v) {
 	default:
 		return d;
 	}
+}
+
+point to(point m, direction_s d) {
+	return m + all_directions[d];
 }
