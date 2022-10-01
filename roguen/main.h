@@ -8,7 +8,6 @@
 #include "color.h"
 #include "crt.h"
 #include "list.h"
-#include "pointm.h"
 #include "pushvalue.h"
 #include "script.h"
 #include "shape.h"
@@ -304,7 +303,7 @@ struct boosti {
 	static void	updateall();
 };
 struct geoposition {
-	pointm		position;
+	point		position;
 	short		level;
 	bool		isoutdoor() const { return level == 0; }
 };

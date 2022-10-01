@@ -246,9 +246,6 @@
     <ClCompile Include="boost.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="pointm.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="direction.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -375,9 +372,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="direction.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="pointm.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="world.h">

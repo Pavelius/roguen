@@ -94,31 +94,32 @@ static void create_locations(fnscene proc) {
 		proc(e);
 }
 
-static void place_shape(const shapei& e, pointm m, direction_s d, tile_s floor, tile_s wall) {
-	auto n = e.size.maximum();
+static void place_shape(const shapei& e, point m, direction_s d, tile_s floor, tile_s wall) {
 	auto c = e.center(m);
-	for(size_t i = 0; i < n; i++) {
-		auto pm = e.translate(c, e.i2m(i), d);
-		auto sm = e.content[i];
-		switch(sm) {
-		case ' ':
-			break;
-		case '.':
-			area.set(m2i(pm), floor);
-			break;
-		case 'X':
-			area.set(m2i(pm), wall);
-			break;
-		case '0':
-			area.set(m2i(pm), floor);
-			break;
-		default:
-			break;
+	for(m.y = 0; m.y < e.size.y; m.y++) {
+		for(m.x = 0; m.x < e.size.x; m.x++) {
+			auto pm = e.translate(c, m, d);
+			auto sm = e[m];
+			switch(sm) {
+			case ' ':
+				break;
+			case '.':
+				area.set(m2i(pm), floor);
+				break;
+			case 'X':
+				area.set(m2i(pm), wall);
+				break;
+			case '0':
+				area.set(m2i(pm), floor);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }
 
-static void place_features(pointm pm, const char* id) {
+static void place_features(point pm, const char* id) {
 	static direction_s direction[] = {North, South, West, East};
 	auto p = bsdata<shapei>::find(id);
 	if(!p)

@@ -1,3 +1,4 @@
+#include "direction.h"
 #include "shape.h"
 #include "stringbuilder.h"
 #include "logparse.h"
@@ -8,26 +9,28 @@ BSDATAC(shapei, 128)
 
 static const char* shape_symbols = {"UX.1234567890 "};
 
-pointm shapei::find(char sym) const {
-	auto m = size.maximum();
-	for(size_t i = 0; i < m; i++) {
-		if(content[i] == sym)
-			return i2m(i);
+point shapei::find(char sym) const {
+	for(short y = 0; y < size.y; y++) {
+		for(short x = 0; x < size.x; x++) {
+			point m = {x, y};
+			if((*this)[m] == sym)
+				return m;
+		}
 	}
-	return pointm();
+	return {-1000, -1000};
 }
 
-pointm shapei::center(pointm c) const {
-	return pointm(c.x + origin.x, c.y + origin.y);
+point shapei::center(point c) const {
+	return c.to(origin.x, origin.y);
 }
 
-pointm shapei::translate(pointm c, pointm v, direction_s d) const {
+point shapei::translate(point c, point v, direction_s d) const {
 	switch(d) {
-	case North: return pointm(c.x + v.x, c.y + v.y);
-	case South: return pointm(c.x + v.x, c.y - v.y);
-	case West: return pointm(c.x - v.y, c.y + v.x);
-	case East: return pointm(c.x + v.y, c.y - v.x);
-	default: return pointm();
+	case North: return c.to(v.x, v.y);
+	case South: return c.to(v.x, -v.y);
+	case West: return c.to(-v.y, v.x);
+	case East: return c.to(v.y, -v.x);
+	default: return c;
 	}
 }
 
@@ -47,7 +50,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 	e.origin.y = 0;
 	if(!isallowed(*p))
 		error(p, "Expected shape data");
-	while(allowparse && *p && (isallowed(*p) || *p=='\n' || *p=='\r')) {
+	while(allowparse && *p && (isallowed(*p) || *p == '\n' || *p == '\r')) {
 		if((*p == '\n') || (*p == '\r')) {
 			if(e.size.x == 0)
 				e.size.x = p - pb;
@@ -64,7 +67,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 		} else
 			sb.add(*p++);
 	}
-	size_t mr = e.size.maximum();
+	size_t mr = e.size.x * e.size.y;
 	size_t mn = sb.getmaximum();
 	if(mr > mn)
 		error(pb, "Shape size %1ix%2i is too big. Try make it smallest. Multiplied sized of shape must be not greater that %3i.", e.size.x, e.size.y, mn);

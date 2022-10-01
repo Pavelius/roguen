@@ -1,20 +1,19 @@
-#include "direction.h"
 #include "point.h"
-#include "pointm.h"
 
 #pragma once
+
+enum direction_s : unsigned char;
 
 struct shapei {
 	const char*		id;
 	const char*		content;
 	point			origin;
-	pointm			size;
-	pointm			points[10];
-	pointm			center(pointm c) const;
-	pointm			find(char sym) const;
+	point			size;
+	point			points[10];
+	char operator[](point m) const { return content[m.y * size.x + m.x]; }
+	point			center(point c) const;
+	point			find(char sym) const;
 	size_t			maximum() const { return size.x * size.y; }
-	int				m2i(pointm v) const { return size.x * v.y + v.x; }
-	pointm			i2m(size_t v) const { return pointm(v % size.x, v / size.x); }
-	pointm			translate(pointm s, pointm m, direction_s d) const;
+	point			translate(point s, point m, direction_s d) const;
 	static void		read(const char* url);
 };
