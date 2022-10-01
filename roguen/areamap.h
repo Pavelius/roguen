@@ -45,7 +45,6 @@ struct areamap : anymap<tile_s, 64> {
 	anymap<feature_s, mps> features;
 	anymap<unsigned char, mps> random;
 	anymap<unsigned char, mps> flags;
-	static void		addwave(point m);
 	void			blockfeatures() const;
 	static void		blockrange(int range);
 	void			blockwalls() const;
@@ -61,7 +60,6 @@ struct areamap : anymap<tile_s, 64> {
 	static unsigned getpath(point start, point goal, point* result, unsigned maximum);
 	static point	getpoint(const rect& rc, direction_s dir);
 	static int		getrange(point start, point target);
-	static point	getwave();
 	void			horz(int x1, int y1, int x2, tile_s tile);
 	bool			is(point m, mapf_s v) const { return (flags[m] & (1 << v)) != 0; }
 	bool			isb(point m, mapf_s v) const { return !isvalid(m) || (flags[m] & (1 << v)) != 0; }

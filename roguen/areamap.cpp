@@ -18,7 +18,7 @@ static point all_directions[] = {
 	{1, 1}, {-1, 1}, {1, -1}, {-1, -1},
 };
 static point straight_directions[] = {
-	{0, 1}, {0, -1}, {1, 0}, {-1, 0},
+	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
 };
 static const direction_s orientations_7b7[49] = {
 	NorthWest, NorthWest, North, North, North, NorthEast, NorthEast,
@@ -218,13 +218,13 @@ void areamap::blockfeatures() const {
 		}
 }
 
-void areamap::addwave(point v) {
+static void addwave(point v) {
 	*push_counter++ = v;
 	if(push_counter >= stack + sizeof(stack) / sizeof(stack[0]))
 		push_counter = stack;
 }
 
-point areamap::getwave() {
+static point getwave() {
 	auto index = *pop_counter++;
 	if(pop_counter >= stack + sizeof(stack) / sizeof(stack[0]))
 		pop_counter = stack;
