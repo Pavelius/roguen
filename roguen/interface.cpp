@@ -877,7 +877,7 @@ static void paint_world() {
 	height = width = z;
 	for(short y = 0; y < world.mps; y++) {
 		for(short x = 0; x < world.mps; x++) {
-			auto t = world.get({x, y});
+			auto t = world[{x, y}];
 			if(!t)
 				continue;
 			auto p = bsdata<sitei>::elements + t;

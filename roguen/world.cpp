@@ -8,22 +8,17 @@ struct sitei;
 static point stack[256 * 256];
 static unsigned short push_stack, pop_stack;
 
-static slice<direction_s> random_directions() {
-	static direction_s table[][8] = {
-		{North, South, East, West},
-		{South, East, West, North},
-		{East, West, North, South},
-		{West, North, South, East},
-	};
-	return maprnd(table);
+static slice<point> random_directions() {
+	static point source[]= {{0, -1}, {0, 1}, {1, 0}, {1, 0}};
+	return source;
 }
 
 static int d100() {
 	return rand() % 100;
 }
 
-static void pushv(worldi* p, point i, unsigned char v) {
-	p->set(i, v);
+static void pushv(worldi& a, point i, unsigned char v) {
+	a[i] = v;
 	stack[push_stack++] = i;
 }
 
@@ -38,20 +33,20 @@ void worldi::clear() {
 void worldi::generate(point start, unsigned char v) {
 	if(!start)
 		return;
-	pushv(this, start, v);
+	pushv(*this, start, v);
 	while(pop_stack < push_stack) {
 		auto i = popv();
-		auto t = get(i);
+		auto t = (*this)[i];
 		for(auto d : random_directions()) {
-			auto n = to(i, d, mps);
-			if(!n || get(n))
+			auto n = i + d;
+			if(!isvalid(n) || (*this)[n])
 				continue;
 			if(d100() < 70)
-				pushv(this, n, t);
+				pushv(*this, n, t);
 			else {
 				auto ntv = random_value("RandomOvelandTiles");
 				if(ntv.iskind<sitei>())
-					pushv(this, n, (unsigned char)ntv.value);
+					pushv(*this, n, (unsigned char)ntv.value);
 			}
 		}
 	}
