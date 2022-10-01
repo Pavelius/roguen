@@ -65,6 +65,16 @@ enum target_s : unsigned char {
 enum spell_s : unsigned char {
 	Sleep, Web
 };
+enum feature_s : unsigned char {
+	NoFeature,
+	Tree, FootMud, FootHill, Grave, Statue,
+	HiveHole, Hive, Hole, Plant, Herbs,
+	Trap, Door,
+};
+enum tile_s : unsigned char {
+	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Lava, Water,
+	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
+};
 extern stringbuilder console;
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
@@ -87,8 +97,8 @@ struct feati : nameable {
 struct weari : nameable {
 	ability_s	bonus;
 };
-struct indexa : adat<indext> {
-	void		select(point pt, int range);
+struct indexa : adat<point> {
+	void		select(point m, int range);
 };
 class actable {
 	variant		kind; // Race or monster
@@ -101,7 +111,7 @@ public:
 	void		setkind(variant v) { kind = v; }
 };
 class movable : public actable {
-	indext		index;
+	point		position;
 	direction_s	direction;
 	bool		mirror;
 public:
@@ -115,12 +125,12 @@ public:
 	void		fixremove() const;
 	void		fixvalue(const char* v, int color = 0) const;
 	void		fixvalue(int v) const;
-	bool		in(const rect& rc) const { return i2m(index).in(rc); }
+	bool		in(const rect& rc) const { return position.in(rc); }
 	bool		ismirror() const { return mirror; }
-	indext		getindex() const { return index; }
-	point		getposition() const { return m2s(i2m(index)); }
+	point		getposition() const { return position; }
+	point		getsposition() const;
 	void		setdirection(direction_s v);
-	void		setindex(indext i);
+	void		setposition(point m);
 };
 struct itemi : nameable {
 	struct weaponi {
@@ -158,7 +168,7 @@ public:
 	void		clear() { type = count = 0; }
 	void		create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void		create(const itemi* pi, int count = 1);
-	void		drop(indext index);
+	void		drop(point m);
 	int			getavatar() const { return geti().wear_index; }
 	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
 	void		getinfo(stringbuilder& sb, bool need_name) const;
@@ -178,12 +188,12 @@ public:
 };
 struct itema : adat<item*> {
 	item*		choose(const char* title) const;
-	void		select(indext index);
+	void		select(point m);
 	void		select(creature* p);
 	void		selectbackpack(creature* p);
 };
 struct itemground : item {
-	indext		index;
+	point		position;
 	static void dropitem(item& it);
 };
 struct wearable : movable {
@@ -221,7 +231,7 @@ class creature : public wearable, public statable, public spellable {
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
 	void		fixcantgo() const;
-	void		interaction(indext index);
+	void		interaction(point m);
 	void		levelup();
 	void		lookcreatures();
 	void		paintbars() const;
@@ -232,7 +242,7 @@ class creature : public wearable, public statable, public spellable {
 public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
-	static creature* create(indext index, variant v);
+	static creature* create(point m, variant v);
 	void		act(const char* format, ...) const { actv(console, format, xva_start(format), getname(), is(Female)); }
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
@@ -258,8 +268,8 @@ public:
 	void		interaction(creature& opponent);
 	void		makemove();
 	void		movestep(direction_s i);
-	void		movestep(indext i);
-	void		moveto(indext i);
+	void		movestep(point m);
+	void		moveto(point m);
 	void		paint() const;
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
@@ -271,8 +281,8 @@ public:
 };
 struct creaturea : adat<creature*> {
 	void		match(feat_s v, bool keep);
-	void		select(indext index, int los);
-	void		sort(indext start);
+	void		select(point m, int los);
+	void		sort(point start);
 };
 struct advancement {
 	variant		type;

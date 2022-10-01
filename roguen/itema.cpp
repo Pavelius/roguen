@@ -1,12 +1,12 @@
 #include "main.h"
 
-void itema::select(indext index) {
+void itema::select(point m) {
 	auto pb = data;
 	auto pe = endof();
 	for(auto& e : bsdata<itemground>()) {
 		if(!e)
 			continue;
-		if(e.index != index)
+		if(e.position != m)
 			continue;
 		if(pb < pe)
 			*pb++ = &e;

@@ -121,7 +121,7 @@ static void debug_message(int bonus) {
 
 static void open_nearest_door(int bonus) {
 	indexa source;
-	source.select(i2m(player->getindex()), 2);
+	source.select(player->getposition(), 2);
 	for(auto i : source) {
 		if(!area.is(i, Activated))
 			area.set(i, Activated);
@@ -142,7 +142,7 @@ static void chat_someone(int bonus) {
 
 static void pickup(int bonus) {
 	itema items;
-	items.select(player->getindex());
+	items.select(player->getposition());
 	if(!items)
 		return;
 	auto p = items.choose(getnm("PickItem"));
@@ -160,7 +160,7 @@ static void dropdown(int bonus) {
 	auto p = items.choose(getnm("DropItem"));
 	if(p) {
 		player->act(getnm("DropdownItem"), p->getname());
-		p->drop(player->getindex());
+		p->drop(player->getposition());
 	}
 }
 

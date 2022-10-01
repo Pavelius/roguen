@@ -6,11 +6,11 @@ static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
 
-static creature* findalive(indext index) {
+static creature* findalive(point m) {
 	for(auto& e : bsdata<creature>()) {
 		if(!e)
 			continue;
-		if(e.getindex() == index)
+		if(e.getposition() == m)
 			return &e;
 	}
 	return 0;
@@ -51,11 +51,11 @@ void creature::levelup() {
 	}
 }
 
-creature* creature::create(indext index, variant kind) {
+creature* creature::create(point m, variant kind) {
 	if(!kind)
 		return 0;
 	auto p = bsdata<creature>::add();
-	p->setindex(index);
+	p->setposition(m);
 	p->setkind(kind);
 	monsteri* pm = kind;
 	if(pm) {
@@ -78,7 +78,7 @@ bool creature::isenemy(const creature& opponent) const {
 }
 
 void creature::movestep(direction_s v) {
-	if(area.is(getindex(), Iced)) {
+	if(area.is(getposition(), Iced)) {
 		if(!roll(Dexterity)) {
 			act(getnm("IcedSlice"));
 			v = round(v, (d100() < 50) ? West : East);
@@ -86,30 +86,30 @@ void creature::movestep(direction_s v) {
 		}
 	}
 	setdirection(v);
-	movestep(to(getindex(), v));
+	movestep(to(getposition(), v));
 }
 
-static void drop_item(indext index, const char* id) {
-	if(index == Blocked || !id)
+static void drop_item(point m, const char* id) {
+	if(!area.isvalid(m) || !id)
 		return;
 	itemi* pi = random_value(id);
 	if(!pi)
 		return;
 	item it; it.create(pi);
-	it.drop(index);
+	it.drop(m);
 }
 
-void creature::interaction(indext index) {
-	if(index == Blocked)
+void creature::interaction(point m) {
+	if(!area.isvalid(m))
 		return;
-	auto f = area.features[index];
+	auto f = area.features[m];
 	if(f) {
 		auto& ei = bsdata<featurei>::elements[f];
 		if(ei.is(AllowActivate)) {
-			if(!area.is(index, Activated))
-				area.set(index, Activated);
+			if(!area.is(m, Activated))
+				area.set(m, Activated);
 			else
-				area.remove(index, Activated);
+				area.remove(m, Activated);
 		} else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = wears[MeleeWeapon].geti();
 			int chance = 1;
@@ -119,8 +119,8 @@ void creature::interaction(indext index) {
 				chance = wei.weapon.damage.max / 2;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
-				area.features[index] = NoFeature;
-				drop_item(index, "WoodenLagsTable");
+				area.features[m] = NoFeature;
+				drop_item(m, "WoodenLagsTable");
 			}
 		}
 	}
@@ -173,15 +173,15 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
-void creature::movestep(indext ni) {
-	if(ni == Blocked) {
+void creature::movestep(point ni) {
+	if(!area.isvalid(ni)) {
 		if(isactive())
 			fixcantgo();
 		wait();
 		return;
 	}
-	auto index = getindex();
-	if(area.is(index, Webbed)) {
+	auto m = getposition();
+	if(area.is(m, Webbed)) {
 		wait(2);
 		if(!roll(Strenght, -2)) {
 			act(getnm("WebEntagled"));
@@ -190,13 +190,13 @@ void creature::movestep(indext ni) {
 			return;
 		}
 		act(getnm("WebBreak"));
-		area.remove(index, Webbed);
+		area.remove(m, Webbed);
 	}
 	auto opponent = findalive(ni);
 	if(opponent)
 		interaction(*opponent);
 	else if(area.isfree(ni)) {
-		setindex(ni);
+		setposition(ni);
 		fixmovement();
 	} else {
 		interaction(ni);
@@ -257,7 +257,7 @@ bool creature::roll(ability_s v, int bonus) const {
 void adventure_mode();
 
 void creature::lookcreatures() {
-	creatures.select(getindex(), getlos());
+	creatures.select(getposition(), getlos());
 	if(is(Ally)) {
 		enemies = creatures;
 		enemies.match(Enemy, true);
@@ -294,14 +294,14 @@ void creature::makemove() {
 	creature* enemy = 0;
 	if(enemies) {
 		// Combat situation - need eliminate enemy
-		enemies.sort(getindex());
+		enemies.sort(getposition());
 		enemy = enemies[0];
 	}
 	if(isactive()) {
-		area.setlos(getindex(), getlos());
+		area.setlos(getposition(), getlos());
 		adventure_mode();
 	} else if(enemy)
-		moveto(enemy->getindex());
+		moveto(enemy->getposition());
 	else
 		aimove();
 }
@@ -378,17 +378,17 @@ void creature::update() {
 	update_abilities();
 }
 
-void creature::moveto(indext ni) {
+void creature::moveto(point ni) {
 	area.clearpath();
 	area.blockwalls();
 	area.blockfeatures();
-	area.makewave(getindex());
+	area.makewave(getposition());
 	area.blockzero();
-	auto i0 = getindex();
-	auto i1 = area.getnext(i0, ni);
-	if(i1 == Blocked)
+	auto m0 = getposition();
+	auto m1 = area.getnext(m0, ni);
+	if(!area.isvalid(m1))
 		return;
-	movestep(area.getdirection(i2m(i0), i2m(i1)));
+	movestep(area.getdirection(m0, m1));
 }
 
 void creature::unlink() {

@@ -1,22 +1,21 @@
 #include "main.h"
 
-static indext compare_index;
+static point compare_position;
 
 static int compare_distace(const void* v1, const void* v2) {
 	auto p1 = *((creature**)v1);
 	auto p2 = *((creature**)v2);
-	auto d1 = area.getrange(p1->getindex(), compare_index);
-	auto d2 = area.getrange(p2->getindex(), compare_index);
+	auto d1 = area.getrange(p1->getposition(), compare_position);
+	auto d2 = area.getrange(p2->getposition(), compare_position);
 	return d1 - d2;
 }
 
-void creaturea::sort(indext start) {
-	compare_index = start;
+void creaturea::sort(point m) {
+	compare_position = m;
 	qsort(data, count, sizeof(data[0]), compare_distace);
 }
 
-void creaturea::select(indext index, int los) {
-	auto pt = i2m(index);
+void creaturea::select(point pt, int los) {
 	rect rc = {pt.x - los, pt.y - los, pt.x + los, pt.y + los};
 	auto ps = data;
 	auto pe = endof();

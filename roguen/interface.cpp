@@ -26,11 +26,11 @@ void set_dark_theme();
 void initialize_translation(const char* locale);
 void initialize_png();
 
-point m2s(point v) {
+static point m2s(point v) {
 	return point{(short)(v.x * tsx), (short)(v.y * tsy)};
 }
 
-point s2m(point v) {
+static point s2m(point v) {
 	return point{(short)(v.x / tsx), (short)(v.y / tsy)};
 }
 
@@ -118,11 +118,15 @@ static void add_object(point pt, void* data, unsigned char random, unsigned char
 	po->alpha = 0xFF;
 }
 
+point movable::getsposition() const {
+	return m2s(getposition());
+}
+
 void movable::fixmovement() const {
 	auto po = draw::findobject(this);
 	if(!po)
 		return;
-	auto pt = getposition();
+	auto pt = getsposition();
 	if(po->position == pt)
 		return;
 	auto pr = po->add(mst);
@@ -148,7 +152,7 @@ void movable::fixeffect(point position, const char* id) {
 }
 
 void movable::fixeffect(const char* id) const {
-	auto pt = getposition(); pt.y -= tsy / 2;
+	auto pt = getsposition(); pt.y -= tsy / 2;
 	fixeffect(pt, id);
 }
 
@@ -156,7 +160,7 @@ void movable::fixappear() const {
 	auto po = draw::findobject(this);
 	if(po)
 		return;
-	po = addobject(getposition());
+	po = addobject(getsposition());
 	po->data = this;
 	po->alpha = 0;
 	po->priority = 11;
@@ -171,7 +175,7 @@ void movable::fixremove() const {
 }
 
 void movable::fixvalue(const char* format, int format_color) const {
-	auto pt = getposition(); pt.y -= tsy;
+	auto pt = getsposition(); pt.y -= tsy;
 	auto pa = addobject(pt);
 	pa->alpha = 0xFF;
 	pa->string = szdup(format);
@@ -205,10 +209,9 @@ static void paint_items() {
 	for(auto& e : bsdata<itemground>()) {
 		if(!e)
 			continue;
-		auto pt = i2m(e.index);
-		if(!pt.in(rc))
+		if(!e.position.in(rc))
 			continue;
-		add_object(m2s(pt), &const_cast<itemi&>(e.geti()), 0, 6);
+		add_object(e.position, &const_cast<itemi&>(e.geti()), 0, 6);
 	}
 }
 
@@ -220,7 +223,7 @@ static void link_camera() {
 	}
 }
 
-static void paint_overlapped(indext i, tile_s tile) {
+static void paint_overlapped(point i, tile_s tile) {
 	for(auto& ei : bsdata<tilei>()) {
 		if(ei.borders == -1)
 			continue;
@@ -235,13 +238,13 @@ static void paint_overlapped(indext i, tile_s tile) {
 	}
 }
 
-static bool iswall(indext i, direction_s d) {
+static bool iswall(point i, direction_s d) {
 	auto i1 = to(i, d);
-	if(i1 == Blocked)
+	if(!area.isvalid(i1))
 		return true;
 	if(!area.is(i1, Explored))
 		return true;
-	return bsdata<tilei>::elements[area.tiles[i1]].iswall();
+	return bsdata<tilei>::elements[area[i1]].iswall();
 }
 
 static void fillwalls() {
@@ -262,7 +265,7 @@ static void fillfow() {
 	rectf();
 }
 
-static void paint_wall(point p0, indext i, unsigned char r, const tilei& ei) {
+static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
 	auto pi = gres(res::Walls);
 	auto bs = ei.walls.start + ei.walls.count;
 	auto bw = 0;
@@ -324,30 +327,30 @@ static void paint_wall(point p0, indext i, unsigned char r, const tilei& ei) {
 }
 
 static void paint_floor() {
+	point i;
 	remove_temp_objects(bsdata<featurei>::source);
 	remove_temp_objects(bsdata<resource>::source);
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
-	auto x1 = (camera.x - tsx / 2) / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
-	auto y1 = (camera.y - tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy + 2;
-	for(short y = y1; y <= y2; y++) {
-		if(y < 0)
+	short x1 = (camera.x - tsx / 2) / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
+	short y1 = (camera.y - tsy / 2) / tsy, y2 = (camera.y + getheight() + tsx / 2) / tsy + 2;
+	for(i.y = y1; i.y <= y2; i.y++) {
+		if(i.y < 0)
 			continue;
-		if(y >= mps)
+		if(i.y >= area.mps)
 			break;
-		for(short x = x1; x <= x2; x++) {
-			if(x < 0)
+		for(i.x = x1; i.x <= x2; i.x++) {
+			if(i.x < 0)
 				continue;
-			if(x >= mps)
+			if(i.x >= area.mps)
 				break;
-			auto i = m2i({x, y});
-			auto pt = m2s({x, y});
+			auto pt = m2s(i);
 			if(!area.is(i, Explored))
 				continue;
 			setcaret(pt);
 			auto r = area.random[i];
-			auto t = area.tiles[i];
+			auto t = area[i];
 			auto& ei = bsdata<tilei>::elements[t];
 			if(ei.iswall())
 				paint_wall(pt, i, r, ei);
@@ -394,14 +397,14 @@ static void paint_fow() {
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;
-		if(y >= mps)
+		if(y >= area.mps)
 			break;
 		for(short x = x1; x <= x2; x++) {
 			if(x < 0)
 				continue;
-			if(x >= mps)
+			if(x >= area.mps)
 				break;
-			auto i = m2i({x, y});
+			point i = {x, y};
 			auto pt = m2s({x, y});
 			setcaret(pt);
 			if(!area.is(i, Explored))
@@ -861,10 +864,10 @@ static void correct_camera() {
 		camera.y = -tsy / 2;
 	auto w = getwidth() - panel_width;
 	auto h = getheight();
-	if(camera.x > tsx * mps - w - tsx / 2)
-		camera.x = tsx * mps - w - tsx / 2;
-	if(camera.y > tsy * mps - h - tsy / 2)
-		camera.y = tsy * mps - h - tsy / 2;
+	if(camera.x > tsx * area.mps - w - tsx / 2)
+		camera.x = tsx * area.mps - w - tsx / 2;
+	if(camera.y > tsy * area.mps - h - tsy / 2)
+		camera.y = tsy * area.mps - h - tsy / 2;
 }
 
 static void paint_world() {
@@ -902,18 +905,18 @@ static void paint_area() {
 	pushvalue push_fore(fore);
 	const int z = 4;
 	point origin;
-	origin.x = (width - mps * z) / 2;
-	origin.y = (height - mps * z) / 2;
+	origin.x = (width - area.mps * z) / 2;
+	origin.y = (height - area.mps * z) / 2;
 	height = width = z;
-	for(auto y = 0; y < mps; y++) {
-		for(auto x = 0; x < mps; x++) {
-			auto i = m2i(x, y);
-			auto t = area.tiles[i];
+	point i;
+	for(i.y = 0; i.y < area.mps; i.y++) {
+		for(i.x = 0; i.x < area.mps; i.x++) {
+			auto t = area[i];
 			if(!t || !area.is(i, Explored))
 				continue;
 			auto p = bsdata<tilei>::elements + t;
-			caret.x = origin.x + x * width;
-			caret.y = origin.y + y * height;
+			caret.x = origin.x + i.x * width;
+			caret.y = origin.y + i.y * height;
 			fore = p->minimap;
 			rectf();
 			switch(area.features[i]) {

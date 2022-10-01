@@ -3,21 +3,17 @@
 void indexa::select(point pt, int range) {
 	auto pb = data;
 	auto pe = endof();
-	for(auto y = pt.y - range; y <= pt.y + range; y++) {
-		if(y < 0)
+	point m;
+	for(m.y = pt.y - range; m.y <= pt.y + range; m.y++) {
+		if(!area.isvalid(m))
 			continue;
-		if(y >= mps)
-			break;
-		for(auto x = pt.x - range; x <= pt.x + range; x++) {
-			if(x < 0)
+		for(m.x = pt.x - range; m.x <= pt.x + range; m.x++) {
+			if(!area.isvalid(m))
 				continue;
-			if(x >= mps)
-				break;
-			auto i = m2i(x, y);
-			if(!area.features[i])
+			if(!area.features[m])
 				continue;
 			if(pb < pe)
-				*pb++ = i;
+				*pb++ = m;
 		}
 	}
 	count = pb - data;

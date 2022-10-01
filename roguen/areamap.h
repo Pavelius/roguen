@@ -4,76 +4,14 @@
 
 #pragma once
 
-typedef short unsigned indext;
-const indext Blocked = 0xFFFF;
-const int mps = 64;
-
 enum direction_s : unsigned char;
-
+enum tile_s : unsigned char;
+enum feature_s : unsigned char;
 enum mapf_s : unsigned char {
 	Explored, Visible, Activated, Searched, Blooded, Iced, Webbed,
 };
-enum tile_s : unsigned char {
-	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Lava, Water,
-	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
-};
-enum feature_s : unsigned char {
-	NoFeature,
-	Tree, FootMud, FootHill, Grave, Statue,
-	HiveHole, Hive, Hole, Plant, Herbs,
-	Trap, Door,
-};
 enum areaf : unsigned char {
 	Impassable, ImpassableNonActive, AllowActivate, BetweenWalls, Woods,
-};
-inline indext m2i(point v) { return v.x + v.y * mps; }
-inline indext m2i(int x, int y) { return x + y * mps; }
-inline point i2m(indext v) { return point{(short)(v % mps), (short)(v / mps)}; }
-struct areamap {
-	tile_s			tiles[mps * mps];
-	feature_s		features[mps * mps];
-	unsigned char	random[mps * mps];
-	unsigned char	flags[mps * mps];
-	static void		addwave(indext i);
-	void			blockfeatures() const;
-	static void		blockrange(int range);
-	void			blockwalls() const;
-	static void		blockzero();
-	void			clear();
-	static void		clearpath();
-	static direction_s getdirection(point s, point d);
-	feature_s		getfeature(indext i) const;
-	unsigned char	getfow(indext i) const;
-	int				getindex(indext i, tile_s e) const;
-	point			getfree(point pt, short maximum) const;
-	static indext	getnext(indext start, indext goal);
-	static unsigned getpath(indext start, indext goal, indext* result, unsigned maximum);
-	static indext	getpoint(const rect& rc, direction_s dir);
-	static int		getrange(indext start, indext target);
-	static indext	getwave();
-	void			horz(int x1, int y1, int x2, tile_s tile);
-	bool			is(indext i, mapf_s v) const { return (flags[i] & (1 << v)) != 0; }
-	bool			isb(indext i, mapf_s v) const { return i == Blocked || (flags[i] & (1 << v)) != 0; }
-	bool			isfree(indext i) const;
-	bool			isfree(int x, int y) const;
-	bool			isfreelt(indext i) const;
-	bool			iswall(indext i, direction_s d) const;
-	bool			linelos(int x0, int y0, int x1, int y1) const;
-	bool			linelossv(int x0, int y0, int x1, int y1);
-	void			set(indext i, mapf_s v) { flags[i] |= (1 << v); }
-	void			set(indext i, tile_s v);
-	void			set(indext i, feature_s v);
-	void			set(rect rc, tile_s v);
-	void			set(rect rc, feature_s v, int random_count);
-	void			set(rect rc, mapf_s v, int random_count);
-	void			set(rect rc, tile_s v, int random_count);
-	void			set(feature_s v, int bonus);
-	void			setlos(indext index, int radius);
-	void			remove(indext i, mapf_s v) { flags[i] &= ~(1 << v); }
-	void			removechance(mapf_s v, int chance);
-	static void		makewave(indext start_index);
-	static void		makewavex();
-	void			vert(int x1, int y1, int y2, tile_s tile);
 };
 struct framerange {
 	unsigned char	start;
@@ -93,7 +31,7 @@ struct tilei {
 	int				borders = -1;
 	tile_s			tile;
 	framerange		walls;
-	bool			iswall() const { return tile != NoTile; }
+	bool			iswall() const { return tile != (tile_s)0; }
 };
 struct featurei {
 	const char*		id;
@@ -103,5 +41,50 @@ struct featurei {
 	void			paint(int random) const;
 	bool			is(areaf v) const { return (flags & (1 << v)) != 0; }
 };
-indext				to(indext d, direction_s v);
+struct areamap : anymap<tile_s, 64> {
+	anymap<feature_s, mps> features;
+	anymap<unsigned char, mps> random;
+	anymap<unsigned char, mps> flags;
+	static void		addwave(point m);
+	void			blockfeatures() const;
+	static void		blockrange(int range);
+	void			blockwalls() const;
+	static void		blockzero();
+	void			clear();
+	static void		clearpath();
+	static direction_s getdirection(point s, point d);
+	feature_s		getfeature(point m) const;
+	unsigned char	getfow(point m) const;
+	int				getindex(point m, tile_s e) const;
+	point			getfree(point m, short maximum) const;
+	static point	getnext(point start, point goal);
+	static unsigned getpath(point start, point goal, point* result, unsigned maximum);
+	static point	getpoint(const rect& rc, direction_s dir);
+	static int		getrange(point start, point target);
+	static point	getwave();
+	void			horz(int x1, int y1, int x2, tile_s tile);
+	bool			is(point m, mapf_s v) const { return (flags[m] & (1 << v)) != 0; }
+	bool			isb(point m, mapf_s v) const { return !isvalid(m) || (flags[m] & (1 << v)) != 0; }
+	bool			isfree(point m) const;
+	bool			isfreelt(point m) const;
+	bool			iswall(point m) const;
+	bool			iswall(point m, direction_s d) const;
+	bool			linelos(int x0, int y0, int x1, int y1) const;
+	bool			linelossv(int x0, int y0, int x1, int y1);
+	void			set(point m, mapf_s v) { if(isvalid(m)) flags[m] |= (1 << v); }
+	void			set(point m, tile_s v);
+	void			set(point m, feature_s v);
+	void			set(rect rc, tile_s v);
+	void			set(rect rc, feature_s v, int random_count);
+	void			set(rect rc, mapf_s v, int random_count);
+	void			set(rect rc, tile_s v, int random_count);
+	void			set(feature_s v, int bonus);
+	void			setlos(point m, int radius);
+	void			remove(point m, mapf_s v) { flags[m] &= ~(1 << v); }
+	void			removechance(mapf_s v, int chance);
+	static void		makewave(point start_index);
+	static void		makewavex();
+	void			vert(int x1, int y1, int y2, tile_s tile);
+};
 direction_s			round(direction_s i, direction_s v);
+point				to(point, direction_s d);

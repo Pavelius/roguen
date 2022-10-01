@@ -70,11 +70,11 @@ creature* item::getowner() const {
 	return bsdata<creature>::elements + i;
 }
 
-void item::drop(indext index) {
-	if(index == Blocked)
+void item::drop(point m) {
+	if(!area.isvalid(m))
 		return;
 	auto pi = bsdata<itemground>::add();
 	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
-	pi->index = index;
+	pi->position = m;
 	clear();
 }

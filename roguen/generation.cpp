@@ -5,30 +5,33 @@ static adat<variant, 32> sites;
 
 typedef void(*fnscene)(const rect& rc);
 
-static bool iswall(indext i, direction_s d1, direction_s d2) {
+static bool iswall(point i, direction_s d1, direction_s d2) {
 	return area.iswall(i, d1)
 		&& area.iswall(i, d2);
 }
 
-static bool isonewall(indext i, direction_s d1, direction_s d2) {
+static bool isonewall(point i, direction_s d1, direction_s d2) {
 	return area.iswall(i, d1)
 		|| area.iswall(i, d2);
 }
 
-static bool isoneof(indext i, direction_s d1, direction_s d2, feature_s v) {
+static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
 	auto f1 = area.getfeature(to(i, d1));
 	auto f2 = area.getfeature(to(i, d1));
 	return f1 == v || f2 == v;
 }
 
 static void update_doors() {
-	for(indext i = 0; i <= mps * mps; i++) {
-		if(bsdata<featurei>::elements[area.features[i]].is(BetweenWalls)) {
-			if(iswall(i, West, East) && !isoneof(i, North, South, Door) && !isonewall(i, North, South))
-				continue;
-			if(iswall(i, North, South) && !isoneof(i, West, East, Door) && !isonewall(i, West, East))
-				continue;
-			area.set(i, NoFeature);
+	point i;
+	for(i.y = 0; i.y < area.mps; i.y++) {
+		for(i.x = 0; i.x < area.mps; i.x++) {
+			if(bsdata<featurei>::elements[area.features[i]].is(BetweenWalls)) {
+				if(iswall(i, West, East) && !isoneof(i, North, South, Door) && !isonewall(i, North, South))
+					continue;
+				if(iswall(i, North, South) && !isoneof(i, West, East, Door) && !isonewall(i, West, East))
+					continue;
+				area.set(i, NoFeature);
+			}
 		}
 	}
 }
@@ -37,7 +40,7 @@ static void update_creatures() {
 	for(auto& e : bsdata<creature>()) {
 		if(!e)
 			continue;
-		auto i = e.getindex();
+		auto i = e.getposition();
 		if(area.getfeature(i) == Door)
 			e.clear();
 	}
@@ -45,14 +48,14 @@ static void update_creatures() {
 
 static void update_items() {
 	for(auto& e : bsdata<itemground>()) {
-		if(!e || e.index == Blocked)
+		if(!e || !area.isvalid(e.position))
 			continue;
-		if(area.getfeature(e.index) == Door)
+		if(area.getfeature(e.position) == Door)
 			e.clear();
 	}
 }
 
-static int getarea(const rect& rc) {
+static int getarea(const rect & rc) {
 	return (rc.width() + 1) * (rc.height() + 1);
 }
 
@@ -66,7 +69,7 @@ static void sort_locations() {
 
 static void create_location_areas() {
 	const int mpp = 4;
-	const int mp4 = mps / mpp;
+	const int mp4 = area.mps / mpp;
 	const int mp8 = mp4 / 2;
 	locations.clear();
 	for(auto y = 0; y < 4; y++) {
@@ -86,7 +89,7 @@ static void remove_smalest() {
 		locations.count--;
 }
 
-static void create_building(const rect& rc) {
+static void create_building(const rect & rc) {
 }
 
 static void create_locations(fnscene proc) {
@@ -94,7 +97,7 @@ static void create_locations(fnscene proc) {
 		proc(e);
 }
 
-static void place_shape(const shapei& e, point m, direction_s d, tile_s floor, tile_s wall) {
+static void place_shape(const shapei & e, point m, direction_s d, tile_s floor, tile_s wall) {
 	auto c = e.center(m);
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
@@ -104,13 +107,13 @@ static void place_shape(const shapei& e, point m, direction_s d, tile_s floor, t
 			case ' ':
 				break;
 			case '.':
-				area.set(m2i(pm), floor);
+				area.set(pm, floor);
 				break;
 			case 'X':
-				area.set(m2i(pm), wall);
+				area.set(pm, wall);
 				break;
 			case '0':
-				area.set(m2i(pm), floor);
+				area.set(pm, floor);
 				break;
 			default:
 				break;
@@ -129,7 +132,7 @@ static void place_features(point pm, const char* id) {
 
 static void create_location_general() {
 	const auto parts = 4;
-	const auto size = mps / parts;
+	const auto size = area.mps / parts;
 	const auto locmin = 3;
 	const auto locmax = 2 * size / 3 - 3;
 	for(auto i = 0; i < parts * parts; i++) {
@@ -143,7 +146,7 @@ static void create_location_general() {
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
 }
 
-static void place_monsters(const rect& rca, const monsteri& e, int count) {
+static void place_monsters(const rect & rca, const monsteri & e, int count) {
 	if(count == 0) {
 		if(game.isoutdoor())
 			count = e.getbase().appear_outdoor.roll();
@@ -154,7 +157,7 @@ static void place_monsters(const rect& rca, const monsteri& e, int count) {
 	}
 }
 
-static void create_landscape(const rect& rca, variant v) {
+static void create_landscape(const rect & rca, variant v) {
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -196,7 +199,7 @@ void create_area(const char* id) {
 		return;
 	locations.clear();
 	sites.clear();
-	create_landscape({0, 0, mps - 1, mps - 1}, tile);
+	create_landscape({0, 0, area.mps - 1, area.mps - 1}, tile);
 	add_area_sites(tile);
 	create_location_general();
 	create_sites();

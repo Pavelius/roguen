@@ -1,5 +1,6 @@
 #include "areamap.h"
 #include "bsreq.h"
+#include "main.h"
 
 BSDATA(tilei) = {
 	{"NoTile"},

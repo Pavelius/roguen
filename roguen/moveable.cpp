@@ -1,7 +1,7 @@
 #include "main.h"
 
-void movable::setindex(indext v) {
-	index = v;
+void movable::setposition(point v) {
+	position = v;
 }
 
 void movable::setdirection(direction_s v) {

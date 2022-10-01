@@ -27,17 +27,17 @@ static void initializating() {
 
 static void random(int x1, int y1, int x2, tile_s tile) {
 	auto x = xrand(x1, x2);
-	auto i = m2i(x, y1);
+	point i = {short(x), short(y1)};
 	area.set(i, tile);
 }
 
 static void random(int x1, int y1, int x2, feature_s tile) {
 	auto x = xrand(x1, x2);
-	auto i = m2i(x, y1);
+	point i = {short(x), short(y1)};
 	area.set(i, tile);
 }
 
-static void setdoor(indext i, tile_s tile) {
+static void setdoor(point i, tile_s tile) {
 	area.set(i, tile);
 	area.set(i, Door);
 	//area.set(i, Activated);
@@ -52,13 +52,13 @@ static void place_building(const rect& rc, tile_s wall) {
 	area.vert(rc.x1, rc.y1, rc.y2, wall);
 	area.horz(rc.x1, rc.y2, rc.x2, wall);
 	area.vert(rc.x2, rc.y1, rc.y2, wall);
-	setdoor(m2i(xrand(rc.x1 + 1, rc.x2 - 1), rc.y2), ei.tile);
-	setdoor(m2i(rc.x1, xrand(rc.y1 + 1, rc.y2 - 1)), ei.tile);
+	setdoor({short(xrand(rc.x1 + 1, rc.x2 - 1)), short(rc.y2)}, ei.tile);
+	setdoor({short(rc.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))}, ei.tile);
 }
 
-static void create_item(indext index, const char* id) {
+static void create_item(point m, const char* id) {
 	auto pi = bsdata<itemground>::add();
-	pi->index = index;
+	pi->position = m;
 	pi->create(id);
 }
 
@@ -66,21 +66,20 @@ void show_worldmap();
 
 static void main_start() {
 	world.clear();
-	world.generate({world.mps/2, world.mps / 2}, 1);
+	world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
 	area.clear();
-	area.set({0, 0, mps, mps}, Grass);
-	area.set(Tree, -10);
+	area.set({0, 0, area.mps - 1, area.mps - 1}, Grass);
 	//area.set(FootMud, 30);
-	player = creature::create(m2i({5, 5}), "Human");
-	player->set(Ally);
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
 	create_area("DeepForest");
-	create_item(m2i(4, 4), "Sword");
-	create_item(m2i(4, 4), "BattleAxe");
+	create_item({4, 4}, "Sword");
+	create_item({4, 4}, "BattleAxe");
+	player = creature::create({5, 5}, "Human");
+	player->set(Ally);
 	setnext(game.play);
 }
 

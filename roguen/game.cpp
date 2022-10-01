@@ -9,10 +9,10 @@ stringbuilder	console(console_text);
 static void update_los() {
 	if(!player)
 		return;
-	// Set fog of war
-	auto max_count = mps * mps;
-	for(auto i = 0; i < max_count; i++)
-		area.remove(i, Visible);
+	point m;
+	for(m.y = 0; m.y < area.mps; m.y++)
+		for(m.x = 0; m.x < area.mps; m.x++)
+			area.remove(m, Visible);
 	//loc.setlos(player->getposition(), player->getlos());
 }
 
