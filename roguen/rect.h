@@ -17,5 +17,6 @@ struct rect {
 	void				offset(int x, int y) { x1 += x; x2 -= x; y1 += y; y2 -= y; }
 	void				offset(int n) { offset(n, n); }
 	void				set(int px1, int py1, int px2, int py2) { x1 = px1; x2 = px2; y1 = py1; y2 = py2; }
+	rect				shrink(int dx, int dy) const { return {x1 + dx, y1 + dy, x2 - dx, y2 - dy}; }
 	inline int			width() const { return x2 - x1; }
 };

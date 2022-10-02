@@ -51,8 +51,17 @@ void creature::levelup() {
 	}
 }
 
+static bool isfreecr(point m) {
+	if(findalive(m))
+		return false;
+	return area.isfree(m);
+}
+
 creature* creature::create(point m, variant kind) {
 	if(!kind)
+		return 0;
+	m = area.getfree(m, 10, isfreecr);
+	if(!area.isvalid(m))
 		return 0;
 	auto p = bsdata<creature>::add();
 	p->setposition(m);
@@ -174,12 +183,6 @@ void creature::fixcantgo() const {
 }
 
 static bool isfreelt(point m) {
-	return area.isfree(m);
-}
-
-static bool isfreecr(point m) {
-	//if(findalive(m))
-	//	return false;
 	return area.isfree(m);
 }
 
@@ -403,4 +406,9 @@ void creature::moveto(point ni) {
 
 void creature::unlink() {
 	boosti::remove(this);
+}
+
+void creature::act(const char* format, ...) const {
+	if(!player || player==this || area.is(player->getposition(), Visible))
+		actv(console, format, xva_start(format), getname(), is(Female));
 }

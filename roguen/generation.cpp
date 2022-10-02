@@ -2,9 +2,24 @@
 
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
-static sitei* last_site;
 
 typedef void(*fnscene)(const rect& rc);
+
+static point random(const rect& rc) {
+	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
+		return {-1000, -1000};
+	short x = xrand(rc.x1, rc.x2);
+	short y = xrand(rc.y1, rc.y2);
+	return {x, y};
+}
+
+static point center(const rect& rc) {
+	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
+		return {-1000, -1000};
+	short x = rc.x1 + rc.width() / 2;
+	short y = rc.y1 + rc.height() / 2;
+	return {x, y};
+}
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
 	return area.iswall(i, d1)
@@ -66,12 +81,6 @@ static int compare_locations(const void* v1, const void* v2) {
 
 static void sort_locations() {
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
-}
-
-static point random(const rect& rc) {
-	short x = xrand(rc.x1 + 1, rc.x2 - 2);
-	short y = xrand(rc.y1 + 1, rc.y2 - 2);
-	return {x, y};
 }
 
 static void create_location_areas() {
@@ -157,11 +166,18 @@ static void place_monsters(const rect & rca, const monsteri & e, int count) {
 		else
 			count = e.getbase().appear.roll();
 	}
-	for(auto i = 0; i < count; i++) {
-	}
+	for(auto i = 0; i < count; i++)
+		creature::create(center(rca), &e);
+}
+
+static bool test_counter(variant v) {
+	if(v.counter > 0 && d100() >= v.counter)
+		return false;
+	return true;
 }
 
 static void create_landscape(const rect & rca, variant v) {
+	static sitei* last_site;
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -169,20 +185,22 @@ static void create_landscape(const rect & rca, variant v) {
 	else if(v.iskind<areafi>())
 		area.set(rca, (mapf_s)v.value, v.counter);
 	else if(v.iskind<sitei>()) {
+		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rca, ev);
 	} else if(v.iskind<monsteri>())
 		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
 	else if(v.iskind<shapei>()) {
-		if(last_site)
-			place_shape(bsdata<shapei>::elements[v.value],
-				random(rca), last_site->floors, last_site->walls);
+		if(!last_site || !test_counter(v))
+			return;
+		place_shape(bsdata<shapei>::elements[v.value],
+			random(rca.shrink(5, 5)), last_site->floors, last_site->walls);
 	}
 }
 
 static void add_area_sites(variant v) {
-	if(v.counter > 0 && d100() >= v.counter)
+	if(!test_counter(v))
 		return;
 	if(v.iskind<sitei>()) {
 		auto& ei = bsdata<sitei>::elements[v.value];

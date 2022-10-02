@@ -12,8 +12,8 @@ MonsterLair
  landscape Webbed+4 Blooded+3 Goblin
 SwampyArea
  landscape FootMud-40 Herbs+3
-RockyMountains walls(WallCave) floors(Cave)
- landscape CircleRoom SmallCircleRoom SmallCircleRoom+30
+RockyMountains walls(WallCave) floors(WallCave)
+ landscape CircleRoom+50 SmallCircleRoom SmallCircleRoom SmallCircleRoom+50 TinyCircleRoom TinyCircleRoom+60 TinyCircleRoom+20
 
 Plains minimap(60 176 67)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90

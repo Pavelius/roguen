@@ -243,7 +243,7 @@ public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
 	static creature* create(point m, variant v);
-	void		act(const char* format, ...) const { actv(console, format, xva_start(format), getname(), is(Female)); }
+	void		act(const char* format, ...) const;
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);

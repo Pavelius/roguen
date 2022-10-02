@@ -22,3 +22,9 @@ XXX...XXX
 X.......X
 XXX...XXX
   XX0XX  
+
+#TinyCircleRoom
+
+ XXX 
+XX.XX
+ X0X  

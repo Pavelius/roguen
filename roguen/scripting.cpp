@@ -167,6 +167,13 @@ static void dropdown(int bonus) {
 static void view_stuff(int bonus) {
 }
 
+static void explore_area(int bonus) {
+	point m;
+	for(m.y = 0; m.y < area.mps; m.y++)
+		for(m.x = 0; m.x < area.mps; m.x++)
+			area.set(m, Explored);
+}
+
 void show_area(int bonus);
 
 BSDATA(script) = {
@@ -175,6 +182,7 @@ BSDATA(script) = {
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"DropDown", dropdown},
+	{"ExploreArea", explore_area},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},

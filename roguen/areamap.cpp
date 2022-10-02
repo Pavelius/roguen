@@ -406,25 +406,27 @@ void areamap::vert(int x1, int y1, int y2, tile_s tile) {
 	}
 }
 
-point areamap::getfree(point m, short maximum) const {
-	if(isfree(m))
+point areamap::getfree(point m, short maximum, fntest test) {
+	if(!test)
+		return {-1000, -1000};
+	if(test(m))
 		return m;
 	point n;
 	for(short r = 1; r < maximum; r++) {
-		for(short i = m.x - r + 1; i < m.x + r; i++) {
-			n = {i, short(m.y - r)};
-			if(isfree(n))
+		for(short i = -r + 1; i < r; i++) {
+			n = m.to(i, -r);
+			if(test(n))
 				return n;
-			n = {i, short(m.y + r)};
-			if(isfree(n))
+			n = m.to(i, r);
+			if(test(n))
 				return n;
 		}
 		for(short i = m.y - r; i <= m.y + r; i++) {
-			n = {short(m.x + r), i};
-			if(isfree(n))
+			n = m.to(r, i);
+			if(test(n))
 				return n;
-			n = {short(m.x - r), i};
-			if(isfree(n))
+			n = m.to(-r, i);
+			if(test(n))
 				return n;
 		}
 	}

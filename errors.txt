@@ -1,4 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 16: Can't find variant `CircleRoom`
- Line 16: Can't find variant `SmallCircleRoom`
- Line 16: Can't find variant `SmallCircleRoom`
+﻿In file `rules/Advancement.txt`:
+Can't find script named 'ExploreArea' in hotkey mapping

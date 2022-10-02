@@ -43,8 +43,10 @@ AdventureKeys
  elements MoveDownRight "PageDown"
  elements MoveRight "Right"
  elements MoveLeft "Left"
- elements DebugMessage "Ctrl+D"
  elements OpenNearestDoor "O"
  elements ChatSomeone "C"
  elements PickUp "P"
  elements ShowMinimap "M"
+
+ elements DebugMessage "Ctrl+D"
+ elements ExploreArea "Ctrl+E"
