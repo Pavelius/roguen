@@ -24,6 +24,7 @@ DeepForest minimap(35 79 31)
  landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
  sites Graveyard Graveyard+30 Graveyard+10 RockyMountains DeepAncientPlace ArtifactStatue+10 MonsterLair+30 SwampyArea
 Mountains minimap(128 128 128)
- landscape Tree+30 Herbs+40 Plant+20 FootMud+20 FootHill+90
+ landscape Tree+30 Herbs+40 Plant+20 FootMud+5 FootHill-10
+ sites Graveyard+10 RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50
 Hills minimap(152 191 100)
  landscape Tree+30 Herbs+35 Plant+5 FootMud+20 FootHill-5

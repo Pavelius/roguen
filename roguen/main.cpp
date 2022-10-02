@@ -75,7 +75,7 @@ static void main_start() {
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
-	create_area("DeepForest");
+	create_area("Mountains");
 	create_item({4, 4}, "Sword");
 	create_item({4, 4}, "BattleAxe");
 	player = creature::create({5, 5}, "Human");

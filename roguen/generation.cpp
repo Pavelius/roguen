@@ -79,27 +79,6 @@ static int compare_locations(const void* v1, const void* v2) {
 	return getarea(*((rect*)v2)) - getarea(*((rect*)v1));
 }
 
-static void sort_locations() {
-	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
-}
-
-static void create_location_areas() {
-	const int mpp = 4;
-	const int mp4 = area.mps / mpp;
-	const int mp8 = mp4 / 2;
-	locations.clear();
-	for(auto y = 0; y < 4; y++) {
-		for(auto x = 0; x < 4; x++) {
-			auto x1 = x * mp4 + xrand(2, mp4 - 2 - mp8);
-			auto y1 = y * mp4 + xrand(2, mp4 - 2 - mp8);
-			auto x2 = x1 + xrand(3, mp8);
-			auto y2 = y1 + xrand(3, mp8);
-			locations.add({x1, y1, x2, y2});
-		}
-	}
-	sort_locations();
-}
-
 static void remove_smalest() {
 	if(locations)
 		locations.count--;
@@ -154,7 +133,14 @@ static void create_location_general() {
 		rc.y2 = rc.y1 + size - 2;
 		locations.add(rc);
 	}
+}
+
+static void sort_locations() {
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
+}
+
+static void shuffle_locations() {
+	zshuffle(locations.data, locations.count);
 }
 
 static void place_monsters(const rect & rca, const monsteri & e, int count) {
@@ -228,5 +214,6 @@ void create_area(const char* id) {
 	create_landscape({0, 0, area.mps - 1, area.mps - 1}, tile);
 	add_area_sites(tile);
 	create_location_general();
+	shuffle_locations();
 	create_sites();
 }
