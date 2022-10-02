@@ -2,6 +2,7 @@
 
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
+static sitei* last_site;
 
 typedef void(*fnscene)(const rect& rc);
 
@@ -67,6 +68,12 @@ static void sort_locations() {
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
 }
 
+static point random(const rect& rc) {
+	short x = xrand(rc.x1 + 1, rc.x2 - 2);
+	short y = xrand(rc.y1 + 1, rc.y2 - 2);
+	return {x, y};
+}
+
 static void create_location_areas() {
 	const int mpp = 4;
 	const int mp4 = area.mps / mpp;
@@ -122,12 +129,9 @@ static void place_shape(const shapei & e, point m, direction_s d, tile_s floor, 
 	}
 }
 
-static void place_features(point pm, const char* id) {
+static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 	static direction_s direction[] = {North, South, West, East};
-	auto p = bsdata<shapei>::find(id);
-	if(!p)
-		return;
-	place_shape(*p, pm, maprnd(direction), Cave, WallCave);
+	place_shape(e, m, maprnd(direction), floor, walls);
 }
 
 static void create_location_general() {
@@ -165,10 +169,16 @@ static void create_landscape(const rect & rca, variant v) {
 	else if(v.iskind<areafi>())
 		area.set(rca, (mapf_s)v.value, v.counter);
 	else if(v.iskind<sitei>()) {
+		last_site = bsdata<sitei>::elements + v.value;
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rca, ev);
 	} else if(v.iskind<monsteri>())
 		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
+	else if(v.iskind<shapei>()) {
+		if(last_site)
+			place_shape(bsdata<shapei>::elements[v.value],
+				random(rca), last_site->floors, last_site->walls);
+	}
 }
 
 static void add_area_sites(variant v) {

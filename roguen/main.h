@@ -300,8 +300,8 @@ struct sitei : nameable {
 	char		site_count;
 	variants	landscape;
 	variants	sites;
-	variant		shape;
 	color		minimap;
+	tile_s		walls, floors;
 };
 struct boosti {
 	variant		parent;

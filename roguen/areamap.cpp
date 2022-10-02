@@ -124,10 +124,6 @@ bool areamap::isfree(point m) const {
 	return true;
 }
 
-bool areamap::isfreelt(point m) const {
-	return isfree(m);
-}
-
 void areamap::clearpath() {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
@@ -309,7 +305,7 @@ bool areamap::iswall(point m, direction_s d) const {
 	return bsdata<tilei>::elements[(*this)[m1]].iswall();
 }
 
-bool areamap::linelossv(int x0, int y0, int x1, int y1) {
+bool areamap::linelossv(int x0, int y0, int x1, int y1, fntest test) {
 	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
 	int err = (dx > dy ? dx : -dy) / 2, e2;
@@ -318,7 +314,7 @@ bool areamap::linelossv(int x0, int y0, int x1, int y1) {
 			point m = {(short)x0, (short)y0};
 			set(m, Visible);
 			set(m, Explored);
-			if(!isfreelt(m))
+			if(!test(m))
 				return false;
 		}
 		if(x0 == x1 && y0 == y1)
@@ -335,14 +331,14 @@ bool areamap::linelossv(int x0, int y0, int x1, int y1) {
 	}
 }
 
-bool areamap::linelos(int x0, int y0, int x1, int y1) const {
+bool areamap::linelos(int x0, int y0, int x1, int y1, fntest test) const {
 	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
 	int err = (dx > dy ? dx : -dy) / 2, e2;
 	for(;;) {
 		if(x0 >= 0 && x0 < mps && y0 >= 0 && y0 < mps) {
 			point m = {(short)x0, (short)y0};
-			if(!isfreelt(m))
+			if(!test(m))
 				return false;
 		}
 		if(x0 == x1 && y0 == y1)
@@ -359,14 +355,14 @@ bool areamap::linelos(int x0, int y0, int x1, int y1) const {
 	}
 }
 
-void areamap::setlos(point m, int r) {
+void areamap::setlos(point m, int r, fntest test) {
 	for(auto x = m.x - r; x <= m.x + r; x++) {
-		linelossv(m.x, m.y, x, m.y - r);
-		linelossv(m.x, m.y, x, m.y + r);
+		linelossv(m.x, m.y, x, m.y - r, test);
+		linelossv(m.x, m.y, x, m.y + r, test);
 	}
 	for(auto y = m.y - r; y <= m.y + r; y++) {
-		linelossv(m.x, m.y, m.x - r, y);
-		linelossv(m.x, m.y, m.x + r, y);
+		linelossv(m.x, m.y, m.x - r, y, test);
+		linelossv(m.x, m.y, m.x + r, y, test);
 	}
 }
 

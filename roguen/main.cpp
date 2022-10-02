@@ -18,8 +18,9 @@ static void initializating() {
 	bsreq::read("rules/Advancement.txt");
 	hotkey::initialize();
 	readl("Chats", speech::read);
-	generatori::read("rules/Tables.txt");
 	shapei::read("rules/Shapes.txt");
+	bsreq::read("rules/Sites.txt");
+	generatori::read("rules/Tables.txt");
 #ifdef _DEBUG
 	main_util();
 #endif
@@ -73,7 +74,7 @@ static void main_start() {
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
-	place_building({7, 2, 12, 7}, WallCave);
+	//place_building({7, 2, 12, 7}, WallCave);
 	create_area("DeepForest");
 	create_item({4, 4}, "Sword");
 	create_item({4, 4}, "BattleAxe");

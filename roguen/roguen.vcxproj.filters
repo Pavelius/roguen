@@ -418,5 +418,8 @@
     <Text Include="..\rules\Shapes.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="..\rules\Sites.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -173,6 +173,16 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
+static bool isfreelt(point m) {
+	return area.isfree(m);
+}
+
+static bool isfreecr(point m) {
+	//if(findalive(m))
+	//	return false;
+	return area.isfree(m);
+}
+
 void creature::movestep(point ni) {
 	if(!area.isvalid(ni)) {
 		if(isactive())
@@ -298,7 +308,7 @@ void creature::makemove() {
 		enemy = enemies[0];
 	}
 	if(isactive()) {
-		area.setlos(getposition(), getlos());
+		area.setlos(getposition(), getlos(), isfreelt);
 		adventure_mode();
 	} else if(enemy)
 		moveto(enemy->getposition());

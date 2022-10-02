@@ -274,6 +274,7 @@
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Items.txt" />
     <Text Include="..\rules\Shapes.txt" />
+    <Text Include="..\rules\Sites.txt" />
     <Text Include="..\rules\Tables.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

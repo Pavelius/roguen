@@ -73,12 +73,20 @@ BSMETA(monsteri) = {
 BSMETA(racei) = {
 	BSREQ(id),
 	{}};
+BSMETA(shapei) = {
+	BSREQ(id),
+	{}};
 BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(landscape),
 	BSREQ(sites),
 	BSREQ(site_count),
+	BSENM(walls, tilei),
+	BSENM(floors, tilei),
 	BSREQ(minimap),
+	{}};
+BSMETA(tilei) = {
+	BSREQ(id),
 	{}};
 BSMETA(weari) = {
 	BSREQ(id),
@@ -102,7 +110,9 @@ BSDATA(varianti) = {
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
 	{"Script", VAR(script), 1},
+	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
+	{"Tile", VAR(tilei), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},
 };

@@ -11,5 +11,14 @@ XX0XX
   XXXXXXX  
 XXX.....XXX
 X.........X
+X.........X
 XXX.....XXX
   XXX0XXX  
+
+#SmallCircleRoom
+
+  XXXXX  
+XXX...XXX
+X.......X
+XXX...XXX
+  XX0XX  

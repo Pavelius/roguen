@@ -48,31 +48,3 @@ AdventureKeys
  elements ChatSomeone "C"
  elements PickUp "P"
  elements ShowMinimap "M"
-
-#Site
-
-NoLocation
-
-ArtifactStatue
- landscape Statue+1
-DeepAncientPlace
- landscape Webbed-30
-Graveyard
- landscape Grave+4
-MonsterLair
- landscape Webbed+4 Blooded+3 Goblin
-SwampyArea
- landscape FootMud-40 Herbs+3
-
-Plains minimap(60 176 67)
- landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
- sites Graveyard
-LightForest minimap(70 109 29)
- landscape Tree-8 Herbs+45 Plant+18 FootMud+12 FootHill+40
-DeepForest minimap(35 79 31)
- landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
- sites Graveyard Graveyard+30 Graveyard+10 DeepAncientPlace ArtifactStatue+10 MonsterLair+30 SwampyArea
-Mountains minimap(128 128 128)
- landscape Tree+30 Herbs+40 Plant+20 FootMud+20 FootHill+90
-Hills minimap(152 191 100)
- landscape Tree+30 Herbs+35 Plant+5 FootMud+20 FootHill-5
