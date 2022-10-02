@@ -146,14 +146,12 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 static void create_location_general() {
 	const auto parts = 4;
 	const auto size = area.mps / parts;
-	const auto locmin = 3;
-	const auto locmax = 2 * size / 3 - 3;
 	for(auto i = 0; i < parts * parts; i++) {
 		rect rc;
-		rc.x1 = (i % parts) * size + 2;
-		rc.y1 = (i / parts) * size + 2;
-		rc.x2 = rc.x1 + xrand(locmin, locmax - 1);
-		rc.y2 = rc.y1 + xrand(locmin, locmax);
+		rc.x1 = (i % parts) * size + 1;
+		rc.y1 = (i / parts) * size + 1;
+		rc.x2 = rc.x1 + size - 2;
+		rc.y2 = rc.y1 + size - 2;
 		locations.add(rc);
 	}
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
@@ -195,7 +193,7 @@ static void create_landscape(const rect & rca, variant v) {
 		if(!last_site || !test_counter(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
-			random(rca.shrink(5, 5)), last_site->floors, last_site->walls);
+			random(rca.shrink(3, 3)), last_site->floors, last_site->walls);
 	}
 }
 
