@@ -361,7 +361,7 @@ static void paint_floor() {
 					if(ei.decals) {
 						auto fw = r >> 3;
 						if(fw < ei.decals.count)
-							image(pd, fw, 0);
+							image(pd, ei.decals.start + fw, 0);
 					}
 				}
 				for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {

@@ -1,5 +1,4 @@
 #include "areamap.h"
-#include "bsreq.h"
 #include "main.h"
 
 BSDATA(tilei) = {
@@ -8,9 +7,12 @@ BSDATA(tilei) = {
 	{"Cave", {}, {9, 3}, {}, 1},
 	{"DungeonFloor", {}, {12, 8}, {}, 3},
 	{"Grass", {60, 176, 67}, {1, 4}, {0, 8}, 0},
-	{"GrassCorupted", {}, {5, 4}, {}, 2},
+	{"GrassCorupted", {66, 63, 48}, {5, 4}, {8, 6}, 2},
+	{"Rock", {}, {44, 1}},
+	{"Sand", {}, {35, 4}},
+	{"Snow", {}, {31, 4}},
 	{"Lava", {}, {28, 3}, {}},
-	{"Water", {}},
+	{"Water", {}, {40, 4}},
 	{"WallCave", {}, {}, {}, -1, Cave, {0, 2}},
 	{"WallBuilding", {}, {}, {}, -1, WoodenFloor, {13, 1}},
 	{"WallDungeon", {}, {}, {}, -1, DungeonFloor, {25, 3}},

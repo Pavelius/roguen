@@ -69,13 +69,11 @@ static void main_start() {
 	world.clear();
 	world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
-	area.clear();
-	area.set({0, 0, area.mps - 1, area.mps - 1}, Grass);
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
-	create_area("Mountains");
+	create_area("AshenLand");
 	create_item({4, 4}, "Sword");
 	create_item({4, 4}, "BattleAxe");
 	player = creature::create({5, 5}, "Human");

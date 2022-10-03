@@ -179,7 +179,7 @@ static void create_landscape(const rect & rca, variant v) {
 		if(!last_site || !test_counter(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
-			random(rca.shrink(3, 3)), last_site->floors, last_site->walls);
+			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
 	}
 }
 
@@ -205,12 +205,22 @@ static void create_sites() {
 		create_landscape(locations.data[i], sites.data[i]);
 }
 
+static void create_floor(variant tile) {
+	if(tile.iskind<sitei>()) {
+		auto& ei = bsdata<sitei>::elements[tile.value];
+		if(ei.floors)
+			area.set({0, 0, area.mps - 1, area.mps - 1}, ei.floors);
+	}
+}
+
 void create_area(const char* id) {
 	variant tile = id;
 	if(!tile)
 		return;
+	area.clear();
 	locations.clear();
 	sites.clear();
+	create_floor(tile);
 	create_landscape({0, 0, area.mps - 1, area.mps - 1}, tile);
 	add_area_sites(tile);
 	create_location_general();

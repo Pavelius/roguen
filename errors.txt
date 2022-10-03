@@ -1,2 +1,2 @@
-﻿In file `rules/Advancement.txt`:
-Can't find script named 'ExploreArea' in hotkey mapping
+﻿In file `rules/Sites.txt`:
+ Line 36: Not found identifier `GrassCorrupted`

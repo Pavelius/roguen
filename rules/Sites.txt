@@ -8,23 +8,30 @@ DeepAncientPlace
  landscape Webbed-30
 Graveyard
  landscape Grave+4
-MonsterLair
+MonstersLair
  landscape Webbed+4 Blooded+3 Goblin
 SwampyArea
  landscape FootMud-40 Herbs+3
 RockyMountains walls(WallCave) floors(WallCave)
- landscape CircleRoom+50 SmallCircleRoom SmallCircleRoom SmallCircleRoom+50 TinyCircleRoom TinyCircleRoom+60 TinyCircleRoom+20
+ landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
+LightBush
+ landscape Tree-15
 
-Plains minimap(60 176 67)
+Plains minimap(60 176 67) floors(Grass)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
  sites Graveyard
-LightForest minimap(70 109 29)
+LightForest minimap(70 109 29) floors(Grass)
  landscape Tree-8 Herbs+45 Plant+18 FootMud+12 FootHill+40
-DeepForest minimap(35 79 31)
+DeepForest minimap(35 79 31) floors(Grass)
  landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
- sites Graveyard Graveyard+30 Graveyard+10 RockyMountains DeepAncientPlace ArtifactStatue+10 MonsterLair+30 SwampyArea
-Mountains minimap(128 128 128)
+ sites Graveyard Graveyard+30 Graveyard+10 RockyMountains DeepAncientPlace ArtifactStatue+10 MonstersLair+30 SwampyArea
+Mountains minimap(128 128 128) floors(Grass)
  landscape Tree+30 Herbs+40 Plant+20 FootMud+5 FootHill-10
- sites Graveyard+10 RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50
-Hills minimap(152 191 100)
+ sites Graveyard+5 MonstersLair MonstersLair+40\
+ RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains\
+ RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+20\
+ LightBush+50
+Hills minimap(152 191 100) floors(Grass)
  landscape Tree+30 Herbs+35 Plant+5 FootMud+20 FootHill-5
+AshenLand minimap(128 128 128) floors(GrassCorupted)
+ landscape FootMud+30 DeadTree+20

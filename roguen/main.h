@@ -67,12 +67,12 @@ enum spell_s : unsigned char {
 };
 enum feature_s : unsigned char {
 	NoFeature,
-	Tree, FootMud, FootHill, Grave, Statue,
+	Tree, DeadTree, FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
 	Trap, Door,
 };
 enum tile_s : unsigned char {
-	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Lava, Water,
+	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava, Water,
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
 extern stringbuilder console;
