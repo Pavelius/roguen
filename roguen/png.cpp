@@ -1,6 +1,7 @@
 ﻿#include "crt.h"
 #include "draw.h"
 
+namespace {
 enum colortypes {
 	PngColorGrey = 0, // greyscale: 1,2,4,8,16 bit
 	PngColorRGB = 2, // RGB: 8,16 bit
@@ -8,6 +9,7 @@ enum colortypes {
 	PngColorGreyAlpha = 4, // greyscale with alpha: 8,16 bit
 	PngColorRGBA = 6 // RGB with alpha: 8,16 bit
 };
+}
 
 static int getNumColorChannels(colortypes colortype) {
 	switch(colortype) {
@@ -179,7 +181,6 @@ static bool unfilter_scanline(unsigned char* recon, const unsigned char* scanlin
 	the incoming scanlines do NOT include the filtertype byte, that one is given in the parameter filterType instead
 	recon and scanline MAY be the same memory address! precon must be disjoint.
 	*/
-
 	unsigned i;
 	switch(filterType) {
 	case 0:
@@ -358,8 +359,8 @@ static void Adam7_deinterlace(unsigned char* out, const unsigned char* in, unsig
 					}
 				}
 		}
-	} else /*bpp < 8: Adam7 with pixels < 8 bit is a bit trickier: with bit pointers*/
-	{
+	} else {
+		/*bpp < 8: Adam7 with pixels < 8 bit is a bit trickier: with bit pointers*/
 		for(i = 0; i != 7; ++i) {
 			unsigned x, y, b;
 			unsigned ilinebits = bpp * passw[i];
@@ -398,8 +399,8 @@ static void postprocess_scanlines(unsigned char* out, unsigned char* in, unsigne
 		// we can immediatly filter into the out buffer, no other steps needed
 		else
 			unfilter(out, in, w, h, bpp);
-	} else // interlace_method is 1 (Adam7)
-	{
+	} else {
+		// interlace_method is 1 (Adam7)
 		// FIXME: Image incorrect visualize
 		unsigned passw[7], passh[7];
 		unsigned long filter_passstart[8], padded_passstart[8], passstart[8];
