@@ -16,6 +16,8 @@ RockyMountains walls(WallCave) floors(WallCave)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
 LightBush
  landscape Tree-15
+DarkLake walls(DarkWater) floors(DarkWater)
+ landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
 
 Plains minimap(60 176 67) floors(Grass)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
@@ -28,10 +30,11 @@ DeepForest minimap(35 79 31) floors(Grass)
 Mountains minimap(128 128 128) floors(Grass)
  landscape Tree+30 Herbs+40 Plant+20 FootMud+5 FootHill-10
  sites Graveyard+5 MonstersLair MonstersLair+40\
- RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains\
- RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+20\
- LightBush+50
+  RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains RockyMountains\
+  RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+50 RockyMountains+20\
+  LightBush+50
 Hills minimap(152 191 100) floors(Grass)
  landscape Tree+30 Herbs+35 Plant+5 FootMud+20 FootHill-5
 AshenLand minimap(128 128 128) floors(GrassCorupted)
  landscape FootMud+30 DeadTree+20
+ sites DarkLake DarkLake+20
