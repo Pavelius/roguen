@@ -14,6 +14,7 @@ BSDATA(tilei) = {
 	{"Lava", {}, {28, 3}, {}},
 	{"Water", {}, {40, 4}},
 	{"DarkWater", {22, 68, 59}, {45, 8}},
+	{"DeepWater", {29, 80, 120}, {53, 8}},
 	{"WallCave", {}, {}, {}, -1, Cave, {0, 2}},
 	{"WallBuilding", {}, {}, {}, -1, WoodenFloor, {13, 1}},
 	{"WallDungeon", {}, {}, {}, -1, DungeonFloor, {25, 3}},

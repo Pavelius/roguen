@@ -58,7 +58,7 @@ static bool chunk_type_equals(const unsigned char* chunk, const char* type) {
 		&& chunk[7] == type[3]);
 }
 
-static int read_idat(unsigned char* out, const unsigned char* p, const unsigned char* pe, const unsigned char** single_input, color& transparent, bool& use_transparent) {
+static int read_idat(unsigned char* out, const unsigned char* p, const unsigned char* pe, const unsigned char** single_input, color* pallette, color& transparent, bool& use_transparent) {
 	int size = 0;
 	int blocks = 0;
 	if(single_input)
@@ -88,6 +88,15 @@ static int read_idat(unsigned char* out, const unsigned char* p, const unsigned 
 					*single_input = 0;
 			}
 			size += chunk_length;
+		} else if(chunk_type_equals(p, "PLTE")) {
+			const auto colors_per_pixel = 3;
+			auto max_colors = chunk_length / colors_per_pixel;
+			auto pd = get_chunk_data(p);
+			for(size_t i = 0; i < max_colors; i++) {
+				pallette[i].r = pd[i * colors_per_pixel + 0];
+				pallette[i].g = pd[i * colors_per_pixel + 1];
+				pallette[i].b = pd[i * colors_per_pixel + 2];
+			}
 		} else if(chunk_type_equals(p, "tRNS")) {
 			auto pn = get_chunk_data(p);
 			if(chunk_length == 6) {
@@ -428,6 +437,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 
 	bool decode(unsigned char* output, int output_bpp, const unsigned char* input, unsigned input_size) override {
 		int image_width, image_height, input_bpp;
+		color pallette[256] = {};
 		if(!output)
 			return false;
 		if(!inspect(image_width, image_height, input_bpp, input, input_size))
@@ -442,7 +452,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		const unsigned char* single_input;
 		color transparent;
 		bool use_transparent = false;
-		int size_compressed = read_idat(0, input, input + input_size, &single_input, transparent, use_transparent);
+		int size_compressed = read_idat(0, input, input + input_size, &single_input, pallette, transparent, use_transparent);
 		if(!size_compressed)
 			return false;
 		// decompress image data
@@ -453,7 +463,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 				return false;
 		} else {
 			unsigned char* ptemp = new unsigned char[size_compressed];
-			if(!read_idat(ptemp, input, input + input_size, 0, transparent, use_transparent)) {
+			if(!read_idat(ptemp, input, input + input_size, 0, pallette, transparent, use_transparent)) {
 				delete ptemp;
 				return false;
 			}
@@ -465,7 +475,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 			delete ptemp;
 		}
 		postprocess_scanlines(output, output, image_width, image_height, bpp, interlace);
-		color::convert(output, image_width, image_height, output_bpp, 0, output, input_bpp, 0);
+		color::convert(output, image_width, image_height, output_bpp, 0, output, input_bpp, pallette, 0);
 		if(output_bpp == 32 && use_transparent)
 			apply_transparent((color*)output, image_width, image_height, transparent);
 		return true;
@@ -482,6 +492,8 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		w = read32(input + 16);
 		h = read32(input + 20);
 		bpp = -get_bpp(colortype, bit_depth);
+		if(bpp == -8)
+			bpp = 8;
 		return true;
 	}
 

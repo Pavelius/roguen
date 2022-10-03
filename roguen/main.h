@@ -73,7 +73,7 @@ enum feature_s : unsigned char {
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava,
-	Water, DarkWater,
+	Water, DarkWater, DeepWater,
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
 extern stringbuilder console;
