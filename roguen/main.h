@@ -36,7 +36,7 @@ enum ability_s : unsigned char {
 	Survival,
 	Level,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana, Money,
+	Hits, Mana, Mood, Reputation, Money,
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
@@ -76,6 +76,9 @@ enum tile_s : unsigned char {
 	Water, DarkWater, DeepWater,
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
+enum reaction_s : unsigned char {
+	Indiferent, Friendly, Hostile,
+};
 extern stringbuilder console;
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
@@ -108,6 +111,7 @@ public:
 	static bool confirm(const char* format, ...);
 	variant		getkind() const { return kind; }
 	const char*	getname() const { return kind.getname(); }
+	static void	pressspace();
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void		setkind(variant v) { kind = v; }
 };
@@ -224,6 +228,7 @@ class creature : public wearable, public statable, public spellable {
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
+	int			money;
 	unsigned	experience;
 	int			wait_seconds;
 	void		advance(variant kind, int level);

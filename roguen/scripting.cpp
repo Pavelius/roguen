@@ -115,8 +115,15 @@ static void inventory(int bonus) {
 	}
 }
 
+static const char* getspeech(const char* id) {
+	speecha source;
+	source.select(id);
+	return source.getrandom();
+}
+
 static void debug_message(int bonus) {
-	actable::confirm("Вы действительно хотите выйти?");
+	player->say(getspeech("TestYouselfPlease"));
+	actable::pressspace();
 }
 
 static void open_nearest_door(int bonus) {
@@ -128,12 +135,6 @@ static void open_nearest_door(int bonus) {
 		else
 			area.remove(i, Activated);
 	}
-}
-
-static const char* getspeech(const char* id) {
-	speecha source;
-	source.select(id);
-	return source.getrandom();
 }
 
 static void chat_someone(int bonus) {

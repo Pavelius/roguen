@@ -34,6 +34,8 @@ BSDATA(abilityi) = {
 	{"ManaMaximum"},
 	{"Hits"},
 	{"Mana"},
+	{"Mood"},
+	{"Alignment"},
 	{"Money"},
 };
 assert_enum(abilityi, Money)

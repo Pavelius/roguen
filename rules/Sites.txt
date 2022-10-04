@@ -31,7 +31,7 @@ LightForest minimap(70 109 29) floors(Grass)
 DeepForest minimap(35 79 31) floors(Grass)
  landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
  sites Graveyard Graveyard+30 Graveyard+10 DeepAncientPlace ArtifactStatue+10 MonstersLair+30\
-  RockyMountains SwampyArea DeepLake DeepLake
+  SwampyArea RockyMountains DeepLake DeepLake
 Mountains minimap(128 128 128) floors(Grass)
  landscape Tree+30 Herbs+40 Plant+20 FootMud+5 FootHill-10
  sites Graveyard+5 MonstersLair MonstersLair+40\

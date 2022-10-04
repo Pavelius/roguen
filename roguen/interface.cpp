@@ -21,6 +21,7 @@ static const void* focus_pressed;
 static unsigned long last_tick_message;
 static unsigned long start_stamp;
 static int wears_offset = 80;
+static rect message_rect;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -77,7 +78,7 @@ static void strokeup() {
 	auto push_fore = fore;
 	fore = push_fore.mix(colors::window, 128);
 	line(caret.x, caret.y + height - 1);
-	line(caret.x + width -1, caret.y);
+	line(caret.x + width - 1, caret.y);
 	fore = push_fore.mix(colors::text, 216);
 	line(caret.x, caret.y - height + 1);
 	line(caret.x - width + 1, caret.y);
@@ -634,6 +635,7 @@ static void paint_status() {
 }
 
 static void before_paint() {
+	message_rect.clear();
 	paint_status();
 }
 
@@ -659,6 +661,7 @@ static void paint_message() {
 	caret.x = (getwidth() - width - panel_width) / 2;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
 	strokeout(strokeborder, metrics::padding, metrics::padding);
+	message_rect.set(caret.x, caret.y, caret.x + width, caret.y + height);
 	textf(p);
 }
 
@@ -845,6 +848,17 @@ void* answers::choose() const {
 	return (void*)getresult();
 }
 
+static bool backward_button(const char* format, void* value) {
+	auto format_width = textw(format);
+	auto push_width = width;
+	auto push_caret = caret;
+	width = format_width;
+	caret.x -= width;
+	auto result = draw::button(format, 0, draw::pbutton, false);
+	width = push_width;
+	return result;
+}
+
 static void answer_after_paint() {
 	auto push_caret = caret;
 	caret = answer_end;
@@ -900,6 +914,13 @@ static void fillfade(color cv, unsigned char av = 128) {
 	rectf();
 }
 
+static point m2a(point m, int z) {
+	point r;
+	r.x = m.x * z;
+	r.y = m.y * z;
+	return r;
+}
+
 static void paint_area() {
 	rectpush push;
 	pushvalue push_fore(fore);
@@ -938,6 +959,22 @@ static void paint_area() {
 	}
 }
 
+static void paint_area_screen() {
+	const int z = 4;
+	if(!player)
+		return;
+	auto pc = player->getposition();
+	auto s1 = s2m(camera);
+	rectpush push;
+	pushvalue push_fore(fore);
+	caret.x = (width - area.mps * z) / 2 + s1.x * z;
+	caret.y = (height - area.mps * z) / 2 + s1.y * z;
+	width = (width / tsx + 1) * z;
+	height = (height / tsy + 1) * z;
+	fore = colors::white;
+	rectb();
+}
+
 static void pause_keys() {
 	if(hot.key == KeySpace || hot.key == KeyEscape)
 		execute(buttoncancel);
@@ -952,6 +989,7 @@ static void scene_world() {
 static void scene_area() {
 	fillwindow();
 	paint_area();
+	paint_area_screen();
 	pause_keys();
 }
 

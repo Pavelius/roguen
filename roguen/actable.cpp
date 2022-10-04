@@ -30,3 +30,10 @@ bool actable::confirm(const char* format, ...) {
 	console.clear();
 	return result != 0;
 }
+
+void actable::pressspace() {
+	answers an;
+	an.add((void*)1, getnm("Continue"));
+	auto result = an.choose();
+	console.clear();
+}

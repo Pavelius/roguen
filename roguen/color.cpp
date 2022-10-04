@@ -125,20 +125,20 @@ void color::read(const void* p1, int x, int bpp, const void* pallette) {
 	case 4:
 		a = 0;
 		break;
-	case 8:
-		p = (unsigned char*)p1 + x;
-		p = (unsigned char*)&((unsigned char*)pallette)[(*p) * 4];
-		r = p[0];
-		g = p[1];
-		b = p[2];
-		a = 255;
-		break;
 	case -8:
 		p = (unsigned char*)p1 + x;
 		p = (unsigned char*)&((unsigned char*)pallette)[(*p) * 4];
 		b = p[0];
 		g = p[1];
 		r = p[2];
+		a = 255;
+		break;
+	case 8:
+		p = (unsigned char*)p1 + x;
+		p = (unsigned char*)&((unsigned char*)pallette)[(*p) * 4];
+		r = p[0];
+		g = p[1];
+		b = p[2];
 		a = 255;
 		break;
 	case -16:
@@ -153,20 +153,6 @@ void color::read(const void* p1, int x, int bpp, const void* pallette) {
 		r = (p[1] & 0xF) << 4;
 		a = ((p[1] >> 4) & 0xF) << 4;
 		break;
-	case -32:
-		p = (unsigned char*)p1 + x * 4;
-		r = p[2];
-		g = p[1];
-		b = p[0];
-		a = p[3];
-		break;
-	case 32:
-		p = (unsigned char*)p1 + x * 4;
-		r = p[0];
-		g = p[1];
-		b = p[2];
-		a = p[3];
-		break;
 	case -24:
 		p = (unsigned char*)p1 + x * 3;
 		r = p[2];
@@ -180,6 +166,20 @@ void color::read(const void* p1, int x, int bpp, const void* pallette) {
 		g = p[1];
 		b = p[2];
 		a = 255;
+		break;
+	case -32:
+		p = (unsigned char*)p1 + x * 4;
+		r = p[2];
+		g = p[1];
+		b = p[0];
+		a = p[3];
+		break;
+	case 32:
+		p = (unsigned char*)p1 + x * 4;
+		r = p[0];
+		g = p[1];
+		b = p[2];
+		a = p[3];
 		break;
 	}
 }

@@ -33,6 +33,7 @@ public:
 	element*			begin() { return elements.data; }
 	void*				choose(const char* title, const char* cancel_text = 0, int cancel_mode = 0) const;
 	void*				choose() const;
+	void*				choosebuttons() const;
 	void				clear();
 	static int			compare(const void* v1, const void* v2);
 	const element*		end() const { return elements.end(); }
