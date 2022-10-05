@@ -794,7 +794,7 @@ static void answer_paint_cell_small(int index, const void* value, const char* fo
 
 static void get_total_height(const answers& source) {
 	auto push_clipping = clipping;
-	const int window_width = 200;
+	//const int window_width = 200;
 	auto total_height = 0;
 	width = window_width;
 	auto p = console.begin();
@@ -821,7 +821,7 @@ static void paint_message(const answers& source, int window_width) {
 	if(!p || !p[0])
 		return;
 	rectpush push;
-	width = 200;
+	width = window_width;
 	caret.y = metrics::padding * 2;
 	caret.x = (getwidth() - window_width - panel_width) / 2;
 	textf(p);
