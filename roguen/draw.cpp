@@ -2603,16 +2603,28 @@ void draw::scene() {
 	scene(0);
 }
 
-bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical) {
+static bool iskeybinds(unsigned key, unsigned hot_key, unsigned* p) {
+	if(!p)
+		return false;
+	while(p[0]) {
+		if(p[0] == key && p[1] == hot_key)
+			return true;
+		p += 2;
+	}
+	return false;
+}
+
+bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical, unsigned* keybinds) {
 	static point pressed_caret;
 	auto push_width = width;
 	auto push_height = height;
 	auto need_execute = false;
 	if(key) {
 		if(caret.in(clipping)) {
-			if(hot.key == key) {
+			auto key_pressed = (hot.key == key);
+			if(key_pressed)
 				pressed_caret = caret;
-			} else if(hot.key == InputKeyUp && pressed_caret == caret) {
+			else if(hot.key == InputKeyUp && pressed_caret == caret) {
 				pressed_caret.clear();
 				need_execute = true;
 			}

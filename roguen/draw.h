@@ -269,9 +269,8 @@ void					write(const char* url, unsigned char* bits, int width, int height, int 
 void					vertical(fnevent proc);
 }
 namespace draw {
-int application(fnevent proc, fnevent initializing);
 void breakmodal(long result);
-bool button(const char* title, unsigned key, fnbutton proc, bool vertical = true);
+bool button(const char* title, unsigned key, fnbutton proc, bool vertical = true, unsigned* keybinds = 0);
 void buttoncancel();
 void buttonok();
 void buttonparam();

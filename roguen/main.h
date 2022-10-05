@@ -337,6 +337,11 @@ public:
 	void		write();
 };
 namespace draw {
+struct keybind {
+	unsigned	key;
+	const void*	data;
+	constexpr explicit operator bool() const { return key != 0; }
+};
 bool			isnext();
 }
 inline int		d100() { return rand() % 100; }

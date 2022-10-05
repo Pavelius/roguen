@@ -22,6 +22,7 @@ static unsigned long last_tick_message;
 static unsigned long start_stamp;
 static int wears_offset = 80;
 static rect message_rect;
+static keybind* keybinds;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -846,6 +847,19 @@ void* answers::choose() const {
 		domodal();
 	}
 	return (void*)getresult();
+}
+
+void actable::pressspace() {
+	static keybind keys[] = {
+		{KeyEscape, (void*)1},
+		{KeyEnter, (void*)1},
+		{}
+	};
+	pushvalue push_key(keybinds);
+	answers an;
+	an.add((void*)1, getnm("Continue"));
+	auto result = an.choose();
+	console.clear();
 }
 
 static bool backward_button(const char* format, void* value) {
