@@ -1,1 +1,7 @@
-﻿
+﻿Bartender: 
+ChaosHydra: 
+CityGuard: 
+Ettin: 
+HillGiant: 
+Minotaur: 
+OrcWarrior: 

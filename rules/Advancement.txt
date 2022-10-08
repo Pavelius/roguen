@@ -1,13 +1,7 @@
 #Advancement
 
 Fighter 0
- elements Strenght+4 Dexterity+2 Constitution+2
-Rogue 0
- elements Dexterity+4 Strenght+2 Charisma+2
-Cleric 0
- elements Wisdow+4 Strenght+2 Charisma+2
-Mage 0
- elements Intellect+4 Wisdow+2 Charisma+2
+ elements Brawl+10
 
 DarkElf 0
  elements LeatherArmor Dagger

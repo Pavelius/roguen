@@ -123,9 +123,9 @@ void creature::interaction(point m) {
 			auto& wei = wears[MeleeWeapon].geti();
 			int chance = 1;
 			if(wei.is(TwoHanded))
-				chance = wei.weapon.damage.max;
+				chance = wei.bonus * 3;
 			else
-				chance = wei.weapon.damage.max / 2;
+				chance = wei.bonus;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
 				area.features[m] = NoFeature;
@@ -140,10 +140,9 @@ void creature::interaction(creature& opponent) {
 		attackmelee(opponent);
 }
 
-dice creature::getdamage(wear_s v) const {
-	dice result = wears[v].getdamage();
+int creature::getdamage(wear_s v) const {
+	auto result = wears[v].getdamage();
 	result += get(damage_ability(v));
-	result.correct();
 	return result;
 }
 
@@ -155,7 +154,7 @@ void creature::attack(creature& enemy, wear_s v, int bonus, int damage_multiplie
 		act(getnm("AttackMiss"));
 		return;
 	}
-	auto result_damage = getdamage(v).roll();
+	auto result_damage = getdamage(v);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
 }
@@ -196,7 +195,7 @@ void creature::movestep(point ni) {
 	auto m = getposition();
 	if(area.is(m, Webbed)) {
 		wait(2);
-		if(!roll(Strenght, -2)) {
+		if(!roll(Brawl)) {
 			act(getnm("WebEntagled"));
 			wait();
 			fixaction();
@@ -290,7 +289,7 @@ void creature::makemove() {
 	update();
 	// Dazzled creature don't make turn
 	if(is(Stun)) {
-		if(roll(Constitution))
+		if(roll(Brawl))
 			remove(Stun);
 		else {
 			wait();
@@ -377,10 +376,10 @@ void creature::update_abilities() {
 	auto level = abilities[Level];
 	if(level > ci.cap)
 		level = ci.cap;
-	abilities[HitsMaximum] += getbonus(Constitution) * level;
+	abilities[HitsMaximum] += getbonus(Brawl) * level;
 	if(abilities[HitsMaximum] < level)
 		abilities[HitsMaximum] = level;
-	abilities[ManaMaximum] += abilities[Intellect] + abilities[Concentration] * level;
+	abilities[ManaMaximum] += abilities[Wits];
 	if(abilities[ManaMaximum] < 0)
 		abilities[ManaMaximum] = 0;
 }

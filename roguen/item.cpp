@@ -49,8 +49,15 @@ void item::create(const itemi* pi, int count) {
 		setcount(count);
 }
 
-dice item::getdamage() const {
-	return geti().weapon.damage;
+int item::getdamage() const {
+	switch(geti().wear) {
+	case MeleeWeapon:
+	case MeleeWeaponOffhand:
+	case RangedWeapon:
+		return geti().bonus;
+	default:
+		return 0;
+	}
 }
 
 bool item::is(wear_s v) const {

@@ -4,6 +4,8 @@
 creaturea creatures, enemies, targets;
 creature* enemy;
 
+void animate_figures();
+
 static void choose_creature(int bonus) {
 }
 
@@ -175,6 +177,21 @@ static void explore_area(int bonus) {
 			area.set(m, Explored);
 }
 
+static void test_arena(int bonus) {
+	answers an;
+	auto count = 0;
+	for(auto& e : bsdata<monsteri>()) {
+		if(e.is(Female))
+			continue;
+		an.add(&e, e.getname());
+	}
+	auto pm = (monsteri*)an.choose(getnm("ChooseMonsterToFight"));
+	auto m = player->getposition();
+	auto p = creature::create(m.to(3, 0), pm);
+	p->set(Enemy);
+	animate_figures();
+}
+
 void show_area(int bonus);
 
 BSDATA(script) = {
@@ -196,6 +213,7 @@ BSDATA(script) = {
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"ShowMinimap", show_area},
+	{"TestArena", test_arena},
 	{"ViewStuff", view_stuff},
 };
 BSDATAF(script)

@@ -26,7 +26,7 @@ Plains minimap(60 176 67) floors(Grass)
  sites Graveyard
 LightForest minimap(70 109 29) floors(Grass)
  landscape Tree-8 Herbs+45 Plant+18 FootMud+12 FootHill+40
- sites Graveyard DeepAncientPlace ArtifactStatue+10 MonstersLair+30\
+ sites Graveyard DeepAncientPlace ArtifactStatue+10 MonstersLair+5\
   SwampyArea DeepLake DeepLake\
   RockyMountains+20
 DeepForest minimap(35 79 31) floors(Grass)

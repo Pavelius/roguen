@@ -78,6 +78,13 @@ void areamap::set(rect rc, tile_s v, int random_count) {
 	}
 }
 
+void areamap::set(rect rc, feature_s v) {
+	point m;
+	for(m.y = rc.y1; m.y < rc.y2; m.y++)
+		for(m.x = rc.x1; m.x < rc.x2; m.x++)
+			features[m] = v;
+}
+
 void areamap::set(rect rc, feature_s v, int random_count) {
 	if(random_count <= -100)
 		return;
@@ -86,7 +93,7 @@ void areamap::set(rect rc, feature_s v, int random_count) {
 	while(random_count > 0) {
 		short x = rc.x1 + rand() % (rc.width() + 1);
 		short y = rc.y1 + rand() % (rc.height() + 1);
-		set({x, y}, v);
+		set(point{x, y}, v);
 		random_count--;
 	}
 }

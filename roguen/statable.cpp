@@ -12,8 +12,8 @@ static int attack_bonus[3][20] = {
 };
 
 void statable::create() {
-	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
-		abilities[i] = 8 + rand() % 5;
+	for(auto i = Brawl; i <= Charisma; i = (ability_s)(i + 1))
+		abilities[i] = 30 + rand() % 10;
 	abilities[LineOfSight] += 3;
 }
 

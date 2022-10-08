@@ -10,23 +10,23 @@ Mage hd(4) cap(9) player(1)
 #Monster
 
 Goblin avatar("0") treasure(RC) appear(2 8) appear_outdoor(6 60)
- abilities Strenght(-2) Dexterity(4)
+ abilities Brawl(-10)
  feats SunSensitive
 GoblinFemale avatar("0_f") parent(Goblin)
- abilities Strenght(-2) Dexterity(4)
+ abilities Brawl(-10)
  feats SunSensitive Female
 CityGuard avatar("57")
  abilities Level(2)
 OrcWarrior avatar("1")
  abilities Level(1)
 Ettin avatar("47")
- abilities Strenght(11) Dexterity(-3) Level(10)
+ abilities Level(10)
 HillGiant avatar("31")
- abilities Strenght(8) Dexterity(-3) Level(9)
+ abilities Level(9)
 ChaosHydra avatar("33")
- abilities Strenght(12) Level(15)
+ abilities Level(15)
 Minotaur avatar("83")
- abilities Strenght(11) Level(8)
+ abilities Level(8)
 Bartender avatar("130")
 
 #HotkeyList
@@ -50,3 +50,4 @@ AdventureKeys
 
  elements DebugMessage "Ctrl+D"
  elements ExploreArea "Ctrl+E"
+ elements TestArena "Ctrl+A"

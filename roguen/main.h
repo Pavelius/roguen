@@ -25,7 +25,7 @@ enum class res {
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
-	Strenght, Dexterity, Constitution, Intellect, Wisdow, Charisma,
+	Brawl, Dexterity, Wits, Charisma,
 	ToHit, ToHitMelee, ToHitRanged, ToHitThrown,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	ParryValue, DamageReduciton,
@@ -36,7 +36,7 @@ enum ability_s : unsigned char {
 	Survival,
 	Level,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana, Mood, Reputation, Money,
+	Hits, Mana, Mood, Reputation, ParryCount, Money,
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
@@ -52,7 +52,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
-	Blunt, Martial, TwoHanded, CutWoods,
+	Blunt, Martial, TwoHanded, CutWoods, ArmorPirce,
 	WearLeather, WearIron, WearLarge, WearShield, Coins,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
@@ -139,7 +139,7 @@ public:
 };
 struct itemi : nameable {
 	struct weaponi {
-		dice	damage;
+		char	parry, damage;
 		short 	ammunition;
 	};
 	int			cost, weight, count;
@@ -179,7 +179,7 @@ public:
 	void		getinfo(stringbuilder& sb, bool need_name) const;
 	int			getcost() const;
 	int			getcount() const;
-	dice		getdamage() const;
+	int			getdamage() const;
 	magic_s		getmagic() const { return magic; }
 	const char*	getname() const { return geti().getname(); }
 	class creature* getowner() const;
@@ -218,6 +218,7 @@ struct monsteri : nameable, statable {
 	const char*	treasure;
 	dice		appear, appear_outdoor;
 	const monsteri* parent;
+	bool		is(feat_s v) const { return feats.is(v); }
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 };
 struct spellable {
@@ -262,7 +263,7 @@ public:
 	int			get(ability_s v) const { return abilities[v]; }
 	int			get(spell_s v) const { return spells[v]; }
 	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
-	dice		getdamage(wear_s w) const;
+	int			getdamage(wear_s w) const;
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const { return get(LineOfSight); }
 	int			getwait() const { return wait_seconds; }
@@ -345,7 +346,6 @@ struct keybind {
 bool			isnext();
 }
 inline int		d100() { return rand() % 100; }
-
 extern areamap		area;
 extern worldi		world;
 extern creaturea	creatures, enemies;

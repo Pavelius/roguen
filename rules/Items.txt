@@ -29,16 +29,16 @@ SilverAmulet cost(1000) weight(4) avatar("item168")
 GoldAmulet cost(1600) weight(5) avatar("item175")
 
 BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar("item189")
- flags Martial Slow TwoHanded CutWoods
- weapon damage(1 8)
+ flags Martial CutWoods ArmorPierce
+ weapon damage(3) parry(-100)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1")
  flags Martial Blunt
  weapon damage(1 4)
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0")
- weapon damage(1 4)
+ weapon damage(1)
 Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345")
- flags Martial Slow TwoHanded WearLarge CutWoods
- weapon damage(1 10)
+ flags Martial Slow TwoHanded WearLarge CutWoods ArmorPierce
+ weapon damage(5) parry(-100)
 HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5")
  flags Martial
  weapon damage(1 6)

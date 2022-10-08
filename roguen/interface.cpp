@@ -698,7 +698,7 @@ static void presskey(const sliceu<hotkey>& source) {
 	}
 }
 
-static void animate_figures() {
+void animate_figures() {
 	start_stamp = getobjectstamp();
 	waitall();
 	remove_temp_objects();

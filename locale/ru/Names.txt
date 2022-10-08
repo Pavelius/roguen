@@ -5,6 +5,7 @@ AttackMiss: %герой промазал%а.
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
+ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Goblin: Гоблин
@@ -20,12 +21,10 @@ WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
 YouCutWood: %герой срубил%а %-1.
 
+Brawl: Сила
 Charisma: Харизма
-Constitution: Телосложение
 Dexterity: Ловкость
-Intellect: Интеллект
-Strenght: Сила
-Wisdow: Мудрость
+Wits: Интеллект
 
 Damage: Урон
 Hits: Хиты

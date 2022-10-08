@@ -73,6 +73,7 @@ struct areamap : anymap<tile_s, 64> {
 	void			set(point m, tile_s v);
 	void			set(point m, feature_s v);
 	void			set(rect rc, tile_s v);
+	void			set(rect rc, feature_s v);
 	void			set(rect rc, feature_s v, int random_count);
 	void			set(rect rc, mapf_s v, int random_count);
 	void			set(rect rc, tile_s v, int random_count);

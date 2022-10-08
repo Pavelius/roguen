@@ -28,7 +28,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("Ёльф мужчина");
 	sb.addn("---");
 	sb.addn("$Tab -20");
-	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
+	for(auto i = Brawl; i <= Charisma; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	sb.addn("$Tab -40");
@@ -43,10 +43,11 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 	auto& ei = geti();
 	if(need_name)
 		sb.adds(getname());
-	if(ei.bonus)
-		sb.adds("%+1i", ei.bonus);
-	if(ei.weapon.damage) {
-		sb.adds("%-Damage");
-		addv(sb, ei.weapon.damage);
+	//if(ei.bonus)
+	//	sb.adds("%+1i", ei.bonus);
+	switch(ei.wear) {
+	case MeleeWeapon:
+		sb.adds("%-Damage%+1i", ei.weapon.damage);
+		break;
 	}
 }
