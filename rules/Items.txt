@@ -68,7 +68,7 @@ ChainArmor cost(40) weight(400) wear(Torso) bonus(4) wear_index(2) avatar("item1
  flags WearIron
 PlateArmor cost(60) weight(500) wear(Torso) bonus(6) wear_index(2) avatar("item13")
  flags WearIron
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) bonus(1) avatar("item17")
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) bonus(1) avatar("item17")
  flags WearShield
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar("item102")

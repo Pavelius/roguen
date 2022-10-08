@@ -30,8 +30,12 @@ SilverRing: Серебрянное кольцо
 BattleAxe: Боевой топор
 
 LeatherArmor: Кожанная броня
+PlateArmor: Латы
 Shield: Щит
 Sword: Меч
 
 Lags: Древесина
 SmallLags: Маленькая ветка
+
+AquaPotion: Водяное зелье
+BluePotion: Синее зелье

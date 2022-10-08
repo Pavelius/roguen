@@ -75,7 +75,12 @@ static void main_start() {
 	//place_building({7, 2, 12, 7}, WallCave);
 	create_area("LightForest");
 	create_item({4, 4}, "Sword");
+	create_item({5, 4}, "LeatherArmor");
+	create_item({6, 4}, "PlateArmor");
+	create_item({6, 5}, "Shield");
 	create_item({4, 4}, "BattleAxe");
+	create_item({5, 7}, "AquaPotion");
+	create_item({6, 7}, "BluePotion");
 	player = creature::create({5, 5}, "Human");
 	player->set(Ally);
 	setnext(game.play);

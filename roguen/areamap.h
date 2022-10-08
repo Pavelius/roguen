@@ -8,7 +8,7 @@ enum direction_s : unsigned char;
 enum tile_s : unsigned char;
 enum feature_s : unsigned char;
 enum mapf_s : unsigned char {
-	Explored, Visible, Activated, Searched, Blooded, Iced, Webbed,
+	Explored, Visible, Activated, Hidden, Used, Blooded, Iced, Webbed,
 };
 enum areaf : unsigned char {
 	Impassable, ImpassableNonActive, AllowActivate, BetweenWalls, Woods,
