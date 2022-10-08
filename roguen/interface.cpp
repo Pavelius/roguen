@@ -211,6 +211,8 @@ static void paint_items() {
 	for(auto& e : bsdata<itemground>()) {
 		if(!e)
 			continue;
+		if(!area.is(e.position, Explored))
+			continue;
 		if(!e.position.in(rc))
 			continue;
 		add_object(m2s(e.position), &const_cast<itemi&>(e.geti()), 0, 6);

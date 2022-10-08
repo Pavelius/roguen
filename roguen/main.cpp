@@ -15,6 +15,7 @@ void main_util();
 
 static void initializating() {
 	bsreq::read("rules/Items.txt");
+	bsreq::read("rules/Monsters.txt");
 	bsreq::read("rules/Advancement.txt");
 	hotkey::initialize();
 	readl("Chats", speech::read);
@@ -84,7 +85,7 @@ static void main_start() {
 	create_item({5, 5}, "Halberd");
 	create_item({5, 7}, "AquaPotion");
 	create_item({6, 7}, "BluePotion");
-	player = creature::create({5, 5}, "Human");
+	player = creature::create({5, 5}, "Human", "Fighter");
 	player->set(Ally);
 	setnext(game.play);
 }

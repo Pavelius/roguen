@@ -1,7 +1,9 @@
 #Advancement
 
 Fighter 0
- elements Brawl+10
+ elements Brawl+10 Dexterity+5 WeaponSkill+20 ShieldUse+10
+Fighter 0
+ elements ChainArmor Sword
 
 DarkElf 0
  elements LeatherArmor Dagger

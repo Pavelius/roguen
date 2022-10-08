@@ -1,0 +1,23 @@
+#Monster
+
+Goblin avatar("0") treasure(RC) appear(2 8) appear_outdoor(6 60)
+ abilities Brawl(-10)
+ feats SunSensitive
+ use Dagger
+GoblinFemale avatar("0_f") parent(Goblin)
+ abilities Brawl(-10)
+ feats SunSensitive Female
+CityGuard avatar("57")
+ abilities Brawl(5) Level(2)
+OrcWarrior avatar("1")
+ abilities Brawl(5) Level(1)
+ use Sword
+Ettin avatar("47")
+ abilities Brawl(40) Level(10)
+HillGiant avatar("31")
+ abilities Brawl(30) Level(9)
+ChaosHydra avatar("33")
+ abilities Brawl(15) Level(15)
+Minotaur avatar("83")
+ abilities Brawl(20) Level(8)
+Bartender avatar("130")

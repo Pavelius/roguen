@@ -3,6 +3,7 @@
 
 creaturea creatures, enemies, targets;
 creature* enemy;
+int	last_hit, last_parry;
 
 void animate_figures();
 

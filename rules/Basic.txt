@@ -7,28 +7,6 @@ Cleric hd(6) cap(9) player(1)
 Rogue hd(4) cap(11) player(1)
 Mage hd(4) cap(9) player(1)
 
-#Monster
-
-Goblin avatar("0") treasure(RC) appear(2 8) appear_outdoor(6 60)
- abilities Brawl(-10)
- feats SunSensitive
-GoblinFemale avatar("0_f") parent(Goblin)
- abilities Brawl(-10)
- feats SunSensitive Female
-CityGuard avatar("57")
- abilities Level(2)
-OrcWarrior avatar("1")
- abilities Level(1)
-Ettin avatar("47")
- abilities Level(10)
-HillGiant avatar("31")
- abilities Level(9)
-ChaosHydra avatar("33")
- abilities Level(15)
-Minotaur avatar("83")
- abilities Level(8)
-Bartender avatar("130")
-
 #HotkeyList
 
 AdventureKeys

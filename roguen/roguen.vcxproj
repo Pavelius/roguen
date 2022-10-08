@@ -274,6 +274,7 @@
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Items.txt" />
+    <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Sites.txt" />
     <Text Include="..\rules\Tables.txt" />

@@ -1,6 +1,6 @@
 #Item
 
-NoItem avatar("item-1") wear(MeleeWeapon)
+NoItem avatar("item-1") wear(MeleeWeapon) ability(WeaponSkill)
  weapon damage(1 2)
 
 SP cost(1) avatar("items37") count(1)
@@ -28,26 +28,26 @@ CoralAmulet cost(600) weight(8) avatar("item167")
 SilverAmulet cost(1000) weight(4) avatar("item168")
 GoldAmulet cost(1600) weight(5) avatar("item175")
 
-BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar("item189")
+BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar("item189") ability(WeaponSkill)
  flags Martial CutWoods ArmorPierce
  weapon damage(3) parry(-100)
-Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1")
+Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1") ability(WeaponSkill)
  flags Martial Blunt
- weapon damage(1 4)
-Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0")
+ weapon damage(2)
+Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0") ability(WeaponSkill)
  weapon damage(1)
-Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345")
+Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345") ability(HeavyWeaponSkill)
  flags Martial Slow TwoHanded WearLarge CutWoods ArmorPierce
  weapon damage(5) parry(-100)
-HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5")
+HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5") ability(WeaponSkill)
  flags Martial
- weapon damage(1 6)
-Mace cost(5) weight(30) wear(MeleeWeapon) avatar("item24")
+ weapon damage(2)
+Mace cost(5) weight(30) wear(MeleeWeapon) avatar("item24") ability(WeaponSkill)
  flags Martial Blunt
- weapon damage(1 6)
-Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4") wear_index(23)
+ weapon damage(2)
+Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4") wear_index(23) ability(WeaponSkill)
  flags Martial
- weapon damage(1 8)
+ weapon damage(2)
 
 Arrow wear(Ammunition) count(30) avatar("item51")
 Bolt wear(Ammunition) count(20) avatar("item34")
@@ -62,13 +62,13 @@ LongBow cost(40) weight(30) wear(RangedWeapon) avatar("item76")
  flags Martial TwoHanded WearLarge
  weapon damage(1 6) ammunition(Arrow)
 
-LeatherArmor cost(20) weight(200) wear(Torso) bonus(2) wear_index(1) avatar("item10")
+LeatherArmor cost(20) weight(200) wear(Torso) bonus(2) wear_index(1) avatar("item10") ability(DamageReduciton)
  flags WearLeather
-ChainArmor cost(40) weight(400) wear(Torso) bonus(4) wear_index(2) avatar("item12")
+ChainArmor cost(40) weight(400) wear(Torso) bonus(4) wear_index(2) avatar("item12") ability(DamageReduciton) bonus(3)
  flags WearIron
-PlateArmor cost(60) weight(500) wear(Torso) bonus(6) wear_index(2) avatar("item13")
+PlateArmor cost(60) weight(500) wear(Torso) bonus(6) wear_index(2) avatar("item13") ability(DamageReduciton)
  flags WearIron
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) bonus(1) avatar("item17")
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) bonus(1) avatar("item17") ability(ShieldUse)
  flags WearShield
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar("item102")

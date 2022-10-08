@@ -1,11 +1,16 @@
 ApplyDamage: %герой получил%а [%1i] урона.
 ApplyKill: %герой упал%а на землю.
 AppTitle: Приключения в забытых Королевствах
-AttackMiss: %герой промазал%а.
+Armor: Броня
+ArmorNegateDamage: Броня поглатила урон.
+AttackMiss: %герой промазал%а ([-%1.2i]>[%2.2i]).
+AttackHit: %герой попал%а ([%1.2i]<[%2.2i]).
+AttackHitButParry: %герой попал%а ([%1.2i]<[%2.2i]), но %-5 парировал навыком %-6 ([%3.2i]<[%4.2i]).
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
+DodgeSkill: Уклонение
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Goblin: Гоблин
@@ -25,6 +30,12 @@ Brawl: Сила
 Charisma: Харизма
 Dexterity: Ловкость
 Wits: Интеллект
+
+HeavyWeaponSkill: Тяж. оружие
+PolearmSkill: Копья
+RangedWeaponSkill: Меткость
+ShieldUse: Щиты
+WeaponSkill: Оружие
 
 Damage: Урон
 Hits: Хиты

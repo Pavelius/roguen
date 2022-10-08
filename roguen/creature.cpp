@@ -16,14 +16,6 @@ static creature* findalive(point m) {
 	return 0;
 }
 
-static ability_s attack_ability(wear_s v) {
-	switch(v) {
-	case RangedWeapon: return ToHitRanged;
-	case ThrownWeapon: return ToHitThrown;
-	default: return ToHitMelee;
-	}
-}
-
 static ability_s damage_ability(wear_s v) {
 	switch(v) {
 	case RangedWeapon: return DamageRanged;
@@ -57,8 +49,12 @@ static bool isfreecr(point m) {
 	return area.isfree(m);
 }
 
-creature* creature::create(point m, variant kind) {
+creature* creature::create(point m, variant kind, variant character) {
 	if(!kind)
+		return 0;
+	if(!character)
+		character = "Monster";
+	if(!character.iskind<classi>())
 		return 0;
 	m = area.getfree(m, 10, isfreecr);
 	if(!area.isvalid(m))
@@ -70,9 +66,18 @@ creature* creature::create(point m, variant kind) {
 	if(pm) {
 		copy(p->basic, *pm);
 		p->feats = pm->feats;
+		p->advance(pm->use);
 	}
 	p->basic.create();
 	p->advance(kind, 0);
+	if(character.value)
+		p->advance(character, 0);
+	else {
+		p->basic.abilities[WeaponSkill] += 15 + p->get(Level) * 5;
+		p->basic.abilities[HeavyWeaponSkill] += 10 + p->get(Level) * 5;
+		p->basic.abilities[RangedWeaponSkill] += 15 + p->get(Level) * 5;
+		p->basic.abilities[ShieldUse] += 5 + p->get(Level) * 5;
+	}
 	p->levelup();
 	p->finish();
 	return p;
@@ -146,20 +151,53 @@ int creature::getdamage(wear_s v) const {
 	return result;
 }
 
+ability_s creature::matchparry(wear_s attack, int attacker_strenght, int value) const {
+	if(value < abilities[DodgeSkill])
+		return DodgeSkill;
+	if(value < abilities[WeaponSkill]
+		&& (attack == MeleeWeapon || attack == MeleeWeaponOffhand)
+		&& wears[MeleeWeapon]
+		&& (attacker_strenght - get(Brawl)) <= 20)
+		return WeaponSkill;
+	if(value < abilities[ShieldUse]
+		&& wears[MeleeWeaponOffhand]
+		&& wears[MeleeWeaponOffhand].is(ShieldUse))
+		return ShieldUse;
+	return (ability_s)0;
+}
+
 void creature::attack(creature& enemy, wear_s v, int bonus, int damage_multiplier) {
-	bonus += get(attack_ability(v));
-	bonus -= enemy.get(ParryValue);
-	auto result = rand() % 20 + 1;
-	if(result == 1 || (result != 20 && result < (10 - bonus))) {
-		act(getnm("AttackMiss"));
+	last_hit = d100();
+	last_parry = d100();
+	bonus += get(wears[v].geti().ability);
+	if(last_hit > 5 && last_hit > bonus) {
+		act(getnm("AttackMiss"), last_hit, bonus);
 		return;
 	}
+	auto parry = matchparry(v, get(Brawl), last_parry);
+	if(parry)
+		act(getnm("AttackHitButParry"), last_hit, bonus, last_parry, enemy.get(parry), enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+	else
+		act(getnm("AttackHit"), last_hit, bonus);
 	auto result_damage = getdamage(v);
-	result_damage = result_damage * damage_multiplier / 100;
-	enemy.damage(result_damage);
+	result_damage += (bonus - last_hit) / 10;
+	if(parry) {
+		if(parry && last_parry > last_hit)
+			return;
+		result_damage -= (get(parry) - last_parry) / 10;
+	}
+	if(result_damage > 0) {
+		result_damage -= get(DamageReduciton);
+		result_damage = result_damage * damage_multiplier / 100;
+		enemy.damage(result_damage);
+	}
 }
 
 void creature::damage(int v) {
+	if(v < 0) {
+		act(getnm("ArmorNegateDamage"));
+		return;
+	}
 	fixvalue(-v);
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
@@ -168,7 +206,7 @@ void creature::damage(int v) {
 		fixremove();
 		clear();
 	} else
-		act(getnm("ApplyDamage"), v);
+		acts(getnm("ApplyDamage"), v);
 }
 
 void creature::attackmelee(creature& enemy) {
@@ -372,6 +410,14 @@ void creature::update_basic() {
 
 void creature::update_abilities() {
 	auto& ci = getclass();
+	// Apply skills value
+	for(auto i = (ability_s)0; i < Hits; i = (ability_s)(i + 1)) {
+		auto n = bsdata<abilityi>::elements[i].basic;
+		if(n)
+			abilities[i] += abilities[n] / 2;
+	}
+	abilities[DamageMelee] += abilities[Brawl] / 10;
+	abilities[DamageThrown] += abilities[Brawl] / 10;
 	abilities[Speed] += 20;
 	auto level = abilities[Level];
 	if(level > ci.cap)
@@ -410,4 +456,9 @@ void creature::unlink() {
 void creature::act(const char* format, ...) const {
 	if(!player || player==this || area.is(player->getposition(), Visible))
 		actv(console, format, xva_start(format), getname(), is(Female));
+}
+
+void creature::acts(const char* format, ...) const {
+	if(!player || player == this || area.is(player->getposition(), Visible))
+		actv(console, format, xva_start(format), getname(), is(Female), ' ');
 }

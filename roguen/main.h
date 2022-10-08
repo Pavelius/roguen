@@ -25,12 +25,12 @@ enum class res {
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
+	LineOfSight,
 	Brawl, Dexterity, Wits, Charisma,
-	ToHit, ToHitMelee, ToHitRanged, ToHitThrown,
+	WeaponSkill, HeavyWeaponSkill, PolearmSkill, RangedWeaponSkill, DodgeSkill, ShieldUse,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	ParryValue, DamageReduciton,
-	Speed, LineOfSight,
-	FightLight, FightHeavy, Markship,
+	Speed,
 	Concentration, Healing,
 	Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
@@ -89,6 +89,7 @@ struct statable {
 	int			getbonus(ability_s v) const;
 };
 struct abilityi : nameable {
+	ability_s	basic;
 };
 struct racei : nameable {
 };
@@ -99,7 +100,7 @@ struct classi : nameable {
 struct feati : nameable {
 };
 struct weari : nameable {
-	ability_s	bonus;
+	ability_s	ability;
 };
 struct indexa : adat<point> {
 	void		select(point m, int range);
@@ -185,6 +186,7 @@ public:
 	class creature* getowner() const;
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
+	bool		is(ability_s v) const { return geti().ability == v; }
 	bool		is(feat_s v) const { return geti().flags.is(v); }
 	bool		is(wear_s v) const;
 	bool		iscountable() const { return geti().count != 0; }
@@ -217,6 +219,7 @@ struct monsteri : nameable, statable {
 	featable	feats;
 	const char*	treasure;
 	dice		appear, appear_outdoor;
+	variants	use;
 	const monsteri* parent;
 	bool		is(feat_s v) const { return feats.is(v); }
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
@@ -249,8 +252,9 @@ class creature : public wearable, public statable, public spellable {
 public:
 	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
-	static creature* create(point m, variant v);
+	static creature* create(point m, variant v, variant character = {});
 	void		act(const char* format, ...) const;
+	void		acts(const char* format, ...) const;
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
@@ -274,6 +278,7 @@ public:
 	bool		isenemy(const creature& opponent) const;
 	void		interaction(creature& opponent);
 	void		makemove();
+	ability_s	matchparry(wear_s attack, int attacker_strenght, int value) const;
 	void		movestep(direction_s i);
 	void		movestep(point m);
 	void		moveto(point m);
@@ -350,5 +355,6 @@ extern areamap		area;
 extern worldi		world;
 extern creaturea	creatures, enemies;
 extern creature*	last_enemy;
+extern int			last_hit, last_parry, last_damage;
 extern gamei		game;
 extern creature*	player;

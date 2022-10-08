@@ -1,12 +1,8 @@
 ﻿In file `rules/Items.txt`:
- Line 4: Not found requisit `damage`
- Line 33: Not found requisit `damage`
- Line 36: Not found requisit `damage`
- Line 38: Not found requisit `damage`
- Line 41: Not found requisit `damage`
- Line 44: Not found requisit `damage`
- Line 47: Not found requisit `damage`
- Line 50: Not found requisit `damage`
- Line 57: Not found requisit `damage`
- Line 60: Not found requisit `damage`
- Line 63: Not found requisit `damage`
+ Line 31: Not found requisit `ability`
+ Line 34: Not found requisit `ability`
+ Line 37: Not found requisit `ability`
+ Line 39: Not found requisit `ability`
+ Line 42: Not found requisit `ability`
+ Line 45: Not found requisit `ability`
+ Line 48: Not found requisit `ability`
