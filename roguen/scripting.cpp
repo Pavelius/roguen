@@ -3,7 +3,7 @@
 
 creaturea creatures, enemies, targets;
 creature* enemy;
-int	last_hit, last_parry;
+int	last_hit, last_hit_result, last_parry, last_parry_result;
 
 void animate_figures();
 
@@ -54,7 +54,6 @@ static void move_down_right(int bonus) {
 }
 
 static void attack_forward(int bonus) {
-	player->act("%герой успешно атаковал%а.");
 	player->fixaction();
 	player->fixeffect("HitVisual");
 	player->wait();
@@ -193,6 +192,10 @@ static void test_arena(int bonus) {
 	animate_figures();
 }
 
+static void show_detail_info_script(int bonus) {
+	show_detail_info = !show_detail_info;
+}
+
 void show_area(int bonus);
 
 BSDATA(script) = {
@@ -214,6 +217,7 @@ BSDATA(script) = {
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"ShowMinimap", show_area},
+	{"ShowDetailInfo", show_detail_info_script},
 	{"TestArena", test_arena},
 	{"ViewStuff", view_stuff},
 };

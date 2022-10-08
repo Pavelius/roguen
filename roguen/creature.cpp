@@ -1,6 +1,7 @@
 #include "main.h"
 
 creature* player;
+bool show_detail_info = true;
 
 static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
@@ -62,6 +63,7 @@ creature* creature::create(point m, variant kind, variant character) {
 	auto p = bsdata<creature>::add();
 	p->setposition(m);
 	p->setkind(kind);
+	p->class_id = character.value;
 	monsteri* pm = kind;
 	if(pm) {
 		copy(p->basic, *pm);
@@ -167,25 +169,31 @@ ability_s creature::matchparry(wear_s attack, int attacker_strenght, int value) 
 }
 
 void creature::attack(creature& enemy, wear_s v, int bonus, int damage_multiplier) {
-	last_hit = d100();
-	last_parry = d100();
+	last_hit = d100(); last_hit_result = 0;
+	last_parry = d100(); last_parry_result = 0;
 	bonus += get(wears[v].geti().ability);
+	last_hit_result = (bonus - last_hit) / 10;
 	if(last_hit > 5 && last_hit > bonus) {
-		act(getnm("AttackMiss"), last_hit, bonus);
+		if(show_detail_info)
+			act(getnm("AttackMiss"), last_hit, bonus);
 		return;
 	}
-	auto parry = matchparry(v, get(Brawl), last_parry);
-	if(parry)
-		act(getnm("AttackHitButParry"), last_hit, bonus, last_parry, enemy.get(parry), enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
-	else
-		act(getnm("AttackHit"), last_hit, bonus);
-	auto result_damage = getdamage(v);
-	result_damage += (bonus - last_hit) / 10;
+	auto parry = enemy.matchparry(v, get(Brawl), last_parry);
 	if(parry) {
-		if(parry && last_parry > last_hit)
+		last_parry_result = (get(parry) - last_parry) / 10;
+		if(last_parry_result > last_hit_result) {
+			if(show_detail_info)
+				act(getnm("AttackHitButParry"), last_hit, bonus, last_parry, enemy.get(parry), enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
 			return;
-		result_damage -= (get(parry) - last_parry) / 10;
+		}
 	}
+	if(show_detail_info) {
+		if(parry)
+			act(getnm("AttackHitButParry"), last_hit, bonus, last_parry, enemy.get(parry), enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+		else
+			act(getnm("AttackHit"), last_hit, bonus);
+	}
+	auto result_damage = getdamage(v) + last_hit_result + last_parry_result;
 	if(result_damage > 0) {
 		result_damage -= get(DamageReduciton);
 		result_damage = result_damage * damage_multiplier / 100;
@@ -195,18 +203,22 @@ void creature::attack(creature& enemy, wear_s v, int bonus, int damage_multiplie
 
 void creature::damage(int v) {
 	if(v < 0) {
-		act(getnm("ArmorNegateDamage"));
+		if(show_detail_info)
+			act(getnm("ArmorNegateDamage"));
 		return;
 	}
 	fixvalue(-v);
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
-		act(getnm("ApplyKill"), v);
+		if(show_detail_info)
+			act(getnm("ApplyKill"), v);
 		fixeffect("HitVisual");
 		fixremove();
 		clear();
-	} else
-		acts(getnm("ApplyDamage"), v);
+	} else {
+		if(show_detail_info)
+			acts(getnm("ApplyDamage"), v);
+	}
 }
 
 void creature::attackmelee(creature& enemy) {
@@ -395,6 +407,7 @@ void creature::update_wears() {
 				dress(ei.dress, getmultiplier(magic));
 		}
 		if(ei.ability) {
+			abilities[ei.ability] += ei.bonus;
 			switch(magic) {
 			case Cursed: abilities[ei.ability] -= 2; break;
 			case Blessed: case Artifact: abilities[ei.ability] += 1; break;

@@ -1,8 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 31: Not found requisit `ability`
- Line 34: Not found requisit `ability`
- Line 37: Not found requisit `ability`
- Line 39: Not found requisit `ability`
- Line 42: Not found requisit `ability`
- Line 45: Not found requisit `ability`
- Line 48: Not found requisit `ability`
+﻿In file `rules/Advancement.txt`:
+Wrong key name 'Crtl' in hotkey

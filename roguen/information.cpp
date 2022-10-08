@@ -16,20 +16,28 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 	case Hits: case Mana:
 		sb.addn("[~%1]\t%2i/%3i", getnameshort(i), value, value_maximum);
 		break;
-	case WeaponSkill: case HeavyWeaponSkill:
-	case PolearmSkill: case ShieldUse: case RangedWeaponSkill:
-		sb.addn("[~%1]\t%2i%%", getnameshort(i), value);
-		break;
 	default:
-		sb.addn("[~%1]\t%2i", getnameshort(i), value);
+		if(i>=WeaponSkill && i<= ShieldUse)
+			sb.addn("[~%1]\t%2i%%", getnameshort(i), value);
+		else
+			sb.addn("[~%1]\t%2i", getnameshort(i), value);
 		break;
 	}
-	
+}
+
+static const char* getrace(variant v, bool female) {
+	if(female) {
+		char temp[260]; stringbuilder sb(temp);
+		sb.add("%1Female");
+		return getnm(temp);
+	} else
+		return getnm(bsdata<racei>::elements[v.value].id);
 }
 
 void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("Кастор");
-	sb.addn("Эльф мужчина");
+	sb.addn(getrace(getkind(), is(Female)));
+	sb.addn(getnm(getclass().id));
 	sb.addn("---");
 	sb.addn("$Tab -25");
 	for(auto i = Brawl; i <= Charisma; i = (ability_s)(i + 1))
@@ -40,6 +48,7 @@ void creature::getinfo(stringbuilder& sb) const {
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	sb.addn("$Tab -40");
+	addf(sb, DamageReduciton, abilities[DamageReduciton]);
 	addf(sb, Hits, abilities[Hits], abilities[HitsMaximum]);
 	addf(sb, Mana, abilities[Mana], abilities[ManaMaximum]);
 	addf(sb, Money, getmoney());

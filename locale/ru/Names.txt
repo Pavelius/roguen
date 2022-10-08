@@ -31,13 +31,16 @@ Charisma: Харизма
 Dexterity: Ловкость
 Wits: Интеллект
 
-HeavyWeaponSkill: Тяж. оружие
+HeavyWeaponSkill: Двуручное
 PolearmSkill: Копья
 RangedWeaponSkill: Меткость
 ShieldUse: Щиты
-WeaponSkill: Оружие
+WeaponSkill: Одноручное
+
+Fighter: Воин
 
 Damage: Урон
+DamageReduciton: Броня
 Hits: Хиты
 Mana: Мана
 Money: Деньги

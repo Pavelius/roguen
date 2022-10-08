@@ -17,6 +17,10 @@
 
 #pragma once
 
+const int version_major = 0;
+const int version_minor = 0;
+const int version_build = 1;
+
 enum class res {
 	Monsters,
 	Borders, Floor, Walls, Decals, Features, Shadows, Items,
@@ -354,7 +358,8 @@ inline int		d100() { return rand() % 100; }
 extern areamap		area;
 extern worldi		world;
 extern creaturea	creatures, enemies;
-extern creature*	last_enemy;
-extern int			last_hit, last_parry, last_damage;
 extern gamei		game;
+extern creature*	last_enemy;
+extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;
 extern creature*	player;
+extern bool			show_detail_info;
