@@ -427,5 +427,8 @@
     <Text Include="..\locale\ru\MonsterNames.txt">
       <Filter>Locale</Filter>
     </Text>
+    <Text Include="..\logs.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

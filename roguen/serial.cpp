@@ -91,7 +91,7 @@ void gamei::read() {
 	serial_area(*this, false);
 }
 
-void save_log() {
+void gamei::writelog() {
 	io::file file("logs.txt", StreamWrite|StreamText);
 	if(!file)
 		return;

@@ -72,6 +72,10 @@ bool creature::isactive() const {
 	return this == player;
 }
 
+bool creature::isplayer() const {
+	return this == player;
+}
+
 bool creature::isenemy(const creature& opponent) const {
 	return opponent.is(is(Enemy) ? Ally : Enemy);
 }
@@ -197,10 +201,13 @@ void creature::damage(int v) {
 	fixvalue(-v);
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
+		auto player_killed = isplayer();
 		logs(getnm("ApplyKill"), v);
 		fixeffect("HitVisual");
 		fixremove();
 		clear();
+		if(player_killed)
+			game.endgame();
 	}
 }
 

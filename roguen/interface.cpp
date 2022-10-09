@@ -857,6 +857,8 @@ void actable::pressspace() {
 		{KeyEnter, (void*)1},
 		{}
 	};
+	if(!console)
+		return;
 	pushvalue push_key(keybinds);
 	answers an;
 	an.add((void*)1, getnm("Continue"));
@@ -1044,11 +1046,9 @@ void show_area(int bonus) {
 	scene(scene_area);
 }
 
-void save_log();
-
 void show_logs(int bonus) {
 	int maximum = -1, format_origin = 0, origin = 0;
-	save_log();
+	game.writelog();
 	while(ismodal()) {
 		paintstart();
 		fillwindow();

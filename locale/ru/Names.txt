@@ -11,6 +11,7 @@ Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
+Continue: Продолжить
 DodgeSkill: Уклонение
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
@@ -19,6 +20,7 @@ Inventory: Одетые предметы
 No: Нет
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
+PlayerKilled: Вы погибли смертью храбрых.
 Rounds: Раунды
 Tree: Дерево
 WebBreak: %герой порвал%а паутину.

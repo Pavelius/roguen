@@ -85,3 +85,9 @@ void gamei::play() {
 	while(checkalive() && !draw::isnext())
 		game.playminute();
 }
+
+void gamei::endgame() {
+	actable::actv(console, getnm("PlayerKilled"), 0, 0, 0);
+	actable::pressspace();
+	writelog();
+}

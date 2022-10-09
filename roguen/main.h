@@ -281,6 +281,7 @@ public:
 	bool		is(feat_s v) const { return feats.is(v); }
 	bool		isactive() const;
 	bool		isenemy(const creature& opponent) const;
+	bool		isplayer() const;
 	void		interaction(creature& opponent);
 	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
 	void		makemove();
@@ -340,6 +341,7 @@ class gamei : public geoposition {
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:
 	static void	all(creature::fnupdate proc);
+	static void endgame();
 	unsigned	getminutes() const { return minutes; }
 	void		pass(unsigned minutes);
 	void		passminute();
@@ -347,6 +349,7 @@ public:
 	void		playminute();
 	void		read();
 	void		write();
+	static void writelog();
 };
 namespace draw {
 struct keybind {
