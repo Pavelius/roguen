@@ -30,7 +30,7 @@ enum class res {
 };
 enum ability_s : unsigned char {
 	LineOfSight,
-	Brawl, Dexterity, Wits, Charisma,
+	Strenght, Dexterity, Wits, Charisma,
 	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	ParryValue, DamageReduciton,
@@ -56,7 +56,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
-	Blunt, Martial, TwoHanded, CutWoods, ArmorPirce,
+	Blunt, Martial, TwoHanded, CutWoods, Retaliate,
 	WearLeather, WearIron, WearLarge, WearShield, Coins,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
@@ -145,7 +145,9 @@ public:
 };
 struct itemi : nameable {
 	struct weaponi {
-		char	parry, damage;
+		char	parry, enemy_parry;
+		char	block, enemy_block, block_ranged;
+		char	damage, pierce;
 		short 	ammunition;
 	};
 	int			cost, weight, count;
@@ -232,6 +234,11 @@ struct monsteri : nameable, statable {
 struct spellable {
 	char		spells[Sleep + 1];
 };
+struct skilli {
+	ability_s	skill;
+	int			value;
+};
+typedef skilli defencet[3];
 class creature : public wearable, public statable, public spellable {
 	unsigned short class_id;
 	statable	basic;
@@ -243,10 +250,14 @@ class creature : public wearable, public statable, public spellable {
 	void		advance(variant kind, int level);
 	void		advance(variants elements);
 	void		advance(variant element);
+	void		damage(const item& weapon, int effect);
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
 	void		fixcantgo() const;
 	void		fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const;
+	int			getblocking(const item& enemy_weapon, const item& weapon) const;
+	int			getparrying(const item& enemy_weapon, const item& weapon) const;
+	int			getmightpenalty(int enemy_strenght) const;
 	void		interaction(point m);
 	void		levelup();
 	void		lookcreatures();
@@ -273,6 +284,7 @@ public:
 	int			get(spell_s v) const { return spells[v]; }
 	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
 	int			getdamage(wear_s w) const;
+	void		getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const;
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const { return get(LineOfSight); }
 	int			getwait() const { return wait_seconds; }
@@ -285,7 +297,6 @@ public:
 	void		interaction(creature& opponent);
 	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
 	void		makemove();
-	ability_s	matchparry(wear_s attack, int attacker_strenght, int value) const;
 	void		movestep(direction_s i);
 	void		movestep(point m);
 	void		moveto(point m);

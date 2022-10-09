@@ -54,7 +54,9 @@ BSMETA(itemi) = {
 	BSREQ(wear_index),
 	{}};
 BSMETA(itemi::weaponi) = {
-	BSREQ(parry), BSREQ(damage),
+	BSREQ(parry), BSREQ(enemy_parry),
+	BSREQ(block), BSREQ(enemy_block), BSREQ(block_ranged),
+	BSREQ(damage), BSREQ(pierce),
 	BSENM(ammunition, itemi),
 	{}};
 BSMETA(advancement) = {

@@ -140,48 +140,71 @@ int creature::getdamage(wear_s v) const {
 	return result;
 }
 
-ability_s creature::matchparry(wear_s attack, int attacker_strenght, int value) const {
-	if(value < abilities[DodgeSkill])
-		return DodgeSkill;
-	auto parry_weapon = wears[MeleeWeapon].geti().weapon.parry;
-	if(value < abilities[WeaponSkill]
-		&& parry_weapon >= 0
-		&& (attack == MeleeWeapon || attack == MeleeWeaponOffhand)
-		&& wears[MeleeWeapon]
-		&& (attacker_strenght - get(Brawl)) <= 20)
-		return WeaponSkill;
-	if(value < abilities[ShieldUse]
-		&& wears[MeleeWeaponOffhand]
-		&& wears[MeleeWeaponOffhand].is(ShieldUse))
-		return ShieldUse;
+void creature::getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const {
+	result[0].skill = WeaponSkill;
+	result[0].value = get(WeaponSkill) + getparrying(attacker_weapon, wears[MeleeWeapon]) - getmightpenalty(attacker_strenght);
+	result[1].skill = ShieldUse;
+	result[1].value = get(ShieldUse) + getblocking(attacker_weapon, wears[MeleeWeaponOffhand]) - getmightpenalty(attacker_strenght);
+	result[2].skill = DodgeSkill;
+	result[2].value = get(DodgeSkill);
+	for(auto& e : result) {
+		if(e.value < 0)
+			e.value = 0;
+	}
+}
+
+static ability_s getbestdefence(const defencet& defences, int parry_result, int& parry_skill, int& parry_effect) {
+	parry_effect = 0;
+	for(auto& e : defences) {
+		if(parry_result <= e.value) {
+			parry_skill = e.value;
+			parry_effect = (e.value - parry_result) / 10;
+			return e.skill;
+		}
+	}
 	return (ability_s)0;
 }
 
-void creature::attack(creature& enemy, wear_s v, int weapon_skill, int damage_multiplier) {
+void creature::damage(const item& weapon, int effect) {
+	auto weapon_damage = weapon.getdamage();
+	auto damage_reduction = get(DamageReduciton) - weapon.geti().weapon.pierce;
+	if(damage_reduction < 0)
+		damage_reduction = 0;
+	auto result_damage = weapon_damage - damage_reduction + effect;
+	fixdamage(result_damage, weapon_damage, 0, -damage_reduction, effect, 0);
+	damage(result_damage);
+}
+
+void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_multiplier) {
+	skilli defences[3] = {};
+	int parry_skill = 0;
 	last_hit = d100(); last_hit_result = 0;
 	last_parry = d100(); last_parry_result = 0;
-	weapon_skill += get(wears[v].geti().ability);
-	last_hit_result = (weapon_skill - last_hit) / 10;
-	if(last_hit > 5 && last_hit > weapon_skill) {
-		logs(getnm("AttackMiss"), last_hit, weapon_skill);
+	attack_skill += get(wears[v].geti().ability);
+	last_hit_result = (attack_skill - last_hit) / 10;
+	if(last_hit > 5 && last_hit > attack_skill) {
+		logs(getnm("AttackMiss"), last_hit, attack_skill);
 		return;
 	}
-	auto parry = enemy.matchparry(v, get(Brawl), last_parry);
+	enemy.getdefence(get(Strenght), wears[v], defences);
+	auto parry = getbestdefence(defences, last_parry, parry_skill, last_parry_result);
 	if(parry) {
-		auto parry_skill = get(parry);
-		last_parry_result = (parry_skill - last_parry) / 10;
 		if(last_parry_result > last_hit_result) {
-			logs(getnm("AttackHitButParryCritical"), last_hit, weapon_skill, last_parry, enemy.get(parry), enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+			logs(getnm("AttackHitButParryCritical"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+			if(parry == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate))
+				damage(enemy.wears[MeleeWeapon], last_parry_result - last_hit_result);
 			return;
 		}
 	}
 	if(parry)
-		logs(getnm("AttackHitButParrySuccess"), last_hit, weapon_skill, last_parry, enemy.get(parry), enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+		logs(getnm("AttackHitButParrySuccess"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
 	else
-		logs(getnm("AttackHitButParryFail"), last_hit, weapon_skill, last_parry, enemy.getname(), enemy.get(WeaponSkill), enemy.get(DodgeSkill), enemy.get(ShieldUse));
+		logs(getnm("AttackHitButParryFail"), last_hit, attack_skill, last_parry, enemy.getname(), defences[0].value, defences[1].value, defences[2].value);
 	auto ability_damage = get(damage_ability(v));
 	auto weapon_damage = wears[v].getdamage();
-	auto damage_reduction = enemy.get(DamageReduciton);
+	auto damage_reduction = enemy.get(DamageReduciton) - wears[v].geti().weapon.pierce;
+	if(damage_reduction < 0)
+		damage_reduction = 0;
 	auto result_damage = weapon_damage + ability_damage - damage_reduction + last_hit_result - last_parry_result;
 	enemy.fixdamage(result_damage, weapon_damage, ability_damage, -damage_reduction, last_hit_result, -last_parry_result);
 	//result_damage = result_damage * damage_multiplier / 100;
@@ -235,7 +258,7 @@ void creature::movestep(point ni) {
 	auto m = getposition();
 	if(area.is(m, Webbed)) {
 		wait(2);
-		if(!roll(Brawl)) {
+		if(!roll(Strenght)) {
 			act(getnm("WebEntagled"));
 			wait();
 			fixaction();
@@ -329,7 +352,7 @@ void creature::makemove() {
 	update();
 	// Dazzled creature don't make turn
 	if(is(Stun)) {
-		if(roll(Brawl))
+		if(roll(Strenght))
 			remove(Stun);
 		else {
 			wait();
@@ -412,9 +435,9 @@ void creature::update_basic() {
 }
 
 void creature::update_abilities() {
-	abilities[DamageMelee] += abilities[Brawl] / 10;
-	abilities[DamageThrown] += abilities[Brawl] / 10;
-	abilities[Speed] += abilities[Dexterity];
+	abilities[DamageMelee] += get(Strenght) / 10;
+	abilities[DamageThrown] += get(Strenght) / 10;
+	abilities[Speed] += get(Dexterity);
 }
 
 void creature::update() {
@@ -443,4 +466,32 @@ void creature::unlink() {
 void creature::act(const char* format, ...) const {
 	if(!player || player == this || area.is(player->getposition(), Visible))
 		actv(console, format, xva_start(format), getname(), is(Female));
+}
+
+int creature::getmightpenalty(int enemy_strenght) const {
+	auto strenght = get(Strenght);
+	if(strenght < enemy_strenght)
+		return enemy_strenght - strenght;
+	return 0;
+}
+
+int creature::getblocking(const item& enemy_weapon, const item& weapon) const {
+	if(!weapon || !weapon.is(ShieldUse))
+		return 0;
+	auto value = enemy_weapon.geti().weapon.enemy_block;
+	if(enemy_weapon.is(RangedWeapon))
+		value += weapon.geti().weapon.block_ranged;
+	else
+		value += weapon.geti().weapon.block;
+	return value;
+}
+
+int creature::getparrying(const item& enemy_weapon, const item& weapon) const {
+	if(!weapon)
+		return 0;
+	if(enemy_weapon.is(RangedWeapon))
+		return 0;
+	auto value = enemy_weapon.geti().weapon.enemy_parry;
+	value += weapon.geti().weapon.parry;
+	return value;
 }

@@ -1,27 +1,27 @@
 #Monster
 
 Goblin avatar("0") treasure(RC) appear(2 8) appear_outdoor(6 60)
- abilities Brawl(20) Dexterity(40) WeaponSkill(20) DodgeSkill(20) HitsMaximum(5)
+ abilities Strenght(20) Dexterity(40) WeaponSkill(20) DodgeSkill(20) HitsMaximum(5)
  feats SunSensitive
  use Dagger
 GoblinFemale avatar("0_f") parent(Goblin)
- abilities Brawl(20) Dexterity(40) WeaponSkill(15) DodgeSkill(10) HitsMaximum(4)
+ abilities Strenght(20) Dexterity(40) WeaponSkill(15) DodgeSkill(10) HitsMaximum(4)
  feats SunSensitive Female
 CityGuard avatar("57")
- abilities Brawl(40) Dexterity(20) WeaponSkill(30) DodgeSkill(10) ShieldUse(40) HitsMaximum(10)
+ abilities Strenght(40) Dexterity(20) WeaponSkill(30) DodgeSkill(10) ShieldUse(40) HitsMaximum(10)
  use Sword Shield ChainArmor
 OrcWarrior avatar("1")
- abilities Brawl(40) Dexterity(20) WeaponSkill(30) DodgeSkill(15) HitsMaximum(15)
+ abilities Strenght(40) Dexterity(20) WeaponSkill(30) DodgeSkill(15) HitsMaximum(15)
  use Sword LeatherArmor
 Ettin avatar("47")
- abilities Brawl(70) Dexterity(20) WeaponSkill(25) DodgeSkill(10) HitsMaximum(40)
+ abilities Strenght(70) Dexterity(20) WeaponSkill(35) DodgeSkill(10) HitsMaximum(50)
  use Club
 HillGiant avatar("31")
- abilities Brawl(80) Dexterity(10) WeaponSkill(25) DodgeSkill(10) HitsMaximum(50)
+ abilities Strenght(70) Dexterity(10) WeaponSkill(30) DodgeSkill(10) HitsMaximum(50)
  use Club
 ChaosHydra avatar("33")
- abilities Brawl(65) Dexterity(10) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
+ abilities Strenght(65) Dexterity(10) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
 Minotaur avatar("83")
- abilities Brawl(60) Dexterity(30) WeaponSkill(50) DodgeSkill(20) HitsMaximum(20)
+ abilities Strenght(60) Dexterity(30) WeaponSkill(60) DodgeSkill(20) HitsMaximum(20)
  use Halberd
 Bartender avatar("130")

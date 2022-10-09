@@ -29,25 +29,25 @@ SilverAmulet cost(1000) weight(4) avatar("item168")
 GoldAmulet cost(1600) weight(5) avatar("item175")
 
 BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar("item189") ability(WeaponSkill)
- flags Martial CutWoods ArmorPierce
- weapon damage(3) parry(-100)
+ flags CutWoods
+ weapon damage(3) parry(-100) pierce(2)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1") ability(WeaponSkill)
- flags Martial Blunt
- weapon damage(2)
+ weapon damage(2) parry(-20)
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0") ability(WeaponSkill)
  weapon damage(1)
 Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345") ability(WeaponSkill)
- flags Martial Slow TwoHanded WearLarge CutWoods ArmorPierce
- weapon damage(5) parry(-100)
-HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5") ability(WeaponSkill)
- flags Martial
- weapon damage(2)
+ flags TwoHanded WearLarge CutWoods
+ weapon damage(5) parry(-100) pierce(2)
+HandAxe cost(4) weight(30) wear(MeleeWeapon) wear_index(0) avatar("item5") ability(WeaponSkill)
+ weapon damage(2) parry(-100) pierce(1)
 Mace cost(5) weight(30) wear(MeleeWeapon) avatar("item24") ability(WeaponSkill)
- flags Martial Blunt
- weapon damage(2)
+ weapon damage(2) parry(-30)
+Spear cost(10) weight(30) wear(MeleeWeapon) avatar("item60") wear_index(22) ability(WeaponSkill)
+ flags Retaliate
+ weapon damage(1) parry(10)
 Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4") wear_index(23) ability(WeaponSkill)
  flags Martial
- weapon damage(2)
+ weapon damage(2) parry(-10)
 
 Arrow wear(Ammunition) count(30) avatar("item51")
 Bolt wear(Ammunition) count(20) avatar("item34")

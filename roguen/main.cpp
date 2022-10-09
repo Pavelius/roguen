@@ -78,11 +78,12 @@ static void main_start() {
 	create_area("LightForest");
 	area.set(rc, NoFeature);
 	create_item({4, 4}, "Sword");
+	create_item({4, 4}, "BattleAxe");
 	create_item({5, 4}, "LeatherArmor");
 	create_item({6, 4}, "PlateArmor");
-	create_item({6, 5}, "Shield");
-	create_item({4, 4}, "BattleAxe");
+	create_item({4, 5}, "Spear");
 	create_item({5, 5}, "Halberd");
+	create_item({6, 5}, "Shield");
 	create_item({5, 7}, "AquaPotion");
 	create_item({6, 7}, "BluePotion");
 	player = creature::create({5, 5}, "Human", "Fighter");

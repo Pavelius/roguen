@@ -14,7 +14,7 @@ BSDATA(feati) = {
 	{"Martial"},
 	{"TwoHanded"},
 	{"CutWoods"},
-	{"ArmorPierce"},	
+	{"Retaliate"},
 	{"WearLeather"},
 	{"WearIron"},
 	{"WearLarge"},

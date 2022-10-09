@@ -40,7 +40,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn(getnm(getclass().id));
 	sb.addn("---");
 	sb.addn("$Tab -25");
-	for(auto i = Brawl; i <= Charisma; i = (ability_s)(i + 1))
+	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	sb.addn("$Tab -25");

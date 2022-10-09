@@ -1,2 +1,2 @@
 ﻿In file `rules/Items.txt`:
- Line 39: Not found identifier `HeavyWeaponSkill`
+ Line 40: Not found identifier `ArmorPierce`

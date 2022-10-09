@@ -2,11 +2,11 @@
 
 BSDATA(abilityi) = {
 	{"LineOfSight"},
-	{"Brawl"},
+	{"Strenght"},
 	{"Dexterity"},
 	{"Wits"},
 	{"Charisma"},
-	{"WeaponSkill", Brawl},
+	{"WeaponSkill", Strenght},
 	{"BalisticSkill", Dexterity},
 	{"DodgeSkill", Dexterity},
 	{"ShieldUse", Dexterity},

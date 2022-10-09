@@ -1,7 +1,7 @@
 #Advancement
 
 Fighter 0
- elements Brawl+40 Dexterity+30 Wits+20 Charisma+20 WeaponSkill+40 ShieldUse+10 HitsMaximum+20
+ elements Strenght+40 Dexterity+30 Wits+20 Charisma+20 WeaponSkill+40 ShieldUse+10 HitsMaximum+20
 Fighter 0
  elements ChainArmor Sword
 
