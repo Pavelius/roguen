@@ -54,13 +54,13 @@ Bolt wear(Ammunition) count(20) avatar("item34")
 
 Crossbow cost(30) weight(50) wear(RangedWeapon) avatar("item67")
  flags Martial Slow TwoHanded
- weapon damage(2 7)
+ weapon damage(4)
 ShortBow cost(25) weight(30) wear(RangedWeapon) avatar("item50")
  flags Martial TwoHanded
- weapon damage(1 6) ammunition(Arrow)
+ weapon damage(2) ammunition(Arrow)
 LongBow cost(40) weight(30) wear(RangedWeapon) avatar("item76")
  flags Martial TwoHanded WearLarge
- weapon damage(1 6) ammunition(Arrow)
+ weapon damage(3) ammunition(Arrow)
 
 LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar("item10") ability(DamageReduciton) bonus(1)
  flags WearLeather
@@ -70,6 +70,7 @@ PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar("item13") abili
  flags WearIron
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar("item17") ability(ShieldUse)
  flags WearShield
+ weapon block_ranged(10)
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar("item102")
 BlackPotion cost(50) weight(10) wear(Potion) avatar("item64")

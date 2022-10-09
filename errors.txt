@@ -1,2 +1,2 @@
 ﻿In file `rules/Items.txt`:
- Line 40: Not found identifier `ArmorPierce`
+ Line 73: Not found requisit `block_range`

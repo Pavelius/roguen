@@ -9,7 +9,7 @@ GoblinFemale avatar("0_f") parent(Goblin)
  feats SunSensitive Female
 CityGuard avatar("57")
  abilities Strenght(40) Dexterity(20) WeaponSkill(30) DodgeSkill(10) ShieldUse(40) HitsMaximum(10)
- use Sword Shield ChainArmor
+ use Sword ChainArmor
 OrcWarrior avatar("1")
  abilities Strenght(40) Dexterity(20) WeaponSkill(30) DodgeSkill(15) HitsMaximum(15)
  use Sword LeatherArmor

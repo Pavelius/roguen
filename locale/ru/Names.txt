@@ -12,7 +12,6 @@ CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 Continue: Продолжить
-DodgeSkill: Уклонение
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 IcedSlice: %герой подскалзнул%ась на льду.
@@ -28,12 +27,13 @@ WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
 YouCutWood: %герой срубил%а %-1.
 
-Brawl: Сила
+Strenght: Сила
 Charisma: Харизма
 Dexterity: Ловкость
 Wits: Интеллект
 
-RangedWeaponSkill: Меткость
+BalisticSkill: Меткость
+DodgeSkill: Уклонение
 ShieldUse: Щиты
 WeaponSkill: Оружие
 
