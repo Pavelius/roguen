@@ -510,7 +510,7 @@ void creature::paint() const {
 		else
 			image(pa, 10 + 25, flags);
 	}
-	if(player == this)
+	if(player == this || player->getenemy()==this)
 		paintbars();
 }
 

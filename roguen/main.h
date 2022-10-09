@@ -240,7 +240,7 @@ struct skilli {
 };
 typedef skilli defencet[3];
 class creature : public wearable, public statable, public spellable {
-	unsigned short class_id;
+	unsigned short class_id, enemy_id;
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
@@ -256,6 +256,7 @@ class creature : public wearable, public statable, public spellable {
 	void		fixcantgo() const;
 	void		fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const;
 	int			getblocking(const item& enemy_weapon, const item& weapon, int value) const;
+	unsigned short getid() const { return this - bsdata<creature>::elements; }
 	int			getparrying(const item& enemy_weapon, const item& weapon, int value) const;
 	int			getmightpenalty(int enemy_strenght) const;
 	void		interaction(point m);
@@ -285,6 +286,7 @@ public:
 	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
 	int			getdamage(wear_s w) const;
 	void		getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const;
+	creature*	getenemy() const { return enemy_id == 0xFFFF ? 0 : bsdata<creature>::elements + enemy_id; }
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const { return get(LineOfSight); }
 	int			getwait() const { return wait_seconds; }
@@ -306,6 +308,7 @@ public:
 	bool		roll(ability_s v, int bonus = 0) const;
 	void		say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
 	void		set(feat_s v) { feats.set(v); }
+	void		setenemy(const creature* p) { enemy_id = p ? p->getid() : 0xFFFF; }
 	void		unlink();
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };

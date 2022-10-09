@@ -183,6 +183,7 @@ void creature::damage(const item& weapon, int effect) {
 void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_multiplier) {
 	skilli defences[3] = {};
 	int parry_skill = 0;
+	enemy.setenemy(this); setenemy(&enemy);
 	last_hit = 1 + d100(); last_hit_result = 0;
 	last_parry = 1 + d100(); last_parry_result = 0;
 	attack_skill += get(wears[v].geti().ability);
@@ -231,6 +232,8 @@ void creature::damage(int v) {
 	fixvalue(-v);
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
+		if(d100() < 40)
+			area.set(getposition(), Blooded);
 		auto player_killed = isplayer();
 		logs(getnm("ApplyKill"), v);
 		fixeffect("HitVisual");
@@ -468,6 +471,11 @@ void creature::moveto(point ni) {
 
 void creature::unlink() {
 	boosti::remove(this);
+	auto id = getid();
+	for(auto& e : bsdata<creature>()) {
+		if(e.enemy_id == id)
+			e.enemy_id = 0xFFFF;
+	}
 }
 
 void creature::act(const char* format, ...) const {

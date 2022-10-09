@@ -77,6 +77,9 @@ static void main_start() {
 	rect rc = {4, 4, 8, 8};
 	create_area("LightForest");
 	area.set(rc, NoFeature);
+	area.set({3, 3}, Iced);
+	area.set({3, 4}, Iced);
+	area.set({5, 4}, Iced);
 	create_item({4, 4}, "Sword");
 	create_item({4, 4}, "BattleAxe");
 	create_item({5, 4}, "LeatherArmor");
