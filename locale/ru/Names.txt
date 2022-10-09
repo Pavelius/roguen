@@ -17,11 +17,14 @@ DropdownItem: %герой положил%а %-1.
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
 No: Нет
+Parry: Парирование
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
+Pierce: Проникание
 PlayerKilled: Вы погибли смертью храбрых.
 Rounds: Раунды
 Tree: Дерево
+TwoHanded: Двуручное
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
@@ -44,6 +47,9 @@ DamageReduciton: Броня
 Hits: Хиты
 Mana: Мана
 Money: Деньги
+
+CutWoods: Рубит деревья
+Retaliate: Ответный удар
 
 Ammunition: Амуниция
 Backward: Спина

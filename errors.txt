@@ -1,2 +1,11 @@
 ﻿In file `rules/Items.txt`:
- Line 73: Not found requisit `block_range`
+ Line 38: Not found identifier `WearLarge`
+ Line 48: Not found identifier `Martial`
+ Line 55: Not found identifier `Martial`
+ Line 58: Not found identifier `Martial`
+ Line 61: Not found identifier `Martial`
+ Line 61: Not found identifier `WearLarge`
+ Line 65: Not found identifier `WearLeather`
+ Line 67: Not found identifier `WearIron`
+ Line 69: Not found identifier `WearIron`
+ Line 71: Not found identifier `WearShield`

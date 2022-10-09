@@ -56,8 +56,8 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
-	Blunt, Martial, TwoHanded, CutWoods, Retaliate,
-	WearLeather, WearIron, WearLarge, WearShield, Coins,
+	Blunt, TwoHanded, CutWoods, Retaliate,
+	Coins,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };

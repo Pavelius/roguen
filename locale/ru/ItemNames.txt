@@ -29,12 +29,13 @@ SilverRing: Серебрянное кольцо
 
 BattleAxe: Боевой топор
 Halberd: Алебарда
+Spear: Копье
+Sword: Меч
 
 LeatherArmor: Кожанная броня
 ChainArmor: Кольчуга
 PlateArmor: Латы
 Shield: Щит
-Sword: Меч
 
 Lags: Древесина
 SmallLags: Маленькая ветка

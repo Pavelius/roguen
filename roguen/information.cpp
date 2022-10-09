@@ -56,17 +56,39 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());
 }
 
+static void addv(stringbuilder& sb, const char* id, int value) {
+	if(!value)
+		return;
+	sb.adds("%-1%+2i", getnm(id), value);
+}
+
+static void addv(stringbuilder& sb, const char* id) {
+	sb.adds(getnm(id));
+}
+
+static void addv(stringbuilder& sb, ability_s id, int value) {
+	addv(sb, bsdata<abilityi>::elements[id].getname(), value);
+}
+
+static void addv(stringbuilder& sb, const featable& feats) {
+	for(auto v = 0; v < 32; v++) {
+		if(feats.is(v))
+			addv(sb, bsdata<feati>::elements[v].id);
+	}
+}
+
 void item::getinfo(stringbuilder& sb, bool need_name) const {
 	auto& ei = geti();
 	if(need_name)
 		sb.adds(getname());
+	addv(sb, Damage, ei.weapon.damage);
+	addv(sb, "Pierce", ei.weapon.pierce);
+	addv(sb, "Parry", ei.weapon.parry);
+	addv(sb, "EnemyParry", ei.weapon.enemy_parry);
 	switch(ei.wear) {
-	case MeleeWeapon:
-		sb.adds("%-Damage %1i", ei.weapon.damage);
-		break;
 	case Torso:
-		if(ei.bonus)
-			sb.adds("%-Armor %1i", ei.bonus);
+		addv(sb, DamageReduciton, ei.bonus);
 		break;
 	}
+	addv(sb, ei.flags);
 }
