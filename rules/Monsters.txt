@@ -25,3 +25,4 @@ Minotaur avatar("83")
  abilities Strenght(60) Dexterity(30) WeaponSkill(60) DodgeSkill(20) HitsMaximum(20)
  use Halberd
 Bartender avatar("130")
+ abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
