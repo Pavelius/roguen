@@ -90,3 +90,12 @@ void gamei::read() {
 	serial_game(false);
 	serial_area(*this, false);
 }
+
+void save_log() {
+	io::file file("logs.txt", StreamWrite|StreamText);
+	if(!file)
+		return;
+	auto p = actable::getlog();
+	if(p)
+		file << p;
+}

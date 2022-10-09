@@ -282,3 +282,12 @@ void draw::textfs(const char* string) {
 	width = maxcaret.x;
 	height = maxcaret.y;
 }
+
+void draw::textfs(const char* string, int& cashe_origin, int& string_origin) {
+	textf(string);
+	if(text_start_string)
+		string_origin = text_start_string - string;
+	cashe_origin = text_start_horiz;
+	width = maxcaret.x;
+	height = maxcaret.y;
+}

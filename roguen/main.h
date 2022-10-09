@@ -31,7 +31,7 @@ enum class res {
 enum ability_s : unsigned char {
 	LineOfSight,
 	Brawl, Dexterity, Wits, Charisma,
-	WeaponSkill, HeavyWeaponSkill, PolearmSkill, RangedWeaponSkill, DodgeSkill, ShieldUse,
+	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	ParryValue, DamageReduciton,
 	Speed,
@@ -90,7 +90,6 @@ extern point m2s(point v);
 struct statable {
 	char		abilities[Money + 1];
 	void		create();
-	int			getbonus(ability_s v) const;
 };
 struct abilityi : nameable {
 	ability_s	basic;
@@ -112,10 +111,12 @@ struct indexa : adat<point> {
 class actable {
 	variant		kind; // Race or monster
 public:
-	void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n') const;
+	static void	actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n');
 	static bool confirm(const char* format, ...);
 	variant		getkind() const { return kind; }
+	static const char* getlog();
 	const char*	getname() const { return kind.getname(); }
+	static void	logv(const char* format, const char* format_param, const char* name, bool female);
 	static void	pressspace();
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void		setkind(variant v) { kind = v; }
@@ -245,6 +246,7 @@ class creature : public wearable, public statable, public spellable {
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
 	void		fixcantgo() const;
+	void		fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const;
 	void		interaction(point m);
 	void		levelup();
 	void		lookcreatures();
@@ -258,7 +260,6 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	static creature* create(point m, variant v, variant character = {});
 	void		act(const char* format, ...) const;
-	void		acts(const char* format, ...) const;
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
@@ -281,6 +282,7 @@ public:
 	bool		isactive() const;
 	bool		isenemy(const creature& opponent) const;
 	void		interaction(creature& opponent);
+	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
 	void		makemove();
 	ability_s	matchparry(wear_s attack, int attacker_strenght, int value) const;
 	void		movestep(direction_s i);
@@ -352,9 +354,9 @@ struct keybind {
 	const void*	data;
 	constexpr explicit operator bool() const { return key != 0; }
 };
-bool			isnext();
+bool				isnext();
 }
-inline int		d100() { return rand() % 100; }
+inline int			d100() { return rand() % 100; }
 extern areamap		area;
 extern worldi		world;
 extern creaturea	creatures, enemies;
@@ -362,4 +364,3 @@ extern gamei		game;
 extern creature*	last_enemy;
 extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;
 extern creature*	player;
-extern bool			show_detail_info;

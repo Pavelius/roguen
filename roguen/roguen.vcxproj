@@ -268,6 +268,7 @@
     <Text Include="..\errors.txt" />
     <Text Include="..\locale\ru\Chats.txt" />
     <Text Include="..\locale\ru\ItemNames.txt" />
+    <Text Include="..\locale\ru\MonsterNames.txt" />
     <Text Include="..\locale\ru\Names.txt" />
     <Text Include="..\locale\ru\NamesNewbe.txt" />
     <Text Include="..\locale\ru\RaceNames.txt" />

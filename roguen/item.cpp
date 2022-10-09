@@ -54,7 +54,7 @@ int item::getdamage() const {
 	case MeleeWeapon:
 	case MeleeWeaponOffhand:
 	case RangedWeapon:
-		return geti().bonus;
+		return geti().weapon.damage;
 	default:
 		return 0;
 	}

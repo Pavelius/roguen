@@ -192,11 +192,8 @@ static void test_arena(int bonus) {
 	animate_figures();
 }
 
-static void show_detail_info_script(int bonus) {
-	show_detail_info = !show_detail_info;
-}
-
 void show_area(int bonus);
+void show_logs(int bonus);
 
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
@@ -216,8 +213,8 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
-	{"ShowDetailInfo", show_detail_info_script},
 	{"TestArena", test_arena},
 	{"ViewStuff", view_stuff},
 };

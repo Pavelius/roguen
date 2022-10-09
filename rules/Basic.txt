@@ -25,8 +25,8 @@ AdventureKeys
  elements ChatSomeone "C"
  elements PickUp "P"
  elements ShowMinimap "M"
+ elements ShowLogs "L"
 
- elements ShowDetailInfo "Ctrl+I"
  elements DebugMessage "Ctrl+D"
  elements ExploreArea "Ctrl+E"
  elements TestArena "Ctrl+A"

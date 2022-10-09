@@ -36,7 +36,7 @@ Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar("item1") ability(
  weapon damage(2)
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar("item0") ability(WeaponSkill)
  weapon damage(1)
-Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345") ability(HeavyWeaponSkill)
+Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar("item345") ability(WeaponSkill)
  flags Martial Slow TwoHanded WearLarge CutWoods ArmorPierce
  weapon damage(5) parry(-100)
 HandAxe cost(4) weight(30) wear(MeleeWeapon) avatar("item5") ability(WeaponSkill)

@@ -1,2 +1,2 @@
-﻿In file `rules/Advancement.txt`:
-Wrong key name 'Crtl' in hotkey
+﻿In file `rules/Items.txt`:
+ Line 39: Not found identifier `HeavyWeaponSkill`

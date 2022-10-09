@@ -1,0 +1,8 @@
+﻿Bartender: Бармен
+ChaosHydra: Гидра хаоса
+CityGuard: Городской охранник
+Ettin: Эттин
+Goblin: Гоблин
+HillGiant: Гигант с холмов
+Minotaur: Минотавр
+OrcWarrior: Орк

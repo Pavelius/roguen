@@ -991,6 +991,33 @@ static void paint_area_screen() {
 	rectb();
 }
 
+static void paint_logs(const char* format, int& origin, int& format_origin, int& maximum) {
+	if(!format)
+		return;
+	rectpush push;
+	if(maximum == -1) {
+		rectpush push;
+		origin = 0;
+		format_origin = 0;
+		textfs(format);
+		maximum = height;
+		height = push.height;
+		width = push.width;
+		caret = push.caret;
+		if(maximum > height) {
+			auto push_clip = clipping;
+			setclip();
+			caret.y -= maximum - height;
+			textfs(format, origin, format_origin);
+			clipping = push_clip;
+		}
+	}
+	auto push_clip = clipping; setclip();
+	caret.y += origin;
+	textf(format + format_origin);
+	clipping = push_clip;
+}
+
 static void pause_keys() {
 	if(hot.key == KeySpace || hot.key == KeyEscape)
 		execute(buttoncancel);
@@ -1015,6 +1042,22 @@ void show_worldmap() {
 
 void show_area(int bonus) {
 	scene(scene_area);
+}
+
+void save_log();
+
+void show_logs(int bonus) {
+	int maximum = -1, format_origin = 0, origin = 0;
+	save_log();
+	while(ismodal()) {
+		paintstart();
+		fillwindow();
+		setoffset(metrics::padding, metrics::padding);
+		paint_logs(actable::getlog(), origin, format_origin, maximum);
+		pause_keys();
+		paintfinish();
+		domodal();
+	}
 }
 
 int start_application(fnevent proc, fnevent initializing) {
