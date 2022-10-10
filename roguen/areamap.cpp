@@ -179,6 +179,11 @@ unsigned areamap::getpath(point start, point goal, point* result, unsigned maxim
 	return pb - result;
 }
 
+void areamap::setblock(point m, unsigned short v) {
+	if(m)
+		movement_rate[m] = v;
+}
+
 void areamap::blockzero() {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)

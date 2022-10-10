@@ -33,9 +33,8 @@ enum ability_s : unsigned char {
 	Strenght, Dexterity, Wits, Charisma,
 	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
-	ParryValue, DamageReduciton,
+	DamageReduciton,
 	Speed,
-	Concentration, Healing,
 	Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
 	Level,
@@ -103,7 +102,6 @@ struct classi : nameable {
 struct feati : nameable {
 };
 struct weari : nameable {
-	ability_s	ability;
 };
 struct indexa : adat<point> {
 	void		select(point m, int range);

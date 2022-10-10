@@ -215,7 +215,7 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 		damage_reduction = 0;
 	auto result_damage = weapon_damage + ability_damage - damage_reduction + last_hit_result - last_parry_result;
 	enemy.fixdamage(result_damage, weapon_damage, ability_damage, -damage_reduction, last_hit_result, -last_parry_result);
-	//result_damage = result_damage * damage_multiplier / 100;
+	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
 }
 
@@ -456,10 +456,19 @@ void creature::update() {
 	update_abilities();
 }
 
+static void blockcreatures(creature* exclude) {
+	for(auto& e : bsdata<creature>()) {
+		if(!e || &e==exclude)
+			continue;
+		area.setblock(e.getposition(), 0xFFFF);
+	}
+}
+
 void creature::moveto(point ni) {
 	area.clearpath();
 	area.blockwalls();
 	area.blockfeatures();
+	blockcreatures(this);
 	area.makewave(getposition());
 	area.blockzero();
 	auto m0 = getposition();

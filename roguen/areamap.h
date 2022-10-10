@@ -78,6 +78,7 @@ struct areamap : anymap<tile_s, 64> {
 	void			set(rect rc, mapf_s v, int random_count);
 	void			set(rect rc, tile_s v, int random_count);
 	void			set(feature_s v, int bonus);
+	static void		setblock(point m, unsigned short v);
 	void			setlos(point m, int radius, fntest test);
 	void			remove(point m, mapf_s v) { flags[m] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
