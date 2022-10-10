@@ -16,6 +16,7 @@ BSDATA(abilityi) = {
 	{"DamageThrown"},
 	{"DamageReduciton"},
 	{"Speed"},
+	{"EnemyAttacks"},
 	{"Pickpockets"},
 	{"Stealth"},
 	{"OpenLocks"},

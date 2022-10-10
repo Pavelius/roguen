@@ -34,7 +34,7 @@ enum ability_s : unsigned char {
 	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	DamageReduciton,
-	Speed,
+	Speed, EnemyAttacks,
 	Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
 	Level,
@@ -88,6 +88,7 @@ struct spellf : flagable<8> {};
 extern point m2s(point v);
 struct statable {
 	char		abilities[Money + 1];
+	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 	void		create();
 };
 struct abilityi : nameable {
@@ -306,6 +307,7 @@ public:
 	bool		roll(ability_s v, int bonus = 0) const;
 	void		say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
 	void		set(feat_s v) { feats.set(v); }
+	void		set(ability_s i, int v) { abilities[i] = v; }
 	void		setenemy(const creature* p) { enemy_id = p ? p->getid() : 0xFFFF; }
 	void		unlink();
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }

@@ -246,7 +246,9 @@ void creature::damage(int v) {
 
 void creature::attackmelee(creature& enemy) {
 	fixaction();
-	attack(enemy, MeleeWeapon, 0, 100);
+	auto number_attackers = enemy.get(EnemyAttacks);
+	attack(enemy, MeleeWeapon, number_attackers * 10, 100);
+	enemy.add(EnemyAttacks, 1);
 }
 
 void creature::fixcantgo() const {
@@ -359,6 +361,7 @@ void creature::makemove() {
 		wait_seconds -= get(Speed);
 		return;
 	}
+	set(EnemyAttacks, 0);
 	update();
 	// Dazzled creature don't make turn
 	if(is(Stun)) {
@@ -372,6 +375,7 @@ void creature::makemove() {
 	// Sleeped creature don't move
 	if(is(Sleep))
 		return;
+	// Unaware attack or others
 	if(is(Unaware))
 		remove(Unaware);
 	// Get nearest creatures
