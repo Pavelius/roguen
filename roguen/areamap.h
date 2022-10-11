@@ -50,6 +50,7 @@ struct areamap : anymap<tile_s, 64> {
 	static void		blockrange(int range);
 	void			blockwalls() const;
 	static void		blockzero();
+	static point	bordered(direction_s d);
 	void			clear();
 	static void		clearpath();
 	static direction_s getdirection(point s, point d);

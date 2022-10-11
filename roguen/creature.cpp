@@ -39,6 +39,11 @@ static bool isfreecr(point m) {
 	return area.isfree(m);
 }
 
+void creature::place(point m) {
+	m = area.getfree(m, 10, isfreecr);
+	setposition(m);
+}
+
 creature* creature::create(point m, variant kind, variant character) {
 	if(!kind)
 		return 0;
@@ -187,7 +192,8 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 	last_hit = 1 + d100(); last_hit_result = 0;
 	last_parry = 1 + d100(); last_parry_result = 0;
 	attack_skill += get(wears[v].geti().ability);
-	last_hit_result = (attack_skill - last_hit) / 10;
+	auto attack_delta = attack_skill - last_hit;
+	last_hit_result = attack_delta / 10;
 	if(last_hit > 5 && last_hit > attack_skill) {
 		logs(getnm("AttackMiss"), last_hit, attack_skill);
 		return;
@@ -196,8 +202,9 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 	auto attacker_name = getname();
 	enemy.getdefence(get(Strenght), wears[v], defences);
 	auto parry = getbestdefence(defences, last_parry, parry_skill, last_parry_result);
+	auto parry_delta = parry_skill - last_parry;
 	if(parry) {
-		if(last_parry_result > last_hit_result) {
+		if(parry_delta > attack_delta) {
 			logs(getnm("AttackHitButParryCritical"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
 			if(parry == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate))
 				damage(enemy.wears[MeleeWeapon], last_parry_result - last_hit_result);
@@ -260,10 +267,26 @@ static bool isfreelt(point m) {
 	return area.isfree(m);
 }
 
+static direction_s movedirection(point m) {
+	if(m.x < 0)
+		return West;
+	else if(m.y < 0)
+		return North;
+	else if(m.y >= area.mps)
+		return South;
+	else
+		return East;
+}
+
 void creature::movestep(point ni) {
 	if(!area.isvalid(ni)) {
-		if(isactive())
-			fixcantgo();
+		if(isactive()) {
+			auto direction = movedirection(ni);
+			if(confirm(getnm("LeaveArea"))) {
+				auto np = to(game.position, direction);
+				game.enter(np, 0, direction);
+			}
+		}
 		wait();
 		return;
 	}

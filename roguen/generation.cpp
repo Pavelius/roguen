@@ -409,6 +409,9 @@ void create_area(const char* id) {
 	variant tile = id;
 	if(!tile)
 		return;
+	bsdata<itemground>::source.clear();
+	bsdata<creature>::source.clear();
+	bsdata<boosti>::source.clear();
 	area.clear();
 	locations.clear();
 	sites.clear();

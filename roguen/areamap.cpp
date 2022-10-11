@@ -444,3 +444,13 @@ point areamap::getfree(point m, short maximum, fntest test) {
 	}
 	return {-1000, -1000};
 }
+
+point areamap::bordered(direction_s d) {
+	switch(d) {
+	case North: return {mps / 2, 0};
+	case South: return {mps / 2, mps - 1};
+	case West: return {0, mps / 2};
+	case East: return {mps - 1, mps / 2};
+	default: return {mps / 2, mps / 2};
+	}
+}

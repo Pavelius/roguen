@@ -302,6 +302,7 @@ public:
 	void		movestep(point m);
 	void		moveto(point m);
 	void		paint() const;
+	void		place(point m);
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v, int bonus = 0) const;
@@ -346,17 +347,20 @@ struct boosti {
 	static void	updateall();
 };
 struct geoposition {
-	point		position;
-	short		level;
+	point		position = {0, 0};
+	short		level = 0;
 	bool		isoutdoor() const { return level == 0; }
 };
 class gamei : public geoposition {
 	unsigned	minutes;
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:
+	short unsigned player_id;
 	static void	all(creature::fnupdate proc);
 	static void endgame();
+	void		enter(point m, int level, direction_s appear_side);
 	unsigned	getminutes() const { return minutes; }
+	static void newgame();
 	void		pass(unsigned minutes);
 	void		passminute();
 	static void	play();

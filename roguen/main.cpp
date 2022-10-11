@@ -7,8 +7,6 @@ static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
 using namespace draw;
 
-void create_area(const char* id);
-
 #ifdef _DEBUG
 void main_util();
 #endif
@@ -75,7 +73,7 @@ static void main_start() {
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
 	rect rc = {4, 4, 8, 8};
-	create_area("LightForest");
+	game.newgame();
 	area.set(rc, NoFeature);
 	area.set({3, 3}, Iced);
 	area.set({3, 4}, Iced);
@@ -91,7 +89,6 @@ static void main_start() {
 	create_item({6, 7}, "BluePotion");
 	player = creature::create({5, 5}, "Human", "Fighter");
 	player->set(Ally);
-	setnext(game.play);
 }
 
 int start_application(fnevent proc, fnevent initializing);
