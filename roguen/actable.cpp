@@ -52,7 +52,7 @@ void actable::sayv(stringbuilder& sb, const char* format, const char* format_par
 }
 
 bool actable::confirm(const char* format, ...) {
-	console.addsep('\n');
+	console.clear();
 	console.addv(format, xva_start(format));
 	answers an;
 	an.add((void*)1, getnm("Yes"));

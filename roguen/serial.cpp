@@ -8,7 +8,7 @@ static creature* allies_reference[16];
 static adat<boosti, 32> boost;
 static const char* save_folder = "save";
 
-void create_area(const char* id);
+void create_area(variant tile);
 
 static short unsigned getindex(const creature* v) {
 	for(auto& e : allies) {
@@ -90,7 +90,8 @@ static bool serial_area(const char* url, bool write_mode) {
 }
 
 static void create_game_area(geoposition v) {
-	create_area("LightForest");
+	auto rt = random_value("RandomOvelandTiles");
+	create_area(rt);
 }
 
 static void serial_area(geoposition v, bool write_mode) {

@@ -5,7 +5,7 @@
 
 #RandomOvelandTiles
 
-5 Plains
+3 Plains
 1 Mountains
 1 Hills
 2 LightForest

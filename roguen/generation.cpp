@@ -405,8 +405,7 @@ static void create_floor(variant tile) {
 	}
 }
 
-void create_area(const char* id) {
-	variant tile = id;
+void create_area(variant tile) {
 	if(!tile)
 		return;
 	bsdata<itemground>::source.clear();
