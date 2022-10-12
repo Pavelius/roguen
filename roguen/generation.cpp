@@ -411,9 +411,11 @@ void create_area(variant tile) {
 	bsdata<itemground>::source.clear();
 	bsdata<creature>::source.clear();
 	bsdata<boosti>::source.clear();
+	loc.clear();
 	area.clear();
 	locations.clear();
 	sites.clear();
+	loc.settile(tile.getid());
 	create_floor(tile);
 	create_landscape({0, 0, area.mps - 1, area.mps - 1}, tile);
 	add_area_sites(tile);

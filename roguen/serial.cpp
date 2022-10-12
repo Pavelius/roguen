@@ -82,6 +82,7 @@ static bool serial_area(const char* url, bool write_mode) {
 	if(!file)
 		return false;
 	archive a(file, write_mode);
+	a.set(loc);
 	a.set(area);
 	a.set(bsdata<itemground>::source);
 	a.set(bsdata<creature>::source);
@@ -91,6 +92,8 @@ static bool serial_area(const char* url, bool write_mode) {
 
 static void create_game_area(geoposition v) {
 	auto rt = random_value("RandomOvelandTiles");
+	if(!rt)
+		rt = "LightForest";
 	create_area(rt);
 }
 

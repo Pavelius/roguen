@@ -19,7 +19,7 @@
 
 const int version_major = 0;
 const int version_minor = 0;
-const int version_build = 1;
+const int version_build = 5;
 
 enum class res {
 	Monsters,
@@ -351,6 +351,11 @@ struct geoposition {
 	short		level = 0;
 	bool		isoutdoor() const { return level == 0; }
 };
+struct location {
+	char		tile[32];
+	void		clear();
+	void		settile(const char* id);
+};
 class gamei : public geoposition {
 	unsigned	minutes;
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
@@ -379,6 +384,7 @@ bool				isnext();
 }
 inline int			d100() { return rand() % 100; }
 extern areamap		area;
+extern location		loc;
 extern worldi		world;
 extern creaturea	creatures, enemies;
 extern gamei		game;

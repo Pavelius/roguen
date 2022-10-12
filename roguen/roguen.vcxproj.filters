@@ -258,6 +258,12 @@
     <ClCompile Include="areamap.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="location.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="direction_req.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -429,6 +435,9 @@
     </Text>
     <Text Include="..\logs.txt">
       <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\locale\ru\DirectionNames.txt">
+      <Filter>Locale</Filter>
     </Text>
   </ItemGroup>
 </Project>

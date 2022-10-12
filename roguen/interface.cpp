@@ -1020,6 +1020,20 @@ static void paint_logs(const char* format, int& origin, int& format_origin, int&
 	clipping = push_clip;
 }
 
+static void text_header(const char* format) {
+	auto push_caret = caret;
+	auto push_font = font;
+	auto push_fore = fore;
+	font = metrics::h2;
+	fore = colors::h2;
+	caret.x += (width - textw(format)) / 2;
+	text(format);
+	caret = push_caret;
+	caret.y += texth();
+	font = push_font;
+	fore = push_fore;
+}
+
 static void pause_keys() {
 	if(hot.key == KeySpace || hot.key == KeyEscape)
 		execute(buttoncancel);
@@ -1033,6 +1047,7 @@ static void scene_world() {
 
 static void scene_area() {
 	fillwindow();
+	text_header(getnm(loc.tile));
 	paint_area();
 	paint_area_screen();
 	pause_keys();

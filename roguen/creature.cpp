@@ -282,8 +282,8 @@ void creature::movestep(point ni) {
 	if(!area.isvalid(ni)) {
 		if(isactive()) {
 			auto direction = movedirection(ni);
-			if(confirm(getnm("LeaveArea"))) {
-				auto np = to(game.position, direction);
+			auto np = to(game.position, direction);
+			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id))) {
 				game.enter(np, 0, direction);
 			}
 		}
