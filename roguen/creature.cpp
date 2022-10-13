@@ -281,7 +281,7 @@ void creature::attackrange(creature& enemy) {
 		return;
 	auto pa = wears[RangedWeapon].geti().getammunition();
 	if(pa)
-		fixshoot(enemy.getposition(), "MissileEast", pa->wear_index);
+		fixshoot(enemy.getposition(), pa->wear_index);
 	else
 		fixaction();
 	attack(enemy, RangedWeapon, 0, 100);

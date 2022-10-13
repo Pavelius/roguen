@@ -206,8 +206,18 @@ void movable::fixaction() const {
 	pr->position = po->position;
 }
 
-void movable::fixshoot(point target, const char* id, int frame) const {
-	auto pe = bsdata<visualeffect>::find(id);
+const char* missilename(direction_s v) {
+	switch(v) {
+	case North: return "MissileNorth";
+	case South: return "MissileSouth";
+	case East: return "MissileEast";
+	case West: return "MissileWest";
+	default: return "MissileNorthWest";
+	}
+}
+
+void movable::fixshoot(point target, int frame) const {
+	auto pe = bsdata<visualeffect>::find(missilename(direction));
 	if(!pe)
 		return;
 	auto range = area.getrange(getposition(), target);
