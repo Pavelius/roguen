@@ -1,16 +1,21 @@
 #include "bsreq.h"
+#include "draw.h"
 #include "main.h"
 
 using namespace draw;
 
 BSDATA(visualeffect) = {
 	{"AcidSplash", res::Splash, 2},
-	{"BloodingVisual", res::Conditions, 1, 15, -32},
+	{"BloodingVisual", res::Conditions, 1, 0, 15, -32},
 	{"FireSplash", res::Splash, 0},
-	{"HitVisual", res::Conditions, 0, 15, -8},
+	{"HitVisual", res::Conditions, 0, 0, 15, -8},
 	{"IceSplash", res::Splash, 1},
 	{"LightingSplash", res::Splash, 1},
-	{"PoisionVisual", res::Conditions, 2, 15, -26},
+	{"PoisionVisual", res::Conditions, 2, 0, 15, -26},
 	{"SearchVisual", res::Splash, 3},
+	{"MissileNorth", res::Missile, 0, 0, 15, -32},
+	{"MissileSouth", res::Missile, 0, ImageMirrorV, 15, -32},
+	{"MissileEast", res::Missile, 1, 0, 15, -32},
+	{"MissileWest", res::Missile, 1, ImageMirrorH, 15, -32},
 };
 BSDATAF(visualeffect)

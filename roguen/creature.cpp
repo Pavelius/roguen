@@ -255,6 +255,8 @@ void creature::damage(int v) {
 void creature::attackmelee(creature& enemy) {
 	fixaction();
 	auto number_attackers = enemy.get(EnemyAttacks);
+	if(number_attackers > 4)
+		number_attackers = 4;
 	attack(enemy, MeleeWeapon, number_attackers * 10, 100);
 	enemy.add(EnemyAttacks, 1);
 }
@@ -275,14 +277,19 @@ bool creature::canshoot(bool interactive) const {
 }
 
 void creature::attackrange(creature& enemy) {
-	fixaction();
 	if(!canshoot(false))
 		return;
+	auto pa = wears[RangedWeapon].geti().getammunition();
+	if(pa)
+		fixshoot(enemy.getposition(), "MissileNorth", 0);
+	else
+		fixaction();
 	attack(enemy, RangedWeapon, 0, 100);
-	if(wears[RangedWeapon].geti().getammunition()) {
+	if(pa) {
 		wears[Ammunition].use();
 		if(d100() < 50) {
-			item it = wears[Ammunition];
+			item it;
+			it.create(pa, 1);
 			it.setcount(1);
 			it.drop(enemy.getposition());
 		}			

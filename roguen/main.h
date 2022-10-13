@@ -25,7 +25,7 @@ enum class res {
 	Monsters,
 	Borders, Floor, Walls, Decals, Features, Shadows, Items,
 	Attack, Conditions, Splash,
-	Fow,
+	Fow, Missile,
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
@@ -133,6 +133,7 @@ public:
 	static void	fixeffect(point position, const char* id);
 	void		fixmovement() const;
 	void		fixremove() const;
+	void		fixshoot(point target, const char* id, int frame) const;
 	void		fixvalue(const char* v, int color = 0) const;
 	void		fixvalue(int v) const;
 	bool		in(const rect& rc) const { return position.in(rc); }
@@ -244,7 +245,8 @@ struct skilli {
 };
 typedef skilli defencet[3];
 class creature : public wearable, public statable, public spellable {
-	unsigned short class_id, enemy_id;
+	unsigned short class_id;
+	unsigned short enemy_id, master_id;
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
@@ -333,10 +335,10 @@ struct advancement {
 };
 struct visualeffect : nameable {
 	res			resid;
-	int			frame;
+	short unsigned frame, flags;
 	unsigned char priority = 15;
 	int			dy;
-	void		paint() const;
+	void		paint(unsigned char random) const;
 };
 struct sitei : nameable {
 	char		site_count;

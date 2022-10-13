@@ -113,12 +113,13 @@ static void remove_temp_objects() {
 	}
 }
 
-static void add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
+static object* add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
 	auto po = addobject(pt);
 	po->data = data;
 	po->priority = priority;
 	po->random = random;
 	po->alpha = 0xFF;
+	return po;
 }
 
 point movable::getsposition() const {
@@ -203,6 +204,22 @@ void movable::fixaction() const {
 	pr->position = to(po->position, direction, tsx / 8, tsy / 8);
 	pr = pr->add(mst / 2);
 	pr->position = po->position;
+}
+
+void movable::fixshoot(point target, const char* id, int frame) const {
+	auto pe = bsdata<visualeffect>::find(id);
+	if(!pe)
+		return;
+	auto range = area.getrange(getposition(), target);
+	if(range == 0xFFFF)
+		return;
+	auto po = add_object(m2s(getposition()), pe, frame, 6);
+	po->position.y += pe->dy;
+	if(!po)
+		return;
+	auto pr = po->add(mst * range / 3);
+	pr->position = m2s(target);
+	pr->position.y += pe->dy;
 }
 
 static void paint_items() {
@@ -535,18 +552,20 @@ void itemi::paint() const {
 	image(pi, this - bsdata<itemi>::elements, 0);
 }
 
-void visualeffect::paint() const {
+void visualeffect::paint(unsigned char random) const {
 	auto pi = gres(resid);
 	if(!pi)
 		return;
-	auto pc = pi->gcicle(frame);
-	if(!pc)
-		return;
-	unsigned long current = getobjectstamp() - start_stamp;
-	auto tk = current * pc->count / mst;
-	if(tk >= pc->count)
-		return;
-	image(pi, pc->start + tk, 0);
+	if(pi->cicles_offset) {
+		auto pc = pi->gcicle(frame);
+		if(pc) {
+			unsigned long current = getobjectstamp() - start_stamp;
+			auto tk = current * pc->count / mst;
+			if(tk < pc->count)
+				image(pi, pc->start + tk, flags);
+		}
+	} else
+		image(pi, random + frame, flags);
 }
 
 static void object_afterpaint(const object* p) {
@@ -557,7 +576,7 @@ static void object_afterpaint(const object* p) {
 	else if(bsdata<itemi>::have(p->data))
 		((itemi*)p->data)->paint();
 	else if(bsdata<visualeffect>::have(p->data))
-		((visualeffect*)p->data)->paint();
+		((visualeffect*)p->data)->paint(p->random);
 	else if(bsdata<resource>::have(p->data))
 		image(((resource*)p->data)->get(), p->random, 0);
 }

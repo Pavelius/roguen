@@ -1,2 +1,5 @@
-﻿In file `rules/Advancement.txt`:
- Line 4: Can't find variant `BallisticSkill`
+﻿In file `rules/Tables.txt`:
+Can't convert file d:/games/adom/gfx/adom/adom/missiles/arrow.png
+Can't convert file d:/games/adom/gfx/adom/adom/missiles/arrow_a.png
+Can't convert file d:/games/adom/gfx/adom/adom/missiles/bolt.png
+Can't convert file d:/games/adom/gfx/adom/adom/missiles/bolt_a.png

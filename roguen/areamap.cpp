@@ -264,7 +264,7 @@ void areamap::blockrange(int range) {
 }
 
 int	areamap::getrange(point m1, point m2) {
-	if(!isvalid(m1) || isvalid(m2))
+	if(!isvalid(m1) || !isvalid(m2))
 		return Blocked;
 	auto dx = iabs(m1.x - m2.x);
 	auto dy = iabs(m1.y - m2.y);
