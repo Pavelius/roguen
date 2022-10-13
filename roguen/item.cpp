@@ -81,9 +81,19 @@ creature* item::getowner() const {
 	return bsdata<creature>::elements + i;
 }
 
+static itemground* findadd(point m, item& it) {
+}
+
 void item::drop(point m) {
 	if(!area.isvalid(m))
 		return;
+	for(auto& e : bsdata<itemground>()) {
+		if(e && e.position == m) {
+			e.add(*this);
+			if(!(*this))
+				return;
+		}
+	}
 	auto pi = bsdata<itemground>::add();
 	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
 	pi->position = m;

@@ -281,7 +281,7 @@ void creature::attackrange(creature& enemy) {
 		return;
 	auto pa = wears[RangedWeapon].geti().getammunition();
 	if(pa)
-		fixshoot(enemy.getposition(), "MissileNorth", 0);
+		fixshoot(enemy.getposition(), "MissileEast", pa->wear_index);
 	else
 		fixaction();
 	attack(enemy, RangedWeapon, 0, 100);
@@ -416,6 +416,15 @@ void creature::lookcreatures() {
 		enemies.clear();
 }
 
+void creature::lookenemies() {
+	lookcreatures();
+	if(enemies) {
+		// Combat situation - need eliminate enemy
+		enemies.sort(getposition());
+		enemy = enemies[0];
+	}
+}
+
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {
@@ -439,19 +448,16 @@ void creature::makemove() {
 	// Unaware attack or others
 	if(is(Unaware))
 		remove(Unaware);
-	// Get nearest creatures
-	lookcreatures();
-	if(enemies) {
-		// Combat situation - need eliminate enemy
-		enemies.sort(getposition());
-		enemy = enemies[0];
-	}
+	lookenemies();
 	if(isactive()) {
 		area.setlos(getposition(), getlos(), isfreelt);
 		adventure_mode();
-	} else if(enemy)
-		moveto(enemy->getposition());
-	else
+	} else if(enemy) {
+		if(canshoot(false))
+			attackrange(*enemy);
+		else
+			moveto(enemy->getposition());
+	} else
 		aimove();
 }
 

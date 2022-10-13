@@ -206,7 +206,7 @@ public:
 	void		use() { setcount(getcount() - 1); }
 };
 struct itema : adat<item*> {
-	item*		choose(const char* title) const;
+	item*		choose(const char* title, const char* cancel = 0) const;
 	void		select(point m);
 	void		select(creature* p);
 	void		selectbackpack(creature* p);
@@ -307,6 +307,7 @@ public:
 	bool		isplayer() const;
 	void		interaction(creature& opponent);
 	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
+	void		lookenemies();
 	void		makemove();
 	void		movestep(direction_s i);
 	void		movestep(point m);

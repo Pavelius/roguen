@@ -15,7 +15,7 @@ BSDATA(visualeffect) = {
 	{"SearchVisual", res::Splash, 3},
 	{"MissileNorth", res::Missile, 0, 0, 15, -32},
 	{"MissileSouth", res::Missile, 0, ImageMirrorV, 15, -32},
-	{"MissileEast", res::Missile, 1, 0, 15, -32},
-	{"MissileWest", res::Missile, 1, ImageMirrorH, 15, -32},
+	{"MissileEast", res::Missile, 1, ImageMirrorH, 15, -32},
+	{"MissileWest", res::Missile, 1, 0, 15, -32},
 };
 BSDATAF(visualeffect)

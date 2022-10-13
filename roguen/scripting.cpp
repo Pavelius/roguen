@@ -149,7 +149,7 @@ static void pickup(int bonus) {
 	items.select(player->getposition());
 	if(!items)
 		return;
-	auto p = items.choose(getnm("PickItem"));
+	auto p = items.choose(getnm("PickItem"), getnm("Cancel"));
 	if(p) {
 		player->act(getnm("PickupItem"), p->getfullname());
 		player->additem(*p);
@@ -161,7 +161,7 @@ static void dropdown(int bonus) {
 	items.selectbackpack(player);
 	if(!items)
 		return;
-	auto p = items.choose(getnm("DropItem"));
+	auto p = items.choose(getnm("DropItem"), getnm("Cancel"));
 	if(p) {
 		player->act(getnm("DropdownItem"), p->getfullname());
 		p->drop(player->getposition());
@@ -190,6 +190,7 @@ static void test_arena(int bonus) {
 	auto m = player->getposition();
 	auto p = creature::create(m.to(3, 0), pm);
 	p->set(Enemy);
+	player->lookenemies();
 	animate_figures();
 }
 
