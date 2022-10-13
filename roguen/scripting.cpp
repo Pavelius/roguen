@@ -205,6 +205,7 @@ static void range_attack(int bonud) {
 		return;
 	}
 	if(enemy) {
+		player->setdirection(area.getdirection(player->getposition(), enemy->getposition()));
 		player->attackrange(*enemy);
 		player->wait();
 	}

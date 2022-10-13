@@ -279,8 +279,14 @@ void creature::attackrange(creature& enemy) {
 	if(!canshoot(false))
 		return;
 	attack(enemy, RangedWeapon, 0, 100);
-	if(wears[RangedWeapon].geti().getammunition())
+	if(wears[RangedWeapon].geti().getammunition()) {
 		wears[Ammunition].use();
+		if(d100() < 50) {
+			item it = wears[Ammunition];
+			it.setcount(1);
+			it.drop(enemy.getposition());
+		}			
+	}
 }
 
 void creature::fixcantgo() const {
