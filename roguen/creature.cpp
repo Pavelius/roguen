@@ -515,7 +515,7 @@ void creature::unlink() {
 }
 
 void creature::act(const char* format, ...) const {
-	if(!player || player == this || area.is(player->getposition(), Visible))
+	if(!player || player == this || area.is(getposition(), Visible))
 		actv(console, format, xva_start(format), getname(), is(Female));
 }
 

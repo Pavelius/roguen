@@ -331,15 +331,18 @@ static void shuffle_locations() {
 	zshuffle(locations.data, locations.count);
 }
 
-static void place_monsters(const rect & rca, const monsteri & e, int count) {
+static void place_monsters(const rect & rca, const monsteri & e, int count, bool hostile) {
 	if(count == 0) {
 		if(game.isoutdoor())
 			count = e.getbase().appear_outdoor.roll();
 		else
 			count = e.getbase().appear.roll();
 	}
-	for(auto i = 0; i < count; i++)
-		creature::create(center(rca), &e);
+	for(auto i = 0; i < count; i++) {
+		auto p = creature::create(center(rca), &e);
+		if(hostile)
+			p->set(Enemy);
+	}
 }
 
 static bool test_counter(variant v) {
@@ -362,7 +365,7 @@ static void create_landscape(const rect & rca, variant v) {
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rca, ev);
 	} else if(v.iskind<monsteri>())
-		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
+		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter, true);
 	else if(v.iskind<shapei>()) {
 		if(!last_site || !test_counter(v))
 			return;

@@ -23,6 +23,7 @@ static unsigned long start_stamp;
 static int wears_offset = 80;
 static rect message_rect;
 static keybind* keybinds;
+bool show_floor_rect;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -330,6 +331,15 @@ static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
 	}
 }
 
+static void floorrect() {
+	rectpush push;
+	caret.x -= tsx / 2 - 1;
+	caret.y -= tsx / 2 - 1;
+	width = tsx - 2;
+	height = tsy - 2;
+	rectb();
+}
+
 static void paint_floor() {
 	point i;
 	remove_temp_objects(bsdata<featurei>::source);
@@ -387,6 +397,8 @@ static void paint_floor() {
 					} else
 						add_object(pt, &ei, r, ei.priority);
 				}
+				if(show_floor_rect)
+					floorrect();
 			}
 		}
 	}
@@ -415,25 +427,22 @@ static void paint_fow() {
 				fillfow();
 			else {
 				auto f = area.getfow(i);
-				if(f == 0) {
-					if(!area.isb(to(i, SouthEast), Explored))
-						image(pi, 2, ImageMirrorH);
-					if(!area.isb(to(i, NorthWest), Explored))
-						image(pi, 2, ImageMirrorV);
-					if(!area.isb(to(i, NorthEast), Explored))
-						image(pi, 2, ImageMirrorV | ImageMirrorH);
-					if(!area.isb(to(i, SouthWest), Explored))
-						image(pi, 2, 0);
-				} else {
-					if((f & 1) != 0)
-						image(pi, 0, ImageMirrorV);
-					if((f & 2) != 0)
-						image(pi, 0, 0);
-					if((f & 4) != 0)
-						image(pi, 1, 0);
-					if((f & 8) != 0)
-						image(pi, 1, ImageMirrorH);
-				}
+				if((f & 1) != 0)
+					image(pi, 0, ImageMirrorV);
+				if((f & 2) != 0)
+					image(pi, 0, 0);
+				if((f & 4) != 0)
+					image(pi, 1, 0);
+				if((f & 8) != 0)
+					image(pi, 1, ImageMirrorH);
+				if((f & (2 | 8)) == 0 && !area.isb(to(i, SouthEast), Explored))
+					image(pi, 2, ImageMirrorH);
+				if((f & (1 | 4)) == 0 && !area.isb(to(i, NorthWest), Explored))
+					image(pi, 2, ImageMirrorV);
+				if((f & (1 | 8)) == 0 && !area.isb(to(i, NorthEast), Explored))
+					image(pi, 2, ImageMirrorV | ImageMirrorH);
+				if((f & (2 | 4)) == 0 && !area.isb(to(i, SouthWest), Explored))
+					image(pi, 2, 0);
 			}
 		}
 	}
@@ -510,7 +519,7 @@ void creature::paint() const {
 		else
 			image(pa, 10 + 25, flags);
 	}
-	if(player == this || player->getenemy()==this)
+	if(player == this || player->getenemy() == this)
 		paintbars();
 }
 

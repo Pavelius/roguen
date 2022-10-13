@@ -4,6 +4,7 @@
 creaturea creatures, enemies, targets;
 creature* enemy;
 int	last_hit, last_hit_result, last_parry, last_parry_result;
+extern bool show_floor_rect;
 
 void animate_figures();
 
@@ -192,6 +193,10 @@ static void test_arena(int bonus) {
 	animate_figures();
 }
 
+static void toggle_floor_rect(int bonus) {
+	show_floor_rect = !show_floor_rect;
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -216,6 +221,7 @@ BSDATA(script) = {
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
 	{"TestArena", test_arena},
+	{"ToggleFloorRect", toggle_floor_rect},
 	{"ViewStuff", view_stuff},
 };
 BSDATAF(script)
