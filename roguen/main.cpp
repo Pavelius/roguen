@@ -62,6 +62,12 @@ static void create_item(point m, const char* id) {
 	pi->create(id);
 }
 
+static void equip_item(const char* id) {
+	item it;
+	it.create(id);
+	player->equip(it);
+}
+
 void show_worldmap();
 
 static void main_start() {
@@ -85,10 +91,14 @@ static void main_start() {
 	create_item({4, 5}, "Spear");
 	create_item({5, 5}, "Halberd");
 	create_item({6, 5}, "Shield");
+	create_item({6, 6}, "LongBow");
+	create_item({6, 6}, "Arrow");
 	create_item({5, 7}, "AquaPotion");
 	create_item({6, 7}, "BluePotion");
 	player = creature::create({5, 5}, "Human", "Fighter");
 	player->set(Ally);
+	equip_item("LongBow");
+	equip_item("Arrow");
 }
 
 int start_application(fnevent proc, fnevent initializing);

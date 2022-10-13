@@ -47,16 +47,16 @@ Spear cost(10) weight(30) wear(MeleeWeapon) avatar("item60") wear_index(22) abil
 Sword cost(10) weight(60) wear(MeleeWeapon) avatar("item4") wear_index(23) ability(WeaponSkill)
  weapon damage(2) parry(-10)
 
-Arrow wear(Ammunition) count(30) avatar("item51")
+Arrow wear(Ammunition) count(30) avatar("item51") count(20)
 Bolt wear(Ammunition) count(20) avatar("item34")
 
-Crossbow cost(30) weight(50) wear(RangedWeapon) avatar("item67")
+Crossbow cost(30) weight(50) wear(RangedWeapon) avatar("item67") ability(BalisticSkill)
  flags TwoHanded
  weapon damage(4)
-ShortBow cost(25) weight(30) wear(RangedWeapon) avatar("item50")
+ShortBow cost(25) weight(30) wear(RangedWeapon) avatar("item50") ability(BalisticSkill) wear_index(7)
  flags TwoHanded
  weapon damage(2) ammunition(Arrow)
-LongBow cost(40) weight(30) wear(RangedWeapon) avatar("item76")
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar("item76") ability(BalisticSkill) wear_index(5)
  flags TwoHanded
  weapon damage(3) ammunition(Arrow)
 

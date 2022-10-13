@@ -1,2 +1,2 @@
-﻿In file `rules/Monsters.txt`:
- Line 21: Can't find variant `LeaterArmor`
+﻿In file `rules/Advancement.txt`:
+ Line 4: Can't find variant `BallisticSkill`

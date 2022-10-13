@@ -47,7 +47,7 @@ wear_s wearable::getwearslot(const item* data) const {
 const char* wearable::getwearname(wear_s id) const {
 	auto it = wears[id];
 	if(it)
-		return it.getname();
+		return it.getfullname();
 	if(id == MeleeWeapon)
 		return getnm("Fist");
 	return 0;

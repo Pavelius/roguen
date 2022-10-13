@@ -158,8 +158,10 @@ struct itemi : nameable {
 	char		wear_index;
 	const char*	avatar;
 	variant		dress, use;
-	void		paint() const;
+	bool operator==(const itemi& v) const { return this == &v; }
+	const itemi* getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
 	bool		is(feat_s v) const { return flags.is(v); }
+	void		paint() const;
 };
 class item {
 	unsigned short type;
@@ -189,15 +191,18 @@ public:
 	int			getdamage() const;
 	magic_s		getmagic() const { return magic; }
 	const char*	getname() const { return geti().getname(); }
+	const char*	getfullname() const;
 	class creature* getowner() const;
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(ability_s v) const { return geti().ability == v; }
 	bool		is(feat_s v) const { return geti().flags.is(v); }
 	bool		is(wear_s v) const;
+	bool		is(const itemi& v) const;
 	bool		iscountable() const { return geti().count != 0; }
 	bool		isidentified() const { return identified != 0; }
 	void		setcount(int v);
+	void		use() { setcount(getcount() - 1); }
 };
 struct itema : adat<item*> {
 	item*		choose(const char* title) const;
@@ -271,9 +276,12 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	static creature* create(point m, variant v, variant character = {});
 	void		act(const char* format, ...) const;
+	void		actp(const char* format, ...) const;
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
+	void		attackrange(creature& enemy);
+	bool		canshoot(bool interactive) const;
 	void		checkmood() {}
 	void		checkpoison() {}
 	void		checksick() {}

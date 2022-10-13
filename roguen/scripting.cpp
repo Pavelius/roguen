@@ -2,7 +2,7 @@
 #include "main.h"
 
 creaturea creatures, enemies, targets;
-creature* enemy;
+extern creature* enemy;
 int	last_hit, last_hit_result, last_parry, last_parry_result;
 extern bool show_floor_rect;
 
@@ -151,7 +151,7 @@ static void pickup(int bonus) {
 		return;
 	auto p = items.choose(getnm("PickItem"));
 	if(p) {
-		player->act(getnm("PickupItem"), p->getname());
+		player->act(getnm("PickupItem"), p->getfullname());
 		player->additem(*p);
 	}
 }
@@ -163,7 +163,7 @@ static void dropdown(int bonus) {
 		return;
 	auto p = items.choose(getnm("DropItem"));
 	if(p) {
-		player->act(getnm("DropdownItem"), p->getname());
+		player->act(getnm("DropdownItem"), p->getfullname());
 		p->drop(player->getposition());
 	}
 }
@@ -197,6 +197,19 @@ static void toggle_floor_rect(int bonus) {
 	show_floor_rect = !show_floor_rect;
 }
 
+static void range_attack(int bonud) {
+	if(!player->canshoot(true))
+		return;
+	if(!enemy) {
+		player->actp(getnm("YouDontSeeAnyEnemy"));
+		return;
+	}
+	if(enemy) {
+		player->attackrange(*enemy);
+		player->wait();
+	}
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -218,6 +231,7 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"RangeAttack", range_attack},
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
 	{"TestArena", test_arena},

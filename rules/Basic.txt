@@ -24,6 +24,7 @@ AdventureKeys
  elements OpenNearestDoor "O"
  elements ChatSomeone "C"
  elements PickUp "P"
+ elements RangeAttack "Q"
  elements ShowMinimap "M"
  elements ShowLogs "L"
 

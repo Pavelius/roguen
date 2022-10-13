@@ -80,7 +80,7 @@ static void addv(stringbuilder& sb, const featable& feats) {
 void item::getinfo(stringbuilder& sb, bool need_name) const {
 	auto& ei = geti();
 	if(need_name)
-		sb.adds(getname());
+		sb.adds(getfullname());
 	addv(sb, Damage, ei.weapon.damage);
 	addv(sb, "Pierce", ei.weapon.pierce);
 	addv(sb, "Parry", ei.weapon.parry);
@@ -91,4 +91,14 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 		break;
 	}
 	addv(sb, ei.flags);
+}
+
+const char*	item::getfullname() const {
+	static char temp[260];
+	stringbuilder sb(temp);
+	auto count = getcount();
+	sb.add(getname());
+	if(count>1)
+		sb.adds("%1i %Pieces", count);
+	return temp;
 }

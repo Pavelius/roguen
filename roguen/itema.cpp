@@ -19,7 +19,7 @@ item* itema::choose(const char* title) const {
 		return data[0];
 	answers an;
 	for(auto p : *this)
-		an.add(p, p->getname());
+		an.add(p, p->getfullname());
 	return (item*)an.choose(title, 0);
 }
 

@@ -21,6 +21,7 @@ No: Нет
 Parry: Парирование
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
+Pieces: шт.
 Pierce: Проникание
 PlayerKilled: Вы погибли смертью храбрых.
 Rounds: Раунды
@@ -30,6 +31,9 @@ WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
 YouCutWood: %герой срубил%а %-1.
+YouDontSeeAnyEnemy: Вы не видите ни одного врага.
+YouNeedAmmunition: Для стрельбы нужно %-1.
+YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
 
 Hills: Холмы
 Plains: Равнины

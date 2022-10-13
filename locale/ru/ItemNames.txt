@@ -37,6 +37,9 @@ ChainArmor: Кольчуга
 PlateArmor: Латы
 Shield: Щит
 
+Arrow: Стрела
+LongBow: Длинный лук
+
 Lags: Древесина
 SmallLags: Маленькая ветка
 

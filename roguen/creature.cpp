@@ -1,6 +1,7 @@
 #include "main.h"
 
 creature* player;
+creature* enemy;
 
 static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
@@ -258,6 +259,30 @@ void creature::attackmelee(creature& enemy) {
 	enemy.add(EnemyAttacks, 1);
 }
 
+bool creature::canshoot(bool interactive) const {
+	if(!wears[RangedWeapon]) {
+		if(interactive)
+			actp(getnm("YouNeedRangeWeapon"));
+		return false;
+	}
+	auto ammo = wears[RangedWeapon].geti().getammunition();
+	if(ammo && !wears[Ammunition].is(*ammo)) {
+		if(interactive)
+			actp(getnm("YouNeedAmmunition"), ammo->getname());
+		return false;
+	}
+	return true;
+}
+
+void creature::attackrange(creature& enemy) {
+	fixaction();
+	if(!canshoot(false))
+		return;
+	attack(enemy, RangedWeapon, 0, 100);
+	if(wears[RangedWeapon].geti().getammunition())
+		wears[Ammunition].use();
+}
+
 void creature::fixcantgo() const {
 	fixaction();
 	act(getnm("CantGoThisWay"));
@@ -403,7 +428,6 @@ void creature::makemove() {
 		remove(Unaware);
 	// Get nearest creatures
 	lookcreatures();
-	creature* enemy = 0;
 	if(enemies) {
 		// Combat situation - need eliminate enemy
 		enemies.sort(getposition());
@@ -516,6 +540,11 @@ void creature::unlink() {
 
 void creature::act(const char* format, ...) const {
 	if(!player || player == this || area.is(getposition(), Visible))
+		actv(console, format, xva_start(format), getname(), is(Female));
+}
+
+void creature::actp(const char* format, ...) const {
+	if(player == this)
 		actv(console, format, xva_start(format), getname(), is(Female));
 }
 
