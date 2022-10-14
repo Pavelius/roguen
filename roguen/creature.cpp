@@ -36,6 +36,9 @@ void creature::levelup() {
 static bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
+	auto tile = area[m];
+	if(tile == Water || tile == DarkWater || tile == DeepWater)
+		return false;
 	return area.isfree(m);
 }
 
@@ -366,7 +369,7 @@ void creature::movestep(point ni) {
 	auto opponent = findalive(ni);
 	if(opponent)
 		interaction(*opponent);
-	else if(area.isfree(ni)) {
+	else if(isfreecr(ni)) {
 		setposition(ni);
 		fixmovement();
 	} else {
@@ -559,6 +562,9 @@ static void blockcreatures(creature* exclude) {
 
 void creature::moveto(point ni) {
 	area.clearpath();
+	area.blocktiles(Water);
+	area.blocktiles(DeepWater);
+	area.blocktiles(DarkWater);
 	area.blockwalls();
 	area.blockfeatures();
 	blockcreatures(this);

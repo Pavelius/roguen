@@ -193,6 +193,15 @@ void areamap::blockzero() {
 		}
 }
 
+void areamap::blocktiles(tile_s v) const {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if((*this)[m]==v)
+				movement_rate[m] = Blocked;
+		}
+}
+
 void areamap::blockwalls() const {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)

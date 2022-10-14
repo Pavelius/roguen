@@ -48,6 +48,7 @@ struct areamap : anymap<tile_s, 64> {
 	anymap<unsigned char, mps> flags;
 	void			blockfeatures() const;
 	static void		blockrange(int range);
+	void			blocktiles(tile_s v) const;
 	void			blockwalls() const;
 	static void		blockzero();
 	static point	bordered(direction_s d);
