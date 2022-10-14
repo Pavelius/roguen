@@ -84,7 +84,6 @@ BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(landscape),
 	BSREQ(sites),
-	BSREQ(site_count),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSREQ(minimap),
