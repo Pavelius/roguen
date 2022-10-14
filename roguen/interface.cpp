@@ -217,13 +217,19 @@ const char* missilename(direction_s v) {
 }
 
 void movable::fixshoot(point target, int frame) const {
-	auto pe = bsdata<visualeffect>::find(missilename(direction));
+	fixthrown(target, missilename(direction), frame);
+}
+
+void movable::fixthrown(point target, const char* id, int frame) const {
+	if(!area.isvalid(target))
+		return;
+	auto pe = bsdata<visualeffect>::find(id);
 	if(!pe)
 		return;
 	auto range = area.getrange(getposition(), target);
 	if(range == 0xFFFF)
 		return;
-	auto po = add_object(m2s(getposition()), pe, frame, 6);
+	auto po = add_object(m2s(getposition()), pe, frame);
 	po->position.y += pe->dy;
 	if(!po)
 		return;

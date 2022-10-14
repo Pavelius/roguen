@@ -62,7 +62,7 @@ static void attack_forward(int bonus) {
 
 static item* choose_wear() {
 	static wear_s source[] = {
-		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon,
+		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon,
 		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
 	};
 	answers an;
@@ -212,6 +212,20 @@ static void range_attack(int bonud) {
 	}
 }
 
+static void thrown_attack(int bonud) {
+	if(!player->canthrown(true))
+		return;
+	if(!enemy) {
+		player->actp(getnm("YouDontSeeAnyEnemy"));
+		return;
+	}
+	if(enemy) {
+		player->setdirection(area.getdirection(player->getposition(), enemy->getposition()));
+		player->attackthrown(*enemy);
+		player->wait();
+	}
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -237,6 +251,7 @@ BSDATA(script) = {
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
 	{"TestArena", test_arena},
+	{"ThrownAttack", thrown_attack},
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"ViewStuff", view_stuff},
 };

@@ -20,7 +20,6 @@ static creature* findalive(point m) {
 static ability_s damage_ability(wear_s v) {
 	switch(v) {
 	case RangedWeapon: return DamageRanged;
-	case ThrownWeapon: return DamageThrown;
 	default: return DamageMelee;
 	}
 }
@@ -207,8 +206,11 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 	if(parry) {
 		if(parry_delta > attack_delta) {
 			logs(getnm("AttackHitButParryCritical"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
-			if(parry == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate))
-				damage(enemy.wears[MeleeWeapon], last_parry_result - last_hit_result);
+			if(parry == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate)) {
+				auto range = area.getrange(enemy.getposition(), getposition());
+				if(range <= 1)
+					damage(enemy.wears[MeleeWeapon], last_parry_result - last_hit_result);
+			}
 			return;
 		}
 	}
@@ -276,6 +278,15 @@ bool creature::canshoot(bool interactive) const {
 	return true;
 }
 
+bool creature::canthrown(bool interactive) const {
+	if(!wears[MeleeWeapon].is(Thrown)) {
+		if(interactive)
+			actp(getnm("YouNeedThrownWeapon"));
+		return false;
+	}
+	return true;
+}
+
 void creature::attackrange(creature& enemy) {
 	if(!canshoot(false))
 		return;
@@ -292,8 +303,20 @@ void creature::attackrange(creature& enemy) {
 			it.create(pa, 1);
 			it.setcount(1);
 			it.drop(enemy.getposition());
-		}			
+		}
 	}
+}
+
+void creature::attackthrown(creature& enemy) {
+	if(!canthrown(false))
+		return;
+	fixthrown(enemy.getposition(), "FlyingItem", wears[MeleeWeapon].geti().getindex());
+	attack(enemy, MeleeWeapon, 0, 100);
+	item it;
+	it.create(&wears[MeleeWeapon].geti(), 1);
+	it.setcount(1);
+	it.drop(enemy.getposition());
+	wears[MeleeWeapon].use();
 }
 
 void creature::fixcantgo() const {
@@ -528,7 +551,7 @@ void creature::update() {
 
 static void blockcreatures(creature* exclude) {
 	for(auto& e : bsdata<creature>()) {
-		if(!e || &e==exclude)
+		if(!e || &e == exclude)
 			continue;
 		area.setblock(e.getposition(), 0xFFFF);
 	}

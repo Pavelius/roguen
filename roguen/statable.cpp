@@ -1,5 +1,5 @@
 #include "main.h"
 
 void statable::create() {
-	abilities[LineOfSight] += 3;
+	abilities[LineOfSight] += 4;
 }

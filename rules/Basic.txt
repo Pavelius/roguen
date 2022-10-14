@@ -27,6 +27,7 @@ AdventureKeys
  elements RangeAttack "Q"
  elements ShowMinimap "M"
  elements ShowLogs "L"
+ elements ThrownAttack "T"
 
  elements DebugMessage "Ctrl+D"
  elements ExploreArea "Ctrl+E"

@@ -34,6 +34,7 @@ YouCutWood: %герой срубил%а %-1.
 YouDontSeeAnyEnemy: Вы не видите ни одного врага.
 YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
+YouNeedThrownWeapon: Вам нужно иметь в руках метательное оружие.
 
 Hills: Холмы
 Plains: Равнины

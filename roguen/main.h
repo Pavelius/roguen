@@ -43,7 +43,7 @@ enum ability_s : unsigned char {
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
-	MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon, Ammunition,
+	MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, Ammunition,
 	Head, Torso, Backward, Legs, Gloves, FingerRight, FingerLeft, Elbows,
 };
 enum magic_s : unsigned char {
@@ -55,7 +55,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
 	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
-	Blunt, TwoHanded, CutWoods, Retaliate,
+	Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	Coins,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
@@ -134,6 +134,7 @@ public:
 	void		fixmovement() const;
 	void		fixremove() const;
 	void		fixshoot(point target, int frame) const;
+	void		fixthrown(point target, const char* id, int frame) const;
 	void		fixvalue(const char* v, int color = 0) const;
 	void		fixvalue(int v) const;
 	bool		in(const rect& rc) const { return position.in(rc); }
@@ -161,6 +162,7 @@ struct itemi : nameable {
 	variant		dress, use;
 	bool operator==(const itemi& v) const { return this == &v; }
 	const itemi* getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
+	int			getindex() const { return this - bsdata<itemi>::elements; }
 	bool		is(feat_s v) const { return flags.is(v); }
 	void		paint() const;
 };
@@ -283,7 +285,9 @@ public:
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
 	void		attackrange(creature& enemy);
+	void		attackthrown(creature& enemy);
 	bool		canshoot(bool interactive) const;
+	bool		canthrown(bool interactive) const;
 	void		checkmood() {}
 	void		checkpoison() {}
 	void		checksick() {}
