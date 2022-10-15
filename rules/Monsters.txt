@@ -24,5 +24,21 @@ ChaosHydra avatar("33")
 Minotaur avatar("83")
  abilities Strenght(60) Dexterity(30) WeaponSkill(60) DodgeSkill(20) HitsMaximum(20)
  use Sword
+
 Bartender avatar("130")
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
+Theif avatar("108")
+ abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(12)
+TheifFemale avatar("108_f")
+ abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(10)
+ feats Female
+Farmer avatar("282")
+ abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
+FarmerFemale avatar("284")
+ abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
+ feats Female
+SmallBoy avatar("283")
+ abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
+SmallGirl avatar("283_f")
+ abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
+ feats Female

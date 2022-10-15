@@ -50,6 +50,8 @@ void creature::place(point m) {
 creature* creature::create(point m, variant kind, variant character) {
 	if(!kind)
 		return 0;
+	if(kind.iskind<generatori>())
+		kind = random_value(kind.getid());
 	if(!character)
 		character = "Monster";
 	if(!character.iskind<classi>())

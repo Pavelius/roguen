@@ -10,3 +10,10 @@
 1 Hills
 2 LightForest
 1 DeepForest
+
+#RandomCommoner
+
+2 Farmer
+2 FarmerFemale
+1 SmallBoy
+1 SmallGirl

@@ -52,6 +52,14 @@ static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
 	return f1 == v || f2 == v;
 }
 
+static void create_monster(const rect& rc, const char* id, bool hostile, int count) {
+	for(auto i = 0; i < count; i++) {
+		auto p = creature::create(random(rc), random_value(id));
+		if(hostile)
+			p->set(Enemy);
+	}
+}
+
 static void update_doors() {
 	point i;
 	for(i.y = 0; i.y < area.mps; i.y++) {
@@ -154,6 +162,7 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 
 static void create_road(const rect& rc) {
 	area.set(rc, Rock);
+	create_monster(rc, "RandomCommoner", false, xrand(3, 6));
 }
 
 static void show_debug_minimap() {
@@ -336,6 +345,8 @@ static void create_dungeon_content(const rect& rc) {
 }
 
 static void place_monsters(const rect & rca, const monsteri & e, int count, bool hostile) {
+	if(count < 0)
+		count = 0;
 	if(count == 0) {
 		if(game.isoutdoor())
 			count = e.getbase().appear_outdoor.roll();
@@ -343,14 +354,14 @@ static void place_monsters(const rect & rca, const monsteri & e, int count, bool
 			count = e.getbase().appear.roll();
 	}
 	for(auto i = 0; i < count; i++) {
-		auto p = creature::create(center(rca), &e);
+		auto p = creature::create(random(rca), &e);
 		if(hostile)
 			p->set(Enemy);
 	}
 }
 
 static bool test_counter(variant v) {
-	if(v.counter > 0 && d100() >= v.counter)
+	if(v.counter < 0 && d100() >= -v.counter)
 		return false;
 	return true;
 }
@@ -381,9 +392,12 @@ static void create_landscape(const rect & rca, variant v) {
 			(last_site->*last_site->local->proc)(rca);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rca, ev);
-	} else if(v.iskind<monsteri>())
-		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter, true);
-	else if(v.iskind<shapei>()) {
+	} else if(v.iskind<monsteri>()) {
+		bool hostile = false;
+		if(bsdata<monsteri>::elements[v.value].friendly < -20)
+			hostile = true;
+		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter, hostile);
+	} else if(v.iskind<shapei>()) {
 		if(!last_site || !test_counter(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],

@@ -70,6 +70,7 @@ BSMETA(monsteri) = {
 	BSFLG(feats, feati),
 	BSREQ(use),
 	BSREQ(avatar),
+	BSREQ(friendly),
 	BSREQ(parent),
 	BSREQ(treasure),
 	BSREQ(appear), BSREQ(appear_outdoor),

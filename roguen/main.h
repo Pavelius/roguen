@@ -232,6 +232,7 @@ struct monsteri : nameable, statable {
 	const char*	avatar;
 	featable	feats;
 	const char*	treasure;
+	char		friendly;
 	dice		appear, appear_outdoor;
 	variants	use;
 	const monsteri* parent;
