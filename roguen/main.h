@@ -345,11 +345,21 @@ struct visualeffect : nameable {
 	int			dy;
 	void		paint(unsigned char random) const;
 };
+struct sitegeni;
 struct sitei : nameable {
+	typedef void (sitei::*fnproc)(const rect& rc) const;
+	const sitegeni*	global;
+	const sitegeni*	local;
 	variants	landscape;
 	variants	sites;
 	color		minimap;
 	tile_s		walls, floors;
+	void		building(const rect& rc) const;
+	void		cityscape(const rect& rca) const;
+	void		outdoor(const rect& rca) const;
+};
+struct sitegeni : nameable {
+	sitei::fnproc proc;
 };
 struct boosti {
 	variant		parent;

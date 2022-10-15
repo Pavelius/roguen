@@ -4,7 +4,8 @@
 
 enum direction_s : unsigned char {
 	North, East, South, West,
-	NorthEast, SouthEast, SouthWest, NorthWest
+	NorthEast, SouthEast, SouthWest, NorthWest,
+	Center
 };
 struct directioni {
 	const char*	id;

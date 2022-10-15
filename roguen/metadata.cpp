@@ -82,11 +82,16 @@ BSMETA(shapei) = {
 	{}};
 BSMETA(sitei) = {
 	BSREQ(id),
+	BSREQ(global),
+	BSREQ(local),
 	BSREQ(landscape),
 	BSREQ(sites),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSREQ(minimap),
+	{}};
+BSMETA(sitegeni) = {
+	BSREQ(id),
 	{}};
 BSMETA(tilei) = {
 	BSREQ(id),
@@ -115,6 +120,7 @@ BSDATA(varianti) = {
 	{"Script", VAR(script), 1},
 	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
+	{"SiteGenerator", VAR(sitegeni), 1},
 	{"Tile", VAR(tilei), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},

@@ -105,6 +105,7 @@ int start_application(fnevent proc, fnevent initializing);
 
 int main(int argc, char *argv[]) {
 	srand(getcputime());
+	//srand(213);
 	return start_application(main_start, initializating);
 }
 

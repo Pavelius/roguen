@@ -8,6 +8,13 @@ extern bool show_floor_rect;
 
 void animate_figures();
 
+void script::run(const char* id, int bonus) {
+	auto p = bsdata<script>::find(id);
+	if(!p)
+		return;
+	p->proc(0);
+}
+
 static void choose_creature(int bonus) {
 }
 
