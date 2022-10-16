@@ -360,6 +360,10 @@ static void place_monsters(const rect & rca, const monsteri & e, int count, bool
 	}
 }
 
+static void place_character(const rect & rca, const racei& race, const classi& cls) {
+	creature::create(random(rca), &race, &cls);
+}
+
 static bool test_counter(variant v) {
 	if(v.counter < 0 && d100() >= -v.counter)
 		return false;
@@ -379,6 +383,7 @@ static void create_locations_common(const rect& rca, variant tile, const sitegen
 
 static void create_landscape(const rect & rca, variant v) {
 	static sitei* last_site;
+	static racei* last_race;
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -402,6 +407,12 @@ static void create_landscape(const rect & rca, variant v) {
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
 			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
+	} else if(v.iskind<racei>())
+		last_race = bsdata<racei>::elements + v.value;
+	else if(v.iskind<classi>()) {
+		if(!last_race)
+			return;
+		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
 	} else if(v.iskind<itemi>()) {
 		item it; it.clear();
 		it.create(bsdata<itemi>::elements + v.value);

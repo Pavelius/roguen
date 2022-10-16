@@ -376,6 +376,14 @@ struct geoposition {
 	short		level = 0;
 	bool		isoutdoor() const { return level == 0; }
 };
+class roomi {
+	short unsigned site_id;
+public:
+	explicit operator bool() const { return site_id == 0xFFFF; }
+	rect		rc;
+	const sitei* getsite() const { return site_id == 0xFFFF ? 0 : bsdata<sitei>::elements + site_id; }
+	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
+};
 struct location {
 	char		tile[32];
 	void		clear();
