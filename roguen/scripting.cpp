@@ -125,14 +125,8 @@ static void inventory(int bonus) {
 	}
 }
 
-static const char* getspeech(const char* id) {
-	speecha source;
-	source.select(id);
-	return source.getrandom();
-}
-
 static void debug_message(int bonus) {
-	player->say(getspeech("TestYouselfPlease"));
+	player->say(player->getspeech("TestYouselfPlease"));
 	actable::pressspace();
 }
 
@@ -148,7 +142,15 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chat_someone(int bonus) {
-	player->say(getspeech("TestYouselfPlease"));
+	player->lookenemies();
+	creaturea source = creatures;
+	source.matchrange(player->getposition(), 1, true);
+	source.remove(player);
+	if(!source) {
+		player->actp(getnm("NoCreaturesNearby"));
+		return;
+	}
+	source[0]->speech("HowYouAre");
 }
 
 static void pickup(int bonus) {

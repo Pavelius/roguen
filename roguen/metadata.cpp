@@ -33,6 +33,9 @@ BSMETA(classi) = {
 BSMETA(color) = {
 	BSREQ(r), BSREQ(g), BSREQ(b),
 	{}};
+BSMETA(conditioni) = {
+	BSREQ(id),
+	{}};
 BSMETA(dice) = {
 	BSREQ(min),
 	BSREQ(max),
@@ -115,6 +118,7 @@ BSDATA(varianti) = {
 	{"Advancement", VAR(advancement), 2},
 	{"AreaFlag", VAR(areafi), 1},
 	{"Class", VAR(classi), 1},
+	{"Condition", VAR(conditioni), 1},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},
 	{"Hotkey", VAR(hotkey), 2},

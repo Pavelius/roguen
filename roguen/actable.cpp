@@ -61,3 +61,14 @@ bool actable::confirm(const char* format, ...) {
 	console.clear();
 	return result != 0;
 }
+
+bool actable::iskind(variant v) const {
+	if(v.iskind<monsteri>()) {
+		if(!kind.iskind<monsteri>())
+			return false;
+		auto pn = bsdata<monsteri>::elements + v.value;
+		auto pt = bsdata<monsteri>::elements + kind.value;
+		return (pn == pt) || (pt->parent == pn);
+	}
+	return false;
+}

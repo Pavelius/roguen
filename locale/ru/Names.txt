@@ -16,8 +16,10 @@ DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
-LeaveArea: Вы действительно хотите отправиться в путишествие на %-1?
+LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 No: Нет
+NoCreaturesNearby: Вокруг никого нет.
+NothingToSay: Нечего сказать.
 Parry: Парирование
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
@@ -34,7 +36,7 @@ YouCutWood: %герой срубил%а %-1.
 YouDontSeeAnyEnemy: Вы не видите ни одного врага.
 YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
-YouNeedThrownWeapon: Вам нужно иметь в руках метательное оружие.
+YouNeedThrownWeapon: Чтобы метать, вам нужно иметь в руках метательное оружие.
 
 Hills: Холмы
 LightForest: Лес
@@ -51,8 +53,6 @@ DodgeSkill: Уклонение
 ShieldUse: Щиты
 WeaponSkill: Оружие
 
-Fighter: Воин
-
 Damage: Урон
 DamageReduciton: Броня
 Hits: Хиты
@@ -61,17 +61,3 @@ Money: Деньги
 
 CutWoods: Рубит деревья
 Retaliate: Ответный удар
-
-Ammunition: Амуниция
-Backward: Спина
-Elbows: Локти
-FingerLeft: Кольцо 
-FingerRight: Кольцо
-Gloves: Перчатки
-Head: Голова
-Legs: Ноги
-MeleeWeapon: Правая рука
-MeleeWeaponOffhand: Левая рука 
-RangedWeapon: Дистанция
-ThrownWeapon: Метание
-Torso: Тело

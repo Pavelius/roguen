@@ -10,7 +10,6 @@ Mage hd(4) cap(9) player(1)
 #HotkeyList
 
 AdventureKeys
- elements AttackForward "A"
  elements DropDown "D"
  elements Inventory "I"
  elements MoveUp "Up"

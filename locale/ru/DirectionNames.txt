@@ -1,5 +1,5 @@
 ﻿North: Север
-South: Север
+South: Юг
 West: Запад
 East: Восток
 

@@ -152,6 +152,7 @@
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="condition.cpp" />
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="creaturea.cpp" />
     <ClCompile Include="crt.cpp" />
@@ -275,6 +276,7 @@
     <Text Include="..\locale\ru\Names.txt" />
     <Text Include="..\locale\ru\NamesNewbe.txt" />
     <Text Include="..\locale\ru\RaceNames.txt" />
+    <Text Include="..\locale\ru\WearNames.txt" />
     <Text Include="..\logs.txt" />
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />

@@ -264,6 +264,9 @@
     <ClCompile Include="direction_req.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="condition.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -437,6 +440,9 @@
       <Filter>Data</Filter>
     </Text>
     <Text Include="..\locale\ru\DirectionNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\WearNames.txt">
       <Filter>Locale</Filter>
     </Text>
   </ItemGroup>

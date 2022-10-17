@@ -1,3 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 23: Not found requisit `generator`
- Line 48: Not found requisit `generator`
+﻿In file `locale/ru/Chats.txt`:
+ Line 9: Unknown variant identifier `Random`

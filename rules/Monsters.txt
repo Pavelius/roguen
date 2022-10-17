@@ -39,6 +39,6 @@ FarmerFemale avatar("284")
  feats Female
 SmallBoy avatar("283")
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
-SmallGirl avatar("283_f")
+SmallGirl avatar("283_f") parent(SmallBoy)
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
  feats Female

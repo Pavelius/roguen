@@ -1,0 +1,13 @@
+﻿Ammunition: Амуниция
+Backward: Спина
+Elbows: Локти
+FingerLeft: Кольцо 
+FingerRight: Кольцо
+Gloves: Перчатки
+Head: Голова
+Legs: Ноги
+MeleeWeapon: Правая рука
+MeleeWeaponOffhand: Левая рука 
+RangedWeapon: Стрельба
+ThrownWeapon: Метание
+Torso: Тело

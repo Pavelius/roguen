@@ -17,3 +17,4 @@
 2 FarmerFemale
 1 SmallBoy
 1 SmallGirl
+1 Theif

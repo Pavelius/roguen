@@ -485,4 +485,5 @@ void create_area(variant tile) {
 	add_area_sites(tile);
 	create_locations_common({0, 0, area.mps - 1, area.mps - 1}, tile, bsdata<sitegeni>::elements);
 	create_sites();
+	//update_doors();
 }

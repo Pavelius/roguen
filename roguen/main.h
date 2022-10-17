@@ -50,7 +50,7 @@ enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
 enum condition_s : unsigned char {
-	Busy,
+	Random, Busy,
 };
 enum feat_s : unsigned char {
 	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
@@ -94,6 +94,8 @@ struct statable {
 struct abilityi : nameable {
 	ability_s	basic;
 };
+struct conditioni : nameable {
+};
 struct racei : nameable {
 };
 struct classi : nameable {
@@ -115,6 +117,7 @@ public:
 	variant		getkind() const { return kind; }
 	static const char* getlog();
 	const char*	getname() const { return kind.getname(); }
+	bool		iskind(variant v) const;
 	static void	logv(const char* format, const char* format_param, const char* name, bool female);
 	static void	pressspace();
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
@@ -271,6 +274,10 @@ class creature : public wearable, public statable, public spellable {
 	void		interaction(point m);
 	void		levelup();
 	void		lookcreatures();
+	const speech* matchfirst(const speecha& source) const;
+	bool		matchspeech(variant v) const;
+	bool		matchspeech(const variants& source) const;
+	void		matchspeech(speecha& source) const;
 	void		paintbars() const;
 	void		update();
 	void		update_abilities();
@@ -303,8 +310,9 @@ public:
 	creature*	getenemy() const { return enemy_id == 0xFFFF ? 0 : bsdata<creature>::elements + enemy_id; }
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const { return get(LineOfSight); }
+	const char* getspeech(const char* id) const;
 	int			getwait() const { return wait_seconds; }
-	bool		is(condition_s v) const { return false; }
+	bool		is(condition_s v) const;
 	bool		is(spell_s v) const { return active_spells.is(v); }
 	bool		is(feat_s v) const { return feats.is(v); }
 	bool		isactive() const;
@@ -323,15 +331,19 @@ public:
 	void		remove(feat_s v) { feats.remove(v); }
 	bool		roll(ability_s v, int bonus = 0) const;
 	void		say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
+	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void		set(feat_s v) { feats.set(v); }
 	void		set(ability_s i, int v) { abilities[i] = v; }
 	void		setenemy(const creature* p) { enemy_id = p ? p->getid() : 0xFFFF; }
+	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	void		unlink();
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
 	void		match(feat_s v, bool keep);
-	void		select(point m, int los);
+	void		matchrange(point start, int v, bool keep);
+	void		remove(const creature* v);
+	void		select(point m, int los, bool visible);
 	void		sort(point start);
 };
 struct advancement {

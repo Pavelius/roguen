@@ -1,8 +1,15 @@
-﻿Bartender: Бармен
+﻿Fighter: Воин
+
+Bartender: Бармен
 ChaosHydra: Гидра хаоса
 CityGuard: Городской охранник
 Ettin: Эттин
+Farmer: Крестьянин
+FarmerFemale: Крестьянка
 Goblin: Гоблин
 HillGiant: Гигант с холмов
 Minotaur: Минотавр
 OrcWarrior: Орк
+SmallBoy: Мальчик
+SmallGirl: Девочка
+Theif: Вор

@@ -139,9 +139,72 @@ void creature::interaction(point m) {
 	}
 }
 
+bool creature::matchspeech(variant v) const {
+	if(v.iskind<monsteri>())
+		return iskind(v);
+	else if(v.iskind<conditioni>())
+		return is((condition_s)v.value);
+	return true;
+}
+
+bool creature::matchspeech(const variants& source) const {
+	for(auto v : source) {
+		if(!matchspeech(v))
+			return false;
+	}
+	return true;
+}
+
+void creature::matchspeech(speecha& source) const {
+	auto ps = source.data;
+	for(auto p : source) {
+		if(!matchspeech(p->condition))
+			continue;
+		*ps++ = p;
+	}
+	source.count = ps - source.data;
+}
+
+const speech* creature::matchfirst(const speecha& source) const {
+	auto ps = source.data;
+	for(auto p : source) {
+		if(!matchspeech(p->condition))
+			continue;
+		return p;
+	}
+	return 0;
+}
+
+const char* creature::getspeech(const char* id) const {
+	speecha source;
+	source.select(id);
+	if(!source)
+		return getnm("NothingToSay");
+	auto conditional = source[0]->condition.count>0;
+	if(conditional) {
+		auto p = matchfirst(source);
+		if(!p)
+			return getnm("NothingToSay");
+		return p->name;
+	} else
+		return source.getrandom();
+}
+
 void creature::interaction(creature& opponent) {
 	if(opponent.isenemy(*this))
 		attackmelee(opponent);
+	else if(!isplayer())
+		return;
+	else {
+		auto pt = opponent.getposition();
+		opponent.setposition(getposition());
+		opponent.fixmovement();
+		opponent.wait();
+		setposition(pt);
+		fixmovement();
+		if(d100() < 40)
+			opponent.speech("DontPushMe");
+	}
 }
 
 int creature::getdamage(wear_s v) const {
@@ -433,7 +496,7 @@ bool creature::roll(ability_s v, int bonus) const {
 void adventure_mode();
 
 void creature::lookcreatures() {
-	creatures.select(getposition(), getlos());
+	creatures.select(getposition(), getlos(), isplayer());
 	if(is(Ally)) {
 		enemies = creatures;
 		enemies.match(Enemy, true);
@@ -624,4 +687,17 @@ int creature::getparrying(const item& enemy_weapon, const item& weapon, int valu
 	value += enemy_weapon.geti().weapon.enemy_parry;
 	value += weapon.geti().weapon.parry;
 	return value;
+}
+
+void creature::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
+	if(isplayer() || area.is(getposition(), Visible))
+		actable::sayv(sb, format, format_param, name, female);
+}
+
+bool creature::is(condition_s v) const {
+	switch(v) {
+	case Busy: return wait_seconds > 1000;
+	case Random: return d100() < 40;
+	default: return true;
+	}
 }

@@ -519,6 +519,8 @@ void creature::paintbars() const {
 void creature::paint() const {
 	auto flags = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
+	if(!area.is(getposition(), Visible))
+		return;
 	if(kind.iskind<monsteri>()) {
 		auto pi = gres(res::Monsters);
 		image(pi, kind.value, flags);
