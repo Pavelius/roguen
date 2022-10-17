@@ -5,7 +5,7 @@
 
 using namespace draw;
 
-const size_t max_object_count = 512;
+const size_t max_object_count = 1024;
 
 BSDATAC(object, max_object_count)
 BSDATAC(draworder, max_object_count)
@@ -255,6 +255,7 @@ void draw::paintobjects() {
 	}
 	if(object::afterpaintall)
 		object::afterpaintall();
+	cleanup();
 	clipping = push_clip;
 }
 
@@ -292,6 +293,17 @@ object* draw::findobject(const void* p) {
 
 void draw::clearobjects() {
 	bsdata<object>::source.clear();
+}
+
+void draw::cleanup() {
+	auto pb = bsdata<object>::begin();
+	auto pe = bsdata<object>::end();
+	while(pe > pb) {
+		if(pe[-1])
+			break;
+		pe--;
+	}
+	bsdata<object>::source.count = pe - bsdata<object>::elements;
 }
 
 static rect getcorrectarea(int offs) {

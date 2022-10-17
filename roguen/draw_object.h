@@ -43,6 +43,7 @@ struct object : drawable {
 object*				addobject(point pt);
 bool				cameravisible(point goal, int border = 48);
 void*				chooseobject();
+void				cleanup();
 void				clearobjects();
 void				focusing(point goal);
 object*				findobject(const void* p);
