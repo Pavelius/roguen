@@ -5,6 +5,7 @@
 NOBSDATA(color)
 NOBSDATA(dice)
 NOBSDATA(itemi::weaponi)
+NOBSDATA(point)
 
 BSDATAD(variant)
 BSMETA(variant) = {{}};
@@ -75,6 +76,9 @@ BSMETA(monsteri) = {
 	BSREQ(treasure),
 	BSREQ(appear), BSREQ(appear_outdoor),
 	{}};
+BSMETA(point) = {
+	BSREQ(x), BSREQ(y),
+	{}};
 BSMETA(racei) = {
 	BSREQ(id),
 	{}};
@@ -90,6 +94,7 @@ BSMETA(sitei) = {
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSREQ(minimap),
+	BSREQ(offset),
 	{}};
 BSMETA(sitegeni) = {
 	BSREQ(id),

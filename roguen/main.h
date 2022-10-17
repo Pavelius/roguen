@@ -355,6 +355,7 @@ struct sitei : nameable {
 	variants	sites;
 	color		minimap;
 	tile_s		walls, floors;
+	point		offset;
 	void		building(const rect& rc) const;
 	void		cityscape(const rect& rca) const;
 	void		outdoor(const rect& rca) const;

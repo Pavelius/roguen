@@ -37,8 +37,9 @@ YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного ору
 YouNeedThrownWeapon: Вам нужно иметь в руках метательное оружие.
 
 Hills: Холмы
-Plains: Равнины
 LightForest: Лес
+Plains: Равнины
+StartVillage: Деревня "Клюв грифона"
 
 Strenght: Сила
 Charisma: Харизма

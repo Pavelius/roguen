@@ -44,9 +44,6 @@ Hills minimap(152 191 100) floors(Grass) global(GenerateOutdoor)
 AshenLand minimap(128 128 128) floors(GrassCorupted) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+60 RockyMountains-10
-StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage)
+StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
- sites NPCHouses NPCHouses NPCHouses Building Building Building Building Building Building Building\
-  Building Building Building Building Building Building Building Building Building Building\
-  Building Building Building Building Building Building Building Building Building Building\
-  Building Building Building Building Building Building Building Building Building Building
+ sites NPCHouses+3 Building+22

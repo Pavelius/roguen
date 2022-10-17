@@ -161,8 +161,20 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 }
 
 static void create_road(const rect& rc) {
-	area.set(rc, Rock);
-	create_monster(rc, "RandomCommoner", false, xrand(3, 6));
+	rect r1 = rc;
+	if(r1.width() > r1.height()) {
+		if(r1.x1 <= 6)
+			r1.x1 = 0;
+		if(r1.x2 >= area.mps - 6)
+			r1.x2 = area.mps - 1;
+	} else {
+		if(r1.y1 >= 1 && r1.y1 <= 6)
+			r1.y1 = 0;
+		if(r1.y2 >= area.mps - 6)
+			r1.y2 = area.mps - 1;
+	}
+	area.set(r1, Rock);
+	create_monster(r1, "RandomCommoner", false, xrand(3, 6));
 }
 
 static void show_debug_minimap() {
@@ -377,8 +389,10 @@ static void create_locations_common(const rect& rca, variant tile, const sitegen
 	auto pg = p->global;
 	if(!pg)
 		pg = pdef;
+	rect r1 = rca;
+	r1.offset(p->offset.x, p->offset.y);
 	if(pg && pg->proc)
-		(p->*pg->proc)(rca);
+		(p->*pg->proc)(r1);
 }
 
 static void create_landscape(const rect & rca, variant v) {
@@ -428,8 +442,13 @@ static void add_area_sites(variant v) {
 		if(ei.sites) {
 			for(auto ev : ei.sites)
 				add_area_sites(ev);
-		} else
-			sites.add(v);
+		} else {
+			auto count = v.counter;
+			if(!count)
+				count = 1;
+			for(auto i = 0; i < count; i++)
+				sites.add(v);
+		}
 	}
 }
 
