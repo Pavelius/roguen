@@ -1390,8 +1390,8 @@ bool draw::ishilite(const rect& rc) {
 	return false;
 }
 
-int	draw::aligned(int x, int width, unsigned flags, int dx) {
-	switch(flags & AlignMask) {
+int	draw::aligned(int x, int width, unsigned feats, int dx) {
+	switch(feats & AlignMask) {
 	case AlignRightBottom:
 	case AlignRightCenter:
 	case AlignRight: return x + width - dx;
@@ -1529,7 +1529,7 @@ int draw::textw(const char* string, int count) {
 	return x1;
 }
 
-void draw::text(const char* string, int count, unsigned flags) {
+void draw::text(const char* string, int count, unsigned feats) {
 	if(!font)
 		return;
 	auto dy = texth();
@@ -1544,7 +1544,7 @@ void draw::text(const char* string, int count, unsigned flags) {
 	while(s1 < s2) {
 		int sm = szget(&s1);
 		if(sm >= 0x21)
-			glyph(sm, flags);
+			glyph(sm, feats);
 		caret.x += textw(sm);
 	}
 	caret = push_caret;
@@ -1578,14 +1578,14 @@ void draw::text(const char* string, int count, unsigned flags) {
 	}
 }*/
 
-void draw::textc(const char* string, int count, unsigned flags) {
+void draw::textc(const char* string, int count, unsigned feats) {
 	auto push_clip = clipping;
 	setclip({caret.x, caret.y, caret.x + width, caret.y + texth()});
 	auto w = textw(string, count);
 	text_clipped = w > width;
 	auto push_caret = caret;
-	caret.x = aligned(caret.x, width, flags, w);
-	text(string, count, flags);
+	caret.x = aligned(caret.x, width, feats, w);
+	text(string, count, feats);
 	caret = push_caret;
 	clipping = push_clip;
 	caret.y += texth();
@@ -1790,7 +1790,7 @@ int draw::hittest(rect rc, const char* string, unsigned state, point pt) {
 	return -1;
 }
 
-void draw::image(int x, int y, const sprite* e, int id, int flags) {
+void draw::image(int x, int y, const sprite* e, int id, int feats) {
 	int x2, y2;
 	color* pal;
 	if(!e)
@@ -1801,23 +1801,23 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	if(!canvas)
 		return;
 	auto xo = x;
-	if(flags & ImageMirrorH) {
+	if(feats & ImageMirrorH) {
 		x2 = x;
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			x2 += f.ox;
 		x = x2 - f.sx;
 	} else {
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			x -= f.ox;
 		x2 = x + f.sx;
 	}
-	if(flags & ImageMirrorV) {
+	if(feats & ImageMirrorV) {
 		y2 = y;
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			y2 += f.oy;
 		y = y2 - f.sy;
 	} else {
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			y -= f.oy;
 		y2 = y + f.sy;
 	}
@@ -1825,7 +1825,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	if(y2<clipping.y1 || y>clipping.y2 || x2<clipping.x1 || x>clipping.x2)
 		return;
 	if(y < clipping.y1) {
-		if((flags & ImageMirrorV) == 0) {
+		if((feats & ImageMirrorV) == 0) {
 			switch(f.encode) {
 			case sprite::ALC: s = skip_alc(s, clipping.y1 - y); break;
 			case sprite::ALC8: s = skip_v3(s, clipping.y1 - y); break;
@@ -1840,7 +1840,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 		y = clipping.y1;
 	}
 	if(y2 > clipping.y2) {
-		if(flags & ImageMirrorV) {
+		if(feats & ImageMirrorV) {
 			switch(f.encode) {
 			case sprite::ALC: s = skip_alc(s, y2 - clipping.y2); break;
 			case sprite::ALC8: s = skip_v3(s, y2 - clipping.y2); break;
@@ -1856,23 +1856,23 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	}
 	if(y >= y2)
 		return;
-	int wd = (flags & ImageMirrorV) ? -canvas->scanline : canvas->scanline;
-	int sy = (flags & ImageMirrorV) ? y2 - 1 : y;
+	int wd = (feats & ImageMirrorV) ? -canvas->scanline : canvas->scanline;
+	int sy = (feats & ImageMirrorV) ? y2 - 1 : y;
 	switch(f.encode) {
 	case sprite::RAW:
 		if(x < clipping.x1) {
-			if((flags & ImageMirrorH) == 0)
+			if((feats & ImageMirrorH) == 0)
 				s += (clipping.x1 - x) * 3;
 			x = clipping.x1;
 		}
 		if(x2 > clipping.x2) {
-			if(flags & ImageMirrorH)
+			if(feats & ImageMirrorH)
 				s += (x2 - clipping.x2) * 3;
 			x2 = clipping.x2;
 		}
 		if(x >= x2)
 			return;
-		if(flags & ImageMirrorH)
+		if(feats & ImageMirrorH)
 			raw32m(ptr(x2 - 1, sy), wd, s, f.sx * 3,
 				x2 - x,
 				y2 - y);
@@ -1882,7 +1882,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 				y2 - y);
 		break;
 	case sprite::RAW1:
-		if(flags & TextBold)
+		if(feats & TextBold)
 			raw1(xo, y - 1, s, f.sx, y2 - 1);
 		raw1(xo, y, s, f.sx, y2);
 		break;
@@ -1895,13 +1895,13 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 			x2 = clipping.x2;
 		if(x >= x2)
 			return;
-		if(!f.pallette || (flags & ImagePallette))
+		if(!f.pallette || (feats & ImagePallette))
 			pal = draw::palt;
 		else
 			pal = (color*)e->ptr(f.pallette);
 		if(!pal)
 			return;
-		if(flags & ImageMirrorH)
+		if(feats & ImageMirrorH)
 			raw832m(ptr(x2 - 1, y), wd, s, f.sx,
 				x2 - x,
 				y2 - y,
@@ -1910,13 +1910,13 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 			raw832(ptr(x, y), wd, s, f.sx, x2 - x, y2 - y, pal);
 		break;
 	case sprite::RLE8:
-		if(!f.pallette || (flags & ImagePallette))
+		if(!f.pallette || (feats & ImagePallette))
 			pal = draw::palt;
 		else
 			pal = (color*)e->ptr(f.pallette);
 		if(!pal)
 			return;
-		if(flags & ImageMirrorH)
+		if(feats & ImageMirrorH)
 			rle832m(ptr(x2 - 1, sy), wd, s, y2 - y,
 				ptr(clipping.x1, sy),
 				ptr(clipping.x2, sy),
@@ -1928,7 +1928,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 				alpha, pal);
 		break;
 	case sprite::ALC8:
-		if(flags & ImageMirrorH) {
+		if(feats & ImageMirrorH) {
 
 		} else
 			alc832(ptr(x, sy), wd, s, y2 - y,
@@ -1937,7 +1937,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 				alpha);
 		break;
 	case sprite::RLE:
-		if(flags & ImageMirrorH)
+		if(feats & ImageMirrorH)
 			rle32m(ptr(x2 - 1, sy), wd, s, y2 - y,
 				ptr(clipping.x1, sy),
 				ptr(clipping.x2, sy),
@@ -1949,10 +1949,10 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 				alpha);
 		break;
 	case sprite::ALC:
-		if(flags & TextBold)
+		if(feats & TextBold)
 			alc32(ptr(x, sy - 1), wd, s, y2 - y,
 				ptr(clipping.x1, sy - 1), ptr(clipping.x2, sy - 1),
-				fore, (flags & TextItalic) != 0);
+				fore, (feats & TextItalic) != 0);
 		//if(flags & TextBold)
 		//	alc32(ptr(x, sy - 1), wd, s, y2 - y,
 		//		ptr(clipping.x1, sy - 1),
@@ -1960,17 +1960,17 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 		//		fore, (flags & TextItalic) != 0);
 		alc32(ptr(x, sy), wd, s, y2 - y,
 			ptr(clipping.x1, sy), ptr(clipping.x2, sy),
-			fore, (flags & TextItalic) != 0);
+			fore, (feats & TextItalic) != 0);
 		break;
 	default:
 		break;
 	}
 }
 
-void draw::image(const sprite* e, int id, int flags, color* pal) {
+void draw::image(const sprite* e, int id, int feats, color* pal) {
 	auto pal_push = draw::palt;
 	draw::palt = pal;
-	image(caret.x, caret.y, e, id, flags | ImagePallette);
+	image(caret.x, caret.y, e, id, feats | ImagePallette);
 	draw::palt = pal_push;
 }
 
@@ -1982,14 +1982,14 @@ static void rectfall() {
 	rectf();
 }
 
-void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin, unsigned char* koeff) {
+void draw::stroke(int x, int y, const sprite* e, int id, int feats, unsigned char thin, unsigned char* koeff) {
 	color tr;
 	tr.a = 0;
 	tr.r = 255;
 	tr.g = 255;
 	tr.b = 255;
 	auto& fr = e->get(id);
-	rect rc = fr.getrect(x, y, flags);
+	rect rc = fr.getrect(x, y, feats);
 	surface sf(rc.width() + 2, rc.height() + 2, 32);
 	x--; y--;
 	auto push_clip = clipping;
@@ -2149,7 +2149,7 @@ void surface::blend(const surface& source, int alpha) {
 		width, height, alpha);
 }
 
-void surface::blit(int x1, int y1, int w, int h, unsigned flags, const surface& ss, int xs, int ys) {
+void surface::blit(int x1, int y1, int w, int h, unsigned feats, const surface& ss, int xs, int ys) {
 	if(ss.bpp != bpp)
 		return;
 	int ox;
@@ -2159,7 +2159,7 @@ void surface::blit(int x1, int y1, int w, int h, unsigned flags, const surface& 
 		h = ss.height;
 	if(w > ss.width)
 		w = ss.width;
-	if(flags & ImageTransparent)
+	if(feats & ImageTransparent)
 		cpy32t(
 			ptr(x1, y1), scanline,
 			const_cast<surface&>(ss).ptr(xs, ys) + ox * 4, ss.scanline,
@@ -2171,9 +2171,9 @@ void surface::blit(int x1, int y1, int w, int h, unsigned flags, const surface& 
 			w, h, 4);
 }
 
-void surface::blit(int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source, int width_source, int height_source) {
+void surface::blit(int x, int y, int width, int height, unsigned feats, const surface& source, int x_source, int y_source, int width_source, int height_source) {
 	if(width == width_source && height == height_source) {
-		blit(x, y, width, height, flags, source, x_source, y_source);
+		blit(x, y, width, height, feats, source, x_source, y_source);
 		return;
 	}
 	if(source.bpp != bpp)
@@ -2225,27 +2225,27 @@ int sprite::glyph(unsigned sym) const {
 	return 't' - 0x21; // Unknown symbol is question mark
 }
 
-rect sprite::frame::getrect(int x, int y, unsigned flags) const {
+rect sprite::frame::getrect(int x, int y, unsigned feats) const {
 	int x2, y2;
 	if(!offset)
 		return{0, 0, 0, 0};
-	if(flags & ImageMirrorH) {
+	if(feats & ImageMirrorH) {
 		x2 = x;
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			x2 += ox;
 		x = x2 - sx;
 	} else {
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			x -= ox;
 		x2 = x + sx;
 	}
-	if(flags & ImageMirrorV) {
+	if(feats & ImageMirrorV) {
 		y2 = y;
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			y2 += oy;
 		y = y2 - sy;
 	} else {
-		if((flags & ImageNoOffset) == 0)
+		if((feats & ImageNoOffset) == 0)
 			y -= oy;
 		y2 = y + sy;
 	}

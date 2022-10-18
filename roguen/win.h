@@ -693,7 +693,7 @@ struct TPMPARAMS {
 };
 struct WINDOWPLACEMENT {
 	UINT					length;
-	UINT					flags;
+	UINT					feats;
 	UINT					showCmd;
 	POINT					ptMinPosition;
 	POINT					ptMaxPosition;
@@ -911,7 +911,7 @@ DLL unsigned WINAPI			GetModuleFileNameA(void* hModule, char* lpFilename, unsign
 DLL void* WINAPI			GetProcessHeap(void);
 WINGDIAPI int WINAPI		GetTextMetricsA(void*, TEXTMETRICA*);
 DLL unsigned WINAPI			GetTickCount(void);
-DLL void* WINAPI			GlobalAlloc(unsigned flags, unsigned);
+DLL void* WINAPI			GlobalAlloc(unsigned feats, unsigned);
 DLL void* WINAPI			GlobalLock(void*);
 DLL unsigned WINAPI			GlobalSize(void*);
 DLL int WINAPI				GlobalUnlock(void*);

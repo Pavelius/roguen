@@ -71,7 +71,7 @@ struct sprite : pma {
 		encodes			encode;
 		unsigned		pallette;
 		unsigned		offset;
-		rect			getrect(int x, int y, unsigned flags) const;
+		rect			getrect(int x, int y, unsigned feats) const;
 	};
 	struct cicle {
 		short unsigned	start;
@@ -79,7 +79,7 @@ struct sprite : pma {
 	};
 	short int			width, height; // common size of all frames (if applicable)
 	short int			ascend, descend; // top or down ascend
-	short unsigned		flags; // must be zero
+	short unsigned		feats; // must be zero
 	unsigned			cicles; // count of anim structure
 	unsigned			cicles_offset;
 	frame				frames[1];
@@ -143,8 +143,8 @@ struct surface {
 	constexpr explicit operator bool() const { return bits != 0; }
 	static unsigned char* allocator(unsigned char* bits, unsigned size);
 	void				blend(const surface& source, int alpha);
-	void				blit(int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source);
-	void				blit(int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source, int width_source, int height_source);
+	void				blit(int x, int y, int width, int height, unsigned feats, const surface& source, int x_source, int y_source);
+	void				blit(int x, int y, int width, int height, unsigned feats, const surface& source, int x_source, int y_source, int width_source, int height_source);
 	void				clear() { resize(0, 0, 0, true); }
 	void				convert(int bpp, color* pallette);
 	void				flipv();
@@ -199,7 +199,7 @@ int						getbpp();
 inline rect				getrect() { return {caret.x, caret.y, caret.x + width, caret.y + height}; }
 int						getheight();
 int						getwidth();
-void					glyph(int sym, unsigned flags);
+void					glyph(int sym, unsigned feats);
 void					gradv(const color c1, const color c2, int skip = 0);
 void					gradh(const color c1, const color c2, int skip = 0);
 const sprite*			gres(res id);
@@ -209,9 +209,9 @@ int						hittest(rect rc, const char* string, unsigned state, point mouse);
 bool					ishilite(const rect& rc);
 inline bool				ishilite() { return ishilite(getrect()); }
 inline bool				ishilite(int size) { return ishilite({caret.x-size, caret.y - size, caret.x + size, caret.y + size}); }
-void					image(int x, int y, const sprite* e, int id, int flags);
-inline void				image(const sprite* e, int id, int flags) { image(caret.x, caret.y, e, id, flags); }
-void					image(const sprite* e, int id, int flags, color* pal);
+void					image(int x, int y, const sprite* e, int id, int feats);
+inline void				image(const sprite* e, int id, int feats) { image(caret.x, caret.y, e, id, feats); }
+void					image(const sprite* e, int id, int feats, color* pal);
 void					imager(int x, int y, const sprite* p, int id, int radius);
 void					key2str(stringbuilder& sb, int key);
 void					line(int x, int y); // Draw line
@@ -241,19 +241,19 @@ void					setpos(int x, int y);
 void					setpos(int x, int y, int width, int height);
 void					settimer(unsigned milleseconds);
 const char*				skiptr(const char* string);
-void					stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin = 1, unsigned char* koeff = 0);
+void					stroke(int x, int y, const sprite* e, int id, int feats, unsigned char thin = 1, unsigned char* koeff = 0);
 void					strokeactive();
 void					strokeborder();
 void					strokeline();
 void					strokeout(fnevent proc, int dx = 0, int dy = 0);
 void					syscursor(bool enable);
-void					text(const char* string, int count = -1, unsigned flags = 0);
+void					text(const char* string, int count = -1, unsigned feats = 0);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
 void					texta(const char* string, unsigned state = 0);
 void					textas(const char* string);
-void					textc(const char* string, int count = -1, unsigned flags = 0);
+void					textc(const char* string, int count = -1, unsigned feats = 0);
 int						textbc(const char* string, int width);
-int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
+int						texte(rect rc, const char* string, unsigned feats, int i1, int i2);
 void					textf(const char* string);
 void					textfs(const char* string);
 void					textfs(const char* string, int& cashe_origin, int& string_origin);

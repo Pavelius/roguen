@@ -1,2 +1,20 @@
-﻿In file `locale/ru/Chats.txt`:
- Line 9: Unknown variant identifier `Random`
+﻿In file `rules/Items.txt`:
+ Line 6: Not found requisit `flags`
+In file `rules/Monsters.txt`:
+ Line 6: Can't find variant `Dagger`
+ Line 12: Can't find variant `Spear`
+ Line 12: Can't find variant `ChainArmor`
+ Line 15: Can't find variant `Sword`
+ Line 15: Can't find variant `LeatherArmor`
+ Line 18: Can't find variant `Club`
+ Line 21: Can't find variant `Club`
+ Line 21: Can't find variant `LeatherArmor`
+ Line 26: Can't find variant `Sword`
+In file `rules/Advancement.txt`:
+ Line 6: Can't find variant `ChainArmor`
+ Line 6: Can't find variant `Sword`
+ Line 9: Can't find variant `LeatherArmor`
+ Line 9: Can't find variant `Dagger`
+In file `rules/Tables.txt`:
+ Line 3: Unknown variant identifier `Lags`
+ Line 4: Unknown variant identifier `SmallLags`

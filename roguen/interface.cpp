@@ -517,42 +517,42 @@ void creature::paintbars() const {
 }
 
 void creature::paint() const {
-	auto flags = ismirror() ? ImageMirrorH : 0;
+	auto feats = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
 	if(!area.is(getposition(), Visible))
 		return;
 	if(kind.iskind<monsteri>()) {
 		auto pi = gres(res::Monsters);
-		image(pi, kind.value, flags);
+		image(pi, kind.value, feats);
 	} else {
 		auto pb = gres(res::PCBody);
 		auto pa = gres(res::PCArms);
 		auto pc = gres(res::PCAccessories);
 		// Missile weapon if any
 		if(wears[RangedWeapon])
-			image(pc, wears[RangedWeapon].getavatar(), flags);
+			image(pc, wears[RangedWeapon].getavatar(), feats);
 		// Cloacks
 		if(wears[Backward])
-			image(pc, wears[Backward].getavatar(), flags);
+			image(pc, wears[Backward].getavatar(), feats);
 		// Primary arm
 		if(wears[MeleeWeapon].is(TwoHanded))
-			image(pa, 9, flags);
+			image(pa, 9, feats);
 		else if(wears[MeleeWeapon])
-			image(pa, 36 + wears[MeleeWeapon].getavatar(), flags);
+			image(pa, 36 + wears[MeleeWeapon].getavatar(), feats);
 		else
-			image(pa, 36 + 25, flags);
+			image(pa, 36 + 25, feats);
 		// Torso and armor
-		image(pb, getavatar(kind.value, is(Female), wears[Torso].getavatar()), flags);
+		image(pb, getavatar(kind.value, is(Female), wears[Torso].getavatar()), feats);
 		// Thrown weapon
 		//if(wears[ThrownWeapon])
 		//	image(pc, 3, 0); // Throwing
 		// Secondanary arm
 		if(wears[MeleeWeapon].is(TwoHanded))
-			image(pa, wears[MeleeWeapon].getavatar(), flags);
+			image(pa, wears[MeleeWeapon].getavatar(), feats);
 		else if(wears[MeleeWeaponOffhand])
-			image(pa, 10 + wears[MeleeWeaponOffhand].getavatar(), flags);
+			image(pa, 10 + wears[MeleeWeaponOffhand].getavatar(), feats);
 		else
-			image(pa, 10 + 25, flags);
+			image(pa, 10 + 25, feats);
 	}
 	if(player == this || player->getenemy() == this)
 		paintbars();
@@ -580,10 +580,10 @@ void visualeffect::paint(unsigned char random) const {
 			unsigned long current = getobjectstamp() - start_stamp;
 			auto tk = current * pc->count / mst;
 			if(tk < pc->count)
-				image(pi, pc->start + tk, flags);
+				image(pi, pc->start + tk, feats);
 		}
 	} else
-		image(pi, random + frame, flags);
+		image(pi, random + frame, feats);
 }
 
 static void object_afterpaint(const object* p) {
@@ -1000,7 +1000,12 @@ static void paint_minimap_creatures() {
 			continue;
 		caret.x = origin.x + i.x * width;
 		caret.y = origin.y + i.y * height;
-		fillfade(color(255, 0, 0), 192);
+		if(e.is(Enemy))
+			fillfade(color(255, 0, 0), 192);
+		else if(e.is(Ally))
+			fillfade(color(0, 255, 0), 192);
+		else
+			fillfade(color(255, 255, 255), 192);
 	}
 }
 

@@ -585,7 +585,7 @@ void creature::update_wears() {
 			continue;
 		auto& ei = wears[i].geti();
 		auto magic = wears[i].getmagic();
-		feats.add(ei.flags);
+		feats.add(ei.feats);
 		if(wears[i].isidentified()) {
 			if(ei.dress)
 				dress(ei.dress, getmultiplier(magic));

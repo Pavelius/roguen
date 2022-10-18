@@ -51,7 +51,7 @@ BSMETA(itemi) = {
 	BSREQ(cost), BSREQ(weight), BSREQ(count),
 	BSREQ(avatar),
 	BSENM(ability, abilityi),
-	BSFLG(flags, feati),
+	BSFLG(feats, feati),
 	BSENM(wear, weari),
 	BSREQ(weapon),
 	BSREQ(bonus),

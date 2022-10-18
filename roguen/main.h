@@ -159,14 +159,14 @@ struct itemi : nameable {
 	ability_s	ability;
 	char		bonus;
 	weaponi		weapon;
-	featable	flags;
+	featable	feats;
 	char		wear_index;
 	const char*	avatar;
 	variant		dress, use;
 	bool operator==(const itemi& v) const { return this == &v; }
 	const itemi* getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
 	int			getindex() const { return this - bsdata<itemi>::elements; }
-	bool		is(feat_s v) const { return flags.is(v); }
+	bool		is(feat_s v) const { return feats.is(v); }
 	void		paint() const;
 };
 class item {
@@ -202,7 +202,7 @@ public:
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(ability_s v) const { return geti().ability == v; }
-	bool		is(feat_s v) const { return geti().flags.is(v); }
+	bool		is(feat_s v) const { return geti().feats.is(v); }
 	bool		is(wear_s v) const;
 	bool		is(const itemi& v) const;
 	bool		iscountable() const { return geti().count != 0; }
@@ -353,7 +353,7 @@ struct advancement {
 };
 struct visualeffect : nameable {
 	res			resid;
-	short unsigned frame, flags;
+	short unsigned frame, feats;
 	unsigned char priority = 15;
 	int			dy;
 	void		paint(unsigned char random) const;

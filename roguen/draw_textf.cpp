@@ -92,25 +92,25 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 	auto push_fore = fore;
 	auto push_font = font;
 	char temp[4096]; temp[0] = 0;
-	unsigned flags = 0;
+	unsigned feats = 0;
 	fore = new_fore;
 	font = new_font;
 	while(true) {
 		if(p[0] == '*' && p[1] == '*') {
 			p += 2;
-			if(flags & TextBold)
-				flags &= ~TextBold;
+			if(feats & TextBold)
+				feats &= ~TextBold;
 			else
-				flags |= TextBold;
+				feats |= TextBold;
 			continue;
 		} else if(p[0] == '*') {
 			p++;
-			if(flags & TextItalic)
-				flags &= ~TextItalic;
+			if(feats & TextItalic)
+				feats &= ~TextItalic;
 			else {
-				if((flags & TextItalic) == 0)
+				if((feats & TextItalic) == 0)
 					caret.x += texth() / 3;
-				flags |= TextItalic;
+				feats |= TextItalic;
 			}
 			continue;
 		} else if(p[0] == '[' && p[1] == '[')
@@ -138,7 +138,7 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 				break;
 			case '#':
 				p++;
-				flags |= TextUscope;
+				feats |= TextUscope;
 				fore = colors::special;
 				break;
 			default:
@@ -147,7 +147,7 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 			}
 		} else if(p[0] == ']') {
 			p++; temp[0] = 0;
-			flags &= ~TextUscope;
+			feats &= ~TextUscope;
 			fore = new_fore;
 		}
 		// ќбработаем пробелы и табул€цию
@@ -168,7 +168,7 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 			w = textw(p, p2 - p);
 			if(caret.x + w > x2)
 				apply_line_feed(x1, texth());
-			text(p, p2 - p, flags);
+			text(p, p2 - p, feats);
 			p = p2;
 		}
 		if(temp[0] && ishilite({caret.x, caret.y, caret.x + w, caret.y + texth()})) {

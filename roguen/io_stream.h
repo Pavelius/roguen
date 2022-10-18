@@ -35,11 +35,11 @@ struct file : stream {
 		void*			handle;
 	};
 	file();
-	file(const char* url, unsigned flags = StreamRead);
+	file(const char* url, unsigned feats = StreamRead);
 	~file();
 	operator bool() const { return handle != 0; }
 	void				close();
-	bool				create(const char* url, unsigned flags);
+	bool				create(const char* url, unsigned feats);
 	static bool			exist(const char* url);
 	static char*		getdir(char* url, int size);
 	static char*		getmodule(char* url, int size);

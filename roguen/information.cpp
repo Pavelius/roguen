@@ -90,7 +90,7 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 		addv(sb, DamageReduciton, ei.bonus);
 		break;
 	}
-	addv(sb, ei.flags);
+	addv(sb, ei.feats);
 }
 
 const char*	item::getfullname() const {

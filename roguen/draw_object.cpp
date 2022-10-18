@@ -147,7 +147,7 @@ void object::disappear(int milliseconds) {
 	pr->alpha = 0;
 }
 
-static void textcn(const char* string, int dy, unsigned flags) {
+static void textcn(const char* string, int dy, unsigned feats) {
 	auto push_caret = caret;
 	caret.x -= textw(string) / 2;
 	caret.y += dy;

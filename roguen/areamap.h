@@ -37,15 +37,15 @@ struct featurei {
 	const char*		id;
 	framerange		features, overlay;
 	unsigned char	priority = 10;
-	unsigned		flags = 0;
+	unsigned		feats = 0;
 	void			paint(int random) const;
-	bool			is(areaf v) const { return (flags & (1 << v)) != 0; }
+	bool			is(areaf v) const { return (feats & (1 << v)) != 0; }
 };
 struct areamap : anymap<tile_s, 64> {
 	typedef bool (*fntest)(point m);
 	anymap<feature_s, mps> features;
 	anymap<unsigned char, mps> random;
-	anymap<unsigned char, mps> flags;
+	anymap<unsigned char, mps> feats;
 	void			blockfeatures() const;
 	static void		blockrange(int range);
 	void			blocktiles(tile_s v) const;
@@ -64,14 +64,14 @@ struct areamap : anymap<tile_s, 64> {
 	static point	getpoint(const rect& rc, direction_s dir);
 	static int		getrange(point start, point target);
 	void			horz(int x1, int y1, int x2, tile_s tile);
-	bool			is(point m, mapf_s v) const { return (flags[m] & (1 << v)) != 0; }
-	bool			isb(point m, mapf_s v) const { return !isvalid(m) || (flags[m] & (1 << v)) != 0; }
+	bool			is(point m, mapf_s v) const { return (feats[m] & (1 << v)) != 0; }
+	bool			isb(point m, mapf_s v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }
 	bool			isfree(point m) const;
 	bool			iswall(point m) const;
 	bool			iswall(point m, direction_s d) const;
 	bool			linelos(int x0, int y0, int x1, int y1, fntest test) const;
 	bool			linelossv(int x0, int y0, int x1, int y1, fntest test);
-	void			set(point m, mapf_s v) { if(isvalid(m)) flags[m] |= (1 << v); }
+	void			set(point m, mapf_s v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			set(point m, tile_s v);
 	void			set(point m, feature_s v);
 	void			set(rect rc, tile_s v);
@@ -82,7 +82,7 @@ struct areamap : anymap<tile_s, 64> {
 	void			set(feature_s v, int bonus);
 	static void		setblock(point m, unsigned short v);
 	void			setlos(point m, int radius, fntest test);
-	void			remove(point m, mapf_s v) { flags[m] &= ~(1 << v); }
+	void			remove(point m, mapf_s v) { feats[m] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
 	static void		makewave(point start_index);
 	static void		makewavex();

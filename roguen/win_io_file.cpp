@@ -10,8 +10,8 @@ void printcnf(const char* text) {
 io::file::file() : handle(0) {
 }
 
-io::file::file(const char* url, unsigned flags) : file() {
-	create(url, flags);
+io::file::file(const char* url, unsigned feats) : file() {
+	create(url, feats);
 }
 
 io::file::~file() {
@@ -56,20 +56,20 @@ const char* io::file::find::name() {
 	return ((WIN32_FIND_DATA*)&reserved)->cFileName;
 }
 
-bool io::file::create(const char* url, unsigned flags) {
+bool io::file::create(const char* url, unsigned feats) {
 	if(handle)
 		return true;
 	handle = CreateFileA(url,
-		(flags&StreamWrite) ? GENERIC_WRITE : GENERIC_READ,
+		(feats&StreamWrite) ? GENERIC_WRITE : GENERIC_READ,
 		0,
 		0,
-		(flags&StreamWrite) ? CREATE_ALWAYS : OPEN_EXISTING,
+		(feats&StreamWrite) ? CREATE_ALWAYS : OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL,
 		0);
 	if(handle == (void*)-1)
 		handle = 0;
 	else {
-		if((flags&(StreamText | StreamWrite)) == (StreamText | StreamWrite)) {
+		if((feats&(StreamText | StreamWrite)) == (StreamText | StreamWrite)) {
 			static unsigned char header_utf8[] = {0xEF, 0xBB, 0xBF};
 			write(header_utf8, sizeof(header_utf8));
 		}

@@ -450,7 +450,13 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\work\Tags.md">
+    <None Include="..\work\General.md">
+      <Filter>Documentations</Filter>
+    </None>
+    <None Include="..\work\Feats.md">
+      <Filter>Documentations</Filter>
+    </None>
+    <None Include="..\work\Files.md">
       <Filter>Documentations</Filter>
     </None>
   </ItemGroup>
