@@ -75,3 +75,6 @@ public:
 typedef const char* (*fntext)(const void* object, stringbuilder& sb);
 typedef void (*fnstatus)(const void* object, stringbuilder& sb);
 typedef void (*fnprint)(stringbuilder& sb);
+typedef void (*fnoutput)(const char* format);
+// Common functions
+void					print(fnoutput proc, const char* format, ...);

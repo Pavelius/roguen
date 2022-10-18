@@ -1040,7 +1040,7 @@ static void paint_area_screen(point origin, int z) {
 	pushvalue push_fore(fore);
 	caret.x = origin.x + s1.x * z;
 	caret.y = origin.y + s1.y * z;
-	width = (draw::getwidth() / tsx + 1) * z;
+	width = ((draw::getwidth() - panel_width) / tsx + 2) * z;
 	height = (draw::getheight() / tsy + 1) * z;
 	fore = colors::white;
 	rectb();
@@ -1087,6 +1087,20 @@ static void text_header(const char* format) {
 	fore = push_fore;
 }
 
+static void small_header(const char* format) {
+	auto push_caret = caret;
+	auto push_font = font;
+	auto push_fore = fore;
+	font = metrics::h3;
+	fore = colors::h3;
+	caret.x += (width - textw(format)) / 2;
+	text(format);
+	caret = push_caret;
+	caret.y += texth();
+	font = push_font;
+	fore = push_fore;
+}
+
 static void pause_keys() {
 	if(hot.key == KeySpace || hot.key == KeyEscape)
 		execute(buttoncancel);
@@ -1101,6 +1115,7 @@ static void scene_world() {
 static void scene_area() {
 	fillwindow();
 	text_header(getnm(loc.tile));
+	print(small_header, getnm("GlobalMapPosition"), game.position.x, game.position.y);
 	const int z = 4;
 	point origin;
 	origin.x = (width - area.mps * z) / 2;

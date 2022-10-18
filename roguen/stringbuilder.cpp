@@ -735,3 +735,11 @@ void stringbuilder::addto(const char* s) {
 	};
 	add(s, map, "ó");
 }
+
+void print(fnoutput proc, const char* format, ...) {
+	if(!proc || !format)
+		return;
+	char temp[512]; stringbuilder sb(temp);
+	sb.addv(format, xva_start(format));
+	proc(temp);
+}
