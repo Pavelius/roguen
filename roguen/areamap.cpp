@@ -78,6 +78,13 @@ void areamap::set(rect rc, tile_s v, int random_count) {
 	}
 }
 
+void areamap::set(rect rc, feature_s v) {
+	point m;
+	for(m.y = rc.y1; m.y < rc.y2; m.y++)
+		for(m.x = rc.x1; m.x < rc.x2; m.x++)
+			features[m] = v;
+}
+
 void areamap::set(rect rc, feature_s v, int random_count) {
 	if(random_count <= -100)
 		return;
@@ -86,7 +93,7 @@ void areamap::set(rect rc, feature_s v, int random_count) {
 	while(random_count > 0) {
 		short x = rc.x1 + rand() % (rc.width() + 1);
 		short y = rc.y1 + rand() % (rc.height() + 1);
-		set({x, y}, v);
+		set(point{x, y}, v);
 		random_count--;
 	}
 }
@@ -172,11 +179,25 @@ unsigned areamap::getpath(point start, point goal, point* result, unsigned maxim
 	return pb - result;
 }
 
+void areamap::setblock(point m, unsigned short v) {
+	if(m)
+		movement_rate[m] = v;
+}
+
 void areamap::blockzero() {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
 			if(movement_rate[m] >= NotCalculatedMovement)
+				movement_rate[m] = Blocked;
+		}
+}
+
+void areamap::blocktiles(tile_s v) const {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if((*this)[m]==v)
 				movement_rate[m] = Blocked;
 		}
 }
@@ -252,7 +273,7 @@ void areamap::blockrange(int range) {
 }
 
 int	areamap::getrange(point m1, point m2) {
-	if(!isvalid(m1) || isvalid(m2))
+	if(!isvalid(m1) || !isvalid(m2))
 		return Blocked;
 	auto dx = iabs(m1.x - m2.x);
 	auto dy = iabs(m1.y - m2.y);
@@ -431,4 +452,14 @@ point areamap::getfree(point m, short maximum, fntest test) {
 		}
 	}
 	return {-1000, -1000};
+}
+
+point areamap::bordered(direction_s d) {
+	switch(d) {
+	case North: return {mps / 2, 0};
+	case South: return {mps / 2, mps - 1};
+	case West: return {0, mps / 2};
+	case East: return {mps - 1, mps / 2};
+	default: return {mps / 2, mps / 2};
+	}
 }

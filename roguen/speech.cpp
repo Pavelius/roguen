@@ -20,7 +20,7 @@ void speecha::select(const char* id) {
 
 const char* speecha::getrandom() const {
 	if(!count)
-		return getnm("NoRandomSpeech");
+		return getnm("NothingToSay");
 	return data[rand() % count]->name;
 }
 
@@ -36,6 +36,8 @@ static const char* read_line(const char* p, stringbuilder& sb, variants& element
 			pv->clear();
 			p = readval(skipsp(p), sb, *pv);
 		}
+		if(*p == '}')
+			p = skipws(p + 1);
 		store_end(elements);
 	}
 	sb.clear();
@@ -51,7 +53,7 @@ void speech::read(const char* url) {
 	while(allowparse && *p) {
 		if(!checksym(p, '#'))
 			break;
-		p = readidn(p+1, sb);
+		p = readidn(p + 1, sb);
 		auto block_id = szdup(temp);
 		if(!checksym(p, '\n'))
 			break;

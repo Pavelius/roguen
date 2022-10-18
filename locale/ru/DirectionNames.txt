@@ -1,0 +1,9 @@
+﻿North: Север
+South: Юг
+West: Запад
+East: Восток
+
+NorthEast: Северо-восток
+NorthWest: Северо-запад
+SouthEast: Юго-восток
+SouthWest: Юго-запад

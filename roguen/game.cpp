@@ -1,6 +1,7 @@
 #include "main.h"
 
 areamap			area;
+location		loc;
 worldi			world;
 gamei			game;
 static char		console_text[4096];
@@ -84,4 +85,10 @@ void gamei::playminute() {
 void gamei::play() {
 	while(checkalive() && !draw::isnext())
 		game.playminute();
+}
+
+void gamei::endgame() {
+	actable::actv(console, getnm("PlayerKilled"), 0, 0, 0);
+	actable::pressspace();
+	writelog();
 }

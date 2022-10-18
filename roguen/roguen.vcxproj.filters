@@ -22,6 +22,9 @@
     <Filter Include="Locale">
       <UniqueIdentifier>{81120db4-ed34-452d-a87a-05f6a5bbf804}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Documentations">
+      <UniqueIdentifier>{ebf0f501-a39a-4452-8083-ed4058bb0618}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="answers.cpp">
@@ -258,6 +261,15 @@
     <ClCompile Include="areamap.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="location.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="direction_req.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="condition.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -421,5 +433,25 @@
     <Text Include="..\rules\Sites.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="..\rules\Monsters.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\locale\ru\MonsterNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\logs.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\locale\ru\DirectionNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\WearNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\work\Tags.md">
+      <Filter>Documentations</Filter>
+    </None>
   </ItemGroup>
 </Project>

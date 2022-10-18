@@ -1,2 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 36: Not found identifier `GrassCorrupted`
+﻿In file `locale/ru/Chats.txt`:
+ Line 9: Unknown variant identifier `Random`

@@ -49,8 +49,19 @@ void item::create(const itemi* pi, int count) {
 		setcount(count);
 }
 
-dice item::getdamage() const {
-	return geti().weapon.damage;
+int item::getdamage() const {
+	switch(geti().wear) {
+	case MeleeWeapon:
+	case MeleeWeaponOffhand:
+	case RangedWeapon:
+		return geti().weapon.damage;
+	default:
+		return 0;
+	}
+}
+
+bool item::is(const itemi& v) const {
+	return geti() == v;
 }
 
 bool item::is(wear_s v) const {
@@ -70,9 +81,19 @@ creature* item::getowner() const {
 	return bsdata<creature>::elements + i;
 }
 
+static itemground* findadd(point m, item& it) {
+}
+
 void item::drop(point m) {
 	if(!area.isvalid(m))
 		return;
+	for(auto& e : bsdata<itemground>()) {
+		if(e && e.position == m) {
+			e.add(*this);
+			if(!(*this))
+				return;
+		}
+	}
 	auto pi = bsdata<itemground>::add();
 	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
 	pi->position = m;

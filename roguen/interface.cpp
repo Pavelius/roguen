@@ -23,6 +23,7 @@ static unsigned long start_stamp;
 static int wears_offset = 80;
 static rect message_rect;
 static keybind* keybinds;
+bool show_floor_rect;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -112,12 +113,13 @@ static void remove_temp_objects() {
 	}
 }
 
-static void add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
+static object* add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
 	auto po = addobject(pt);
 	po->data = data;
 	po->priority = priority;
 	po->random = random;
 	po->alpha = 0xFF;
+	return po;
 }
 
 point movable::getsposition() const {
@@ -164,10 +166,10 @@ void movable::fixappear() const {
 		return;
 	po = addobject(getsposition());
 	po->data = this;
-	po->alpha = 0;
+	po->alpha = 0xFF;
 	po->priority = 11;
-	auto pr = po->add(mst);
-	pr->alpha = 0xFF;
+	//auto pr = po->add(mst);
+	//pr->alpha = 0xFF;
 }
 
 void movable::fixremove() const {
@@ -204,12 +206,46 @@ void movable::fixaction() const {
 	pr->position = po->position;
 }
 
+const char* missilename(direction_s v) {
+	switch(v) {
+	case North: return "MissileNorth";
+	case South: return "MissileSouth";
+	case East: return "MissileEast";
+	case West: return "MissileWest";
+	default: return "MissileNorthWest";
+	}
+}
+
+void movable::fixshoot(point target, int frame) const {
+	fixthrown(target, missilename(direction), frame);
+}
+
+void movable::fixthrown(point target, const char* id, int frame) const {
+	if(!area.isvalid(target))
+		return;
+	auto pe = bsdata<visualeffect>::find(id);
+	if(!pe)
+		return;
+	auto range = area.getrange(getposition(), target);
+	if(range == 0xFFFF)
+		return;
+	auto po = add_object(m2s(getposition()), pe, frame);
+	po->position.y += pe->dy;
+	if(!po)
+		return;
+	auto pr = po->add(mst * range / 3);
+	pr->position = m2s(target);
+	pr->position.y += pe->dy;
+}
+
 static void paint_items() {
 	remove_temp_objects(bsdata<itemi>::source);
 	auto p1 = s2m(camera);
 	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx + 1, p1.y + getheight() / tsy + 1};
 	for(auto& e : bsdata<itemground>()) {
 		if(!e)
+			continue;
+		if(!area.is(e.position, Explored))
 			continue;
 		if(!e.position.in(rc))
 			continue;
@@ -328,6 +364,15 @@ static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
 	}
 }
 
+static void floorrect() {
+	rectpush push;
+	caret.x -= tsx / 2 - 1;
+	caret.y -= tsx / 2 - 1;
+	width = tsx - 2;
+	height = tsy - 2;
+	rectb();
+}
+
 static void paint_floor() {
 	point i;
 	remove_temp_objects(bsdata<featurei>::source);
@@ -385,6 +430,8 @@ static void paint_floor() {
 					} else
 						add_object(pt, &ei, r, ei.priority);
 				}
+				if(show_floor_rect)
+					floorrect();
 			}
 		}
 	}
@@ -413,25 +460,22 @@ static void paint_fow() {
 				fillfow();
 			else {
 				auto f = area.getfow(i);
-				if(f == 0) {
-					if(!area.isb(to(i, SouthEast), Explored))
-						image(pi, 2, ImageMirrorH);
-					if(!area.isb(to(i, NorthWest), Explored))
-						image(pi, 2, ImageMirrorV);
-					if(!area.isb(to(i, NorthEast), Explored))
-						image(pi, 2, ImageMirrorV | ImageMirrorH);
-					if(!area.isb(to(i, SouthWest), Explored))
-						image(pi, 2, 0);
-				} else {
-					if((f & 1) != 0)
-						image(pi, 0, ImageMirrorV);
-					if((f & 2) != 0)
-						image(pi, 0, 0);
-					if((f & 4) != 0)
-						image(pi, 1, 0);
-					if((f & 8) != 0)
-						image(pi, 1, ImageMirrorH);
-				}
+				if((f & 1) != 0)
+					image(pi, 0, ImageMirrorV);
+				if((f & 2) != 0)
+					image(pi, 0, 0);
+				if((f & 4) != 0)
+					image(pi, 1, 0);
+				if((f & 8) != 0)
+					image(pi, 1, ImageMirrorH);
+				if((f & (2 | 8)) == 0 && !area.isb(to(i, SouthEast), Explored))
+					image(pi, 2, ImageMirrorH);
+				if((f & (1 | 4)) == 0 && !area.isb(to(i, NorthWest), Explored))
+					image(pi, 2, ImageMirrorV);
+				if((f & (1 | 8)) == 0 && !area.isb(to(i, NorthEast), Explored))
+					image(pi, 2, ImageMirrorV | ImageMirrorH);
+				if((f & (2 | 4)) == 0 && !area.isb(to(i, SouthWest), Explored))
+					image(pi, 2, 0);
 			}
 		}
 	}
@@ -475,6 +519,8 @@ void creature::paintbars() const {
 void creature::paint() const {
 	auto flags = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
+	if(!area.is(getposition(), Visible))
+		return;
 	if(kind.iskind<monsteri>()) {
 		auto pi = gres(res::Monsters);
 		image(pi, kind.value, flags);
@@ -508,7 +554,7 @@ void creature::paint() const {
 		else
 			image(pa, 10 + 25, flags);
 	}
-	if(player == this)
+	if(player == this || player->getenemy() == this)
 		paintbars();
 }
 
@@ -524,18 +570,20 @@ void itemi::paint() const {
 	image(pi, this - bsdata<itemi>::elements, 0);
 }
 
-void visualeffect::paint() const {
+void visualeffect::paint(unsigned char random) const {
 	auto pi = gres(resid);
 	if(!pi)
 		return;
-	auto pc = pi->gcicle(frame);
-	if(!pc)
-		return;
-	unsigned long current = getobjectstamp() - start_stamp;
-	auto tk = current * pc->count / mst;
-	if(tk >= pc->count)
-		return;
-	image(pi, pc->start + tk, 0);
+	if(pi->cicles_offset) {
+		auto pc = pi->gcicle(frame);
+		if(pc) {
+			unsigned long current = getobjectstamp() - start_stamp;
+			auto tk = current * pc->count / mst;
+			if(tk < pc->count)
+				image(pi, pc->start + tk, flags);
+		}
+	} else
+		image(pi, random + frame, flags);
 }
 
 static void object_afterpaint(const object* p) {
@@ -546,7 +594,7 @@ static void object_afterpaint(const object* p) {
 	else if(bsdata<itemi>::have(p->data))
 		((itemi*)p->data)->paint();
 	else if(bsdata<visualeffect>::have(p->data))
-		((visualeffect*)p->data)->paint();
+		((visualeffect*)p->data)->paint(p->random);
 	else if(bsdata<resource>::have(p->data))
 		image(((resource*)p->data)->get(), p->random, 0);
 }
@@ -698,7 +746,7 @@ static void presskey(const sliceu<hotkey>& source) {
 	}
 }
 
-static void animate_figures() {
+void animate_figures() {
 	start_stamp = getobjectstamp();
 	waitall();
 	remove_temp_objects();
@@ -855,6 +903,8 @@ void actable::pressspace() {
 		{KeyEnter, (void*)1},
 		{}
 	};
+	if(!console)
+		return;
 	pushvalue push_key(keybinds);
 	answers an;
 	an.add((void*)1, getnm("Continue"));
@@ -935,6 +985,25 @@ static point m2a(point m, int z) {
 	return r;
 }
 
+static void paint_minimap_creatures() {
+	rectpush push;
+	const int z = 4;
+	point origin;
+	origin.x = (width - area.mps * z) / 2;
+	origin.y = (height - area.mps * z) / 2;
+	height = width = z;
+	for(auto& e : bsdata<creature>()) {
+		if(!e)
+			continue;
+		auto i = e.getposition();
+		if(!area.is(i, Explored))
+			continue;
+		caret.x = origin.x + i.x * width;
+		caret.y = origin.y + i.y * height;
+		fillfade(color(255, 0, 0), 192);
+	}
+}
+
 static void paint_area() {
 	rectpush push;
 	pushvalue push_fore(fore);
@@ -989,6 +1058,47 @@ static void paint_area_screen() {
 	rectb();
 }
 
+static void paint_logs(const char* format, int& origin, int& format_origin, int& maximum) {
+	if(!format)
+		return;
+	rectpush push;
+	if(maximum == -1) {
+		rectpush push;
+		origin = 0;
+		format_origin = 0;
+		textfs(format);
+		maximum = height;
+		height = push.height;
+		width = push.width;
+		caret = push.caret;
+		if(maximum > height) {
+			auto push_clip = clipping;
+			setclip();
+			caret.y -= maximum - height;
+			textfs(format, origin, format_origin);
+			clipping = push_clip;
+		}
+	}
+	auto push_clip = clipping; setclip();
+	caret.y += origin;
+	textf(format + format_origin);
+	clipping = push_clip;
+}
+
+static void text_header(const char* format) {
+	auto push_caret = caret;
+	auto push_font = font;
+	auto push_fore = fore;
+	font = metrics::h2;
+	fore = colors::h2;
+	caret.x += (width - textw(format)) / 2;
+	text(format);
+	caret = push_caret;
+	caret.y += texth();
+	font = push_font;
+	fore = push_fore;
+}
+
 static void pause_keys() {
 	if(hot.key == KeySpace || hot.key == KeyEscape)
 		execute(buttoncancel);
@@ -1002,7 +1112,9 @@ static void scene_world() {
 
 static void scene_area() {
 	fillwindow();
+	text_header(getnm(loc.tile));
 	paint_area();
+	paint_minimap_creatures();
 	paint_area_screen();
 	pause_keys();
 }
@@ -1013,6 +1125,20 @@ void show_worldmap() {
 
 void show_area(int bonus) {
 	scene(scene_area);
+}
+
+void show_logs(int bonus) {
+	int maximum = -1, format_origin = 0, origin = 0;
+	game.writelog();
+	while(ismodal()) {
+		paintstart();
+		fillwindow();
+		setoffset(metrics::padding, metrics::padding);
+		paint_logs(actable::getlog(), origin, format_origin, maximum);
+		pause_keys();
+		paintfinish();
+		domodal();
+	}
 }
 
 int start_application(fnevent proc, fnevent initializing) {

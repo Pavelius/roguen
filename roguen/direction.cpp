@@ -33,6 +33,15 @@ direction_s round(direction_s d, direction_s v) {
 		default: return d;
 		}
 		break;
+	case South:
+		switch(d) {
+		case North: return South;
+		case West: return East;
+		case South: return North;
+		case East: return West;
+		default: return d;
+		}
+		break;
 	default:
 		return d;
 	}

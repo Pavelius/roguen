@@ -1,6 +1,7 @@
 #include "main.h"
 
 creature* player;
+creature* enemy;
 
 static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
@@ -16,18 +17,9 @@ static creature* findalive(point m) {
 	return 0;
 }
 
-static ability_s attack_ability(wear_s v) {
-	switch(v) {
-	case RangedWeapon: return ToHitRanged;
-	case ThrownWeapon: return ToHitThrown;
-	default: return ToHitMelee;
-	}
-}
-
 static ability_s damage_ability(wear_s v) {
 	switch(v) {
 	case RangedWeapon: return DamageRanged;
-	case ThrownWeapon: return DamageThrown;
 	default: return DamageMelee;
 	}
 }
@@ -39,26 +31,30 @@ void creature::clear() {
 }
 
 void creature::levelup() {
-	if(abilities[Level] == 0) {
-		while(true) {
-			auto hp = xrand(1, getclass().hd);
-			if(getclass().player && (hp == 1 || hp == 2))
-				continue;
-			basic.abilities[HitsMaximum] += hp;
-			break;
-		}
-		basic.abilities[Level]++;
-	}
 }
 
 static bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
+	auto tile = area[m];
+	if(tile == Water || tile == DarkWater || tile == DeepWater)
+		return false;
 	return area.isfree(m);
 }
 
-creature* creature::create(point m, variant kind) {
+void creature::place(point m) {
+	m = area.getfree(m, 10, isfreecr);
+	setposition(m);
+}
+
+creature* creature::create(point m, variant kind, variant character) {
 	if(!kind)
+		return 0;
+	if(kind.iskind<generatori>())
+		kind = random_value(kind.getid());
+	if(!character)
+		character = "Monster";
+	if(!character.iskind<classi>())
 		return 0;
 	m = area.getfree(m, 10, isfreecr);
 	if(!area.isvalid(m))
@@ -66,19 +62,27 @@ creature* creature::create(point m, variant kind) {
 	auto p = bsdata<creature>::add();
 	p->setposition(m);
 	p->setkind(kind);
+	p->class_id = character.value;
 	monsteri* pm = kind;
 	if(pm) {
 		copy(p->basic, *pm);
 		p->feats = pm->feats;
+		p->advance(pm->use);
 	}
 	p->basic.create();
 	p->advance(kind, 0);
+	if(character.value)
+		p->advance(character, 0);
 	p->levelup();
 	p->finish();
 	return p;
 }
 
 bool creature::isactive() const {
+	return this == player;
+}
+
+bool creature::isplayer() const {
 	return this == player;
 }
 
@@ -123,9 +127,9 @@ void creature::interaction(point m) {
 			auto& wei = wears[MeleeWeapon].geti();
 			int chance = 1;
 			if(wei.is(TwoHanded))
-				chance = wei.weapon.damage.max;
+				chance = wei.bonus * 3;
 			else
-				chance = wei.weapon.damage.max / 2;
+				chance = wei.bonus;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
 				area.features[m] = NoFeature;
@@ -135,46 +139,252 @@ void creature::interaction(point m) {
 	}
 }
 
+bool creature::matchspeech(variant v) const {
+	if(v.iskind<monsteri>())
+		return iskind(v);
+	else if(v.iskind<conditioni>())
+		return is((condition_s)v.value);
+	return true;
+}
+
+bool creature::matchspeech(const variants& source) const {
+	for(auto v : source) {
+		if(!matchspeech(v))
+			return false;
+	}
+	return true;
+}
+
+void creature::matchspeech(speecha& source) const {
+	auto ps = source.data;
+	for(auto p : source) {
+		if(!matchspeech(p->condition))
+			continue;
+		*ps++ = p;
+	}
+	source.count = ps - source.data;
+}
+
+const speech* creature::matchfirst(const speecha& source) const {
+	auto ps = source.data;
+	for(auto p : source) {
+		if(!matchspeech(p->condition))
+			continue;
+		return p;
+	}
+	return 0;
+}
+
+const char* creature::getspeech(const char* id) const {
+	speecha source;
+	source.select(id);
+	if(!source)
+		return getnm("NothingToSay");
+	auto conditional = source[0]->condition.count>0;
+	if(conditional) {
+		auto p = matchfirst(source);
+		if(!p)
+			return getnm("NothingToSay");
+		return p->name;
+	} else
+		return source.getrandom();
+}
+
 void creature::interaction(creature& opponent) {
 	if(opponent.isenemy(*this))
 		attackmelee(opponent);
+	else if(!isplayer())
+		return;
+	else {
+		auto pt = opponent.getposition();
+		opponent.setposition(getposition());
+		opponent.fixmovement();
+		opponent.wait();
+		setposition(pt);
+		fixmovement();
+		if(d100() < 40)
+			opponent.speech("DontPushMe");
+	}
 }
 
-dice creature::getdamage(wear_s v) const {
-	dice result = wears[v].getdamage();
+int creature::getdamage(wear_s v) const {
+	auto result = wears[v].getdamage();
 	result += get(damage_ability(v));
-	result.correct();
 	return result;
 }
 
-void creature::attack(creature& enemy, wear_s v, int bonus, int damage_multiplier) {
-	bonus += get(attack_ability(v));
-	bonus -= enemy.get(ParryValue);
-	auto result = rand() % 20 + 1;
-	if(result == 1 || (result != 20 && result < (10 - bonus))) {
-		act(getnm("AttackMiss"));
+void creature::getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const {
+	result[0].skill = WeaponSkill;
+	result[0].value = getparrying(attacker_weapon, wears[MeleeWeapon], get(WeaponSkill)) - getmightpenalty(attacker_strenght);
+	result[1].skill = ShieldUse;
+	result[1].value = getblocking(attacker_weapon, wears[MeleeWeaponOffhand], get(ShieldUse)) - getmightpenalty(attacker_strenght);
+	result[2].skill = DodgeSkill;
+	result[2].value = get(DodgeSkill);
+	for(auto& e : result) {
+		if(e.value < 0)
+			e.value = 0;
+	}
+}
+
+static ability_s getbestdefence(const defencet& defences, int parry_result, int& parry_skill, int& parry_effect) {
+	auto parry = (ability_s)0;
+	parry_skill = 0;
+	parry_effect = 0;
+	for(auto& e : defences) {
+		if(parry_result <= e.value) {
+			auto v = (e.value - parry_result) / 10;
+			if(!parry_skill || parry_effect < v) {
+				parry = e.skill;
+				parry_skill = e.value;
+				parry_effect = v;
+			}
+		}
+	}
+	return parry;
+}
+
+void creature::damage(const item& weapon, int effect) {
+	auto weapon_damage = weapon.getdamage();
+	auto damage_reduction = get(DamageReduciton) - weapon.geti().weapon.pierce;
+	if(damage_reduction < 0)
+		damage_reduction = 0;
+	auto result_damage = weapon_damage - damage_reduction + effect;
+	fixdamage(result_damage, weapon_damage, 0, -damage_reduction, effect, 0);
+	damage(result_damage);
+}
+
+void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_multiplier) {
+	skilli defences[3] = {};
+	int parry_skill = 0;
+	enemy.setenemy(this); setenemy(&enemy);
+	last_hit = 1 + d100(); last_hit_result = 0;
+	last_parry = 1 + d100(); last_parry_result = 0;
+	attack_skill += get(wears[v].geti().ability);
+	auto attack_delta = attack_skill - last_hit;
+	last_hit_result = attack_delta / 10;
+	if(last_hit > 5 && last_hit > attack_skill) {
+		logs(getnm("AttackMiss"), last_hit, attack_skill);
 		return;
 	}
-	auto result_damage = getdamage(v).roll();
+	auto enemy_name = enemy.getname();
+	auto attacker_name = getname();
+	enemy.getdefence(get(Strenght), wears[v], defences);
+	auto parry = getbestdefence(defences, last_parry, parry_skill, last_parry_result);
+	auto parry_delta = parry_skill - last_parry;
+	if(parry) {
+		if(parry_delta > attack_delta) {
+			logs(getnm("AttackHitButParryCritical"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+			if(parry == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate)) {
+				auto range = area.getrange(enemy.getposition(), getposition());
+				if(range <= 1)
+					damage(enemy.wears[MeleeWeapon], last_parry_result - last_hit_result);
+			}
+			return;
+		}
+	}
+	if(parry)
+		logs(getnm("AttackHitButParrySuccess"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+	else
+		logs(getnm("AttackHitButParryFail"), last_hit, attack_skill, last_parry, enemy.getname(), defences[0].value, defences[1].value, defences[2].value);
+	auto ability_damage = get(damage_ability(v));
+	auto weapon_damage = wears[v].getdamage();
+	auto damage_reduction = enemy.get(DamageReduciton) - wears[v].geti().weapon.pierce;
+	if(damage_reduction < 0)
+		damage_reduction = 0;
+	auto result_damage = weapon_damage + ability_damage - damage_reduction + last_hit_result - last_parry_result;
+	enemy.fixdamage(result_damage, weapon_damage, ability_damage, -damage_reduction, last_hit_result, -last_parry_result);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
 }
 
+void creature::fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const {
+	logs(getnm("ApplyDamage"), total, damage_weapon, damage_strenght, damage_armor,
+		damage_skill, damage_parry);
+}
+
 void creature::damage(int v) {
+	if(v <= 0) {
+		logs(getnm("ArmorNegateDamage"));
+		return;
+	}
 	fixvalue(-v);
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
-		act(getnm("ApplyKill"), v);
+		if(d100() < 40)
+			area.set(getposition(), Blooded);
+		auto player_killed = isplayer();
+		logs(getnm("ApplyKill"), v);
 		fixeffect("HitVisual");
 		fixremove();
 		clear();
-	} else
-		act(getnm("ApplyDamage"), v);
+		if(player_killed)
+			game.endgame();
+	}
 }
 
 void creature::attackmelee(creature& enemy) {
 	fixaction();
+	auto number_attackers = enemy.get(EnemyAttacks);
+	if(number_attackers > 4)
+		number_attackers = 4;
+	attack(enemy, MeleeWeapon, number_attackers * 10, 100);
+	enemy.add(EnemyAttacks, 1);
+}
+
+bool creature::canshoot(bool interactive) const {
+	if(!wears[RangedWeapon]) {
+		if(interactive)
+			actp(getnm("YouNeedRangeWeapon"));
+		return false;
+	}
+	auto ammo = wears[RangedWeapon].geti().getammunition();
+	if(ammo && !wears[Ammunition].is(*ammo)) {
+		if(interactive)
+			actp(getnm("YouNeedAmmunition"), ammo->getname());
+		return false;
+	}
+	return true;
+}
+
+bool creature::canthrown(bool interactive) const {
+	if(!wears[MeleeWeapon].is(Thrown)) {
+		if(interactive)
+			actp(getnm("YouNeedThrownWeapon"));
+		return false;
+	}
+	return true;
+}
+
+void creature::attackrange(creature& enemy) {
+	if(!canshoot(false))
+		return;
+	auto pa = wears[RangedWeapon].geti().getammunition();
+	if(pa)
+		fixshoot(enemy.getposition(), pa->wear_index);
+	else
+		fixaction();
+	attack(enemy, RangedWeapon, 0, 100);
+	if(pa) {
+		wears[Ammunition].use();
+		if(d100() < 50) {
+			item it;
+			it.create(pa, 1);
+			it.setcount(1);
+			it.drop(enemy.getposition());
+		}
+	}
+}
+
+void creature::attackthrown(creature& enemy) {
+	if(!canthrown(false))
+		return;
+	fixthrown(enemy.getposition(), "FlyingItem", wears[MeleeWeapon].geti().getindex());
 	attack(enemy, MeleeWeapon, 0, 100);
+	item it;
+	it.create(&wears[MeleeWeapon].geti(), 1);
+	it.setcount(1);
+	it.drop(enemy.getposition());
+	wears[MeleeWeapon].use();
 }
 
 void creature::fixcantgo() const {
@@ -186,17 +396,33 @@ static bool isfreelt(point m) {
 	return area.isfree(m);
 }
 
+static direction_s movedirection(point m) {
+	if(m.x < 0)
+		return West;
+	else if(m.y < 0)
+		return North;
+	else if(m.y >= area.mps)
+		return South;
+	else
+		return East;
+}
+
 void creature::movestep(point ni) {
 	if(!area.isvalid(ni)) {
-		if(isactive())
-			fixcantgo();
+		if(isactive()) {
+			auto direction = movedirection(ni);
+			auto np = to(game.position, direction);
+			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id))) {
+				game.enter(np, 0, direction);
+			}
+		}
 		wait();
 		return;
 	}
 	auto m = getposition();
 	if(area.is(m, Webbed)) {
 		wait(2);
-		if(!roll(Strenght, -2)) {
+		if(!roll(Strenght)) {
 			act(getnm("WebEntagled"));
 			wait();
 			fixaction();
@@ -208,7 +434,7 @@ void creature::movestep(point ni) {
 	auto opponent = findalive(ni);
 	if(opponent)
 		interaction(*opponent);
-	else if(area.isfree(ni)) {
+	else if(isfreecr(ni)) {
 		setposition(ni);
 		fixmovement();
 	} else {
@@ -259,10 +485,10 @@ void creature::advance(variant v) {
 
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
-	auto result = 1 + (rand() % 20);
-	if(result == 1)
+	auto result = d100();
+	if(result <= 5)
 		return true;
-	else if(result == 20)
+	else if(result >= 95)
 		return false;
 	return result <= (value + bonus);
 }
@@ -270,7 +496,7 @@ bool creature::roll(ability_s v, int bonus) const {
 void adventure_mode();
 
 void creature::lookcreatures() {
-	creatures.select(getposition(), getlos());
+	creatures.select(getposition(), getlos(), isplayer());
 	if(is(Ally)) {
 		enemies = creatures;
 		enemies.match(Enemy, true);
@@ -281,16 +507,26 @@ void creature::lookcreatures() {
 		enemies.clear();
 }
 
+void creature::lookenemies() {
+	lookcreatures();
+	if(enemies) {
+		// Combat situation - need eliminate enemy
+		enemies.sort(getposition());
+		enemy = enemies[0];
+	}
+}
+
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {
 		wait_seconds -= get(Speed);
 		return;
 	}
+	set(EnemyAttacks, 0);
 	update();
 	// Dazzled creature don't make turn
 	if(is(Stun)) {
-		if(roll(Constitution))
+		if(roll(Strenght))
 			remove(Stun);
 		else {
 			wait();
@@ -300,22 +536,19 @@ void creature::makemove() {
 	// Sleeped creature don't move
 	if(is(Sleep))
 		return;
+	// Unaware attack or others
 	if(is(Unaware))
 		remove(Unaware);
-	// Get nearest creatures
-	lookcreatures();
-	creature* enemy = 0;
-	if(enemies) {
-		// Combat situation - need eliminate enemy
-		enemies.sort(getposition());
-		enemy = enemies[0];
-	}
+	lookenemies();
 	if(isactive()) {
 		area.setlos(getposition(), getlos(), isfreelt);
 		adventure_mode();
-	} else if(enemy)
-		moveto(enemy->getposition());
-	else
+	} else if(enemy) {
+		if(canshoot(false))
+			attackrange(*enemy);
+		else
+			moveto(enemy->getposition());
+	} else
 		aimove();
 }
 
@@ -358,6 +591,7 @@ void creature::update_wears() {
 				dress(ei.dress, getmultiplier(magic));
 		}
 		if(ei.ability) {
+			abilities[ei.ability] += ei.bonus;
 			switch(magic) {
 			case Cursed: abilities[ei.ability] -= 2; break;
 			case Blessed: case Artifact: abilities[ei.ability] += 1; break;
@@ -372,17 +606,9 @@ void creature::update_basic() {
 }
 
 void creature::update_abilities() {
-	auto& ci = getclass();
-	abilities[Speed] += 20;
-	auto level = abilities[Level];
-	if(level > ci.cap)
-		level = ci.cap;
-	abilities[HitsMaximum] += getbonus(Constitution) * level;
-	if(abilities[HitsMaximum] < level)
-		abilities[HitsMaximum] = level;
-	abilities[ManaMaximum] += abilities[Intellect] + abilities[Concentration] * level;
-	if(abilities[ManaMaximum] < 0)
-		abilities[ManaMaximum] = 0;
+	abilities[DamageMelee] += get(Strenght) / 10;
+	abilities[DamageThrown] += get(Strenght) / 10;
+	abilities[Speed] += get(Dexterity);
 }
 
 void creature::update() {
@@ -391,10 +617,22 @@ void creature::update() {
 	update_abilities();
 }
 
+static void blockcreatures(creature* exclude) {
+	for(auto& e : bsdata<creature>()) {
+		if(!e || &e == exclude)
+			continue;
+		area.setblock(e.getposition(), 0xFFFF);
+	}
+}
+
 void creature::moveto(point ni) {
 	area.clearpath();
+	area.blocktiles(Water);
+	area.blocktiles(DeepWater);
+	area.blocktiles(DarkWater);
 	area.blockwalls();
 	area.blockfeatures();
+	blockcreatures(this);
 	area.makewave(getposition());
 	area.blockzero();
 	auto m0 = getposition();
@@ -406,9 +644,60 @@ void creature::moveto(point ni) {
 
 void creature::unlink() {
 	boosti::remove(this);
+	auto id = getid();
+	for(auto& e : bsdata<creature>()) {
+		if(e.enemy_id == id)
+			e.enemy_id = 0xFFFF;
+	}
 }
 
 void creature::act(const char* format, ...) const {
-	if(!player || player==this || area.is(player->getposition(), Visible))
+	if(!player || player == this || area.is(getposition(), Visible))
 		actv(console, format, xva_start(format), getname(), is(Female));
+}
+
+void creature::actp(const char* format, ...) const {
+	if(player == this)
+		actv(console, format, xva_start(format), getname(), is(Female));
+}
+
+int creature::getmightpenalty(int enemy_strenght) const {
+	auto strenght = get(Strenght);
+	if(strenght < enemy_strenght)
+		return enemy_strenght - strenght;
+	return 0;
+}
+
+int creature::getblocking(const item& enemy_weapon, const item& weapon, int value) const {
+	if(!weapon || !weapon.is(ShieldUse))
+		return 0;
+	value += enemy_weapon.geti().weapon.enemy_block;
+	if(enemy_weapon.is(RangedWeapon))
+		value += weapon.geti().weapon.block_ranged;
+	else
+		value += weapon.geti().weapon.block;
+	return value;
+}
+
+int creature::getparrying(const item& enemy_weapon, const item& weapon, int value) const {
+	if(!weapon)
+		return 0;
+	if(enemy_weapon.is(RangedWeapon))
+		return 0;
+	value += enemy_weapon.geti().weapon.enemy_parry;
+	value += weapon.geti().weapon.parry;
+	return value;
+}
+
+void creature::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
+	if(isplayer() || area.is(getposition(), Visible))
+		actable::sayv(sb, format, format_param, name, female);
+}
+
+bool creature::is(condition_s v) const {
+	switch(v) {
+	case Busy: return wait_seconds > 1000;
+	case Random: return d100() < 40;
+	default: return true;
+	}
 }

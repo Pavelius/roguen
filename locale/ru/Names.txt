@@ -1,47 +1,63 @@
-ApplyDamage: %герой получил%а [%1i] урона.
-ApplyKill: %герой упал%а на землю.
+ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i%+5i%+6i) урона.
+ApplyKill: %герой убит%а.
 AppTitle: Приключения в забытых Королевствах
-AttackMiss: %герой промазал%а.
+Armor: Броня
+ArmorNegateDamage: Броня поглатила урон.
+AttackMiss: %герой промазал%а ([-%1i]>[%2i]).
+AttackHitButParrySuccess: %герой попал%а ([%1i]<[%2i]), но %-5 частично парировал навыком %-6 ([%3i]<[%4i]).
+AttackHitButParryFail: %герой попал%а ([%1i]<[%2i]) и %-4 не смог парировать ([-%3i]>[%5i],[%6i],[%7i]).
+AttackHitButParryCritical: %герой попал%а ([%1i]<[%2i]), но %-5 полностью парировал навыком %-6 ([%3i]<[%4i]).
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
+ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
+Continue: Продолжить
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
-Goblin: Гоблин
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
+LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 No: Нет
+NoCreaturesNearby: Вокруг никого нет.
+NothingToSay: Нечего сказать.
+Parry: Парирование
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
+Pieces: шт.
+Pierce: Проникание
+PlayerKilled: Вы погибли смертью храбрых.
 Rounds: Раунды
 Tree: Дерево
+TwoHanded: Двуручное
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
 YouCutWood: %герой срубил%а %-1.
+YouDontSeeAnyEnemy: Вы не видите ни одного врага.
+YouNeedAmmunition: Для стрельбы нужно %-1.
+YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
+YouNeedThrownWeapon: Чтобы метать, вам нужно иметь в руках метательное оружие.
 
-Charisma: Харизма
-Constitution: Телосложение
-Dexterity: Ловкость
-Intellect: Интеллект
+Hills: Холмы
+LightForest: Лес
+Plains: Равнины
+StartVillage: Деревня "Клюв грифона"
+
 Strenght: Сила
-Wisdow: Мудрость
+Charisma: Харизма
+Dexterity: Ловкость
+Wits: Интеллект
+
+BalisticSkill: Меткость
+DodgeSkill: Уклонение
+ShieldUse: Щиты
+WeaponSkill: Оружие
 
 Damage: Урон
+DamageReduciton: Броня
 Hits: Хиты
 Mana: Мана
 Money: Деньги
 
-Ammunition: Амуниция
-Backward: Спина
-Elbows: Локти
-FingerLeft: Кольцо 
-FingerRight: Кольцо
-Gloves: Перчатки
-Head: Голова
-Legs: Ноги
-MeleeWeapon: Правая рука
-MeleeWeaponOffhand: Левая рука 
-RangedWeapon: Дистанция
-ThrownWeapon: Метание
-Torso: Тело
+CutWoods: Рубит деревья
+Retaliate: Ответный удар

@@ -2,7 +2,18 @@
 #include "main.h"
 
 creaturea creatures, enemies, targets;
-creature* enemy;
+extern creature* enemy;
+int	last_hit, last_hit_result, last_parry, last_parry_result;
+extern bool show_floor_rect;
+
+void animate_figures();
+
+void script::run(const char* id, int bonus) {
+	auto p = bsdata<script>::find(id);
+	if(!p)
+		return;
+	p->proc(0);
+}
 
 static void choose_creature(int bonus) {
 }
@@ -51,7 +62,6 @@ static void move_down_right(int bonus) {
 }
 
 static void attack_forward(int bonus) {
-	player->act("%герой успешно атаковал%а.");
 	player->fixaction();
 	player->fixeffect("HitVisual");
 	player->wait();
@@ -59,7 +69,7 @@ static void attack_forward(int bonus) {
 
 static item* choose_wear() {
 	static wear_s source[] = {
-		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, ThrownWeapon,
+		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon,
 		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
 	};
 	answers an;
@@ -115,14 +125,8 @@ static void inventory(int bonus) {
 	}
 }
 
-static const char* getspeech(const char* id) {
-	speecha source;
-	source.select(id);
-	return source.getrandom();
-}
-
 static void debug_message(int bonus) {
-	player->say(getspeech("TestYouselfPlease"));
+	console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
 	actable::pressspace();
 }
 
@@ -138,7 +142,15 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chat_someone(int bonus) {
-	player->say(getspeech("TestYouselfPlease"));
+	player->lookenemies();
+	creaturea source = creatures;
+	source.matchrange(player->getposition(), 1, true);
+	source.remove(player);
+	if(!source) {
+		player->actp(getnm("NoCreaturesNearby"));
+		return;
+	}
+	source[0]->speech("HowYouAre");
 }
 
 static void pickup(int bonus) {
@@ -146,9 +158,9 @@ static void pickup(int bonus) {
 	items.select(player->getposition());
 	if(!items)
 		return;
-	auto p = items.choose(getnm("PickItem"));
+	auto p = items.choose(getnm("PickItem"), getnm("Cancel"));
 	if(p) {
-		player->act(getnm("PickupItem"), p->getname());
+		player->act(getnm("PickupItem"), p->getfullname());
 		player->additem(*p);
 	}
 }
@@ -158,9 +170,9 @@ static void dropdown(int bonus) {
 	items.selectbackpack(player);
 	if(!items)
 		return;
-	auto p = items.choose(getnm("DropItem"));
+	auto p = items.choose(getnm("DropItem"), getnm("Cancel"));
 	if(p) {
-		player->act(getnm("DropdownItem"), p->getname());
+		player->act(getnm("DropdownItem"), p->getfullname());
 		p->drop(player->getposition());
 	}
 }
@@ -175,7 +187,56 @@ static void explore_area(int bonus) {
 			area.set(m, Explored);
 }
 
+static void test_arena(int bonus) {
+	answers an;
+	auto count = 0;
+	for(auto& e : bsdata<monsteri>()) {
+		if(e.is(Female))
+			continue;
+		an.add(&e, e.getname());
+	}
+	auto pm = (monsteri*)an.choose(getnm("ChooseMonsterToFight"));
+	auto m = player->getposition();
+	auto p = creature::create(m.to(3, 0), pm);
+	p->set(Enemy);
+	player->lookenemies();
+	animate_figures();
+}
+
+static void toggle_floor_rect(int bonus) {
+	show_floor_rect = !show_floor_rect;
+}
+
+static void range_attack(int bonud) {
+	if(!player->canshoot(true))
+		return;
+	if(!enemy) {
+		player->actp(getnm("YouDontSeeAnyEnemy"));
+		return;
+	}
+	if(enemy) {
+		player->setdirection(area.getdirection(player->getposition(), enemy->getposition()));
+		player->attackrange(*enemy);
+		player->wait();
+	}
+}
+
+static void thrown_attack(int bonud) {
+	if(!player->canthrown(true))
+		return;
+	if(!enemy) {
+		player->actp(getnm("YouDontSeeAnyEnemy"));
+		return;
+	}
+	if(enemy) {
+		player->setdirection(area.getdirection(player->getposition(), enemy->getposition()));
+		player->attackthrown(*enemy);
+		player->wait();
+	}
+}
+
 void show_area(int bonus);
+void show_logs(int bonus);
 
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
@@ -195,7 +256,12 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"RangeAttack", range_attack},
+	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
+	{"TestArena", test_arena},
+	{"ThrownAttack", thrown_attack},
+	{"ToggleFloorRect", toggle_floor_rect},
 	{"ViewStuff", view_stuff},
 };
 BSDATAF(script)

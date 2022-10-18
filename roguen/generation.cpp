@@ -1,16 +1,24 @@
 #include "main.h"
 
+BSDATA(sitegeni) = {
+	{"GenerateOutdoor", &sitei::outdoor},
+	{"GenerateVillage", &sitei::cityscape},
+	{"GenerateDungeon"},
+	{"GenerateBuilding", &sitei::building},
+};
+BSDATAF(sitegeni)
+
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
 static direction_s connectors_side[] = {North, East, West, South};
+static point last_door;
+static direction_s last_direction;
 
 const auto minimum_corridor_lenght = 4;
 const auto chance_create_door = 10;
 const auto chance_corridor_content = 10;
 const auto chance_line_corridor = 40;
 const auto chance_hidden_door = 10;
-
-typedef void(*fnscene)(const rect& rc);
 
 static point random(const rect& rc) {
 	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
@@ -42,6 +50,14 @@ static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
 	auto f1 = area.getfeature(to(i, d1));
 	auto f2 = area.getfeature(to(i, d1));
 	return f1 == v || f2 == v;
+}
+
+static void create_monster(const rect& rc, const char* id, bool hostile, int count) {
+	for(auto i = 0; i < count; i++) {
+		auto p = creature::create(random(rc), random_value(id));
+		if(hostile)
+			p->set(Enemy);
+	}
 }
 
 static void update_doors() {
@@ -86,17 +102,32 @@ static int compare_locations(const void* v1, const void* v2) {
 	return getarea(*((rect*)v2)) - getarea(*((rect*)v1));
 }
 
-static void remove_smalest() {
-	if(locations)
-		locations.count--;
+static void shuffle_locations() {
+	zshuffle(locations.data, locations.count);
 }
 
-static void create_building(const rect & rc) {
+static void sort_locations() {
+	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
 }
 
-static void create_locations(fnscene proc) {
-	for(auto& e : locations)
-		proc(e);
+void sitei::building(const rect & rc) const {
+	static direction_s rdir[] = {North, South, West, East};
+	const auto door = Door;
+	// Walls and floors
+	area.set(rc, floors);
+	area.horz(rc.x1, rc.y1, rc.x2, walls);
+	area.vert(rc.x1, rc.y1, rc.y2, walls);
+	area.horz(rc.x1, rc.y2, rc.x2, walls);
+	area.vert(rc.x2, rc.y1, rc.y2, walls);
+	// Doors
+	last_direction = maprnd(rdir);;
+	last_door = area.getpoint(rc, last_direction);
+	area.set(last_door, floors);
+	area.set(last_door, door);
+	auto m1 = to(last_door, last_direction);
+	if(area.iswall(m1))
+		area.set(m1, floors);
+	area.set(m1, NoFeature);
 }
 
 static void place_shape(const shapei & e, point m, direction_s d, tile_s floor, tile_s wall) {
@@ -130,65 +161,67 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 }
 
 static void create_road(const rect& rc) {
-	area.set(rc, Rock);
+	rect r1 = rc;
+	if(r1.width() > r1.height()) {
+		if(r1.x1 <= 6)
+			r1.x1 = 0;
+		if(r1.x2 >= area.mps - 6)
+			r1.x2 = area.mps - 1;
+	} else {
+		if(r1.y1 >= 1 && r1.y1 <= 6)
+			r1.y1 = 0;
+		if(r1.y2 >= area.mps - 6)
+			r1.y2 = area.mps - 1;
+	}
+	area.set(r1, Rock);
+	create_monster(r1, "RandomCommoner", false, xrand(3, 6));
+}
+
+static void show_debug_minimap() {
+	script::run("ExploreArea");
+	script::run("ShowMinimap");
 }
 
 static void create_city_level(const rect& rc, int level) {
-	const int chance_special_area = 20;
-	const int max_building_size = 5;
+	const int min_building_size = 8;
+	const int max_building_size = 16;
 	auto w = rc.width();
 	auto h = rc.height();
-	if(d100() < chance_special_area &&
-		w > max_building_size && w<max_building_size * 3 && h>max_building_size && h < max_building_size * 3) {
-		return;
-	}
 	if(w <= max_building_size && h <= max_building_size) {
-		if(w > 6 && h > 6)
-			locations.add({rc.x1, rc.y1, rc.x2 - 3, rc.y2 - 3});
+		if(w >= min_building_size && h >= min_building_size)
+			locations.add({rc.x1 + 1, rc.y1 + 1, rc.x2 - 1, rc.y2 - 1});
 		return;
 	}
-	int m = xrand(30, 60);
-	int r = -1;
+	auto m = xrand(40, 70);
+	auto r = (d100() < 50) ? 0 : 1;
 	if(w / 3 >= h / 2)
 		r = 0;
 	else if(h / 3 >= w / 2)
 		r = 1;
-	if(r == -1)
-		r = (d100() < 50) ? 0 : 1;
+	auto rd = 2;
+	if(level > 2)
+		rd = 0;
 	if(r == 0) {
-		int w1 = (w * m) / 100; // horizontal
-		create_city_level({rc.x1, rc.y1, rc.x1 + w1, rc.y2}, level + 1);
-		create_city_level({rc.x1 + w1 + 1, rc.y1, rc.x2, rc.y2}, level + 1);
-		if(level <= 2) {
-			auto r1 = rc;
-			if(r1.y2 >= area.mps - 3)
-				r1.y2 = area.mps - 1;
-			if(r1.y1 <= 2)
-				r1.y1 = 0;
-			rect r2 = {r1.x1 + w1 - 2, r1.y1, r1.x1 + w1, r1.y2};
-			create_road(r2);
-			//for(int i = xrand(0, 4); i > 0; i--)
-			//	loc.commoner(loc.getrand(r2));
-		}
+		auto w1 = (w * m) / 100; // horizontal
+		create_city_level({rc.x1, rc.y1, rc.x1 + w1 - rd - 1, rc.y2}, level + 1);
+		create_city_level({rc.x1 + w1, rc.y1, rc.x2, rc.y2}, level + 1);
+		if(rd)
+			create_road({rc.x1 + w1 - rd, rc.y1, rc.x1 + w1 - 1, rc.y2});
 	} else {
-		int h1 = (h * m) / 100; // vertial
-		create_city_level({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, level + 1);
-		create_city_level({rc.x1, rc.y1 + h1 + 1, rc.x2, rc.y2}, level + 1);
-		if(level <= 2) {
-			auto r1 = rc;
-			if(r1.x2 >= area.mps - 3)
-				r1.x2 = area.mps - 1;
-			if(r1.x1 <= 2)
-				r1.x1 = 0;
-			rect r2 = {r1.x1, r1.y1 + h1 - 2, r1.x2, r1.y1 + h1};
-			create_road(r2);
-			//for(int i = xrand(0, 4); i > 0; i--)
-			//	loc.commoner(loc.getrand(r2));
-		}
+		auto h1 = (h * m) / 100; // vertial
+		create_city_level({rc.x1, rc.y1, rc.x2, rc.y1 + h1 - rd - 1}, level + 1);
+		create_city_level({rc.x1, rc.y1 + h1, rc.x2, rc.y2}, level + 1);
+		if(rd)
+			create_road({rc.x1, rc.y1 + h1 - rd, rc.x2, rc.y1 + h1 - 1});
 	}
 }
 
-static void create_location_general() {
+void sitei::cityscape(const rect& rca) const {
+	create_city_level(rca, 0);
+	sort_locations();
+}
+
+void sitei::outdoor(const rect& rca) const {
 	const auto parts = 4;
 	const auto size = area.mps / parts;
 	for(auto i = 0; i < parts * parts; i++) {
@@ -199,6 +232,7 @@ static void create_location_general() {
 		rc.y2 = rc.y1 + size - 2;
 		locations.add(rc);
 	}
+	shuffle_locations();
 }
 
 static void create_dungeon_rooms() {
@@ -263,7 +297,6 @@ static void create_connector(point index, direction_s dir, const rect& correct) 
 			break;
 		count++;
 	}
-	//show_minimap_step(index);
 	direction_s rnd[] = {West, East, North};
 	zshuffle(rnd, 3);
 	for(auto e : rnd) {
@@ -323,33 +356,48 @@ static void create_dungeon_content(const rect& rc) {
 	}
 }
 
-static void sort_locations() {
-	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
-}
-
-static void shuffle_locations() {
-	zshuffle(locations.data, locations.count);
-}
-
-static void place_monsters(const rect & rca, const monsteri & e, int count) {
+static void place_monsters(const rect & rca, const monsteri & e, int count, bool hostile) {
+	if(count < 0)
+		count = 0;
 	if(count == 0) {
 		if(game.isoutdoor())
 			count = e.getbase().appear_outdoor.roll();
 		else
 			count = e.getbase().appear.roll();
 	}
-	for(auto i = 0; i < count; i++)
-		creature::create(center(rca), &e);
+	for(auto i = 0; i < count; i++) {
+		auto p = creature::create(random(rca), &e);
+		if(hostile)
+			p->set(Enemy);
+	}
+}
+
+static void place_character(const rect & rca, const racei& race, const classi& cls) {
+	creature::create(random(rca), &race, &cls);
 }
 
 static bool test_counter(variant v) {
-	if(v.counter > 0 && d100() >= v.counter)
+	if(v.counter < 0 && d100() >= -v.counter)
 		return false;
 	return true;
 }
 
+static void create_locations_common(const rect& rca, variant tile, const sitegeni* pdef = 0) {
+	auto p = (sitei*)tile;
+	if(!p)
+		return;
+	auto pg = p->global;
+	if(!pg)
+		pg = pdef;
+	rect r1 = rca;
+	r1.offset(p->offset.x, p->offset.y);
+	if(pg && pg->proc)
+		(p->*pg->proc)(r1);
+}
+
 static void create_landscape(const rect & rca, variant v) {
 	static sitei* last_site;
+	static racei* last_race;
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -359,15 +407,26 @@ static void create_landscape(const rect & rca, variant v) {
 	else if(v.iskind<sitei>()) {
 		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
+		if(last_site->local && last_site->local->proc)
+			(last_site->*last_site->local->proc)(rca);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rca, ev);
-	} else if(v.iskind<monsteri>())
-		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
-	else if(v.iskind<shapei>()) {
+	} else if(v.iskind<monsteri>()) {
+		bool hostile = false;
+		if(bsdata<monsteri>::elements[v.value].friendly < -20)
+			hostile = true;
+		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter, hostile);
+	} else if(v.iskind<shapei>()) {
 		if(!last_site || !test_counter(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
 			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
+	} else if(v.iskind<racei>())
+		last_race = bsdata<racei>::elements + v.value;
+	else if(v.iskind<classi>()) {
+		if(!last_race)
+			return;
+		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
 	} else if(v.iskind<itemi>()) {
 		item it; it.clear();
 		it.create(bsdata<itemi>::elements + v.value);
@@ -383,8 +442,13 @@ static void add_area_sites(variant v) {
 		if(ei.sites) {
 			for(auto ev : ei.sites)
 				add_area_sites(ev);
-		} else
-			sites.add(v);
+		} else {
+			auto count = v.counter;
+			if(!count)
+				count = 1;
+			for(auto i = 0; i < count; i++)
+				sites.add(v);
+		}
 	}
 }
 
@@ -405,18 +469,21 @@ static void create_floor(variant tile) {
 	}
 }
 
-void create_area(const char* id) {
-	variant tile = id;
+void create_area(variant tile) {
 	if(!tile)
 		return;
+	bsdata<itemground>::source.clear();
+	bsdata<creature>::source.clear();
+	bsdata<boosti>::source.clear();
+	loc.clear();
 	area.clear();
 	locations.clear();
 	sites.clear();
+	loc.settile(tile.getid());
 	create_floor(tile);
 	create_landscape({0, 0, area.mps - 1, area.mps - 1}, tile);
 	add_area_sites(tile);
-	create_location_general();
-	//create_city_level({0, 0, area.mps - 1, area.mps - 1}, 0);
-	shuffle_locations();
+	create_locations_common({0, 0, area.mps - 1, area.mps - 1}, tile, bsdata<sitegeni>::elements);
 	create_sites();
+	//update_doors();
 }

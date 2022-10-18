@@ -7,14 +7,13 @@ static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
 using namespace draw;
 
-void create_area(const char* id);
-
 #ifdef _DEBUG
 void main_util();
 #endif
 
 static void initializating() {
 	bsreq::read("rules/Items.txt");
+	bsreq::read("rules/Monsters.txt");
 	bsreq::read("rules/Advancement.txt");
 	hotkey::initialize();
 	readl("Chats", speech::read);
@@ -63,6 +62,12 @@ static void create_item(point m, const char* id) {
 	pi->create(id);
 }
 
+static void equip_item(const char* id) {
+	item it;
+	it.create(id);
+	player->equip(it);
+}
+
 void show_worldmap();
 
 static void main_start() {
@@ -73,23 +78,34 @@ static void main_start() {
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
-	create_area("LightForest");
+	rect rc = {4, 4, 8, 8};
+	game.newgame();
+	area.set(rc, NoFeature);
+	area.set({3, 3}, Iced);
+	area.set({3, 4}, Iced);
+	area.set({5, 4}, Iced);
 	create_item({4, 4}, "Sword");
+	create_item({4, 4}, "BattleAxe");
 	create_item({5, 4}, "LeatherArmor");
 	create_item({6, 4}, "PlateArmor");
+	create_item({4, 5}, "Spear");
+	create_item({5, 5}, "Halberd");
 	create_item({6, 5}, "Shield");
-	create_item({4, 4}, "BattleAxe");
+	create_item({6, 6}, "LongBow");
+	create_item({6, 6}, "Arrow");
 	create_item({5, 7}, "AquaPotion");
 	create_item({6, 7}, "BluePotion");
-	player = creature::create({5, 5}, "Human");
+	player = creature::create({5, 5}, "Human", "Fighter");
 	player->set(Ally);
-	setnext(game.play);
+	equip_item("LongBow");
+	equip_item("Arrow");
 }
 
 int start_application(fnevent proc, fnevent initializing);
 
 int main(int argc, char *argv[]) {
 	srand(getcputime());
+	//srand(213);
 	return start_application(main_start, initializating);
 }
 

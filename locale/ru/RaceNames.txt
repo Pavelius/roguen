@@ -1,12 +1,24 @@
 DarkElf: Темный эльф
+DarkElfFemale: Темная эльфийка
 Drake: Ящер
+DrakeFemale: Ящерица
 Dwarf: Дварф
+DwarfFemale: Дварфийка
 GoldElf: Золотой эльф
+GoldElfFemale: Золотая эльфийка
 Gnome: Гном
+GnomeFemale: Гномиха
 HightElf: Высший эльф
+HightElfFemale: Высшая эльфийка
 Human: Человек
+HumanFemale: Женщина
 Hurtling: Хоббит
+HurtlingFemale: Хоббитка
 MistElf: Туманный эльф
+MistElfFemale: Туманная эльфийка
 Orc: Орк
+OrcFemale: Орчиха
 Ratling: Крысолюд
+RatlingFemale: Крысолюдка
 Troll: Тролль
+TrollFemale: Троллиха

@@ -152,6 +152,7 @@
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="condition.cpp" />
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="creaturea.cpp" />
     <ClCompile Include="crt.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="dataset.cpp" />
     <ClCompile Include="dice.cpp" />
     <ClCompile Include="direction.cpp" />
+    <ClCompile Include="direction_req.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_answers.cpp" />
     <ClCompile Include="draw_object.cpp" />
@@ -182,6 +184,7 @@
     <ClCompile Include="itema.cpp" />
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
+    <ClCompile Include="location.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="main.cpp" />
@@ -267,16 +270,24 @@
   <ItemGroup>
     <Text Include="..\errors.txt" />
     <Text Include="..\locale\ru\Chats.txt" />
+    <Text Include="..\locale\ru\DirectionNames.txt" />
     <Text Include="..\locale\ru\ItemNames.txt" />
+    <Text Include="..\locale\ru\MonsterNames.txt" />
     <Text Include="..\locale\ru\Names.txt" />
     <Text Include="..\locale\ru\NamesNewbe.txt" />
     <Text Include="..\locale\ru\RaceNames.txt" />
+    <Text Include="..\locale\ru\WearNames.txt" />
+    <Text Include="..\logs.txt" />
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Items.txt" />
+    <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Sites.txt" />
     <Text Include="..\rules\Tables.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\work\Tags.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

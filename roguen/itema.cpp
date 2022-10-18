@@ -14,13 +14,13 @@ void itema::select(point m) {
 	count = pb - data;
 }
 
-item* itema::choose(const char* title) const {
+item* itema::choose(const char* title, const char* cancel) const {
 	if(count == 1)
 		return data[0];
 	answers an;
 	for(auto p : *this)
-		an.add(p, p->getname());
-	return (item*)an.choose(title, 0);
+		an.add(p, p->getfullname());
+	return (item*)an.choose(title, cancel);
 }
 
 void itema::select(creature* p) {

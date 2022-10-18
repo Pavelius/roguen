@@ -48,8 +48,10 @@ struct areamap : anymap<tile_s, 64> {
 	anymap<unsigned char, mps> flags;
 	void			blockfeatures() const;
 	static void		blockrange(int range);
+	void			blocktiles(tile_s v) const;
 	void			blockwalls() const;
 	static void		blockzero();
+	static point	bordered(direction_s d);
 	void			clear();
 	static void		clearpath();
 	static direction_s getdirection(point s, point d);
@@ -73,10 +75,12 @@ struct areamap : anymap<tile_s, 64> {
 	void			set(point m, tile_s v);
 	void			set(point m, feature_s v);
 	void			set(rect rc, tile_s v);
+	void			set(rect rc, feature_s v);
 	void			set(rect rc, feature_s v, int random_count);
 	void			set(rect rc, mapf_s v, int random_count);
 	void			set(rect rc, tile_s v, int random_count);
 	void			set(feature_s v, int bonus);
+	static void		setblock(point m, unsigned short v);
 	void			setlos(point m, int radius, fntest test);
 	void			remove(point m, mapf_s v) { flags[m] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
