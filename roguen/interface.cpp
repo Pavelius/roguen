@@ -15,7 +15,7 @@ const int tsy = 48;
 const int mst = 260;
 const int window_width = 480;
 const int window_height = 280;
-const int panel_width = 120;
+const int panel_width = 130;
 
 static const void* focus_pressed;
 static unsigned long last_tick_message;
@@ -665,29 +665,6 @@ static void player_info() {
 	textf(temp);
 }
 
-static void paint_status() {
-	auto push_caret = caret;
-	auto push_height = height;
-	auto push_width = width;
-	caret.x = getwidth() - panel_width;
-	caret.y = 0;
-	width = panel_width - 1;
-	height = getheight() - 1;
-	fillform();
-	strokeborder();
-	setoffset(metrics::border, metrics::border);
-	if(player)
-		player_info();
-	caret = push_caret;
-	height = push_height;
-	width = push_width - panel_width;
-}
-
-static void before_paint() {
-	message_rect.clear();
-	paint_status();
-}
-
 static void before_paint_all() {
 	auto push_caret = caret;
 	auto push_clip = clipping;
@@ -985,12 +962,23 @@ static point m2a(point m, int z) {
 	return r;
 }
 
-static void paint_minimap_creatures() {
+static void paint_minimap_items(point origin, int z) {
 	rectpush push;
-	const int z = 4;
-	point origin;
-	origin.x = (width - area.mps * z) / 2;
-	origin.y = (height - area.mps * z) / 2;
+	height = width = z;
+	for(auto& e : bsdata<itemground>()) {
+		if(!e)
+			continue;
+		auto i = e.position;
+		if(!area.is(i, Explored))
+			continue;
+		caret.x = origin.x + i.x * width;
+		caret.y = origin.y + i.y * height;
+		fillfade(color(255, 255, 0), 192);
+	}
+}
+
+static void paint_minimap_creatures(point origin, int z) {
+	rectpush push;
 	height = width = z;
 	for(auto& e : bsdata<creature>()) {
 		if(!e)
@@ -1009,13 +997,9 @@ static void paint_minimap_creatures() {
 	}
 }
 
-static void paint_area() {
+static void paint_area(point origin, int z) {
 	rectpush push;
 	pushvalue push_fore(fore);
-	const int z = 4;
-	point origin;
-	origin.x = (width - area.mps * z) / 2;
-	origin.y = (height - area.mps * z) / 2;
 	height = width = z;
 	point i;
 	for(i.y = 0; i.y < area.mps; i.y++) {
@@ -1047,18 +1031,17 @@ static void paint_area() {
 	}
 }
 
-static void paint_area_screen() {
-	const int z = 4;
+static void paint_area_screen(point origin, int z) {
 	if(!player)
 		return;
 	auto pc = player->getposition();
 	auto s1 = s2m(camera);
 	rectpush push;
 	pushvalue push_fore(fore);
-	caret.x = (width - area.mps * z) / 2 + s1.x * z;
-	caret.y = (height - area.mps * z) / 2 + s1.y * z;
-	width = (width / tsx + 1) * z;
-	height = (height / tsy + 1) * z;
+	caret.x = origin.x + s1.x * z;
+	caret.y = origin.y + s1.y * z;
+	width = (draw::getwidth() / tsx + 1) * z;
+	height = (draw::getheight() / tsy + 1) * z;
 	fore = colors::white;
 	rectb();
 }
@@ -1118,10 +1101,49 @@ static void scene_world() {
 static void scene_area() {
 	fillwindow();
 	text_header(getnm(loc.tile));
-	paint_area();
-	paint_minimap_creatures();
-	paint_area_screen();
+	const int z = 4;
+	point origin;
+	origin.x = (width - area.mps * z) / 2;
+	origin.y = (height - area.mps * z) / 2;
+	paint_area(origin, z);
+	paint_minimap_creatures(origin, z);
+	paint_minimap_items(origin, z);
+	paint_area_screen(origin, z);
 	pause_keys();
+}
+
+static void paint_minimap() {
+	const auto z = 2;
+	paint_area(caret, z);
+	paint_minimap_creatures(caret, z);
+	paint_minimap_items(caret, z);
+	paint_area_screen(caret, z);
+}
+
+static void paint_status() {
+	auto push_caret = caret;
+	auto push_height = height;
+	auto push_width = width;
+	caret.x = getwidth() - panel_width;
+	caret.y = 0;
+	width = panel_width - 1;
+	height = getheight() - 1;
+	fillform();
+	strokeborder();
+	setoffset(metrics::border, metrics::border);
+	if(player)
+		player_info();
+	caret.x = getwidth() - panel_width + 1;
+	caret.y = draw::getheight() - 128 - 1;
+	paint_minimap();
+	caret = push_caret;
+	height = push_height;
+	width = push_width - panel_width;
+}
+
+static void before_paint() {
+	message_rect.clear();
+	paint_status();
 }
 
 void show_worldmap() {
