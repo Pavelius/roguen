@@ -166,10 +166,10 @@ void movable::fixappear() const {
 		return;
 	po = addobject(getsposition());
 	po->data = this;
-	po->alpha = 0;
+	po->alpha = 0xFF;
 	po->priority = 11;
-	auto pr = po->add(mst);
-	pr->alpha = 0xFF;
+	//auto pr = po->add(mst);
+	//pr->alpha = 0xFF;
 }
 
 void movable::fixremove() const {
@@ -985,6 +985,25 @@ static point m2a(point m, int z) {
 	return r;
 }
 
+static void paint_minimap_creatures() {
+	rectpush push;
+	const int z = 4;
+	point origin;
+	origin.x = (width - area.mps * z) / 2;
+	origin.y = (height - area.mps * z) / 2;
+	height = width = z;
+	for(auto& e : bsdata<creature>()) {
+		if(!e)
+			continue;
+		auto i = e.getposition();
+		if(!area.is(i, Explored))
+			continue;
+		caret.x = origin.x + i.x * width;
+		caret.y = origin.y + i.y * height;
+		fillfade(color(255, 0, 0), 192);
+	}
+}
+
 static void paint_area() {
 	rectpush push;
 	pushvalue push_fore(fore);
@@ -1095,6 +1114,7 @@ static void scene_area() {
 	fillwindow();
 	text_header(getnm(loc.tile));
 	paint_area();
+	paint_minimap_creatures();
 	paint_area_screen();
 	pause_keys();
 }

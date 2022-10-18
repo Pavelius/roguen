@@ -66,7 +66,7 @@ enum target_s : unsigned char {
 	EnemyClose, EnemyNear,
 };
 enum spell_s : unsigned char {
-	Sleep, Web
+	Sleep, Teleport, Web
 };
 enum feature_s : unsigned char {
 	NoFeature,

@@ -1,4 +1,6 @@
 ﻿Fighter: Воин
+Vagabond: Бродяга
+Wizard: Волшебник
 
 Bartender: Бармен
 ChaosHydra: Гидра хаоса
