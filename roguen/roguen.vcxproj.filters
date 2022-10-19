@@ -22,9 +22,6 @@
     <Filter Include="Locale">
       <UniqueIdentifier>{81120db4-ed34-452d-a87a-05f6a5bbf804}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Documentations">
-      <UniqueIdentifier>{ebf0f501-a39a-4452-8083-ed4058bb0618}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="answers.cpp">
@@ -448,16 +445,5 @@
     <Text Include="..\locale\ru\WearNames.txt">
       <Filter>Locale</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\work\General.md">
-      <Filter>Documentations</Filter>
-    </None>
-    <None Include="..\work\Feats.md">
-      <Filter>Documentations</Filter>
-    </None>
-    <None Include="..\work\Files.md">
-      <Filter>Documentations</Filter>
-    </None>
   </ItemGroup>
 </Project>

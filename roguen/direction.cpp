@@ -7,7 +7,7 @@ point all_directions[] = {
 
 direction_s round(direction_s d, direction_s v) {
 	switch(v) {
-	case East:
+	case NorthEast:
 		switch(d) {
 		case North: return NorthEast;
 		case NorthEast: return East;
@@ -20,7 +20,7 @@ direction_s round(direction_s d, direction_s v) {
 		default: return d;
 		}
 		break;
-	case West:
+	case NorthWest:
 		switch(d) {
 		case North: return NorthWest;
 		case NorthWest: return West;
@@ -30,6 +30,24 @@ direction_s round(direction_s d, direction_s v) {
 		case SouthEast: return East;
 		case East: return NorthEast;
 		case NorthEast: return North;
+		default: return d;
+		}
+		break;
+	case East:
+		switch(d) {
+		case North: return East;
+		case East: return South;
+		case South: return West;
+		case West: return North;
+		default: return d;
+		}
+		break;
+	case West:
+		switch(d) {
+		case North: return West;
+		case West: return South;
+		case South: return East;
+		case East: return North;
 		default: return d;
 		}
 		break;

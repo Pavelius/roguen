@@ -14,7 +14,6 @@ static void update_los() {
 	for(m.y = 0; m.y < area.mps; m.y++)
 		for(m.x = 0; m.x < area.mps; m.x++)
 			area.remove(m, Visible);
-	//loc.setlos(player->getposition(), player->getlos());
 }
 
 static void decoy_food() {

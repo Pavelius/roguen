@@ -321,8 +321,6 @@ bool areamap::iswall(point m, direction_s d) const {
 	auto m1 = to(m, d);
 	if(!isvalid(m1))
 		return false;
-	if(!is(m1, Explored))
-		return true;
 	return bsdata<tilei>::elements[(*this)[m1]].iswall();
 }
 
@@ -402,10 +400,10 @@ void areamap::set(feature_s v, int bonus) {
 		set(rc, v, count * bonus / 100);
 }
 
-point areamap::getpoint(const rect & rc, direction_s dir) {
+point areamap::getpoint(const rect& rc, direction_s dir) {
 	switch(dir) {
-	case East: return {short(rc.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))};
-	case West: return {short(rc.x2), short(xrand(rc.y1 + 1, rc.y2 - 1))};
+	case West: return {short(rc.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))};
+	case East: return {short(rc.x2), short(xrand(rc.y1 + 1, rc.y2 - 1))};
 	case North: return {short(xrand(rc.x1 + 1, rc.x2 - 1)), short(rc.y1)};
 	default: return {short(xrand(rc.x1 + 1, rc.x2 - 1)), short(rc.y2)};
 	}
@@ -462,4 +460,13 @@ point areamap::bordered(direction_s d) {
 	case East: return {mps - 1, mps / 2};
 	default: return {mps / 2, mps / 2};
 	}
+}
+
+void areamap::change(tile_s t1, tile_s t2) {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if((*this)[m] == t1)
+				(*this)[m] = t2;
+		}
 }

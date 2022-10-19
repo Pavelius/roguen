@@ -23,6 +23,7 @@ DeepLake walls(DeepWater) floors(DeepWater)
 Building walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Human Fighter
+EmpthyRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
 
 Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
@@ -44,6 +45,8 @@ Hills minimap(152 191 100) floors(Grass) global(GenerateOutdoor)
 AshenLand minimap(128 128 128) floors(GrassCorupted) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+60 RockyMountains-10
-StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
+SmallVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
  sites NPCHouses+3 Building+22
+StartVillage minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(2 2) darkness(2)
+ sites EmpthyRoom+16

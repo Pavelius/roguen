@@ -90,9 +90,10 @@ BSMETA(shapei) = {
 	{}};
 BSMETA(sitei) = {
 	BSREQ(id),
-	BSREQ(global),
+	BSREQ(global), BSREQ(global_finish),
 	BSREQ(local),
 	BSREQ(landscape),
+	BSREQ(darkness),
 	BSREQ(sites),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),

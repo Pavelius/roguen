@@ -286,11 +286,6 @@
     <Text Include="..\rules\Sites.txt" />
     <Text Include="..\rules\Tables.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\work\Feats.md" />
-    <None Include="..\work\Files.md" />
-    <None Include="..\work\General.md" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

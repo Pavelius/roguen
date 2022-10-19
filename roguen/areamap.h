@@ -52,9 +52,11 @@ struct areamap : anymap<tile_s, 64> {
 	void			blockwalls() const;
 	static void		blockzero();
 	static point	bordered(direction_s d);
+	void			change(tile_s t1, tile_s t2);
 	void			clear();
 	static void		clearpath();
 	static direction_s getdirection(point s, point d);
+	static point	get(int x, int y) { return {(short)x, (short)y}; }
 	feature_s		getfeature(point m) const;
 	unsigned char	getfow(point m) const;
 	int				getindex(point m, tile_s e) const;
@@ -65,6 +67,7 @@ struct areamap : anymap<tile_s, 64> {
 	static int		getrange(point start, point target);
 	void			horz(int x1, int y1, int x2, tile_s tile);
 	bool			is(point m, mapf_s v) const { return (feats[m] & (1 << v)) != 0; }
+	bool			is(point m, tile_s v) const { return isvalid(m) && (*this)[m] == v; }
 	bool			isb(point m, mapf_s v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }
 	bool			isfree(point m) const;
 	bool			iswall(point m) const;

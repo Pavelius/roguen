@@ -701,3 +701,11 @@ bool creature::is(condition_s v) const {
 	default: return true;
 	}
 }
+
+int	creature::getlos() const {
+	auto r = get(LineOfSight) - loc.darkness;
+	auto m = 1;
+	if(r < 1)
+		r = 1;
+	return r;
+}

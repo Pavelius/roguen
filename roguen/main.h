@@ -309,7 +309,7 @@ public:
 	void		getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const;
 	creature*	getenemy() const { return enemy_id == 0xFFFF ? 0 : bsdata<creature>::elements + enemy_id; }
 	void		getinfo(stringbuilder& sb) const;
-	int			getlos() const { return get(LineOfSight); }
+	int			getlos() const;
 	const char* getspeech(const char* id) const;
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const;
@@ -361,16 +361,24 @@ struct visualeffect : nameable {
 struct sitegeni;
 struct sitei : nameable {
 	typedef void (sitei::*fnproc)(const rect& rc) const;
-	const sitegeni*	global;
-	const sitegeni*	local;
 	variants	landscape;
 	variants	sites;
 	color		minimap;
 	tile_s		walls, floors;
+	char		darkness;
 	point		offset;
-	void		building(const rect& rc) const;
+	const shapei* shape;
+	const sitegeni*	global;
+	const sitegeni*	local;
+	const sitegeni*	global_finish;
+	void		building(const rect& rca) const;
 	void		cityscape(const rect& rca) const;
+	void		corridors(const rect& rca) const;
+	void		dungeon(const rect& rca) const;
 	void		outdoor(const rect& rca) const;
+	void		room(const rect & rc) const;
+	void		fillfloor(const rect& rca) const;
+	void		fillwalls(const rect& rca) const;
 };
 struct sitegeni : nameable {
 	sitei::fnproc proc;
@@ -399,6 +407,7 @@ public:
 };
 struct location {
 	char		tile[32];
+	char		darkness;
 	void		clear();
 	void		settile(const char* id);
 };
