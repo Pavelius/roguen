@@ -94,7 +94,7 @@ void creature::movestep(direction_s v) {
 	if(area.is(getposition(), Iced)) {
 		if(!roll(Dexterity)) {
 			act(getnm("IcedSlice"));
-			v = round(v, (d100() < 50) ? West : East);
+			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
 			wait();
 		}
 	}
