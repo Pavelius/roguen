@@ -87,6 +87,7 @@ static bool serial_area(const char* url, bool write_mode) {
 	a.set(bsdata<itemground>::source);
 	a.set(bsdata<creature>::source);
 	a.set(bsdata<boosti>::source);
+	a.set(bsdata<roomi>::source);
 	return true;
 }
 
@@ -128,7 +129,7 @@ void gamei::read() {
 	after_serial_game({-1000, -1000});
 }
 
-void gamei::enter(point m, int level, direction_s appear_side) {
+void gamei::enter(point m, int level, feature_s feature, direction_s appear_side) {
 	before_serial_game();
 	if(position) {
 		serial_game(true);
@@ -137,7 +138,12 @@ void gamei::enter(point m, int level, direction_s appear_side) {
 	this->position = m;
 	this->level = level;
 	serial_area(*this, false);
-	after_serial_game(area.bordered(round(appear_side, South)));
+	point start = {-1000, -1000};
+	if(feature)
+		start = area.find(feature);
+	if(start == point{-1000, -1000})
+		start = area.bordered(round(appear_side, South));
+	after_serial_game(start);
 	draw::setnext(game.play);
 }
 
@@ -164,5 +170,5 @@ static void cleanup_saves() {
 
 void gamei::newgame() {
 	cleanup_saves();
-	game.enter({128, 128}, 0, NorthEast);
+	game.enter({128, 128}, 0, NoFeature, NorthEast);
 }

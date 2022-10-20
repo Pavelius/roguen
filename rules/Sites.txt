@@ -20,10 +20,16 @@ DarkLake walls(DarkWater) floors(DarkWater)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
 DeepLake walls(DeepWater) floors(DeepWater)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
+
 Building walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Human Fighter
+
 EmpthyRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+StairsUpRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+ landscape StairsUp
+StairsDownRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+ landscape StairsDown
 
 Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
@@ -49,4 +55,4 @@ SmallVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2
  landscape Tree+50 FootMud+20 FootHill+90
  sites NPCHouses+3 Building+22
 StartVillage minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(2 2) darkness(2)
- sites EmpthyRoom+16
+ sites StairsUpRoom StairsDownRoom EmpthyRoom+16

@@ -90,6 +90,8 @@ void areamap::set(rect rc, feature_s v, int random_count) {
 		return;
 	if(random_count < 0)
 		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
+	if(random_count == 0)
+		random_count = 1;
 	while(random_count > 0) {
 		short x = rc.x1 + rand() % (rc.width() + 1);
 		short y = rc.y1 + rand() % (rc.height() + 1);
@@ -469,4 +471,14 @@ void areamap::change(tile_s t1, tile_s t2) {
 			if((*this)[m] == t1)
 				(*this)[m] = t2;
 		}
+}
+
+point areamap::find(feature_s v) const {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if(features[m] == v)
+				return m;
+		}
+	return {-1000, -1000};
 }

@@ -413,7 +413,7 @@ void creature::movestep(point ni) {
 			auto direction = movedirection(ni);
 			auto np = to(game.position, direction);
 			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id))) {
-				game.enter(np, 0, direction);
+				game.enter(np, 0, NoFeature, direction);
 			}
 		}
 		wait();

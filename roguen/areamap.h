@@ -55,6 +55,7 @@ struct areamap : anymap<tile_s, 64> {
 	void			change(tile_s t1, tile_s t2);
 	void			clear();
 	static void		clearpath();
+	point			find(feature_s v) const;
 	static direction_s getdirection(point s, point d);
 	static point	get(int x, int y) { return {(short)x, (short)y}; }
 	feature_s		getfeature(point m) const;

@@ -72,7 +72,7 @@ enum feature_s : unsigned char {
 	NoFeature,
 	Tree, DeadTree, FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
-	Trap, Door,
+	Trap, Door, StairsUp, StairsDown,
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava,
@@ -400,8 +400,10 @@ struct geoposition {
 class roomi {
 	short unsigned site_id;
 public:
-	explicit operator bool() const { return site_id == 0xFFFF; }
 	rect		rc;
+	explicit operator bool() const { return site_id == 0xFFFF; }
+	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
+	void		clear() { memset(this, 0, sizeof(*this)); }
 	const sitei* getsite() const { return site_id == 0xFFFF ? 0 : bsdata<sitei>::elements + site_id; }
 	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
 };
@@ -418,7 +420,7 @@ public:
 	short unsigned player_id;
 	static void	all(creature::fnupdate proc);
 	static void endgame();
-	void		enter(point m, int level, direction_s appear_side);
+	void		enter(point m, int level, feature_s feature, direction_s appear_side);
 	unsigned	getminutes() const { return minutes; }
 	static void newgame();
 	void		pass(unsigned minutes);

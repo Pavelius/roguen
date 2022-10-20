@@ -18,6 +18,7 @@ BSDATAC(boosti, 256);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
 BSDATAC(monsteri, 512);
+BSDATAC(roomi, 64);
 BSDATAC(sitei, 64);
 
 BSMETA(abilityi) = {

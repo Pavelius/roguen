@@ -467,8 +467,17 @@ void sitei::outdoor(const rect& rca) const {
 	shuffle_locations();
 }
 
+static roomi* add_room(const sitei* ps, const rect& rc) {
+	auto p = new roomi();
+	p->clear();
+	p->setsite(ps);
+	p->rc = rc;
+	return p;
+}
+
 void sitei::room(const rect & rc) const {
 	fillfloor(rc);
+	add_room(this, rc);
 }
 
 void sitei::dungeon(const rect& rca) const {
