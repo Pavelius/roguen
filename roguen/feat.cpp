@@ -1,15 +1,6 @@
 #include "main.h"
 
 BSDATA(feati) = {
-	{"EnergyDrain"},
-	{"Paralysis"},
-	{"PetrifyingGaze"},
-	{"PoisonImmunity"},
-	{"StrenghtDrain"},
-	{"SunSensitive"},
-	{"Slow"},
-	{"NormalWeaponImmunity"},
-	{"FireResistance"},
 	{"Blunt"},
 	{"TwoHanded"},
 	{"CutWoods"},

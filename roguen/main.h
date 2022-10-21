@@ -53,8 +53,6 @@ enum condition_s : unsigned char {
 	Random, Busy,
 };
 enum feat_s : unsigned char {
-	EnergyDrain, Paralysis, PetrifyingGaze, PoisonImmunity, StrenghtDrain,
-	SunSensitive, Slow, NormalWeaponImmunity, FireResistance,
 	Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	Coins,
 	Female, Undead, Summoned, Ally, Enemy,
@@ -401,9 +399,11 @@ class roomi {
 	short unsigned site_id;
 public:
 	rect		rc;
+	featable	feats;
 	explicit operator bool() const { return site_id == 0xFFFF; }
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
 	void		clear() { memset(this, 0, sizeof(*this)); }
+	bool		is(feat_s v) const { return feats.is(v); }
 	const sitei* getsite() const { return site_id == 0xFFFF ? 0 : bsdata<sitei>::elements + site_id; }
 	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
 };
