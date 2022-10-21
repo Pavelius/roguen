@@ -1142,6 +1142,30 @@ static void paint_legends(point origin, int z) {
 	caret = push_caret;
 }
 
+static void paint_legends_text(point origin) {
+	auto push_caret = caret;
+	auto push_fore = fore;
+	auto push_font = font;
+	font = metrics::font;
+	caret = origin;
+	auto index = 1;
+	char temp[260]; stringbuilder sb(temp);
+	for(auto& e : bsdata<roomi>()) {
+		if(!e || !e.is(ShowMinimapBullet))
+			continue;
+		caret.x = origin.x;
+		sb.clear(); sb.add("%1i.", index);
+		text(temp);
+		caret.x += 16;
+		text(e.getname());
+		caret.y += texth();
+		index++;
+	}
+	font = push_font;
+	fore = push_fore;
+	caret = push_caret;
+}
+
 static void scene_area() {
 	fillwindow();
 	if(game.level)
@@ -1151,12 +1175,13 @@ static void scene_area() {
 	print(small_header, getnm("GlobalMapPosition"), game.position.x, game.position.y);
 	const int z = 4;
 	point origin;
-	origin.x = (width - area.mps * z) / 2;
+	origin.x = 16;
 	origin.y = (height - area.mps * z) / 2;
 	paint_area(origin, z);
 	paint_minimap_creatures(origin, z);
 	paint_minimap_items(origin, z);
 	paint_legends(origin, z);
+	paint_legends_text({(short)(16 + area.mps*z + 16), origin.y});
 	paint_area_screen(origin, z);
 	pause_keys();
 }

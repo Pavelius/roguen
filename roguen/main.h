@@ -405,6 +405,7 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
 	int			getindex() const { return this - bsdata<roomi>::elements; }
+	const char*	getname() const { return getsite()->getname(); }
 	const sitei* getsite() const { return site_id == 0xFFFF ? 0 : bsdata<sitei>::elements + site_id; }
 	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
 };
