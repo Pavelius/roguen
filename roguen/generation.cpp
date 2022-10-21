@@ -386,8 +386,11 @@ static void create_landscape(const rect & rca, variant v) {
 		last_site = bsdata<sitei>::elements + v.value;
 		if(last_site->local && last_site->local->proc)
 			(last_site->*last_site->local->proc)(rca);
-		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
-			create_landscape(rca, ev);
+		for(auto ev : bsdata<sitei>::elements[v.value].landscape) {
+			rect rc = rca;
+			rc.offset(last_site->offset.x, last_site->offset.y);
+			create_landscape(rc, ev);
+		}
 	} else if(v.iskind<monsteri>()) {
 		bool hostile = false;
 		if(bsdata<monsteri>::elements[v.value].friendly < -20)

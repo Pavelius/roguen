@@ -93,10 +93,12 @@ static bool serial_area(const char* url, bool write_mode) {
 
 static void create_game_area(geoposition v) {
 	variant rt;
-	if(v.position == point{128, 128} && v.level==0)
+	if(v.position == point{128, 128} && v.level == 0)
 		rt = "StartVillage";
-	else
+	else if(v.level == 0)
 		rt = random_value("RandomOvelandTiles");
+	else
+		rt = "DefaultDungeon";
 	if(!rt)
 		rt = "LightForest";
 	create_area(rt);
@@ -170,5 +172,5 @@ static void cleanup_saves() {
 
 void gamei::newgame() {
 	cleanup_saves();
-	game.enter({128, 128}, 0, NoFeature, NorthEast);
+	game.enter({128, 128}, 0, StairsDown, NorthEast);
 }

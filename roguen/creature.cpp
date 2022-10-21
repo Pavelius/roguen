@@ -180,7 +180,7 @@ const char* creature::getspeech(const char* id) const {
 	source.select(id);
 	if(!source)
 		return getnm("NothingToSay");
-	auto conditional = source[0]->condition.count>0;
+	auto conditional = source[0]->condition.count > 0;
 	if(conditional) {
 		auto p = matchfirst(source);
 		if(!p)
@@ -420,6 +420,21 @@ void creature::movestep(point ni) {
 		return;
 	}
 	auto m = getposition();
+	auto f = area.getfeature(ni);
+	switch(f) {
+	case StairsUp:
+		if(isplayer()) {
+			if(confirm(getnm("MoveStairsUp")))
+				game.enter(game.position, game.level - 1, StairsDown, Center);
+		}
+		break;
+	case StairsDown:
+		if(isplayer()) {
+			if(confirm(getnm("MoveStairsDown")))
+				game.enter(game.position, game.level + 1, StairsUp, Center);
+		}
+		break;
+	}
 	if(area.is(m, Webbed)) {
 		wait(2);
 		if(!roll(Strenght)) {
