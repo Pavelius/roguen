@@ -50,11 +50,12 @@ enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
 enum condition_s : unsigned char {
-	Random, Busy,
+	Identified, Random, ShowMinimapBullet,
+	Busy,
 };
 enum feat_s : unsigned char {
 	Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
-	Coins,
+	Coins, Notable,
 	Female, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
@@ -64,7 +65,7 @@ enum target_s : unsigned char {
 	EnemyClose, EnemyNear,
 };
 enum spell_s : unsigned char {
-	Sleep, Teleport, Web
+	Gate, Sleep, Teleport, Web
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -76,9 +77,6 @@ enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava,
 	Water, DarkWater, DeepWater,
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
-};
-enum reaction_s : unsigned char {
-	Indiferent, Friendly, Hostile,
 };
 extern stringbuilder console;
 struct featable : flagable<4> {};
@@ -365,6 +363,7 @@ struct sitei : nameable {
 	tile_s		walls, floors;
 	char		darkness;
 	point		offset;
+	featable	feats;
 	const shapei* shape;
 	const sitegeni*	global;
 	const sitegeni*	local;
@@ -397,13 +396,15 @@ struct geoposition {
 };
 class roomi {
 	short unsigned site_id;
+	unsigned char ideftified : 1;
 public:
 	rect		rc;
-	featable	feats;
-	explicit operator bool() const { return site_id == 0xFFFF; }
+	explicit operator bool() const { return site_id != 0xFFFF; }
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
-	void		clear() { memset(this, 0, sizeof(*this)); }
-	bool		is(feat_s v) const { return feats.is(v); }
+	void		clear() { memset(this, 0, sizeof(*this)); site_id = 0xFFFF; }
+	bool		is(condition_s v) const;
+	bool		is(feat_s v) const;
+	int			getindex() const { return this - bsdata<roomi>::elements; }
 	const sitei* getsite() const { return site_id == 0xFFFF ? 0 : bsdata<sitei>::elements + site_id; }
 	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
 };
@@ -448,3 +449,4 @@ extern gamei		game;
 extern creature*	last_enemy;
 extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;
 extern creature*	player;
+point				center(const rect& rc);

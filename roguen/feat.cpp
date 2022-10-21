@@ -7,6 +7,7 @@ BSDATA(feati) = {
 	{"Retaliate"},
 	{"Thrown"},
 	{"Coins"},
+	{"Notable"},
 	{"Female"},
 	{"Undead"},
 	{"Summoned"},

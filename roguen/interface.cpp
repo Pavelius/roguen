@@ -1115,6 +1115,33 @@ static void scene_world() {
 	pause_keys();
 }
 
+static void paint_legends(point origin, int z) {
+	auto push_caret = caret;
+	auto push_fore = fore;
+	auto push_font = font;
+	font = metrics::font;
+	auto index = 1;
+	for(auto& e : bsdata<roomi>()) {
+		if(!e || !e.is(ShowMinimapBullet))
+			continue;
+		caret.x = origin.x + center(e.rc).x * z + z / 2;
+		caret.y = origin.y + center(e.rc).y * z + z / 2;
+		fore = colors::white;
+		circlef(7);
+		fore = colors::black;
+		circle(7);
+		char temp[260]; stringbuilder sb(temp);
+		sb.add("%1i", index);
+		caret.y -= texth() / 2;
+		caret.x -= textw(temp) / 2;
+		text(temp);
+		index++;
+	}
+	font = push_font;
+	fore = push_fore;
+	caret = push_caret;
+}
+
 static void scene_area() {
 	fillwindow();
 	if(game.level)
@@ -1129,6 +1156,7 @@ static void scene_area() {
 	paint_area(origin, z);
 	paint_minimap_creatures(origin, z);
 	paint_minimap_items(origin, z);
+	paint_legends(origin, z);
 	paint_area_screen(origin, z);
 	pause_keys();
 }

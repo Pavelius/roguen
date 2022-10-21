@@ -44,14 +44,6 @@ static rect random(const rect& rca, point offset, point minimum, point maximum) 
 	return rc;
 }
 
-static point center(const rect& rc) {
-	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
-		return {-1000, -1000};
-	short x = rc.x1 + rc.width() / 2;
-	short y = rc.y1 + rc.height() / 2;
-	return {x, y};
-}
-
 static bool iswall(point i, direction_s d1, direction_s d2) {
 	return area.iswall(i, d1)
 		&& area.iswall(i, d2);
@@ -139,6 +131,14 @@ static void remove_trail_locations(size_t count) {
 		locations.count = 0;
 }
 
+static roomi* add_room(const sitei* ps, const rect& rc) {
+	auto p = new roomi();
+	p->clear();
+	p->setsite(ps);
+	p->rc = rc;
+	return p;
+}
+
 void sitei::fillfloor(const rect & rc) const {
 	area.set(rc, floors);
 }
@@ -165,6 +165,7 @@ void sitei::building(const rect & rc) const {
 	if(area.iswall(m1))
 		area.set(m1, floors);
 	area.set(m1, NoFeature);
+	add_room(this, rc);
 }
 
 static void place_shape(const shapei & e, point m, direction_s d, tile_s floor, tile_s wall) {
@@ -468,14 +469,6 @@ void sitei::outdoor(const rect& rca) const {
 		locations.add(rc);
 	}
 	shuffle_locations();
-}
-
-static roomi* add_room(const sitei* ps, const rect& rc) {
-	auto p = new roomi();
-	p->clear();
-	p->setsite(ps);
-	p->rc = rc;
-	return p;
 }
 
 void sitei::room(const rect & rc) const {

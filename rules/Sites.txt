@@ -24,14 +24,18 @@ DeepLake walls(DeepWater) floors(DeepWater)
 Building walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Human Fighter
+ feats Notable
 StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding) offset(1 1)
  landscape StairsDown
+ feats Notable
 
 EmpthyRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
 StairsUpRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
  landscape StairsUp
+ feats Notable
 StairsDownRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
  landscape StairsDown
+ feats Notable
 
 Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
  landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90

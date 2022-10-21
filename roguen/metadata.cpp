@@ -95,6 +95,7 @@ BSMETA(sitei) = {
 	BSREQ(local),
 	BSREQ(landscape),
 	BSREQ(darkness),
+	BSFLG(feats, feati),
 	BSREQ(sites),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),

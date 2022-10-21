@@ -267,6 +267,9 @@
     <ClCompile Include="condition.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="room.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
