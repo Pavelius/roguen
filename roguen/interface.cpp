@@ -1117,7 +1117,10 @@ static void scene_world() {
 
 static void scene_area() {
 	fillwindow();
-	text_header(getnm(loc.tile));
+	if(game.level)
+		print(text_header, "%1 (%Level %2i)", getnm(loc.tile), game.level);
+	else
+		text_header(getnm(loc.tile));
 	print(small_header, getnm("GlobalMapPosition"), game.position.x, game.position.y);
 	const int z = 4;
 	point origin;

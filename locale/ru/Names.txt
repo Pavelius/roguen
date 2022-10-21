@@ -18,6 +18,8 @@ GlobalMapPosition: Позиция на карте мира %1i, %2i
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
+MoveStairsUp: Поднятся по лестнице наверх?
+MoveStairsDown: Спустится по лестнице вниз?
 No: Нет
 NoCreaturesNearby: Вокруг никого нет.
 NothingToSay: Нечего сказать.
@@ -39,6 +41,7 @@ YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
 YouNeedThrownWeapon: Чтобы метать, вам нужно иметь в руках метательное оружие.
 
+DefaultDungeon: Подземелье
 Hills: Холмы
 LightForest: Лес
 Plains: Равнины
