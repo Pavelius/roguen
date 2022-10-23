@@ -72,3 +72,13 @@ bool actable::iskind(variant v) const {
 	}
 	return false;
 }
+
+bool actable::isnpc() const {
+	return !kind.iskind<monsteri>();
+}
+
+const char* actable::getname() const {
+	if(name_id != 0xFFFF)
+		return charname::getname(name_id);
+	return kind.getname();
+}

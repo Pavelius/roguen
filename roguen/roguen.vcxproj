@@ -151,6 +151,7 @@
     <ClCompile Include="boost.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
+    <ClCompile Include="charname.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="condition.cpp" />
     <ClCompile Include="creature.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="areamap.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
+    <ClInclude Include="charname.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
     <ClInclude Include="crt.h" />
@@ -274,6 +276,7 @@
     <Text Include="..\locale\ru\DirectionNames.txt" />
     <Text Include="..\locale\ru\ItemNames.txt" />
     <Text Include="..\locale\ru\MonsterNames.txt" />
+    <Text Include="..\locale\ru\NameCharacters.txt" />
     <Text Include="..\locale\ru\Names.txt" />
     <Text Include="..\locale\ru\NamesNewbe.txt" />
     <Text Include="..\locale\ru\RaceNames.txt" />

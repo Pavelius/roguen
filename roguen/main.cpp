@@ -17,6 +17,7 @@ static void initializating() {
 	bsreq::read("rules/Advancement.txt");
 	hotkey::initialize();
 	readl("Chats", speech::read);
+	readl("NameCharacters", charname::read);
 	shapei::read("rules/Shapes.txt");
 	bsreq::read("rules/Sites.txt");
 	generatori::read("rules/Tables.txt");
@@ -95,7 +96,7 @@ static void main_start() {
 	create_item({6, 6}, "Arrow");
 	create_item({5, 7}, "AquaPotion");
 	create_item({6, 7}, "BluePotion");
-	player = creature::create({5, 5}, "Human", "Fighter");
+	player = creature::create({5, 5}, "HightElf", "Fighter");
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");

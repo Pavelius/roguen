@@ -270,6 +270,9 @@
     <ClCompile Include="room.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="charname.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -395,6 +398,9 @@
     <ClInclude Include="areamap.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="charname.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -446,6 +452,9 @@
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\locale\ru\WearNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\NameCharacters.txt">
       <Filter>Locale</Filter>
     </Text>
   </ItemGroup>

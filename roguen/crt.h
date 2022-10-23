@@ -103,7 +103,7 @@ public:
 	typedef T data_type;
 	constexpr slice() : data(0), count(0) {}
 	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
-	template<int N> constexpr slice(adat<T, N>& v) : data(v), count(v.count) {}
+	template<int N> constexpr slice(const adat<T, N>& v) : data(const_cast<T*>(v.data)), count(v.count) {}
 	constexpr slice(T* data, unsigned count) : data(data), count(count) {}
 	constexpr slice(T* p1, const T* p2) : data(p1), count(p2 - p1) {}
 	explicit operator bool() const { return count != 0; }

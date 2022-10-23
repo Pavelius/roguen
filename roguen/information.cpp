@@ -35,9 +35,9 @@ static const char* getrace(variant v, bool female) {
 }
 
 void creature::getinfo(stringbuilder& sb) const {
-	sb.addn("Кастор");
+	sb.addn(getname());
 	sb.addn(getrace(getkind(), is(Female)));
-	sb.addn(getnm(getclass().id));
+	sb.addn("%1 %2i [~%-Level]", getnm(getclass().id), get(Level));
 	sb.addn("---");
 	sb.addn("$Tab -25");
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))

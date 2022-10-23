@@ -31,6 +31,7 @@ void creature::clear() {
 }
 
 void creature::levelup() {
+	basic.abilities[Level] += 1;
 }
 
 static bool isfreecr(point m) {
@@ -62,12 +63,19 @@ creature* creature::create(point m, variant kind, variant character) {
 	auto p = bsdata<creature>::add();
 	p->setposition(m);
 	p->setkind(kind);
+	p->setnoname();
 	p->class_id = character.value;
 	monsteri* pm = kind;
 	if(pm) {
 		copy(p->basic, *pm);
 		p->feats = pm->feats;
 		p->advance(pm->use);
+	} else {
+		adat<variant> conditions;
+		conditions.add(kind);
+		if(p->is(Female))
+			conditions.add("Female");
+		p->setname(charname::random(conditions));
 	}
 	p->basic.create();
 	p->advance(kind, 0);
@@ -712,6 +720,7 @@ void creature::sayv(stringbuilder& sb, const char* format, const char* format_pa
 bool creature::is(condition_s v) const {
 	switch(v) {
 	case Busy: return wait_seconds > 1000;
+	case NPC: return isnpc();
 	case Random: return d100() < 40;
 	default: return true;
 	}

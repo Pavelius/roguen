@@ -1156,7 +1156,7 @@ static void paint_legends_text(point origin) {
 		caret.x = origin.x;
 		sb.clear(); sb.add("%1i.", index);
 		text(temp);
-		caret.x += 16;
+		caret.x += 18;
 		text(e.getname());
 		caret.y += texth();
 		index++;

@@ -2,6 +2,7 @@
 
 BSDATA(conditioni) = {
 	{"Identified"},
+	{"NPC"},
 	{"Random"},
 	{"ShowMinimapBullet"},
 	{"Busy"},

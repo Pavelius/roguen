@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "areamap.h"
+#include "charname.h"
 #include "dice.h"
 #include "direction.h"
 #include "flagable.h"
@@ -50,7 +51,7 @@ enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
 enum condition_s : unsigned char {
-	Identified, Random, ShowMinimapBullet,
+	Identified, NPC, Random, ShowMinimapBullet,
 	Busy,
 };
 enum feat_s : unsigned char {
@@ -107,17 +108,21 @@ struct indexa : adat<point> {
 };
 class actable {
 	variant		kind; // Race or monster
+	short unsigned name_id;
 public:
 	static void	actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n');
 	static bool confirm(const char* format, ...);
 	variant		getkind() const { return kind; }
 	static const char* getlog();
-	const char*	getname() const { return kind.getname(); }
+	const char*	getname() const;
 	bool		iskind(variant v) const;
+	bool		isnpc() const;
 	static void	logv(const char* format, const char* format_param, const char* name, bool female);
 	static void	pressspace();
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void		setkind(variant v) { kind = v; }
+	void		setnoname() { name_id = 0xFFFF; }
+	void		setname(unsigned short v) { name_id = v; }
 };
 class movable : public actable {
 	point		position;
@@ -249,6 +254,7 @@ typedef skilli defencet[3];
 class creature : public wearable, public statable, public spellable {
 	unsigned short class_id;
 	unsigned short enemy_id, master_id;
+	unsigned short name_id;
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
