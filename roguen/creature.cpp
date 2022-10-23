@@ -28,6 +28,9 @@ void creature::clear() {
 	memset(this, 0, sizeof(*this));
 	if(player == this)
 		player = 0;
+	room_id = 0xFFFF;
+	name_id = 0xFFFF;
+	master_id = enemy_id = 0xFFFF;
 }
 
 void creature::levelup() {
@@ -464,6 +467,7 @@ void creature::movestep(point ni) {
 		interaction(ni);
 		fixaction();
 	}
+	update_room();
 	wait();
 }
 
@@ -624,6 +628,29 @@ void creature::update_wears() {
 	}
 }
 
+static roomi* find_room(point pt) {
+	for(auto& e : bsdata<roomi>()) {
+		if(pt.in(e.rc))
+			return &e;
+	}
+	return 0;
+}
+
+void creature::update_room() {
+	auto pn = find_room(getposition());
+	if(pn) {
+		auto pb = getroom();
+		if(pn != pb) {
+			auto ps = pn->getsite();
+			auto pd = getdescription(ps->id);
+			if(pd)
+				actp(pd);
+		}
+		room_id = bsdata<roomi>::source.indexof(pn);
+	} else
+		room_id = 0xFFFF;
+}
+
 void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
 }
@@ -732,4 +759,8 @@ int	creature::getlos() const {
 	if(r < 1)
 		r = 1;
 	return r;
+}
+
+roomi* creature::getroom() const {
+	return (room_id == 0xFFFF) ? 0 : bsdata<roomi>::elements + room_id;
 }

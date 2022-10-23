@@ -17,5 +17,6 @@ BSDATA(featurei) = {
 	{"Door", {39, 1}, {}, 7, FG(BetweenWalls) | FG(ImpassableNonActive) | FG(AllowActivate)},
 	{"StairsUp", {52, 1}, {}, 4},
 	{"StairsDown", {53, 1}, {}, 4},
+	{"GatePortal", {54, 2}, {}, 4, FG(AllowActivate)},
 };
-assert_enum(featurei, StairsDown)
+assert_enum(featurei, GatePortal)

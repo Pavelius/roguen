@@ -72,7 +72,7 @@ enum feature_s : unsigned char {
 	NoFeature,
 	Tree, DeadTree, FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
-	Trap, Door, StairsUp, StairsDown,
+	Trap, Door, StairsUp, StairsDown, GatePortal,
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava,
@@ -251,10 +251,11 @@ struct skilli {
 	int			value;
 };
 typedef skilli defencet[3];
+class roomi;
 class creature : public wearable, public statable, public spellable {
 	unsigned short class_id;
 	unsigned short enemy_id, master_id;
-	unsigned short name_id;
+	unsigned short name_id, room_id;
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
@@ -284,6 +285,7 @@ class creature : public wearable, public statable, public spellable {
 	void		update();
 	void		update_abilities();
 	void		update_basic();
+	void		update_room();
 	void		update_wears();
 public:
 	typedef void (creature::*fnupdate)();
@@ -312,6 +314,7 @@ public:
 	creature*	getenemy() const { return enemy_id == 0xFFFF ? 0 : bsdata<creature>::elements + enemy_id; }
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const;
+	roomi*		getroom() const;
 	const char* getspeech(const char* id) const;
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const;
@@ -422,7 +425,6 @@ struct location {
 	void		settile(const char* id);
 };
 struct spelli : nameable {
-
 };
 class gamei : public geoposition {
 	unsigned	minutes;
