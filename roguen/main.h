@@ -66,7 +66,7 @@ enum target_s : unsigned char {
 	EnemyClose, EnemyNear,
 };
 enum spell_s : unsigned char {
-	Gate, Sleep, Teleport, Web
+	Gate, Light, Sleep, Teleport, Web
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -420,6 +420,9 @@ struct location {
 	char		darkness;
 	void		clear();
 	void		settile(const char* id);
+};
+struct spelli : nameable {
+
 };
 class gamei : public geoposition {
 	unsigned	minutes;
