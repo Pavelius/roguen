@@ -49,6 +49,7 @@ static bool isfreecr(point m) {
 void creature::place(point m) {
 	m = area.getfree(m, 10, isfreecr);
 	setposition(m);
+	update_room();
 }
 
 creature* creature::create(point m, variant kind, variant character) {
@@ -643,8 +644,12 @@ void creature::update_room() {
 		if(pn != pb) {
 			auto ps = pn->getsite();
 			auto pd = getdescription(ps->id);
-			if(pd)
+			if(pd) {
+				auto pn = getnm(ps->id);
+				if(pn)
+					actp(getnm("YouSeeRoom"), pn);
 				actp(pd);
+			}
 		}
 		room_id = bsdata<roomi>::source.indexof(pn);
 	} else
