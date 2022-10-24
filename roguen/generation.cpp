@@ -530,6 +530,7 @@ void create_area(variant tile) {
 	bsdata<itemground>::source.clear();
 	bsdata<creature>::source.clear();
 	bsdata<boosti>::source.clear();
+	bsdata<roomi>::source.clear();
 	loc.clear();
 	area.clear();
 	locations.clear();
