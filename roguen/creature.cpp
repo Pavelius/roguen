@@ -65,6 +65,7 @@ creature* creature::create(point m, variant kind, variant character) {
 	if(!area.isvalid(m))
 		return 0;
 	auto p = bsdata<creature>::add();
+	p->clear();
 	p->setposition(m);
 	p->setkind(kind);
 	p->setnoname();

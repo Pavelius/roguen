@@ -516,6 +516,11 @@ void creature::paintbars() const {
 	bar(get(Mana), get(ManaMaximum), colors::blue);
 }
 
+void creature::paintbarsall() const {
+	if(player == this || player->getenemy() == this)
+		paintbars();
+}
+
 void creature::paint() const {
 	auto feats = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
@@ -554,8 +559,6 @@ void creature::paint() const {
 		else
 			image(pa, 10 + 25, feats);
 	}
-	if(player == this || player->getenemy() == this)
-		paintbars();
 }
 
 void featurei::paint(int r) const {
@@ -584,6 +587,11 @@ void visualeffect::paint(unsigned char random) const {
 		}
 	} else
 		image(pi, random + frame, feats);
+}
+
+static void object_afterpaintpo(const object* p) {
+	if(bsdata<creature>::have(p->data))
+		((creature*)p->data)->paintbarsall();
 }
 
 static void object_afterpaint(const object* p) {
@@ -1259,6 +1267,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	pbackground = before_paint;
 	object::beforepaintall = before_paint_all;
 	object::afterpaint = object_afterpaint;
+	object::afterpaintallpo = object_afterpaintpo;
 	object::afterpaintall = after_paint_all;
 	object::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;

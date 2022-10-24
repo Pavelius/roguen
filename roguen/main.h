@@ -331,6 +331,7 @@ public:
 	void		movestep(point m);
 	void		moveto(point m);
 	void		paint() const;
+	void		paintbarsall() const;
 	void		place(point m);
 	void		restoration() {}
 	void		remove(feat_s v) { feats.remove(v); }

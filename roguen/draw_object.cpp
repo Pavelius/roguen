@@ -14,6 +14,7 @@ fnevent				draw::object::afterpaintall;
 fnevent				draw::object::beforepaintall;
 fnevent				draw::object::correctcamera;
 fnpaint				draw::object::afterpaint;
+fnpaint				draw::object::afterpaintallpo;
 static rect			last_screen;
 static unsigned long timestamp;
 static unsigned long timestamp_last;
@@ -255,6 +256,12 @@ void draw::paintobjects() {
 	}
 	if(object::afterpaintall)
 		object::afterpaintall();
+	if(object::afterpaintallpo) {
+		for(size_t i = 0; i < count; i++) {
+			draw::caret = source[i]->position - draw::camera;
+			object::afterpaintallpo(source[i]);
+		}
+	}
 	cleanup();
 	clipping = push_clip;
 }

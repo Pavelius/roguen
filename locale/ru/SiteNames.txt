@@ -4,5 +4,6 @@ LightForest: Лес
 NPCHouses: Дом влиятельного горожанина
 Plains: Равнины
 PortalRoom: Портал
+StairsUpRoom: Лестница вверх
 StairsDownHouses: Дом с лестницей вниз
 StartVillage: Деревня "Клюв грифона"
