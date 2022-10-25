@@ -273,6 +273,9 @@
     <ClCompile Include="charname.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="price.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -399,6 +402,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="charname.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="price.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
