@@ -7,6 +7,7 @@ int	last_hit, last_hit_result, last_parry, last_parry_result;
 extern bool show_floor_rect;
 
 void animate_figures();
+void visualize_images(res pid, point size, point offset);
 
 void script::run(const char* id, int bonus) {
 	auto p = bsdata<script>::find(id);
@@ -92,7 +93,7 @@ static item* choose_wear() {
 static item* choose_stuff(wear_s wear) {
 	answers an;
 	char temp[512]; stringbuilder sb(temp);
-	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i+1)) {
+	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i + 1)) {
 		auto pi = player->getwear(i);
 		if(!(*pi))
 			continue;
@@ -235,6 +236,10 @@ static void thrown_attack(int bonud) {
 	}
 }
 
+static void show_images(int bonus) {
+	visualize_images(res::Monsters, {80, 90}, {80 / 2, 90});
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -257,6 +262,7 @@ BSDATA(script) = {
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"RangeAttack", range_attack},
+	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
 	{"TestArena", test_arena},

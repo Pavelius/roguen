@@ -28,6 +28,7 @@ AdventureKeys
  elements ShowLogs "L"
  elements ThrownAttack "T"
 
+ elements ShowImages "Ctrl+I"
  elements DebugMessage "Ctrl+D"
  elements ExploreArea "Ctrl+E"
  elements TestArena "Ctrl+A"

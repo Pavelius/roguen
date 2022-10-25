@@ -528,7 +528,7 @@ void creature::paint() const {
 		return;
 	if(kind.iskind<monsteri>()) {
 		auto pi = gres(res::Monsters);
-		image(pi, kind.value, feats);
+		image(pi, bsdata<monsteri>::elements[kind.value].avatar, feats);
 	} else {
 		auto pb = gres(res::PCBody);
 		auto pa = gres(res::PCArms);
@@ -1189,7 +1189,7 @@ static void scene_area() {
 	paint_minimap_creatures(origin, z);
 	paint_minimap_items(origin, z);
 	paint_legends(origin, z);
-	paint_legends_text({(short)(16 + area.mps*z + 16), origin.y});
+	paint_legends_text({(short)(16 + area.mps * z + 16), origin.y});
 	paint_area_screen(origin, z);
 	pause_keys();
 }
@@ -1247,6 +1247,50 @@ void show_logs(int bonus) {
 		pause_keys();
 		paintfinish();
 		domodal();
+	}
+}
+
+static void textcn(const char* format) {
+	auto push_caret = caret;
+	caret.x -= (textw(format) + 1) / 2;
+	caret.y -= texth();
+	text(format);
+	caret = push_caret;
+}
+
+void visualize_images(res pid, point size, point offset) {
+	auto p = gres(pid);
+	auto origin = 0;
+	point d = {(short)(getwidth() / size.x), (short)(getheight() / size.y)};
+	auto per_screen = d.x * d.y;
+	auto maximum_origin = p->count - per_screen;
+	if(maximum_origin < 0)
+		maximum_origin = 0;
+	while(ismodal()) {
+		fillform();
+		if(origin < 0)
+			origin = 0;
+		if(origin > maximum_origin)
+			origin = maximum_origin;
+		for(auto y = 0; y < d.y; y++) {
+			for(auto x = 0; x < d.x; x++) {
+				auto i = origin + y * d.x + x;
+				caret.x = size.x * x;
+				caret.y = size.x * y;
+				caret = caret + offset;
+				image(p, i, 0);
+				print(textcn, "%1i", i);
+			}
+		}
+		paintfinish();
+		domodal();
+		switch(hot.key) {
+		case KeyUp: origin -= d.x; break;
+		case KeyPageUp: origin -= per_screen; break;
+		case KeyDown: origin += d.x; break;
+		case KeyPageDown: origin += per_screen; break;
+		case KeyEscape: breakmodal(0); break;
+		}
 	}
 }
 

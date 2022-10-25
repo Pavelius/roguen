@@ -233,7 +233,7 @@ struct wearable : movable {
 	const item*	getwear(const void* data) const;
 };
 struct monsteri : nameable, statable {
-	const char*	avatar;
+	unsigned short avatar;
 	featable	feats;
 	const char*	treasure;
 	char		friendly;

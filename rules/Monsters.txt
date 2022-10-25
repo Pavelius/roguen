@@ -1,43 +1,43 @@
 #Monster
 
-Goblin avatar("0") treasure(RC) appear(2 8) appear_outdoor(6 60)
+Goblin avatar(0) treasure(RC) appear(2 8) appear_outdoor(6 60)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
  use Dagger
-GoblinFemale avatar("0_f") parent(Goblin)
+GoblinFemale avatar(1) parent(Goblin)
  abilities Strenght(20) Dexterity(40) WeaponSkill(15) DodgeSkill(10) HitsMaximum(4)
  feats Female
-CityGuard avatar("57")
+CityGuard avatar(543)
  abilities Strenght(30) Dexterity(30) WeaponSkill(40) DodgeSkill(20) ShieldUse(40) HitsMaximum(10)
  use Spear ChainArmor
-OrcWarrior avatar("1")
+OrcWarrior avatar(2)
  abilities Strenght(40) Dexterity(25) WeaponSkill(40) DodgeSkill(20) HitsMaximum(15)
  use Sword LeatherArmor
-Ettin avatar("47")
+Ettin avatar(516)
  abilities Strenght(70) Dexterity(25) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
  use Club
-HillGiant avatar("31")
+HillGiant avatar(537)
  abilities Strenght(70) Dexterity(20) WeaponSkill(50) DodgeSkill(10) HitsMaximum(50)
  use Club LeatherArmor
-ChaosHydra avatar("33")
+ChaosHydra avatar(339)
  abilities Strenght(65) Dexterity(10) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
-Minotaur avatar("83")
+Minotaur avatar(580)
  abilities Strenght(60) Dexterity(30) WeaponSkill(60) DodgeSkill(20) HitsMaximum(20)
  use Sword
 
 Bartender avatar("130")
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
-Theif avatar("108")
+Theif avatar(313)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(12)
-TheifFemale avatar("108_f")
+TheifFemale avatar(314)
  abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(10)
  feats Female
-Farmer avatar("282")
+Farmer avatar(273)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
-FarmerFemale avatar("284")
+FarmerFemale avatar(276)
  abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
  feats Female
-SmallBoy avatar("283")
+SmallBoy avatar(274)
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
-SmallGirl avatar("283_f") parent(SmallBoy)
+SmallGirl avatar(275) parent(SmallBoy)
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
  feats Female
