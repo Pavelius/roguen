@@ -138,11 +138,11 @@ void creature::interaction(point m) {
 				area.remove(m, Activated);
 		} else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = wears[MeleeWeapon].geti();
-			int chance = 1;
+			int chance = get(Strenght) / 10;
 			if(wei.is(TwoHanded))
-				chance = wei.bonus * 3;
+				chance += wei.weapon.damage * 3;
 			else
-				chance = wei.bonus;
+				chance += wei.weapon.damage;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
 				area.features[m] = NoFeature;

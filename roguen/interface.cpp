@@ -570,7 +570,7 @@ void featurei::paint(int r) const {
 
 void itemi::paint() const {
 	auto pi = gres(res::Items);
-	image(pi, this - bsdata<itemi>::elements, 0);
+	image(pi, avatar, 0);
 }
 
 void visualeffect::paint(unsigned char random) const {

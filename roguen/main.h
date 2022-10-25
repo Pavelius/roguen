@@ -156,13 +156,13 @@ struct itemi : nameable {
 		short 	ammunition;
 	};
 	int			cost, weight, count;
+	short		avatar;
 	wear_s		wear;
 	ability_s	ability;
 	char		bonus;
 	weaponi		weapon;
 	featable	feats;
 	char		wear_index;
-	const char*	avatar;
 	variant		dress, use;
 	bool operator==(const itemi& v) const { return this == &v; }
 	const itemi* getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
