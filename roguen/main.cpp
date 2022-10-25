@@ -71,8 +71,8 @@ static void equip_item(const char* id) {
 void show_worldmap();
 
 static void main_start() {
-	world.clear();
-	world.generate({world.mps / 2, world.mps / 2}, 1);
+	//world.clear();
+	//world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
 	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
 	//p2->set(Enemy);

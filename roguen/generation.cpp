@@ -198,12 +198,8 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 }
 
 static void create_monster(const rect& rc, variant v, int count) {
-	for(auto i = 0; i < count; i++) {
-		auto pm = (monsteri*)single(v);
-		if(!pm)
-			continue;
+	for(auto i = 0; i < count; i++)
 		creature::create(random(rc), single(v));
-	}
 }
 
 static void create_road(const rect& rc) {
@@ -411,6 +407,7 @@ static bool test_counter(variant v) {
 static void create_landscape(const rect& rca, variant v) {
 	static sitei* last_site;
 	static racei* last_race;
+	v = single(v);
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -428,9 +425,7 @@ static void create_landscape(const rect& rca, variant v) {
 			create_landscape(rc, ev);
 	} else if(v.iskind<monsteri>()) {
 		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
-	} else if(v.iskind<randomizeri>())
-		create_landscape(rca, single(v));
-	else if(v.iskind<listi>()) {
+	} else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
 			create_landscape(rca, v);
 	} else if(v.iskind<shapei>()) {
@@ -438,10 +433,9 @@ static void create_landscape(const rect& rca, variant v) {
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
 			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
-	} else if(v.iskind<racei>()) {
-		pushvalue push_race(last_race);
+	} else if(v.iskind<racei>())
 		last_race = bsdata<racei>::elements + v.value;
-	} else if(v.iskind<classi>()) {
+	else if(v.iskind<classi>()) {
 		if(!last_race)
 			return;
 		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
