@@ -16,10 +16,7 @@ static adat<variant, 32> sites;
 static point last_door;
 static direction_s last_direction;
 static sitei* landscape;
-static rect correct = {1, 1, area.mps - 2, area.mps - 2};
 
-const auto minimum_corridor_lenght = 6;
-const auto chance_create_door = 10;
 const auto chance_corridor_content = 10;
 const auto chance_hidden_door = 10;
 
@@ -139,18 +136,18 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	return p;
 }
 
-void sitei::fillfloor(const rect & rc) const {
+void sitei::fillfloor(rect & rc) const {
 	area.set(rc, floors);
 }
 
-void sitei::fillwalls(const rect & rc) const {
+void sitei::fillwalls(rect & rc) const {
 	area.horz(rc.x1, rc.y1, rc.x2, walls);
 	area.vert(rc.x1, rc.y1, rc.y2, walls);
 	area.horz(rc.x1, rc.y2, rc.x2, walls);
 	area.vert(rc.x2, rc.y1, rc.y2, walls);
 }
 
-void sitei::building(const rect & rc) const {
+void sitei::building(rect& rc) const {
 	static direction_s rdir[] = {North, South, West, East};
 	const auto door = Door;
 	// Walls and floors
@@ -166,9 +163,10 @@ void sitei::building(const rect & rc) const {
 		area.set(m1, floors);
 	area.set(m1, NoFeature);
 	add_room(this, rc);
+	rc.offset(1, 1);
 }
 
-static void place_shape(const shapei & e, point m, direction_s d, tile_s floor, tile_s wall) {
+static void place_shape(const shapei& e, point m, direction_s d, tile_s floor, tile_s wall) {
 	auto c = e.center(m);
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
@@ -284,6 +282,7 @@ static void create_door(point m, tile_s floor, tile_s wall, bool hidden) {
 
 static void create_connector(point index, direction_s dir, tile_s wall, tile_s floor) {
 	const auto chance_line_corridor = 60;
+	const auto minimum_corridor_lenght = 6;
 	auto count = 0;
 	point start = {0, 0};
 	while(true) {
@@ -347,14 +346,24 @@ static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
 	}
 }
 
-static void place_monsters(const rect & rca, const monsteri & e, int count, bool hostile) {
-	if(count < 0)
+static void place_monsters(const rect& rca, const monsteri& e, int count) {
+	if(count < 0) {
+		if(d100() >= (-count))
+			return;
 		count = 0;
-	if(count == 0) {
-		count = e.getbase().appear.roll();
-		if(game.isoutdoor())
-			count *= 3;
 	}
+	if(count == 0) {
+		count = e.appear.roll();
+		if(game.isoutdoor()) {
+			count += e.appear.roll();
+			count += e.appear.roll();
+		}
+		if(!count)
+			count = 1;
+	}
+	bool hostile = false;
+	if(e.friendly < -20)
+		hostile = true;
 	for(auto i = 0; i < count; i++) {
 		auto p = creature::create(random(rca), &e);
 		if(hostile)
@@ -362,7 +371,19 @@ static void place_monsters(const rect & rca, const monsteri & e, int count, bool
 	}
 }
 
-static void place_character(const rect & rca, const racei& race, const classi& cls) {
+static void place_items(const rect& rca, const itemi& e, int count) {
+	if(&e == bsdata<itemi>::elements)
+		return;
+	if(count < 0)
+		count = 0;
+	for(auto i = 0; i < count; i++) {
+		item it; it.clear();
+		it.create(&e);
+		it.drop(random(rca));
+	}
+}
+
+static void place_character(const rect& rca, const racei& race, const classi& cls) {
 	creature::create(random(rca), &race, &cls);
 }
 
@@ -372,7 +393,7 @@ static bool test_counter(variant v) {
 	return true;
 }
 
-static void create_landscape(const rect & rca, variant v) {
+static void create_landscape(const rect& rca, variant v) {
 	static sitei* last_site;
 	static racei* last_race;
 	if(v.iskind<featurei>())
@@ -384,34 +405,32 @@ static void create_landscape(const rect & rca, variant v) {
 	else if(v.iskind<sitei>()) {
 		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
+		rect rc = rca;
 		if(last_site->local && last_site->local->proc)
-			(last_site->*last_site->local->proc)(rca);
-		for(auto ev : bsdata<sitei>::elements[v.value].landscape) {
-			rect rc = rca;
-			rc.offset(last_site->offset.x, last_site->offset.y);
+			(last_site->*last_site->local->proc)(rc);
+		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rc, ev);
-		}
 	} else if(v.iskind<monsteri>()) {
-		bool hostile = false;
-		if(bsdata<monsteri>::elements[v.value].friendly < -20)
-			hostile = true;
-		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter, hostile);
+		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
+	} else if(v.iskind<generatori>())
+		create_landscape(rca, bsdata<generatori>::elements[v.value].random());
+	else if(v.iskind<listi>()) {
+		for(auto v : bsdata<listi>::elements[v.value].elements)
+			create_landscape(rca, v);
 	} else if(v.iskind<shapei>()) {
 		if(!last_site || !test_counter(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
 			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
-	} else if(v.iskind<racei>())
+	} else if(v.iskind<racei>()) {
+		pushvalue push_race(last_race);
 		last_race = bsdata<racei>::elements + v.value;
-	else if(v.iskind<classi>()) {
+	} else if(v.iskind<classi>()) {
 		if(!last_race)
 			return;
 		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
-	} else if(v.iskind<itemi>()) {
-		item it; it.clear();
-		it.create(bsdata<itemi>::elements + v.value);
-		it.drop(random(rca));
-	}
+	} else if(v.iskind<itemi>())
+		place_items(rca, bsdata<itemi>::elements[v.value], v.counter);
 }
 
 static void add_area_sites(variant v) {
@@ -446,7 +465,7 @@ static bool apply_landscape(variant tile) {
 	return landscape != 0;
 }
 
-void sitei::cityscape(const rect& rca) const {
+void sitei::cityscape(rect& rca) const {
 	fillfloor(rca);
 	create_landscape(rca, this);
 	rect r1 = rca; r1.offset(offset.x, offset.y);
@@ -454,7 +473,7 @@ void sitei::cityscape(const rect& rca) const {
 	sort_locations();
 }
 
-void sitei::outdoor(const rect& rca) const {
+void sitei::outdoor(rect& rca) const {
 	fillfloor(rca);
 	create_landscape(rca, this);
 	const auto parts = 4;
@@ -470,12 +489,12 @@ void sitei::outdoor(const rect& rca) const {
 	shuffle_locations();
 }
 
-void sitei::room(const rect & rc) const {
+void sitei::room(rect & rc) const {
 	fillfloor(rc);
 	add_room(this, rc);
 }
 
-void sitei::dungeon(const rect& rca) const {
+void sitei::dungeon(rect& rca) const {
 	const auto parts = 4;
 	const auto size = area.mps / parts;
 	for(auto i = 0; i < parts * parts; i++) {
@@ -513,7 +532,7 @@ static void create_doors(tile_s floor, tile_s wall) {
 		create_doors(rc, floor, wall);
 }
 
-void sitei::corridors(const rect& rca) const {
+void sitei::corridors(rect& rca) const {
 	static direction_s connectors_side[] = {North, East, West, South};
 	const auto& rc = locations[0];
 	auto dir = getmost(rc);

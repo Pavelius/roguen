@@ -293,6 +293,7 @@ public:
 	static creature* create(point m, variant v, variant character = {});
 	void		act(const char* format, ...) const;
 	void		actp(const char* format, ...) const;
+	void		actps(const char* format, ...) const;
 	void		aimove();
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
@@ -366,7 +367,7 @@ struct visualeffect : nameable {
 };
 struct sitegeni;
 struct sitei : nameable {
-	typedef void (sitei::*fnproc)(const rect& rc) const;
+	typedef void (sitei::*fnproc)(rect& rc) const;
 	variants	landscape;
 	variants	sites;
 	color		minimap;
@@ -378,14 +379,14 @@ struct sitei : nameable {
 	const sitegeni*	global;
 	const sitegeni*	local;
 	const sitegeni*	global_finish;
-	void		building(const rect& rca) const;
-	void		cityscape(const rect& rca) const;
-	void		corridors(const rect& rca) const;
-	void		dungeon(const rect& rca) const;
-	void		outdoor(const rect& rca) const;
-	void		room(const rect & rc) const;
-	void		fillfloor(const rect& rca) const;
-	void		fillwalls(const rect& rca) const;
+	void		building(rect& rca) const;
+	void		cityscape(rect& rca) const;
+	void		corridors(rect& rca) const;
+	void		dungeon(rect& rca) const;
+	void		outdoor(rect& rca) const;
+	void		room(rect& rc) const;
+	void		fillfloor(rect& rca) const;
+	void		fillwalls(rect& rca) const;
 };
 struct sitegeni : nameable {
 	sitei::fnproc proc;

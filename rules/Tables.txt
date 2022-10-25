@@ -18,3 +18,9 @@
 1 SmallBoy
 1 SmallGirl
 1 Theif
+
+#VillageNPCRace
+
+2 Human
+1 Dwarf
+1 HightElf

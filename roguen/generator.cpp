@@ -1,6 +1,5 @@
 #include "bsreq.h"
 #include "generator.h"
-#include "list.h"
 #include "logparse.h"
 
 using namespace log;
@@ -10,7 +9,7 @@ BSMETA(generatori) = {
 	BSREQ(chance),
 	BSREQ(value),
 	{}};
-BSDATAC(generatori, 256)
+BSDATAC(generatori, 1024)
 
 typedef slice<generatori> generatora;
 
@@ -37,6 +36,17 @@ static generatora find_elements(const char* id) {
 	return generatora(p1, p2 + 1);
 }
 
+static generatora find_elements(const generatori* p) {
+	auto pb = p;
+	auto pe = bsdata<generatori>::end();
+	while(p < pe) {
+		if(p->id != pb->id)
+			break;
+		p++;
+	}
+	return generatora(const_cast<generatori*>(pb), p);
+}
+
 static int total_chance(const generatora& elements) {
 	auto result = 0;
 	for(auto& e : elements)
@@ -44,8 +54,7 @@ static int total_chance(const generatora& elements) {
 	return result;
 }
 
-static variant random_value_raw(const char* id) {
-	auto elements = find_elements(id);
+static variant random_value(const generatora& elements) {
 	auto total = total_chance(elements);
 	if(total) {
 		auto result = rand() % total;
@@ -58,18 +67,12 @@ static variant random_value_raw(const char* id) {
 	return variant();
 }
 
-variant random_list_value(variant value) {
-	if(value.iskind<listi>()) {
-		auto pi = bsdata<listi>::elements + value.value;
-		if(!pi->elements)
-			return variant();
-		return random_list_value(pi->elements.begin()[(rand() % pi->elements.count)]);
-	}
-	return value;
+variant random_value(const char* id) {
+	return random_value(find_elements(id));
 }
 
-variant random_value(const char* id) {
-	return random_list_value(random_value_raw(id));
+variant generatori::random() const {
+	return random_value(find_elements(this));
 }
 
 static const char* readid(const char* p, const char*& result) {

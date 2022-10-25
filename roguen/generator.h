@@ -7,6 +7,7 @@ struct generatori {
 	char			chance;
 	variant			value;
 	void			clear();
+	variant			random() const;
 	static void		read(const char* id);
 };
 variant random_value(const char* id);

@@ -138,11 +138,11 @@ void creature::interaction(point m) {
 				area.remove(m, Activated);
 		} else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = wears[MeleeWeapon].geti();
-			int chance = get(Strenght) / 10;
+			auto chance = get(Strenght) / 10 + wei.weapon.damage;
+			if(chance < 1)
+				chance = 1;
 			if(wei.is(TwoHanded))
-				chance += wei.weapon.damage * 3;
-			else
-				chance += wei.weapon.damage;
+				chance *= 2;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
 				area.features[m] = NoFeature;
@@ -645,12 +645,8 @@ void creature::update_room() {
 		if(pn != pb) {
 			auto ps = pn->getsite();
 			auto pd = getdescription(ps->id);
-			if(pd) {
-				auto pn = getnm(ps->id);
-				if(pn)
-					actp(getnm("YouSeeRoom"), pn);
+			if(pd)
 				actp(pd);
-			}
 		}
 		room_id = bsdata<roomi>::source.indexof(pn);
 	} else
@@ -715,6 +711,11 @@ void creature::act(const char* format, ...) const {
 void creature::actp(const char* format, ...) const {
 	if(player == this)
 		actv(console, format, xva_start(format), getname(), is(Female));
+}
+
+void creature::actps(const char* format, ...) const {
+	if(player == this)
+		actv(console, format, xva_start(format), getname(), is(Female), ' ');
 }
 
 int creature::getmightpenalty(int enemy_strenght) const {

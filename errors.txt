@@ -1,4 +1,2 @@
-﻿In file `locale/ru/NameCharacters.txt`:
- Line 13: Can't find variant `Elf`
- Line 16: Can't find variant `Halfling`
- Line 18: Can't find variant `Halfling`
+﻿In file `rules/Sites.txt`:
+ Line 32: Can't find variant `VillageNPCRace`

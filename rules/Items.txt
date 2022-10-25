@@ -71,3 +71,5 @@ BlackPotion cost(50) weight(10) wear(Potion) avatar(603)
 BluePotion cost(60) weight(10) wear(Potion) avatar(433)
 GreenPotion cost(70) weight(10) wear(Potion) avatar(428)
 YellowPotion cost(100) weight(10) wear(Potion) avatar(435)
+
+Ration cost(10) weight(50) avatar(126)

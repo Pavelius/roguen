@@ -130,6 +130,7 @@ BSDATA(varianti) = {
 	{"List", VAR(listi), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
+	{"RandomTable", VAR(generatori), 1},
 	{"Script", VAR(script), 1},
 	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
