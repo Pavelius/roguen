@@ -10,6 +10,7 @@ AttackHitButParryCritical: %герой попал%а ([%1i]<[%2i]), но %-5 полностью париро
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
+ChooseImageSet: Выбирайте набор изображений
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 Continue: Продолжить
 DropItem: Избавиться от предмета

@@ -879,6 +879,7 @@ void* answers::choose() const {
 		paint_message(*this, window_width);
 		domodal();
 	}
+	::console.clear();
 	return (void*)getresult();
 }
 

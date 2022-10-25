@@ -1,4 +1,5 @@
 #include "draw_object.h"
+#include "resource.h"
 #include "main.h"
 
 creaturea creatures, enemies, targets;
@@ -237,7 +238,21 @@ static void thrown_attack(int bonud) {
 }
 
 static void show_images(int bonus) {
-	visualize_images(res::Monsters, {80, 90}, {80 / 2, 90});
+	static res source[] = {res::Monsters, res::Items};
+	answers an;
+	for(auto id : source)
+		an.add((void*)id, bsdata<resource>::elements[(int)id].name);
+	console.clear();
+	player->act(getnm("ChooseImageSet"));
+	auto id = (res)(int)an.choose();
+	switch(id) {
+	case res::Items:
+		visualize_images(id, {64, 64}, {64 / 2, 64 / 2});
+		break;
+	default:
+		visualize_images(id, {80, 90}, {80 / 2, 90});
+		break;
+	}
 }
 
 void show_area(int bonus);
