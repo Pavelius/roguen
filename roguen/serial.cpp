@@ -94,13 +94,13 @@ static bool serial_area(const char* url, bool write_mode) {
 static void create_game_area(geoposition v) {
 	variant rt;
 	if(v.position == point{128, 128} && v.level == 0)
-		rt = "StartVillage";
+		rt = single("StartVillage");
 	else if(v.level == 0)
-		rt = random_value("RandomOvelandTiles");
+		rt = single("RandomOvelandTiles");
 	else
-		rt = "DefaultDungeon";
+		rt = single("DefaultDungeon");
 	if(!rt)
-		rt = "LightForest";
+		rt = single("LightForest");
 	create_area(rt);
 }
 

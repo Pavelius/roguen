@@ -2,6 +2,7 @@ DefaultDungeon: Подземелье
 GeneralStore: Магазин
 Hills: Холмы
 LightForest: Лес
+MysteryHouse: Странный дом
 NPCHouses: Дом влиятельного горожанина
 Plains: Равнины
 PortalRoom: Портал

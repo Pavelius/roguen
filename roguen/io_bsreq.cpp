@@ -28,16 +28,30 @@ static void skipsymcr() {
 	allowparse = false;
 }
 
+static const char* example(const char* p, stringbuilder& sb) {
+	while(*p && *p != '\n' && *p != '\r') {
+		if(sb.isfull())
+			break;
+		sb.add(*p++);
+	}
+	return sb.begin();
+}
+
 static void skipsym(char sym) {
 	if(!allowparse)
 		return;
+	do {
+		p = skipspcr(p);
+		next();
+	} while(*p == 10 || *p == 13);
 	if(*p == sym) {
 		p = p + 1;
 		next();
 		return;
 	}
-	char temp[2] = {sym, 0};
-	log::error(p, "Expected symbol `%1`", temp);
+	char result[2] = {sym, 0};
+	char string[16]; stringbuilder sb(string); sb.clear();
+	log::error(p, "Expected symbol `%1`, but you have string `%2`", result, example(p, sb));
 	allowparse = false;
 }
 

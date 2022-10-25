@@ -174,7 +174,6 @@
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="generation.cpp" />
-    <ClCompile Include="generator.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="indexa.cpp" />
     <ClCompile Include="information.cpp" />
@@ -198,6 +197,7 @@
     <ClCompile Include="moveable.cpp" />
     <ClCompile Include="price.cpp" />
     <ClCompile Include="race.cpp" />
+    <ClCompile Include="randomizer.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="resource_static.cpp" />
     <ClCompile Include="room.cpp" />
@@ -245,7 +245,6 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="flagable.h" />
-    <ClInclude Include="generator.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
     <ClInclude Include="keyname.h" />
@@ -258,6 +257,7 @@
     <ClInclude Include="pointl.h" />
     <ClInclude Include="price.h" />
     <ClInclude Include="pushvalue.h" />
+    <ClInclude Include="randomizer.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />
@@ -292,7 +292,6 @@
     <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Sites.txt" />
-    <Text Include="..\rules\Tables.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

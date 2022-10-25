@@ -1,33 +1,35 @@
 #Monster
 
-Goblin avatar(0) treasure(RC) appear(2 8)
+Goblin avatar(0) treasure(RC) appear(2 8) friendly(-30)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
  use Dagger
-GoblinFemale avatar(1) parent(Goblin)
+GoblinFemale avatar(1) parent(Goblin) appear(1 6) friendly(-30)
  abilities Strenght(20) Dexterity(40) WeaponSkill(15) DodgeSkill(10) HitsMaximum(4)
  feats Female
 CityGuard avatar(543)
  abilities Strenght(30) Dexterity(30) WeaponSkill(40) DodgeSkill(20) ShieldUse(40) HitsMaximum(10)
  use Spear ChainArmor
-OrcWarrior avatar(2)
+OrcWarrior avatar(2) appear(2 5) friendly(-30)
  abilities Strenght(40) Dexterity(25) WeaponSkill(40) DodgeSkill(20) HitsMaximum(15)
  use Sword LeatherArmor
-Ettin avatar(516)
+Ettin avatar(516) friendly(-20)
  abilities Strenght(70) Dexterity(25) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
  use Club
-HillGiant avatar(537)
+HillGiant avatar(537) appear(1 3) friendly(-20)
  abilities Strenght(70) Dexterity(20) WeaponSkill(50) DodgeSkill(10) HitsMaximum(50)
  use Club LeatherArmor
-ChaosHydra avatar(339)
+ChaosHydra avatar(339) friendly(-20)
  abilities Strenght(65) Dexterity(10) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
-Minotaur avatar(580)
+Minotaur avatar(580) friendly(-20)
  abilities Strenght(60) Dexterity(30) WeaponSkill(60) DodgeSkill(20) HitsMaximum(20)
  use Sword
 
 Bartender avatar(51)
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
+ feats PlaceOwner
 Shopkeeper avatar(581)
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
+ feats PlaceOwner
 Theif avatar(313)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(12)
 TheifFemale avatar(314)

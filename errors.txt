@@ -1,2 +1,8 @@
 ﻿In file `rules/Sites.txt`:
- Line 32: Can't find variant `VillageNPCRace`
+ Line 3: Expected line feed
+In file `rules/Tables.txt`:
+ Line 8: Unknown variant identifier `Plains`
+ Line 9: Unknown variant identifier `Mountains`
+ Line 10: Unknown variant identifier `Hills`
+ Line 11: Unknown variant identifier `LightForest`
+ Line 12: Unknown variant identifier `DeepForest`

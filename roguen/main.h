@@ -4,12 +4,12 @@
 #include "dice.h"
 #include "direction.h"
 #include "flagable.h"
-#include "generator.h"
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
 #include "list.h"
 #include "pushvalue.h"
+#include "randomizer.h"
 #include "script.h"
 #include "shape.h"
 #include "speech.h"
@@ -57,7 +57,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	Coins, Notable,
-	Female, Undead, Summoned, Ally, Enemy,
+	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
 enum target_s : unsigned char {
@@ -285,7 +285,6 @@ class creature : public wearable, public statable, public spellable {
 	void		update();
 	void		update_abilities();
 	void		update_basic();
-	void		update_room();
 	void		update_wears();
 public:
 	typedef void (creature::*fnupdate)();
@@ -344,6 +343,7 @@ public:
 	void		setenemy(const creature* p) { enemy_id = p ? p->getid() : 0xFFFF; }
 	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	void		unlink();
+	void		update_room();
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
@@ -385,6 +385,7 @@ struct sitei : nameable {
 	void		dungeon(rect& rca) const;
 	void		outdoor(rect& rca) const;
 	void		room(rect& rc) const;
+	void		markasroom(rect& rc) const;
 	void		fillfloor(rect& rca) const;
 	void		fillwalls(rect& rca) const;
 };
@@ -406,7 +407,7 @@ struct geoposition {
 	bool		isoutdoor() const { return level == 0; }
 };
 class roomi {
-	short unsigned site_id;
+	short unsigned site_id, owner_id;
 	unsigned char ideftified : 1;
 public:
 	rect		rc;
@@ -416,8 +417,10 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
 	int			getindex() const { return this - bsdata<roomi>::elements; }
+	creature*	getowner() const { return (owner_id == 0xFFFF) ? 0 : bsdata<creature>::elements + owner_id; }
 	const char*	getname() const { return getsite()->getname(); }
-	const sitei* getsite() const { return site_id == 0xFFFF ? 0 : bsdata<sitei>::elements + site_id; }
+	const sitei* getsite() const { return (site_id == 0xFFFF) ? 0 : bsdata<sitei>::elements + site_id; }
+	void		setowner(const creature* v) { owner_id = v ? (v - bsdata<creature>::elements) : 0xFFFF; }
 	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
 };
 struct location {

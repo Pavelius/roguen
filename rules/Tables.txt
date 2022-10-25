@@ -2,25 +2,3 @@
 
 1 Lags
 2 SmallLags
-
-#RandomOvelandTiles
-
-3 Plains
-1 Mountains
-1 Hills
-2 LightForest
-1 DeepForest
-
-#RandomCommoner
-
-2 Farmer
-2 FarmerFemale
-1 SmallBoy
-1 SmallGirl
-1 Theif
-
-#VillageNPCRace
-
-2 Human
-1 Dwarf
-1 HightElf

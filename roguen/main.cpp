@@ -20,7 +20,6 @@ static void initializating() {
 	readl("NameCharacters", charname::read);
 	shapei::read("rules/Shapes.txt");
 	bsreq::read("rules/Sites.txt");
-	generatori::read("rules/Tables.txt");
 #ifdef _DEBUG
 	main_util();
 #endif

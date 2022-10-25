@@ -73,3 +73,11 @@ GreenPotion cost(70) weight(10) wear(Potion) avatar(428)
 YellowPotion cost(100) weight(10) wear(Potion) avatar(435)
 
 Ration cost(10) weight(50) avatar(126)
+
+Bones cost(2) weight(3) avatar(899)
+MonsterSkull cost(50) weight(50) avatar(519)
+
+#RandomTable
+
+WoodenLagsTable
+ chance Lags SmallLags+2

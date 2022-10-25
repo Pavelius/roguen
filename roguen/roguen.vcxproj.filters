@@ -231,9 +231,6 @@
     <ClCompile Include="keyname.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="generator.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="generation.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -274,6 +271,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="price.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="randomizer.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -380,9 +380,6 @@
     <ClInclude Include="keyname.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="generator.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="colori.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -405,6 +402,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="price.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="randomizer.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
@@ -435,9 +435,6 @@
     </Text>
     <Text Include="..\locale\ru\ItemNames.txt">
       <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\rules\Tables.txt">
-      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Shapes.txt">
       <Filter>Data</Filter>

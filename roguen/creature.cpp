@@ -55,8 +55,6 @@ void creature::place(point m) {
 creature* creature::create(point m, variant kind, variant character) {
 	if(!kind)
 		return 0;
-	if(kind.iskind<generatori>())
-		kind = random_value(kind.getid());
 	if(!character)
 		character = "Monster";
 	if(!character.iskind<classi>())
@@ -88,6 +86,7 @@ creature* creature::create(point m, variant kind, variant character) {
 		p->advance(character, 0);
 	p->levelup();
 	p->finish();
+	p->update_room();
 	return p;
 }
 
@@ -118,7 +117,7 @@ void creature::movestep(direction_s v) {
 static void drop_item(point m, const char* id) {
 	if(!area.isvalid(m) || !id)
 		return;
-	itemi* pi = random_value(id);
+	itemi* pi = single(id);
 	if(!pi)
 		return;
 	item it; it.create(pi);

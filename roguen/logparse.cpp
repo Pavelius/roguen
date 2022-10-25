@@ -58,6 +58,8 @@ static const char* example(const char* p, stringbuilder& sb) {
 }
 
 bool log::checksym(const char* p, char sym) {
+	if(!allowparse)
+		return false;
 	if(sym == '\n') {
 		if(*p != '\n' && *p != '\r') {
 			log::error(p, "Expected symbol line feed");

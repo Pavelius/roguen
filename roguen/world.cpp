@@ -1,7 +1,7 @@
 #include "crt.h"
 #include "direction.h"
-#include "generator.h"
 #include "pushvalue.h"
+#include "randomizer.h"
 #include "world.h"
 
 struct sitei;
@@ -44,7 +44,7 @@ void worldi::generate(point start, unsigned char v) {
 			if(d100() < 70)
 				pushv(*this, n, t);
 			else {
-				auto ntv = random_value("RandomOvelandTiles");
+				auto ntv = single("RandomOvelandTiles");
 				if(ntv.iskind<sitei>())
 					pushv(*this, n, (unsigned char)ntv.value);
 			}

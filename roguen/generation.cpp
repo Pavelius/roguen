@@ -7,6 +7,7 @@ BSDATA(sitegeni) = {
 	{"GenerateOutdoor", &sitei::outdoor},
 	{"GenerateRoom", &sitei::room},
 	{"GenerateVillage", &sitei::cityscape},
+	{"MarkAsRoom", &sitei::markasroom},
 };
 BSDATAF(sitegeni)
 
@@ -26,6 +27,14 @@ static point random(const rect& rc) {
 	short x = xrand(rc.x1, rc.x2);
 	short y = xrand(rc.y1, rc.y2);
 	return {x, y};
+}
+
+static rect center_rect(const rect& rc) {
+	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
+		return {-1000, -1000};
+	auto x = rc.x1 + rc.width() / 2;
+	auto y = rc.y1 + rc.height() / 2;
+	return {x, y, x, y};
 }
 
 static rect random(const rect& rca, point offset, point minimum, point maximum) {
@@ -55,14 +64,6 @@ static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
 	auto f1 = area.getfeature(to(i, d1));
 	auto f2 = area.getfeature(to(i, d2));
 	return f1 == v || f2 == v;
-}
-
-static void create_monster(const rect& rc, const char* id, bool hostile, int count) {
-	for(auto i = 0; i < count; i++) {
-		auto p = creature::create(random(rc), random_value(id));
-		if(hostile)
-			p->set(Enemy);
-	}
 }
 
 static bool isvaliddoor(point m) {
@@ -196,6 +197,15 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 	place_shape(e, m, maprnd(direction), floor, walls);
 }
 
+static void create_monster(const rect& rc, variant v, int count) {
+	for(auto i = 0; i < count; i++) {
+		auto pm = (monsteri*)single(v);
+		if(!pm)
+			continue;
+		creature::create(random(rc), single(v));
+	}
+}
+
 static void create_road(const rect& rc) {
 	rect r1 = rc;
 	if(r1.width() > r1.height()) {
@@ -210,7 +220,7 @@ static void create_road(const rect& rc) {
 			r1.y2 = area.mps - 1;
 	}
 	area.set(r1, Rock);
-	create_monster(r1, "RandomCommoner", false, xrand(3, 6));
+	create_monster(r1, "RandomCommoner", xrand(3, 6));
 }
 
 static void show_debug_minimap() {
@@ -219,8 +229,8 @@ static void show_debug_minimap() {
 }
 
 static void create_city_level(const rect& rc, int level) {
-	const int min_building_size = 8;
-	const int max_building_size = 16;
+	const int min_building_size = 7;
+	const int max_building_size = 12;
 	auto w = rc.width();
 	auto h = rc.height();
 	if(w <= max_building_size && h <= max_building_size) {
@@ -368,6 +378,11 @@ static void place_monsters(const rect& rca, const monsteri& e, int count) {
 		auto p = creature::create(random(rca), &e);
 		if(hostile)
 			p->set(Enemy);
+		if(p->is(PlaceOwner)) {
+			auto pr = p->getroom();
+			if(pr)
+				pr->setowner(p);
+		}
 	}
 }
 
@@ -408,12 +423,13 @@ static void create_landscape(const rect& rca, variant v) {
 		rect rc = rca;
 		if(last_site->local && last_site->local->proc)
 			(last_site->*last_site->local->proc)(rc);
+		rc.offset(last_site->offset.x, last_site->offset.y);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rc, ev);
 	} else if(v.iskind<monsteri>()) {
 		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
-	} else if(v.iskind<generatori>())
-		create_landscape(rca, bsdata<generatori>::elements[v.value].random());
+	} else if(v.iskind<randomizeri>())
+		create_landscape(rca, single(v));
 	else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
 			create_landscape(rca, v);
@@ -491,6 +507,10 @@ void sitei::outdoor(rect& rca) const {
 
 void sitei::room(rect & rc) const {
 	fillfloor(rc);
+	markasroom(rc);
+}
+
+void sitei::markasroom(rect& rc) const {
 	add_room(this, rc);
 }
 
