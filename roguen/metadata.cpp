@@ -78,7 +78,7 @@ BSMETA(monsteri) = {
 	BSREQ(friendly),
 	BSREQ(parent),
 	BSREQ(treasure),
-	BSREQ(appear), BSREQ(appear_outdoor),
+	BSREQ(appear),
 	{}};
 BSMETA(point) = {
 	BSREQ(x), BSREQ(y),

@@ -1,6 +1,6 @@
 #Monster
 
-Goblin avatar(0) treasure(RC) appear(2 8) appear_outdoor(6 60)
+Goblin avatar(0) treasure(RC) appear(2 8)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
  use Dagger
 GoblinFemale avatar(1) parent(Goblin)

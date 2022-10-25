@@ -237,7 +237,7 @@ struct monsteri : nameable, statable {
 	featable	feats;
 	const char*	treasure;
 	char		friendly;
-	dice		appear, appear_outdoor;
+	dice		appear;
 	variants	use;
 	const monsteri* parent;
 	bool		is(feat_s v) const { return feats.is(v); }

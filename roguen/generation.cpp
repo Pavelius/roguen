@@ -351,10 +351,9 @@ static void place_monsters(const rect & rca, const monsteri & e, int count, bool
 	if(count < 0)
 		count = 0;
 	if(count == 0) {
+		count = e.getbase().appear.roll();
 		if(game.isoutdoor())
-			count = e.getbase().appear_outdoor.roll();
-		else
-			count = e.getbase().appear.roll();
+			count *= 3;
 	}
 	for(auto i = 0; i < count; i++) {
 		auto p = creature::create(random(rca), &e);
