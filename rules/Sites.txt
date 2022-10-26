@@ -3,7 +3,7 @@
 RandomCommoner
  chance Farmer+2 FarmerFemale+2 SmallBoy SmallGirl Theif
 VillageNPCRace
- chance Human+2 Dwarf HightElf
+ chance Human+3 Dwarf HightElf
 
 #Site
 
@@ -82,11 +82,15 @@ DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global
  sites StairsUpRoom StairsDownRoom PortalRoom-10 EmpthyRoom+16
 StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
- sites GeneralStore Tavern StairsDownHouses FamousHeroMonument-10 MysteryHouse NPCHouses+3 Building+22
+ sites GeneralStore Tavern StairsDownHouses FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 
 #RandomTable
 
+RandomNearestOverlandTiles
+ chance LightForest+4 DeepForest+4 ForestSwamps+2
 RandomOvelandTiles
- chance Plains+3 Mountains Hills LightForest DeepForest
-RandomNearestTiles
- chance ForestSwamps+8 LightForest DeepForest
+ chance LightForest+3 DeepForest+3 Hills+1 ForestSwamps+2 AshenLand+1
+RandomFarOverlandTiles
+ chance LightForest+2 DeepForest+2 Hills+1 ForestSwamps+3 AshenLand+2
+RandomUnknownOverlandTiles
+ chance LightForest+3 DeepForest+3 Hills+2 ForestSwamps+6 AshenLand+6

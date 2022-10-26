@@ -91,13 +91,28 @@ static bool serial_area(const char* url, bool write_mode) {
 	return true;
 }
 
+static int getrange(point m1, point m2) {
+	auto dx = iabs(m1.x - m2.x);
+	auto dy = iabs(m1.y - m2.y);
+	return (dx > dy) ? dx : dy;
+}
+
 static void create_game_area(geoposition v) {
+	static point start_village = {128, 128};
 	variant rt;
-	if(v.position == point{128, 128} && v.level == 0)
-		rt = single("StartVillage");
-	else if(v.level == 0)
-		rt = single("RandomOvelandTiles");
-	else
+	if(v.level == 0) {
+		auto range = getrange(v.position, start_village);
+		if(range == 0)
+			rt = single("StartVillage");
+		else if(range <= 2)
+			rt = single("RandomNearestOverlandTiles");
+		else if(range <= 5)
+			rt = single("RandomOverlandTiles");
+		else if(range <= 9)
+			rt = single("RandomFarOverlandTiles");
+		else
+			rt = single("RandomUnknownOverlandTiles");
+	} else
 		rt = single("DefaultDungeon");
 	if(!rt)
 		rt = single("LightForest");

@@ -2,10 +2,11 @@
 #include "resource.h"
 #include "main.h"
 
-creaturea creatures, enemies, targets;
-extern creature* enemy;
-int	last_hit, last_hit_result, last_parry, last_parry_result;
-extern bool show_floor_rect;
+creaturea			creatures, enemies, targets;
+itema				items;
+extern creature*	enemy;
+int					last_hit, last_hit_result, last_parry, last_parry_result;
+extern bool			show_floor_rect;
 
 void animate_figures();
 void visualize_images(res pid, point size, point offset);

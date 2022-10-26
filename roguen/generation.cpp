@@ -197,9 +197,19 @@ static void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 	place_shape(e, m, maprnd(direction), floor, walls);
 }
 
-static void create_monster(const rect& rc, variant v, int count) {
+static void create_monster(const rect& rca, variant v, int count) {
+	if(count < 0) {
+		if(d100() >= (-count))
+			return;
+		count = 0;
+	}
+	if(count == 0) {
+		count = xrand(2, 5);
+		if(!count)
+			count = 1;
+	}
 	for(auto i = 0; i < count; i++)
-		creature::create(random(rc), single(v));
+		creature::create(random(rca), single(v));
 }
 
 static void create_road(const rect& rc) {
@@ -352,36 +362,6 @@ static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
 	}
 }
 
-static void place_monsters(const rect& rca, const monsteri& e, int count) {
-	if(count < 0) {
-		if(d100() >= (-count))
-			return;
-		count = 0;
-	}
-	if(count == 0) {
-		count = e.appear.roll();
-		if(game.isoutdoor()) {
-			count += e.appear.roll();
-			count += e.appear.roll();
-		}
-		if(!count)
-			count = 1;
-	}
-	bool hostile = false;
-	if(e.friendly < -20)
-		hostile = true;
-	for(auto i = 0; i < count; i++) {
-		auto p = creature::create(random(rca), &e);
-		if(hostile)
-			p->set(Enemy);
-		if(p->is(PlaceOwner)) {
-			auto pr = p->getroom();
-			if(pr)
-				pr->setowner(p);
-		}
-	}
-}
-
 static void place_items(const rect& rca, const itemi& e, int count) {
 	if(&e == bsdata<itemi>::elements)
 		return;
@@ -423,9 +403,9 @@ static void create_landscape(const rect& rca, variant v) {
 		rc.offset(last_site->offset.x, last_site->offset.y);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rc, ev);
-	} else if(v.iskind<monsteri>()) {
-		place_monsters(rca, bsdata<monsteri>::elements[v.value], v.counter);
-	} else if(v.iskind<listi>()) {
+	} else if(v.iskind<monsteri>())
+		create_monster(rca, v, v.counter);
+	else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
 			create_landscape(rca, v);
 	} else if(v.iskind<shapei>()) {

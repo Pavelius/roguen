@@ -276,7 +276,8 @@ class creature : public wearable, public statable, public spellable {
 	int			getmightpenalty(int enemy_strenght) const;
 	void		interaction(point m);
 	void		levelup();
-	void		lookcreatures();
+	void		lookcreatures() const;
+	void		lookitems() const;
 	const speech* matchfirst(const speecha& source) const;
 	bool		matchspeech(variant v) const;
 	bool		matchspeech(const variants& source) const;
@@ -462,6 +463,7 @@ extern areamap		area;
 extern location		loc;
 extern worldi		world;
 extern creaturea	creatures, enemies;
+extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
 extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;

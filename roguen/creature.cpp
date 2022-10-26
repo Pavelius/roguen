@@ -87,6 +87,15 @@ creature* creature::create(point m, variant kind, variant character) {
 	p->levelup();
 	p->finish();
 	p->update_room();
+	if(pm) {
+		if(pm->friendly <= -20)
+			p->set(Enemy);
+	}
+	if(p->is(PlaceOwner)) {
+		auto pr = p->getroom();
+		if(pr)
+			pr->setowner(p);
+	}
 	return p;
 }
 
@@ -419,6 +428,28 @@ static direction_s movedirection(point m) {
 		return East;
 }
 
+void creature::lookitems() const {
+	items.select(getposition());
+	if(isplayer() && items) {
+		char temp[4096]; stringbuilder sb(temp);
+		auto count = items.getcount();
+		auto index = 0;
+		sb.add(getnm("ThereIsLying"));
+		for(auto p : items) {
+			if(index > 0) {
+				if(index == count - 1)
+					sb.adds(getnm("And"));
+				else
+					sb.add(",");
+			}
+			sb.adds("%-1", p->getfullname());
+			index++;
+		}
+		sb.add(".");
+		actp(temp);
+	}
+}
+
 void creature::movestep(point ni) {
 	if(!area.isvalid(ni)) {
 		if(isactive()) {
@@ -464,6 +495,7 @@ void creature::movestep(point ni) {
 	else if(isfreecr(ni)) {
 		setposition(ni);
 		fixmovement();
+		lookitems();
 	} else {
 		interaction(ni);
 		fixaction();
@@ -523,7 +555,7 @@ bool creature::roll(ability_s v, int bonus) const {
 
 void adventure_mode();
 
-void creature::lookcreatures() {
+void creature::lookcreatures() const {
 	creatures.select(getposition(), getlos(), isplayer());
 	if(is(Ally)) {
 		enemies = creatures;

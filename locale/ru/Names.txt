@@ -1,3 +1,4 @@
+And: и
 ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i%+5i%+6i) урона.
 ApplyKill: %герой убит%а.
 AppTitle: Приключения в забытых Королевствах
@@ -28,10 +29,11 @@ NothingToSay: Нечего сказать.
 Parry: Парирование
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
-Pieces: шт.
+Pieces: шт
 Pierce: Проникание
 PlayerKilled: Вы погибли смертью храбрых.
 Rounds: Раунды
+ThereIsLying: Здесь лежит
 Tree: Дерево
 TwoHanded: Двуручное
 WebBreak: %герой порвал%а паутину.
