@@ -217,6 +217,7 @@
     <ClCompile Include="szdup.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="variant.cpp" />
+    <ClCompile Include="variantc.cpp" />
     <ClCompile Include="visualeffect.cpp" />
     <ClCompile Include="wear.cpp" />
     <ClCompile Include="wearable.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />
+    <ClInclude Include="variantc.h" />
     <ClInclude Include="widget.h" />
     <ClInclude Include="win.h" />
     <ClInclude Include="world.h" />

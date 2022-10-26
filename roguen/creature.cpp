@@ -798,7 +798,3 @@ int	creature::getlos() const {
 		r = 1;
 	return r;
 }
-
-roomi* creature::getroom() const {
-	return (room_id == 0xFFFF) ? 0 : bsdata<roomi>::elements + room_id;
-}

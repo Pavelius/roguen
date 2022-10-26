@@ -13,7 +13,7 @@
 #include "script.h"
 #include "shape.h"
 #include "speech.h"
-#include "variant.h"
+#include "variantc.h"
 #include "world.h"
 
 #pragma once
@@ -312,10 +312,10 @@ public:
 	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
 	int			getdamage(wear_s w) const;
 	void		getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const;
-	creature*	getenemy() const { return enemy_id == 0xFFFF ? 0 : bsdata<creature>::elements + enemy_id; }
+	creature*	getenemy() const { return bsdata<creature>::ptr(enemy_id); }
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const;
-	roomi*		getroom() const;
+	roomi*		getroom() const { return bsdata<roomi>::ptr(room_id); }
 	const char* getspeech(const char* id) const;
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const;
@@ -341,7 +341,7 @@ public:
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void		set(feat_s v) { feats.set(v); }
 	void		set(ability_s i, int v) { abilities[i] = v; }
-	void		setenemy(const creature* p) { enemy_id = p ? p->getid() : 0xFFFF; }
+	void		setenemy(const creature* p) { bsset(enemy_id, p); }
 	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	void		unlink();
 	void		update_room();
@@ -403,26 +403,36 @@ struct boosti {
 	static void	updateall();
 };
 struct geoposition {
-	point		position = {0, 0};
+	point		position = {-1000, -1000};
 	short		level = 0;
+	constexpr bool operator==(const geoposition& e) const { return e.position == position && e.level == level; }
+	constexpr bool operator!=(const geoposition& e) const { return e.position != position || e.level != level; }
 	bool		isoutdoor() const { return level == 0; }
 };
-class roomi {
-	short unsigned site_id, owner_id;
+class siteable {
+	short unsigned site_id;
+public:
+	explicit operator bool() const { return site_id != 0xFFFF; }
+	sitei*		getsite() const { return bsdata<sitei>::ptr(site_id); }
+	void		setsite(const sitei* v) { bsset(site_id, v); }
+};
+class ownerable {
+	short unsigned owner_id;
+public:
+	creature*	getowner() const { return bsdata<creature>::ptr(owner_id); }
+	void		setowner(const creature* v) { bsset(owner_id, v); }
+};
+class geomark : public geoposition, public siteable {
+};
+class roomi : public siteable, public ownerable {
 	unsigned char ideftified : 1;
 public:
 	rect		rc;
-	explicit operator bool() const { return site_id != 0xFFFF; }
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
-	void		clear() { memset(this, 0, sizeof(*this)); site_id = 0xFFFF; }
+	void		clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
-	int			getindex() const { return this - bsdata<roomi>::elements; }
-	creature*	getowner() const { return (owner_id == 0xFFFF) ? 0 : bsdata<creature>::elements + owner_id; }
 	const char*	getname() const { return getsite()->getname(); }
-	const sitei* getsite() const { return (site_id == 0xFFFF) ? 0 : bsdata<sitei>::elements + site_id; }
-	void		setowner(const creature* v) { owner_id = v ? (v - bsdata<creature>::elements) : 0xFFFF; }
-	void		setsite(const sitei* v) { site_id = v ? (v - bsdata<sitei>::elements) : 0xFFFF; }
 };
 struct location {
 	char		tile[32];
@@ -436,11 +446,15 @@ class gamei : public geoposition {
 	unsigned	minutes;
 	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
 public:
+	static point start_village;
 	short unsigned player_id;
+	variantc	events;
 	static void	all(creature::fnupdate proc);
+	void		createarea();
 	static void endgame();
 	void		enter(point m, int level, feature_s feature, direction_s appear_side);
 	unsigned	getminutes() const { return minutes; }
+	static int	getrange(point m1, point m2);
 	static void newgame();
 	void		pass(unsigned minutes);
 	void		passminute();

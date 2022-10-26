@@ -91,40 +91,12 @@ static bool serial_area(const char* url, bool write_mode) {
 	return true;
 }
 
-static int getrange(point m1, point m2) {
-	auto dx = iabs(m1.x - m2.x);
-	auto dy = iabs(m1.y - m2.y);
-	return (dx > dy) ? dx : dy;
-}
-
-static void create_game_area(geoposition v) {
-	static point start_village = {128, 128};
-	variant rt;
-	if(v.level == 0) {
-		auto range = getrange(v.position, start_village);
-		if(range == 0)
-			rt = single("StartVillage");
-		else if(range <= 2)
-			rt = single("RandomNearestOverlandTiles");
-		else if(range <= 5)
-			rt = single("RandomOverlandTiles");
-		else if(range <= 9)
-			rt = single("RandomFarOverlandTiles");
-		else
-			rt = single("RandomUnknownOverlandTiles");
-	} else
-		rt = single("DefaultDungeon");
-	if(!rt)
-		rt = single("LightForest");
-	create_area(rt);
-}
-
-static void serial_area(geoposition v, bool write_mode) {
+static void serial_area(bool write_mode) {
 	char temp[260]; stringbuilder sb(temp);
-	sb.add("%4/AR%1.2h%2.2h%3.2h.sav", v.position.y, v.position.x, v.level, save_folder);
+	sb.add("%4/AR%1.2h%2.2h%3.2h.sav", game.position.y, game.position.x, game.level, save_folder);
 	if(!write_mode) {
 		if(!serial_area(temp, false)) {
-			create_game_area(v);
+			game.createarea();
 			if(!serial_area(temp, false))
 				return;
 		}
@@ -137,12 +109,12 @@ void gamei::write() {
 		return;
 	before_serial_game();
 	serial_game(true);
-	serial_area(*this, true);
+	serial_area(true);
 }
 
 void gamei::read() {
 	serial_game(false);
-	serial_area(*this, false);
+	serial_area(false);
 	after_serial_game({-1000, -1000});
 }
 
@@ -150,11 +122,11 @@ void gamei::enter(point m, int level, feature_s feature, direction_s appear_side
 	before_serial_game();
 	if(position) {
 		serial_game(true);
-		serial_area(*this, true);
+		serial_area(true);
 	}
 	this->position = m;
 	this->level = level;
-	serial_area(*this, false);
+	serial_area(false);
 	point start = {-1000, -1000};
 	if(feature)
 		start = area.find(feature);
@@ -187,5 +159,5 @@ static void cleanup_saves() {
 
 void gamei::newgame() {
 	cleanup_saves();
-	game.enter({128, 128}, 0, StairsDown, NorthEast);
+	game.enter(start_village, 0, StairsDown, NorthEast);
 }

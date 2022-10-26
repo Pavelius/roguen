@@ -28,6 +28,7 @@ static void choose_targets(target_s target) {
 		targets.add(player);
 		break;
 	case YouOrAlly:
+		targets = creatures;
 		break;
 	}
 }

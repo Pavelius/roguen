@@ -45,3 +45,8 @@ SmallLags: Маленькая ветка
 
 AquaPotion: Водяное зелье
 BluePotion: Синее зелье
+
+Ration: Сухпаек
+
+Bones: Кости
+MonsterSkull: Череп монстра

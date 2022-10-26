@@ -2,6 +2,7 @@
 #include "draw.h"
 #include "main.h"
 #include "hotkey.h"
+#include "variantc.h"
 
 static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
@@ -70,6 +71,11 @@ static void equip_item(const char* id) {
 
 void show_worldmap();
 
+static void test_collection() {
+	variantc collection;
+	collection.select(bsdata<itemi>::source);
+}
+
 static void main_start() {
 	//world.clear();
 	//world.generate({world.mps / 2, world.mps / 2}, 1);
@@ -79,24 +85,23 @@ static void main_start() {
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
 	rect rc = {4, 4, 8, 8};
+	player = creature::create({5, 5}, "HightElf", "Fighter");
+	player->set(Ally);
 	game.newgame();
-	area.set(rc, NoFeature);
 	area.set({3, 3}, Iced);
 	area.set({3, 4}, Iced);
 	area.set({5, 4}, Iced);
-	create_item({4, 4}, "Sword");
-	create_item({4, 4}, "BattleAxe");
-	create_item({5, 4}, "LeatherArmor");
-	create_item({6, 4}, "PlateArmor");
-	create_item({4, 5}, "Spear");
-	create_item({5, 5}, "Halberd");
-	create_item({6, 5}, "Shield");
-	create_item({6, 6}, "LongBow");
-	create_item({6, 6}, "Arrow");
-	create_item({5, 7}, "AquaPotion");
-	create_item({6, 7}, "BluePotion");
-	player = creature::create({5, 5}, "HightElf", "Fighter");
-	player->set(Ally);
+	//create_item({4, 4}, "Sword");
+	//create_item({4, 4}, "BattleAxe");
+	//create_item({5, 4}, "LeatherArmor");
+	//create_item({6, 4}, "PlateArmor");
+	//create_item({4, 5}, "Spear");
+	//create_item({5, 5}, "Halberd");
+	//create_item({6, 5}, "Shield");
+	//create_item({6, 6}, "LongBow");
+	//create_item({6, 6}, "Arrow");
+	//create_item({5, 7}, "AquaPotion");
+	//create_item({6, 7}, "BluePotion");
 	equip_item("LongBow");
 	equip_item("Arrow");
 }

@@ -276,6 +276,9 @@
     <ClCompile Include="randomizer.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="variantc.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -405,6 +408,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="randomizer.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="variantc.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

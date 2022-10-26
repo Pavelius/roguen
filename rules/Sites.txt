@@ -35,10 +35,10 @@ MysteryHouse walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Webbed+4 Blooded+3 Bones+4 MonsterSkull+1
  feats Notable
 GeneralStore walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape Shopkeeper Ration+10
+ landscape Shopkeeper+1 Ration+10
  feats Notable
 Tavern walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape Bartender
+ landscape Bartender+1
  feats Notable
 Building walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)

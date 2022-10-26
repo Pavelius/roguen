@@ -423,6 +423,14 @@ static void create_landscape(const rect& rca, variant v) {
 		place_items(rca, bsdata<itemi>::elements[v.value], v.counter);
 }
 
+static void add_area_events(geoposition v) {
+	for(auto& e : bsdata<geomark>()) {
+		if(!e || e!=v)
+			continue;
+		sites.add(e.getsite());
+	}
+}
+
 static void add_area_sites(variant v) {
 	if(!test_counter(v))
 		return;
@@ -535,7 +543,7 @@ void sitei::corridors(rect& rca) const {
 	create_doors(floors, walls);
 }
 
-void create_area(variant tile) {
+static void create_area(geoposition position, variant tile) {
 	static rect all = {0, 0, area.mps - 1, area.mps - 1};
 	if(!apply_landscape(tile))
 		return;
@@ -549,6 +557,7 @@ void create_area(variant tile) {
 	sites.clear();
 	loc.settile(landscape->id);
 	loc.darkness = landscape->darkness;
+	add_area_events(position);
 	add_area_sites(tile);
 	if(landscape->global)
 		(landscape->*landscape->global->proc)(all);
@@ -558,4 +567,25 @@ void create_area(variant tile) {
 	if(landscape->global_finish)
 		(landscape->*landscape->global_finish->proc)(all);
 	update_doors();
+}
+
+void gamei::createarea() {
+	variant rt;
+	if(level == 0) {
+		auto range = getrange(position, start_village);
+		if(range == 0)
+			rt = single("StartVillage");
+		else if(range <= 2)
+			rt = single("RandomNearestOverlandTiles");
+		else if(range <= 5)
+			rt = single("RandomOverlandTiles");
+		else if(range <= 9)
+			rt = single("RandomFarOverlandTiles");
+		else
+			rt = single("RandomUnknownOverlandTiles");
+	} else
+		rt = single("DefaultDungeon");
+	if(!rt)
+		rt = single("LightForest");
+	create_area(*this, rt);
 }

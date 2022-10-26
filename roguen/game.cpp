@@ -6,6 +6,7 @@ worldi			world;
 gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);
+point			gamei::start_village = {128, 128};
 
 static void update_los() {
 	if(!player)
@@ -26,6 +27,12 @@ static bool checkalive() {
 	if(!player || !(*player))
 		return false;
 	return true;
+}
+
+int gamei::getrange(point m1, point m2) {
+	auto dx = iabs(m1.x - m2.x);
+	auto dy = iabs(m1.y - m2.y);
+	return (dx > dy) ? dx : dy;
 }
 
 void gamei::all(creature::fnupdate proc) {
