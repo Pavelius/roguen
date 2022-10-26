@@ -81,9 +81,6 @@ creature* item::getowner() const {
 	return bsdata<creature>::elements + i;
 }
 
-static itemground* findadd(point m, item& it) {
-}
-
 void item::drop(point m) {
 	if(!area.isvalid(m))
 		return;

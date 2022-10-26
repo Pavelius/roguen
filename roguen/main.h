@@ -56,7 +56,8 @@ enum condition_s : unsigned char {
 };
 enum feat_s : unsigned char {
 	Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
-	Coins, Notable,
+	IgnoreWeb,
+	Coins, Notable, Natural,
 	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
@@ -242,13 +243,11 @@ struct wearable : movable {
 };
 struct monsteri : nameable, statable {
 	unsigned short avatar;
-	featable	feats;
 	const char*	treasure;
 	char		friendly;
 	dice		appear;
 	variants	use;
 	const monsteri* parent;
-	bool		is(feat_s v) const { return feats.is(v); }
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 };
 struct spellable {

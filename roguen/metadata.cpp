@@ -73,7 +73,6 @@ BSMETA(advancement) = {
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
-	BSFLG(feats, feati),
 	BSREQ(use),
 	BSREQ(avatar),
 	BSREQ(friendly),

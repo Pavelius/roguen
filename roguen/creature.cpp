@@ -71,7 +71,6 @@ creature* creature::create(point m, variant kind, variant character) {
 	monsteri* pm = kind;
 	if(pm) {
 		copy(p->basic, *pm);
-		p->feats = pm->feats;
 		p->advance(pm->use);
 	} else {
 		adat<variant> conditions;
@@ -492,7 +491,7 @@ void creature::movestep(point ni) {
 		}
 		break;
 	}
-	if(area.is(m, Webbed)) {
+	if(area.is(m, Webbed) && !is(IgnoreWeb)) {
 		wait(2);
 		if(!roll(Strenght)) {
 			act(getnm("WebEntagled"));
@@ -554,6 +553,11 @@ void creature::advance(variant v) {
 		item it;
 		it.create(bsdata<itemi>::elements + v.value, 1);
 		equip(it);
+	} else if(v.iskind<feati>()) {
+		if(v.counter < 0)
+			feats.remove(v.value);
+		else
+			feats.set(v.value);
 	}
 }
 

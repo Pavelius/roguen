@@ -182,11 +182,8 @@ static void explore_area(int bonus) {
 static void test_arena(int bonus) {
 	answers an;
 	auto count = 0;
-	for(auto& e : bsdata<monsteri>()) {
-		if(e.is(Female))
-			continue;
+	for(auto& e : bsdata<monsteri>())
 		an.add(&e, e.getname());
-	}
 	auto pm = (monsteri*)an.choose(getnm("ChooseMonsterToFight"));
 	auto m = player->getposition();
 	auto p = creature::create(m.to(3, 0), pm);

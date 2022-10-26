@@ -5,7 +5,7 @@ Goblin avatar(0) treasure(RC) appear(2 8) friendly(-30)
  use Dagger
 GoblinFemale avatar(1) parent(Goblin) appear(1 6) friendly(-30)
  abilities Strenght(20) Dexterity(40) WeaponSkill(15) DodgeSkill(10) HitsMaximum(4)
- feats Female
+ use Female
 CityGuard avatar(543)
  abilities Strenght(30) Dexterity(30) WeaponSkill(40) DodgeSkill(20) ShieldUse(40) HitsMaximum(10)
  use Spear ChainArmor
@@ -23,25 +23,28 @@ ChaosHydra avatar(339) friendly(-20)
 Minotaur avatar(580) friendly(-20)
  abilities Strenght(60) Dexterity(30) WeaponSkill(60) DodgeSkill(20) HitsMaximum(20)
  use Sword
+Spider avatar(591) friendly(-20) appear(1 4)
+ abilities Strenght(40) Dexterity(20) WeaponSkill(40) DodgeSkill(30) HitsMaximum(20)
+ use Bite IgnoreWeb
 
 Bartender avatar(51)
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
- feats PlaceOwner
+ use PlaceOwner
 Shopkeeper avatar(581)
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
- feats PlaceOwner
+ use PlaceOwner
 Theif avatar(313)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(12)
 TheifFemale avatar(314)
  abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(10)
- feats Female
+ use Female
 Farmer avatar(273)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
 FarmerFemale avatar(276)
  abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
- feats Female
+ use Female
 SmallBoy avatar(274)
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
 SmallGirl avatar(275) parent(SmallBoy)
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
- feats Female
+ use Female
