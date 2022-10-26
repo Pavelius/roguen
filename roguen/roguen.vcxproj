@@ -215,6 +215,7 @@
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />
+    <ClCompile Include="target.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="variantc.cpp" />

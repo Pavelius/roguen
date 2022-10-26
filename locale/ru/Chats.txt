@@ -1,3 +1,9 @@
+#DontPushMePlaceOwner
+{Bartender Random} Я у себя в таверне хожу где хочу.
+{Shopkeeper Random} Не толкай меня в моем магазине!
+{Random} Что ты себе позволяешь?
+Не трогай меня!
+
 #DontPushMe
 Эй, не надо меня толкать!
 Куда лезешь?

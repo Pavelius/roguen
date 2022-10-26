@@ -22,3 +22,11 @@ bool roomi::is(condition_s v) const {
 	default: return false;
 	}
 }
+
+roomi* roomi::find(point pt) {
+	for(auto& e : bsdata<roomi>()) {
+		if(pt.in(e.rc))
+			return &e;
+	}
+	return 0;
+}

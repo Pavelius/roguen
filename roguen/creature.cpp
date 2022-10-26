@@ -216,7 +216,13 @@ void creature::interaction(creature& opponent) {
 		attackmelee(opponent);
 	else if(!isplayer())
 		return;
-	else {
+	else if(opponent.is(PlaceOwner)) {
+		fixaction();
+		opponent.wait();
+		if(d100() < 40)
+			opponent.speech("DontPushMePlaceOwner");
+		return;
+	} else {
 		auto pt = opponent.getposition();
 		opponent.setposition(getposition());
 		opponent.fixmovement();
@@ -463,6 +469,14 @@ void creature::movestep(point ni) {
 		return;
 	}
 	auto m = getposition();
+	// Place owner can't leave it room
+	if(is(PlaceOwner)) {
+		auto pr = roomi::find(m);
+		if(getroom() != pr) {
+			wait();
+			return;
+		}
+	}
 	auto f = area.getfeature(ni);
 	switch(f) {
 	case StairsUp:
@@ -569,6 +583,7 @@ void creature::lookcreatures() const {
 
 void creature::lookenemies() {
 	lookcreatures();
+	enemy = 0;
 	if(enemies) {
 		// Combat situation - need eliminate enemy
 		enemies.sort(getposition());
@@ -584,15 +599,6 @@ void creature::makemove() {
 	}
 	set(EnemyAttacks, 0);
 	update();
-	// Dazzled creature don't make turn
-	if(is(Stun)) {
-		if(roll(Strenght))
-			remove(Stun);
-		else {
-			wait();
-			return;
-		}
-	}
 	// Sleeped creature don't move
 	if(is(Sleep))
 		return;
@@ -610,6 +616,11 @@ void creature::makemove() {
 			moveto(enemy->getposition());
 	} else
 		aimove();
+	// Stun creature may remove this state at end of it turn
+	if(is(Stun)) {
+		if(roll(Strenght))
+			remove(Stun);
+	}
 }
 
 static int getmultiplier(magic_s v) {
@@ -661,16 +672,8 @@ void creature::update_wears() {
 	}
 }
 
-static roomi* find_room(point pt) {
-	for(auto& e : bsdata<roomi>()) {
-		if(pt.in(e.rc))
-			return &e;
-	}
-	return 0;
-}
-
 void creature::update_room() {
-	auto pn = find_room(getposition());
+	auto pn = roomi::find(getposition());
 	if(pn) {
 		auto pb = getroom();
 		if(pn != pb) {

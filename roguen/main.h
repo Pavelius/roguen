@@ -62,6 +62,7 @@ enum feat_s : unsigned char {
 };
 enum target_s : unsigned char {
 	You, YouOrAlly,
+	AllyClose,
 	EnemyOrAllyClose, EnemyOrAllyNear,
 	EnemyClose, EnemyNear,
 };
@@ -87,6 +88,13 @@ struct statable {
 	char		abilities[Money + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 	void		create();
+};
+struct targeti {
+	const char*	id;
+	bool		you;
+	bool		enemies;
+	bool		allies;
+	short		range = 1000;
 };
 struct abilityi : nameable {
 	ability_s	basic;
@@ -348,6 +356,7 @@ public:
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
+	void		distinct();
 	void		match(feat_s v, bool keep);
 	void		matchrange(point start, int v, bool keep);
 	void		remove(const creature* v);
@@ -430,9 +439,10 @@ public:
 	rect		rc;
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
 	void		clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
+	static roomi* find(point pt);
+	const char*	getname() const { return getsite()->getname(); }
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
-	const char*	getname() const { return getsite()->getname(); }
 };
 struct location {
 	char		tile[32];
@@ -441,6 +451,7 @@ struct location {
 	void		settile(const char* id);
 };
 struct spelli : nameable {
+	target_s	target;
 };
 class gamei : public geoposition {
 	unsigned	minutes;
