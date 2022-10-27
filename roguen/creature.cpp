@@ -471,14 +471,18 @@ void creature::movestep(point ni) {
 	switch(f) {
 	case StairsUp:
 		if(isplayer()) {
-			if(confirm(getnm("MoveStairsUp")))
+			if(confirm(getnm("MoveStairsUp"))) {
 				game.enter(game.position, game.level - 1, StairsDown, Center);
+				return;
+			}
 		}
 		break;
 	case StairsDown:
 		if(isplayer()) {
-			if(confirm(getnm("MoveStairsDown")))
+			if(confirm(getnm("MoveStairsDown"))) {
 				game.enter(game.position, game.level + 1, StairsUp, Center);
+				return;
+			}
 		}
 		break;
 	}
