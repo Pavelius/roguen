@@ -1,20 +1,13 @@
-#RandomTable
-
-RandomCommoner
- chance Farmer+2 FarmerFemale+2 SmallBoy SmallGirl Theif
-VillageNPCRace
- chance Human+3 Dwarf HightElf
-
 #Site
 
 NoLocation
 
 SpiderNest
- landscape Webbed-40 Bones+3 Spider
+ landscape Webbed-40 Bones+3 GiantSpider
 GoblinScouts
  landscape Goblin
 MonstersLair
- landscape Webbed+4 Blooded+3 Goblin
+ landscape Bones+2 Blooded+3 DireBoar
 
 ArtifactStatue
  landscape Statue+1
@@ -34,6 +27,8 @@ DarkLake walls(DarkWater) floors(DarkWater)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
 DeepLake walls(DeepWater) floors(DeepWater)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
+PlantsGround
+ landscape Plant+4
 
 FamousHeroMonument offset(3 3)
  landscape Statue+1
@@ -67,23 +62,25 @@ PortalRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
  feats Notable
 
 Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
- landscape Tree+50 Herbs+40 Plant+20 FootMud+20 FootHill+90
+ landscape Tree+50 Herbs+40 FootMud+20 FootHill+90
  sites Graveyard
 LightForest minimap(70 109 29) floors(Grass) global(GenerateOutdoor)
- landscape Tree-8 Herbs+45 Plant+18 FootMud+12 FootHill+40
- sites ArtifactStatue-10 MonstersLair-5 Graveyard-20\
+ landscape Tree-8 Herbs+45 FootMud+12 FootHill+40
+ sites ArtifactStatue-10 Graveyard-20 RandomWildAnimals-60\
   DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush
 DeepForest minimap(35 79 31) floors(Grass) global(GenerateOutdoor)
- landscape Tree-16 Herbs+50 Plant+10 FootMud+12 FootHill+20
- sites SpiderNest-10 GoblinScouts-15 Graveyard-30 ArtifactStatue-10 DungeonEntrance-5\
-  DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush LightBush
+ landscape Tree-16 Herbs+50 FootMud+12 FootHill+20
+ sites RandomWildAnimals SpiderNest-10 GoblinScouts-15 Graveyard-30 ArtifactStatue-10 MonstersLair-5 DungeonEntrance-5\
+  DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush+2
 ForestSwamps floors(Grass) global(GenerateOutdoor)
- landscape FootMud-40 Herbs+25 Tree-10 DeadTree+10
+ landscape FootMud-40 Herbs+25 Tree-5 DeadTree+10
+ sites RandomBogMonsters RandomWildAnimals-20 SpiderNest-10 GoblinScouts-15 Graveyard-30 ArtifactStatue-10 DungeonEntrance-5\
+  DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush LightBush PlantsGround-50
 Mountains minimap(128 128 128) floors(Grass) global(GenerateOutdoor)
- landscape Tree+30 Herbs+40 Plant+20 FootMud+5 FootHill-10
+ landscape Tree+30 Herbs+40 FootMud+5 FootHill-10
  sites Graveyard-5 MonstersLair MonstersLair-40 RockyMountains+8 RockyMountains-50 RockyMountains-50 RockyMountains-50 LightBush-50
 Hills minimap(152 191 100) floors(Grass) global(GenerateOutdoor)
- landscape Tree+30 Herbs+35 Plant+5 FootMud+20 FootHill-5
+ landscape Tree+30 Herbs+35 FootMud+20 FootHill-5
 AshenLand minimap(128 128 128) floors(GrassCorupted) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+60 RockyMountains-10

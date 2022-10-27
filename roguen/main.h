@@ -18,10 +18,6 @@
 
 #pragma once
 
-const int version_major = 0;
-const int version_minor = 0;
-const int version_build = 5;
-
 enum class res {
 	Monsters,
 	Borders, Floor, Walls, Decals, Features, Shadows, Items,
@@ -96,6 +92,7 @@ struct targeti {
 	bool		enemies;
 	bool		allies;
 	short		range = 1000;
+	tile_s		tiles[8];
 };
 struct abilityi : nameable {
 	ability_s	basic;
@@ -405,7 +402,6 @@ struct sitei : nameable {
 	void		dungeon(rect& rca) const;
 	void		outdoor(rect& rca) const;
 	void		room(rect& rc) const;
-	void		markasroom(rect& rc) const;
 	void		fillfloor(rect& rca) const;
 	void		fillwalls(rect& rca) const;
 };

@@ -1,2 +1,2 @@
 ﻿In file `rules/Sites.txt`:
- Line 38: Not found identifier `MarkAsRoom`
+ Line 77: Can't find variant `WildAnimals`

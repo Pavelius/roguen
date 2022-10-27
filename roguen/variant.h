@@ -44,6 +44,7 @@ union variant {
 	};
 	constexpr variant() : u(0) {}
 	constexpr variant(int u) : u(u) {}
+	constexpr variant(variant_s	type, char counter, unsigned short value) : type(type), counter(counter), value(value) {}
 	template<class T> static constexpr variant_s kind();
 	template<class T> variant(T* v) : variant((const void*)v) {}
 	template<class T> constexpr variant(T v) : variant(kind<T>(), v) {}
@@ -54,6 +55,7 @@ union variant {
 	template<class T> operator T*() const { return (T*)((bsdata<varianti>::elements[type].source == bsdata<T>::source_ptr) ? getpointer() : 0); }
 	void				clear() { u = 0; }
 	constexpr bool		issame(const variant& v) const { return type == v.type && value == v.value; }
+	constexpr variant	nocounter() const { return variant(type, 0, value); }
 	template<class T> constexpr bool iskind() const { return bsdata<varianti>::elements[type].source==bsdata<T>::source_ptr; }
 	const char*			getdescription() const;
 	const varianti&		to() const { return bsdata<varianti>::elements[type]; }

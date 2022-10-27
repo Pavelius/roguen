@@ -109,15 +109,6 @@ void gamei::enter(point m, int level, feature_s feature, direction_s appear_side
 	draw::setnext(game.play);
 }
 
-void gamei::writelog() {
-	io::file file("logs.txt", StreamWrite | StreamText);
-	if(!file)
-		return;
-	auto p = actable::getlog();
-	if(p)
-		file << p;
-}
-
 static void cleanup_saves() {
 	char temp[260]; stringbuilder sb(temp);
 	for(io::file::find file(save_folder); file; file.next()) {
@@ -133,4 +124,13 @@ static void cleanup_saves() {
 void gamei::newgame() {
 	cleanup_saves();
 	game.enter(start_village, 0, StairsDown, NorthEast);
+}
+
+void gamei::writelog() {
+	io::file file("logs.txt", StreamWrite | StreamText);
+	if(!file)
+		return;
+	auto p = actable::getlog();
+	if(p)
+		file << p;
 }

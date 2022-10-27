@@ -84,7 +84,7 @@ creature* creature::create(point m, variant kind, variant character) {
 	p->finish();
 	p->update_room();
 	if(pm) {
-		if(pm->friendly <= -20)
+		if(pm->friendly <= -10)
 			p->set(Enemy);
 	}
 	if(p->is(PlaceOwner)) {

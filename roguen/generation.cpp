@@ -163,7 +163,6 @@ void sitei::building(rect& rc) const {
 	if(area.iswall(m1))
 		area.set(m1, floors);
 	area.set(m1, NoFeature);
-	add_room(this, rc);
 	rc.offset(1, 1);
 }
 
@@ -401,10 +400,10 @@ static void create_landscape(const rect& rca, variant v) {
 		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
 		rect rc = rca;
-		auto proc = &sitei::markasroom;
 		if(last_site->local && last_site->local->proc)
-			proc = last_site->local->proc;
-		(last_site->*proc)(rc);
+			(last_site->*last_site->local->proc)(rc);
+		if(!last_site->sites)
+			add_room(last_site, rc);
 		rc.offset(last_site->offset.x, last_site->offset.y);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rc, ev);
@@ -442,7 +441,6 @@ static void add_area_sites(variant v) {
 	auto count = v.counter;
 	if(!count)
 		count = 1;
-	v = single(v);
 	if(v.iskind<sitei>()) {
 		auto& ei = bsdata<sitei>::elements[v.value];
 		if(ei.sites) {
@@ -450,9 +448,13 @@ static void add_area_sites(variant v) {
 				add_area_sites(ev);
 		} else {
 			for(auto i = 0; i < count; i++)
-				sites.add(v);
+				sites.add(v.nocounter());
 		}
-	}
+	} else if(v.iskind<randomizeri>()) {
+		for(auto i = 0; i < count; i++)
+			add_area_sites(single(v));
+	} else if(v.iskind<monsteri>())
+		sites.add(v);
 }
 
 static void create_sites() {
@@ -495,11 +497,6 @@ void sitei::outdoor(rect& rca) const {
 
 void sitei::room(rect & rc) const {
 	fillfloor(rc);
-	markasroom(rc);
-}
-
-void sitei::markasroom(rect& rc) const {
-	add_room(this, rc);
 }
 
 void sitei::dungeon(rect& rca) const {
