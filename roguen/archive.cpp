@@ -28,7 +28,7 @@ bool archive::version(short major, short minor) {
 	return true;
 }
 
-template<> void archive::set<array>(array& v) {
+void archive::set(array& v) {
 	set(v.count);
 	set(v.size);
 	if(!writemode)

@@ -26,43 +26,6 @@ static void initializating() {
 #endif
 }
 
-static void random(int x1, int y1, int x2, tile_s tile) {
-	auto x = xrand(x1, x2);
-	point i = {short(x), short(y1)};
-	area.set(i, tile);
-}
-
-static void random(int x1, int y1, int x2, feature_s tile) {
-	auto x = xrand(x1, x2);
-	point i = {short(x), short(y1)};
-	area.set(i, tile);
-}
-
-static void setdoor(point i, tile_s tile) {
-	area.set(i, tile);
-	area.set(i, Door);
-	//area.set(i, Activated);
-}
-
-static void place_building(const rect& rc, tile_s wall) {
-	auto& ei = bsdata<tilei>::elements[wall];
-	if(!ei.iswall())
-		return;
-	area.set(rc, ei.tile);
-	area.horz(rc.x1, rc.y1, rc.x2, wall);
-	area.vert(rc.x1, rc.y1, rc.y2, wall);
-	area.horz(rc.x1, rc.y2, rc.x2, wall);
-	area.vert(rc.x2, rc.y1, rc.y2, wall);
-	setdoor({short(xrand(rc.x1 + 1, rc.x2 - 1)), short(rc.y2)}, ei.tile);
-	setdoor({short(rc.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))}, ei.tile);
-}
-
-static void create_item(point m, const char* id) {
-	auto pi = bsdata<itemground>::add();
-	pi->position = m;
-	pi->create(id);
-}
-
 static void equip_item(const char* id) {
 	item it;
 	it.create(id);
@@ -70,11 +33,6 @@ static void equip_item(const char* id) {
 }
 
 void show_worldmap();
-
-static void test_collection() {
-	variantc collection;
-	collection.select(bsdata<itemi>::source);
-}
 
 static void main_start() {
 	//world.clear();
@@ -84,35 +42,19 @@ static void main_start() {
 	//p2->set(Enemy);
 	//area.set({2, 2, 6, 7}, GrassCorupted);
 	//place_building({7, 2, 12, 7}, WallCave);
-	rect rc = {4, 4, 8, 8};
 	player = creature::create({5, 5}, "HightElf", "Fighter");
 	player->set(Ally);
-	game.setowner(player);
-	game.newgame();
-	player = game.getowner();
-	area.set({3, 3}, Iced);
-	area.set({3, 4}, Iced);
-	area.set({5, 4}, Iced);
-	//create_item({4, 4}, "Sword");
-	//create_item({4, 4}, "BattleAxe");
-	//create_item({5, 4}, "LeatherArmor");
-	//create_item({6, 4}, "PlateArmor");
-	//create_item({4, 5}, "Spear");
-	//create_item({5, 5}, "Halberd");
-	//create_item({6, 5}, "Shield");
-	//create_item({6, 6}, "LongBow");
-	//create_item({6, 6}, "Arrow");
-	//create_item({5, 7}, "AquaPotion");
-	//create_item({6, 7}, "BluePotion");
 	equip_item("LongBow");
 	equip_item("Arrow");
+	game.setowner(player);
+	game.newgame();
 }
 
 int start_application(fnevent proc, fnevent initializing);
 
 int main(int argc, char *argv[]) {
-	srand(getcputime());
-	//srand(213);
+	//srand(getcputime());
+	srand(213);
 	return start_application(main_start, initializating);
 }
 

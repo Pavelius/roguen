@@ -116,8 +116,8 @@ struct indexa : adat<point> {
 	void		select(point m, int range);
 };
 struct geoposition {
-	point		position = {-1000, -1000};
-	short		level = 0;
+	point		position;
+	short		level;
 	constexpr bool operator==(const geoposition& e) const { return e.position == position && e.level == level; }
 	constexpr bool operator!=(const geoposition& e) const { return e.position != position || e.level != level; }
 	bool		isoutdoor() const { return level == 0; }
@@ -131,8 +131,8 @@ public:
 	variant		getkind() const { return kind; }
 	static const char* getlog();
 	const char*	getname() const;
+	bool		ischaracter() const;
 	bool		iskind(variant v) const;
-	bool		isnpc() const;
 	static void	logv(const char* format, const char* format_param, const char* name, bool female);
 	static void	pressspace();
 	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
@@ -339,9 +339,9 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(spell_s v) const { return active_spells.is(v); }
 	bool		is(feat_s v) const { return feats.is(v); }
-	bool		isactive() const;
 	bool		isenemy(const creature& opponent) const;
 	bool		isplayer() const;
+	bool		isvalid() const;
 	void		interaction(creature& opponent);
 	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
 	void		lookenemies();
@@ -437,7 +437,7 @@ public:
 	rect		rc;
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
 	void		clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
-	static roomi* find(point pt);
+	static roomi* find(geoposition gp, point pt);
 	const char*	getname() const { return getsite()->getname(); }
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
@@ -491,4 +491,5 @@ extern gamei		game;
 extern creature*	last_enemy;
 extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;
 extern creature*	player;
+inline bool			islocal(const geoposition& m) { return game == m; }
 point				center(const rect& rc);

@@ -73,8 +73,8 @@ bool actable::iskind(variant v) const {
 	return false;
 }
 
-bool actable::isnpc() const {
-	return !kind.iskind<monsteri>();
+bool actable::ischaracter() const {
+	return kind.iskind<racei>();
 }
 
 const char* actable::getname() const {

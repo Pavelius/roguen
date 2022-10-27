@@ -9,13 +9,11 @@ static const char* save_folder = "save";
 static void save_monsters() {
 	saved_creatures.clear();
 	for(auto& e : bsdata<creature>()) {
-		if(e.worldpos != game)
+		if(!e.isvalid() || e.ischaracter())
 			continue;
-		if(!e.isnpc()) {
-			e.unlink();
-			saved_creatures.add(e);
-			e.clear();
-		}
+		e.unlink();
+		saved_creatures.add(e);
+		e.clear();
 	}
 }
 
@@ -31,19 +29,18 @@ static void restore_monsters() {
 static void update_ui() {
 	bsdata<draw::object>::source.clear();
 	for(auto& e : bsdata<creature>()) {
-		if(e.worldpos != game)
-			continue;
-		e.fixappear();
+		if(e.isvalid())
+			e.fixappear();
 	}
 }
 
-static void set_allies_position(geoposition gp, point m) {
-	if(area.isvalid(m)) {
-		for(auto& e : bsdata<creature>()) {
-			if(e.isplayer()) {
-				e.place(m);
-				e.worldpos = gp;
-			}
+static void set_allies_position(geoposition ogp, geoposition ngp, point m) {
+	if(!area.isvalid(m))
+		return;
+	for(auto& e : bsdata<creature>()) {
+		if(e.worldpos == ogp && e.is(Ally)) {
+			e.place(m);
+			e.worldpos = ngp;
 		}
 	}
 }
@@ -75,6 +72,7 @@ static bool serial_area(const char* url, bool write_mode) {
 	archive a(file, write_mode);
 	a.set(loc);
 	a.set(area);
+	a.set(saved_creatures);
 	a.set(bsdata<itemground>::source);
 	return true;
 }
@@ -83,14 +81,17 @@ static void serial_area(bool write_mode) {
 	char temp[260]; stringbuilder sb(temp);
 	sb.add("%4/AR%1.2h%2.2h%3.2h.sav", game.position.y, game.position.x, game.level, save_folder);
 	if(!write_mode) {
-		if(!serial_area(temp, false))
+		if(!serial_area(temp, false)) {
+			saved_creatures.clear();
 			game.createarea();
+		}
 	} else
 		serial_area(temp, write_mode);
 }
 
 void gamei::enter(point m, int level, feature_s feature, direction_s appear_side) {
 	before_serial_game();
+	geoposition old_game = game;
 	if(game.isvalid(position)) {
 		serial_game(true);
 		serial_area(true);
@@ -101,9 +102,9 @@ void gamei::enter(point m, int level, feature_s feature, direction_s appear_side
 	point start = {-1000, -1000};
 	if(feature)
 		start = area.find(feature);
-	if(start == point{-1000, -1000})
+	if(!game.isvalid(start))
 		start = area.bordered(round(appear_side, South));
-	set_allies_position(game, start);
+	set_allies_position(old_game, game, start);
 	after_serial_game();
 	draw::setnext(game.play);
 }

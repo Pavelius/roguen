@@ -23,7 +23,7 @@ bool roomi::is(condition_s v) const {
 	}
 }
 
-roomi* roomi::find(point pt) {
+roomi* roomi::find(geoposition gp, point pt) {
 	for(auto& e : bsdata<roomi>()) {
 		if(e == game && pt.in(e.rc))
 			return &e;

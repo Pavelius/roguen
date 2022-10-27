@@ -9,9 +9,7 @@ static void copy(statable& v1, const statable& v2) {
 
 static creature* findalive(point m) {
 	for(auto& e : bsdata<creature>()) {
-		if(e.worldpos != game)
-			continue;
-		if(e.getposition() == m)
+		if(e.isvalid() && e.getposition() == m)
 			return &e;
 	}
 	return 0;
@@ -25,10 +23,8 @@ static ability_s damage_ability(wear_s v) {
 }
 
 void creature::clear() {
-	if(player == this)
-		player = 0;
-	worldpos = {-1000, -1000};
 	memset(this, 0, sizeof(*this));
+	worldpos = {-1000, -1000};
 	setroom(0);
 	setowner(0);
 }
@@ -97,10 +93,6 @@ creature* creature::create(point m, variant kind, variant character) {
 			pr->setowner(p);
 	}
 	return p;
-}
-
-bool creature::isactive() const {
-	return this == player;
 }
 
 bool creature::isplayer() const {
@@ -457,7 +449,7 @@ void creature::lookitems() const {
 
 void creature::movestep(point ni) {
 	if(!area.isvalid(ni)) {
-		if(isactive()) {
+		if(isplayer()) {
 			auto direction = movedirection(ni);
 			auto np = to(game.position, direction);
 			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
@@ -469,7 +461,7 @@ void creature::movestep(point ni) {
 	auto m = getposition();
 	// Place owner can't leave it room
 	if(is(PlaceOwner)) {
-		auto pr = roomi::find(m);
+		auto pr = roomi::find(worldpos, m);
 		if(getroom() != pr) {
 			wait();
 			return;
@@ -595,6 +587,7 @@ void creature::lookenemies() {
 }
 
 void creature::makemove() {
+	player = this;
 	// Recoil form action
 	if(wait_seconds > 0) {
 		wait_seconds -= get(Speed);
@@ -609,7 +602,7 @@ void creature::makemove() {
 	if(is(Unaware))
 		remove(Unaware);
 	lookenemies();
-	if(isactive()) {
+	if(isplayer()) {
 		area.setlos(getposition(), getlos(), isfreelt);
 		adventure_mode();
 	} else if(enemy) {
@@ -676,7 +669,7 @@ void creature::update_wears() {
 }
 
 void creature::update_room() {
-	auto pn = roomi::find(getposition());
+	auto pn = roomi::find(worldpos, getposition());
 	if(pn) {
 		auto pb = getroom();
 		if(pn != pb) {
@@ -792,7 +785,7 @@ void creature::sayv(stringbuilder& sb, const char* format, const char* format_pa
 bool creature::is(condition_s v) const {
 	switch(v) {
 	case Busy: return wait_seconds > 1000;
-	case NPC: return isnpc();
+	case NPC: return ischaracter();
 	case Random: return d100() < 40;
 	default: return true;
 	}
@@ -804,4 +797,8 @@ int	creature::getlos() const {
 	if(r < 1)
 		r = 1;
 	return r;
+}
+
+bool creature::isvalid() const {
+	return worldpos == game;
 }

@@ -35,9 +35,8 @@ int gamei::getrange(point m1, point m2) {
 
 void gamei::all(creature::fnupdate proc) {
 	for(auto& e : bsdata<creature>()) {
-		if(e.worldpos != game)
-			continue;
-		(e.*proc)();
+		if(e.isvalid())
+			(e.*proc)();
 	}
 }
 

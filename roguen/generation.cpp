@@ -554,7 +554,6 @@ static void create_area(geoposition position, variant tile) {
 	if(!apply_landscape(tile))
 		return;
 	bsdata<itemground>::source.clear();
-	bsdata<boosti>::source.clear();
 	loc.clear();
 	area.clear();
 	locations.clear();

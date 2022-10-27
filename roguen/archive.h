@@ -12,6 +12,7 @@ struct archive {
 	bool				signature(const char* id);
 	bool				version(short major, short minor);
 	void				set(void* value, unsigned size);
+	void				set(array& value);
 	// Array with fixed count
 	template<typename T, size_t N> void set(T(&value)[N]) {
 		for(int i = 0; i < N; i++)
@@ -22,6 +23,10 @@ struct archive {
 		set(value.count);
 		for(auto& e : value)
 			set(e);
+	}
+	// Fixed vector collection
+	template<typename T> void set(vector<T>& value) {
+		set(*static_cast<array*>(&value));
 	}
 	// All simple types and requisites
 	template<class T> void set(T& value) {
@@ -41,4 +46,3 @@ struct archive {
 			set(*((T*)p));
 	}
 };
-template<> void archive::set<array>(array& v);
