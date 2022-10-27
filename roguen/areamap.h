@@ -75,6 +75,9 @@ struct areamap : anymap<tile_s, 64> {
 	bool			iswall(point m, direction_s d) const;
 	bool			linelos(int x0, int y0, int x1, int y1, fntest test) const;
 	bool			linelossv(int x0, int y0, int x1, int y1, fntest test);
+	static void		makewave(point start_index);
+	static void		makewavex();
+	int				randomcount(const rect& rc, int v) const;
 	void			set(point m, mapf_s v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			set(point m, tile_s v);
 	void			set(point m, feature_s v);
@@ -88,7 +91,5 @@ struct areamap : anymap<tile_s, 64> {
 	void			setlos(point m, int radius, fntest test);
 	void			remove(point m, mapf_s v) { feats[m] &= ~(1 << v); }
 	void			removechance(mapf_s v, int chance);
-	static void		makewave(point start_index);
-	static void		makewavex();
 	void			vert(int x1, int y1, int y2, tile_s tile);
 };

@@ -52,28 +52,32 @@ void areamap::set(rect rc, tile_s v) {
 			set(m, v);
 }
 
+point randomr(const rect& rc) {
+	short x = rc.x1 + rand() % (rc.width() + 1);
+	short y = rc.y1 + rand() % (rc.height() + 1);
+	return {x, y};
+}
+
 void areamap::set(rect rc, mapf_s v, int random_count) {
-	if(random_count < 0)
-		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
+	random_count = randomcount(rc, random_count);
 	while(random_count > 0) {
-		short x = rc.x1 + rand() % (rc.width() + 1);
-		short y = rc.y1 + rand() % (rc.height() + 1);
-		set({x, y}, v);
+		set(randomr(rc), v);
 		random_count--;
 	}
 }
 
 void areamap::set(rect rc, tile_s v, int random_count) {
-	if(random_count <= -100) {
-		set(rc, v);
-		return;
-	}
-	if(random_count < 0)
-		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
+	random_count = randomcount(rc, random_count);
 	while(random_count > 0) {
-		short x = rc.x1 + rand() % (rc.width() + 1);
-		short y = rc.y1 + rand() % (rc.height() + 1);
-		set(point{x, y}, v);
+		set(randomr(rc), v);
+		random_count--;
+	}
+}
+
+void areamap::set(rect rc, feature_s v, int random_count) {
+	random_count = randomcount(rc, random_count);
+	while(random_count > 0) {
+		set(randomr(rc), v);
 		random_count--;
 	}
 }
@@ -85,19 +89,14 @@ void areamap::set(rect rc, feature_s v) {
 			features[m] = v;
 }
 
-void areamap::set(rect rc, feature_s v, int random_count) {
-	if(random_count <= -100)
-		return;
-	if(random_count < 0)
-		random_count = (rc.width() + 1) * (rc.height() + 1) * (-random_count) / 100;
-	if(random_count == 0)
-		random_count = 1;
-	while(random_count > 0) {
-		short x = rc.x1 + rand() % (rc.width() + 1);
-		short y = rc.y1 + rand() % (rc.height() + 1);
-		set(point{x, y}, v);
-		random_count--;
-	}
+int areamap::randomcount(const rect& rc, int v) const {
+	if(v <= -100)
+		return 0;
+	if(v < 0)
+		v = (rc.width() + 1) * (rc.height() + 1) * (-v) / 100;
+	if(v == 0)
+		v = 1;
+	return v;
 }
 
 void areamap::removechance(mapf_s v, int chance) {

@@ -8,5 +8,6 @@ Plains: Равнины
 PortalRoom: Портал
 StairsUpRoom: Лестница вверх
 StairsDownHouses: Дом с лестницей вниз
+StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"
 Tavern: Таверна

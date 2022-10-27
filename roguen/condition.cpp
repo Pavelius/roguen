@@ -1,6 +1,7 @@
 #include "main.h"
 
 BSDATA(conditioni) = {
+	{"NoModifier"},
 	{"Identified"},
 	{"NPC"},
 	{"Random"},

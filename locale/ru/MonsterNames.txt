@@ -3,11 +3,16 @@ Vagabond: Бродяга
 Wizard: Волшебник
 
 Bartender: Бармен
+Bear: Медведь
+Boar: Кабан
 ChaosHydra: Гидра хаоса
 CityGuard: Городской охранник
+DireBoar: Ужасный кабан
 Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка
+GiantLizard: Гиганская ящерица
+GiantSpider: Гиганский паук
 Goblin: Гоблин
 GoblinFemale: Гоблиниха
 HillGiant: Гигант с холмов
@@ -15,7 +20,8 @@ Minotaur: Минотавр
 OrcWarrior: Орк
 Rabbit: Кролик
 RabbitFemale: Крольчиха
+ShamblingMound: Ползущая насыпь
 SmallBoy: Мальчик
 SmallGirl: Девочка
-Spider: Паук
 Theif: Вор
+Wolf: Волк

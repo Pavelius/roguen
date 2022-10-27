@@ -591,6 +591,7 @@ void creature::lookenemies() {
 }
 
 void creature::makemove() {
+	pushvalue push_player(player);
 	player = this;
 	// Recoil form action
 	if(wait_seconds > 0) {

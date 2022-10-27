@@ -186,7 +186,11 @@ static void test_arena(int bonus) {
 		if(e.friendly <= -5)
 			an.add(&e, e.getname());
 	}
-	auto pm = (monsteri*)an.choose(getnm("ChooseMonsterToFight"));
+	pushvalue push_column(answers::column_count);
+	answers::column_count = 3;
+	auto pm = (monsteri*)an.choose(getnm("ChooseMonsterToFight"), getnm("Cancel"));
+	if(!pm)
+		return;
 	auto m = player->getposition();
 	auto p = creature::create(m.to(3, 0), pm);
 	p->set(Enemy);
@@ -199,6 +203,7 @@ static void toggle_floor_rect(int bonus) {
 }
 
 static void range_attack(int bonud) {
+	player->lookenemies();
 	if(!player->canshoot(true))
 		return;
 	if(!enemy) {

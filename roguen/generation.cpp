@@ -16,6 +16,7 @@ static adat<variant, 32> sites;
 static point last_door;
 static direction_s last_direction;
 static sitei* landscape;
+static condition_s last_modifier;
 
 const auto chance_corridor_content = 10;
 const auto chance_hidden_door = 10;
@@ -390,6 +391,8 @@ static void create_landscape(const rect& rca, variant v) {
 	static sitei* last_site;
 	static racei* last_race;
 	v = single(v);
+	if(!v)
+		return;
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -398,6 +401,7 @@ static void create_landscape(const rect& rca, variant v) {
 		area.set(rca, (mapf_s)v.value, v.counter);
 	else if(v.iskind<sitei>()) {
 		pushvalue push_site(last_site);
+		pushvalue push_race(last_race);
 		last_site = bsdata<sitei>::elements + v.value;
 		rect rc = rca;
 		if(last_site->local && last_site->local->proc)
@@ -427,15 +431,9 @@ static void create_landscape(const rect& rca, variant v) {
 		place_items(rca, bsdata<itemi>::elements[v.value], v.counter);
 }
 
-static void add_area_events(geoposition v) {
-	for(auto& e : bsdata<geomark>()) {
-		if(!e || e!=v)
-			continue;
-		sites.add(e.getsite());
-	}
-}
-
 static void add_area_sites(variant v) {
+	if(!v)
+		return;
 	if(!test_counter(v))
 		return;
 	auto count = v.counter;
@@ -455,6 +453,17 @@ static void add_area_sites(variant v) {
 			add_area_sites(single(v));
 	} else if(v.iskind<monsteri>())
 		sites.add(v);
+}
+
+static void add_area_events(geoposition v) {
+	for(auto& e : bsdata<geomark>()) {
+		if(e.position != v.position)
+			continue;
+		if(v.level == 0)
+			add_area_sites(e.site);
+		else
+			add_area_sites(e.adjective);
+	}
 }
 
 static void create_sites() {
@@ -546,7 +555,7 @@ void sitei::corridors(rect& rca) const {
 	create_doors(floors, walls);
 }
 
-static void create_area(geoposition position, variant tile) {
+static void create_area(geoposition geo, variant tile) {
 	static rect all = {0, 0, area.mps - 1, area.mps - 1};
 	if(!apply_landscape(tile))
 		return;
@@ -557,7 +566,7 @@ static void create_area(geoposition position, variant tile) {
 	sites.clear();
 	loc.settile(landscape->id);
 	loc.darkness = landscape->darkness;
-	add_area_events(position);
+	add_area_events(geo);
 	add_area_sites(tile);
 	if(landscape->global)
 		(landscape->*landscape->global->proc)(all);

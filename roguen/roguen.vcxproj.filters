@@ -282,6 +282,9 @@
     <ClCompile Include="target.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="geomark.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

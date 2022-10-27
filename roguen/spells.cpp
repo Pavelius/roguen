@@ -2,7 +2,7 @@
 
 BSDATA(spelli) = {
 	{"Gate"},
-	{"Light"},
+	{"Light", You},
 	{"Sleep"},
 	{"Teleport"},
 	{"Web"},

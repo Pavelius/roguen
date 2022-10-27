@@ -50,12 +50,6 @@ void answers::paintanswers(int columns, const char* cancel_text) const {
 	}
 	caret.x = x1; caret.y = y2;
 	width = push_width_normal;
-	//if(cancel_text) {
-	//	auto push_fore = fore;
-	//	fore = fore.mix(colors::h3, 128);
-	//	paintcell(elements.getcount(), 0, cancel_text, buttonparam);
-	//	fore = push_fore;
-	//}
 }
 
 void* answers::choose(const char* title, const char* cancel_text, int cancel_mode) const {

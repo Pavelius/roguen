@@ -47,6 +47,7 @@ enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
 enum condition_s : unsigned char {
+	NoModifier,
 	Identified, NPC, Random, ShowMinimapBullet,
 	Busy,
 };
@@ -93,6 +94,7 @@ struct targeti {
 	bool		allies;
 	short		range = 1000;
 	tile_s		tiles[8];
+	feature_s	features[8];
 };
 struct abilityi : nameable {
 	ability_s	basic;
@@ -424,7 +426,11 @@ struct boosti {
 	static void	remove(variant parent);
 	static void	updateall();
 };
-class geomark : public geoposition, public siteable {
+struct geomark {
+	char		rumor;
+	point		position;
+	variant		site, adjective, guard;
+	static geomark* find(point position);
 };
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char ideftified : 1;
