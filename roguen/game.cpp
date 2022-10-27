@@ -9,8 +9,6 @@ stringbuilder	console(console_text);
 point			gamei::start_village = {128, 128};
 
 static void update_los() {
-	if(!player)
-		return;
 	point m;
 	for(m.y = 0; m.y < area.mps; m.y++)
 		for(m.x = 0; m.x < area.mps; m.x++)
@@ -37,7 +35,7 @@ int gamei::getrange(point m1, point m2) {
 
 void gamei::all(creature::fnupdate proc) {
 	for(auto& e : bsdata<creature>()) {
-		if(!e)
+		if(e.worldpos != game)
 			continue;
 		(e.*proc)();
 	}

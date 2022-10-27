@@ -20,7 +20,7 @@ void creaturea::select(point pt, int los, bool isplayer) {
 	auto ps = data;
 	auto pe = endof();
 	for(auto& e : bsdata<creature>()) {
-		if(!e || !e.in(rc))
+		if(e.worldpos != game || !e.in(rc))
 			continue;
 		if(isplayer && !area.is(e.getposition(), Visible))
 			continue;

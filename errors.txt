@@ -1,16 +1,2 @@
-﻿In file `rules/Monsters.txt`:
- Line 32: Not found requisit `feats`
-In file `locale/ru/Chats.txt`:
- Line 3: Unknown variant identifier `Shopkeeper`
- Line 16: Unknown variant identifier `SmallBoy`
- Line 17: Unknown variant identifier `SmallBoy`
- Line 18: Unknown variant identifier `Theif`
- Line 19: Unknown variant identifier `Theif`
- Line 20: Unknown variant identifier `Theif`
-In file `rules/Sites.txt`:
- Line 4: Can't find variant `Farmer`
- Line 4: Can't find variant `FarmerFemale`
- Line 4: Can't find variant `SmallBoy`
- Line 4: Can't find variant `SmallGirl`
- Line 4: Can't find variant `Theif`
- Line 38: Can't find variant `Shopkeeper`
+﻿In file `rules/Sites.txt`:
+ Line 38: Not found identifier `MarkAsRoom`

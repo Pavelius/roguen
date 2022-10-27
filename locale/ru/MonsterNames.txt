@@ -9,9 +9,13 @@ Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка
 Goblin: Гоблин
+GoblinFemale: Гоблиниха
 HillGiant: Гигант с холмов
 Minotaur: Минотавр
 OrcWarrior: Орк
+Rabbit: Кролик
+RabbitFemale: Крольчиха
 SmallBoy: Мальчик
 SmallGirl: Девочка
+Spider: Паук
 Theif: Вор

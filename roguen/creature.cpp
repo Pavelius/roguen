@@ -9,7 +9,7 @@ static void copy(statable& v1, const statable& v2) {
 
 static creature* findalive(point m) {
 	for(auto& e : bsdata<creature>()) {
-		if(!e)
+		if(e.worldpos != game)
 			continue;
 		if(e.getposition() == m)
 			return &e;
@@ -25,12 +25,12 @@ static ability_s damage_ability(wear_s v) {
 }
 
 void creature::clear() {
-	memset(this, 0, sizeof(*this));
 	if(player == this)
 		player = 0;
-	room_id = 0xFFFF;
-	name_id = 0xFFFF;
-	master_id = enemy_id = 0xFFFF;
+	worldpos = {-1000, -1000};
+	memset(this, 0, sizeof(*this));
+	setroom(0);
+	setowner(0);
 }
 
 void creature::levelup() {
@@ -62,9 +62,10 @@ creature* creature::create(point m, variant kind, variant character) {
 	m = area.getfree(m, 10, isfreecr);
 	if(!area.isvalid(m))
 		return 0;
-	auto p = bsdata<creature>::add();
+	auto p = bsdata<creature>::addz();
 	p->clear();
 	p->setposition(m);
+	p->worldpos = game;
 	p->setkind(kind);
 	p->setnoname();
 	p->class_id = character.value;
@@ -103,7 +104,7 @@ bool creature::isactive() const {
 }
 
 bool creature::isplayer() const {
-	return this == player;
+	return game.getowner() == this;
 }
 
 bool creature::isenemy(const creature& opponent) const {
@@ -282,7 +283,6 @@ void creature::damage(const item& weapon, int effect) {
 void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_multiplier) {
 	skilli defences[3] = {};
 	int parry_skill = 0;
-	enemy.setenemy(this); setenemy(&enemy);
 	last_hit = 1 + d100(); last_hit_result = 0;
 	last_parry = 1 + d100(); last_parry_result = 0;
 	attack_skill += get(wears[v].geti().ability);
@@ -460,9 +460,8 @@ void creature::movestep(point ni) {
 		if(isactive()) {
 			auto direction = movedirection(ni);
 			auto np = to(game.position, direction);
-			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id))) {
+			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
 				game.enter(np, 0, NoFeature, direction);
-			}
 		}
 		wait();
 		return;
@@ -709,7 +708,9 @@ void creature::update() {
 
 static void blockcreatures(creature* exclude) {
 	for(auto& e : bsdata<creature>()) {
-		if(!e || &e == exclude)
+		if(e.worldpos != game)
+			continue;
+		if(&e == exclude)
 			continue;
 		area.setblock(e.getposition(), 0xFFFF);
 	}
@@ -734,25 +735,24 @@ void creature::moveto(point ni) {
 
 void creature::unlink() {
 	boosti::remove(this);
-	auto id = getid();
 	for(auto& e : bsdata<creature>()) {
-		if(e.enemy_id == id)
-			e.enemy_id = 0xFFFF;
+		if(e.getowner() == this)
+			e.setowner(0);
 	}
 }
 
 void creature::act(const char* format, ...) const {
-	if(!player || player == this || area.is(getposition(), Visible))
+	if(game.getowner() == this || area.is(getposition(), Visible))
 		actv(console, format, xva_start(format), getname(), is(Female));
 }
 
 void creature::actp(const char* format, ...) const {
-	if(player == this)
+	if(game.getowner() == this)
 		actv(console, format, xva_start(format), getname(), is(Female));
 }
 
 void creature::actps(const char* format, ...) const {
-	if(player == this)
+	if(game.getowner() == this)
 		actv(console, format, xva_start(format), getname(), is(Female), ' ');
 }
 

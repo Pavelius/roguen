@@ -7,7 +7,6 @@ BSDATA(sitegeni) = {
 	{"GenerateOutdoor", &sitei::outdoor},
 	{"GenerateRoom", &sitei::room},
 	{"GenerateVillage", &sitei::cityscape},
-	{"MarkAsRoom", &sitei::markasroom},
 };
 BSDATAF(sitegeni)
 
@@ -133,6 +132,7 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	auto p = new roomi();
 	p->clear();
 	p->setsite(ps);
+	*static_cast<geoposition*>(p) = game;
 	p->rc = rc;
 	return p;
 }
@@ -204,7 +204,10 @@ static void create_monster(const rect& rca, variant v, int count) {
 		count = 0;
 	}
 	if(count == 0) {
-		count = xrand(2, 5);
+		if(v.iskind<monsteri>())
+			count = bsdata<monsteri>::elements[v.value].appear.roll();
+		else
+			count = xrand(2, 5);
 		if(!count)
 			count = 1;
 	}
@@ -398,8 +401,10 @@ static void create_landscape(const rect& rca, variant v) {
 		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
 		rect rc = rca;
+		auto proc = &sitei::markasroom;
 		if(last_site->local && last_site->local->proc)
-			(last_site->*last_site->local->proc)(rc);
+			proc = last_site->local->proc;
+		(last_site->*proc)(rc);
 		rc.offset(last_site->offset.x, last_site->offset.y);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rc, ev);
@@ -434,15 +439,16 @@ static void add_area_events(geoposition v) {
 static void add_area_sites(variant v) {
 	if(!test_counter(v))
 		return;
+	auto count = v.counter;
+	if(!count)
+		count = 1;
+	v = single(v);
 	if(v.iskind<sitei>()) {
 		auto& ei = bsdata<sitei>::elements[v.value];
 		if(ei.sites) {
 			for(auto ev : ei.sites)
 				add_area_sites(ev);
 		} else {
-			auto count = v.counter;
-			if(!count)
-				count = 1;
 			for(auto i = 0; i < count; i++)
 				sites.add(v);
 		}
@@ -548,9 +554,7 @@ static void create_area(geoposition position, variant tile) {
 	if(!apply_landscape(tile))
 		return;
 	bsdata<itemground>::source.clear();
-	bsdata<creature>::source.clear();
 	bsdata<boosti>::source.clear();
-	bsdata<roomi>::source.clear();
 	loc.clear();
 	area.clear();
 	locations.clear();

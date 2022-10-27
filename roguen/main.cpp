@@ -87,7 +87,9 @@ static void main_start() {
 	rect rc = {4, 4, 8, 8};
 	player = creature::create({5, 5}, "HightElf", "Fighter");
 	player->set(Ally);
+	game.setowner(player);
 	game.newgame();
+	player = game.getowner();
 	area.set({3, 3}, Iced);
 	area.set({3, 4}, Iced);
 	area.set({5, 4}, Iced);

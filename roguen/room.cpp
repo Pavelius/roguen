@@ -25,7 +25,7 @@ bool roomi::is(condition_s v) const {
 
 roomi* roomi::find(point pt) {
 	for(auto& e : bsdata<roomi>()) {
-		if(pt.in(e.rc))
+		if(e == game && pt.in(e.rc))
 			return &e;
 	}
 	return 0;

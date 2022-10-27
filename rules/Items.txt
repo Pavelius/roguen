@@ -77,9 +77,9 @@ Ration cost(10) weight(50) avatar(126)
 Bones cost(2) weight(3) avatar(899)
 MonsterSkull cost(50) weight(50) avatar(519)
 
-Bite avatar(12) wear(MeleeWeapon)
+Bite avatar(12) wear(MeleeWeapon) ability(WeaponSkill)
  feats Natural
- weapon damage(1)
+ weapon parry(-20)
 
 #RandomTable
 

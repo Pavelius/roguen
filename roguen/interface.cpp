@@ -517,7 +517,7 @@ void creature::paintbars() const {
 }
 
 void creature::paintbarsall() const {
-	if(player == this || player->getenemy() == this)
+	if(game.getowner() == this || is(Enemy))
 		paintbars();
 }
 
@@ -548,9 +548,6 @@ void creature::paint() const {
 			image(pa, 36 + 25, feats);
 		// Torso and armor
 		image(pb, getavatar(kind.value, is(Female), wears[Torso].getavatar()), feats);
-		// Thrown weapon
-		//if(wears[ThrownWeapon])
-		//	image(pc, 3, 0); // Throwing
 		// Secondanary arm
 		if(wears[MeleeWeapon].is(TwoHanded))
 			image(pa, wears[MeleeWeapon].getavatar(), feats);
@@ -743,8 +740,11 @@ void adventure_mode() {
 	if(!pk)
 		return;
 	animate_figures();
-	auto start = player->getwait();
-	while(player && start == player->getwait() && ismodal()) {
+	auto human = player;
+	if(!human)
+		return;
+	auto start = human->getwait();
+	while(start == human->getwait() && ismodal()) {
 		paintstart();
 		paintobjects();
 		presskey(pk->elements);
@@ -990,7 +990,7 @@ static void paint_minimap_creatures(point origin, int z) {
 	rectpush push;
 	height = width = z;
 	for(auto& e : bsdata<creature>()) {
-		if(!e)
+		if(e.worldpos != game)
 			continue;
 		auto i = e.getposition();
 		if(!area.is(i, Explored))
@@ -1131,7 +1131,7 @@ static void paint_legends(point origin, int z) {
 	font = metrics::font;
 	auto index = 1;
 	for(auto& e : bsdata<roomi>()) {
-		if(!e || !e.is(ShowMinimapBullet))
+		if(e != game || !e.is(ShowMinimapBullet))
 			continue;
 		caret.x = origin.x + center(e.rc).x * z + z / 2;
 		caret.y = origin.y + center(e.rc).y * z + z / 2;
@@ -1160,7 +1160,7 @@ static void paint_legends_text(point origin) {
 	auto index = 1;
 	char temp[260]; stringbuilder sb(temp);
 	for(auto& e : bsdata<roomi>()) {
-		if(!e || !e.is(ShowMinimapBullet))
+		if(e != game || !e.is(ShowMinimapBullet))
 			continue;
 		caret.x = origin.x;
 		sb.clear(); sb.add("%1i.", index);
