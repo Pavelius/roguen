@@ -430,6 +430,8 @@ struct geomark {
 	char		rumor;
 	point		position;
 	variant		site, adjective, guard;
+	void		clear();
+	static geomark* create(point position, variant site, variant adjective);
 	static geomark* find(point position);
 };
 class roomi : public geoposition, public siteable, public ownerable {

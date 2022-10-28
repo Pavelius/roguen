@@ -10,7 +10,7 @@ BSDATA(sitegeni) = {
 };
 BSDATAF(sitegeni)
 
-static adat<point> points;
+static adat<point, 512> points;
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
 static point last_door;
@@ -291,18 +291,23 @@ static bool isallowcorridor(point index, direction_s dir, bool deadend = false) 
 	return true;
 }
 
-static void create_corridor_content(point m) {
-}
-
 static void create_door(point m, tile_s floor, tile_s wall, bool hidden) {
 	area.set(m, floor);
 	area.set(m, Door);
 }
 
-static void create_connector(point index, direction_s dir, tile_s wall, tile_s floor) {
+static void place_item(point index, const itemi* pe) {
+	if(!pe || pe == bsdata<itemi>::elements)
+		return;
+	item it; it.clear();
+	it.create(pe);
+	it.drop(index);
+}
+
+static void create_connector(point index, direction_s dir, tile_s wall, tile_s floor, int& count) {
 	const auto chance_line_corridor = 60;
 	const auto minimum_corridor_lenght = 6;
-	auto count = 0;
+	count = 0;
 	point start = {0, 0};
 	while(true) {
 		if(!isallowcorridor(index, dir)) {
@@ -316,9 +321,6 @@ static void create_connector(point index, direction_s dir, tile_s wall, tile_s f
 			start = i0;
 			//if(d100() < chance_create_door)
 			//	create_door(i0, d100() < chance_hidden_door);
-		} else {
-			if(d100() < chance_corridor_content)
-				create_corridor_content(i0);
 		}
 		index = i0;
 		if(count >= minimum_corridor_lenght && d100() >= chance_line_corridor)
@@ -328,13 +330,18 @@ static void create_connector(point index, direction_s dir, tile_s wall, tile_s f
 	//show_debug_minimap();
 	direction_s rnd[] = {West, East, North};
 	zshuffle(rnd, 3);
+	int next_count = 0;
 	for(auto d : rnd)
-		create_connector(index, round(dir, d), wall, floor);
+		create_connector(index, round(dir, d), wall, floor, next_count);
+	if(!next_count)
+		points.add(index);
 }
 
 static void create_corridor(const rect& rc, direction_s dir, tile_s wall, tile_s floor) {
+	points.clear();
 	auto index = area.getpoint(rc, dir);
-	create_connector(index, dir, wall, floor);
+	auto count = 0;
+	create_connector(index, dir, wall, floor, count);
 }
 
 static void add_possible_door(point m) {
@@ -546,12 +553,26 @@ static void create_doors(tile_s floor, tile_s wall) {
 		create_doors(rc, floor, wall);
 }
 
+static void create_corridor_content(point i) {
+	place_item(i, bsdata<itemi>::find("SP"));
+}
+
+static void create_corridor_contents() {
+	zshuffle(points.data, points.count);
+	auto count = xrand(10, 30);
+	if(count > (int)points.count)
+		count = points.count;
+	for(auto i = 0; i < count; i++)
+		create_corridor_content(points.data[i]);
+}
+
 void sitei::corridors(rect& rca) const {
 	static direction_s connectors_side[] = {North, East, West, South};
 	const auto& rc = locations[0];
 	auto dir = getmost(rc);
 	create_corridor(rc, dir, walls, floors);
 	area.change(NoTile, walls);
+	create_corridor_contents();
 	create_doors(floors, walls);
 }
 

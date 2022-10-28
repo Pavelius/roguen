@@ -38,10 +38,7 @@ static void main_start() {
 	//world.clear();
 	//world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
-	//auto p2 = creature::create(m2i({3, 3}), "Goblin");
-	//p2->set(Enemy);
-	//area.set({2, 2, 6, 7}, GrassCorupted);
-	//place_building({7, 2, 12, 7}, WallCave);
+	geomark::create({128, 128}, "DungeonEntrance", "EvilSite");
 	player = creature::create({5, 5}, "HightElf", "Fighter");
 	player->set(Ally);
 	equip_item("LongBow");

@@ -77,7 +77,7 @@ struct areamap : anymap<tile_s, 64> {
 	bool			linelossv(int x0, int y0, int x1, int y1, fntest test);
 	static void		makewave(point start_index);
 	static void		makewavex();
-	int				randomcount(const rect& rc, int v) const;
+	static int		randomcount(const rect& rc, int v);
 	void			set(point m, mapf_s v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			set(point m, tile_s v);
 	void			set(point m, feature_s v);

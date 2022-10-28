@@ -89,7 +89,7 @@ void areamap::set(rect rc, feature_s v) {
 			features[m] = v;
 }
 
-int areamap::randomcount(const rect& rc, int v) const {
+int areamap::randomcount(const rect& rc, int v) {
 	if(v <= -100)
 		return 0;
 	if(v < 0)

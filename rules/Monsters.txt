@@ -36,6 +36,13 @@ ShamblingMound avatar(9) friendly(-20)
  abilities Strenght(45) Dexterity(15) WeaponSkill(40) DodgeSkill(10) HitsMaximum(30)
  use Bite
 
+Skeleton avatar(574) appear(3 6) friendly(-20)
+ abilities Strenght(25) Dexterity(20) WeaponSkill(30) DodgeSkill(20) ShieldUse(20) HitsMaximum(10)
+ use Spear Shield
+Zombie avatar(101) appear(2 5) friendly(-20)
+ abilities Strenght(40) Dexterity(10) WeaponSkill(25) HitsMaximum(20)
+ use Dagger
+
 Rabbit avatar(7)
  abilities Strenght(6) Dexterity(20) WeaponSkill(10) DodgeSkill(30) HitsMaximum(2)
 RabbitFemale avatar(8)

@@ -517,6 +517,8 @@ void creature::paintbars() const {
 }
 
 void creature::paintbarsall() const {
+	if(!area.is(getposition(), Visible))
+		return;
 	if(game.getowner() == this || is(Enemy))
 		paintbars();
 }

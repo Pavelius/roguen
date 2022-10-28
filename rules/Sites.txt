@@ -8,6 +8,9 @@ GoblinScouts
  landscape Goblin
 MonstersLair
  landscape Bones+2 Blooded+3 DireBoar
+UnholyPlace walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+ landscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
+ feats Notable
 
 ArtifactStatue
  landscape Statue+1
@@ -61,6 +64,9 @@ PortalRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
  landscape GatePortal
  feats Notable
 
+EvilSite
+ sites UnholyPlace UnholyPlace-60 UnholyPlace-40
+
 Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
  landscape Tree+50 Herbs+40 FootMud+20 FootHill+90
  sites Graveyard
@@ -88,7 +94,7 @@ DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global
  sites StairsUpRoom StairsDownRoom PortalRoom-10 EmpthyRoom+16
 StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
- sites GeneralStore Tavern StairsDownHouses FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
+ sites GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 
 #RandomTable
 
