@@ -12,6 +12,7 @@
 *.o
 *_util.cpp
 *_util.h
+*.sav
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
