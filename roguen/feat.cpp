@@ -1,6 +1,7 @@
 #include "main.h"
 
 BSDATA(feati) = {
+	{"Darkvision"},
 	{"Blunt"},
 	{"TwoHanded"},
 	{"CutWoods"},

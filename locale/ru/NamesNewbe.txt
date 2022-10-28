@@ -1,1 +1,3 @@
-﻿UnholyPlace: 
+﻿Zombie: 
+Броня: 
+Урон: 

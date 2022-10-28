@@ -65,7 +65,7 @@ PortalRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
  feats Notable
 
 EvilSite
- sites UnholyPlace UnholyPlace-60 UnholyPlace-40
+ sites UnholyPlace+3 UnholyPlace-60 UnholyPlace-40
 
 Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
  landscape Tree+50 Herbs+40 FootMud+20 FootHill+90

@@ -801,6 +801,10 @@ int	creature::getlos() const {
 	auto m = 1;
 	if(r < 1)
 		r = 1;
+	if(is(Darkvision)) {
+		if(r < 2)
+			r = 2;
+	}
 	return r;
 }
 

@@ -52,7 +52,7 @@ enum condition_s : unsigned char {
 	Busy,
 };
 enum feat_s : unsigned char {
-	Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
+	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	IgnoreWeb,
 	Coins, Notable, Natural,
 	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,

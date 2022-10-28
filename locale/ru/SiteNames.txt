@@ -11,3 +11,4 @@ StairsDownHouses: Дом с лестницей вниз
 StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"
 Tavern: Таверна
+UnholyPlace: Проклятое место
