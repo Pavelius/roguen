@@ -285,6 +285,9 @@
     <ClCompile Include="geomark.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="collection.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -417,6 +420,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="variantc.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="collection.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

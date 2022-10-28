@@ -59,7 +59,7 @@ Boar avatar(376) appear(2 5) friendly(-20)
 
 Bartender avatar(51)
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
- use PlaceOwner
+ use PlaceOwner KnowRumor
 Shopkeeper avatar(581)
  abilities Strenght(15) Dexterity(20) WeaponSkill(30) HitsMaximum(5)
  use PlaceOwner

@@ -1,6 +1,7 @@
 #include "main.h"
 
 creature* player;
+creature* opponent;
 creature* enemy;
 
 static void copy(statable& v1, const statable& v2) {
@@ -810,4 +811,16 @@ int	creature::getlos() const {
 
 bool creature::isvalid() const {
 	return worldpos == game;
+}
+
+bool creature::speechrumor() const {
+	geomarka source;
+	source.select(geomark::notknown);
+	auto p = source.random();
+	if(!p)
+		return false;
+	char temp[1024]; stringbuilder sb(temp);
+	p->getrumor(sb);
+	say(temp);
+	return true;
 }

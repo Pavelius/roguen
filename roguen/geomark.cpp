@@ -11,6 +11,7 @@ geomark* geomark::create(point position, variant site, variant adjective) {
 	p->position = position;
 	p->site = site;
 	p->adjective = adjective;
+	p->rumor = xrand(15, 70);
 	return p;
 }
 

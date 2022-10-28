@@ -32,4 +32,5 @@ AdventureKeys
  elements DebugMessage "Ctrl+D"
  elements ExploreArea "Ctrl+E"
  elements TestArena "Ctrl+A"
+ elements TestRumor "Ctrl+R"
  elements ToggleFloorRect "Ctrl+F"

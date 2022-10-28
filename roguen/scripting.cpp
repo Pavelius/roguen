@@ -5,6 +5,7 @@
 creaturea			creatures, enemies, targets;
 itema				items;
 extern creature*	enemy;
+extern creature*	opponent;
 int					last_hit, last_hit_result, last_parry, last_parry_result;
 extern bool			show_floor_rect;
 
@@ -142,7 +143,16 @@ static void chat_someone(int bonus) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
 	}
-	source[0]->speech("HowYouAre");
+	opponent = source[0];
+	if(opponent->is(KnowRumor) && d100() < 70) {
+		if(opponent->speechrumor())
+			return;
+	}
+	opponent->speech("HowYouAre");
+}
+
+static void test_rumor(int bonus) {
+	player->speechrumor();
 }
 
 static void pickup(int bonus) {
@@ -275,6 +285,7 @@ BSDATA(script) = {
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
 	{"TestArena", test_arena},
+	{"TestRumor", test_rumor},
 	{"ThrownAttack", thrown_attack},
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"ViewStuff", view_stuff},

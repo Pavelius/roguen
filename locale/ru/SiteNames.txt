@@ -12,3 +12,10 @@ StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"
 Tavern: Таверна
 UnholyPlace: Проклятое место
+
+EvilSite: Злой
+DarkSite: Темный
+AncientSite: Древний
+FrozenSite: Ледяной
+
+DungeonEntrance: Подземелье

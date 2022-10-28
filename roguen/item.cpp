@@ -1,5 +1,20 @@
 #include "main.h"
 
+int item::getcost() const {
+	return geti().cost;
+}
+
+int item::getcostall() const {
+	auto& ei = geti();
+	auto c = getcount();
+	if(ei.count > 1) {
+		c = c / ei.count;
+		if(c <= 0)
+			c = 1;
+	}
+	return ei.cost * c;
+}
+
 void item::setcount(int v) {
 	if(v <= 0)
 		clear();

@@ -11,6 +11,7 @@ BSDATA(feati) = {
 	{"Coins"},
 	{"Notable"},
 	{"Natural"},
+	{"KnowRumor"},
 	{"Female"},
 	{"PlaceOwner"},
 	{"Undead"},

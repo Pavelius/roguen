@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "areamap.h"
 #include "charname.h"
+#include "collection.h"
 #include "dice.h"
 #include "direction.h"
 #include "flagable.h"
@@ -54,7 +55,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	IgnoreWeb,
-	Coins, Notable, Natural,
+	Coins, Notable, Natural, KnowRumor,
 	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
@@ -209,6 +210,7 @@ public:
 	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
 	void		getinfo(stringbuilder& sb, bool need_name) const;
 	int			getcost() const;
+	int			getcostall() const;
 	int			getcount() const;
 	int			getdamage() const;
 	magic_s		getmagic() const { return magic; }
@@ -360,6 +362,7 @@ public:
 	void		set(ability_s i, int v) { abilities[i] = v; }
 	void		setroom(const roomi* v) { bsset(room_id, v); }
 	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
+	bool		speechrumor() const;
 	void		unlink();
 	void		update_room();
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
@@ -433,6 +436,11 @@ struct geomark {
 	void		clear();
 	static geomark* create(point position, variant site, variant adjective);
 	static geomark* find(point position);
+	void		getrumor(stringbuilder& sb) const;
+	static bool notknown(const void* object) { return true; }
+};
+struct geomarka : collection<geomark> {
+	void		match();
 };
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char ideftified : 1;

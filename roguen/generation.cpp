@@ -301,6 +301,8 @@ static void place_item(point index, const itemi* pe) {
 		return;
 	item it; it.clear();
 	it.create(pe);
+	if(pe->is(Coins))
+		it.setcount(xrand(3, 18));
 	it.drop(index);
 }
 

@@ -4,6 +4,27 @@
 static char current_locale[4] = {"ru"};
 static const char spaces[] = " \n\t\r.,!?;:";
 
+struct stringbuilder::grammar {
+	const char*		name;
+	const char*		change;
+	unsigned		name_size;
+	unsigned		change_size;
+	constexpr grammar() : name(0), change(0), name_size(0), change_size(0) {}
+	constexpr grammar(const char* name, const char* change) :
+		name(name), change(change), name_size(zlen(name)), change_size(zlen(change)) {
+	}
+	operator bool() const { return name != 0; }
+};
+
+struct stringbuilder::genderi {
+	const char*		name;
+	int				value;
+	unsigned		name_size;
+	constexpr genderi() : name(0), value(0), name_size(0) {}
+	constexpr genderi(const char* name, int value) : name(name), value(value), name_size(zlen(name)) {}
+	operator bool() const { return name != 0; }
+};
+
 static const char* psnum16(const char* p, long& value) {
 	int result = 0;
 	const int radix = 16;
@@ -211,18 +232,6 @@ void stringbuilder::addcount(const char* id, int count, const char* format) {
 		format = "%1i %2";
 	add(format, count, getbycount(id, count));
 }
-
-struct stringbuilder::grammar {
-	const char*		name;
-	const char*		change;
-	unsigned		name_size;
-	unsigned		change_size;
-	constexpr grammar() : name(0), change(0), name_size(0), change_size(0) {}
-	constexpr grammar(const char* name, const char* change) :
-		name(name), change(change), name_size(zlen(name)), change_size(zlen(change)) {
-	}
-	operator bool() const { return name != 0; }
-};
 
 unsigned char stringbuilder::upper(unsigned char u) {
 	if(u >= 0x61 && u <= 0x7A)
@@ -701,7 +710,25 @@ void stringbuilder::addof(const char* s) {
 void stringbuilder::addnounf(const char* s) {
 	static grammar map[] = {
 		{"ий", "ая"},
+		{"ой", "ая"},
 		{"ый", "ая"},
+		{}};
+	add(s, map, "");
+}
+
+void stringbuilder::addnouni(const char* s) {
+	static grammar map[] = {
+		{"ий", "ое"},
+		{"ой", "ое"},
+		{"ый", "ое"},
+		{}};
+	add(s, map, "");
+}
+
+void stringbuilder::addnounx(const char* s) {
+	static grammar map[] = {
+		{"ий", "ие"},
+		{"ый", "ые"},
 		{}};
 	add(s, map, "");
 }
@@ -742,4 +769,34 @@ void print(fnoutput proc, const char* format, ...) {
 	char temp[512]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));
 	proc(temp);
+}
+
+int stringbuilder::getgender(const char* s) {
+	static genderi source[] = {
+		{"а", 1},
+		{"о", 2},
+		{"ы", 3},
+		{"я", 1},
+		{"ье", 2},
+	};
+	auto ps = skip_space(s);
+	auto pw = word_end(ps);
+	unsigned s1 = pw - ps;
+	for(auto& e : source) {
+		auto s2 = e.name_size;
+		if(e.name_size > s1)
+			continue;
+		if(memcmp(pw - s2, e.name, s2) == 0)
+			return e.value;
+	}
+	return 0;
+}
+
+void stringbuilder::adjective(const char* name, int m) {
+	switch(m) {
+	case 1: addnounf(name); break;
+	case 2: addnouni(name); break;
+	case 3: addnounx(name); break;
+	default: add(name); break;
+	}
 }

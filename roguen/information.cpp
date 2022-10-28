@@ -102,3 +102,15 @@ const char*	item::getfullname() const {
 		sb.adds("%1i %Pieces", count);
 	return temp;
 }
+
+void geomark::getrumor(stringbuilder& sb) const {
+	char temp[64]; stringbuilder sba(temp);
+	auto direction = area.getdirection(game.position, position);
+	auto site_name = site.getname();
+	sba.adjective(adjective.getname(), stringbuilder::getgender(site_name));
+	sb.add(getnm("RumorDungeon"),
+		getnm(bsdata<directioni>::elements[direction].id),
+		site.getname(),
+		temp,
+		guard.getname());
+}

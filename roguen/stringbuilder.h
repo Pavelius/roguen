@@ -8,6 +8,7 @@
 
 class stringbuilder {
 	struct grammar;
+	struct genderi;
 	char*				p;
 	char*				pb;
 	const char*			pe;
@@ -31,6 +32,8 @@ public:
 	void				addlocaleurl();
 	void				addn(const char* format, ...) { addx('\n', format, xva_start(format)); }
 	void				addnounf(const char* s);
+	void				addnouni(const char* s);
+	void				addnounx(const char* s);
 	void				addnz(const char* format, unsigned count);
 	void				addof(const char* s);
 	void				adds(const char* format, ...) { addx(' ', format, xva_start(format)); }
@@ -42,6 +45,7 @@ public:
 	void				addx(char separator, const char* format, const char* format_param);
 	void				addx(const char* separator, const char* format, const char* format_param);
 	void				adduint(unsigned value, int precision, const int radix);
+	void				adjective(const char* name, int g);
 	const char*			begin() const { return pb; }
 	void				change(char s1, char s2);
 	void				change(const char* s1, const char* s2);
@@ -50,6 +54,7 @@ public:
 	const char*			end() const { return pe; }
 	char*				get() const { return p; }
 	static const char*	getbycount(const char* id, int count);
+	static int			getgender(const char* v);
 	static int			getnum(const char* v);
 	size_t				getlenght() const { return p - pb; }
 	size_t				getmaximum() const { return pe - pb - 1; }
