@@ -55,7 +55,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	IgnoreWeb,
-	Coins, Notable, Natural, KnowRumor,
+	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
@@ -314,6 +314,9 @@ public:
 	void		actp(const char* format, ...) const;
 	void		actps(const char* format, ...) const;
 	void		aimove();
+	void		apply(variant v);
+	void		apply(spell_s v, unsigned minutes);
+	bool		apply(spell_s v, int level, bool run);
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
 	void		attackrange(creature& enemy);
@@ -363,8 +366,10 @@ public:
 	void		setroom(const roomi* v) { bsset(room_id, v); }
 	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	bool		speechrumor() const;
+	bool		speechlocation() const;
 	void		unlink();
 	void		update_room();
+	void		use(variants source);
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
@@ -450,6 +455,8 @@ public:
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
 	void		clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
 	static roomi* find(geoposition gp, point pt);
+	void		getrumor(stringbuilder& sb) const;
+	static bool	notknown(const void* object);
 	const char*	getname() const { return getsite()->getname(); }
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;

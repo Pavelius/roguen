@@ -52,6 +52,13 @@ void areamap::set(rect rc, tile_s v) {
 			set(m, v);
 }
 
+void areamap::set(rect rc, mapf_s v) {
+	point m;
+	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
+		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
+			set(m, v);
+}
+
 point randomr(const rect& rc) {
 	short x = rc.x1 + rand() % (rc.width() + 1);
 	short y = rc.y1 + rand() % (rc.height() + 1);

@@ -824,3 +824,34 @@ bool creature::speechrumor() const {
 	say(temp);
 	return true;
 }
+
+bool creature::speechlocation() const {
+	collection<roomi> source;
+	source.select(roomi::notknown);
+	auto p = source.random();
+	if(!p)
+		return false;
+	char temp[1024]; stringbuilder sb(temp);
+	p->getrumor(sb);
+	say(temp);
+	return true;
+}
+
+void creature::apply(variant v) {
+	if(v.iskind<spelli>())
+		apply((spell_s)v.value, v.counter, true);
+}
+
+void creature::apply(spell_s v, unsigned minutes) {
+	auto p = bsdata<boosti>::addz();
+	p->clear();
+	p->effect = v;
+	p->stamp = game.getminutes() + minutes;
+	p->parent = this;
+	active_spells.set(v);
+}
+
+void creature::use(variants source) {
+	for(auto v : source)
+		apply(v);
+}

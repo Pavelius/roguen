@@ -148,6 +148,10 @@ static void chat_someone(int bonus) {
 		if(opponent->speechrumor())
 			return;
 	}
+	if(opponent->is(KnowLocation) && d100() < 50) {
+		if(opponent->speechlocation())
+			return;
+	}
 	opponent->speech("HowYouAre");
 }
 

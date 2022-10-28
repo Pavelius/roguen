@@ -114,3 +114,13 @@ void geomark::getrumor(stringbuilder& sb) const {
 		temp,
 		guard.getname());
 }
+
+void roomi::getrumor(stringbuilder& sb) const {
+	char temp[64]; stringbuilder sba(temp);
+	auto direction = area.getdirection(player->getposition(), center(rc));
+	auto site_name = getname();
+	sb.add(getnm("RumorLocation"),
+		getnm(bsdata<directioni>::elements[direction].id),
+		site_name);
+	area.set(rc, Explored);
+}

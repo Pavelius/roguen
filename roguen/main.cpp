@@ -38,7 +38,7 @@ static void main_start() {
 	//world.clear();
 	//world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
-	geomark::create({128, 128}, "DungeonEntrance", "EvilSite");
+	geomark::create({127, 128}, "DungeonEntrance", "EvilSite");
 	player = creature::create({5, 5}, "HightElf", "Fighter");
 	player->set(Ally);
 	equip_item("LongBow");

@@ -15,6 +15,11 @@ bool roomi::is(feat_s v) const {
 	return p->feats.is(v);
 }
 
+bool roomi::notknown(const void* object) {
+	return ((roomi*)object)->is(Notable)
+		&& !area.is(center(((roomi*)object)->rc), Explored);
+}
+
 bool roomi::is(condition_s v) const {
 	switch(v) {
 	case ShowMinimapBullet: return is(Notable) && area.is(center(rc), Explored);

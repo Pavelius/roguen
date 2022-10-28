@@ -12,6 +12,7 @@ BSDATA(feati) = {
 	{"Notable"},
 	{"Natural"},
 	{"KnowRumor"},
+	{"KnowLocation"},
 	{"Female"},
 	{"PlaceOwner"},
 	{"Undead"},

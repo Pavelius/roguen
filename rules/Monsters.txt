@@ -70,9 +70,11 @@ TheifFemale avatar(314)
  use Female
 Farmer avatar(273)
  abilities Strenght(30) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
+ use KnowLocation
 FarmerFemale avatar(276)
  abilities Strenght(26) Dexterity(40) WeaponSkill(30) HitsMaximum(5)
  use Female
+ use KnowLocation
 SmallBoy avatar(274)
  abilities Strenght(10) Dexterity(10) WeaponSkill(10) HitsMaximum(2)
 SmallGirl avatar(275) parent(SmallBoy)
