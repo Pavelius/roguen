@@ -1,4 +1,3 @@
 ﻿In file `rules/Sites.txt`:
- Line 81: Can't find variant `DungeonEntrance`
- Line 85: Can't find variant `DungeonEntrance`
- Line 93: Can't find variant `DungeonEntrance`
+ Line 67: Not found requisit `Iced`
+ Line 67: Expected symbol `(`, but you have string `+13`
