@@ -23,11 +23,19 @@ static ability_s damage_ability(wear_s v) {
 	}
 }
 
+monsteri* monsteri::ally() const {
+	if(minions)
+		return minions->random();
+	return 0;
+}
+
 void creature::clear() {
 	memset(this, 0, sizeof(*this));
 	worldpos = {-1000, -1000};
 	setroom(0);
 	setowner(0);
+	if(game.getowner() == this)
+		game.setowner(0);
 }
 
 void creature::levelup() {
@@ -805,6 +813,11 @@ bool creature::is(condition_s v) const {
 	case Busy: return wait_seconds > 1000;
 	case NPC: return ischaracter();
 	case Random: return d100() < 40;
+	case NoInt: return get(Wits) == 10;
+	case AnimalInt: return get(Wits) < 10;
+	case LowInt: return get(Wits) < 20;
+	case AveInt: return get(Wits) < 35;
+	case HighInt: return get(Wits) < 50;
 	default: return true;
 	}
 }
@@ -826,8 +839,8 @@ bool creature::isvalid() const {
 }
 
 bool creature::speechrumor() const {
-	geomarka source;
-	source.select(geomark::notknown);
+	collection<dungeon> source;
+	source.select();
 	auto p = source.random();
 	if(!p)
 		return false;

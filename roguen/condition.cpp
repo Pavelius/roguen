@@ -7,5 +7,10 @@ BSDATA(conditioni) = {
 	{"Random"},
 	{"ShowMinimapBullet"},
 	{"Busy"},
+	{"NoInt"},
+	{"AnimalInt"},
+	{"LowInt"},
+	{"AveInt"},
+	{"HighInt"},
 };
-assert_enum(conditioni, Busy);
+assert_enum(conditioni, HighInt);

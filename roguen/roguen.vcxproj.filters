@@ -282,13 +282,13 @@
     <ClCompile Include="target.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="geomark.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="collection.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="duration.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeon.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>

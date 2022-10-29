@@ -16,6 +16,7 @@ static adat<variant, 32> sites;
 static point last_door;
 static direction_s last_direction;
 static sitei* landscape;
+static dungeon* last_dungeon;
 static condition_s last_modifier;
 static rect correct_conncetors;
 
@@ -465,14 +466,19 @@ static void add_area_sites(variant v) {
 }
 
 static void add_area_events(geoposition v) {
-	for(auto& e : bsdata<geomark>()) {
-		if(e.position != v.position)
-			continue;
-		if(v.level == 0)
-			add_area_sites(e.site);
-		else
-			add_area_sites(e.adjective);
-	}
+	if(!last_dungeon)
+		return;
+	if(v.level == 0)
+		add_area_sites(last_dungeon->entrance);
+	else
+		add_area_sites(last_dungeon->modifier);
+}
+
+static void add_area_landscapes(const rect rca) {
+	if(!last_dungeon)
+		return;
+	for(auto v : last_dungeon->modifier->landscape)
+		create_landscape(rca, v);
 }
 
 static void create_sites() {
@@ -480,8 +486,10 @@ static void create_sites() {
 		locations.count = sites.count;
 	if(sites.count > locations.count)
 		sites.count = locations.count;
-	for(size_t i = 0; i < locations.count; i++)
+	for(size_t i = 0; i < locations.count; i++) {
+		add_area_landscapes(locations.data[i]);
 		create_landscape(locations.data[i], sites.data[i]);
+	}
 }
 
 static bool apply_landscape(variant tile) {
@@ -552,7 +560,7 @@ void sitei::dungeon(rect& rca) const {
 	remove_trail_locations(xrand(1, 3));
 	shuffle_locations();
 	correct_conncetors = bounding_locations();
-	correct_conncetors.offset(3, 3);
+	correct_conncetors.offset(6, 4);
 }
 
 direction_s getmost(const rect& rc) {
@@ -622,8 +630,15 @@ static void create_area(geoposition geo, variant tile) {
 	update_doors();
 }
 
+variant get_dungeon_site(point v) {
+	if(!last_dungeon || !last_dungeon->level)
+		return single("DefaultDungeon");
+	return last_dungeon->level;
+}
+
 void gamei::createarea() {
 	variant rt;
+	last_dungeon = dungeon::find(position);
 	if(level == 0) {
 		auto range = getrange(position, start_village);
 		if(range == 0)
@@ -637,7 +652,7 @@ void gamei::createarea() {
 		else
 			rt = single("RandomUnknownOverlandTiles");
 	} else
-		rt = single("DefaultDungeon");
+		rt = get_dungeon_site(position);
 	if(!rt)
 		rt = single("LightForest");
 	create_area(*this, rt);

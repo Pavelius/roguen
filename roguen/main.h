@@ -52,6 +52,7 @@ enum condition_s : unsigned char {
 	NoModifier,
 	Identified, NPC, Random, ShowMinimapBullet,
 	Busy,
+	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 };
 enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
@@ -257,8 +258,11 @@ struct monsteri : nameable, statable {
 	char		friendly;
 	dice		appear;
 	variants	use;
-	const monsteri* parent;
+	monsteri*	parent;
+	randomizeri* minions;
+	monsteri*	ally() const;
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
+	static bool	isboss(const void* p) { return ((monsteri*)p)->minions != 0; }
 };
 struct spellable {
 	char		spells[Sleep + 1];
@@ -439,18 +443,21 @@ struct boosti {
 	static void	remove(variant parent);
 	static void	updateall();
 };
-struct geomark {
-	char		rumor;
+struct dungeon {
 	point		position;
-	variant		site, adjective, guard;
-	void		clear();
-	static geomark* create(point position, variant site, variant adjective);
-	static geomark* find(point position);
+	const sitei* entrance;
+	const sitei* modifier;
+	const sitei* level;
+	const sitei* final_level;
+	monsteri*	guardian;
+	char		rumor;
+	variant		twist; // Monster, Item, Site
+	constexpr operator bool() const { return level != 0; }
+	static dungeon*	add(point position);
+	static dungeon*	add(point position, sitei* modifier, sitei* type);
+	void		clear() { memset(this, 0, sizeof(*this)); }
+	static dungeon* find(point position);
 	void		getrumor(stringbuilder& sb) const;
-	static bool notknown(const void* object) { return true; }
-};
-struct geomarka : collection<geomark> {
-	void		match();
 };
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char ideftified : 1;

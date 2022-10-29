@@ -15,9 +15,9 @@ BSDATAD(advancement);
 BSDATAC(boosti, 256);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
+BSDATAC(dungeon, 256);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
-BSDATAC(geomark, 1024)
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 64);
@@ -41,6 +41,11 @@ BSMETA(conditioni) = {
 BSMETA(dice) = {
 	BSREQ(min),
 	BSREQ(max),
+	{}};
+BSMETA(dungeon) = {
+	BSREQ(rumor),
+	BSREQ(level),
+	BSREQ(final_level),
 	{}};
 BSMETA(feati) = {
 	BSREQ(id),
@@ -80,6 +85,7 @@ BSMETA(monsteri) = {
 	BSREQ(parent),
 	BSREQ(treasure),
 	BSREQ(appear),
+	BSREQ(minions),
 	{}};
 BSMETA(point) = {
 	BSREQ(x), BSREQ(y),
@@ -130,6 +136,7 @@ BSDATA(varianti) = {
 	{"AreaFlag", VAR(areafi), 1},
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},
+	{"Dungeon", VAR(dungeon), 0},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},
 	{"Hotkey", VAR(hotkey), 2},

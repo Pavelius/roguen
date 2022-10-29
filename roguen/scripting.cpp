@@ -134,6 +134,22 @@ static void open_nearest_door(int bonus) {
 	}
 }
 
+static void chat_someone() {
+	if(opponent->is(AnimalInt)) {
+		opponent->act(opponent->getspeech("AnimalRoar"));
+		return;
+	}
+	if(opponent->is(KnowRumor) && d100() < 70) {
+		if(opponent->speechrumor())
+			return;
+	}
+	if(opponent->is(KnowLocation) && d100() < 30) {
+		if(opponent->speechlocation())
+			return;
+	}
+	opponent->speech("HowYouAre");
+}
+
 static void chat_someone(int bonus) {
 	player->lookenemies();
 	creaturea source = creatures;
@@ -144,15 +160,9 @@ static void chat_someone(int bonus) {
 		return;
 	}
 	opponent = source[0];
-	if(opponent->is(KnowRumor) && d100() < 70) {
-		if(opponent->speechrumor())
-			return;
-	}
-	if(opponent->is(KnowLocation) && d100() < 50) {
-		if(opponent->speechlocation())
-			return;
-	}
-	opponent->speech("HowYouAre");
+	chat_someone();
+	player->wait();
+	opponent->wait();
 }
 
 static void test_rumor(int bonus) {

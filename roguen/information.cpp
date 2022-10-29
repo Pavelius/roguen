@@ -103,16 +103,17 @@ const char*	item::getfullname() const {
 	return temp;
 }
 
-void geomark::getrumor(stringbuilder& sb) const {
+void dungeon::getrumor(stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
 	auto direction = area.getdirection(game.position, position);
-	auto site_name = site.getname();
-	sba.adjective(adjective.getname(), stringbuilder::getgender(site_name));
+	auto site_name = level->getname();
+	sba.adjective(modifier->getname(), stringbuilder::getgender(site_name));
 	sb.add(getnm("RumorDungeon"),
 		getnm(bsdata<directioni>::elements[direction].id),
-		site.getname(),
+		site_name,
 		temp,
-		guard.getname());
+		guardian->getname(),
+		guardian->minions->getname());
 }
 
 void roomi::getrumor(stringbuilder& sb) const {
