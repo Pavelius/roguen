@@ -13,9 +13,9 @@ StartVillage: Деревня "Клюв грифона"
 Tavern: Таверна
 UnholyPlace: Проклятое место
 
-EvilSite: Злой
-DarkSite: Темный
 AncientSite: Древний
+DarkSite: Темный
+EvilSite: Злой
 FrozenSite: Ледяной
 
 DungeonEntrance: Подземелье

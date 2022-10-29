@@ -5,7 +5,7 @@ BSMETA(randomizeri) = {
 	BSREQ(id),
 	BSREQ(chance),
 	{}};
-BSDATAC(randomizeri, 128)
+BSDATAC(randomizeri, 512)
 
 static int getcounter(variant v) {
 	if(v.counter < 1)

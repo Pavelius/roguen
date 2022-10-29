@@ -20,7 +20,7 @@ BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
-BSDATAC(sitei, 64);
+BSDATAC(sitei, 256);
 
 BSMETA(abilityi) = {
 	BSREQ(id),
