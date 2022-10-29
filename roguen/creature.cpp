@@ -812,12 +812,10 @@ bool creature::is(condition_s v) const {
 int	creature::getlos() const {
 	auto r = get(LineOfSight) - loc.darkness;
 	auto m = 1;
-	if(r < 1)
-		r = 1;
-	if(is(Darkvision)) {
-		if(r < 2)
-			r = 2;
-	}
+	if(is(Darkvision))
+		m++;
+	if(r < m)
+		r = m;
 	if(r > 4)
 		r = 4;
 	return r;

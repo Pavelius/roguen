@@ -170,6 +170,7 @@
     <ClCompile Include="draw_text.cpp" />
     <ClCompile Include="draw_textf.cpp" />
     <ClCompile Include="draw_theme.cpp" />
+    <ClCompile Include="duration.cpp" />
     <ClCompile Include="feat.cpp" />
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="direction.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
+    <ClInclude Include="duration.h" />
     <ClInclude Include="flagable.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />

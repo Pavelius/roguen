@@ -288,6 +288,9 @@
     <ClCompile Include="collection.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="duration.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -424,6 +427,9 @@
     </ClInclude>
     <ClInclude Include="collection.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="duration.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

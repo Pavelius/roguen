@@ -55,10 +55,10 @@ StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  feats Notable
 
 EmpthyRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
-StairsUpRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+StairsUpRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom) offset(1 1)
  landscape StairsUp
  feats Notable
-StairsDownRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+StairsDownRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom) offset(1 1)
  landscape StairsDown
  feats Notable
 PortalRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
@@ -91,7 +91,7 @@ Hills minimap(152 191 100) floors(Grass) global(GenerateOutdoor)
 AshenLand minimap(128 128 128) floors(GrassCorupted) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DungeonEntrance-10
-DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(2 2) darkness(3)
+DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(4 4) darkness(3)
  sites StairsUpRoom StairsDownRoom PortalRoom-10 EmpthyRoom+16
 StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90

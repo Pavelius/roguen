@@ -8,6 +8,7 @@
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
+#include "duration.h"
 #include "list.h"
 #include "pushvalue.h"
 #include "randomizer.h"
@@ -471,6 +472,7 @@ struct location : siteable {
 };
 struct spelli : nameable {
 	target_s	target;
+	duration_s	duration;
 };
 class gamei : public geoposition, public ownerable {
 	unsigned	minutes;
