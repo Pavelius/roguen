@@ -179,7 +179,8 @@ struct itemi : nameable {
 	weaponi		weapon;
 	featable	feats;
 	char		wear_index;
-	variant		dress, use;
+	variant		dress;
+	variants	use;
 	bool operator==(const itemi& v) const { return this == &v; }
 	const itemi* getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
 	int			getindex() const { return this - bsdata<itemi>::elements; }
@@ -229,7 +230,7 @@ public:
 	void		use() { setcount(getcount() - 1); }
 };
 struct itema : adat<item*> {
-	item*		choose(const char* title, const char* cancel = 0) const;
+	item*		choose(const char* title, const char* cancel = 0, bool autochoose = true) const;
 	void		select(point m);
 	void		select(creature* p);
 	void		selectbackpack(creature* p);
@@ -370,6 +371,7 @@ public:
 	void		unlink();
 	void		update_room();
 	void		use(variants source);
+	void		use(item& v);
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : adat<creature*> {
@@ -430,6 +432,7 @@ struct boosti {
 	spell_s		effect;
 	unsigned	stamp;
 	constexpr explicit operator bool() const { return parent.operator bool(); }
+	static boosti* add(variant parent, spell_s effect);
 	void		clear() { memset(this, 0, sizeof(*this)); }
 	static void	remove(variant parent);
 	static void	updateall();
@@ -461,11 +464,9 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
 };
-struct location {
-	char		tile[32];
+struct location : siteable {
 	char		darkness;
 	void		clear();
-	void		settile(const char* id);
 };
 struct spelli : nameable {
 	target_s	target;

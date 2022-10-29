@@ -697,6 +697,8 @@ void creature::update_abilities() {
 	abilities[DamageMelee] += get(Strenght) / 10;
 	abilities[DamageThrown] += get(Strenght) / 10;
 	abilities[Speed] += get(Dexterity);
+	if(is(Light))
+		abilities[LineOfSight] += 3;
 }
 
 void creature::update() {
@@ -806,6 +808,8 @@ int	creature::getlos() const {
 		if(r < 2)
 			r = 2;
 	}
+	if(r > 4)
+		r = 4;
 	return r;
 }
 
@@ -843,15 +847,26 @@ void creature::apply(variant v) {
 }
 
 void creature::apply(spell_s v, unsigned minutes) {
-	auto p = bsdata<boosti>::addz();
-	p->clear();
-	p->effect = v;
-	p->stamp = game.getminutes() + minutes;
-	p->parent = this;
+	auto p = boosti::add(this, v);
+	auto n = game.getminutes() + minutes;
+	if(p->stamp < n)
+		p->stamp = n;
 	active_spells.set(v);
 }
 
 void creature::use(variants source) {
 	for(auto v : source)
 		apply(v);
+}
+
+void creature::use(item& v) {
+	if(!v)
+		return;
+	auto& ei = v.geti();
+	if(!ei.use)
+		return;
+	use(ei.use);
+	act(getnm("YouUseItem"), v.getname());
+	v.use();
+	wait();
 }

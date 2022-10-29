@@ -1180,9 +1180,9 @@ static void paint_legends_text(point origin) {
 static void scene_area() {
 	fillwindow();
 	if(game.level)
-		print(text_header, "%1 (%Level %2i)", getnm(loc.tile), game.level);
+		print(text_header, "%1 (%Level %2i)", loc.getsite()->getname(), game.level);
 	else
-		text_header(getnm(loc.tile));
+		text_header(loc.getsite()->getname());
 	print(small_header, getnm("GlobalMapPosition"), game.position.x, game.position.y);
 	const int z = 4;
 	point origin;

@@ -59,6 +59,9 @@ ShortBow cost(25) weight(30) wear(RangedWeapon) avatar(448) ability(BalisticSkil
 LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) ability(BalisticSkill) wear_index(5)
  feats TwoHanded
  weapon damage(3) ammunition(Arrow)
+Bite avatar(12) wear(MeleeWeapon) ability(WeaponSkill)
+ feats Natural
+ weapon parry(-20)
 
 LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(DamageReduciton) bonus(1)
 ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(DamageReduciton) bonus(3)
@@ -73,13 +76,11 @@ GreenPotion cost(70) weight(10) wear(Potion) avatar(428)
 YellowPotion cost(100) weight(10) wear(Potion) avatar(435)
 
 Ration cost(10) weight(50) avatar(126)
+Torch cost(10) weight(30) count(3)
+ use Light+3
 
 Bones cost(2) weight(3) avatar(899)
 MonsterSkull cost(50) weight(50) avatar(519)
-
-Bite avatar(12) wear(MeleeWeapon) ability(WeaponSkill)
- feats Natural
- weapon parry(-20)
 
 #RandomTable
 

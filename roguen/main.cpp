@@ -30,6 +30,8 @@ static void equip_item(const char* id) {
 	item it;
 	it.create(id);
 	player->equip(it);
+	if(it)
+		player->additem(it);
 }
 
 void show_worldmap();
@@ -38,11 +40,12 @@ static void main_start() {
 	//world.clear();
 	//world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
-	geomark::create({127, 128}, "DungeonEntrance", "EvilSite");
+	geomark::create({128, 128}, "DungeonEntrance", "EvilSite");
 	player = creature::create({5, 5}, "HightElf", "Fighter");
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");
+	equip_item("Torch");
 	game.setowner(player);
 	game.newgame();
 }

@@ -1,2 +1,9 @@
-﻿In file `rules/Sites.txt`:
- Line 77: Can't find variant `WildAnimals`
+﻿In file `rules/Items.txt`:
+ Line 80: Not found requisit `Light`
+ Line 80: Expected symbol `(`, but you have string `+3`
+In file `rules/Sites.txt`:
+ Line 6: Can't find variant `Bones`
+ Line 10: Can't find variant `Bones`
+ Line 12: Can't find variant `Bones`
+ Line 41: Can't find variant `Bones`
+ Line 41: Can't find variant `MonsterSkull`

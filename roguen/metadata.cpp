@@ -58,6 +58,7 @@ BSMETA(itemi) = {
 	BSREQ(weapon),
 	BSREQ(bonus),
 	BSREQ(wear_index),
+	BSREQ(use),
 	{}};
 BSMETA(itemi::weaponi) = {
 	BSREQ(parry), BSREQ(enemy_parry),
@@ -105,6 +106,13 @@ BSMETA(sitei) = {
 BSMETA(sitegeni) = {
 	BSREQ(id),
 	{}};
+BSMETA(spelli) = {
+	BSREQ(id),
+	BSENM(target, targeti),
+	{}};
+BSMETA(targeti) = {
+	BSREQ(id),
+	{}};
 BSMETA(tilei) = {
 	BSREQ(id),
 	{}};
@@ -135,6 +143,7 @@ BSDATA(varianti) = {
 	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
 	{"SiteGenerator", VAR(sitegeni), 1},
+	{"Spell", VAR(spelli), 1},
 	{"Tile", VAR(tilei), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},

@@ -587,7 +587,7 @@ static void create_area(geoposition geo, variant tile) {
 	area.clear();
 	locations.clear();
 	sites.clear();
-	loc.settile(landscape->id);
+	loc.setsite(landscape);
 	loc.darkness = landscape->darkness;
 	add_area_events(geo);
 	add_area_sites(tile);

@@ -16,3 +16,15 @@ void boosti::remove(variant parent) {
 			e.clear();
 	}
 }
+
+boosti* boosti::add(variant parent, spell_s effect) {
+	for(auto& e : bsdata<boosti>()) {
+		if(e.effect == effect && e.parent == parent)
+			return &e;
+	}
+	auto p = bsdata<boosti>::add();
+	p->clear();
+	p->parent = parent;
+	p->effect = effect;
+	return p;
+}

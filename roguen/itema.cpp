@@ -14,8 +14,8 @@ void itema::select(point m) {
 	count = pb - data;
 }
 
-item* itema::choose(const char* title, const char* cancel) const {
-	if(count == 1)
+item* itema::choose(const char* title, const char* cancel, bool autochoose) const {
+	if(autochoose && count == 1)
 		return data[0];
 	answers an;
 	for(auto p : *this)

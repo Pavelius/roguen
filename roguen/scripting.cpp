@@ -183,6 +183,16 @@ static void dropdown(int bonus) {
 	}
 }
 
+static void use_item(int bonus) {
+	itema items;
+	items.selectbackpack(player);
+	if(!items)
+		return;
+	auto p = items.choose(getnm("UseItem"), getnm("Cancel"), false);
+	if(p)
+		player->use(*p);
+}
+
 static void view_stuff(int bonus) {
 }
 
@@ -293,5 +303,6 @@ BSDATA(script) = {
 	{"ThrownAttack", thrown_attack},
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"ViewStuff", view_stuff},
+	{"UseItem", use_item},
 };
 BSDATAF(script)

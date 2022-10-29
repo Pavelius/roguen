@@ -18,6 +18,7 @@ DeepAncientPlace
  landscape Webbed-30
 DungeonEntrance
  landscape StairsDown
+ feats Notable
 Graveyard
  landscape Grave+4
 SwampyArea
