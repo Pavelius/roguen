@@ -3,7 +3,7 @@
 void boosti::updateall() {
 	auto ps = bsdata<boosti>::elements;
 	for(auto& e : bsdata<boosti>()) {
-		if(e.stamp >= game.getminutes())
+		if(e.stamp < game.getminutes())
 			continue;
 		*ps++= e;
 	}

@@ -689,6 +689,15 @@ void creature::update_room() {
 		room_id = 0xFFFF;
 }
 
+void creature::update_boost() {
+	variant v = this;
+	active_spells.clear();
+	for(auto& e : bsdata<boosti>()) {
+		if(e.parent==v)
+			active_spells.set(e.effect);
+	}
+}
+
 void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
 }
@@ -703,6 +712,7 @@ void creature::update_abilities() {
 
 void creature::update() {
 	update_basic();
+	update_boost();
 	update_wears();
 	update_abilities();
 }
@@ -851,7 +861,6 @@ void creature::apply(spell_s v, unsigned minutes) {
 	auto n = game.getminutes() + minutes;
 	if(p->stamp < n)
 		p->stamp = n;
-	active_spells.set(v);
 }
 
 void creature::use(variants source) {

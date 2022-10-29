@@ -306,6 +306,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void		update();
 	void		update_abilities();
 	void		update_basic();
+	void		update_boost();
 	void		update_wears();
 public:
 	geoposition worldpos;
