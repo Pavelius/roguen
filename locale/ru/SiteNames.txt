@@ -1,4 +1,7 @@
+DefaultCave: Пещера
+DefaultCaveEntrance: Вход в пещеру
 DefaultDungeon: Подземелье
+DefaultDungeonEntrance: Вход в подземелье
 GeneralStore: Магазин
 Hills: Холмы
 LightForest: Лес
@@ -18,5 +21,3 @@ AncientSite: Древний
 DarkSite: Темный
 EvilSite: Злой
 FrozenSite: Ледяной
-
-DungeonEntrance: Подземелье

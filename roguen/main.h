@@ -308,6 +308,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	bool		matchspeech(const variants& source) const;
 	void		matchspeech(speecha& source) const;
 	void		paintbars() const;
+	void		restore(ability_s a, ability_s m, ability_s test);
 	void		update();
 	void		update_abilities();
 	void		update_basic();
@@ -330,9 +331,11 @@ public:
 	void		attackthrown(creature& enemy);
 	bool		canshoot(bool interactive) const;
 	bool		canthrown(bool interactive) const;
-	void		checkmood() {}
-	void		checkpoison() {}
-	void		checksick() {}
+	void		every10minutes() {}
+	void		every30minutes();
+	void		every5minutes() {}
+	void		every1hour() {}
+	void		every4hour();
 	void		clear();
 	static creature* create(point m, variant v, variant character = {});
 	void		damage(int v);

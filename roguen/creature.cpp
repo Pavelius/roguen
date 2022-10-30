@@ -892,3 +892,20 @@ void creature::use(item& v) {
 	v.use();
 	wait();
 }
+
+void creature::restore(ability_s a, ability_s am, ability_s test) {
+	auto v = get(a);
+	auto mv = get(am);
+	if(v < mv) {
+		if(roll(test))
+			add(a, 1);
+	}
+}
+
+void creature::every4hour() {
+	restore(Hits, HitsMaximum, Strenght);
+}
+
+void creature::every30minutes() {
+	restore(Mana, ManaMaximum, Charisma);
+}

@@ -6,6 +6,13 @@ static monsteri* random_boss() {
 	return source.random();
 }
 
+static const char* word(const char* prefix, const char* suffix) {
+	char temp[64]; stringbuilder sb(temp);
+	sb.add(prefix);
+	sb.add(suffix);
+	return szdup(temp);
+}
+
 dungeon* dungeon::add(point position, sitei* modifier, sitei* type, variant reward) {
 	if(!modifier || !type)
 		return 0;
@@ -16,10 +23,10 @@ dungeon* dungeon::add(point position, sitei* modifier, sitei* type, variant rewa
 	p->clear();
 	p->position = position;
 	p->modifier = modifier;
-	p->entrance = bsdata<sitei>::find("DefaultDungeonEntrance");
-	p->reward = reward;
+	p->entrance = bsdata<sitei>::find(word(type->id, "Entrance"));
 	p->level = type;
-	p->final_level = type;
+	p->final_level = bsdata<sitei>::find(word(type->id, "Final"));
+	p->reward = reward;
 	p->guardian = boss;
 	p->rumor = xrand(20, 70);
 	return p;

@@ -665,8 +665,18 @@ void gamei::createarea() {
 			rt = single("RandomFarOverlandTiles");
 		else
 			rt = single("RandomUnknownOverlandTiles");
-	} else
-		rt = get_dungeon_site(position);
+	} else {
+		if(last_dungeon) {
+			if(last_dungeon->final_level && d100() < (level * 10))
+				rt = last_dungeon->final_level;
+			else if(last_dungeon->level)
+				rt = last_dungeon->level;
+			else
+				rt = single("DefaultDungeon");
+		}
+		if(!rt)
+			rt = single("DefaultDungeon");
+	}
 	if(!rt)
 		rt = single("LightForest");
 	create_area(*this, rt);

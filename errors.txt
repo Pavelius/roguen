@@ -1,2 +1,4 @@
 ﻿In file `rules/Sites.txt`:
- Line 109: Not found identifier `CaveFloor`
+ Line 95: Can't find variant `DefaultDungeonEntrance`
+ Line 99: Can't find variant `DefaultDungeonEntrance`
+ Line 107: Can't find variant `DefaultDungeonEntrance`

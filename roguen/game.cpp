@@ -48,16 +48,16 @@ void gamei::passminute() {
 	boosti::updateall();
 	all(&creature::restoration);
 	while(restore_half_turn < minutes) {
-		all(&creature::checkpoison);
+		all(&creature::every5minutes);
 		restore_half_turn += 5;
 		area.removechance(Iced, 20);
 	}
 	while(restore_turn < minutes) {
-		all(&creature::checkmood);
+		all(&creature::every10minutes);
 		restore_turn += 10;
 	}
 	while(restore_hour < minutes) {
-		all(&creature::checksick);
+		all(&creature::every1hour);
 		restore_hour += 60;
 	}
 	while(restore_day_part < minutes) {
