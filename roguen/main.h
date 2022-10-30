@@ -451,10 +451,10 @@ struct dungeon {
 	const sitei* final_level;
 	monsteri*	guardian;
 	char		rumor;
-	variant		twist; // Monster, Item, Site
+	variant		reward, twist; // Can't be random table
 	constexpr operator bool() const { return level != 0; }
 	static dungeon*	add(point position);
-	static dungeon*	add(point position, sitei* modifier, sitei* type);
+	static dungeon*	add(point position, sitei* modifier, sitei* type, variant reward);
 	void		clear() { memset(this, 0, sizeof(*this)); }
 	static dungeon* find(point position);
 	void		getrumor(stringbuilder& sb) const;

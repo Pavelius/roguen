@@ -375,34 +375,31 @@ static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
 	}
 }
 
-static void place_items(const rect& rca, const itemi& e, int count) {
-	if(&e == bsdata<itemi>::elements)
-		return;
-	if(count < 0)
-		count = 0;
-	for(auto i = 0; i < count; i++) {
-		item it; it.clear();
-		it.create(&e);
-		it.drop(random(rca));
-	}
-}
-
-static void place_character(const rect& rca, const racei& race, const classi& cls) {
-	creature::create(random(rca), &race, &cls);
-}
-
 static bool test_counter(variant v) {
 	if(v.counter < 0 && d100() >= -v.counter)
 		return false;
 	return true;
 }
 
+static void place_item(const rect& rca, const itemi& e, int count) {
+	if(count < 0) {
+		if(d100() >= -count)
+			return;
+		count = 0;
+	}
+	if(count == 0)
+		count = 1;
+	for(auto i = 0; i < count; i++)
+		place_item(random(rca), &e);
+}
+
+static void place_character(const rect& rca, const racei& race, const classi& cls) {
+	creature::create(random(rca), &race, &cls);
+}
+
 static void create_landscape(const rect& rca, variant v, const sitei* overlaped_landscape = 0) {
 	static sitei* last_site;
 	static racei* last_race;
-	v = single(v);
-	if(!v)
-		return;
 	if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -442,7 +439,16 @@ static void create_landscape(const rect& rca, variant v, const sitei* overlaped_
 			return;
 		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
 	} else if(v.iskind<itemi>())
-		place_items(rca, bsdata<itemi>::elements[v.value], v.counter);
+		place_item(rca, bsdata<itemi>::elements[v.value], v.counter);
+	else if(v.iskind<randomizeri>()) {
+		if(!test_counter(v))
+			return;
+		auto count = v.counter;
+		if(!count)
+			count = 1;
+		for(auto i = 0; i < count; i++)
+			create_landscape(rca, bsdata<randomizeri>::elements[v.value].random());
+	}
 }
 
 static void add_area_sites(variant v) {

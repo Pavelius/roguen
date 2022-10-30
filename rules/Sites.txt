@@ -43,6 +43,9 @@ GeneralStore walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 Tavern walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Bartender+1
  feats Notable
+TheifGuild walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
+ landscape StolenTreasures
+ feats Notable
 Building walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape VillageNPCRace Fighter
@@ -103,13 +106,13 @@ DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global
  sites StairsUpRoom StairsDownRoom PortalRoom-10 EmpthyRoom+16
 StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
- sites GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
+ sites GeneralStore Tavern TheifGuild FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 
 #RandomTable
 
 RandomNearestOverlandTiles
  chance LightForest+4 DeepForest+4 ForestSwamps+2
-RandomOvelandTiles
+RandomOverlandTiles
  chance LightForest+3 DeepForest+3 Hills+1 ForestSwamps+2 AshenLand+1
 RandomFarOverlandTiles
  chance LightForest+2 DeepForest+2 Hills+1 ForestSwamps+3 AshenLand+2
@@ -119,3 +122,5 @@ RandomDungeonModifier
  chance AncientSite DarkSite+9 EvilSite FrozenSite
 RandomDungeonType
  chance DefaultDungeon
+RandomDungeonTreasure
+ chance StolenTreasures

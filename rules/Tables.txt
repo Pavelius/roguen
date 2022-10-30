@@ -1,4 +1,0 @@
-#WoodenLagsTable
-
-1 Lags
-2 SmallLags

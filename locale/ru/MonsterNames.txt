@@ -25,3 +25,6 @@ SmallBoy: Мальчик
 SmallGirl: Девочка
 Theif: Вор
 Wolf: Волк
+
+GoblinoidTribe: Племя гоблинов
+UndeadHorde: Орда мартвых

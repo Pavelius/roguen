@@ -86,3 +86,10 @@ MonsterSkull cost(50) weight(50) avatar(519)
 
 WoodenLagsTable
  chance Lags SmallLags+2
+RandomGem
+ chance OrnamentalStones+25 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
+
+#List
+
+StolenTreasures
+ elements GP+3 GP-50 GP-50 GP-50 GP-50 SP+8 SP-50 SP-50 SP-50 PP-40 PP-40 PP-20 RandomGem+3 RandomGem-60 RandomGem-40
