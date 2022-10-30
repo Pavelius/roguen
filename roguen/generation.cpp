@@ -15,8 +15,6 @@ static adat<rect, 32> locations;
 static adat<variant, 32> sites;
 static point last_door;
 static direction_s last_direction;
-static sitei* landscape;
-static dungeon* last_dungeon;
 static condition_s last_modifier;
 static rect correct_conncetors;
 
@@ -140,8 +138,11 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	return p;
 }
 
-void sitei::fillfloor(rect & rc) const {
-	area.set(rc, floors);
+void sitei::fillfloor(rect& rc) const {
+	auto n = floors;
+	if(!n && loc.getsite()->floors)
+		n = loc.getsite()->floors;
+	area.set(rc, n);
 }
 
 void sitei::fillwalls(rect & rc) const {
@@ -303,6 +304,8 @@ static void create_door(point m, tile_s floor, tile_s wall, bool hidden) {
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
 		return;
+	if(area.iswall(index))
+		return;
 	item it; it.clear();
 	it.create(pe);
 	if(pe->is(Coins))
@@ -398,9 +401,10 @@ static void place_character(const rect& rca, const racei& race, const classi& cl
 }
 
 static void create_landscape(const rect& rca, variant v, const sitei* overlaped_landscape = 0) {
-	static sitei* last_site;
 	static racei* last_race;
-	if(v.iskind<featurei>())
+	if(!v)
+		return;
+	else if(v.iskind<featurei>())
 		area.set(rca, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
 		area.set(rca, (tile_s)v.value, v.counter);
@@ -440,7 +444,12 @@ static void create_landscape(const rect& rca, variant v, const sitei* overlaped_
 		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
 	} else if(v.iskind<itemi>())
 		place_item(rca, bsdata<itemi>::elements[v.value], v.counter);
-	else if(v.iskind<randomizeri>()) {
+	else if(v.iskind<script>()) {
+		last_rect = rca;
+		bsdata<script>::elements[v.value].run(v.counter);
+		if(last_variant)
+			create_landscape(last_rect, last_variant);
+	} else if(v.iskind<randomizeri>()) {
 		if(!test_counter(v))
 			return;
 		auto count = v.counter;
@@ -497,9 +506,13 @@ static void create_sites() {
 	}
 }
 
-static bool apply_landscape(variant tile) {
-	landscape = tile;
-	return landscape != 0;
+static bool apply_landscape(geoposition geo, variant tile) {
+	sitei* site = tile;
+	if(!site)
+		return false;
+	loc.setsite(site);
+	loc.darkness = loc.getsite()->darkness;
+	return true;
 }
 
 void sitei::cityscape(rect& rca) const {
@@ -561,11 +574,9 @@ void sitei::dungeon(rect& rca) const {
 		auto r1 = random(rc, {2, 2}, {5, 3}, {8, 6});
 		locations.add(r1);
 	}
-	sort_locations();
-	remove_trail_locations(xrand(1, 3));
 	shuffle_locations();
 	correct_conncetors = bounding_locations();
-	correct_conncetors.offset(6, 4);
+	correct_conncetors.offset(4, 2);
 }
 
 direction_s getmost(const rect& rc) {
@@ -613,25 +624,23 @@ void sitei::corridors(rect& rca) const {
 }
 
 static void create_area(geoposition geo, variant tile) {
-	if(!apply_landscape(tile))
+	loc.clear();
+	if(!apply_landscape(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
-	loc.clear();
 	area.clear();
 	locations.clear();
 	sites.clear();
-	loc.setsite(landscape);
-	loc.darkness = landscape->darkness;
 	add_area_events(geo);
 	add_area_sites(tile);
 	rect all = {0, 0, area.mps - 1, area.mps - 1};
-	if(landscape->global)
-		(landscape->*landscape->global->proc)(all);
+	if(loc.getsite()->global)
+		(loc.getsite()->*loc.getsite()->global->proc)(all);
 	else
-		landscape->outdoor(all);
+		loc.getsite()->outdoor(all);
 	create_sites();
-	if(landscape->global_finish)
-		(landscape->*landscape->global_finish->proc)(all);
+	if(loc.getsite()->global_finish)
+		(loc.getsite()->*loc.getsite()->global_finish->proc)(all);
 	update_doors();
 }
 

@@ -76,7 +76,7 @@ GreenPotion cost(70) weight(10) wear(Potion) avatar(428)
 YellowPotion cost(100) weight(10) wear(Potion) avatar(435)
 
 Ration cost(10) weight(50) avatar(126)
-Torch cost(10) weight(30) count(3)
+Torch cost(10) avatar(207) weight(30) count(3)
  use Light+3
 
 Bones cost(2) weight(3) avatar(899)

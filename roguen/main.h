@@ -459,6 +459,12 @@ struct dungeon {
 	static dungeon* find(point position);
 	void		getrumor(stringbuilder& sb) const;
 };
+//class questable {
+//	short unsigned value;
+//public:
+//	dungeon*	getquest() const { bsdata<dungeon>::ptr(value); }
+//	void		setquest(const dungeon* v) { bsset(value, v); }
+//};
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char ideftified : 1;
 	unsigned char explored : 1;
@@ -520,6 +526,10 @@ extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
 extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;
+extern variant		last_variant;
+extern dungeon*		last_dungeon;
+extern rect			last_rect;
+extern sitei*		last_site;
 extern creature*	player;
 inline bool			islocal(const geoposition& m) { return game == m; }
 point				center(const rect& rc);

@@ -54,16 +54,20 @@ StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape StairsDown
  feats Notable
 
-EmpthyRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
-DarkestRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+EmpthyRoom local(GenerateRoom)
+FalseRoom
+ landscape SiteWall-100
+MinionsRoom local(GenerateRoom)
+ landscape QuestMinion QuestMinion-30
+DarkestRoom local(GenerateRoom)
  landscape Darkened-100
-StairsUpRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom) offset(1 1)
+StairsUpRoom local(GenerateRoom) offset(1 1)
  landscape StairsUp
  feats Notable
-StairsDownRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom) offset(1 1)
+StairsDownRoom local(GenerateRoom) offset(1 1)
  landscape StairsDown
  feats Notable
-PortalRoom walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
+PortalRoom local(GenerateRoom)
  landscape GatePortal
  feats Notable
 
@@ -79,32 +83,32 @@ DefaultDungeonEntrance
  landscape StairsDown
  feats Notable
 
-Plains minimap(60 176 67) floors(Grass) global(GenerateOutdoor)
+Plains minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateOutdoor)
  landscape Tree+50 Herbs+40 FootMud+20 FootHill+90
  sites Graveyard
-LightForest minimap(70 109 29) floors(Grass) global(GenerateOutdoor)
+LightForest minimap(70 109 29) floors(Grass) walls(WallCave) global(GenerateOutdoor)
  landscape Tree-8 Herbs+45 FootMud+12 FootHill+40
  sites ArtifactStatue-10 Graveyard-20 RandomWildAnimals-60\
   DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush
-DeepForest minimap(35 79 31) floors(Grass) global(GenerateOutdoor)
+DeepForest minimap(35 79 31) floors(Grass) walls(WallCave) global(GenerateOutdoor)
  landscape Tree-16 Herbs+50 FootMud+12 FootHill+20
  sites RandomWildAnimals SpiderNest-10 GoblinScouts-15 Graveyard-30 ArtifactStatue-10 MonstersLair-5 DefaultDungeonEntrance-5\
   DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush+2
-ForestSwamps floors(Grass) global(GenerateOutdoor)
+ForestSwamps floors(Grass) walls(WallCave) global(GenerateOutdoor)
  landscape FootMud-40 Herbs+25 Tree-5 DeadTree+10
  sites RandomBogMonsters RandomWildAnimals-20 SpiderNest-10 GoblinScouts-15 Graveyard-30 ArtifactStatue-10 DefaultDungeonEntrance-5\
   DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush LightBush PlantsGround-50
-Mountains minimap(128 128 128) floors(Grass) global(GenerateOutdoor)
+Mountains minimap(128 128 128) floors(Grass) walls(WallCave) global(GenerateOutdoor)
  landscape Tree+30 Herbs+40 FootMud+5 FootHill-10
  sites Graveyard-5 MonstersLair MonstersLair-40 RockyMountains+8 RockyMountains-50 RockyMountains-50 RockyMountains-50 LightBush-50
-Hills minimap(152 191 100) floors(Grass) global(GenerateOutdoor)
+Hills minimap(152 191 100) floors(Grass) walls(WallCave) global(GenerateOutdoor)
  landscape Tree+30 Herbs+35 FootMud+20 FootHill-5
-AshenLand minimap(128 128 128) floors(GrassCorupted) global(GenerateOutdoor)
+AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
 DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(4 4) darkness(3)
- sites StairsUpRoom StairsDownRoom PortalRoom-10 EmpthyRoom+16
-StartVillage minimap(60 176 67) floors(Grass) global(GenerateVillage) offset(2 2)
+ sites StairsUpRoom StairsDownRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
+StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
  sites GeneralStore Tavern TheifGuild FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 

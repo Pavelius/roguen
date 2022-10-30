@@ -7,17 +7,14 @@ itema				items;
 extern creature*	enemy;
 extern creature*	opponent;
 int					last_hit, last_hit_result, last_parry, last_parry_result;
+variant				last_variant;
+dungeon*			last_dungeon;
+sitei*				last_site;
+rect				last_rect;
 extern bool			show_floor_rect;
 
 void animate_figures();
 void visualize_images(res pid, point size, point offset);
-
-void script::run(const char* id, int bonus) {
-	auto p = bsdata<script>::find(id);
-	if(!p)
-		return;
-	p->proc(0);
-}
 
 static void choose_creature(int bonus) {
 }
@@ -283,6 +280,46 @@ static void show_images(int bonus) {
 	}
 }
 
+static void set_result(variant v, int bonus) {
+	last_variant = v;
+	if(last_variant)
+		last_variant.counter = bonus;
+}
+
+static void quest_minion(int bonus) {
+	last_variant.clear();
+	if(last_dungeon && last_dungeon->guardian)
+		set_result(last_dungeon->guardian->ally(), bonus);
+}
+
+static void quest_guardian(int bonus) {
+	last_variant.clear();
+	if(last_dungeon && last_dungeon->guardian)
+		set_result(last_dungeon->guardian, bonus);
+}
+
+static void quest_reward(int bonus) {
+	last_variant.clear();
+	if(last_dungeon && last_dungeon->reward)
+		set_result(last_dungeon->reward, bonus);
+}
+
+static void site_floor(int bonus) {
+	last_variant.clear();
+	if(last_site && last_site->floors)
+		set_result(bsdata<tilei>::elements + last_site->floors, bonus);
+	else if(loc.getsite() && loc.getsite()->floors)
+		set_result(bsdata<tilei>::elements + loc.getsite()->floors, bonus);
+}
+
+static void site_wall(int bonus) {
+	last_variant.clear();
+	if(last_site && last_site->walls)
+		set_result(bsdata<tilei>::elements + last_site->walls, bonus);
+	else if(loc.getsite() && loc.getsite()->walls)
+		set_result(bsdata<tilei>::elements + loc.getsite()->walls, bonus);
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -304,10 +341,15 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"QuestGuardian", quest_guardian},
+	{"QuestMinion", quest_minion},
+	{"QuestReward", quest_reward},
 	{"RangeAttack", range_attack},
 	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},
+	{"SiteFloor", site_floor},
+	{"SiteWall", site_wall},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},
 	{"ThrownAttack", thrown_attack},
