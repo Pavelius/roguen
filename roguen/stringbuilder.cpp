@@ -718,6 +718,7 @@ void stringbuilder::addnounf(const char* s) {
 
 void stringbuilder::addnouni(const char* s) {
 	static grammar map[] = {
+		{"ний", "нее"},
 		{"ий", "ое"},
 		{"ой", "ое"},
 		{"ый", "ое"},

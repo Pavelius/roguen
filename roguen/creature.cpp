@@ -420,6 +420,8 @@ void creature::fixcantgo() const {
 }
 
 static bool isfreelt(point m) {
+	if(area.is(m, Darkened))
+		return false;
 	return area.isfree(m);
 }
 

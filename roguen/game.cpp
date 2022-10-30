@@ -11,8 +11,11 @@ point			gamei::start_village = {128, 128};
 static void update_los() {
 	point m;
 	for(m.y = 0; m.y < area.mps; m.y++)
-		for(m.x = 0; m.x < area.mps; m.x++)
+		for(m.x = 0; m.x < area.mps; m.x++) {
 			area.remove(m, Visible);
+			if(area.is(m, Darkened))
+				area.remove(m, Explored);
+		}
 }
 
 static void decoy_food() {

@@ -397,7 +397,7 @@ static bool test_counter(variant v) {
 	return true;
 }
 
-static void create_landscape(const rect& rca, variant v) {
+static void create_landscape(const rect& rca, variant v, const sitei* overlaped_landscape = 0) {
 	static sitei* last_site;
 	static racei* last_race;
 	v = single(v);
@@ -416,9 +416,13 @@ static void create_landscape(const rect& rca, variant v) {
 		rect rc = rca;
 		if(last_site->local && last_site->local->proc)
 			(last_site->*last_site->local->proc)(rc);
-		rc.offset(last_site->offset.x, last_site->offset.y);
 		if(!last_site->sites)
 			add_room(last_site, rc);
+		rc.offset(last_site->offset.x, last_site->offset.y);
+		if(overlaped_landscape) {
+			for(auto ev : overlaped_landscape->landscape)
+				create_landscape(rc, ev);
+		}
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(rc, ev);
 	} else if(v.iskind<monsteri>())
@@ -474,21 +478,16 @@ static void add_area_events(geoposition v) {
 		add_area_sites(last_dungeon->modifier);
 }
 
-static void add_area_landscapes(const rect rca) {
-	if(!last_dungeon)
-		return;
-	for(auto v : last_dungeon->modifier->landscape)
-		create_landscape(rca, v);
-}
-
 static void create_sites() {
 	if(sites.count < locations.count)
 		locations.count = sites.count;
 	if(sites.count > locations.count)
 		sites.count = locations.count;
 	for(size_t i = 0; i < locations.count; i++) {
-		add_area_landscapes(locations.data[i]);
-		create_landscape(locations.data[i], sites.data[i]);
+		if(last_dungeon && game.level != 0)
+			create_landscape(locations.data[i], sites.data[i], last_dungeon->modifier);
+		else
+			create_landscape(locations.data[i], sites.data[i]);
 	}
 }
 

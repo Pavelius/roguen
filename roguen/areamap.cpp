@@ -66,6 +66,10 @@ point randomr(const rect& rc) {
 }
 
 void areamap::set(rect rc, mapf_s v, int random_count) {
+	if(random_count <= -100) {
+		set(rc, v);
+		return;
+	}
 	random_count = randomcount(rc, random_count);
 	while(random_count > 0) {
 		set(randomr(rc), v);
@@ -74,6 +78,10 @@ void areamap::set(rect rc, mapf_s v, int random_count) {
 }
 
 void areamap::set(rect rc, tile_s v, int random_count) {
+	if(random_count <= -100) {
+		set(rc, v);
+		return;
+	}
 	random_count = randomcount(rc, random_count);
 	while(random_count > 0) {
 		set(randomr(rc), v);
@@ -82,6 +90,10 @@ void areamap::set(rect rc, tile_s v, int random_count) {
 }
 
 void areamap::set(rect rc, feature_s v, int random_count) {
+	if(random_count <= -100) {
+		set(rc, v);
+		return;
+	}
 	random_count = randomcount(rc, random_count);
 	while(random_count > 0) {
 		set(randomr(rc), v);
