@@ -332,6 +332,19 @@ void creature::fixdamage(int total, int damage_weapon, int damage_strenght, int 
 		damage_skill, damage_parry);
 }
 
+void creature::heal(int v) {
+	if(v <= 0) {
+		return;
+	}
+	v += abilities[Hits];
+	if(v > abilities[HitsMaximum])
+		v = abilities[HitsMaximum];
+	if(v != abilities[Hits]) {
+		fixvalue(v - abilities[Hits]);
+		abilities[Hits] = v;
+	}
+}
+
 void creature::damage(int v) {
 	if(v <= 0) {
 		logs(getnm("ArmorNegateDamage"));
@@ -712,7 +725,7 @@ void creature::update_boost() {
 	variant v = this;
 	active_spells.clear();
 	for(auto& e : bsdata<boosti>()) {
-		if(e.parent==v)
+		if(e.parent == v)
 			active_spells.set(e.effect);
 	}
 }
@@ -814,20 +827,6 @@ void creature::sayv(stringbuilder& sb, const char* format, const char* format_pa
 		actable::sayv(sb, format, format_param, name, female);
 }
 
-bool creature::is(condition_s v) const {
-	switch(v) {
-	case Busy: return wait_seconds > 1000;
-	case NPC: return ischaracter();
-	case Random: return d100() < 40;
-	case NoInt: return get(Wits) == 10;
-	case AnimalInt: return get(Wits) < 10;
-	case LowInt: return get(Wits) < 20;
-	case AveInt: return get(Wits) < 35;
-	case HighInt: return get(Wits) < 50;
-	default: return true;
-	}
-}
-
 int	creature::getlos() const {
 	auto r = get(LineOfSight) - loc.darkness;
 	auto m = 1;
@@ -904,6 +903,13 @@ void creature::restore(ability_s a, ability_s am, ability_s test) {
 		if(roll(test))
 			add(a, 1);
 	}
+}
+
+void creature::everyminute() {
+	if(is(Regeneration))
+		restore(Hits, HitsMaximum, Strenght);
+	if(is(ManaRegeneration))
+		restore(Mana, ManaMaximum, Charisma);
 }
 
 void creature::every4hour() {

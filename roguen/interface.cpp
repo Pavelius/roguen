@@ -184,7 +184,17 @@ void movable::fixvalue(const char* format, int format_color) const {
 	pa->alpha = 0xFF;
 	pa->string = szdup(format);
 	pa->priority = 20;
-	pa->fore = colors::red;
+	switch(format_color) {
+	case 2:
+		pa->fore = colors::green;
+		break;
+	case 1:
+		pa->fore = colors::red;
+		break;
+	default:
+		pa->fore = colors::yellow;
+		break;
+	}
 	auto po = pa->add(mst);
 	pt.y -= tsy;
 	po->position = pt;

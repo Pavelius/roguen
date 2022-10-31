@@ -1,1 +1,3 @@
-﻿
+﻿Shopkeeper: 
+Skeleton: 
+Zombie: 

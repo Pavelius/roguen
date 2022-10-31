@@ -293,6 +293,7 @@
     <Text Include="..\locale\ru\RaceNames.txt" />
     <Text Include="..\locale\ru\SiteDescriptions.txt" />
     <Text Include="..\locale\ru\SiteNames.txt" />
+    <Text Include="..\locale\ru\SpellNames.txt" />
     <Text Include="..\locale\ru\WearNames.txt" />
     <Text Include="..\logs.txt" />
     <Text Include="..\rules\Advancement.txt" />

@@ -51,6 +51,7 @@ enum magic_s : unsigned char {
 enum condition_s : unsigned char {
 	NoModifier,
 	Identified, NPC, Random, ShowMinimapBullet,
+	NoWounded, LightWounded, HeavyWounded,
 	Busy,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 };
@@ -68,7 +69,7 @@ enum target_s : unsigned char {
 	EnemyClose, EnemyNear,
 };
 enum spell_s : unsigned char {
-	Gate, Light, Sleep, Teleport, Web
+	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, Teleport, Web
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -344,6 +345,7 @@ public:
 	void		attackthrown(creature& enemy);
 	bool		canshoot(bool interactive) const;
 	bool		canthrown(bool interactive) const;
+	void		everyminute();
 	void		every10minutes() {}
 	void		every30minutes();
 	void		every5minutes() {}
@@ -364,6 +366,7 @@ public:
 	void		getrumor(struct dungeon& e, stringbuilder& sb) const;
 	const char* getspeech(const char* id) const;
 	int			getwait() const { return wait_seconds; }
+	void		heal(int v);
 	bool		is(condition_s v) const;
 	bool		is(spell_s v) const { return active_spells.is(v); }
 	bool		is(feat_s v) const { return feats.is(v); }
@@ -496,6 +499,8 @@ struct location : siteable {
 struct spelli : nameable {
 	target_s	target;
 	duration_s	duration;
+	dice		count;
+	int			getcount(int level) const;
 };
 class gamei : public geoposition, public ownerable {
 	unsigned	minutes;

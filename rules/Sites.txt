@@ -123,7 +123,7 @@ AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) global(Gene
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
 StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateVillage) offset(2 2)
  landscape Tree+50 FootMud+20 FootHill+90
- sites GeneralStore Tavern TheifGuild FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
+ sites GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 
 #RandomTable
 

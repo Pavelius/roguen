@@ -23,6 +23,7 @@ Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
+Minutes: Минут
 No: Нет
 NoCreaturesNearby: Вокруг никого нет.
 NothingToSay: Нечего сказать.
