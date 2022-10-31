@@ -141,3 +141,8 @@ RandomDungeonType
  chance DefaultDungeon DefaultCave
 RandomDungeonTreasure
  chance StolenTreasures
+
+#Trigger
+
+WhenCreatureEnterP1 Tavern
+ effect ILoveThisPlace

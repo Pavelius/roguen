@@ -1,8 +1,9 @@
 #include "main.h"
 
 BSDATA(triggeri) = {
-	{"WhenEnterSiteP1"},
+	{"WhenCreatureEnterP1"},
 };
+assert_enum(triggeri, WhenEnterSiteP1)
 
 void trigger::apply(variants source) const {
 	for(auto v : source)
@@ -10,6 +11,11 @@ void trigger::apply(variants source) const {
 }
 
 void trigger::apply(variant v) const {
+	if(v.iskind<speech>()) {
+		if(!game.testcount(v))
+			return;
+		player->speech(bsdata<speech>::elements[v.value].id);
+	}
 }
 
 void trigger::fire(trigger_s type, variant p1, variant p2) {

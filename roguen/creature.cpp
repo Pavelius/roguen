@@ -67,43 +67,44 @@ creature* creature::create(point m, variant kind, variant character, bool female
 	m = area.getfree(m, 10, isfreecr);
 	if(!area.isvalid(m))
 		return 0;
-	auto p = bsdata<creature>::addz();
-	p->clear();
-	p->setposition(m);
-	p->worldpos = game;
-	p->setkind(kind);
-	p->setnoname();
-	p->class_id = character.value;
+	pushvalue push_player(player);
+	player = bsdata<creature>::addz();
+	player->clear();
+	player->setposition(m);
+	player->worldpos = game;
+	player->setkind(kind);
+	player->setnoname();
+	player->class_id = character.value;
 	if(female)
-		p->set(Female);
+		player->set(Female);
 	monsteri* pm = kind;
 	if(pm) {
-		copy(p->basic, *pm);
-		p->advance(pm->use);
+		copy(player->basic, *pm);
+		player->advance(pm->use);
 	} else {
 		adat<variant> conditions;
 		conditions.add(kind);
-		if(p->is(Female))
+		if(player->is(Female))
 			conditions.add("Female");
-		p->setname(charname::random(conditions));
+		player->setname(charname::random(conditions));
 	}
-	p->basic.create();
-	p->advance(kind, 0);
+	player->basic.create();
+	player->advance(kind, 0);
 	if(character.value)
-		p->advance(character, 0);
-	p->levelup();
-	p->finish();
-	p->update_room();
+		player->advance(character, 0);
+	player->levelup();
+	player->finish();
+	player->update_room();
 	if(pm) {
 		if(pm->friendly <= -10)
-			p->set(Enemy);
+			player->set(Enemy);
 	}
-	if(p->is(PlaceOwner)) {
-		auto pr = p->getroom();
+	if(player->is(PlaceOwner)) {
+		auto pr = player->getroom();
 		if(pr)
-			pr->setowner(p);
+			pr->setowner(player);
 	}
-	return p;
+	return player;
 }
 
 bool creature::isplayer() const {

@@ -98,3 +98,9 @@ void gamei::endgame() {
 	actable::pressspace();
 	writelog();
 }
+
+bool gamei::testcount(variant v) {
+	if(v.counter < 0 && d100() >= -v.counter)
+		return false;
+	return true;
+}

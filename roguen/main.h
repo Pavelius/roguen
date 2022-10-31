@@ -516,6 +516,7 @@ public:
 	static void	play();
 	void		playminute();
 	void		read();
+	static bool	testcount(variant v);
 	void		write();
 	static void writelog();
 };

@@ -378,12 +378,6 @@ static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
 	}
 }
 
-static bool test_counter(variant v) {
-	if(v.counter < 0 && d100() >= -v.counter)
-		return false;
-	return true;
-}
-
 static void place_item(const rect& rca, const itemi& e, int count) {
 	if(count < 0) {
 		if(d100() >= -count)
@@ -432,7 +426,7 @@ static void create_landscape(const rect& rca, variant v, const sitei* overlaped_
 		for(auto v : bsdata<listi>::elements[v.value].elements)
 			create_landscape(rca, v);
 	} else if(v.iskind<shapei>()) {
-		if(!last_site || !test_counter(v))
+		if(!last_site || !game.testcount(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
 			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
@@ -450,7 +444,7 @@ static void create_landscape(const rect& rca, variant v, const sitei* overlaped_
 		if(last_variant)
 			create_landscape(last_rect, last_variant);
 	} else if(v.iskind<randomizeri>()) {
-		if(!test_counter(v))
+		if(!game.testcount(v))
 			return;
 		auto count = v.counter;
 		if(!count)
@@ -463,7 +457,7 @@ static void create_landscape(const rect& rca, variant v, const sitei* overlaped_
 static void add_area_sites(variant v) {
 	if(!v)
 		return;
-	if(!test_counter(v))
+	if(!game.testcount(v))
 		return;
 	auto count = v.counter;
 	if(!count)

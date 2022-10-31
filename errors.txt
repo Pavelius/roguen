@@ -1,4 +1,2 @@
 ﻿In file `rules/Sites.txt`:
- Line 95: Can't find variant `DefaultDungeonEntrance`
- Line 99: Can't find variant `DefaultDungeonEntrance`
- Line 107: Can't find variant `DefaultDungeonEntrance`
+ Line 147: Not found identifier `WhenCreatureEnterP1`

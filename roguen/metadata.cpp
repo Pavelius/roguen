@@ -33,6 +33,9 @@ BSMETA(classi) = {
 	BSREQ(id),
 	BSREQ(hd), BSREQ(cap), BSREQ(player),
 	{}};
+BSMETA(speech) = {
+	BSREQ(id),
+	{}};
 BSMETA(color) = {
 	BSREQ(r), BSREQ(g), BSREQ(b),
 	{}};
@@ -124,6 +127,15 @@ BSMETA(targeti) = {
 BSMETA(tilei) = {
 	BSREQ(id),
 	{}};
+BSMETA(triggeri) = {
+	BSREQ(id),
+	{}};
+BSMETA(trigger) = {
+	BSENM(type, triggeri),
+	BSREQ(p1),
+	BSREQ(p2),
+	BSREQ(effect),
+	{}};
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
@@ -153,7 +165,9 @@ BSDATA(varianti) = {
 	{"Site", VAR(sitei), 1},
 	{"SiteGenerator", VAR(sitegeni), 1},
 	{"Spell", VAR(spelli), 1},
+	{"Speech", VAR(speech), 1},
 	{"Tile", VAR(tilei), 1},
+	{"Trigger", VAR(trigger), 3},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},
 };
