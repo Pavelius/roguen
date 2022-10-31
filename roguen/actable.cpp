@@ -38,6 +38,15 @@ void actable::actv(stringbuilder& sb, const char* format, const char* format_par
 	logv(pb, 0, 0, false);
 }
 
+void actable::actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...) {
+	stringact sa(sb, name, female);
+	sa.addsep(separator);
+	auto pb = sa.get();
+	sa.addv(format, xva_start(format));
+	sb = sa;
+}
+
+
 void actable::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
 	if(!name)
 		name = getname();

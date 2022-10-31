@@ -28,7 +28,7 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 static const char* getrace(variant v, bool female) {
 	if(female) {
 		char temp[260]; stringbuilder sb(temp);
-		sb.add("%1Female");
+		sb.add("%1Female", bsdata<racei>::elements[v.value].id);
 		return getnm(temp);
 	} else
 		return getnm(bsdata<racei>::elements[v.value].id);
@@ -103,22 +103,27 @@ const char*	item::getfullname() const {
 	return temp;
 }
 
-void dungeon::getrumor(stringbuilder& sb) const {
+void creature::getrumor(dungeon& e, stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
-	auto direction = area.getdirection(game.position, position);
-	auto range = area.getrange(game.position, position);
-	auto site_name = level->getname();
-	sba.adjective(modifier->getname(), stringbuilder::getgender(site_name));
+	auto direction = area.getdirection(game.position, e.position);
+	auto range = area.getrange(game.position, e.position);
+	auto site_name = e.level->getname();
+	sba.adjective(e.modifier->getname(), stringbuilder::getgender(site_name));
 	auto part_one = "RumorDungeon";
 	if(range==0xFFFF)
 		part_one = "RumorDungeonHere";
-	sb.add(getnm(part_one),
+	actvf(sb, getname(), is(Female), 0,
+		getnm(part_one),
 		getnm(bsdata<directioni>::elements[direction].id),
 		site_name,
 		temp);
-	sb.adds(getnm("RumorDungeonMore"),
-		reward.getname(),
-		guardian->minions->getname());
+	actvf(sb, getname(), is(Female), ' ',
+		getnm("RumorDungeonMore"),
+		e.reward.getname(),
+		e.guardian->minions->getname());
+	actvf(sb, getname(), is(Female), ' ',
+		getnm("RumorDungeonGuardian"),
+		e.guardian->getname());
 }
 
 void roomi::getrumor(stringbuilder& sb) const {

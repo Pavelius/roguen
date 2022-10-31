@@ -404,6 +404,8 @@ void stringbuilder::addv(const char* src, const char* vl) {
 }
 
 void stringbuilder::addsep(char separator) {
+	if(!separator)
+		return;
 	if(p <= pb || p >= pe)
 		return;
 	if(p[-1] == separator)

@@ -21,6 +21,7 @@ BSDATAC(itemground, 1024);
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
+BSDATAC(trigger, 256);
 
 BSMETA(abilityi) = {
 	BSREQ(id),
@@ -102,6 +103,7 @@ BSMETA(sitei) = {
 	BSREQ(local),
 	BSREQ(landscape),
 	BSREQ(darkness),
+	BSREQ(levels),
 	BSFLG(feats, feati),
 	BSREQ(sites),
 	BSENM(walls, tilei),

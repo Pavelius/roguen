@@ -81,6 +81,9 @@ enum tile_s : unsigned char {
 	Water, DarkWater, DeepWater,
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
+enum trigger_s : unsigned char {
+	WhenEnterSiteP1,
+};
 extern stringbuilder console;
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
@@ -98,6 +101,16 @@ struct targeti {
 	short		range = 1000;
 	tile_s		tiles[8];
 	feature_s	features[8];
+};
+struct triggeri : nameable {
+};
+struct trigger {
+	trigger_s	type;
+	variant		p1, p2;
+	variants	effect;
+	void		apply(variant v) const;
+	void		apply(variants v) const;
+	static void	fire(trigger_s t, variant p1 = {}, variant p2 = {});
 };
 struct abilityi : nameable {
 	ability_s	basic;
@@ -129,6 +142,7 @@ class actable {
 	short unsigned name_id;
 public:
 	static void	actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n');
+	static void	actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...);
 	static bool confirm(const char* format, ...);
 	variant		getkind() const { return kind; }
 	static const char* getlog();
@@ -320,7 +334,6 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	void		act(const char* format, ...) const;
 	void		actp(const char* format, ...) const;
-	void		actps(const char* format, ...) const;
 	void		aimove();
 	void		apply(variant v);
 	void		apply(spell_s v, unsigned minutes);
@@ -337,7 +350,7 @@ public:
 	void		every1hour() {}
 	void		every4hour();
 	void		clear();
-	static creature* create(point m, variant v, variant character = {});
+	static creature* create(point m, variant v, variant character = {}, bool female = false);
 	void		damage(int v);
 	void		finish();
 	int			get(ability_s v) const { return abilities[v]; }
@@ -348,6 +361,7 @@ public:
 	void		getinfo(stringbuilder& sb) const;
 	int			getlos() const;
 	roomi*		getroom() const { return bsdata<roomi>::ptr(room_id); }
+	void		getrumor(struct dungeon& e, stringbuilder& sb) const;
 	const char* getspeech(const char* id) const;
 	int			getwait() const { return wait_seconds; }
 	bool		is(condition_s v) const;
@@ -410,7 +424,7 @@ struct sitei : nameable {
 	variants	sites;
 	color		minimap;
 	tile_s		walls, floors;
-	char		darkness;
+	char		darkness, levels;
 	point		offset;
 	featable	feats;
 	const shapei* shape;
@@ -460,14 +474,7 @@ struct dungeon {
 	static dungeon*	add(point position, sitei* modifier, sitei* type, variant reward);
 	void		clear() { memset(this, 0, sizeof(*this)); }
 	static dungeon* find(point position);
-	void		getrumor(stringbuilder& sb) const;
 };
-//class questable {
-//	short unsigned value;
-//public:
-//	dungeon*	getquest() const { bsdata<dungeon>::ptr(value); }
-//	void		setquest(const dungeon* v) { bsset(value, v); }
-//};
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char ideftified : 1;
 	unsigned char explored : 1;

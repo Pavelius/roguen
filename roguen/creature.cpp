@@ -57,7 +57,7 @@ void creature::place(point m) {
 	update_room();
 }
 
-creature* creature::create(point m, variant kind, variant character) {
+creature* creature::create(point m, variant kind, variant character, bool female) {
 	if(!kind)
 		return 0;
 	if(!character)
@@ -74,6 +74,8 @@ creature* creature::create(point m, variant kind, variant character) {
 	p->setkind(kind);
 	p->setnoname();
 	p->class_id = character.value;
+	if(female)
+		p->set(Female);
 	monsteri* pm = kind;
 	if(pm) {
 		copy(p->basic, *pm);
@@ -688,13 +690,19 @@ void creature::update_room() {
 	auto pn = roomi::find(worldpos, getposition());
 	if(pn) {
 		auto pb = getroom();
+		auto room_changed = false;
 		if(pn != pb) {
-			auto ps = pn->getsite();
-			auto pd = getdescription(ps->id);
-			if(pd)
-				actp(pd);
+			if(isplayer()) {
+				auto ps = pn->getsite();
+				auto pd = getdescription(ps->id);
+				if(pd)
+					actp(pd);
+			}
+			room_changed = true;
 		}
 		room_id = bsdata<roomi>::source.indexof(pn);
+		if(room_changed)
+			trigger::fire(WhenEnterSiteP1, pn->getsite());
 	} else
 		room_id = 0xFFFF;
 }
@@ -768,13 +776,8 @@ void creature::act(const char* format, ...) const {
 }
 
 void creature::actp(const char* format, ...) const {
-	if(game.getowner() == this)
+	if(isplayer())
 		actv(console, format, xva_start(format), getname(), is(Female));
-}
-
-void creature::actps(const char* format, ...) const {
-	if(game.getowner() == this)
-		actv(console, format, xva_start(format), getname(), is(Female), ' ');
 }
 
 int creature::getmightpenalty(int enemy_strenght) const {
@@ -847,7 +850,7 @@ bool creature::speechrumor() const {
 	if(!p)
 		return false;
 	char temp[1024]; stringbuilder sb(temp);
-	p->getrumor(sb);
+	getrumor(*p, sb);
 	say(temp);
 	return true;
 }
