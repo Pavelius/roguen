@@ -117,7 +117,7 @@ bool creature::isenemy(const creature& opponent) const {
 
 void creature::movestep(direction_s v) {
 	if(area.is(getposition(), Iced)) {
-		if(!roll(Dexterity)) {
+		if(!roll(Dexterity, 30)) {
 			act(getnm("IcedSlice"));
 			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
 			wait();
