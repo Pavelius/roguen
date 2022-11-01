@@ -51,4 +51,4 @@ Ration: Сухпаек
 Bones: Кости
 MonsterSkull: Череп монстра
 
-StolenTreasures: Наварованные сокровища
+StolenTreasures: Украденные сокровища

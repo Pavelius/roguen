@@ -1,1 +1,3 @@
 Light: Свет
+Teleport: Телепорт
+Web: Паутина

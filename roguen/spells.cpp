@@ -1,14 +1,14 @@
 #include "main.h"
 
 BSDATA(spelli) = {
-	{"CureWounds", AllyClose, Instant},
-	{"Gate", You, Instant},
-	{"Light", You, Hour1PL},
-	{"ManaRegeneration", You, Hour1PL},
-	{"Regeneration", You, Hour1PL},
-	{"Sleep", You, Minute20},
-	{"Teleport", You, Instant},
-	{"Web", EnemyOrAllyNear, Instant},
+	{"CureWounds", 10, AllyClose, Instant},
+	{"Gate", 40, You, Instant},
+	{"Light", 2, You, Hour1PL},
+	{"ManaRegeneration", 0, You, Hour1PL},
+	{"Regeneration", 15, You, Hour1PL},
+	{"Sleep", 5, You, Minute20},
+	{"Teleport", 30, You, Instant},
+	{"Web", 5, EnemyOrAllyNear, Instant},
 };
 assert_enum(spelli, Web)
 
@@ -34,4 +34,29 @@ bool creature::apply(spell_s v, int level, bool run) {
 
 int	spelli::getcount(int level) const {
 	return level + count.roll();
+}
+
+void spella::select(const spellable* p) {
+	auto ps = data;
+	for(auto i = (spell_s)0; i <= LastSpell; i = (spell_s)(i + 1)) {
+		if(!p->spells[i])
+			continue;
+		*ps++ = bsdata<spelli>::source.ptr(i);
+	}
+	count = ps - data;
+}
+
+static const char* object_level(const void* object, stringbuilder& sb) {
+	auto i = bsdata<spelli>::source.indexof(object);
+	sb.add("%1i %Level", player->spells[i]);
+}
+
+static const char* object_mana(const void* object, stringbuilder& sb) {
+	auto i = bsdata<spelli>::source.indexof(object);
+	sb.add("%1i", player->spells[i]);
+}
+
+spelli*	spella::choose(const char* title, const char* cancel) const {
+	pushvalue push_width(window_width, 300);
+	return collection<spelli>::choose(title, cancel, false);
 }

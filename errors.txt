@@ -1,2 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 147: Not found identifier `WhenCreatureEnterP1`
+﻿In file `rules/Monsters.txt`:
+ Line 3: Not found identifier `RC`

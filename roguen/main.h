@@ -69,7 +69,8 @@ enum target_s : unsigned char {
 	EnemyClose, EnemyNear,
 };
 enum spell_s : unsigned char {
-	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, Teleport, Web
+	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, Teleport, Web,
+	LastSpell = Web
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -83,7 +84,7 @@ enum tile_s : unsigned char {
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
 enum trigger_s : unsigned char {
-	WhenEnterSiteP1,
+	WhenEnterSiteP1, WhenDeadP1,
 };
 extern stringbuilder console;
 struct featable : flagable<4> {};
@@ -233,6 +234,7 @@ public:
 	int			getdamage() const;
 	magic_s		getmagic() const { return magic; }
 	const char*	getname() const { return geti().getname(); }
+	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*	getfullname() const;
 	class creature* getowner() const;
 	void		getstatus(stringbuilder& sb) const;
@@ -246,8 +248,7 @@ public:
 	void		setcount(int v);
 	void		use() { setcount(getcount() - 1); }
 };
-struct itema : adat<item*> {
-	item*		choose(const char* title, const char* cancel = 0, bool autochoose = true) const;
+struct itema : collection<item> {
 	void		select(point m);
 	void		select(creature* p);
 	void		selectbackpack(creature* p);
@@ -269,18 +270,18 @@ struct wearable : movable {
 };
 struct monsteri : nameable, statable {
 	unsigned short avatar;
-	const char*	treasure;
 	char		friendly;
 	dice		appear;
 	variants	use;
 	monsteri*	parent;
 	randomizeri* minions;
+	variants	treasure;
 	monsteri*	ally() const;
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 	static bool	isboss(const void* p) { return ((monsteri*)p)->minions != 0; }
 };
 struct spellable {
-	char		spells[Sleep + 1];
+	char		spells[LastSpell + 1];
 };
 struct skilli {
 	ability_s	skill;
@@ -309,6 +310,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void		damage(const item& weapon, int effect);
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
+	void		droptreasure() const;
 	void		fixcantgo() const;
 	void		fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const;
 	int			getblocking(const item& enemy_weapon, const item& weapon, int value) const;
@@ -374,6 +376,7 @@ public:
 	bool		isplayer() const;
 	bool		isvalid() const;
 	void		interaction(creature& opponent);
+	void		kill();
 	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
 	void		lookenemies();
 	void		makemove();
@@ -400,8 +403,7 @@ public:
 	void		use(item& v);
 	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
-struct creaturea : adat<creature*> {
-	void		distinct();
+struct creaturea : collection<creature> {
 	void		match(feat_s v, bool keep);
 	void		matchrange(point start, int v, bool keep);
 	void		remove(const creature* v);
@@ -497,10 +499,16 @@ struct location : siteable {
 	void		clear();
 };
 struct spelli : nameable {
+	int			mana;
 	target_s	target;
 	duration_s	duration;
 	dice		count;
 	int			getcount(int level) const;
+	static void	linerow(const void* object);
+};
+struct spella : collection<spelli> {
+	spelli*		choose(const char* title, const char* cancel) const;
+	void		select(const spellable* p);
 };
 class gamei : public geoposition, public ownerable {
 	unsigned	minutes;
@@ -547,5 +555,6 @@ extern dungeon*		last_dungeon;
 extern rect			last_rect;
 extern sitei*		last_site;
 extern creature*	player;
-inline bool			islocal(const geoposition& m) { return game == m; }
+extern int			window_width;
+extern int			window_height;
 point				center(const rect& rc);

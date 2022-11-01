@@ -13,8 +13,6 @@ using namespace draw;
 const int tsx = 64;
 const int tsy = 48;
 const int mst = 260;
-const int window_width = 480;
-const int window_height = 280;
 const int panel_width = 130;
 
 static const void* focus_pressed;
@@ -24,6 +22,8 @@ static int wears_offset = 80;
 static rect message_rect;
 static keybind* keybinds;
 bool show_floor_rect;
+int window_width = 480;
+int window_height = 280;
 
 void set_dark_theme();
 void initialize_translation(const char* locale);
@@ -168,8 +168,6 @@ void movable::fixappear() const {
 	po->data = this;
 	po->alpha = 0xFF;
 	po->priority = 11;
-	//auto pr = po->add(mst);
-	//pr->alpha = 0xFF;
 }
 
 void movable::fixremove() const {
@@ -184,17 +182,7 @@ void movable::fixvalue(const char* format, int format_color) const {
 	pa->alpha = 0xFF;
 	pa->string = szdup(format);
 	pa->priority = 20;
-	switch(format_color) {
-	case 2:
-		pa->fore = colors::green;
-		break;
-	case 1:
-		pa->fore = colors::red;
-		break;
-	default:
-		pa->fore = colors::yellow;
-		break;
-	}
+	pa->fore = getcolor(format_color);
 	auto po = pa->add(mst);
 	pt.y -= tsy;
 	po->position = pt;
@@ -797,10 +785,8 @@ static unsigned answer_key(int index) {
 	case 3: case 4: case 5:
 	case 6: case 7: case 8:
 		return '1' + index;
-	case 9:
-		return '0';
-	default:
-		return 'A' + (index - 10);
+	case 9: return '0';
+	default: return 'A' + (index - 10);
 	}
 }
 
@@ -840,7 +826,6 @@ static void answer_paint_cell_small(int index, const void* value, const char* fo
 
 static void get_total_height(const answers& source) {
 	auto push_clipping = clipping;
-	//const int window_width = 200;
 	auto total_height = 0;
 	width = window_width;
 	auto p = console.begin();

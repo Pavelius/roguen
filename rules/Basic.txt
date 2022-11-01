@@ -33,5 +33,6 @@ AdventureKeys
  elements ExploreArea "Ctrl+E"
  elements TestArena "Ctrl+A"
  elements TestRumor "Ctrl+R"
+ elements ChooseSpell "Ctrl+S"
  elements ToggleFloorRect "Ctrl+F"
  elements UseItem "Ctrl+U"

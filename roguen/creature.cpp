@@ -345,6 +345,45 @@ void creature::heal(int v) {
 	}
 }
 
+void place_item(point index, const itemi* pe);
+
+void generate_treasure(point index, variant v) {
+	if(!game.testcount(v))
+		return;
+	auto count = v.counter;
+	if(count < 1)
+		count = 1;
+	for(auto i = 0; i < count; i++) {
+		if(v.iskind<itemi>())
+			place_item(index, bsdata<itemi>::elements + v.value);
+		else if(v.iskind<randomizeri>())
+			generate_treasure(index, single(v));
+		else if(v.iskind<listi>()) {
+			for(auto v : bsdata<listi>::elements[v.value].elements)
+				generate_treasure(index, v);
+		}
+	}
+}
+
+void creature::droptreasure() const {
+	monsteri* p = getkind();
+	if(!p)
+		return;
+	for(auto v : p->treasure)
+		generate_treasure(getposition(), v);
+}
+
+void creature::kill() {
+	auto player_killed = isplayer();
+	fixeffect("HitVisual");
+	fixremove();
+	droptreasure();
+	trigger::fire(WhenDeadP1, getkind());
+	clear();
+	if(player_killed)
+		game.endgame();
+}
+
 void creature::damage(int v) {
 	if(v <= 0) {
 		logs(getnm("ArmorNegateDamage"));
@@ -355,21 +394,16 @@ void creature::damage(int v) {
 	if(abilities[Hits] <= 0) {
 		if(d100() < 40)
 			area.set(getposition(), Blooded);
-		auto player_killed = isplayer();
 		logs(getnm("ApplyKill"), v);
-		fixeffect("HitVisual");
-		fixremove();
-		clear();
-		if(player_killed)
-			game.endgame();
+		kill();
 	}
 }
 
 void creature::attackmelee(creature& enemy) {
 	fixaction();
 	auto number_attackers = enemy.get(EnemyAttacks);
-	if(number_attackers > 4)
-		number_attackers = 4;
+	if(number_attackers > 3)
+		number_attackers = 3;
 	attack(enemy, MeleeWeapon, number_attackers * 10, 100);
 	enemy.add(EnemyAttacks, 1);
 }
@@ -580,7 +614,8 @@ void creature::advance(variant v) {
 			feats.remove(v.value);
 		else
 			feats.set(v.value);
-	}
+	} else if(v.iskind<spelli>())
+		spells[v.value] += v.counter;
 }
 
 bool creature::roll(ability_s v, int bonus) const {

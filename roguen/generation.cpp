@@ -301,7 +301,7 @@ static void create_door(point m, tile_s floor, tile_s wall, bool hidden) {
 	area.set(m, Door);
 }
 
-static void place_item(point index, const itemi* pe) {
+void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
 		return;
 	if(area.iswall(index))

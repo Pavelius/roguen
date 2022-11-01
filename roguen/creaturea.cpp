@@ -62,22 +62,3 @@ void creaturea::matchrange(point start, int v, bool keep) {
 	}
 	count = ps - data;
 }
-
-
-static bool exist(creature** pb, creature** pe, const creature* v) {
-	while(pb < pe) {
-		if(*pb == v)
-			return true;
-		pb++;
-	}
-	return false;
-}
-
-void creaturea::distinct() {
-	auto ps = data;
-	for(auto p : *this) {
-		if(!exist(data, ps, p))
-			*ps++ = p;
-	}
-	count = ps - data;
-}

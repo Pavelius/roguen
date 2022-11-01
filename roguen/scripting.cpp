@@ -3,6 +3,7 @@
 #include "main.h"
 
 creaturea			creatures, enemies, targets;
+spella				allowed_spells;
 itema				items;
 extern creature*	enemy;
 extern creature*	opponent;
@@ -320,12 +321,18 @@ static void site_wall(int bonus) {
 		set_result(bsdata<tilei>::elements + loc.getsite()->walls, bonus);
 }
 
+static void choose_spell(int bonus) {
+	allowed_spells.select(player);
+	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"));
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},
+	{"ChooseSpell", choose_spell},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"DropDown", dropdown},

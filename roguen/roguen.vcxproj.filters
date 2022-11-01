@@ -258,9 +258,6 @@
     <ClCompile Include="location.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="direction_req.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="condition.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -293,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="trigger.cpp">
       <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="direction_req.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
