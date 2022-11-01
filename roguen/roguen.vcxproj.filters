@@ -294,6 +294,9 @@
     <ClCompile Include="direction_req.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="listcolumn.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -433,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="duration.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="listcolumn.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

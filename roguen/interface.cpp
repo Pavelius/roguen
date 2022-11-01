@@ -804,6 +804,20 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 		}
 	}
 	text(format);
+	if(current_columns) {
+		auto total_width = current_columns->totalwidth();
+		char temp[260]; stringbuilder sb(temp);
+		if(width >= total_width) {
+			caret.x = push_caret.x + width - total_width;
+			for(auto p = current_columns; *p; p++) {
+				sb.clear();
+				auto push_caret = caret;
+				textf(p->proc(value, sb));
+				caret = push_caret;
+				caret.x += p->width;
+			}
+		}
+	}
 	if(need_execute)
 		execute(proc, (long)value);
 	caret = push_caret;

@@ -104,3 +104,9 @@ bool gamei::testcount(variant v) {
 		return false;
 	return true;
 }
+
+int gamei::getpositivecount(variant v) {
+	if(v.counter < 1)
+		return 1;
+	return v.counter;
+}

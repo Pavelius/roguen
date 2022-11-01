@@ -187,6 +187,7 @@
     <ClCompile Include="itema.cpp" />
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
+    <ClCompile Include="listcolumn.cpp" />
     <ClCompile Include="location.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="duration.h" />
     <ClInclude Include="flagable.h" />
+    <ClInclude Include="listcolumn.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
     <ClInclude Include="keyname.h" />

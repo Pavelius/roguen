@@ -607,7 +607,7 @@ void creature::advance(variant v) {
 		basic.abilities[v.value] += v.counter;
 	else if(v.iskind<itemi>()) {
 		item it;
-		it.create(bsdata<itemi>::elements + v.value, 1);
+		it.create(bsdata<itemi>::elements + v.value, game.getpositivecount(v));
 		equip(it);
 	} else if(v.iskind<feati>()) {
 		if(v.counter < 0)
@@ -769,14 +769,6 @@ void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
 }
 
-void creature::update_abilities() {
-	abilities[DamageMelee] += get(Strenght) / 10;
-	abilities[DamageThrown] += get(Strenght) / 10;
-	abilities[Speed] += get(Dexterity);
-	if(is(Light))
-		abilities[LineOfSight] += 3;
-}
-
 void creature::update() {
 	update_basic();
 	update_boost();
@@ -905,6 +897,8 @@ bool creature::speechlocation() const {
 void creature::apply(variant v) {
 	if(v.iskind<spelli>())
 		apply((spell_s)v.value, v.counter, true);
+	else
+		advance(v);
 }
 
 void creature::apply(spell_s v, unsigned minutes) {

@@ -48,15 +48,23 @@ void spella::select(const spellable* p) {
 
 static const char* object_level(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);
-	sb.add("%1i %Level", player->spells[i]);
+	sb.add("%1i %-Level", player->spells[i]);
+	return sb.begin();
 }
 
 static const char* object_mana(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);
-	sb.add("%1i", player->spells[i]);
+	sb.add("[%1i] %-Mana", ((spelli*)object)->mana);
+	return sb.begin();
 }
 
 spelli*	spella::choose(const char* title, const char* cancel) const {
+	static listcolumn columns[] = {
+		{"Level", 60, object_level},
+		{"Mana", 60, object_mana},
+		{}};
 	pushvalue push_width(window_width, 300);
+	pushvalue push_columns(current_columns, columns);
+	pushvalue push_count(answers::column_count, 1);
 	return collection<spelli>::choose(title, cancel, false);
 }

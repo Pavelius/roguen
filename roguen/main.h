@@ -10,6 +10,7 @@
 #include "crt.h"
 #include "duration.h"
 #include "list.h"
+#include "listcolumn.h"
 #include "pushvalue.h"
 #include "randomizer.h"
 #include "script.h"
@@ -521,6 +522,7 @@ public:
 	static void endgame();
 	void		enter(point m, int level, feature_s feature, direction_s appear_side);
 	unsigned	getminutes() const { return minutes; }
+	static int	getpositivecount(variant v);
 	static int	getrange(point m1, point m2);
 	static bool	isvalid(point m) { return m.x >= 0 && m.x < 256 && m.y >= 0 && m.y < 256; }
 	static void newgame();

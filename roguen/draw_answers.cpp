@@ -64,19 +64,17 @@ void* answers::choose(const char* title, const char* cancel_text, int cancel_mod
 	auto columns = column_count;
 	if(columns == -1)
 		columns = getcolumns(*this);
-	pushvalue push_title(prompa);
-	pushvalue push_cancel(answers::cancel_text);
+	pushvalue push_title(prompa, title);
+	pushvalue push_cancel(answers::cancel_text, cancel_text);
 	pushvalue push_height(height);
 	auto push_caret = caret;
 	auto push_width = width;
-	prompa = title;
-	answers::cancel_text = cancel_text;
 	while(ismodal()) {
 		paintstart();
 		if(beforepaint)
 			beforepaint();
 		auto push_clip = clipping;
-		setclip({push_caret.x, push_caret.y, push_caret.x + width, push_caret.y + height});
+		setclip({caret.x, caret.y, caret.x + width, caret.y + height});
 		paintanswers(columns, cancel_text);
 		clipping = push_clip;
 		if(afterpaint)
