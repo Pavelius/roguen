@@ -157,6 +157,7 @@
     <ClCompile Include="condition.cpp" />
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="creaturea.cpp" />
+    <ClCompile Include="creature_talk.cpp" />
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="crt_file.cpp" />
     <ClCompile Include="crt_locale.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />
+    <ClCompile Include="talk.cpp" />
     <ClCompile Include="target.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="trigger.cpp" />
@@ -277,6 +279,7 @@
     <ClInclude Include="sprite_util.h" />
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
+    <ClInclude Include="talk.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="variantc.h" />
     <ClInclude Include="widget.h" />
@@ -297,6 +300,7 @@
     <Text Include="..\locale\ru\core\SpellNames.txt" />
     <Text Include="..\locale\ru\core\UnknownNames.txt" />
     <Text Include="..\locale\ru\core\WearNames.txt" />
+    <Text Include="..\locale\ru\talk\NPCHouses.txt" />
     <Text Include="..\logs.txt" />
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />

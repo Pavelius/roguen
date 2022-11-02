@@ -21,6 +21,7 @@ static void initializating() {
 	readl("NameCharacters", charname::read);
 	shapei::read("rules/Shapes.txt");
 	bsreq::read("rules/Sites.txt");
+	talki::read();
 #ifdef _DEBUG
 	main_util();
 #endif

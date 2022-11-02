@@ -16,6 +16,7 @@
 #include "script.h"
 #include "shape.h"
 #include "speech.h"
+#include "talk.h"
 #include "variantc.h"
 #include "world.h"
 
@@ -386,6 +387,7 @@ public:
 	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	bool		speechrumor() const;
 	bool		speechlocation() const;
+	bool		talk(const char* id);
 	void		unlink();
 	void		update_room();
 	void		use(variants source);
@@ -546,6 +548,7 @@ extern dungeon*		last_dungeon;
 extern rect			last_rect;
 extern sitei*		last_site;
 extern creature*	player;
+extern creature*	opponent;
 extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);

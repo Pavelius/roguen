@@ -841,12 +841,14 @@ static void answer_paint_cell_small(int index, const void* value, const char* fo
 static void get_total_height(const answers& source) {
 	auto push_clipping = clipping;
 	auto total_height = 0;
-	width = window_width;
+	width = window_width - 60;
 	auto p = console.begin();
 	textfs(p);
-	total_height += height + metrics::padding;
+	total_height += height;
 	auto minimal_width = width;
 	auto minimal_height = texth() + 1;
+	if(source)
+		total_height += metrics::padding;
 	for(auto& e : source) {
 		width = window_width - 24 - metrics::padding;
 		textfs(e.text);
@@ -878,18 +880,19 @@ static void paint_message(const answers& source, int window_width) {
 
 void* answers::choose() const {
 	rectpush push;
-	get_total_height(*this);
-	auto window_width = width;
-	caret.y = metrics::padding * 2;
-	caret.x = (getwidth() - window_width - panel_width) / 2;
-	strokeout(fillwindow, metrics::padding, metrics::padding);
-	strokeout(strokeborder, metrics::padding, metrics::padding);
 	screenshoot screen;
 	while(ismodal()) {
 		screen.restore();
+		get_total_height(*this);
+		auto window_width = width;
+		caret.y = metrics::padding * 2;
+		caret.x = (getwidth() - window_width - panel_width) / 2;
+		strokeout(fillwindow, metrics::padding, metrics::padding);
+		strokeout(strokeborder, metrics::padding, metrics::padding);
 		paint_message(*this, window_width);
 		domodal();
 	}
+	screen.restore();
 	::console.clear();
 	return (void*)getresult();
 }

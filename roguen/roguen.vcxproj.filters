@@ -22,6 +22,9 @@
     <Filter Include="Locale">
       <UniqueIdentifier>{81120db4-ed34-452d-a87a-05f6a5bbf804}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Talk">
+      <UniqueIdentifier>{8b5ad259-2ea2-4d82-9254-415b3c164511}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="answers.cpp">
@@ -297,6 +300,12 @@
     <ClCompile Include="listcolumn.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="talk.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="creature_talk.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -440,6 +449,9 @@
     <ClInclude Include="listcolumn.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="talk.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -501,6 +513,9 @@
     </Text>
     <Text Include="..\locale\ru\core\WearNames.txt">
       <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\talk\NPCHouses.txt">
+      <Filter>Talk</Filter>
     </Text>
   </ItemGroup>
 </Project>

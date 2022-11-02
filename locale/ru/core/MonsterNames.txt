@@ -21,6 +21,7 @@ OrcWarrior: Орк
 Rabbit: Кролик
 RabbitFemale: Крольчиха
 ShamblingMound: Ползущая насыпь
+Shopkeeper: Владелец магазина
 Skeleton: Скелет
 SmallBoy: Мальчик
 SmallGirl: Девочка

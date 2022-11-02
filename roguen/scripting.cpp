@@ -133,6 +133,13 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chat_someone() {
+	auto room = opponent->getroom();
+		player->talk("NPCHouses");
+		return;
+	if(room) {
+		if(player->talk(room->getsite()->id))
+			return;
+	}
 	if(opponent->is(AnimalInt)) {
 		opponent->act(opponent->getspeech("AnimalRoar"));
 		return;
