@@ -209,21 +209,27 @@ void stringbuilder::setlocale(const char* id) {
 	sb.add(id);
 }
 
-void stringbuilder::addlocaleurl() {
-	add("locale/%1", current_locale);
+void stringbuilder::addlocaleurl(const char* folder) {
+	add("locale/%1/%2", current_locale, folder);
 }
 
-void stringbuilder::addlocalefile(const char* name, const char* ext) {
+void stringbuilder::addlocalefile(const char* folder, const char* name, const char* ext) {
 	if(!ext)
 		ext = "txt";
-	add("locale/%1/%2.%3", current_locale, name, ext);
+	add("locale/%1/%2/%3.%4", current_locale, folder, name, ext);
 }
 
 const char* stringbuilder::getbycount(const char* id, int count) {
+	static char temp[260];
+	stringbuilder sb(temp);
 	switch(count) {
 	case 0: case 1: return getnm(id);
-	case 2: case 3: case 4: return getnmof(id);
-	default: return getnmpl(id);
+	case 2: case 3: case 4:
+		sb.addof(getnm(id));
+		return temp;
+	default:
+		sb.addnpl(getnm(id));
+		return temp;
 	}
 }
 
@@ -707,6 +713,17 @@ void stringbuilder::addof(const char* s) {
 		{"ÿ", "ט"},
 		{}};
 	add(s, map, "א");
+}
+
+void stringbuilder::addnpl(const char* s) {
+	static grammar map[] = {
+		{"בט", "בט"},
+		{"סט", "סוי"},
+		{"üÿ", "üט"},
+		{"א", ""},
+		{"ü", "וי"},
+		{}};
+	add(s, map, "מג");
 }
 
 void stringbuilder::addnounf(const char* s) {

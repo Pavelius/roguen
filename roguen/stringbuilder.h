@@ -28,12 +28,13 @@ public:
 	virtual void		addidentifier(const char* identifier);
 	void				addicon(const char* id, int value);
 	void				addint(int value, int precision, const int radix);
-	void				addlocalefile(const char* name, const char* ext = 0);
-	void				addlocaleurl();
+	void				addlocalefile(const char* folder, const char* name, const char* ext);
+	void				addlocaleurl(const char* folder);
 	void				addn(const char* format, ...) { addx('\n', format, xva_start(format)); }
 	void				addnounf(const char* s);
 	void				addnouni(const char* s);
 	void				addnounx(const char* s);
+	void				addnpl(const char* s);
 	void				addnz(const char* format, unsigned count);
 	void				addof(const char* s);
 	void				adds(const char* format, ...) { addx(' ', format, xva_start(format)); }

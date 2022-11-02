@@ -3,18 +3,8 @@
 #include "log.h"
 #include "stringbuilder.h"
 
-namespace {
-struct translate {
-	const char*			id;
-	const char*			name;
-};
-}
-
 static char main_locale[4];
 static array source_name(sizeof(translate));
-static array source_nameof(sizeof(translate));
-static array source_namepl(sizeof(translate));
-static array source_namesh(sizeof(translate));
 static array source_text(sizeof(translate));
 
 static int compare(const void* v1, const void* v2) {
@@ -111,9 +101,9 @@ static void savel(const char* url, array& source, bool only_empthy) {
 	}
 }
 
-static void setlist(array& source, const char* id, const char* locale) {
+static void setlist(array& source, const char* id, const char* locale, const char* folder) {
 	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.addlocaleurl();
+	sb.clear(); sb.addlocaleurl(folder);
 	char filter[260]; stringbuilder sf(filter);
 	sf.add("*%1.txt", id);
 	for(io::file::find find(temp); find; find.next()) {
@@ -130,19 +120,19 @@ static void setlist(array& source, const char* id, const char* locale) {
 	}
 }
 
-static void setfile(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
+void seriall(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
 	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.addlocalefile(id);
+	sb.clear(); sb.addlocalefile("core", id, "txt");
 	if(write_mode)
 		savel(temp, source, only_empthy);
 	else {
 		readl(temp, source, required);
-		setlist(source, id, locale);
+		setlist(source, id, locale, "core");
 	}
 }
 
 static void deinitialize() {
-	setfile(source_name, "NamesNewbe", main_locale, true, false, true);
+	seriall(source_name, "UnknownNames", main_locale, true, false, true);
 }
 
 static void check(array& source, const char* locale, const char* url) {
@@ -154,7 +144,7 @@ static void check(array& source, const char* locale, const char* url) {
 	}
 }
 
-void check_translation() {
+static void check_translation() {
 	check(source_name, main_locale, "Names.txt");
 }
 
@@ -167,18 +157,33 @@ void initialize_translation(const char* locale) {
 	if(main_locale[0])
 		return;
 	copy_locale(locale);
-	setfile(source_name, "Names", main_locale, false, true, false);
-	setfile(source_text, "Descriptions", main_locale, false, false, false);
-	setfile(source_nameof, "NamesOf", main_locale, false, false, false);
-	setfile(source_namepl, "NamesPl", main_locale, false, false, false);
-	setfile(source_namesh, "NamesSh", main_locale, false, false, false);
-	atexit(deinitialize);
+	seriall(source_name, "Names", main_locale, false, true, false);
+	seriall(source_text, "Descriptions", main_locale, false, false, false);
+#ifdef _DEBUG
+	check_translation();
+	if(!log::geterrors())
+		atexit(deinitialize);
+#endif
+}
+
+const char* getnm(const array& source, const char* id) {
+	if(!id || id[0] == 0)
+		return 0;
+	if(!ischa(id[0]))
+		return id;
+	translate key = {id, 0};
+	auto p = (translate*)bsearch(&key, source.data, source.getcount(), source.getsize(), compare);
+	return p ? p->name : 0;
+}
+
+const char* getdescription(const char* id) {
+	return getnm(source_text, id);
 }
 
 const char* getnm(const char* id) {
 	if(!id || id[0] == 0)
 		return "";
-	if(isnum(id[0]))
+	if(!ischa(id[0]))
 		return id;
 	translate key = {id, 0};
 	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
@@ -196,56 +201,10 @@ const char* getnm(const char* id) {
 	return p->name;
 }
 
-const char* getnmsh(const char* id) {
-	if(!id || id[0] == 0)
-		return "";
-	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_namesh.data, source_namesh.getcount(), source_namesh.getsize(), compare);
-	if(!p || !p->name || !p->name[0])
-		return getnm(id);
-	return p->name;
-}
-
-const char* getnmof(const char* id) {
-	if(!id || id[0] == 0)
-		return "";
-	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_nameof.data, source_nameof.getcount(), source_nameof.getsize(), compare);
-	if(!p || !p->name || !p->name[0])
-		return id;
-	return p->name;
-}
-
-const char* getnmpl(const char* id) {
-	if(!id || id[0] == 0)
-		return "";
-	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_namepl.data, source_namepl.getcount(), source_namepl.getsize(), compare);
-	if(!p || !p->name || !p->name[0])
-		return id;
-	return p->name;
-}
-
-const char* getdescription(const char* id) {
-	if(!id || id[0] == 0)
-		return 0;
-	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_text.data, source_text.getcount(), source_text.getsize(), compare);
-	if(!p || !p->name)
-		return 0;
-	return p->name;
-}
-
-const char* getnm(const char* id, int count) {
-	if(count == 1)
-		return getnm(id);
-	return getnmof(id);
-}
-
 void readl(const char* id, void(*proc)(const char* url)) {
 	if(!proc)
 		return;
 	char temp[260]; stringbuilder sb(temp);
-	sb.addlocalefile(id);
+	sb.addlocalefile("core", id, "txt");
 	proc(temp);
 }

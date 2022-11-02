@@ -21,10 +21,12 @@ OrcWarrior: Орк
 Rabbit: Кролик
 RabbitFemale: Крольчиха
 ShamblingMound: Ползущая насыпь
+Skeleton: Скелет
 SmallBoy: Мальчик
 SmallGirl: Девочка
 Theif: Вор
 Wolf: Волк
+Zombie: Зомби
 
 GoblinoidTribe: Племя гоблинов
 UndeadHorde: Орда мартвых
