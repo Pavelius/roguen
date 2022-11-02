@@ -63,12 +63,6 @@ enum feat_s : unsigned char {
 	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,
 	Stun, Unaware,
 };
-enum target_s : unsigned char {
-	You, YouOrAlly,
-	AllyClose,
-	EnemyOrAllyClose, EnemyOrAllyNear,
-	EnemyClose, EnemyNear,
-};
 enum spell_s : unsigned char {
 	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, Teleport, Web,
 	LastSpell = Web
@@ -87,6 +81,9 @@ enum tile_s : unsigned char {
 enum trigger_s : unsigned char {
 	WhenEnterSiteP1, WhenDeadP1,
 };
+enum targetf : unsigned char {
+	Item, Feature, You, Allies, Enemies, FarRange,
+};
 extern stringbuilder console;
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
@@ -95,15 +92,6 @@ struct statable {
 	char		abilities[Money + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 	void		create();
-};
-struct targeti {
-	const char*	id;
-	bool		you;
-	bool		enemies;
-	bool		allies;
-	short		range = 1000;
-	tile_s		tiles[8];
-	feature_s	features[8];
 };
 struct triggeri : nameable {
 };
@@ -501,10 +489,11 @@ struct location : siteable {
 };
 struct spelli : nameable {
 	int			mana;
-	target_s	target;
+	unsigned	flags;
 	duration_s	duration;
 	dice		count;
 	int			getcount(int level) const;
+	bool		is(targetf v) const { return (flags & FG(v)) != 0; }
 	static void	linerow(const void* object);
 };
 struct spella : collection<spelli> {

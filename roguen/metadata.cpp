@@ -119,10 +119,6 @@ BSMETA(sitegeni) = {
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
-	BSENM(target, targeti),
-	{}};
-BSMETA(targeti) = {
-	BSREQ(id),
 	{}};
 BSMETA(tilei) = {
 	BSREQ(id),

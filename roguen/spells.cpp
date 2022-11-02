@@ -1,14 +1,14 @@
 #include "main.h"
 
 BSDATA(spelli) = {
-	{"CureWounds", 10, AllyClose, Instant},
-	{"Gate", 40, You, Instant},
-	{"Light", 2, You, Hour1PL},
-	{"ManaRegeneration", 0, You, Hour1PL},
-	{"Regeneration", 15, You, Hour1PL},
-	{"Sleep", 5, You, Minute20},
-	{"Teleport", 30, You, Instant},
-	{"Web", 5, EnemyOrAllyNear, Instant},
+	{"CureWounds", 10, FG(Allies) | FG(You), Instant, {1, 4}},
+	{"Gate", 40, FG(You), Instant},
+	{"Light", 2, FG(You), Hour1PL},
+	{"ManaRegeneration", 0, FG(You), Hour1PL},
+	{"Regeneration", 15, FG(You), Hour1PL},
+	{"Sleep", 5, FG(You), Minute20},
+	{"Teleport", 30, FG(You), Instant},
+	{"Web", 5, FG(Enemies) | FG(FarRange), Instant},
 };
 assert_enum(spelli, Web)
 
@@ -48,7 +48,7 @@ void spella::select(const spellable* p) {
 
 static const char* object_level(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);
-	sb.add("%1i %-Level", player->spells[i]);
+	sb.add("[%1i] %-Level", player->spells[i]);
 	return sb.begin();
 }
 
@@ -61,10 +61,9 @@ static const char* object_mana(const void* object, stringbuilder& sb) {
 spelli*	spella::choose(const char* title, const char* cancel) const {
 	static listcolumn columns[] = {
 		{"Level", 60, object_level},
-		{"Mana", 60, object_mana},
+		{"Mana", 80, object_mana},
 		{}};
 	pushvalue push_width(window_width, 300);
 	pushvalue push_columns(current_columns, columns);
-	pushvalue push_count(answers::column_count, 1);
 	return collection<spelli>::choose(title, cancel, false);
 }

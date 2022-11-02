@@ -487,6 +487,7 @@ static direction_s movedirection(point m) {
 }
 
 void creature::lookitems() const {
+	items.clear();
 	items.select(getposition());
 	if(isplayer() && items) {
 		char temp[4096]; stringbuilder sb(temp);

@@ -1,7 +1,7 @@
 #include "main.h"
 
 void itema::select(point m) {
-	auto pb = data;
+	auto pb = data + count;
 	auto pe = endof();
 	for(auto& e : bsdata<itemground>()) {
 		if(!e)
@@ -15,7 +15,7 @@ void itema::select(point m) {
 }
 
 void itema::select(creature* p) {
-	auto pb = data;
+	auto pb = data + count;
 	auto pe = endof();
 	if(!p)
 		return;
@@ -29,11 +29,11 @@ void itema::select(creature* p) {
 }
 
 void itema::selectbackpack(creature* p) {
-	auto pb = data;
+	auto pb = data + count;
 	auto pe = endof();
 	if(!p)
 		return;
-	for(auto i = Backpack; i <= BackpackLast; i=(wear_s)(i+1)) {
+	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i + 1)) {
 		auto& e = p->wears[i];
 		if(!e)
 			continue;

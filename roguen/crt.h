@@ -15,6 +15,7 @@ typedef decltype(sizeof(0)) size_t;
 #endif
 
 #define FG(V) (1<<V)
+#define FGT(F, V) ((F&FG(V))!=0)
 #define	FO(T,R) ((size_t)&((T*)0)->R)
 #define	lenghtof(C) (sizeof(C)/sizeof(C[0]))
 #define	lastof(C) C+lenghtof(C)

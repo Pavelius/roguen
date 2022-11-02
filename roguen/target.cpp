@@ -1,17 +1,7 @@
 #include "main.h"
 
-BSDATA(targeti) = {
-	{"You", true},
-	{"YouOrAlly", true, false, true},
-	{"AllyClose", false, false, true, 1},
-	{"EnemyOrAllyClose", false, true, true, 1},
-	{"EnemyOrAllyNear", false, true, true},
-	{"EnemyClose", false, true, false, 1},
-	{"EnemyNear", false, true, false},
-};
-assert_enum(targeti, EnemyNear)
-
 extern creaturea targets;
+extern itema items;
 
 static void keep_enemies() {
 	if(player->is(Ally))
@@ -34,24 +24,28 @@ static void add_creatures(feat_s v) {
 	}
 }
 
-static void choose_targets(target_s target) {
-	auto& ei = bsdata<targeti>::elements[target];
+static void choose_targets(unsigned flags) {
 	targets.clear();
-	if(ei.allies) {
+	if(FGT(flags, Allies)) {
 		if(player->is(Ally))
 			add_creatures(Ally);
 		if(player->is(Enemy))
 			add_creatures(Enemy);
 	}
-	if(ei.enemies) {
+	if(FGT(flags, Enemies)) {
 		if(player->is(Ally))
 			add_creatures(Enemy);
 		if(player->is(Enemy))
 			add_creatures(Ally);
 	}
-	if(ei.you)
+	if(FGT(flags, You))
 		targets.add(player);
-	if(ei.range < 1000)
-		targets.matchrange(player->getposition(), ei.range, true);
+	if(!FGT(flags, FarRange))
+		targets.matchrange(player->getposition(), 1, true);
 	targets.distinct();
+	items.clear();
+	if(FGT(flags, Item)) {
+		for(auto p : targets)
+			items.select(p);
+	}
 }
