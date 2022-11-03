@@ -156,6 +156,7 @@ class movable : public actable {
 public:
 	void		fixaction() const;
 	void		fixappear() const;
+	void		fixability(ability_s i, int v) const;
 	void		fixcantgo() const;
 	void		fixdisappear() const;
 	void		fixeffect(const char* id) const;
@@ -337,6 +338,7 @@ public:
 	void		attackmelee(creature& enemy);
 	void		attackrange(creature& enemy);
 	void		attackthrown(creature& enemy);
+	bool		canhear(point i) const;
 	bool		canshoot(bool interactive) const;
 	bool		canthrown(bool interactive) const;
 	void		everyminute();
@@ -356,6 +358,7 @@ public:
 	int			getdamage(wear_s w) const;
 	void		getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const;
 	void		getinfo(stringbuilder& sb) const;
+	int			getloh() const;
 	int			getlos() const;
 	roomi*		getroom() const { return bsdata<roomi>::ptr(room_id); }
 	void		getrumor(struct dungeon& e, stringbuilder& sb) const;
@@ -401,7 +404,7 @@ struct creaturea : collection<creature> {
 	void		match(feat_s v, bool keep);
 	void		matchrange(point start, int v, bool keep);
 	void		remove(const creature* v);
-	void		select(point m, int los, bool visible);
+	void		select(point m, int los, bool visible, const creature* exclude);
 	void		sort(point start);
 };
 struct advancement {
@@ -549,8 +552,7 @@ extern variant		last_variant;
 extern dungeon*		last_dungeon;
 extern rect			last_rect;
 extern sitei*		last_site;
-extern creature*	player;
-extern creature*	opponent;
+extern creature		*player, *opponent, *enemy;
 extern bool			stop_script;
 extern int			window_width;
 extern int			window_height;

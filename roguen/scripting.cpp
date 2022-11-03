@@ -5,8 +5,7 @@
 creaturea			creatures, enemies, targets;
 spella				allowed_spells;
 itema				items;
-extern creature*	enemy;
-extern creature*	opponent;
+creature			*player, *opponent, *enemy;
 int					last_hit, last_hit_result, last_parry, last_parry_result;
 variant				last_variant;
 dungeon*			last_dungeon;
@@ -16,9 +15,23 @@ extern bool			show_floor_rect;
 bool				stop_script;
 
 void animate_figures();
+void choose_targets(unsigned flags);
+void create_landscape(variant v);
 void visualize_images(res pid, point size, point offset);
 
 static void choose_creature(int bonus) {
+}
+
+static void choose_opponent(unsigned flags) {
+	opponent = 0;
+	choose_targets(flags);
+	if(!targets)
+		return;
+	else if(targets.getcount() == 1) {
+		opponent = targets[0];
+		return;
+	}
+	opponent = targets[0];
 }
 
 static void move_left(int bonus) {
@@ -160,15 +173,11 @@ static void chat_someone() {
 }
 
 static void chat_someone(int bonus) {
-	player->lookenemies();
-	creaturea source = creatures;
-	source.matchrange(player->getposition(), 1, true);
-	source.remove(player);
-	if(!source) {
+	choose_opponent(0);
+	if(!opponent) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
 	}
-	opponent = source[0];
 	chat_someone();
 	player->wait();
 	opponent->wait();
@@ -316,6 +325,13 @@ static void quest_reward(int bonus) {
 		set_result(last_dungeon->reward, bonus);
 }
 
+static void quest_landscape(int bonus) {
+	if(!last_dungeon || !last_dungeon->modifier)
+		return;
+	for(auto v : last_dungeon->modifier->landscape)
+		create_landscape(v);
+}
+
 static void site_floor(int bonus) {
 	last_variant.clear();
 	if(last_site && last_site->floors)
@@ -365,6 +381,7 @@ BSDATA(script) = {
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"QuestGuardian", quest_guardian},
+	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
 	{"QuestReward", quest_reward},
 	{"RangeAttack", range_attack},

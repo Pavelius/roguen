@@ -394,55 +394,51 @@ static void place_character(const rect& rca, const racei& race, const classi& cl
 	creature::create(random(rca), &race, &cls);
 }
 
-static void create_landscape(const rect& rca, variant v, const sitei* overlaped_landscape = 0) {
+void create_landscape(variant v) {
 	static racei* last_race;
 	if(!v)
 		return;
 	else if(v.iskind<featurei>())
-		area.set(rca, (feature_s)v.value, v.counter);
+		area.set(last_rect, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
-		area.set(rca, (tile_s)v.value, v.counter);
+		area.set(last_rect, (tile_s)v.value, v.counter);
 	else if(v.iskind<areafi>())
-		area.set(rca, (mapf_s)v.value, v.counter);
+		area.set(last_rect, (mapf_s)v.value, v.counter);
 	else if(v.iskind<sitei>()) {
 		pushvalue push_site(last_site);
 		pushvalue push_race(last_race);
+		pushvalue push_rect(last_rect);
 		last_site = bsdata<sitei>::elements + v.value;
-		rect rc = rca;
 		if(last_site->local && last_site->local->proc)
-			(last_site->*last_site->local->proc)(rc);
+			(last_site->*last_site->local->proc)(last_rect);
 		if(!last_site->sites)
-			add_room(last_site, rc);
-		rc.offset(last_site->offset.x, last_site->offset.y);
-		if(overlaped_landscape) {
-			for(auto ev : overlaped_landscape->landscape)
-				create_landscape(rc, ev);
-		}
+			add_room(last_site, last_rect);
+		last_rect.offset(last_site->offset.x, last_site->offset.y);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
-			create_landscape(rc, ev);
+			create_landscape(ev);
 	} else if(v.iskind<monsteri>())
-		create_monster(rca, v, v.counter);
+		create_monster(last_rect, v, v.counter);
 	else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
-			create_landscape(rca, v);
+			create_landscape(v);
 	} else if(v.iskind<shapei>()) {
 		if(!last_site || !game.testcount(v))
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
-			random(rca.shrink(4, 4)), last_site->floors, last_site->walls);
+			random(last_rect.shrink(4, 4)), last_site->floors, last_site->walls);
 	} else if(v.iskind<racei>())
 		last_race = bsdata<racei>::elements + v.value;
 	else if(v.iskind<classi>()) {
 		if(!last_race)
 			return;
-		place_character(rca, *last_race, bsdata<classi>::elements[v.value]);
+		place_character(last_rect, *last_race, bsdata<classi>::elements[v.value]);
 	} else if(v.iskind<itemi>())
-		place_item(rca, bsdata<itemi>::elements[v.value], v.counter);
+		place_item(last_rect, bsdata<itemi>::elements[v.value], v.counter);
 	else if(v.iskind<script>()) {
-		last_rect = rca;
+		pushvalue push_result(last_variant, {});
 		bsdata<script>::elements[v.value].run(v.counter);
 		if(last_variant)
-			create_landscape(last_rect, last_variant);
+			create_landscape(last_variant);
 	} else if(v.iskind<randomizeri>()) {
 		if(!game.testcount(v))
 			return;
@@ -450,7 +446,7 @@ static void create_landscape(const rect& rca, variant v, const sitei* overlaped_
 		if(!count)
 			count = 1;
 		for(auto i = 0; i < count; i++)
-			create_landscape(rca, bsdata<randomizeri>::elements[v.value].random());
+			create_landscape(bsdata<randomizeri>::elements[v.value].random());
 	}
 }
 
@@ -493,10 +489,8 @@ static void create_sites() {
 	if(sites.count > locations.count)
 		sites.count = locations.count;
 	for(size_t i = 0; i < locations.count; i++) {
-		if(last_dungeon && game.level != 0)
-			create_landscape(locations.data[i], sites.data[i], last_dungeon->modifier);
-		else
-			create_landscape(locations.data[i], sites.data[i]);
+		pushvalue push_rect(last_rect, locations.data[i]);
+		create_landscape(sites.data[i]);
 	}
 }
 
@@ -511,7 +505,7 @@ static bool apply_landscape(geoposition geo, variant tile) {
 
 void sitei::cityscape(rect& rca) const {
 	fillfloor(rca);
-	create_landscape(rca, this);
+	create_landscape(this);
 	rca.offset(offset.x, offset.y);
 	create_city_level(rca, 0);
 	sort_locations();
@@ -519,7 +513,7 @@ void sitei::cityscape(rect& rca) const {
 
 void sitei::outdoor(rect& rca) const {
 	fillfloor(rca);
-	create_landscape(rca, this);
+	create_landscape(this);
 	rca.offset(offset.x, offset.y);
 	const auto parts = 4;
 	const auto size = rca.width() / parts;
@@ -541,14 +535,15 @@ void sitei::room(rect& rc) const {
 static rect bounding_locations() {
 	rect rc = {1000, 1000, 0, 0};
 	for(auto& e : locations) {
-		if(rc.x1 > e.x1)
-			rc.x1 = e.x1;
-		if(rc.y1 > e.y1)
-			rc.y1 = e.y1;
-		if(rc.x2 < e.x2)
-			rc.x2 = e.x2;
-		if(rc.y2 < e.y2)
-			rc.y2 = e.y2;
+		auto pt = center(e);
+		if(rc.x1 > pt.x)
+			rc.x1 = pt.x;
+		if(rc.y1 > pt.y)
+			rc.y1 = pt.y;
+		if(rc.x2 < pt.x)
+			rc.x2 = pt.x;
+		if(rc.y2 < pt.y)
+			rc.y2 = pt.y;
 	}
 	return rc;
 }
@@ -570,7 +565,7 @@ void sitei::dungeon(rect& rca) const {
 	}
 	shuffle_locations();
 	correct_conncetors = bounding_locations();
-	//correct_conncetors.offset(4, 2);
+	//correct_conncetors.offset(-1, -1);
 }
 
 direction_s getmost(const rect& rc) {
@@ -601,7 +596,8 @@ static void create_corridor_content(point i) {
 		treasure = randomizeri::random(site->loot);
 	if(last_dungeon && last_dungeon->modifier && last_dungeon->modifier->loot && d100() < 40)
 		treasure = randomizeri::random(last_dungeon->modifier->loot);
-	create_landscape({i.x, i.y, i.x, i.y}, treasure);
+	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
+	create_landscape(treasure);
 }
 
 static void create_corridor_contents() {

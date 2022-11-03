@@ -15,7 +15,7 @@ void creaturea::sort(point m) {
 	qsort(data, count, sizeof(data[0]), compare_distace);
 }
 
-void creaturea::select(point pt, int los, bool isplayer) {
+void creaturea::select(point pt, int los, bool isplayer, const creature* exclude) {
 	rect rc = {pt.x - los, pt.y - los, pt.x + los, pt.y + los};
 	auto ps = data;
 	auto pe = endof();
@@ -25,6 +25,8 @@ void creaturea::select(point pt, int los, bool isplayer) {
 		if(!e.in(rc))
 			continue;
 		if(isplayer && !area.is(e.getposition(), Visible))
+			continue;
+		if(exclude && &e == exclude)
 			continue;
 		if(ps < pe)
 			*ps++ = &e;

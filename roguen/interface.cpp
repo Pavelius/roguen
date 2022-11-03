@@ -188,12 +188,6 @@ void movable::fixvalue(const char* format, int format_color) const {
 	po->position = pt;
 }
 
-void movable::fixvalue(int v) const {
-	char temp[260]; stringbuilder sb(temp);
-	sb.add("%1i", v);
-	fixvalue(temp, (v > 0) ? 2 : 1);
-}
-
 void movable::fixaction() const {
 	auto po = draw::findobject(this);
 	if(!po)
@@ -744,7 +738,7 @@ void adventure_mode() {
 	if(!human)
 		return;
 	auto start = human->getwait();
-	while(start == human->getwait() && ismodal()) {
+	while((start == human->getwait()) && ismodal()) {
 		paintstart();
 		paintobjects();
 		presskey(pk->elements);
@@ -1000,14 +994,17 @@ static void paint_minimap_items(point origin, int z) {
 	}
 }
 
-static void paint_minimap_creatures(point origin, int z) {
+static void paint_minimap_creatures(point origin, int z, bool use_hearing) {
 	rectpush push;
 	height = width = z;
 	for(auto& e : bsdata<creature>()) {
 		if(e.worldpos != game)
 			continue;
 		auto i = e.getposition();
-		if(!area.is(i, Explored))
+		if(use_hearing) {
+			if(player && !player->canhear(e.getposition()))
+				continue;
+		} else if(!area.is(i, Explored))
 			continue;
 		caret.x = origin.x + i.x * width;
 		caret.y = origin.y + i.y * height;
@@ -1201,7 +1198,7 @@ static void scene_area() {
 	origin.x = 16;
 	origin.y = (height - area.mps * z) / 2;
 	paint_area(origin, z);
-	paint_minimap_creatures(origin, z);
+	paint_minimap_creatures(origin, z, true);
 	paint_minimap_items(origin, z);
 	paint_legends(origin, z);
 	paint_legends_text({(short)(16 + area.mps * z + 16), origin.y});
@@ -1212,7 +1209,7 @@ static void scene_area() {
 static void paint_minimap() {
 	const auto z = 2;
 	paint_area(caret, z);
-	paint_minimap_creatures(caret, z);
+	paint_minimap_creatures(caret, z, true);
 	paint_minimap_items(caret, z);
 	paint_area_screen(caret, z);
 }

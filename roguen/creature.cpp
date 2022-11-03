@@ -1,9 +1,5 @@
 #include "main.h"
 
-creature* player;
-creature* opponent;
-creature* enemy;
-
 static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
@@ -468,12 +464,6 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
-static bool isfreelt(point m) {
-	if(area.is(m, Darkened))
-		return false;
-	return area.isfree(m);
-}
-
 static direction_s movedirection(point m) {
 	if(m.x < 0)
 		return West;
@@ -605,12 +595,8 @@ void creature::advance(variants elements) {
 void creature::advance(variant v) {
 	if(v.iskind<abilityi>()) {
 		switch(v.value) {
-		case Experience:
-			gainexperience(v.counter);
-			break;
-		default:
-			basic.abilities[v.value] += v.counter;
-			break;
+		case Experience: gainexperience(v.counter); break;
+		default: basic.abilities[v.value] += v.counter; break;
 		}
 	} else if(v.iskind<itemi>()) {
 		item it;
@@ -638,7 +624,7 @@ bool creature::roll(ability_s v, int bonus) const {
 void adventure_mode();
 
 void creature::lookcreatures() const {
-	creatures.select(getposition(), getlos(), isplayer());
+	creatures.select(getposition(), getlos(), isplayer(), this);
 	if(is(Ally)) {
 		enemies = creatures;
 		enemies.match(Enemy, true);
@@ -659,6 +645,14 @@ void creature::lookenemies() {
 	}
 }
 
+int creature::getloh() const {
+	return 2 + get(Wits) / 10;
+}
+
+bool creature::canhear(point i) const {
+	return area.getrange(getposition(), i) <= getloh();
+}
+
 void creature::makemove() {
 	pushvalue push_player(player);
 	player = this;
@@ -676,10 +670,9 @@ void creature::makemove() {
 	if(is(Unaware))
 		remove(Unaware);
 	lookenemies();
-	if(isplayer()) {
-		area.setlos(getposition(), getlos(), isfreelt);
+	if(isplayer())
 		adventure_mode();
-	} else if(enemy) {
+	else if(enemy) {
 		if(canshoot(false))
 			attackrange(*enemy);
 		else
@@ -957,12 +950,8 @@ void creature::every30minutes() {
 }
 
 void creature::gainexperience(int v) {
-	if(v < 0)
-		return;
-	if(isplayer() && answers::interactive) {
-		char temp[32]; stringbuilder sb(temp);
-		sb.add("%Experience%+1i", v);
-		fixvalue(temp, 4);
+	if(v > 0) {
+		fixability(Experience, v);
+		experience += v;
 	}
-	experience += v;
 }

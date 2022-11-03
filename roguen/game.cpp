@@ -8,6 +8,12 @@ static char		console_text[4096];
 stringbuilder	console(console_text);
 point			gamei::start_village = {128, 128};
 
+static bool isfreelt(point m) {
+	if(area.is(m, Darkened))
+		return false;
+	return area.isfree(m);
+}
+
 static void update_los() {
 	point m;
 	for(m.y = 0; m.y < area.mps; m.y++)
@@ -16,6 +22,12 @@ static void update_los() {
 			if(area.is(m, Darkened))
 				area.remove(m, Explored);
 		}
+	auto human = game.getowner();
+	if(human) {
+		auto i = human->getposition();
+		if(area.isvalid(i))
+			area.setlos(i, human->getlos(), isfreelt);
+	}
 }
 
 static void decoy_food() {
@@ -76,8 +88,7 @@ void gamei::playminute() {
 	while(need_continue) {
 		need_continue = true;
 		for(auto i = 0; i < moves_per_minute; i++) {
-			if((i % 5) == 0)
-				update_los();
+			update_los();
 			all(&creature::makemove);
 			if(!game.getowner() || draw::isnext()) {
 				need_continue = false;

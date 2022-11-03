@@ -3,13 +3,13 @@
 NoLocation
 
 SpiderNest
- landscape Webbed-40 Bones+3 GiantSpider
+ landscape QuestLandscape Webbed-40 Bones+3 GiantSpider
 GoblinScouts
- landscape Goblin
+ landscape QuestLandscape Goblin
 MonstersLair
- landscape Bones+2 Blooded+3 DireBoar
+ landscape QuestLandscape Bones+2 Blooded+3 DireBoar
 UnholyPlace walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
- landscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
+ landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
  feats Notable
 
 ArtifactStatue
@@ -55,22 +55,23 @@ StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  feats Notable
 
 EmpthyRoom local(GenerateRoom)
+ landscape QuestLandscape
 FalseRoom
  landscape SiteWall-100
 MinionsRoom local(GenerateRoom)
- landscape QuestMinion QuestMinion-30
+ landscape QuestLandscape QuestMinion QuestMinion-30
 BossRoom local(GenerateRoom)
- landscape QuestGuardian QuestReward QuestMinion+2
+ landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
 DarkestRoom local(GenerateRoom)
- landscape Darkened-100
+ landscape QuestLandscape Darkened-100
 StairsUpRoom local(GenerateRoom) offset(1 1)
- landscape StairsUp
+ landscape QuestLandscape StairsUp
  feats Notable
 StairsDownRoom local(GenerateRoom) offset(1 1)
- landscape StairsDown
+ landscape QuestLandscape StairsDown
  feats Notable
 PortalRoom local(GenerateRoom) offset(1 1)
- landscape GatePortal
+ landscape QuestLandscape GatePortal
  feats Notable
 
 AncientSite
