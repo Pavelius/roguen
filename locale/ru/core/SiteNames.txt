@@ -1,7 +1,9 @@
 DefaultCave: Пещера
 DefaultCaveEntrance: Вход в пещеру
+DefaultCaveFinal: Пещера
 DefaultDungeon: Подземелье
 DefaultDungeonEntrance: Вход в подземелье
+DefaultDungeonFinal: Подземелье
 GeneralStore: Магазин
 Hills: Холмы
 LightForest: Лес

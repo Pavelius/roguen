@@ -570,7 +570,7 @@ void sitei::dungeon(rect& rca) const {
 	}
 	shuffle_locations();
 	correct_conncetors = bounding_locations();
-	correct_conncetors.offset(4, 2);
+	//correct_conncetors.offset(4, 2);
 }
 
 direction_s getmost(const rect& rc) {
@@ -595,7 +595,13 @@ static void create_doors(tile_s floor, tile_s wall) {
 }
 
 static void create_corridor_content(point i) {
-	place_item(i, bsdata<itemi>::find("SP"));
+	variant treasure = "RandomTreasure";
+	auto site = loc.getsite();
+	if(site && site->loot && d100() < 40)
+		treasure = randomizeri::random(site->loot);
+	if(last_dungeon && last_dungeon->modifier && last_dungeon->modifier->loot && d100() < 40)
+		treasure = randomizeri::random(last_dungeon->modifier->loot);
+	create_landscape({i.x, i.y, i.x, i.y}, treasure);
 }
 
 static void create_corridor_contents() {

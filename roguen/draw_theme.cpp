@@ -4,9 +4,9 @@ void set_dark_theme() {
 	colors::window = color(32, 32, 32);
 	colors::active = color(172, 128, 0);
 	colors::border = color(73, 73, 80);
-	colors::button = color(0, 122, 204);
 	colors::form = color(45, 45, 48);
 	colors::text = color(255, 255, 255);
+	colors::button = color(55, 55, 58);
 	colors::special = color(255, 244, 32);
 	colors::border = color(63, 63, 70);
 	colors::tips::text = color(255, 255, 255);

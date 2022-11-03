@@ -88,6 +88,7 @@ StrangeRod cost(50) weight(10) avatar(80) mistery(3)
 
 Bones cost(2) weight(3) avatar(899)
 MonsterSkull cost(50) weight(50) avatar(519)
+Stones weight(4) avatar(900) count(6)
 
 #RandomTable
 
@@ -99,6 +100,8 @@ RandomGem
  chance OrnamentalStones+25 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
 RandomJewelry
  chance RandomGem+15 LeadAmulet CoralAmulet SilverAmulet
+RandomTreasure
+ chance RandomCoins+4 RandomJewelry
 WoodenLagsTable
  chance Lags SmallLags+2
 

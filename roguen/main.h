@@ -419,8 +419,7 @@ struct visualeffect : nameable {
 struct sitegeni;
 struct sitei : nameable {
 	typedef void (sitei::*fnproc)(rect& rc) const;
-	variants	landscape;
-	variants	sites;
+	variants	landscape, sites, loot;
 	color		minimap;
 	tile_s		walls, floors;
 	char		darkness, chance_finale;

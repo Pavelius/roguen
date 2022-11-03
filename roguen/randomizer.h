@@ -5,6 +5,8 @@
 
 struct randomizeri : nameable {
 	variants	chance;
-	variant		random() const;
+	static variant random(const variants& elements);
+	variant		random() const { return random(chance); }
+	static int	total(const variants& elements);
 };
 variant single(variant v);

@@ -13,18 +13,18 @@ static int getcounter(variant v) {
 	return v.counter;
 }
 
-static int total_chance(const variants& elements) {
+int randomizeri::total(const variants& elements) {
 	auto result = 0;
 	for(auto& e : elements)
 		result += getcounter(e);
 	return result;
 }
 
-variant randomizeri::random() const {
-	auto total = total_chance(chance);
-	if(total) {
-		auto result = rand() % total;
-		for(auto& e : chance) {
+variant randomizeri::random(const variants& elements) {
+	auto summary = total(elements);
+	if(summary) {
+		auto result = rand() % summary;
+		for(auto& e : elements) {
 			auto n = getcounter(e);
 			if(result < n) {
 				auto r = e;

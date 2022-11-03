@@ -79,6 +79,7 @@ DarkSite
  sites DarkestRoom+2 DarkestRoom-60 DarkestRoom-40
 EvilSite
  sites UnholyPlace+3 UnholyPlace-60 UnholyPlace-40
+ loot Bones Stones+2
 FrozenSite
  landscape Iced+13
 
