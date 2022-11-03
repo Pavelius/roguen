@@ -927,6 +927,7 @@ void creature::use(item& v) {
 	use(ei.use);
 	act(getnm("YouUseItem"), v.getname());
 	v.use();
+	update();
 	wait();
 }
 

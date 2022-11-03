@@ -14,10 +14,23 @@ rect				last_rect;
 extern bool			show_floor_rect;
 bool				stop_script;
 
+typedef void (*fnvariant)(variant v);
+
 void animate_figures();
 void choose_targets(unsigned flags);
 void create_landscape(variant v);
 void visualize_images(res pid, point size, point offset);
+
+static void runscript(const variants& elements, fnvariant proc) {
+	if(stop_script)
+		return;
+	pushvalue push_stop(stop_script);
+	for(auto v : elements) {
+		if(stop_script)
+			break;
+		proc(v);
+	}
+}
 
 static void choose_creature(int bonus) {
 }
@@ -355,6 +368,11 @@ static void choose_spell(int bonus) {
 
 static void heal_player(int bonus) {
 	player->heal(bonus);
+	player->wait();
+}
+
+static void heal_all(int bonus) {
+	heal_player(100);
 }
 
 void show_area(int bonus);
@@ -369,6 +387,7 @@ BSDATA(script) = {
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
 	{"Heal", heal_player},
+	{"HealAll", heal_all},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},

@@ -36,3 +36,4 @@ AdventureKeys
  elements ChooseSpell "Ctrl+S"
  elements ToggleFloorRect "Ctrl+F"
  elements UseItem "Ctrl+U"
+ elements HealAll "Ctrl+H"
