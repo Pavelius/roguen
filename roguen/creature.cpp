@@ -654,8 +654,13 @@ bool creature::canhear(point i) const {
 }
 
 void creature::makemove() {
-	pushvalue push_player(player);
-	player = this;
+	auto pt = getposition();
+	pushvalue push_player(player, this);
+	pushvalue push_rect(last_rect, {pt.x, pt.y, pt.x, pt.y});
+	// Get room
+	auto room = getroom();
+	if(room)
+		last_rect = room->rc;
 	// Recoil form action
 	if(wait_seconds > 0) {
 		wait_seconds -= get(Speed);

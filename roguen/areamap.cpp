@@ -500,3 +500,19 @@ point areamap::find(feature_s v) const {
 		}
 	return {-1000, -1000};
 }
+
+direction_s areamap::getmost(const rect& rc) const {
+	auto x1 = rc.x1;
+	auto x2 = mps - 1 - rc.x2;
+	auto y1 = rc.y1;
+	auto y2 = mps - 1 - rc.y2;
+	if(imax(x1, x2) > imax(y1, y2)) {
+		if(x1 > x2)
+			return West;
+		return East;
+	} else {
+		if(y1 > y2)
+			return North;
+		return South;
+	}
+}

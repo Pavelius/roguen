@@ -142,7 +142,7 @@ RandomDungeonModifier
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultDungeon DefaultCave
+ chance DefaultCave DefaultDungeon
 
 #Trigger
 

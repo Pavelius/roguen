@@ -1,3 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 63: Not found requisit `QuestLandscape`
- Line 63: Expected symbol `(`, but you have string `local(GenerateR`
+﻿In file `Names.txt`:
+Stones: Define translate

@@ -421,7 +421,7 @@ struct visualeffect : nameable {
 };
 struct sitegeni;
 struct sitei : nameable {
-	typedef void (sitei::*fnproc)(rect& rc) const;
+	typedef void (sitei::*fnproc)() const;
 	variants	landscape, sites, loot;
 	color		minimap;
 	tile_s		walls, floors;
@@ -432,14 +432,14 @@ struct sitei : nameable {
 	const sitegeni*	global;
 	const sitegeni*	local;
 	const sitegeni*	global_finish;
-	void		building(rect& rca) const;
-	void		cityscape(rect& rca) const;
-	void		corridors(rect& rca) const;
-	void		dungeon(rect& rca) const;
-	void		outdoor(rect& rca) const;
-	void		room(rect& rc) const;
-	void		fillfloor(rect& rca) const;
-	void		fillwalls(rect& rca) const;
+	void		building() const;
+	void		cityscape() const;
+	void		corridors() const;
+	void		dungeon() const;
+	void		outdoor() const;
+	void		room() const;
+	void		fillfloor() const;
+	void		fillwalls() const;
 };
 class siteable {
 	short unsigned site_id;
