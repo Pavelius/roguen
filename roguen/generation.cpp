@@ -661,7 +661,8 @@ void gamei::createarea() {
 			rt = single("RandomUnknownOverlandTiles");
 	} else {
 		if(last_dungeon) {
-			if(last_dungeon->final_level && d100() < (level * 10))
+			auto chance_finale = level * 10;
+			if(last_dungeon->final_level && d100() < (last_dungeon->final_level->chance_finale + chance_finale))
 				rt = last_dungeon->final_level;
 			else if(last_dungeon->level)
 				rt = last_dungeon->level;

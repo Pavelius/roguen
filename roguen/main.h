@@ -40,7 +40,7 @@ enum ability_s : unsigned char {
 	Survival,
 	Level,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana, Mood, Reputation, ParryCount, Money,
+	Hits, Mana, Mood, Reputation, ParryCount, Experience, Money,
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
@@ -80,7 +80,7 @@ enum tile_s : unsigned char {
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
 enum trigger_s : unsigned char {
-	WhenEnterSiteP1, WhenDeadP1,
+	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead,
 };
 enum targetf : unsigned char {
 	Item, Feature, You, Allies, Enemies, FarRange,
@@ -138,6 +138,7 @@ public:
 	static bool confirm(const char* format, ...);
 	variant		getkind() const { return kind; }
 	static const char* getlog();
+	struct monsteri* getmonster() const;
 	const char*	getname() const;
 	bool		ischaracter() const;
 	bool		iskind(variant v) const;
@@ -187,6 +188,7 @@ struct itemi : nameable {
 	weaponi		weapon;
 	featable	feats;
 	char		wear_index;
+	char		mistery;
 	variant		dress;
 	variants	use;
 	bool operator==(const itemi& v) const { return this == &v; }
@@ -347,6 +349,7 @@ public:
 	static creature* create(point m, variant v, variant character = {}, bool female = false);
 	void		damage(int v);
 	void		finish();
+	void		gainexperience(int v);
 	int			get(ability_s v) const { return abilities[v]; }
 	int			get(spell_s v) const { return spells[v]; }
 	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
@@ -420,7 +423,7 @@ struct sitei : nameable {
 	variants	sites;
 	color		minimap;
 	tile_s		walls, floors;
-	char		darkness, levels;
+	char		darkness, chance_finale;
 	point		offset;
 	featable	feats;
 	const shapei* shape;
@@ -549,6 +552,7 @@ extern rect			last_rect;
 extern sitei*		last_site;
 extern creature*	player;
 extern creature*	opponent;
+extern bool			stop_script;
 extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);

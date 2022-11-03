@@ -60,7 +60,7 @@ FalseRoom
 MinionsRoom local(GenerateRoom)
  landscape QuestMinion QuestMinion-30
 BossRoom local(GenerateRoom)
- landscape QuestGuardian QuestReward QuestMinion QuestMinion-30
+ landscape QuestGuardian QuestReward QuestMinion+2
 DarkestRoom local(GenerateRoom)
  landscape Darkened-100
 StairsUpRoom local(GenerateRoom) offset(1 1)
@@ -69,7 +69,7 @@ StairsUpRoom local(GenerateRoom) offset(1 1)
 StairsDownRoom local(GenerateRoom) offset(1 1)
  landscape StairsDown
  feats Notable
-PortalRoom local(GenerateRoom)
+PortalRoom local(GenerateRoom) offset(1 1)
  landscape GatePortal
  feats Notable
 
@@ -85,7 +85,7 @@ FrozenSite
 DefaultDungeonEntrance
  landscape StairsDown
  feats Notable
-DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(4 4) darkness(3)
+DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(3 3) darkness(3)
  sites StairsUpRoom StairsDownRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
 DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
@@ -93,9 +93,9 @@ DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) g
 DefaultCaveEntrance
  landscape StairsDown
  feats Notable
-DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(4 4) darkness(3)
+DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
  sites StairsUpRoom StairsDownRoom MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
-DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
+DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3) chance_finale(40)
  sites StairsUpRoom BossRoom MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 Plains minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateOutdoor)
@@ -137,12 +137,12 @@ RandomUnknownOverlandTiles
  chance LightForest+3 DeepForest+3 Hills+2 ForestSwamps+6 AshenLand+6
 RandomDungeonModifier
  chance AncientSite DarkSite EvilSite+2 FrozenSite
-RandomDungeonType
- chance DefaultDungeon DefaultCave
 RandomDungeonTreasure
  chance StolenTreasures
+RandomDungeonType
+ chance DefaultDungeon DefaultCave
 
 #Trigger
 
-WhenCreatureEnterP1 Tavern
- effect ILoveThisPlace
+WhenCreatureP1EnterSiteP2 0 Tavern
+ effect ILoveThisPlace Experience+1

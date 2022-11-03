@@ -18,22 +18,21 @@ OrcWarrior avatar(2) appear(2 5) friendly(-30)
  treasure SP SP-50
 GiantSpider avatar(591) appear(1 4) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) DodgeSkill(30) HitsMaximum(20)
- use Bite IgnoreWeb
+ use IgnoreWeb
 GiantLizard avatar(220) appear(1 3) friendly(-20)
  abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(30) DodgeSkill(20) HitsMaximum(20) DamageReduciton(4)
- use Bite
 ChaosHydra avatar(339) friendly(-20)
  abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) DodgeSkill(10) HitsMaximum(50)
 DireBoar avatar(377) appear(1 2) friendly(-20)
  abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(40) DodgeSkill(10) HitsMaximum(40)
- use Bite
+Outsider avatar(121) appear(1 3) friendly(-20)
+ abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) DodgeSkill(20) HitsMaximum(10) DamageReduciton(4)
 Rabbit avatar(7) appear(3 6)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) DodgeSkill(30) HitsMaximum(2)
 RabbitFemale avatar(8) parent(Rabbit) appear(2 4)
  abilities Strenght(5) Dexterity(22) Wits(3) WeaponSkill(8) DodgeSkill(30) HitsMaximum(2)
 ShamblingMound avatar(9) friendly(-20)
  abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) DodgeSkill(10) HitsMaximum(30)
- use Bite
 Skeleton avatar(574) appear(3 6) friendly(-20)
  abilities Strenght(25) Dexterity(20) Wits(2) WeaponSkill(30) DodgeSkill(20) ShieldUse(20) HitsMaximum(10)
  use Spear Shield Darkvision
@@ -42,13 +41,10 @@ Zombie avatar(101) appear(2 5) friendly(-20)
  use Dagger Darkvision
 Bear avatar(360) appear(1 2) friendly(-10)
  abilities Strenght(55) Dexterity(20) Wits(3) WeaponSkill(40) DodgeSkill(20) HitsMaximum(30) DamageReduciton(1)
- use Bite
 Wolf avatar(20) appear(2 5) friendly(-10)
  abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(40) DodgeSkill(30) HitsMaximum(10)
- use Bite
 Boar avatar(376) appear(2 5) friendly(-20)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) DodgeSkill(10) HitsMaximum(20)
- use Bite
 
 #RandomTable
 

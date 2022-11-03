@@ -66,6 +66,7 @@ BSMETA(itemi) = {
 	BSENM(wear, weari),
 	BSREQ(weapon),
 	BSREQ(bonus),
+	BSREQ(mistery),
 	BSREQ(wear_index),
 	BSREQ(use),
 	{}};
@@ -106,9 +107,9 @@ BSMETA(sitei) = {
 	BSREQ(local),
 	BSREQ(landscape),
 	BSREQ(darkness),
-	BSREQ(levels),
 	BSFLG(feats, feati),
 	BSREQ(sites),
+	BSREQ(chance_finale),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSREQ(minimap),

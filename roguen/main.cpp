@@ -42,7 +42,7 @@ static void main_start() {
 	//world.generate({world.mps / 2, world.mps / 2}, 1);
 	//show_worldmap();
 	dungeon::add({128, 128});
-	player = creature::create({5, 5}, "HightElf", "Fighter", true);
+	player = creature::create({5, 5}, "Human", "Fighter", true);
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");

@@ -18,6 +18,7 @@ GoblinFemale: Гоблиниха
 HillGiant: Гигант с холмов
 Minotaur: Минотавр
 OrcWarrior: Орк
+Outsider: Древний
 Rabbit: Кролик
 RabbitFemale: Крольчиха
 ShamblingMound: Ползущая насыпь

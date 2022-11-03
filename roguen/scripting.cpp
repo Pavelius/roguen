@@ -13,6 +13,7 @@ dungeon*			last_dungeon;
 sitei*				last_site;
 rect				last_rect;
 extern bool			show_floor_rect;
+bool				stop_script;
 
 void animate_figures();
 void visualize_images(res pid, point size, point offset);
@@ -133,9 +134,12 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chat_someone() {
+	auto monster = opponent->getmonster();
+	if(monster) {
+		if(player->talk(monster->id))
+			return;
+	}
 	auto room = opponent->getroom();
-		player->talk("NPCHouses");
-		return;
 	if(room) {
 		if(player->talk(room->getsite()->id))
 			return;
@@ -333,6 +337,10 @@ static void choose_spell(int bonus) {
 	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"));
 }
 
+static void heal_player(int bonus) {
+	player->heal(bonus);
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -344,6 +352,7 @@ BSDATA(script) = {
 	{"DebugMessage", debug_message},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
+	{"Heal", heal_player},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},

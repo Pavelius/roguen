@@ -223,7 +223,7 @@ void creature::interaction(creature& opponent) {
 	else if(opponent.is(PlaceOwner)) {
 		fixaction();
 		opponent.wait();
-		if(d100() < 40)
+		if(d100() < 40 && !opponent.is(AnimalInt))
 			opponent.speech("DontPushMePlaceOwner");
 		return;
 	} else {
@@ -233,7 +233,7 @@ void creature::interaction(creature& opponent) {
 		opponent.wait();
 		setposition(pt);
 		fixmovement();
-		if(d100() < 40)
+		if(d100() < 40 && !opponent.is(AnimalInt))
 			opponent.speech("DontPushMe");
 	}
 }
@@ -333,9 +333,8 @@ void creature::fixdamage(int total, int damage_weapon, int damage_strenght, int 
 }
 
 void creature::heal(int v) {
-	if(v <= 0) {
+	if(v <= 0)
 		return;
-	}
 	v += abilities[Hits];
 	if(v > abilities[HitsMaximum])
 		v = abilities[HitsMaximum];
@@ -378,7 +377,7 @@ void creature::kill() {
 	fixeffect("HitVisual");
 	fixremove();
 	droptreasure();
-	trigger::fire(WhenDeadP1, getkind());
+	trigger::fire(WhenCreatureP1Dead, getkind());
 	clear();
 	if(player_killed)
 		game.endgame();
@@ -604,9 +603,16 @@ void creature::advance(variants elements) {
 }
 
 void creature::advance(variant v) {
-	if(v.iskind<abilityi>())
-		basic.abilities[v.value] += v.counter;
-	else if(v.iskind<itemi>()) {
+	if(v.iskind<abilityi>()) {
+		switch(v.value) {
+		case Experience:
+			gainexperience(v.counter);
+			break;
+		default:
+			basic.abilities[v.value] += v.counter;
+			break;
+		}
+	} else if(v.iskind<itemi>()) {
 		item it;
 		it.create(bsdata<itemi>::elements + v.value, game.getpositivecount(v));
 		equip(it);
@@ -752,7 +758,7 @@ void creature::update_room() {
 		}
 		room_id = bsdata<roomi>::source.indexof(pn);
 		if(room_changed)
-			trigger::fire(WhenEnterSiteP1, pn->getsite());
+			trigger::fire(WhenCreatureP1EnterSiteP2, getkind(), pn->getsite());
 	} else
 		room_id = 0xFFFF;
 }
@@ -948,4 +954,15 @@ void creature::every4hour() {
 
 void creature::every30minutes() {
 	restore(Mana, ManaMaximum, Charisma);
+}
+
+void creature::gainexperience(int v) {
+	if(v < 0)
+		return;
+	if(isplayer() && answers::interactive) {
+		char temp[32]; stringbuilder sb(temp);
+		sb.add("%Experience%+1i", v);
+		fixvalue(temp, 4);
+	}
+	experience += v;
 }

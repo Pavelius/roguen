@@ -91,3 +91,7 @@ const char* actable::getname() const {
 		return charname::getname(name_id);
 	return kind.getname();
 }
+
+struct monsteri* actable::getmonster() const {
+	return kind;
+}

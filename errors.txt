@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
-Shopkeeper: Define translate
+﻿In file `rules/Sites.txt`:
+ Line 98: Not found requisit `chance_final`
