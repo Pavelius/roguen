@@ -16,7 +16,7 @@ template<typename T>
 struct collection : collectiona {
 	constexpr T* operator[](unsigned i) const { return (T*)data[i]; }
 	T**		begin() const { return (T**)data; }
-	T*		choose(const char* title, const char* cancel = 0, bool autochoose = false) const {
+	T*		choose(const char* title, const char* cancel = 0, bool autochoose = true) const {
 		return (T*)collectiona::choose(T::getname, title, cancel, autochoose);
 	}
 	T**		end() const { return (T**)data + count; }

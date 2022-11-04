@@ -1,3 +1,8 @@
+#RandomTable
+
+RandomAltar
+ chance AltarGood AltarNeutral AltarEvil
+
 #Site
 
 NoLocation
@@ -8,9 +13,6 @@ GoblinScouts
  landscape QuestLandscape Goblin
 MonstersLair
  landscape QuestLandscape Bones+2 Blooded+3 DireBoar
-UnholyPlace walls(WallDungeon) floors(DungeonFloor) local(GenerateRoom)
- landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
- feats Notable
 
 ArtifactStatue
  landscape Statue+1
@@ -54,6 +56,18 @@ StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape StairsDown
  feats Notable
 
+AltarRoom local(GenerateRoom)
+ landscape QuestLandscape RandomAltar
+ feats Notable
+ArtifactStatueRoom local(GenerateRoom)
+ landscape QuestLandscape Statue+1
+ feats Notable
+AncientLabRoom local(GenerateRoom)
+ landscape QuestLandscape UndeadHorde-30
+ feats Notable
+SarcaphagusRoom local(GenerateRoom)
+ landscape QuestLandscape RandomAltar-20 UndeadHorde-20 UndeadHorde-30
+ feats Notable
 EmpthyRoom local(GenerateRoom)
  landscape QuestLandscape
 FalseRoom
@@ -64,6 +78,7 @@ BossRoom local(GenerateRoom)
  landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
 DarkestRoom local(GenerateRoom)
  landscape QuestLandscape Darkened-100
+ feats Notable
 StairsUpRoom local(GenerateRoom) offset(1 1)
  landscape QuestLandscape StairsUp
  feats Notable
@@ -73,13 +88,20 @@ StairsDownRoom local(GenerateRoom) offset(1 1)
 PortalRoom local(GenerateRoom) offset(1 1)
  landscape QuestLandscape GatePortal
  feats Notable
+UnholyAltarRoom local(GenerateRoom)
+ landscape QuestLandscape AltarEvil UndeadHorde RandomTreasure
+ feats Notable
+UnholyPlace local(GenerateRoom)
+ landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
+ feats Notable
 
 AncientSite
  landscape Webbed+4 Bones+2
+ loot RandomArtifact
 DarkSite
  sites DarkestRoom+2 DarkestRoom-60 DarkestRoom-40
 EvilSite
- sites UnholyPlace+3 UnholyPlace-60 UnholyPlace-40
+ sites UnholyPlace+3 UnholyPlace-60 UnholyPlace-40 UnholyAltarRoom-70
  loot Bones Stones+2
 FrozenSite
  landscape Iced+13
@@ -88,7 +110,7 @@ DefaultDungeonEntrance
  landscape StairsDown Dog
  feats Notable
 DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(3 3) darkness(3)
- sites StairsUpRoom StairsDownRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
+ sites StairsUpRoom StairsDownRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 AltarRoom-50 SarcaphagusRoom EmpthyRoom+16
 DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
@@ -142,7 +164,7 @@ RandomDungeonModifier
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultCave //DefaultDungeon
+ chance DefaultCave DefaultDungeon
 
 #Trigger
 

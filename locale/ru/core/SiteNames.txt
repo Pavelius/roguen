@@ -1,3 +1,4 @@
+AltarRoom: Алтарь
 DefaultCave: Пещера
 DefaultCaveEntrance: Вход в пещеру
 DefaultCaveFinal: Пещера
@@ -17,6 +18,7 @@ StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"
 TheifGuild: Гильдия воров
 Tavern: Таверна
+UnholyAltarRoom: Алтарь проклятых
 UnholyPlace: Проклятое место
 
 AncientSite: Древний

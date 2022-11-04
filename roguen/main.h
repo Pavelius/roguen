@@ -73,6 +73,7 @@ enum feature_s : unsigned char {
 	Tree, TreePalm, DeadTree, ThornBushe,
 	FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
+	AltarGood, AltarNeutral, AltarEvil,
 	Trap, Door, StairsUp, StairsDown, GatePortal,
 };
 enum tile_s : unsigned char {

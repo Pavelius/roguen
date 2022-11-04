@@ -45,6 +45,9 @@ Mace cost(5) weight(30) wear(MeleeWeapon) avatar(841) ability(WeaponSkill)
 Spear cost(10) weight(30) wear(MeleeWeapon) avatar(559) wear_index(22) ability(WeaponSkill)
  feats Retaliate
  weapon damage(1) parry(-10)
+Staff cost(5) weight(20) wear(MeleeWeapon) avatar(558) wear_index(6) ability(WeaponSkill)
+ feats TwoHanded
+ weapon damage(1)
 Sword cost(10) weight(60) wear(MeleeWeapon) avatar(114) wear_index(23) ability(WeaponSkill)
  weapon damage(2) parry(-10)
 StrangeSword cost(100) weight(60) wear(MeleeWeapon) avatar(173) wear_index(23) ability(WeaponSkill) mistery(3)
@@ -86,13 +89,13 @@ StrangeGreenSphere cost(100) weight(50) avatar(232) mistery(5)
 
 StrangeRod cost(50) weight(10) avatar(80) mistery(3)
 
-Bones cost(2) weight(3) avatar(899)
-MonsterSkull cost(50) weight(50) avatar(519)
-Stones weight(4) avatar(900) count(6)
+Bones cost(2) weight(3) avatar(899) count(1)
+MonsterSkull cost(50) weight(50) avatar(519) count(1)
+Stones weight(4) avatar(900) count(6) count(1)
 
 #RandomTable
 
-RandomArtefact
+RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins
  chance SP+8 GP+3 PP
@@ -108,4 +111,4 @@ WoodenLagsTable
 #List
 
 StolenTreasures
- elements GP+3 GP-50 GP-50 GP-50 GP-50 SP+8 SP-50 SP-50 SP-50 PP-40 PP-40 PP-20 RandomGem+3 RandomArtefact-60 RandomJewelry-40
+ elements GP+3 GP-50 GP-50 GP-50 GP-50 SP+8 SP-50 SP-50 SP-50 PP-40 PP-40 PP-20 RandomGem+3 RandomArtifact-60 RandomJewelry-40

@@ -18,6 +18,7 @@ Goblin: Гоблин
 GoblinFemale: Гоблиниха
 HillGiant: Гигант с холмов
 Minotaur: Минотавр
+Necromant: Некромант
 OrcWarrior: Орк
 Outsider: Древний
 Rabbit: Кролик
