@@ -7,8 +7,6 @@ RandomAltar
 
 NoLocation
 
-SpiderNest
- landscape QuestLandscape Webbed-40 Bones+3 GiantSpider
 GoblinScouts
  landscape QuestLandscape Goblin
 MonstersLair
@@ -56,49 +54,57 @@ StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape StairsDown
  feats Notable
 
-AltarRoom local(GenerateRoom)
+AltarRoom
  landscape QuestLandscape RandomAltar
  feats Notable
-ArtifactStatueRoom local(GenerateRoom)
+ArtifactStatueRoom
  landscape QuestLandscape Statue+1
  feats Notable
-AncientLabRoom local(GenerateRoom)
+AncientLabRoom
  landscape QuestLandscape UndeadHorde-30
  feats Notable
-SarcaphagusRoom local(GenerateRoom)
+InscribedRoom
+ landscape QuestLandscape UndeadHorde-30 RandomArtifact-40 RandomArtifact-40 OtherworldCreature-40
+ feats Notable
+SarcaphagusRoom
  landscape QuestLandscape RandomAltar-20 UndeadHorde-20 UndeadHorde-30
  feats Notable
-EmpthyRoom local(GenerateRoom)
+EmpthyRoom
  landscape QuestLandscape
-FalseRoom
- landscape SiteWall-100
-MinionsRoom local(GenerateRoom)
- landscape QuestLandscape QuestMinion QuestMinion-30
-CaveMonsterLair local(GenerateRoom)
+FalseRoom local(GenerateWalls)
+MinionsRoom
+ landscape QuestLandscape Blooded+2 QuestMinion QuestMinion-30
+ feats Notable
+CaveMonsterLair
  landscape QuestLandscape Bones+2 Blooded+3 RandomCaveMonster
-BossRoom local(GenerateRoom)
+ feats Notable
+BossRoom
  landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
-DarkestRoom local(GenerateRoom)
+ feats Notable
+DarkestRoom
  landscape QuestLandscape Darkened-100
  feats Notable
-SpiderNestRoom local(GenerateRoom)
+PitRoom
+ landscape QuestLandscape Pit
+ feats Notable
+SpiderNest
  landscape QuestLandscape Webbed-70 Bones+3 GiantSpider
-StrangeFloraRoom local(GenerateRoom)
+StrangeFloraRoom
  landscape QuestLandscape Herbs+4 Plant+1
  feats Notable
-StairsUpRoom local(GenerateRoom) offset(1 1)
+StairsUpRoom offset(1 1)
  landscape QuestLandscape StairsUp QuestMinion-10
  feats Notable
-StairsDownRoom local(GenerateRoom) offset(1 1)
+StairsDownRoom offset(1 1)
  landscape QuestLandscape StairsDown QuestMinion-80
  feats Notable
-PortalRoom local(GenerateRoom) offset(1 1)
+PortalRoom offset(1 1)
  landscape QuestLandscape GatePortal
  feats Notable
-UnholyAltarRoom local(GenerateRoom)
+UnholyAltarRoom
  landscape QuestLandscape AltarEvil UndeadHorde RandomTreasure
  feats Notable
-UnholyPlace local(GenerateRoom)
+UnholyPlace
  landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
  feats Notable
 
@@ -116,17 +122,17 @@ FrozenSite
 DefaultDungeonEntrance
  landscape StairsDown Dog
  feats Notable
-DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(3 3) darkness(3)
- sites StairsUpRoom StairsDownRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 AltarRoom-50 SarcaphagusRoom StrangeFloraRoom-20 EmpthyRoom+16
-DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
+DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(3 3) darkness(3)
+ sites StairsUpRoom StairsDownRoom AltarRoom SarcaphagusRoom ArtifactStatueRoom AncientLabRoom InscribedRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
+DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(10 10) darkness(3)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 DefaultCaveEntrance
  landscape TreePalm+5 ThornBush+3 StairsDown Dog
  feats Notable
-DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
- sites StairsUpRoom StairsDownRoom MinionsRoom MinionsRoom-60 FalseRoom CaveMonsterLair-50 SpiderNestRoom-50 StrangeFloraRoom EmpthyRoom+16
-DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3) chance_finale(40)
+DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(10 10) darkness(3)
+ sites StairsUpRoom StairsDownRoom MinionsRoom MinionsRoom-60 FalseRoom CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom EmpthyRoom+16
+DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(10 10) darkness(3) chance_finale(40)
  sites StairsUpRoom BossRoom MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 Plains minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateOutdoor)

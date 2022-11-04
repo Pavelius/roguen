@@ -18,6 +18,7 @@ BSDATA(featurei) = {
 	{"AltarGood", {56, 1}, {}, 6},
 	{"AltarNeutral", {57, 1}, {}, 6},
 	{"AltarEvil", {58, 1}, {}, 6},
+	{"Pit", {76, 1}, {}, 6, FG(Impassable)},
 	{"Trap", {27, 12}, {}, 4},
 	{"Door", {39, 1}, {}, 7, FG(BetweenWalls) | FG(ImpassableNonActive) | FG(AllowActivate)},
 	{"StairsUp", {52, 1}, {}, 4},

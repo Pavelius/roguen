@@ -74,7 +74,7 @@ enum feature_s : unsigned char {
 	FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
 	AltarGood, AltarNeutral, AltarEvil,
-	Trap, Door, StairsUp, StairsDown, GatePortal,
+	Pit, Trap, Door, StairsUp, StairsDown, GatePortal,
 };
 enum tile_s : unsigned char {
 	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava,
@@ -438,10 +438,12 @@ struct sitei : nameable {
 	void		cityscape() const;
 	void		corridors() const;
 	void		dungeon() const;
-	void		outdoor() const;
-	void		room() const;
 	void		fillfloor() const;
 	void		fillwalls() const;
+	void		fillwallsall() const;
+	void		nogenerate() const {}
+	void		outdoor() const;
+	void		room() const;
 };
 class siteable {
 	short unsigned site_id;

@@ -1,2 +1,3 @@
 ﻿In file `Names.txt`:
-DarkestRoom: Define translate
+ Define translation for `AncientLabRoom`
+ Define translation for `ArtifactStatueRoom`

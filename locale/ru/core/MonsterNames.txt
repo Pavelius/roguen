@@ -8,12 +8,14 @@ Boar: Кабан
 ChaosHydra: Гидра хаоса
 CityGuard: Городской охранник
 DireBoar: Ужасный кабан
+DireWolf: Ужасный волк
 Dog: Собака
 Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка
 GiantLizard: Гиганская ящерица
 GiantSpider: Гиганский паук
+Ghoul: Упырь
 Goblin: Гоблин
 GoblinFemale: Гоблиниха
 HillGiant: Гигант с холмов

@@ -1,4 +1,8 @@
 AltarRoom: Алтарь
+AncientLabRoom: Древняя лабортория
+ArtifactStatueRoom: Статуя
+BossRoom: Логово
+CaveMonsterLair: Зверинное логово
 DarkestRoom: Истинная тьма
 DefaultCave: Пещера
 DefaultCaveEntrance: Вход в пещеру
@@ -8,11 +12,14 @@ DefaultDungeonEntrance: Вход в подземелье
 DefaultDungeonFinal: Подземелье
 GeneralStore: Магазин
 Hills: Холмы
+InscribedRoom: Надписи на стенах
 LightForest: Лес
+MinionsRoom: Монстры
 MysteryHouse: Странный дом
 NPCHouses: Дом влиятельного горожанина
 Plains: Равнины
 PortalRoom: Портал
+SarcaphagusRoom: Саркофаг
 StairsUpRoom: Лестница вверх
 StairsDownHouses: Дом с лестницей вниз
 StairsDownRoom: Лестница вниз

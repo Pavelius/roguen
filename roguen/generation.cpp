@@ -1,11 +1,13 @@
 #include "main.h"
 
 BSDATA(sitegeni) = {
+	{"NoGenerate", &sitei::nogenerate},
 	{"GenerateBuilding", &sitei::building},
 	{"GenerateCorridors", &sitei::corridors},
 	{"GenerateDungeon", &sitei::dungeon},
 	{"GenerateOutdoor", &sitei::outdoor},
 	{"GenerateRoom", &sitei::room},
+	{"GenerateWalls", &sitei::fillwallsall},
 	{"GenerateVillage", &sitei::cityscape},
 };
 BSDATAF(sitegeni)
@@ -17,6 +19,7 @@ static point last_door;
 static direction_s last_direction;
 static condition_s last_modifier;
 static rect correct_conncetors;
+static const sitegeni* last_method;
 
 const auto chance_corridor_content = 10;
 const auto chance_hidden_door = 10;
@@ -150,6 +153,13 @@ void sitei::fillfloor() const {
 	auto n = floors;
 	if(!n && loc.getsite()->floors)
 		n = loc.getsite()->floors;
+	area.set(last_rect, n);
+}
+
+void sitei::fillwallsall() const {
+	auto n = walls;
+	if(!n && loc.getsite()->walls)
+		n = loc.getsite()->walls;
 	area.set(last_rect, n);
 }
 
@@ -447,9 +457,12 @@ void create_landscape(variant v) {
 		pushvalue push_site(last_site);
 		pushvalue push_race(last_race);
 		pushvalue push_rect(last_rect);
+		pushvalue push_method(last_method);
 		last_site = bsdata<sitei>::elements + v.value;
-		if(last_site->local && last_site->local->proc)
-			(last_site->*last_site->local->proc)();
+		if(last_site->local)
+			last_method = last_site->local;
+		if(last_method)
+			(last_site->*last_method->proc)();
 		if(!last_site->sites)
 			add_room(last_site, last_rect);
 		last_rect.offset(last_site->offset.x, last_site->offset.y);
@@ -678,19 +691,18 @@ static void create_area(geoposition geo, variant tile) {
 	add_area_events(geo);
 	add_area_sites(tile);
 	rect all = {0, 0, area.mps - 1, area.mps - 1};
-	if(true) {
-		pushvalue push_rect(last_rect, all);
-		if(loc.getsite()->global)
-			(loc.getsite()->*loc.getsite()->global->proc)();
-		else
-			loc.getsite()->outdoor();
-		last_rect = push_rect;
-		create_sites();
-		last_rect = push_rect;
-		if(loc.getsite()->global_finish)
-			(loc.getsite()->*loc.getsite()->global_finish->proc)();
-		update_doors();
-	}
+	pushvalue push_rect(last_rect, all);
+	pushvalue push_method(last_method, loc.getsite()->local);
+	if(loc.getsite()->global)
+		(loc.getsite()->*loc.getsite()->global->proc)();
+	else
+		loc.getsite()->outdoor();
+	last_rect = push_rect;
+	create_sites();
+	last_rect = push_rect;
+	if(loc.getsite()->global_finish)
+		(loc.getsite()->*loc.getsite()->global_finish->proc)();
+	update_doors();
 }
 
 variant get_dungeon_site(point v) {

@@ -55,6 +55,8 @@ Wolf avatar(20) appear(2 5) friendly(-10)
 
 #RandomTable
 
+OtherworldCreature
+ chance Outsider
 GoblinoidTribe
  chance Goblin+2 OrcWarrior+1
 UndeadHorde

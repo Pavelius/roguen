@@ -499,10 +499,23 @@ static void bar(int value, int maximum, color m) {
 	fore = push_fore;
 }
 
+static point get_top_position(variant v) {
+	point result = {0, 0};
+	if(v.iskind<monsteri>()) {
+		auto ps = gres(res::Monsters);
+		auto& fr = ps->get(bsdata<monsteri>::elements[v.value].avatar);
+		result.y -= fr.oy + 4*2;
+	} else if(v.iskind<racei>()) {
+		result.y = -76;
+	}
+	return result;
+}
+
 void creature::paintbars() const {
 	const int dy = 4;
 	rectpush push;
-	caret.y -= tsy * 7 / 4; caret.x -= tsx / 4;
+	caret.y += get_top_position(getkind()).y;
+	caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
 	bar(get(Hits), get(HitsMaximum), colors::red); caret.y += dy - 1;
 	bar(get(Mana), get(ManaMaximum), colors::blue);
@@ -1034,7 +1047,7 @@ static void paint_area(point origin, int z) {
 			rectf();
 			switch(area.features[i]) {
 			case NoTile: break;
-			case Tree:
+			case Tree: case TreePalm:
 				fillfade(color(35, 79, 31), 192);
 				break;
 			case FootMud: case FootHill:

@@ -140,7 +140,7 @@ static void check(array& source, const char* locale, const char* url) {
 	for(auto& e : source.records<translate>()) {
 		if(e.name && e.name[0])
 			continue;
-		log::error(0, "%1: Define translate", e.id);
+		log::error(0, " Define translation for `%1`", e.id);
 	}
 }
 
