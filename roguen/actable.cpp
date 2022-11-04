@@ -46,10 +46,13 @@ void actable::actvf(stringbuilder& sb, const char* name, bool female, char separ
 	sb = sa;
 }
 
-
 void actable::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
 	if(!name)
 		name = getname();
+	if(format[0] == '>') {
+		actv(sb, format + 1, format_param, name, female);
+		return;
+	}
 	stringact sa(sb, getname(), female);
 	sa.addsep('\n');
 	auto pb = sa.get();

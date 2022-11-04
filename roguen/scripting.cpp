@@ -170,10 +170,6 @@ static void chat_someone() {
 		if(player->talk(room->getsite()->id))
 			return;
 	}
-	if(opponent->is(AnimalInt)) {
-		opponent->act(opponent->getspeech("AnimalRoar"));
-		return;
-	}
 	if(opponent->is(KnowRumor) && d100() < 70) {
 		if(opponent->speechrumor())
 			return;

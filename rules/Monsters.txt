@@ -1,5 +1,8 @@
 #Monster
 
+Dog avatar(292) appear(1 2)
+ abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) DodgeSkill(20) HitsMaximum(4)
+ use Female
 Goblin avatar(0) appear(2 7) friendly(-30)
  abilities Strenght(30) Dexterity(40) Wits(14) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
  use Dagger

@@ -8,6 +8,7 @@ Boar: Кабан
 ChaosHydra: Гидра хаоса
 CityGuard: Городской охранник
 DireBoar: Ужасный кабан
+Dog: Собака
 Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка
