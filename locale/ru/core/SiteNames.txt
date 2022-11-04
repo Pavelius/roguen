@@ -16,6 +16,7 @@ StairsUpRoom: Лестница вверх
 StairsDownHouses: Дом с лестницей вниз
 StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"
+StrangeFloraRoom: Дивная растительность
 TheifGuild: Гильдия воров
 Tavern: Таверна
 UnholyAltarRoom: Алтарь проклятых
