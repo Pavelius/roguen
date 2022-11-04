@@ -93,7 +93,7 @@ DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) g
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 DefaultCaveEntrance
- landscape StairsDown Dog
+ landscape TreePalm+5 ThornBush+3 StairsDown Dog
  feats Notable
 DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) offset(10 10) darkness(3)
  sites StairsUpRoom StairsDownRoom MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
@@ -142,7 +142,7 @@ RandomDungeonModifier
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultCave DefaultDungeon
+ chance DefaultCave //DefaultDungeon
 
 #Trigger
 

@@ -15,7 +15,7 @@ fnevent				draw::object::beforepaintall;
 fnevent				draw::object::correctcamera;
 fnpaint				draw::object::afterpaint;
 fnpaint				draw::object::afterpaintallpo;
-static rect			last_screen;
+static rect			last_screen, last_area;
 static unsigned long timestamp;
 static unsigned long timestamp_last;
 object				object::def;
@@ -214,6 +214,8 @@ void object::paint() const {
 static size_t getobjects(object** pb, object** pe) {
 	auto ps = pb;
 	for(auto& e : bsdata<object>()) {
+		if(!e.position.in(last_area))
+			continue;
 		if(ps < pe)
 			*ps++ = &e;
 	}
@@ -248,6 +250,8 @@ void draw::paintobjects() {
 	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
 	setclip(last_screen);
 	object* source[max_object_count];
+	last_area = last_screen; last_area.move(camera.x, camera.y);
+	last_area.offset(-128, -128);
 	auto count = getobjects(source, source + sizeof(source) / sizeof(source[0]));
 	sortobjects(source, count);
 	for(size_t i = 0; i < count; i++) {

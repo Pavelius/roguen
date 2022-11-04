@@ -70,7 +70,8 @@ enum spell_s : unsigned char {
 };
 enum feature_s : unsigned char {
 	NoFeature,
-	Tree, DeadTree, FootMud, FootHill, Grave, Statue,
+	Tree, TreePalm, DeadTree, ThornBushe,
+	FootMud, FootHill, Grave, Statue,
 	HiveHole, Hive, Hole, Plant, Herbs,
 	Trap, Door, StairsUp, StairsDown, GatePortal,
 };
