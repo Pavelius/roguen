@@ -1,4 +1,5 @@
 AltarRoom: Алтарь
+DarkestRoom: Истинная тьма
 DefaultCave: Пещера
 DefaultCaveEntrance: Вход в пещеру
 DefaultCaveFinal: Пещера

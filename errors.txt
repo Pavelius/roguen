@@ -1,2 +1,2 @@
-﻿In file `rules/Monsters.txt`:
- Line 71: Can't find variant `Staff`
+﻿In file `Names.txt`:
+DarkestRoom: Define translate

@@ -10,8 +10,10 @@ CityGuard avatar(543)
  abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) DodgeSkill(20) ShieldUse(40) HitsMaximum(10)
  use Spear ChainArmor
  treasure SP GP-10
-DireBoar avatar(377) appear(1 2) friendly(-20)
+DireBoar avatar(377) appear(2 3) friendly(-20)
  abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(40) DodgeSkill(10) HitsMaximum(40)
+DireWolf avatar(52) appear(2 4) friendly(-20)
+ abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(40) DodgeSkill(20) HitsMaximum(30)
 Dog avatar(292) appear(1 2)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) DodgeSkill(20) HitsMaximum(4)
  use Female
@@ -49,7 +51,7 @@ Zombie avatar(101) appear(2 5) friendly(-20)
  abilities Strenght(40) Dexterity(10) Wits(2) WeaponSkill(25) HitsMaximum(20)
  use Dagger Darkvision
 Wolf avatar(20) appear(2 5) friendly(-10)
- abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(40) DodgeSkill(30) HitsMaximum(10)
+ abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(30) DodgeSkill(30) HitsMaximum(10)
 
 #RandomTable
 
@@ -105,5 +107,7 @@ RandomWildAnimals
  chance Rabbit RabbitFemale Wolf+6 Boar+9 Bear+6 DireBoar+2
 RandomBogMonsters
  chance GiantLizard+2 ShamblingMound
+RandomCaveMonster
+ chance GiantLizard Bear DireWolf
 VillageNPCRace
  chance Human+3 Dwarf HightElf
