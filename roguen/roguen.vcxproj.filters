@@ -288,9 +288,6 @@
     <ClCompile Include="dungeon.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="trigger.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="direction_req.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -307,6 +304,9 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="duration.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="trigger.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -453,6 +453,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="duration.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="trigger.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

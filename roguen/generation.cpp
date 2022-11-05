@@ -12,8 +12,6 @@ BSDATA(sitegeni) = {
 };
 BSDATAF(sitegeni)
 
-void standart_script(variant v);
-
 static adat<point, 512> points;
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
@@ -200,7 +198,7 @@ static void create_road(const rect& rc) {
 	area.set(last_rect, Rock);
 	variant v = "RandomCommoner";
 	v.counter = xrand(3, 6);
-	standart_script(v);
+	runscript(v);
 }
 
 static void show_debug_minimap() {
@@ -403,7 +401,7 @@ static void create_sites() {
 		sites.count = locations.count;
 	for(size_t i = 0; i < locations.count; i++) {
 		pushvalue push_rect(last_rect, locations.data[i]);
-		standart_script(sites.data[i]);
+		runscript(sites.data[i]);
 	}
 }
 
@@ -418,7 +416,7 @@ static bool apply_landscape(geoposition geo, variant tile) {
 
 void sitei::cityscape() const {
 	fillfloor();
-	standart_script(this);
+	runscript(this);
 	last_rect.offset(2, 2);
 	create_city_level(last_rect, 0);
 	sort_locations();
@@ -426,7 +424,7 @@ void sitei::cityscape() const {
 
 void sitei::outdoor() const {
 	fillfloor();
-	standart_script(this);
+	runscript(this);
 	const auto parts = 4;
 	const auto size = last_rect.width() / parts;
 	for(auto i = 0; i < parts * parts; i++) {
@@ -517,7 +515,7 @@ static void create_corridor_content(point i) {
 	else if(last_dungeon && last_dungeon->modifier && last_dungeon->modifier->loot && d100() < 40)
 		treasure = randomizeri::random(last_dungeon->modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
-	standart_script(treasure);
+	runscript(treasure);
 }
 
 static void create_corridor_contents() {

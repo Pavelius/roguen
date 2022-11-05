@@ -17,6 +17,7 @@ LightForest: Лес
 MinionsRoom: Монстры
 MysteryHouse: Странный дом
 NPCHouses: Дом влиятельного горожанина
+PitRoom: Ямы
 Plains: Равнины
 PortalRoom: Портал
 SarcaphagusRoom: Саркофаг

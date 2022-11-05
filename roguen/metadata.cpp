@@ -38,7 +38,7 @@ BSMETA(areafi) = {
 	{}};
 BSMETA(classi) = {
 	BSREQ(id),
-	BSREQ(hd), BSREQ(cap), BSREQ(player),
+	BSREQ(player),
 	{}};
 BSMETA(speech) = {
 	BSREQ(id),

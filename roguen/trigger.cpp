@@ -1,36 +1,17 @@
-#include "main.h"
+#include "bsreq.h"
+#include "pushvalue.h"
+#include "trigger.h"
+#include "script.h"
 
-BSDATA(triggeri) = {
-	{"WhenCreatureP1EnterSiteP2"},
-	{"WhenCreatureP1Dead"},
-	{"WhenCreatureP1InSiteP2UpdateAbilities"}
-};
-assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
-
-void trigger::apply(variants source) const {
-	pushvalue push_stop(stop_script, false);
-	for(auto v : source) {
-		if(stop_script)
-			break;
-		apply(v);
-	}
-}
-
-void trigger::apply(variant v) const {
-	if(v.iskind<speech>()) {
-		auto count = game.getcount(v, 0);
-		if(count < 0)
-			return;
-		player->speech(bsdata<speech>::elements[v.value].id);
-	} else
-		player->apply(v);
-}
+trigger* last_trigger;
 
 void trigger::fire(trigger_s type, variant p1, variant p2) {
 	for(auto& e : bsdata<trigger>()) {
 		if(e.type == type
 			&& (!e.p1 || e.p1 == p1)
-			&& (!e.p2 || e.p2 == p2))
-			e.apply(e.effect);
+			&& (!e.p2 || e.p2 == p2)) {
+			pushvalue last_push(last_trigger, &e);
+			runscript(e.effect);
+		}
 	}
 }

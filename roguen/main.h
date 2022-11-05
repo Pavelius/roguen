@@ -17,6 +17,7 @@
 #include "shape.h"
 #include "speech.h"
 #include "talk.h"
+#include "trigger.h"
 #include "variantc.h"
 
 #pragma once
@@ -95,16 +96,6 @@ struct statable {
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 	void		create();
 };
-struct triggeri : nameable {
-};
-struct trigger {
-	trigger_s	type;
-	variant		p1, p2;
-	variants	effect;
-	void		apply(variant v) const;
-	void		apply(variants v) const;
-	static void	fire(trigger_s t, variant p1 = {}, variant p2 = {});
-};
 struct abilityi : nameable {
 	ability_s	basic;
 };
@@ -117,8 +108,7 @@ struct globali : nameable {
 struct racei : nameable {
 };
 struct classi : nameable {
-	char		hd;
-	char		cap, player;
+	char		player;
 };
 struct feati : nameable {
 };

@@ -6,7 +6,8 @@ roomi* add_room(const sitei* ps, const rect& rc);
 void animate_figures();
 void choose_targets(unsigned flags);
 void place_shape(const shapei& e, point m, tile_s floor, tile_s walls);
-void standart_script(variant v);
+void show_area(int bonus);
+void show_logs(int bonus);
 void visualize_images(res pid, point size, point offset);
 
 creaturea			creatures, enemies, targets;
@@ -21,7 +22,6 @@ static const sitei*	last_site;
 globali*			last_global;
 rect				last_rect;
 extern bool			show_floor_rect;
-static fnvariant	last_scipt_proc = standart_script;
 const sitegeni*		last_method;
 
 tile_s getfloor() {
@@ -75,7 +75,7 @@ static void create_creature(variant v, int count) {
 		creature::create(area.get(last_rect), v);
 }
 
-void standart_script(variant v) {
+static void standart_script(variant v) {
 	if(v.iskind<featurei>())
 		area.set(last_rect, (feature_s)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -136,26 +136,17 @@ void standart_script(variant v) {
 		if(!last_site->sites)
 			add_room(last_site, last_rect);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
-			last_scipt_proc(ev);
+			runscript(ev);
+	} else if(v.iskind<speech>()) {
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		if(player)
+			player->speech(bsdata<speech>::elements[v.value].id);
+	} else {
+		if(player)
+			player->apply(v);
 	}
-}
-
-void runscript(const variants& elements) {
-	if(stop_script)
-		return;
-	pushvalue push_stop(stop_script);
-	for(auto v : elements) {
-		if(stop_script)
-			break;
-		last_scipt_proc(v);
-	}
-}
-
-static void runscript(const variants& elements, fnvariant proc) {
-	if(!proc)
-		return;
-	pushvalue push_proc(last_scipt_proc, proc);
-	runscript(elements);
 }
 
 static void choose_creature(int bonus) {
@@ -510,9 +501,16 @@ static void win_game(int bonus) {
 static void lose_game(int bonus) {
 }
 
-void show_area(int bonus);
-void show_logs(int bonus);
+void initialize_script() {
+	last_scipt_proc = standart_script;
+}
 
+BSDATA(triggeri) = {
+	{"WhenCreatureP1EnterSiteP2"},
+	{"WhenCreatureP1Dead"},
+	{"WhenCreatureP1InSiteP2UpdateAbilities"}
+};
+assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
 	{"ChooseCreature", choose_creature},

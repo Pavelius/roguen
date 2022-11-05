@@ -1,3 +1,5 @@
+#include "variant.h"
+
 #pragma once
 
 struct script {
@@ -7,5 +9,11 @@ struct script {
 	void			run(int bonus);
 	static void		run(const char* id, int bonus = 0);
 };
+
 extern bool			stop_script;
 extern const script* last_script;
+extern fnvariant	last_scipt_proc;
+
+void				runscript(variant v);
+void				runscript(const variants& elements);
+void				runscript(const variants& elements, fnvariant proc);
