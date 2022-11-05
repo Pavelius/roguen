@@ -2,6 +2,13 @@
 #include "resource.h"
 #include "main.h"
 
+roomi* add_room(const sitei* ps, const rect& rc);
+void animate_figures();
+void choose_targets(unsigned flags);
+void place_shape(const shapei& e, point m, tile_s floor, tile_s walls);
+void standart_script(variant v);
+void visualize_images(res pid, point size, point offset);
+
 creaturea			creatures, enemies, targets;
 spella				allowed_spells;
 itema				items;
@@ -10,16 +17,28 @@ int					last_hit, last_hit_result, last_parry, last_parry_result, last_value;
 variant				last_variant;
 dungeon*			last_dungeon;
 sitei*				last_location;
-sitei*				last_site;
+static const sitei*	last_site;
 globali*			last_global;
 rect				last_rect;
 extern bool			show_floor_rect;
-static fnvariant	last_scipt_proc;
+static fnvariant	last_scipt_proc = standart_script;
+const sitegeni*		last_method;
 
-void animate_figures();
-void choose_targets(unsigned flags);
-void create_landscape(variant v);
-void visualize_images(res pid, point size, point offset);
+tile_s getfloor() {
+	if(last_site && last_site->floors)
+		return last_site->floors;
+	if(last_location && last_location->floors)
+		return last_location->floors;
+	return DungeonFloor;
+}
+
+tile_s getwall() {
+	if(last_site && last_site->walls)
+		return last_site->walls;
+	if(last_location && last_location->walls)
+		return last_location->walls;
+	return WallDungeon;
+}
 
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
@@ -56,8 +75,14 @@ static void create_creature(variant v, int count) {
 		creature::create(area.get(last_rect), v);
 }
 
-static void standart_script(variant v) {
-	if(v.iskind<globali>()) {
+void standart_script(variant v) {
+	if(v.iskind<featurei>())
+		area.set(last_rect, (feature_s)v.value, v.counter);
+	else if(v.iskind<tilei>())
+		area.set(last_rect, (tile_s)v.value, v.counter);
+	else if(v.iskind<areafi>())
+		area.set(last_rect, (mapf_s)v.value, v.counter);
+	else if(v.iskind<globali>()) {
 		last_global = bsdata<globali>::elements + v.value;
 		last_value = game.get(*last_global);
 		game.set(*last_global, last_value + v.counter);
@@ -80,12 +105,42 @@ static void standart_script(variant v) {
 		if(count <= 0)
 			return;
 		create_creature(v, count);
+	} else if(v.iskind<classi>()) {
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		for(auto i = 0; i < count; i++)
+			creature::create(area.get(last_rect), single("RandomRace"), v, (rand() % 2) != 0);
+	} else if(v.iskind<shapei>()) {
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		for(auto i = 0; i < count; i++) {
+			place_shape(bsdata<shapei>::elements[v.value],
+				area.get(last_rect.shrink(4, 4)), getfloor(), getwall());
+		}
+	} else if(v.iskind<itemi>()) {
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		for(auto i = 0; i < count; i++)
+			place_item(area.get(last_rect), bsdata<itemi>::elements + v.value);
+	} else if(v.iskind<sitei>()) {
+		pushvalue push_rect(last_rect);
+		pushvalue push_method(last_method);
+		last_site = bsdata<sitei>::elements + v.value;
+		if(last_site->local)
+			last_method = last_site->local;
+		if(last_method)
+			(last_site->*last_method->proc)();
+		if(!last_site->sites)
+			add_room(last_site, last_rect);
+		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
+			last_scipt_proc(ev);
 	}
 }
 
 void runscript(const variants& elements) {
-	if(!last_scipt_proc)
-		return;
 	if(stop_script)
 		return;
 	pushvalue push_stop(stop_script);
@@ -96,7 +151,9 @@ void runscript(const variants& elements) {
 	}
 }
 
-void runscript(const variants& elements, fnvariant proc) {
+static void runscript(const variants& elements, fnvariant proc) {
+	if(!proc)
+		return;
 	pushvalue push_proc(last_scipt_proc, proc);
 	runscript(elements);
 }
@@ -406,8 +463,7 @@ static void quest_reward(int bonus) {
 static void quest_landscape(int bonus) {
 	if(!last_dungeon || !last_dungeon->modifier)
 		return;
-	for(auto v : last_dungeon->modifier->landscape)
-		create_landscape(v);
+	runscript(last_dungeon->modifier->landscape);
 }
 
 static void site_floor(int bonus) {

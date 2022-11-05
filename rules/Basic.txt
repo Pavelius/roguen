@@ -7,6 +7,11 @@ Cleric hd(6) cap(9) player(1)
 Rogue hd(4) cap(11) player(1)
 Mage hd(4) cap(9) player(1)
 
+#RandomTable
+
+RandomRace
+ chance Human+8 HightElf+1
+
 #HotkeyList
 
 AdventureKeys

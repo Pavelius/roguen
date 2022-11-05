@@ -340,30 +340,12 @@ void creature::heal(int v) {
 	}
 }
 
-void place_item(point index, const itemi* pe);
-
-void generate_treasure(point index, variant v) {
-	auto count = game.getcount(v);
-	if(count <= 0)
-		return;
-	for(auto i = 0; i < count; i++) {
-		if(v.iskind<itemi>())
-			place_item(index, bsdata<itemi>::elements + v.value);
-		else if(v.iskind<randomizeri>())
-			generate_treasure(index, single(v));
-		else if(v.iskind<listi>()) {
-			for(auto v : bsdata<listi>::elements[v.value].elements)
-				generate_treasure(index, v);
-		}
-	}
-}
 
 void creature::droptreasure() const {
 	monsteri* p = getkind();
 	if(!p)
 		return;
-	for(auto v : p->treasure)
-		generate_treasure(getposition(), v);
+	runscript(p->treasure);
 }
 
 void creature::kill() {

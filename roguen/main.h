@@ -589,11 +589,14 @@ extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_dama
 extern variant		last_variant;
 extern dungeon*		last_dungeon;
 extern rect			last_rect;
-extern sitei*		last_site;
+extern const sitei*	last_site;
 extern sitei*		last_location;
+extern const sitegeni* last_method;
 extern creature		*player, *opponent, *enemy;
 extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);
+tile_s				getfloor();
+tile_s				getwall();
 void				runscript(const variants& elements);
 void				runscript(const variants& elements, fnvariant proc);
