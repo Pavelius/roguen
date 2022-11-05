@@ -574,6 +574,7 @@ void creature::advance(variants elements) {
 
 void creature::advance(variant v) {
 	if(v.iskind<abilityi>()) {
+		last_ability = (ability_s)v.value;
 		switch(v.value) {
 		case Experience: gainexperience(v.counter); break;
 		default: basic.abilities[v.value] += v.counter; break;
@@ -594,6 +595,7 @@ void creature::advance(variant v) {
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	auto result = d100();
+	last_value = (value - result) / 10;
 	if(result <= 5)
 		return true;
 	else if(result >= 95)
@@ -637,14 +639,17 @@ void creature::makemove() {
 	auto pt = getposition();
 	pushvalue push_player(player, this);
 	pushvalue push_rect(last_rect, {pt.x, pt.y, pt.x, pt.y});
-	// Get room
-	auto room = getroom();
-	if(room)
-		last_rect = room->rc;
+	pushvalue push_site(last_site);
 	// Recoil form action
 	if(wait_seconds > 0) {
 		wait_seconds -= get(Speed);
 		return;
+	}
+	// Get room
+	auto room = getroom();
+	if(room) {
+		last_rect = room->rc;
+		last_site = room->getsite();
 	}
 	set(EnemyAttacks, 0);
 	update();
@@ -655,6 +660,7 @@ void creature::makemove() {
 	if(is(Unaware))
 		remove(Unaware);
 	lookenemies();
+	last_actions.select(siteskilli::isvalid);
 	if(isplayer())
 		adventure_mode();
 	else if(enemy) {

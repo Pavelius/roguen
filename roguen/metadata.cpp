@@ -174,7 +174,7 @@ BSDATA(varianti) = {
 	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
 	{"SiteGenerator", VAR(sitegeni), 1},
-	{"SiteSkills", VAR(siteskilli), 1},
+	{"SiteSkill", VAR(siteskilli), 1},
 	{"Spell", VAR(spelli), 1},
 	{"Speech", VAR(speech), 1},
 	{"Tile", VAR(tilei), 1},

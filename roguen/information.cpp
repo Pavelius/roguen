@@ -110,7 +110,7 @@ void creature::getrumor(dungeon& e, stringbuilder& sb) const {
 	auto site_name = e.level->getname();
 	sba.adjective(e.modifier->getname(), stringbuilder::getgender(site_name));
 	auto part_one = "RumorDungeon";
-	if(range==0xFFFF)
+	if(!range)
 		part_one = "RumorDungeonHere";
 	actvf(sb, getname(), is(Female), 0,
 		getnm(part_one),

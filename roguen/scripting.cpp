@@ -15,12 +15,14 @@ spella				allowed_spells;
 itema				items;
 creature			*player, *opponent, *enemy;
 int					last_hit, last_hit_result, last_parry, last_parry_result, last_value;
+ability_s			last_ability;
 variant				last_variant;
 dungeon*			last_dungeon;
 sitei*				last_location;
-static const sitei*	last_site;
+const sitei*		last_site;
 globali*			last_global;
 rect				last_rect;
+siteskilla			last_actions;
 extern bool			show_floor_rect;
 const sitegeni*		last_method;
 
@@ -495,10 +497,34 @@ static void set_offset(int bonus) {
 	last_rect.offset(bonus);
 }
 
+static void trigger_text(int bonus) {
+	if(!last_site)
+		return;
+}
+
 static void win_game(int bonus) {
 }
 
 static void lose_game(int bonus) {
+}
+
+static void choose_action(int bonus) {
+	if(!last_actions) {
+		player->actp(getnm("YouDontHaveAnyActions"));
+		player->wait();
+		return;
+	}
+	auto pa = last_actions.choose(getnm("ChooseAction"), getnm("Cancel"), false);
+}
+
+static void roll_value(int bonus) {
+	if(!player)
+		return;
+	if(!player->roll(last_ability, bonus)) {
+		player->logs(getnm("YouMakeRoll"), last_value, player->get(last_ability) + bonus, bonus);
+		stop_script = true;
+	} else
+		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
 }
 
 void initialize_script() {
@@ -513,6 +539,7 @@ BSDATA(triggeri) = {
 assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
+	{"ChooseAction", choose_action},
 	{"ChooseCreature", choose_creature},
 	{"ChooseSpell", choose_spell},
 	{"ChatSomeone", chat_someone},
@@ -538,6 +565,7 @@ BSDATA(script) = {
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
 	{"QuestReward", quest_reward},
+	{"Roll", roll_value},
 	{"RangeAttack", range_attack},
 	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},
@@ -548,6 +576,7 @@ BSDATA(script) = {
 	{"TestRumor", test_rumor},
 	{"ThrownAttack", thrown_attack},
 	{"ToggleFloorRect", toggle_floor_rect},
+	{"TriggerText", trigger_text},
 	{"ViewStuff", view_stuff},
 	{"WinGame", win_game},
 	{"UseItem", use_item},

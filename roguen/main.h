@@ -559,7 +559,9 @@ struct siteskilli : nameable {
 	ability_s		skill;
 	duration_s		retry;
 	variants		effect, fail;
+	static bool		isvalid(const void* object);
 };
+typedef collection<siteskilli> siteskilla;
 namespace draw {
 struct keybind {
 	unsigned	key;
@@ -575,12 +577,14 @@ extern creaturea	creatures, enemies;
 extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
-extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage;
+extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage, last_value;
+extern ability_s	last_ability;
 extern variant		last_variant;
 extern dungeon*		last_dungeon;
 extern rect			last_rect;
 extern const sitei*	last_site;
 extern sitei*		last_location;
+extern siteskilla	last_actions;
 extern const sitegeni* last_method;
 extern creature		*player, *opponent, *enemy;
 extern int			window_width;

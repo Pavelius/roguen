@@ -197,3 +197,8 @@ RandomDungeonType
 
 WhenCreatureP1EnterSiteP2 0 Tavern
  effect ILoveThisPlace-40
+
+#SiteSkill
+
+KnowRumor site(Tavern) skill(Charisma)
+ effect Experience+10

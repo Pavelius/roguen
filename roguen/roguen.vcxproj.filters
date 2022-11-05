@@ -309,6 +309,9 @@
     <ClCompile Include="trigger.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="siteskill.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
