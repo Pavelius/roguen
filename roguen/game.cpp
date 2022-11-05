@@ -109,10 +109,13 @@ void gamei::endgame() {
 	writelog();
 }
 
-bool gamei::testcount(variant v) {
-	if(v.counter < 0 && d100() >= -v.counter)
-		return false;
-	return true;
+int gamei::getcount(variant v, int minimal) {
+	auto count = v.counter;
+	if(count < 0 && d100() >= -count)
+		return -1;
+	if(count < minimal)
+		count = minimal;
+	return count;
 }
 
 int gamei::getpositivecount(variant v) {
@@ -128,7 +131,7 @@ void gamei::setup_globals() {
 
 void gamei::setup_rumors(int count) {
 	point pt;
-	//dungeon::add(start_village);
+	dungeon::add(start_village);
 	const int r = 6;
 	for(auto i = 0; i < count; i++) {
 		pt.x = xrand(start_village.x - r, start_village.x + r);

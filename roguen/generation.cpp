@@ -24,14 +24,6 @@ static const sitegeni* last_method;
 const auto chance_corridor_content = 10;
 const auto chance_hidden_door = 10;
 
-static point random(const rect& rc) {
-	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
-		return {-1000, -1000};
-	short x = xrand(rc.x1, rc.x2);
-	short y = xrand(rc.y1, rc.y2);
-	return {x, y};
-}
-
 static rect center_rect(const rect& rc) {
 	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
 		return {-1000, -1000};
@@ -233,7 +225,7 @@ static void create_monster(variant v, int count) {
 			count = 1;
 	}
 	for(auto i = 0; i < count; i++)
-		creature::create(random(last_rect), single(v));
+		creature::create(area.get(last_rect), single(v));
 }
 
 static void create_road(const rect& rc) {
@@ -436,11 +428,11 @@ static void place_item(const itemi& e, int count) {
 	if(count == 0)
 		count = 1;
 	for(auto i = 0; i < count; i++)
-		place_item(random(last_rect), &e);
+		place_item(area.get(last_rect), &e);
 }
 
 static void place_character(const racei& race, const classi& cls) {
-	creature::create(random(last_rect), &race, &cls);
+	creature::create(area.get(last_rect), &race, &cls);
 }
 
 void create_landscape(variant v) {
@@ -473,10 +465,13 @@ void create_landscape(variant v) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
 			create_landscape(v);
 	} else if(v.iskind<shapei>()) {
-		if(!last_site || !game.testcount(v))
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		if(!last_site)
 			return;
 		place_shape(bsdata<shapei>::elements[v.value],
-			random(last_rect.shrink(4, 4)), last_site->floors, last_site->walls);
+			area.get(last_rect.shrink(4, 4)), last_site->floors, last_site->walls);
 	} else if(v.iskind<racei>())
 		last_race = bsdata<racei>::elements + v.value;
 	else if(v.iskind<classi>()) {
@@ -491,11 +486,9 @@ void create_landscape(variant v) {
 		if(last_variant)
 			create_landscape(last_variant);
 	} else if(v.iskind<randomizeri>()) {
-		if(!game.testcount(v))
+		auto count = game.getcount(v);
+		if(count <= 0)
 			return;
-		auto count = v.counter;
-		if(!count)
-			count = 1;
 		for(auto i = 0; i < count; i++)
 			create_landscape(bsdata<randomizeri>::elements[v.value].random());
 	}
@@ -504,11 +497,9 @@ void create_landscape(variant v) {
 static void add_area_sites(variant v) {
 	if(!v)
 		return;
-	if(!game.testcount(v))
+	auto count = game.getcount(v);
+	if(count <= 0)
 		return;
-	auto count = v.counter;
-	if(!count)
-		count = 1;
 	if(v.iskind<sitei>()) {
 		auto& ei = bsdata<sitei>::elements[v.value];
 		if(ei.sites) {

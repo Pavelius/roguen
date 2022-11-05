@@ -65,6 +65,14 @@ point randomr(const rect& rc) {
 	return {x, y};
 }
 
+point areamap::get(const rect& rc) {
+	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
+		return {-1000, -1000};
+	short x = xrand(rc.x1, rc.x2);
+	short y = xrand(rc.y1, rc.y2);
+	return {x, y};
+}
+
 void areamap::set(rect rc, mapf_s v, int random_count) {
 	if(random_count <= -100) {
 		set(rc, v);
@@ -217,7 +225,7 @@ void areamap::blocktiles(tile_s v) const {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
-			if((*this)[m]==v)
+			if((*this)[m] == v)
 				movement_rate[m] = Blocked;
 		}
 }

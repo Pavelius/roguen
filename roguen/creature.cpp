@@ -343,11 +343,9 @@ void creature::heal(int v) {
 void place_item(point index, const itemi* pe);
 
 void generate_treasure(point index, variant v) {
-	if(!game.testcount(v))
+	auto count = game.getcount(v);
+	if(count <= 0)
 		return;
-	auto count = v.counter;
-	if(count < 1)
-		count = 1;
 	for(auto i = 0; i < count; i++) {
 		if(v.iskind<itemi>())
 			place_item(index, bsdata<itemi>::elements + v.value);

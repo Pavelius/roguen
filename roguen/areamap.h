@@ -58,6 +58,7 @@ struct areamap : anymap<tile_s, 64> {
 	point			find(feature_s v) const;
 	static direction_s getdirection(point s, point d);
 	static point	get(int x, int y) { return {(short)x, (short)y}; }
+	static point	get(const rect& rc);
 	feature_s		getfeature(point m) const;
 	unsigned char	getfow(point m) const;
 	static point	getfree(point m, short maximum, fntest test);

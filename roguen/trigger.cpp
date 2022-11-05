@@ -18,7 +18,8 @@ void trigger::apply(variants source) const {
 
 void trigger::apply(variant v) const {
 	if(v.iskind<speech>()) {
-		if(!game.testcount(v))
+		auto count = game.getcount(v, 0);
+		if(count < 0)
 			return;
 		player->speech(bsdata<speech>::elements[v.value].id);
 	} else

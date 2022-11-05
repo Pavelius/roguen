@@ -14,33 +14,91 @@ sitei*				last_site;
 globali*			last_global;
 rect				last_rect;
 extern bool			show_floor_rect;
+static fnvariant	last_scipt_proc;
 
 void animate_figures();
 void choose_targets(unsigned flags);
 void create_landscape(variant v);
 void visualize_images(res pid, point size, point offset);
 
+static void place_item(point index, const itemi* pe) {
+	if(!pe || pe == bsdata<itemi>::elements)
+		return;
+	if(area.iswall(index))
+		return;
+	item it; it.clear();
+	it.create(pe);
+	if(pe->is(Coins))
+		it.setcount(xrand(3, 18));
+	it.drop(index);
+}
+
+static void place_item(const itemi* pe) {
+	if(!player || !pe || pe == bsdata<itemi>::elements)
+		return;
+	item it; it.clear();
+	it.create(pe);
+	if(pe->is(Coins))
+		it.setcount(xrand(3, 18));
+	player->additem(it);
+}
+
+static void create_creature(variant v, int count) {
+	if(count <= 0) {
+		if(v.iskind<monsteri>())
+			count = bsdata<monsteri>::elements[v.value].appear.roll();
+		else
+			count = xrand(2, 5);
+		if(!count)
+			count = 1;
+	}
+	for(auto i = 0; i < count; i++)
+		creature::create(area.get(last_rect), v);
+}
+
 static void standart_script(variant v) {
 	if(v.iskind<globali>()) {
 		last_global = bsdata<globali>::elements + v.value;
 		last_value = game.get(*last_global);
 		game.set(*last_global, last_value + v.counter);
+	} else if(v.iskind<listi>()) {
+		for(auto v : bsdata<listi>::elements[v.value].elements)
+			last_scipt_proc(v);
+	} else if(v.iskind<randomizeri>()) {
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		for(auto i = 0; i < count; i++)
+			last_scipt_proc(bsdata<randomizeri>::elements[v.value].random());
+	} else if(v.iskind<script>()) {
+		pushvalue push_result(last_variant, {});
+		bsdata<script>::elements[v.value].run(v.counter);
+		if(last_variant)
+			last_scipt_proc(last_variant);
+	} else if(v.iskind<monsteri>() || v.iskind<racei>()) {
+		auto count = game.getcount(v);
+		if(count <= 0)
+			return;
+		create_creature(v, count);
 	}
 }
 
-void runscript(const variants& elements, fnvariant proc) {
+void runscript(const variants& elements) {
+	if(!last_scipt_proc)
+		return;
 	if(stop_script)
 		return;
 	pushvalue push_stop(stop_script);
 	for(auto v : elements) {
 		if(stop_script)
 			break;
-		proc(v);
+		last_scipt_proc(v);
 	}
 }
 
-void runscript(const variants& elements) {
-	runscript(elements, standart_script);
+void runscript(const variants& elements, fnvariant proc) {
+	pushvalue push_proc(last_scipt_proc, proc);
+	runscript(elements);
 }
 
 static void choose_creature(int bonus) {

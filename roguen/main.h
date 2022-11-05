@@ -539,6 +539,7 @@ public:
 	static void		endgame();
 	void			enter(point m, int level, feature_s feature, direction_s appear_side);
 	int				get(const globali& e) const { return globals[bsid(&e)]; }
+	static int		getcount(variant v, int minimal = 1);
 	unsigned		getminutes() const { return minutes; }
 	static int		getpositivecount(variant v);
 	static int		getrange(point m1, point m2);
@@ -551,7 +552,6 @@ public:
 	void			randomworld();
 	void			read();
 	void			set(const globali& e, int v);
-	static bool		testcount(variant v);
 	void			write();
 	static void		writelog();
 };
@@ -596,3 +596,4 @@ extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);
 void				runscript(const variants& elements);
+void				runscript(const variants& elements, fnvariant proc);
