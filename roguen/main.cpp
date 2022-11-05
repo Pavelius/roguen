@@ -36,6 +36,11 @@ static void equip_item(const char* id) {
 		player->additem(it);
 }
 
+static void test_string() {
+	auto p = str("%1i decks", 12);
+	str("%1i %2", 12, "Test");
+}
+
 static void main_start() {
 	player = creature::create({5, 5}, "Human", "Fighter", true);
 	player->set(Ally);

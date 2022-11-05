@@ -791,6 +791,12 @@ void print(fnoutput proc, const char* format, ...) {
 	proc(temp);
 }
 
+const char* str(const char* format, ...) {
+	static char temp[512]; stringbuilder sb(temp);
+	sb.addv(format, xva_start(format));
+	return temp;
+}
+
 int stringbuilder::getgender(const char* s) {
 	static genderi source[] = {
 		{"à", 1},
