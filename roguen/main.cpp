@@ -2,7 +2,6 @@
 #include "draw.h"
 #include "main.h"
 #include "hotkey.h"
-#include "variantc.h"
 
 static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 
@@ -28,20 +27,13 @@ static void initializating() {
 }
 
 static void equip_item(const char* id) {
-	item it;
-	it.create(id);
+	item it; it.create(id);
 	player->equip(it);
 	if(it)
 		player->additem(it);
 }
 
-void show_worldmap();
-
 static void main_start() {
-	//world.clear();
-	//world.generate({world.mps / 2, world.mps / 2}, 1);
-	//show_worldmap();
-	dungeon::add({128, 128});
 	player = creature::create({5, 5}, "Human", "Fighter", true);
 	player->set(Ally);
 	equip_item("LongBow");

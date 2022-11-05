@@ -494,6 +494,16 @@ public:
 	bool		is(feat_s v) const;
 };
 struct areaheadi : siteable {
+	struct totali {
+		short	mysteries;
+		short	traps;
+		short	doors;
+		short	rooms;
+		short	monsters;
+		short	boss;
+		short	loots;
+	};
+	totali		total;
 	char		darkness;
 	void		clear();
 };
@@ -529,6 +539,7 @@ public:
 	void		passminute();
 	static void	play();
 	void		playminute();
+	void		randomworld();
 	void		read();
 	static bool	testcount(variant v);
 	void		write();

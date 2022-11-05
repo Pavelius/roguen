@@ -14,12 +14,15 @@ static const char* word(const char* prefix, const char* suffix) {
 }
 
 dungeon* dungeon::add(point position, sitei* modifier, sitei* type, variant reward) {
+	auto p = find(position);
+	if(p)
+		return p;
 	if(!modifier || !type)
 		return 0;
 	auto boss = random_boss();
 	if(!boss)
 		return 0;
-	auto p = bsdata<dungeon>::addz();
+	p = bsdata<dungeon>::addz();
 	p->clear();
 	p->position = position;
 	p->modifier = modifier;

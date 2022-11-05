@@ -677,6 +677,16 @@ void sitei::corridors() const {
 	create_doors(floors, walls);
 }
 
+static void update_dungeon_rumor() {
+	if(last_dungeon)
+		return;
+	auto i = area.find(StairsDown);
+	if(!area.isvalid(i))
+		return;
+	// Add random rumor
+	dungeon::add(game.position);
+}
+
 static void create_area(geoposition geo, variant tile) {
 	areahead.clear();
 	if(!apply_landscape(geo, tile))
@@ -700,6 +710,7 @@ static void create_area(geoposition geo, variant tile) {
 	if(last_location->global_finish)
 		(last_location->*last_location->global_finish->proc)();
 	update_doors();
+	update_dungeon_rumor();
 }
 
 variant get_dungeon_site(point v) {

@@ -120,7 +120,7 @@ FrozenSite
  landscape Iced+13
 
 DefaultDungeonEntrance
- landscape StairsDown Dog
+ landscape StairsDown
  feats Notable
 DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
  sites StairsUpRoom StairsDownRoom FalseRoom+2\

@@ -123,6 +123,7 @@ static void cleanup_saves() {
 
 void gamei::newgame() {
 	cleanup_saves();
+	game.randomworld();
 	game.enter(start_village, 0, StairsDown, NorthEast);
 }
 

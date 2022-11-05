@@ -120,3 +120,13 @@ int gamei::getpositivecount(variant v) {
 		return 1;
 	return v.counter;
 }
+
+void gamei::randomworld() {
+	point pt;
+	dungeon::add({128, 128});
+	for(auto i = 0; i < 4; i++) {
+		pt.x = xrand(124, 132);
+		pt.y = xrand(124, 132);
+		dungeon::add(pt);
+	}
+}

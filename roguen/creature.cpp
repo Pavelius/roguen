@@ -886,7 +886,10 @@ bool creature::isvalid() const {
 bool creature::speechrumor() const {
 	collection<dungeon> source;
 	source.select();
-	auto p = source.random();
+	if(!source)
+		return false;
+	auto seed = game.getminutes() / (60 * 12);
+	auto p = (dungeon*)source.data[seed % source.getcount()];
 	if(!p)
 		return false;
 	char temp[1024]; stringbuilder sb(temp);
