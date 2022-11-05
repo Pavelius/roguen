@@ -204,6 +204,7 @@ template<typename T> struct bsdata {
 	static constexpr T*				ptr(short unsigned i) { return (i==0xFFFF) ? 0 : elements + i; }
 };
 template<typename T> inline void	bsset(short unsigned& v, const T* p) { v = (p == 0) ? 0xFFFF : p - bsdata<T>::elements; }
+template<typename T> inline unsigned short bsid(const T* p) { return bsdata<T>::source.indexof(p); }
 template<> struct bsdata<int> { static constexpr array* source_ptr = 0; };
 NOBSDATA(unsigned)
 NOBSDATA(short)

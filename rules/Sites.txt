@@ -1,3 +1,12 @@
+#Global
+
+ChurchOfBlessedOne maximum(1500) current(100)
+ effect WinGame
+ fail LoseGame
+
+GoblinInvasion maximum(20) current(3)
+ effect LoseGame
+
 #RandomTable
 
 RandomAltar

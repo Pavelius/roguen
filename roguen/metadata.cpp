@@ -16,15 +16,22 @@ BSDATAC(boosti, 256);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(dungeon, 256);
+BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
+BSDATAC(siteskilli, 256);
 BSDATAC(trigger, 256);
 
 BSMETA(abilityi) = {
 	BSREQ(id),
+	{}};
+BSMETA(globali) = {
+	BSREQ(id),
+	BSREQ(minimum), BSREQ(maximum), BSREQ(current),
+	BSREQ(effect), BSREQ(fail),
 	{}};
 BSMETA(areafi) = {
 	BSREQ(id),
@@ -113,6 +120,13 @@ BSMETA(sitei) = {
 	BSENM(floors, tilei),
 	BSREQ(minimap),
 	{}};
+BSMETA(siteskilli) = {
+	BSREQ(id),
+	BSENM(skill, abilityi),
+	BSREQ(site),
+	BSENM(retry, durationi),
+	BSREQ(effect), BSREQ(fail),
+	{}};
 BSMETA(sitegeni) = {
 	BSREQ(id),
 	{}};
@@ -148,6 +162,7 @@ BSDATA(varianti) = {
 	{"Dungeon", VAR(dungeon), 0},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},
+	{"Global", VAR(globali), 1},
 	{"Hotkey", VAR(hotkey), 2},
 	{"HotkeyList", VAR(hotkeylist), 1},
 	{"Item", VAR(itemi), 1},
@@ -159,6 +174,7 @@ BSDATA(varianti) = {
 	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
 	{"SiteGenerator", VAR(sitegeni), 1},
+	{"SiteSkills", VAR(siteskilli), 1},
 	{"Spell", VAR(spelli), 1},
 	{"Speech", VAR(speech), 1},
 	{"Tile", VAR(tilei), 1},

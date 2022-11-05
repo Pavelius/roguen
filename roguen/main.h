@@ -110,6 +110,10 @@ struct abilityi : nameable {
 };
 struct conditioni : nameable {
 };
+struct globali : nameable {
+	int			minimum, maximum, current;
+	variants	effect, fail;
+};
 struct racei : nameable {
 };
 struct classi : nameable {
@@ -202,7 +206,8 @@ struct itemi : nameable {
 class item {
 	unsigned short type;
 	union {
-		unsigned short count;
+		unsigned short	count;
+		unsigned char	b[2];
 		struct {
 			magic_s	magic : 2;
 			unsigned char broken : 2;
@@ -521,29 +526,49 @@ struct spella : collection<spelli> {
 	void		select(const spellable* p);
 };
 class gamei : public geoposition, public ownerable {
-	unsigned	minutes;
-	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
+	unsigned		minutes;
+	unsigned		restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
+	int				globals[128];
+	void			setup_globals();
+	static void		setup_rumors(int count);
 public:
-	static point start_village;
-	variantc	events;
-	static void	all(creature::fnupdate proc);
-	void		createarea();
-	static void endgame();
-	void		enter(point m, int level, feature_s feature, direction_s appear_side);
-	unsigned	getminutes() const { return minutes; }
-	static int	getpositivecount(variant v);
-	static int	getrange(point m1, point m2);
-	static bool	isvalid(point m) { return m.x >= 0 && m.x < 256 && m.y >= 0 && m.y < 256; }
-	static void newgame();
-	void		pass(unsigned minutes);
-	void		passminute();
-	static void	play();
-	void		playminute();
-	void		randomworld();
-	void		read();
-	static bool	testcount(variant v);
-	void		write();
-	static void writelog();
+	static point	start_village;
+	static void		all(creature::fnupdate proc);
+	void			clear() { memset(this, 0, sizeof(*this)); }
+	void			createarea();
+	static void		endgame();
+	void			enter(point m, int level, feature_s feature, direction_s appear_side);
+	int				get(const globali& e) const { return globals[bsid(&e)]; }
+	unsigned		getminutes() const { return minutes; }
+	static int		getpositivecount(variant v);
+	static int		getrange(point m1, point m2);
+	static bool		isvalid(point m) { return m.x >= 0 && m.x < 256 && m.y >= 0 && m.y < 256; }
+	static void		newgame();
+	void			pass(unsigned minutes);
+	void			passminute();
+	static void		play();
+	void			playminute();
+	void			randomworld();
+	void			read();
+	void			set(const globali& e, int v);
+	static bool		testcount(variant v);
+	void			write();
+	static void		writelog();
+};
+struct skilluse {
+	ability_s		ability;
+	char			result;
+	unsigned short	player_id;
+	unsigned short	room_id;
+	unsigned		stamp;
+	static skilluse* add(ability_s v, short unsigned player_id, short unsigned room_id);
+	static skilluse* find(ability_s v, short unsigned player_id, short unsigned room_id);
+};
+struct siteskilli : nameable {
+	const sitei*	site;
+	ability_s		skill;
+	duration_s		retry;
+	variants		effect, fail;
 };
 namespace draw {
 struct keybind {
@@ -567,7 +592,7 @@ extern rect			last_rect;
 extern sitei*		last_site;
 extern sitei*		last_location;
 extern creature		*player, *opponent, *enemy;
-extern bool			stop_script;
 extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);
+void				runscript(const variants& elements);

@@ -212,6 +212,7 @@
     <ClCompile Include="scripting.cpp" />
     <ClCompile Include="serial.cpp" />
     <ClCompile Include="shape.cpp" />
+    <ClCompile Include="skilluse.cpp" />
     <ClCompile Include="speech.cpp" />
     <ClCompile Include="spells.cpp" />
     <ClCompile Include="sprite_util.cpp" />

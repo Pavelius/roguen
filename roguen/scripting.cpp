@@ -6,23 +6,29 @@ creaturea			creatures, enemies, targets;
 spella				allowed_spells;
 itema				items;
 creature			*player, *opponent, *enemy;
-int					last_hit, last_hit_result, last_parry, last_parry_result;
+int					last_hit, last_hit_result, last_parry, last_parry_result, last_value;
 variant				last_variant;
 dungeon*			last_dungeon;
 sitei*				last_location;
 sitei*				last_site;
+globali*			last_global;
 rect				last_rect;
 extern bool			show_floor_rect;
-bool				stop_script;
-
-typedef void (*fnvariant)(variant v);
 
 void animate_figures();
 void choose_targets(unsigned flags);
 void create_landscape(variant v);
 void visualize_images(res pid, point size, point offset);
 
-static void runscript(const variants& elements, fnvariant proc) {
+static void standart_script(variant v) {
+	if(v.iskind<globali>()) {
+		last_global = bsdata<globali>::elements + v.value;
+		last_value = game.get(*last_global);
+		game.set(*last_global, last_value + v.counter);
+	}
+}
+
+void runscript(const variants& elements, fnvariant proc) {
 	if(stop_script)
 		return;
 	pushvalue push_stop(stop_script);
@@ -31,6 +37,10 @@ static void runscript(const variants& elements, fnvariant proc) {
 			break;
 		proc(v);
 	}
+}
+
+void runscript(const variants& elements) {
+	runscript(elements, standart_script);
 }
 
 static void choose_creature(int bonus) {
@@ -380,6 +390,12 @@ static void set_offset(int bonus) {
 	last_rect.offset(bonus);
 }
 
+static void win_game(int bonus) {
+}
+
+static void lose_game(int bonus) {
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -402,6 +418,7 @@ BSDATA(script) = {
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
 	{"Inventory", inventory},
+	{"LoseGame", lose_game},
 	{"Offset", set_offset},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
@@ -420,6 +437,7 @@ BSDATA(script) = {
 	{"ThrownAttack", thrown_attack},
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"ViewStuff", view_stuff},
+	{"WinGame", win_game},
 	{"UseItem", use_item},
 };
 BSDATAF(script)

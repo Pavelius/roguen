@@ -62,5 +62,6 @@ union variant {
 	const char*			getname() const;
 	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; counter = 0; }
 };
+typedef void (*fnvariant)(variant v);
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);

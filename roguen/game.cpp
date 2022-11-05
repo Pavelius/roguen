@@ -121,12 +121,39 @@ int gamei::getpositivecount(variant v) {
 	return v.counter;
 }
 
-void gamei::randomworld() {
+void gamei::setup_globals() {
+	for(auto& e : bsdata<globali>())
+		globals[bsid(&e)] = e.current;
+}
+
+void gamei::setup_rumors(int count) {
 	point pt;
-	dungeon::add({128, 128});
-	for(auto i = 0; i < 4; i++) {
-		pt.x = xrand(124, 132);
-		pt.y = xrand(124, 132);
+	//dungeon::add(start_village);
+	const int r = 6;
+	for(auto i = 0; i < count; i++) {
+		pt.x = xrand(start_village.x - r, start_village.x + r);
+		pt.y = xrand(start_village.x - r, start_village.x + r);
 		dungeon::add(pt);
 	}
+}
+
+void gamei::randomworld() {
+	clear();
+	setup_globals();
+	setup_rumors(xrand(4, 7));
+}
+
+void gamei::set(const globali& e, int v) {
+	if(v < e.minimum)
+		v = e.minimum;
+	if(v > e.maximum)
+		v = e.maximum;
+	auto cv = get(e);
+	if(cv == v)
+		return;
+	globals[bsid(&e)] = v;
+	if(v == e.minimum)
+		runscript(e.fail);
+	else if(v==e.maximum)
+		runscript(e.effect);
 }
