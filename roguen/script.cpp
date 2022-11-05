@@ -11,8 +11,10 @@ BSMETA(script) = {
 	{}};
 
 void script::run(int bonus) {
+	auto push = last_script;
 	last_script = this;
 	proc(bonus);
+	last_script = push;
 }
 
 void script::run(const char* id, int bonus) {

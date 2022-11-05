@@ -10,6 +10,7 @@ DefaultCaveFinal: Пещера
 DefaultDungeon: Подземелье
 DefaultDungeonEntrance: Вход в подземелье
 DefaultDungeonFinal: Подземелье
+FamousHeroMonument: Монумент герою
 GeneralStore: Магазин
 Hills: Холмы
 InscribedRoom: Надписи на стенах
