@@ -70,7 +70,7 @@ static bool serial_area(const char* url, bool write_mode) {
 	if(!file)
 		return false;
 	archive a(file, write_mode);
-	a.set(loc);
+	a.set(areahead);
 	a.set(area);
 	a.set(saved_creatures);
 	a.set(bsdata<itemground>::source);

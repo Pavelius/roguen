@@ -9,6 +9,7 @@ creature			*player, *opponent, *enemy;
 int					last_hit, last_hit_result, last_parry, last_parry_result;
 variant				last_variant;
 dungeon*			last_dungeon;
+sitei*				last_location;
 sitei*				last_site;
 rect				last_rect;
 extern bool			show_floor_rect;
@@ -345,16 +346,16 @@ static void site_floor(int bonus) {
 	last_variant.clear();
 	if(last_site && last_site->floors)
 		set_result(bsdata<tilei>::elements + last_site->floors, bonus);
-	else if(loc.getsite() && loc.getsite()->floors)
-		set_result(bsdata<tilei>::elements + loc.getsite()->floors, bonus);
+	else if(last_location && last_location->floors)
+		set_result(bsdata<tilei>::elements + last_location->floors, bonus);
 }
 
 static void site_wall(int bonus) {
 	last_variant.clear();
 	if(last_site && last_site->walls)
 		set_result(bsdata<tilei>::elements + last_site->walls, bonus);
-	else if(loc.getsite() && loc.getsite()->walls)
-		set_result(bsdata<tilei>::elements + loc.getsite()->walls, bonus);
+	else if(last_location && last_location->walls)
+		set_result(bsdata<tilei>::elements + last_location->walls, bonus);
 }
 
 static void choose_spell(int bonus) {

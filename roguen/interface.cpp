@@ -955,7 +955,7 @@ static void correct_camera() {
 		camera.y = tsy * area.mps - h - tsy / 2;
 }
 
-static void paint_world() {
+/*static void paint_world() {
 	rectpush push;
 	pushvalue push_fore(fore);
 	const int z = 16;
@@ -975,7 +975,7 @@ static void paint_world() {
 			rectf();
 		}
 	}
-}
+}*/
 
 static void fillfade(color cv, unsigned char av = 128) {
 	pushvalue push_fore(fore);
@@ -1142,11 +1142,11 @@ static void pause_keys() {
 		execute(buttoncancel);
 }
 
-static void scene_world() {
+/*static void scene_world() {
 	fillwindow();
 	paint_world();
 	pause_keys();
-}
+}*/
 
 static void paint_legends(point origin, int z) {
 	auto push_caret = caret;
@@ -1202,9 +1202,9 @@ static void paint_legends_text(point origin) {
 static void scene_area() {
 	fillwindow();
 	if(game.level)
-		print(text_header, "%1 (%Level %2i)", loc.getsite()->getname(), game.level);
+		print(text_header, "%1 (%Level %2i)", areahead.getsite()->getname(), game.level);
 	else
-		text_header(loc.getsite()->getname());
+		text_header(areahead.getsite()->getname());
 	print(small_header, getnm("GlobalMapPosition"), game.position.x, game.position.y);
 	const int z = 4;
 	point origin;
@@ -1251,10 +1251,6 @@ static void paint_status() {
 static void before_paint() {
 	message_rect.clear();
 	paint_status();
-}
-
-void show_worldmap() {
-	scene(scene_world);
 }
 
 void show_area(int bonus) {

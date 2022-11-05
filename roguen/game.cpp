@@ -1,8 +1,7 @@
 #include "main.h"
 
 areamap			area;
-location		loc;
-worldi			world;
+areaheadi		areahead;
 gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);

@@ -868,7 +868,7 @@ void creature::sayv(stringbuilder& sb, const char* format, const char* format_pa
 }
 
 int	creature::getlos() const {
-	auto r = get(LineOfSight) - loc.darkness;
+	auto r = get(LineOfSight) - areahead.darkness;
 	auto m = 1;
 	if(is(Darkvision))
 		m++;

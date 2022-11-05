@@ -54,7 +54,8 @@ static void main_start() {
 int start_application(fnevent proc, fnevent initializing);
 
 int main(int argc, char *argv[]) {
-	srand(getcputime());
+	auto seed = getcputime();
+	srand(seed);
 	//srand(213);
 	return start_application(main_start, initializating);
 }

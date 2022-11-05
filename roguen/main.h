@@ -18,7 +18,6 @@
 #include "speech.h"
 #include "talk.h"
 #include "variantc.h"
-#include "world.h"
 
 #pragma once
 
@@ -494,7 +493,7 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
 };
-struct location : siteable {
+struct areaheadi : siteable {
 	char		darkness;
 	void		clear();
 };
@@ -545,8 +544,7 @@ bool				isnext();
 }
 inline int			d100() { return rand() % 100; }
 extern areamap		area;
-extern location		loc;
-extern worldi		world;
+extern areaheadi	areahead;
 extern creaturea	creatures, enemies;
 extern itema		items;
 extern gamei		game;
@@ -556,6 +554,7 @@ extern variant		last_variant;
 extern dungeon*		last_dungeon;
 extern rect			last_rect;
 extern sitei*		last_site;
+extern sitei*		last_location;
 extern creature		*player, *opponent, *enemy;
 extern bool			stop_script;
 extern int			window_width;

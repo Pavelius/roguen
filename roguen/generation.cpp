@@ -151,15 +151,15 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 
 void sitei::fillfloor() const {
 	auto n = floors;
-	if(!n && loc.getsite()->floors)
-		n = loc.getsite()->floors;
+	if(!n && last_location->floors)
+		n = last_location->floors;
 	area.set(last_rect, n);
 }
 
 void sitei::fillwallsall() const {
 	auto n = walls;
-	if(!n && loc.getsite()->walls)
-		n = loc.getsite()->walls;
+	if(!n && last_location->walls)
+		n = last_location->walls;
 	area.set(last_rect, n);
 }
 
@@ -546,11 +546,11 @@ static void create_sites() {
 }
 
 static bool apply_landscape(geoposition geo, variant tile) {
-	sitei* site = tile;
-	if(!site)
+	last_location = tile;
+	if(!last_location)
 		return false;
-	loc.setsite(site);
-	loc.darkness = loc.getsite()->darkness;
+	areahead.setsite(last_location);
+	areahead.darkness = areahead.getsite()->darkness;
 	return true;
 }
 
@@ -650,10 +650,9 @@ static void create_doors(tile_s floor, tile_s wall) {
 
 static void create_corridor_content(point i) {
 	variant treasure = "RandomTreasure";
-	auto site = loc.getsite();
-	if(site && site->loot && d100() < 40)
-		treasure = randomizeri::random(site->loot);
-	if(last_dungeon && last_dungeon->modifier && last_dungeon->modifier->loot && d100() < 40)
+	if(last_location && last_location->loot && d100() < 40)
+		treasure = randomizeri::random(last_location->loot);
+	else if(last_dungeon && last_dungeon->modifier && last_dungeon->modifier->loot && d100() < 40)
 		treasure = randomizeri::random(last_dungeon->modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	create_landscape(treasure);
@@ -679,7 +678,7 @@ void sitei::corridors() const {
 }
 
 static void create_area(geoposition geo, variant tile) {
-	loc.clear();
+	areahead.clear();
 	if(!apply_landscape(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
@@ -690,16 +689,16 @@ static void create_area(geoposition geo, variant tile) {
 	add_area_sites(tile);
 	rect all = {0, 0, area.mps - 1, area.mps - 1};
 	pushvalue push_rect(last_rect, all);
-	pushvalue push_method(last_method, loc.getsite()->local);
-	if(loc.getsite()->global)
-		(loc.getsite()->*loc.getsite()->global->proc)();
+	pushvalue push_method(last_method, last_location->local);
+	if(last_location->global)
+		(last_location->*last_location->global->proc)();
 	else
-		loc.getsite()->outdoor();
+		last_location->outdoor();
 	last_rect = push_rect;
 	create_sites();
 	last_rect = push_rect;
-	if(loc.getsite()->global_finish)
-		(loc.getsite()->*loc.getsite()->global_finish->proc)();
+	if(last_location->global_finish)
+		(last_location->*last_location->global_finish->proc)();
 	update_doors();
 }
 
