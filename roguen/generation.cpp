@@ -465,7 +465,6 @@ void create_landscape(variant v) {
 			(last_site->*last_method->proc)();
 		if(!last_site->sites)
 			add_room(last_site, last_rect);
-		last_rect.offset(last_site->offset.x, last_site->offset.y);
 		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
 			create_landscape(ev);
 	} else if(v.iskind<monsteri>())
@@ -558,7 +557,7 @@ static bool apply_landscape(geoposition geo, variant tile) {
 void sitei::cityscape() const {
 	fillfloor();
 	create_landscape(this);
-	last_rect.offset(offset.x, offset.y);
+	last_rect.offset(2, 2);
 	create_city_level(last_rect, 0);
 	sort_locations();
 }
@@ -566,7 +565,6 @@ void sitei::cityscape() const {
 void sitei::outdoor() const {
 	fillfloor();
 	create_landscape(this);
-	last_rect.offset(offset.x, offset.y);
 	const auto parts = 4;
 	const auto size = last_rect.width() / parts;
 	for(auto i = 0; i < parts * parts; i++) {
@@ -601,7 +599,7 @@ static rect bounding_locations() {
 }
 
 void sitei::dungeon() const {
-	last_rect.offset(offset.x, offset.y);
+	last_rect.offset(2, 2);
 	auto parts = 4;
 	if(last_rect.width() <= 48)
 		parts = 3;

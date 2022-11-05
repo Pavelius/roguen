@@ -774,10 +774,18 @@ void creature::update_basic() {
 	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
 }
 
+void creature::update_room_abilities() {
+	auto p = getroom();
+	if(!p)
+		return;
+	trigger::fire(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), p->getsite());
+}
+
 void creature::update() {
 	update_basic();
 	update_boost();
 	update_wears();
+	update_room_abilities();
 	update_abilities();
 }
 

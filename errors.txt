@@ -1,3 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `AncientLabRoom`
- Define translation for `ArtifactStatueRoom`
+﻿In file `rules/Sites.txt`:
+ Line 166: Not found requisit `offset`

@@ -82,7 +82,7 @@ enum tile_s : unsigned char {
 	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
 };
 enum trigger_s : unsigned char {
-	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead,
+	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
 };
 enum targetf : unsigned char {
 	Item, Feature, You, Allies, Enemies, FarRange,
@@ -325,6 +325,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void		update_abilities();
 	void		update_basic();
 	void		update_boost();
+	void		update_room_abilities();
 	void		update_wears();
 public:
 	geoposition worldpos;
@@ -428,7 +429,6 @@ struct sitei : nameable {
 	color		minimap;
 	tile_s		walls, floors;
 	char		darkness, chance_finale;
-	point		offset;
 	featable	feats;
 	const shapei* shape;
 	const sitegeni*	global;

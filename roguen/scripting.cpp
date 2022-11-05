@@ -371,6 +371,14 @@ static void heal_all(int bonus) {
 	heal_player(100);
 }
 
+static void set_offset(int bonus) {
+	if(bonus > last_rect.width() / 2)
+		bonus = last_rect.width() / 2;
+	if(bonus > last_rect.height() / 2)
+		bonus = last_rect.height() / 2;
+	last_rect.offset(bonus);
+}
+
 void show_area(int bonus);
 void show_logs(int bonus);
 
@@ -393,6 +401,7 @@ BSDATA(script) = {
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
 	{"Inventory", inventory},
+	{"Offset", set_offset},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"QuestGuardian", quest_guardian},

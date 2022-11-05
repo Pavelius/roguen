@@ -3,8 +3,9 @@
 BSDATA(triggeri) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
+	{"WhenCreatureP1InSiteP2UpdateAbilities"}
 };
-assert_enum(triggeri, WhenCreatureP1Dead)
+assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
 
 void trigger::apply(variants source) const {
 	pushvalue push_stop(stop_script, false);

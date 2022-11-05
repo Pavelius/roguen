@@ -112,7 +112,6 @@ BSMETA(sitei) = {
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSREQ(minimap),
-	BSREQ(offset),
 	{}};
 BSMETA(sitegeni) = {
 	BSREQ(id),

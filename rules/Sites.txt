@@ -31,8 +31,8 @@ DeepLake walls(DeepWater) floors(DeepWater)
 PlantsGround
  landscape Plant+4
 
-FamousHeroMonument offset(3 3)
- landscape Statue+1
+FamousHeroMonument
+ landscape Offset+2 Statue+1
  feats Notable
 MysteryHouse walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Webbed+4 Blooded+3 Bones+4 MonsterSkull+1
@@ -92,17 +92,17 @@ SpiderNest
 StrangeFloraRoom
  landscape QuestLandscape Herbs+4 Plant+1
  feats Notable
-StairsUpRoom offset(1 1)
- landscape QuestLandscape StairsUp QuestMinion-10
+StairsUpRoom
+ landscape QuestLandscape Offset+2 StairsUp QuestMinion-10
  feats Notable
-StairsDownRoom offset(1 1)
- landscape QuestLandscape StairsDown QuestMinion-80
+StairsDownRoom
+ landscape QuestLandscape Offset+2 StairsDown QuestMinion-80
  feats Notable
-PortalRoom offset(1 1)
- landscape QuestLandscape GatePortal
+PortalRoom
+ landscape QuestLandscape Offset+1 GatePortal
  feats Notable
 UnholyAltarRoom
- landscape QuestLandscape AltarEvil UndeadHorde RandomTreasure
+ landscape QuestLandscape Blooded+5 AltarEvil UndeadHorde RandomTreasure+2
  feats Notable
 UnholyPlace
  landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
@@ -122,17 +122,22 @@ FrozenSite
 DefaultDungeonEntrance
  landscape StairsDown Dog
  feats Notable
-DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(3 3) darkness(3)
- sites StairsUpRoom StairsDownRoom AltarRoom SarcaphagusRoom ArtifactStatueRoom AncientLabRoom InscribedRoom PortalRoom-10 MinionsRoom+3 MinionsRoom-60 FalseRoom+2 EmpthyRoom+16
-DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(10 10) darkness(3)
+DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
+ sites StairsUpRoom StairsDownRoom FalseRoom+2\
+  AltarRoom-50 SarcaphagusRoom-60 ArtifactStatueRoom-30 AncientLabRoom-30 InscribedRoom-80 PortalRoom-10\
+  MinionsRoom+3 MinionsRoom-60\
+  EmpthyRoom+16
+DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 DefaultCaveEntrance
- landscape TreePalm+5 ThornBush+3 StairsDown Dog
+ landscape StairsDown Dog
  feats Notable
-DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(10 10) darkness(3)
- sites StairsUpRoom StairsDownRoom MinionsRoom MinionsRoom-60 FalseRoom CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom EmpthyRoom+16
-DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) offset(10 10) darkness(3) chance_finale(40)
+DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
+ sites StairsUpRoom StairsDownRoom MinionsRoom MinionsRoom-60 FalseRoom\
+  CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom\
+  EmpthyRoom+16
+DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) chance_finale(40)
  sites StairsUpRoom BossRoom MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 Plains minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateOutdoor)
@@ -158,7 +163,7 @@ Hills minimap(152 191 100) floors(Grass) walls(WallCave) global(GenerateOutdoor)
 AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
-StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateVillage) offset(2 2)
+StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateVillage)
  landscape Tree+50 FootMud+20 FootHill+90
  sites GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 
