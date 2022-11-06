@@ -333,6 +333,18 @@ int areamap::getindex(point m, tile_s tile) const {
 	return r;
 }
 
+unsigned char areamap::getlos(point m) const {
+	unsigned char r = 0;
+	unsigned char f = 1;
+	for(auto d : straight_directions) {
+		auto m1 = m + d;
+		if(isvalid(m1) && !is(m1, Visible))
+			r |= f;
+		f = f << 1;
+	}
+	return r;
+}
+
 unsigned char areamap::getfow(point m) const {
 	unsigned char r = 0;
 	unsigned char f = 1;

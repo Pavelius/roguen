@@ -412,7 +412,7 @@ static bool apply_location(geoposition geo, variant tile) {
 void sitei::cityscape() const {
 	fillfloor();
 	runscript(this);
-	last_rect.offset(2, 2);
+	last_rect.offset(last_location->offset, last_location->offset);
 	create_city_level(last_rect, 0);
 	sort_locations();
 }
@@ -420,6 +420,7 @@ void sitei::cityscape() const {
 void sitei::outdoor() const {
 	fillfloor();
 	runscript(this);
+	last_rect.offset(last_location->offset, last_location->offset);
 	const auto parts = 4;
 	const auto size = last_rect.width() / parts;
 	for(auto i = 0; i < parts * parts; i++) {
@@ -454,7 +455,7 @@ static rect bounding_locations() {
 }
 
 void sitei::dungeon() const {
-	last_rect.offset(2, 2);
+	last_rect.offset(last_location->offset, last_location->offset);
 	auto parts = 4;
 	if(last_rect.width() <= 48)
 		parts = 3;

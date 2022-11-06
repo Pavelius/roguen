@@ -64,6 +64,7 @@ struct areamap : anymap<tile_s, 64> {
 	unsigned char	getfow(point m) const;
 	static point	getfree(point m, short maximum, fntest test);
 	int				getindex(point m, tile_s e) const;
+	unsigned char	getlos(point m) const;
 	direction_s		getmost(const rect& rc) const;
 	static point	getnext(point start, point goal);
 	static unsigned getpath(point start, point goal, point* result, unsigned maximum);

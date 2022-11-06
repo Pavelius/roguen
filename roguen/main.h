@@ -26,7 +26,7 @@ enum class res {
 	Monsters,
 	Borders, Floor, Walls, Decals, Features, Shadows, Items,
 	Attack, Conditions, Splash,
-	Fow, Missile,
+	Fow, Los, Missile,
 	PCBody, PCArms, PCAccessories,
 };
 enum ability_s : unsigned char {
@@ -439,7 +439,7 @@ struct locationi : sitei {
 	variants	sites;
 	const sitegeni*	global;
 	const sitegeni*	global_finish;
-	char		darkness, chance_finale;
+	char		darkness, chance_finale, offset;
 	color		minimap;
 };
 class siteable {

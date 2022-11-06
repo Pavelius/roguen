@@ -137,19 +137,19 @@ EvilSite
 FrozenSite
  landscape Iced-50
 
-DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
+DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(2)
  sites StairsUpRoom StairsDownRoom FalseRoom+2\
   AltarRoom-50 SarcaphagusRoom-60 ArtifactStatueRoom-30 AncientLabRoom-30 InscribedRoom-80 PortalRoom-10\
   MinionsRoom+3 MinionsRoom-60\
   EmpthyRoom+16
-DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
+DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
-DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
+DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
  sites StairsUpRoom StairsDownRoom DeepLake-10 MinionsRoom MinionsRoom-60 FalseRoom\
   CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom\
   EmpthyRoom+16
-DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) chance_finale(40)
+DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) chance_finale(40) offset(10)
  sites StairsUpRoom BossRoom MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 Plains minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateOutdoor)
@@ -175,7 +175,7 @@ Hills minimap(152 191 100) floors(Grass) walls(WallCave) global(GenerateOutdoor)
 AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
-StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateVillage)
+StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) global(GenerateVillage) offset(4)
  landscape Tree+50 FootMud+20 FootHill+90
  sites GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 

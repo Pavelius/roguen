@@ -122,7 +122,7 @@ BSMETA(locationi) = {
 	BSREQ(global), BSREQ(global_finish),
 	BSREQ(local),
 	BSREQ(landscape), BSREQ(sites), BSREQ(loot),
-	BSREQ(darkness),
+	BSREQ(darkness), BSREQ(offset),
 	BSFLG(feats, feati),
 	BSREQ(chance_finale),
 	BSENM(walls, tilei),

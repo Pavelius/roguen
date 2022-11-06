@@ -286,6 +286,16 @@ static void fillwalls() {
 	rectf();
 }
 
+static void filllos() {
+	rectpush push;
+	pushvalue push_fore(fore);
+	pushvalue push_alpha(alpha, (unsigned char)64);
+	caret.x -= tsx / 2; caret.y -= tsy / 2;
+	width = tsx; height = tsy;
+	fore = color(0, 0, 0);
+	rectf();
+}
+
 static void fillfow() {
 	rectpush push;
 	pushvalue push_fore(fore);
@@ -473,6 +483,67 @@ static void paint_fow() {
 	}
 }
 
+static void paint_los() {
+	rectpush push;
+	height = tsy; width = tsx;
+	auto pi = gres(res::Los);
+	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
+	auto y1 = camera.y / tsy, y2 = (camera.y + getheight() + tsy / 2) / tsy;
+	for(short y = y1; y <= y2; y++) {
+		if(y < 0)
+			continue;
+		if(y >= area.mps)
+			break;
+		for(short x = x1; x <= x2; x++) {
+			if(x < 0)
+				continue;
+			if(x >= area.mps)
+				break;
+			point i = {x, y};
+			if(!area.is(i, Explored))
+				continue;
+			auto pt = m2s({x, y});
+			setcaret(pt);
+			if(!area.is(i, Visible))
+				filllos();
+			else {
+				auto f = area.getlos(i);
+				if(f != area.getfow(i)) {
+					// 1 - North
+					// 2 - South
+					// 4 - West
+					// 8 - East
+					switch(f) {
+					case 1: image(pi, 0, ImageMirrorV); break;
+					case 2: image(pi, 0, 0); break;
+					case 1 + 2: image(pi, 0, ImageMirrorV); image(pi, 0, 0); break;
+					case 4: image(pi, 1, 0); break;
+					case 1 + 4: image(pi, 3, ImageMirrorV); break;
+					case 2 + 4: image(pi, 3, 0); break;
+					case 1 + 2 + 4: image(pi, 3, 0); image(pi, 0, ImageMirrorV); break;
+					case 8: image(pi, 1, ImageMirrorH); break;
+					case 1 + 8: image(pi, 3, ImageMirrorV | ImageMirrorH); break;
+					case 2 + 8: image(pi, 3, ImageMirrorH); break;
+					case 1 + 2 + 8: image(pi, 0, ImageMirrorV); image(pi, 3, ImageMirrorH); break;
+					case 4 + 8: image(pi, 1, 0); image(pi, 1, ImageMirrorH); break;
+					case 1 + 4 + 8: image(pi, 3, ImageMirrorV); image(pi, 1, ImageMirrorH); break;
+					case 2 + 4 + 8: image(pi, 3, 0); image(pi, 1, ImageMirrorH); break;
+					default: break;
+					}
+				}
+				if((f & (2 | 8)) == 0 && !area.isb(to(i, SouthEast), Visible))
+					image(pi, 2, ImageMirrorH);
+				if((f & (1 | 4)) == 0 && !area.isb(to(i, NorthWest), Visible))
+					image(pi, 2, ImageMirrorV);
+				if((f & (1 | 8)) == 0 && !area.isb(to(i, NorthEast), Visible))
+					image(pi, 2, ImageMirrorV | ImageMirrorH);
+				if((f & (2 | 4)) == 0 && !area.isb(to(i, SouthWest), Visible))
+					image(pi, 2, 0);
+			}
+		}
+	}
+}
+
 static int getavatar(int race, bool female, int armor) {
 	return race * 6 + (female ? 1 : 0) + armor * 2;
 }
@@ -504,7 +575,7 @@ static point get_top_position(variant v) {
 	if(v.iskind<monsteri>()) {
 		auto ps = gres(res::Monsters);
 		auto& fr = ps->get(bsdata<monsteri>::elements[v.value].avatar);
-		result.y -= fr.oy + 4*2;
+		result.y -= fr.oy + 4 * 2;
 	} else if(v.iskind<racei>()) {
 		result.y = -76;
 	}
@@ -684,6 +755,7 @@ static void before_paint_all() {
 	link_camera();
 	paint_floor();
 	paint_items();
+	paint_los();
 	caret = push_caret;
 	clipping = push_clip;
 }

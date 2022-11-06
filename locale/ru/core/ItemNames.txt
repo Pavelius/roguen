@@ -52,6 +52,7 @@ StrangeAquaSphere: Голубая сфера
 StrangeGreenSphere: Зеленая сфера
 StrangeRedSphere: Красная сфера
 StrangeRod: Прутик
+StrangeSword: Меч
 
 Bones: Кости
 MonsterSkull: Череп монстра

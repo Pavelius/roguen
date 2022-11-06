@@ -1,4 +1,2 @@
 ﻿In file `Names.txt`:
- Define translation for `StrangeAquaSphere`
- Define translation for `StrangeRedSphere`
- Define translation for `StrangeRod`
+ Define translation for `StrangeSword`

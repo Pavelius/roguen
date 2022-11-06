@@ -328,6 +328,15 @@ static void pickup(int bonus) {
 	}
 }
 
+static void pickup_all(int bonus) {
+	itema items;
+	items.select(player->getposition());
+	for(auto p : items) {
+		player->act(getnm("PickupItem"), p->getfullname());
+		player->additem(*p);
+	}
+}
+
 static void dropdown(int bonus) {
 	itema items;
 	items.selectbackpack(player);
@@ -565,6 +574,7 @@ BSDATA(script) = {
 	{"Offset", set_offset},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
+	{"PickUpAll", pickup_all},
 	{"QuestGuardian", quest_guardian},
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
