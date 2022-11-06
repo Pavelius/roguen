@@ -1,2 +1,4 @@
-﻿In file `rules/Sites.txt`:
- Line 11: Can't find variant `Not`
+﻿In file `Names.txt`:
+ Define translation for `StrangeAquaSphere`
+ Define translation for `StrangeRedSphere`
+ Define translation for `StrangeRod`

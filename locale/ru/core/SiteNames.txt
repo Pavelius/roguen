@@ -22,6 +22,7 @@ PitRoom: Ямы
 Plains: Равнины
 PortalRoom: Портал
 SarcaphagusRoom: Саркофаг
+SpiderNest: Логово пауков
 StairsUpRoom: Лестница вверх
 StairsDownHouses: Дом с лестницей вниз
 StairsDownRoom: Лестница вниз

@@ -14,10 +14,6 @@ RandomAltar
 
 #Site
 
-NoLocation
-
-GoblinScouts
- landscape QuestLandscape Goblin
 MonstersLair
  landscape QuestLandscape Bones+2 Blooded+3 DireBoar
 
@@ -72,32 +68,36 @@ ArtifactStatueRoom
 AncientLabRoom
  landscape QuestLandscape UndeadHorde-30
  feats Notable
-InscribedRoom
- landscape QuestLandscape UndeadHorde-30 RandomArtifact-40 RandomArtifact-40 OtherworldCreature-40
- feats Notable
-SarcaphagusRoom
- landscape QuestLandscape RandomAltar-20 UndeadHorde-20 UndeadHorde-30
- feats Notable
-EmpthyRoom
- landscape QuestLandscape
-FalseRoom local(GenerateWalls)
-MinionsRoom
- landscape QuestLandscape Blooded+2 QuestMinion QuestMinion-30
+BossRoom
+ landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
  feats Notable
 CaveMonsterLair
  landscape QuestLandscape Bones+2 Blooded+3 RandomCaveMonster
  feats Notable
-BossRoom
- landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
- feats Notable
 DarkestRoom
  landscape QuestLandscape Darkened-100
+ feats Notable
+EmpthyRoom
+ landscape QuestLandscape
+FalseRoom local(GenerateWalls)
+GoblinScouts
+ landscape QuestLandscape Goblin
+ feats Notable
+InscribedRoom
+ landscape QuestLandscape UndeadHorde-30 RandomArtifact-40 RandomArtifact-40 OtherworldCreature-40
+ feats Notable
+MinionsRoom
+ landscape QuestLandscape Blooded+2 QuestMinion QuestMinion-30
  feats Notable
 PitRoom
  landscape QuestLandscape Pit+3
  feats Notable
+SarcaphagusRoom
+ landscape QuestLandscape RandomAltar-20 UndeadHorde-20 UndeadHorde-30
+ feats Notable
 SpiderNest
  landscape QuestLandscape Webbed-70 Bones+3 GiantSpider
+ feats Notable
 StrangeFloraRoom
  landscape QuestLandscape Herbs+4 Plant+1
  feats Notable
@@ -117,12 +117,11 @@ UnholyPlace
  landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
  feats Notable
 
-DefaultDungeonEntrance
- landscape StairsDown
- feats Notable
-
 DefaultCaveEntrance
  landscape StairsDown Dog
+ feats Notable
+DefaultDungeonEntrance
+ landscape StairsDown
  feats Notable
 
 #Location
@@ -147,7 +146,7 @@ DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) g
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
- sites StairsUpRoom StairsDownRoom MinionsRoom MinionsRoom-60 FalseRoom\
+ sites StairsUpRoom StairsDownRoom DeepLake-10 MinionsRoom MinionsRoom-60 FalseRoom\
   CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom\
   EmpthyRoom+16
 DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) chance_finale(40)
@@ -195,7 +194,7 @@ RandomDungeonModifier
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultCave DefaultDungeon
+ chance DefaultCave //DefaultDungeon
 
 #Trigger
 

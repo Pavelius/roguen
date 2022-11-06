@@ -48,7 +48,10 @@ BluePotion: Синее зелье
 
 Ration: Сухпаек
 
+StrangeAquaSphere: Голубая сфера
 StrangeGreenSphere: Зеленая сфера
+StrangeRedSphere: Красная сфера
+StrangeRod: Прутик
 
 Bones: Кости
 MonsterSkull: Череп монстра

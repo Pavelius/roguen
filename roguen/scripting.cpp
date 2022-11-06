@@ -119,7 +119,7 @@ static void standart_script(variant v) {
 			return;
 		for(auto i = 0; i < count; i++) {
 			place_shape(bsdata<shapei>::elements[v.value],
-				area.get(last_rect.shrink(4, 4)), getfloor(), getwall());
+				area.get(last_rect), getfloor(), getwall());
 		}
 	} else if(v.iskind<itemi>()) {
 		auto count = game.getcount(v);
