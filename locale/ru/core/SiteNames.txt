@@ -1,9 +1,11 @@
 AltarRoom: Алтарь
 AncientLabRoom: Древняя лабортория
 ArtifactStatueRoom: Статуя
+AshenLand: Земли пепла
 BossRoom: Логово
 CaveMonsterLair: Зверинное логово
 DarkestRoom: Истинная тьма
+DeepForest: Дремучий лес
 DefaultCave: Пещера
 DefaultCaveEntrance: Вход в пещеру
 DefaultCaveFinal: Пещера
@@ -11,6 +13,7 @@ DefaultDungeon: Подземелье
 DefaultDungeonEntrance: Вход в подземелье
 DefaultDungeonFinal: Подземелье
 FamousHeroMonument: Монумент герою
+ForestSwamps: Заболоченный лес
 GeneralStore: Магазин
 Hills: Холмы
 InscribedRoom: Надписи на стенах

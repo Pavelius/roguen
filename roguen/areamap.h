@@ -11,7 +11,7 @@ enum mapf_s : unsigned char {
 	Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed,
 };
 enum areaf : unsigned char {
-	Impassable, ImpassableNonActive, AllowActivate, BetweenWalls, Woods,
+	Impassable, ImpassableNonActive, AllowActivate, DangerousFeature, BetweenWalls, Woods,
 };
 struct framerange {
 	unsigned char	start;

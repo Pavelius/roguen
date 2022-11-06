@@ -401,6 +401,7 @@ static void create_sites() {
 }
 
 static bool apply_location(geoposition geo, variant tile) {
+	last_site = 0;
 	last_location = tile;
 	if(!last_location)
 		return false;

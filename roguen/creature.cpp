@@ -482,56 +482,101 @@ void creature::lookitems() const {
 	}
 }
 
-void creature::movestep(point ni) {
-	if(!area.isvalid(ni)) {
-		if(isplayer()) {
-			auto direction = movedirection(ni);
-			auto np = to(game.position, direction);
-			if(confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
-				game.enter(np, 0, NoFeature, direction);
-		}
-		wait();
-		return;
-	}
-	auto m = getposition();
-	// Place owner can't leave it room
-	if(is(PlaceOwner)) {
-		auto pr = roomi::find(worldpos, m);
-		if(getroom() != pr) {
-			wait();
-			return;
-		}
-	}
-	auto f = area.getfeature(ni);
+static bool check_stairs_movement(creature* p, point m) {
+	auto f = area.getfeature(m);
 	switch(f) {
 	case StairsUp:
-		if(isplayer()) {
-			if(confirm(getnm("MoveStairsUp"))) {
+		if(p->isplayer()) {
+			if(p->confirm(getnm("MoveStairsUp"))) {
 				game.enter(game.position, game.level - 1, StairsDown, Center);
-				return;
+				return false;
 			}
 		}
 		break;
 	case StairsDown:
-		if(isplayer()) {
-			if(confirm(getnm("MoveStairsDown"))) {
+		if(p->isplayer()) {
+			if(p->confirm(getnm("MoveStairsDown"))) {
 				game.enter(game.position, game.level + 1, StairsUp, Center);
-				return;
+				return false;
 			}
 		}
 		break;
 	}
-	if(area.is(m, Webbed) && !is(IgnoreWeb)) {
-		wait(2);
-		if(!roll(Strenght)) {
-			act(getnm("WebEntagled"));
-			wait();
-			fixaction();
-			return;
+	return true;
+}
+
+static bool check_dangerous_feature(creature* p, point m) {
+	auto fo = area.getfeature(m);
+	auto& foi = bsdata<featurei>::elements[fo];
+	if(foi.is(DangerousFeature)) {
+		p->wait(2);
+		if(!p->roll(Strenght)) {
+			p->act(getnme(str("%1Entagled", foi.id)));
+			p->damage(1);
+			p->wait();
+			p->fixaction();
+			return false;
 		}
-		act(getnm("WebBreak"));
+		p->act(getnme(str("%1Break", foi.id)));
+		area.set(m, NoFeature);
+	}
+	return true;
+}
+
+static bool check_webbed_tile(creature* p, point m) {
+	if(p->is(IgnoreWeb))
+		return true;
+	if(area.is(m, Webbed)) {
+		p->wait(2);
+		if(!p->roll(Strenght)) {
+			p->act(getnm("WebEntagled"));
+			p->wait();
+			p->fixaction();
+			return false;
+		}
+		p->act(getnm("WebBreak"));
 		area.remove(m, Webbed);
 	}
+	return true;
+}
+
+static bool check_leave_area(creature* p, point m) {
+	if(!area.isvalid(m) && game.level == 0) {
+		if(p->isplayer()) {
+			auto direction = movedirection(m);
+			auto np = to(game.position, direction);
+			if(p->confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
+				game.enter(np, 0, NoFeature, direction);
+		}
+		p->wait();
+		return false;
+	}
+	return true;
+}
+
+static bool check_place_owner(creature* p, point m) {
+	if(p->is(PlaceOwner)) {
+		auto pr = roomi::find(p->worldpos, m);
+		if(p->getroom() != pr) {
+			p->wait();
+			return false;
+		}
+	}
+	return true;
+}
+
+void creature::movestep(point ni) {
+	if(!check_leave_area(this, ni))
+		return;
+	if(!check_place_owner(this, ni))
+		return;
+	auto m = getposition();
+	if(!check_dangerous_feature(this, m))
+		return;
+	if(!check_stairs_movement(this, ni))
+		return;
+	if(!check_webbed_tile(this, m))
+		return;
 	auto opponent = findalive(ni);
 	if(opponent)
 		interaction(*opponent);
