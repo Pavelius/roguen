@@ -28,6 +28,7 @@ monsteri* monsteri::ally() const {
 void creature::clear() {
 	memset(this, 0, sizeof(*this));
 	worldpos = {-1000, -1000};
+	moveorder = {-1000, -1000};
 	setroom(0);
 	setowner(0);
 	if(game.getowner() == this)
@@ -635,6 +636,16 @@ bool creature::canhear(point i) const {
 	return area.getrange(getposition(), i) <= getloh();
 }
 
+bool creature::isfollowmaster() const {
+	auto master = getowner();
+	if(!master)
+		return false;
+	const int bound_range = 2;
+	if(area.getrange(master->getposition(), getposition()) <= bound_range)
+		return false;
+	return true;
+}
+
 void creature::makemove() {
 	auto pt = getposition();
 	pushvalue push_player(player, this);
@@ -674,8 +685,22 @@ void creature::makemove() {
 			attackrange(*enemy);
 		else
 			moveto(enemy->getposition());
-	} else
-		aimove();
+	} else {
+		allowed_spells.match(spelli::isnotcombat, true);
+		allowed_spells.match(spelli::isallowmana, true);
+		allowed_spells.match(spelli::isallowuse, true);
+		if(allowed_spells && d100() < 20)
+			cast((spell_s)bsid(allowed_spells.random()));
+		else if(isfollowmaster())
+			moveto(getowner()->getposition());
+		else if(area.isvalid(moveorder)) {
+			if(moveorder == getposition())
+				moveorder = {-1000, -1000};
+			else if(!moveto(moveorder))
+				moveorder = {-1000, -1000};
+		} else
+			aimove();
+	}
 	// Stun creature may remove this state at end of it turn
 	if(is(Stun)) {
 		if(roll(Strenght))
@@ -791,7 +816,7 @@ static void blockcreatures(creature* exclude) {
 	}
 }
 
-void creature::moveto(point ni) {
+bool creature::moveto(point ni) {
 	area.clearpath();
 	area.blocktiles(Water);
 	area.blocktiles(DeepWater);
@@ -804,8 +829,9 @@ void creature::moveto(point ni) {
 	auto m0 = getposition();
 	auto m1 = area.getnext(m0, ni);
 	if(!area.isvalid(m1))
-		return;
+		return false;
 	movestep(area.getdirection(m0, m1));
+	return true;
 }
 
 void creature::unlink() {
@@ -1012,7 +1038,31 @@ void creature::cast(spell_s v, int level, int mana) {
 		act(pn);
 	for(auto p : targets)
 		p->apply(v, level);
+	auto& ei = bsdata<spelli>::elements[v];
+	if(ei.summon) {
+		auto count = ei.getcount(level);
+		player->summon(player->getposition(), ei.summon, count, level);
+	}
 	add(Mana, -mana);
 	update();
 	wait();
+}
+
+void creature::summon(point m, const variants& elements, int count, int level) {
+	auto isenemy = is(Enemy);
+	auto isally = is(Ally);
+	for(auto i = 0; i < count; i++) {
+		auto v = randomizeri::random(elements);
+		auto p = creature::create(m, v);
+		if(isenemy)
+			p->set(Enemy);
+		else
+			p->remove(Enemy);
+		if(isally)
+			p->set(Ally);
+		else
+			p->remove(Ally);
+		p->set(Summoned);
+		p->setowner(this);
+	}
 }

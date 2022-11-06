@@ -7,6 +7,7 @@ BSDATA(spelli) = {
 	{"ManaRegeneration"},
 	{"Regeneration"},
 	{"Sleep"},
+	{"SummonUndead"},
 	{"Teleport"},
 	{"Web"},
 };
@@ -20,6 +21,15 @@ static void match_creatures(const spelli& ei, int level) {
 		*ps++ = p;
 	}
 	targets.count = ps - targets.begin();
+}
+
+bool spelli::iscombat(const void* object) {
+	auto p = (spelli*)object;
+	if(p->is(Enemies))
+		return true;
+	if(p->summon)
+		return true;
+	return false;
 }
 
 bool spelli::isallow(const creature* target, int level) const {
@@ -56,7 +66,7 @@ bool spelli::isready(int level) const {
 	if(targets.count > target_count)
 		targets.count = target_count;
 	match_creatures(*this, level);
-	return targets.getcount() != 0;
+	return targets.getcount() != 0 || summon.size() != 0;
 }
 
 void spella::select(const spellable* p) {

@@ -13,6 +13,8 @@ Regeneration mana(15) duration(Hour1PL)
  target You
 Sleep mana(5) duration(Minute20)
  target Enemies Neutrals Multitarget Ranged
+SummonUndead mana(20)
+ summon Skeleton+4 Zombie+2 Ghoul+1
 Web mana(4)
  target Enemies Neutrals Multitarget Ranged
  conditions NoWebbed

@@ -66,7 +66,7 @@ enum feat_s : unsigned char {
 	Stun, Unaware,
 };
 enum spell_s : unsigned char {
-	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, Teleport, Web,
+	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, SummonUndead, Teleport, Web,
 	LastSpell = Web
 };
 enum feature_s : unsigned char {
@@ -289,6 +289,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	statable	basic;
 	spellf		active_spells;
 	featable	feats;
+	point		moveorder;
 	int			money;
 	unsigned	experience;
 	int			wait_seconds;
@@ -306,6 +307,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	int			getmightpenalty(int enemy_strenght) const;
 	void		interaction(point m);
 	bool		isallow(spell_s v, int level) const;
+	bool		isfollowmaster() const;
 	void		levelup();
 	void		lookcreatures() const;
 	void		lookitems() const;
@@ -340,13 +342,13 @@ public:
 	bool		canthrown(bool interactive) const;
 	void		cast(spell_s v);
 	void		cast(spell_s v, int level, int mana);
+	void		clear();
 	void		everyminute();
 	void		every10minutes();
 	void		every30minutes();
 	void		every5minutes() {}
 	void		every1hour() {}
 	void		every4hour();
-	void		clear();
 	static creature* create(point m, variant v, variant character = {}, bool female = false);
 	void		damage(int v);
 	void		finish();
@@ -379,7 +381,7 @@ public:
 	void		makemove();
 	void		movestep(direction_s i);
 	void		movestep(point m);
-	void		moveto(point m);
+	bool		moveto(point m);
 	void		paint() const;
 	void		paintbarsall() const;
 	void		place(point m);
@@ -394,6 +396,7 @@ public:
 	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	bool		speechrumor() const;
 	bool		speechlocation() const;
+	void		summon(point m, const variants& elements, int count, int level);
 	bool		talk(const char* id);
 	void		unlink();
 	void		update_room();
@@ -497,39 +500,40 @@ public:
 };
 struct areaheadi {
 	struct totali {
-		short	mysteries;
-		short	traps;
-		short	doors;
-		short	rooms;
-		short	monsters;
-		short	boss;
-		short	loots;
+		short		mysteries;
+		short		traps;
+		short		doors;
+		short		rooms;
+		short		monsters;
+		short		boss;
+		short		loots;
 	};
-	short unsigned site_id;
-	totali		total;
-	char		darkness;
-	void		clear();
-	locationi*	getloc() const { return bsdata<locationi>::ptr(site_id); }
-	void		setloc(const locationi* v) { bsset(site_id, v); }
+	short unsigned	site_id;
+	totali			total;
+	char			darkness;
+	void			clear();
+	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
+	void			setloc(const locationi* v) { bsset(site_id, v); }
 };
 struct spelli : nameable {
-	int			mana;
-	unsigned	target;
-	duration_s	duration;
-	dice		count;
-	variants	conditions;
-	int			getcount(int level) const;
-	bool		is(condition_s v) const { return (target & FG(v)) != 0; }
-	bool		isallow(const creature* target, int level) const;
-	static bool	isallowmana(const void* object);
-	static bool	isallowuse(const void* object);
-	static bool	iscombat(const void* object) { return ((spelli*)object)->is(Enemies); }
-	bool		isready(int level) const;
-	static void	linerow(const void* object);
+	int				mana;
+	unsigned		target;
+	duration_s		duration;
+	dice			count;
+	variants		conditions, summon;
+	int				getcount(int level) const;
+	bool			is(condition_s v) const { return (target & FG(v)) != 0; }
+	bool			isallow(const creature* target, int level) const;
+	static bool		isallowmana(const void* object);
+	static bool		isallowuse(const void* object);
+	static bool		iscombat(const void* object);
+	static bool		isnotcombat(const void* object) { return !iscombat(object); }
+	bool			isready(int level) const;
+	static void		linerow(const void* object);
 };
 struct spella : collection<spelli> {
-	spelli*		choose(const char* title, const char* cancel) const;
-	void		select(const spellable* p);
+	spelli*			choose(const char* title, const char* cancel) const;
+	void			select(const spellable* p);
 };
 class gamei : public geoposition, public ownerable {
 	unsigned		minutes;

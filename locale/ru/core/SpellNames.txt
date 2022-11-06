@@ -1,3 +1,4 @@
 Light: Свет
+SummonUndead: Призвать мертвецов
 Teleport: Телепорт
 Web: Паутина

@@ -148,7 +148,7 @@ BSMETA(spelli) = {
 	BSREQ(mana), BSREQ(count),
 	BSENM(duration, durationi),
 	BSFLG(target, conditioni),
-	BSREQ(conditions),
+	BSREQ(conditions), BSREQ(summon),
 	{}};
 BSMETA(tilei) = {
 	BSREQ(id),
