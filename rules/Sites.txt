@@ -118,7 +118,7 @@ UnholyPlace
  feats Notable
 
 DefaultCaveEntrance
- landscape StairsDown Dog
+ landscape StairsDown Dog ThornBush+4
  feats Notable
 DefaultDungeonEntrance
  landscape StairsDown
@@ -194,7 +194,7 @@ RandomDungeonModifier
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultCave DefaultDungeon
+ chance DefaultCave //DefaultDungeon
 
 #Trigger
 

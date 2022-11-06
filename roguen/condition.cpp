@@ -10,6 +10,7 @@ BSDATA(conditioni) = {
 	{"HeavyWounded"},
 	{"Busy"},
 	{"NoWebbed"},
+	{"NoDangerousFeature"},
 	{"NoInt"},
 	{"AnimalInt"},
 	{"LowInt"},
@@ -60,6 +61,8 @@ bool creature::is(condition_s v) const {
 		return false;
 	case NoWebbed:
 		return !area.is(getposition(), Webbed);
+	case NoDangerousFeature:
+		return bsdata<featurei>::elements[area.getfeature(getposition())].is(DangerousFeature);
 	default:
 		return true;
 	}

@@ -2,6 +2,7 @@
 
 BSDATA(spelli) = {
 	{"CureWounds"},
+	{"Entaglement"},
 	{"Gate"},
 	{"Light"},
 	{"ManaRegeneration"},

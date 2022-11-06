@@ -53,7 +53,7 @@ enum magic_s : unsigned char {
 enum condition_s : unsigned char {
 	Identified, NPC, Random, ShowMinimapBullet,
 	NoWounded, Wounded, HeavyWounded,
-	Busy, NoWebbed,
+	Busy, NoWebbed, NoDangerousFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 	Item, Feature,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
@@ -66,7 +66,7 @@ enum feat_s : unsigned char {
 	Stun, Unaware,
 };
 enum spell_s : unsigned char {
-	CureWounds, Gate, Light, ManaRegeneration, Regeneration, Sleep, SummonUndead, Teleport, Web,
+	CureWounds, Entaglement, Gate, Light, ManaRegeneration, Regeneration, Sleep, SummonUndead, Teleport, Web,
 	LastSpell = Web
 };
 enum feature_s : unsigned char {
