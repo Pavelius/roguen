@@ -318,7 +318,7 @@ static void create_connector(point index, direction_s dir, tile_s wall, tile_s f
 
 static void create_corridor(const rect& rc, direction_s dir, tile_s wall, tile_s floor) {
 	points.clear();
-	auto index = area.getpoint(rc, dir);
+	auto index = area.getpoint(rc, correct_conncetors, dir);
 	auto count = 0;
 	create_connector(index, dir, wall, floor, count, false);
 }

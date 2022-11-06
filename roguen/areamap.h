@@ -68,6 +68,7 @@ struct areamap : anymap<tile_s, 64> {
 	static point	getnext(point start, point goal);
 	static unsigned getpath(point start, point goal, point* result, unsigned maximum);
 	static point	getpoint(const rect& rc, direction_s dir);
+	static point	getpoint(const rect& rc, const rect& bound, direction_s dir);
 	static int		getrange(point start, point target);
 	void			horz(int x1, int y1, int x2, tile_s tile);
 	bool			is(point m, mapf_s v) const { return (feats[m] & (1 << v)) != 0; }

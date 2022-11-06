@@ -437,6 +437,24 @@ point areamap::getpoint(const rect& rc, direction_s dir) {
 	}
 }
 
+point areamap::getpoint(const rect& rco, const rect& bound, direction_s dir) {
+	rect rc = rco;
+	if(rc.x1 < bound.x1)
+		rc.x1 = bound.x1;
+	if(rc.y1 < bound.y1)
+		rc.y1 = bound.y1;
+	if(rc.x2 > bound.x2)
+		rc.x2 = bound.x2;
+	if(rc.y2 > bound.y2)
+		rc.y2 = bound.y2;
+	switch(dir) {
+	case West: return {short(rco.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))};
+	case East: return {short(rco.x2), short(xrand(rc.y1 + 1, rc.y2 - 1))};
+	case North: return {short(xrand(rc.x1 + 1, rc.x2 - 1)), short(rco.y1)};
+	default: return {short(xrand(rc.x1 + 1, rc.x2 - 1)), short(rco.y2)};
+	}
+}
+
 void areamap::horz(int x1, int y1, int x2, tile_s tile) {
 	while(x1 <= x2) {
 		if(x1 >= 0 && x1 < mps)
