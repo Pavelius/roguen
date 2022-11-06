@@ -31,6 +31,8 @@ GoldAmulet cost(1600) weight(5) avatar(119)
 BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar(447) ability(WeaponSkill)
  feats CutWoods
  weapon damage(4) parry(-50) pierce(2)
+BruteSword cost(10) weight(80) wear(MeleeWeapon) avatar(65) wear_index(1) ability(WeaponSkill)
+ weapon damage(4) parry(-20)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) ability(WeaponSkill)
  weapon damage(3) parry(-50)
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar(2) ability(WeaponSkill)
@@ -66,9 +68,9 @@ LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) ability(BalisticSkill
  feats TwoHanded
  weapon damage(4) ammunition(Arrow)
 
-LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(DamageReduciton) bonus(1)
-ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(DamageReduciton) bonus(3)
-PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) ability(DamageReduciton) bonus(4)
+LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(Armor) bonus(1)
+ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(Armor) bonus(3)
+PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) ability(Armor) bonus(4)
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) ability(ShieldUse)
  weapon block_ranged(10)
 

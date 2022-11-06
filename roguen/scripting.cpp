@@ -64,7 +64,7 @@ static void place_item(const itemi* pe) {
 	player->additem(it);
 }
 
-static void create_creature(variant v, int count) {
+static void place_creature(variant v, int count) {
 	if(count <= 0) {
 		if(v.iskind<monsteri>())
 			count = bsdata<monsteri>::elements[v.value].appear.roll();
@@ -73,8 +73,10 @@ static void create_creature(variant v, int count) {
 		if(!count)
 			count = 1;
 	}
-	for(auto i = 0; i < count; i++)
-		creature::create(area.get(last_rect), v);
+	for(auto i = 0; i < count; i++) {
+		auto p = creature::create(area.get(last_rect), v);
+		p->set(Local);
+	}
 }
 
 static void standart_script(variant v) {
@@ -110,12 +112,12 @@ static void standart_script(variant v) {
 			count = bsdata<monsteri>::elements[v.value].appear.roll();
 		if(!count)
 			count = 1;
-		create_creature(v, count);
+		place_creature(v, count);
 	} else if(v.iskind<racei>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
 			return;
-		create_creature(v, count);
+		place_creature(v, count);
 	} else if(v.iskind<classi>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)

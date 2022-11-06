@@ -273,7 +273,7 @@ static ability_s getbestdefence(const defencet& defences, int parry_result, int&
 
 void creature::damage(const item& weapon, int effect) {
 	auto weapon_damage = weapon.getdamage();
-	auto damage_reduction = get(DamageReduciton) - weapon.geti().weapon.pierce;
+	auto damage_reduction = get(Armor) - weapon.geti().weapon.pierce;
 	if(damage_reduction < 0)
 		damage_reduction = 0;
 	auto result_damage = weapon_damage - damage_reduction + effect;
@@ -314,17 +314,16 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 	else
 		logs(getnm("AttackHitButParryFail"), last_hit, attack_skill, last_parry, enemy.getname(), defences[0].value, defences[1].value, defences[2].value);
 	auto pierce = wears[v].geti().weapon.pierce;
-	auto damage_reduction = enemy.get(DamageReduciton);
+	auto armor = enemy.get(Armor);
 	if(v == MeleeWeapon || v == MeleeWeaponOffhand)
-		damage_reduction += (enemy.get(Strenght) - get(Strenght)) / 10;
-	if(pierce > damage_reduction)
-		damage_reduction = 0;
+		armor += (enemy.get(Strenght) - get(Strenght)) / 10;
+	if(pierce > armor)
+		armor = 0;
 	else
-		damage_reduction -= pierce;
-	damage_reduction += get(damage_ability(v));
-	auto weapon_damage = wears[v].getdamage();
-	auto result_damage = weapon_damage - damage_reduction + last_hit_result - last_parry_result;
-	enemy.fixdamage(result_damage, weapon_damage, -damage_reduction, last_hit_result, -last_parry_result);
+		armor -= pierce;
+	auto weapon_damage = wears[v].getdamage() + get(damage_ability(v));
+	auto result_damage = weapon_damage - armor + last_hit_result - last_parry_result;
+	enemy.fixdamage(result_damage, weapon_damage, -armor, last_hit_result, -last_parry_result);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
 }
@@ -893,6 +892,9 @@ int	creature::getlos() const {
 	auto r = get(LineOfSight) - areahead.darkness;
 	auto m = 1;
 	if(is(Darkvision))
+		m++;
+	// Local folk knows his place better that you
+	if(is(Local))
 		m++;
 	if(r < m)
 		r = m;

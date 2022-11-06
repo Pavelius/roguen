@@ -1,2 +1,3 @@
-﻿In file `Names.txt`:
- Define translation for `NotEnoughtMana`
+﻿In file `rules/Monsters.txt`:
+ Line 4: Not found field `DamageReduciton` in dataset `abilities`
+ Line 23: Not found field `DamageReduciton` in dataset `abilities`

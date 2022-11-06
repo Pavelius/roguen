@@ -6,14 +6,27 @@
 static vector<creature> saved_creatures;
 static const char* save_folder = "save";
 
+static void remove_summoned() {
+	for(auto& e : bsdata<creature>()) {
+		if(!e.isvalid())
+			continue;
+		if(e.is(Summoned)) {
+			e.unlink();
+			e.clear();
+		}
+	}
+}
+
 static void save_monsters() {
 	saved_creatures.clear();
 	for(auto& e : bsdata<creature>()) {
-		if(!e.isvalid() || e.ischaracter())
+		if(!e.isvalid())
 			continue;
-		e.unlink();
-		saved_creatures.add(e);
-		e.clear();
+		if(e.is(Local)) {
+			e.unlink();
+			saved_creatures.add(e);
+			e.clear();
+		}
 	}
 }
 
@@ -91,6 +104,7 @@ static void serial_area(bool write_mode) {
 
 void gamei::enter(point m, int level, feature_s feature, direction_s appear_side) {
 	before_serial_game();
+	remove_summoned();
 	geoposition old_game = game;
 	if(game.isvalid(position)) {
 		serial_game(true);

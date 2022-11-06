@@ -1,7 +1,7 @@
 #Monster
 
 Bear avatar(360) appear(1 2) friendly(-10)
- abilities Strenght(55) Dexterity(20) Wits(3) WeaponSkill(40) DodgeSkill(20) HitsMaximum(30) DamageReduciton(1)
+ abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) DodgeSkill(20) HitsMaximum(30)
 Boar avatar(376) appear(2 5) friendly(-20)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) DodgeSkill(10) HitsMaximum(20)
 ChaosHydra avatar(339) friendly(-20)
@@ -20,37 +20,37 @@ Dog avatar(292) appear(1 2)
 GiantBat avatar(155) appear(2 5) friendly(-10)
  abilities Strenght(10) Dexterity(30) Wits(2) WeaponSkill(20) HitsMaximum(4)
 GiantLizard avatar(220) appear(1 3) friendly(-20)
- abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(30) DodgeSkill(20) HitsMaximum(20) DamageReduciton(4)
+ abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) HitsMaximum(20) Armor(4)
 GiantSpider avatar(591) appear(1 4) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) DodgeSkill(30) HitsMaximum(20)
  use IgnoreWeb Web+4
 Ghoul avatar(305) appear(1 3) friendly(-20)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) DodgeSkill(30) HitsMaximum(10)
-Goblin avatar(0) appear(2 7) friendly(-30)
- abilities Strenght(30) Dexterity(40) Wits(14) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
+Goblin avatar(0) appear(3 8) friendly(-30)
+ abilities Strenght(25) Dexterity(40) Wits(14) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
  use Dagger
  treasure SP-20
 GoblinFemale avatar(1) parent(Goblin) appear(1 3) friendly(-30)
- abilities Strenght(20) Dexterity(40) Wits(15) WeaponSkill(15) DodgeSkill(10) HitsMaximum(4)
+ abilities Strenght(20) Dexterity(40) Wits(15) WeaponSkill(15) DodgeSkill(30) HitsMaximum(4)
  use Female
  treasure SP-10
-OrcWarrior avatar(2) appear(2 5) friendly(-30)
- abilities Strenght(40) Dexterity(25) Wits(20) WeaponSkill(40) DodgeSkill(20) HitsMaximum(15)
- use Sword LeatherArmor Darkvision
+OrcWarrior avatar(2) appear(2 4) friendly(-30)
+ abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(35) HitsMaximum(15)
+ use BruteSword LeatherArmor Darkvision
  treasure SP SP-50
 Outsider avatar(121) appear(1 3) friendly(-20)
- abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) DodgeSkill(20) HitsMaximum(10) DamageReduciton(4)
+ abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) DodgeSkill(20) HitsMaximum(10) Armor(4)
 Rabbit avatar(7) appear(3 6)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) DodgeSkill(30) HitsMaximum(2)
 RabbitFemale avatar(8) parent(Rabbit) appear(2 4)
  abilities Strenght(5) Dexterity(22) Wits(3) WeaponSkill(8) DodgeSkill(30) HitsMaximum(2)
 ShamblingMound avatar(9) friendly(-20)
- abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) DodgeSkill(10) HitsMaximum(30)
+ abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) HitsMaximum(30)
 Skeleton avatar(574) appear(3 6) friendly(-20)
- abilities Strenght(25) Dexterity(20) Wits(2) WeaponSkill(30) DodgeSkill(20) ShieldUse(20) HitsMaximum(10)
- use Spear Shield Darkvision
+ abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) HitsMaximum(8) Armor(1)
+ use Spear Darkvision
 Zombie avatar(101) appear(2 5) friendly(-20)
- abilities Strenght(40) Dexterity(10) Wits(2) WeaponSkill(25) HitsMaximum(20)
+ abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(25) HitsMaximum(16)
  use Dagger Darkvision
 Wolf avatar(20) appear(2 5) friendly(-10)
  abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(30) DodgeSkill(30) HitsMaximum(10)

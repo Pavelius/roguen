@@ -17,6 +17,7 @@ BSDATA(feati) = {
 	{"PlaceOwner"},
 	{"Undead"},
 	{"Summoned"},
+	{"Local"},
 	{"Ally"},
 	{"Enemy"},
 	{"Stun"},

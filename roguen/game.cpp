@@ -144,6 +144,10 @@ void gamei::setup_rumors(int count) {
 	}
 }
 
+void gamei::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
 void gamei::randomworld() {
 	clear();
 	setup_globals();

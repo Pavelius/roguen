@@ -34,7 +34,7 @@ enum ability_s : unsigned char {
 	Strenght, Dexterity, Wits, Charisma,
 	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
-	DamageReduciton,
+	Armor,
 	Speed, EnemyAttacks,
 	Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
@@ -62,7 +62,7 @@ enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	IgnoreWeb,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
-	Female, PlaceOwner, Undead, Summoned, Ally, Enemy,
+	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Unaware,
 };
 enum spell_s : unsigned char {
@@ -544,7 +544,7 @@ class gamei : public geoposition, public ownerable {
 public:
 	static point	start_village;
 	static void		all(creature::fnupdate proc);
-	void			clear() { memset(this, 0, sizeof(*this)); }
+	void			clear();
 	void			createarea();
 	static void		endgame();
 	void			enter(point m, int level, feature_s feature, direction_s appear_side);
@@ -553,7 +553,7 @@ public:
 	unsigned		getminutes() const { return minutes; }
 	static int		getpositivecount(variant v);
 	static int		getrange(point m1, point m2);
-	static bool		isvalid(point m) { return m.x >= 0 && m.x < 256 && m.y >= 0 && m.y < 256; }
+	static bool		isvalid(point m) { return m.x > 0 && m.x < 256 && m.y > 0 && m.y < 256; }
 	static void		newgame();
 	void			pass(unsigned minutes);
 	void			passminute();

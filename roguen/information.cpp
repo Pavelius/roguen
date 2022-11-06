@@ -48,7 +48,7 @@ void creature::getinfo(stringbuilder& sb) const {
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	sb.addn("$Tab -40");
-	addf(sb, DamageReduciton, abilities[DamageReduciton]);
+	addf(sb, Armor, abilities[Armor]);
 	addf(sb, Hits, abilities[Hits], abilities[HitsMaximum]);
 	addf(sb, Mana, abilities[Mana], abilities[ManaMaximum]);
 	addf(sb, Money, getmoney());
@@ -87,7 +87,7 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 	addv(sb, "EnemyParry", ei.weapon.enemy_parry);
 	switch(ei.wear) {
 	case Torso:
-		addv(sb, DamageReduciton, ei.bonus);
+		addv(sb, Armor, ei.bonus);
 		break;
 	}
 	addv(sb, ei.feats);
