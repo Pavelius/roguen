@@ -19,6 +19,7 @@ BSDATAC(dungeon, 256);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
+BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
@@ -110,6 +111,14 @@ BSMETA(shapei) = {
 	{}};
 BSMETA(sitei) = {
 	BSREQ(id),
+	BSREQ(local),
+	BSREQ(landscape), BSREQ(loot),
+	BSFLG(feats, feati),
+	BSENM(walls, tilei),
+	BSENM(floors, tilei),
+	{}};
+BSMETA(locationi) = {
+	BSREQ(id),
 	BSREQ(global), BSREQ(global_finish),
 	BSREQ(local),
 	BSREQ(landscape), BSREQ(sites), BSREQ(loot),
@@ -152,7 +161,6 @@ BSMETA(weari) = {
 BSMETA(visualeffect) = {
 	BSREQ(id),
 	{}};
-
 BSDATA(varianti) = {
 	{"NoVariant", VAR(script), 1},
 	{"Ability", VAR(abilityi), 1},
@@ -168,6 +176,7 @@ BSDATA(varianti) = {
 	{"HotkeyList", VAR(hotkeylist), 1},
 	{"Item", VAR(itemi), 1},
 	{"List", VAR(listi), 1},
+	{"Location", VAR(locationi), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Race", VAR(racei), 1},
 	{"RandomTable", VAR(randomizeri), 1},

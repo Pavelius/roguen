@@ -16,12 +16,8 @@ static adat<point, 512> points;
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
 static point last_door;
-static direction_s last_direction;
-static condition_s last_modifier;
 static rect correct_conncetors;
-
-const auto chance_corridor_content = 10;
-const auto chance_hidden_door = 10;
+static direction_s last_direction;
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
 	return area.iswall(i, d1)
@@ -349,6 +345,7 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
+	const int chance_hidden_door = 20;
 	points.clear();
 	auto hidden_room = d100() < chance_hidden_door / 2;
 	add_possible_doors(rc, true);
@@ -369,20 +366,18 @@ static void add_area_sites(variant v) {
 	auto count = game.getcount(v);
 	if(count <= 0)
 		return;
-	if(v.iskind<sitei>()) {
+	if(v.iskind<locationi>()) {
+		auto& ei = bsdata<locationi>::elements[v.value];
+		for(auto ev : ei.sites)
+			add_area_sites(ev);
+	} else if(v.iskind<sitei>()) {
 		auto& ei = bsdata<sitei>::elements[v.value];
-		if(ei.sites) {
-			for(auto ev : ei.sites)
-				add_area_sites(ev);
-		} else {
-			for(auto i = 0; i < count; i++)
-				sites.add(v.nocounter());
-		}
+		for(auto i = 0; i < count; i++)
+			sites.add(v.nocounter());
 	} else if(v.iskind<randomizeri>()) {
 		for(auto i = 0; i < count; i++)
 			add_area_sites(single(v));
-	} else if(v.iskind<monsteri>())
-		sites.add(v);
+	}
 }
 
 static void add_area_events(geoposition v) {
@@ -405,12 +400,12 @@ static void create_sites() {
 	}
 }
 
-static bool apply_landscape(geoposition geo, variant tile) {
+static bool apply_location(geoposition geo, variant tile) {
 	last_location = tile;
 	if(!last_location)
 		return false;
-	areahead.setsite(last_location);
-	areahead.darkness = areahead.getsite()->darkness;
+	areahead.setloc(last_location);
+	areahead.darkness = last_location->darkness;
 	return true;
 }
 
@@ -549,7 +544,7 @@ static void update_dungeon_rumor() {
 
 static void create_area(geoposition geo, variant tile) {
 	areahead.clear();
-	if(!apply_landscape(geo, tile))
+	if(!apply_location(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
 	area.clear();
@@ -571,12 +566,6 @@ static void create_area(geoposition geo, variant tile) {
 		(last_location->*last_location->global_finish->proc)();
 	update_doors();
 	update_dungeon_rumor();
-}
-
-variant get_dungeon_site(point v) {
-	if(!last_dungeon || !last_dungeon->level)
-		return single("DefaultDungeon");
-	return last_dungeon->level;
 }
 
 void gamei::createarea() {

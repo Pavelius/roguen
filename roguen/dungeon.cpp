@@ -13,7 +13,7 @@ static const char* word(const char* prefix, const char* suffix) {
 	return szdup(temp);
 }
 
-dungeon* dungeon::add(point position, sitei* modifier, sitei* type, variant reward) {
+dungeon* dungeon::add(point position, locationi* modifier, locationi* type, variant reward) {
 	auto p = find(position);
 	if(p)
 		return p;
@@ -28,7 +28,7 @@ dungeon* dungeon::add(point position, sitei* modifier, sitei* type, variant rewa
 	p->modifier = modifier;
 	p->entrance = bsdata<sitei>::find(word(type->id, "Entrance"));
 	p->level = type;
-	p->final_level = bsdata<sitei>::find(word(type->id, "Final"));
+	p->final_level = bsdata<locationi>::find(word(type->id, "Final"));
 	p->reward = reward;
 	p->guardian = boss;
 	p->rumor = xrand(20, 70);

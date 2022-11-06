@@ -117,6 +117,16 @@ UnholyPlace
  landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
  feats Notable
 
+DefaultDungeonEntrance
+ landscape StairsDown
+ feats Notable
+
+DefaultCaveEntrance
+ landscape StairsDown Dog
+ feats Notable
+
+#Location
+
 AncientSite
  landscape Webbed+4 Bones+2
  loot RandomArtifact
@@ -128,9 +138,6 @@ EvilSite
 FrozenSite
  landscape Iced+13
 
-DefaultDungeonEntrance
- landscape StairsDown
- feats Notable
 DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
  sites StairsUpRoom StairsDownRoom FalseRoom+2\
   AltarRoom-50 SarcaphagusRoom-60 ArtifactStatueRoom-30 AncientLabRoom-30 InscribedRoom-80 PortalRoom-10\
@@ -139,9 +146,6 @@ DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global
 DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
-DefaultCaveEntrance
- landscape StairsDown Dog
- feats Notable
 DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3)
  sites StairsUpRoom StairsDownRoom MinionsRoom MinionsRoom-60 FalseRoom\
   CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom\

@@ -419,15 +419,11 @@ struct visualeffect : nameable {
 struct sitegeni;
 struct sitei : nameable {
 	typedef void (sitei::*fnproc)() const;
-	variants	landscape, sites, loot;
-	color		minimap;
+	variants	landscape, loot;
 	tile_s		walls, floors;
-	char		darkness, chance_finale;
 	featable	feats;
 	const shapei* shape;
-	const sitegeni*	global;
 	const sitegeni*	local;
-	const sitegeni*	global_finish;
 	void		building() const;
 	void		cityscape() const;
 	void		corridors() const;
@@ -438,6 +434,13 @@ struct sitei : nameable {
 	void		nogenerate() const {}
 	void		outdoor() const;
 	void		room() const;
+};
+struct locationi : sitei {
+	variants	sites;
+	const sitegeni*	global;
+	const sitegeni*	global_finish;
+	char		darkness, chance_finale;
+	color		minimap;
 };
 class siteable {
 	short unsigned site_id;
@@ -462,15 +465,15 @@ struct boosti {
 struct dungeon {
 	point		position;
 	const sitei* entrance;
-	const sitei* modifier;
-	const sitei* level;
-	const sitei* final_level;
+	const locationi* modifier;
+	const locationi* level;
+	const locationi* final_level;
 	monsteri*	guardian;
 	char		rumor;
 	variant		reward, twist; // Can't be random table
 	constexpr operator bool() const { return level != 0; }
 	static dungeon*	add(point position);
-	static dungeon*	add(point position, sitei* modifier, sitei* type, variant reward);
+	static dungeon*	add(point position, locationi* modifier, locationi* type, variant reward);
 	void		clear() { memset(this, 0, sizeof(*this)); }
 	static dungeon* find(point position);
 };
@@ -488,7 +491,7 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(feat_s v) const;
 };
-struct areaheadi : siteable {
+struct areaheadi {
 	struct totali {
 		short	mysteries;
 		short	traps;
@@ -498,9 +501,12 @@ struct areaheadi : siteable {
 		short	boss;
 		short	loots;
 	};
+	short unsigned site_id;
 	totali		total;
 	char		darkness;
 	void		clear();
+	locationi*	getloc() const { return bsdata<locationi>::ptr(site_id); }
+	void		setloc(const locationi* v) { bsset(site_id, v); }
 };
 struct spelli : nameable {
 	int			mana;
@@ -583,7 +589,7 @@ extern variant		last_variant;
 extern dungeon*		last_dungeon;
 extern rect			last_rect;
 extern const sitei*	last_site;
-extern sitei*		last_location;
+extern locationi*	last_location;
 extern siteskilla	last_actions;
 extern const sitegeni* last_method;
 extern creature		*player, *opponent, *enemy;

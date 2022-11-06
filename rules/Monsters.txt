@@ -17,6 +17,8 @@ DireWolf avatar(52) appear(2 4) friendly(-20)
 Dog avatar(292) appear(1 2)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) DodgeSkill(20) HitsMaximum(4)
  use Female
+GiantBat avatar(155) appear(2 5) friendly(-10)
+ abilities Strenght(10) Dexterity(30) Wits(2) WeaponSkill(20) HitsMaximum(4)
 GiantLizard avatar(220) appear(1 3) friendly(-20)
  abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(30) DodgeSkill(20) HitsMaximum(20) DamageReduciton(4)
 GiantSpider avatar(591) appear(1 4) friendly(-20)

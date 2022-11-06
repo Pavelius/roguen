@@ -18,7 +18,7 @@ int					last_hit, last_hit_result, last_parry, last_parry_result, last_value;
 ability_s			last_ability;
 variant				last_variant;
 dungeon*			last_dungeon;
-sitei*				last_location;
+locationi*			last_location;
 const sitei*		last_site;
 globali*			last_global;
 rect				last_rect;
@@ -135,10 +135,11 @@ static void standart_script(variant v) {
 			last_method = last_site->local;
 		if(last_method)
 			(last_site->*last_method->proc)();
-		if(!last_site->sites)
-			add_room(last_site, last_rect);
-		for(auto ev : bsdata<sitei>::elements[v.value].landscape)
-			runscript(ev);
+		add_room(last_site, last_rect);
+		runscript(bsdata<sitei>::elements[v.value].landscape);
+	} else if(v.iskind<locationi>()) {
+		pushvalue push_rect(last_rect);
+		runscript(bsdata<locationi>::elements[v.value].landscape);
 	} else if(v.iskind<speech>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)

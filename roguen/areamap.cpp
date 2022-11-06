@@ -509,20 +509,20 @@ point areamap::find(feature_s v) const {
 	return {-1000, -1000};
 }
 
+static point center(const rect& rc) {
+	short x = rc.x1 + rc.width() / 2;
+	short y = rc.y1 + rc.height() / 2;
+	return {x, y};
+}
+
 direction_s areamap::getmost(const rect& rc) const {
-	auto x1 = rc.x1;
-	auto x2 = mps - 1 - rc.x2;
-	auto y1 = rc.y1;
-	auto y2 = mps - 1 - rc.y2;
-	if(imax(x1, x2) > imax(y1, y2)) {
-		if(x1 > x2)
-			return West;
-		return East;
-	} else {
-		if(y1 > y2)
-			return North;
-		return South;
-	}
+	auto c = mps / 2;
+	auto x = (iabs(rc.x1 - c) < iabs(rc.x2 - c)) ? rc.x1 : rc.x2;
+	auto y = (iabs(rc.y1 - c) < iabs(rc.y2 - c)) ? rc.y1 : rc.y2;
+	if(iabs(x - c) < iabs(y - c))
+		return (x == rc.x1) ? West : East;
+	else
+		return (y == rc.y1) ? North : South;
 }
 
 rect areamap::get(const rect& rca, point offset, point minimum, point maximum) {
