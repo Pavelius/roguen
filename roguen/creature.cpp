@@ -660,10 +660,16 @@ void creature::makemove() {
 	if(is(Unaware))
 		remove(Unaware);
 	lookenemies();
+	allowed_spells.select(player);
 	last_actions.select(siteskilli::isvalid);
 	if(isplayer())
 		adventure_mode();
 	else if(enemy) {
+		allowed_spells.match(spelli::iscombat, true);
+		allowed_spells.match(spelli::isallowmana, true);
+		allowed_spells.match(spelli::isallowuse, true);
+		if(allowed_spells && d100() < 40)
+			cast((spell_s)bsid(allowed_spells.random()));
 		if(canshoot(false))
 			attackrange(*enemy);
 		else
@@ -980,6 +986,14 @@ bool creature::isallow(variant v) const {
 	return false;
 }
 
+bool creature::isallow(const variants& source) const {
+	for(auto v : source) {
+		if(isallow(v))
+			return true;
+	}
+	return false;
+}
+
 void creature::cast(spell_s v) {
 	cast(v, get(v), bsdata<spelli>::elements[v].mana);
 }
@@ -989,25 +1003,11 @@ void creature::cast(spell_s v, int level, int mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	auto& ei = bsdata<spelli>::elements[v];
-	choose_targets(ei.target);
-	unsigned target_count = 1;
-	if(ei.is(Multitarget))
-		target_count += level;
-	if(targets.count > target_count)
-		targets.count = target_count;
-	auto valid_targets = false;
-	for(auto p : targets) {
-		if(p->isallow(v, level)) {
-			valid_targets = true;
-			break;
-		}
-	}
-	if(!valid_targets) {
+	if(!bsdata<spelli>::elements[v].isready(level)) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	auto pn = getdescription(str("%1Casting", ei.id));
+	auto pn = getdescription(str("%1Casting", bsdata<spelli>::elements[v].id));
 	if(pn)
 		act(pn);
 	for(auto p : targets)

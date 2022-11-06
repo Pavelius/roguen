@@ -486,7 +486,6 @@ static void site_wall(int bonus) {
 }
 
 static void choose_spell(int bonus) {
-	allowed_spells.select(player);
 	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"));
 }
 

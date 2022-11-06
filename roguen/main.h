@@ -53,7 +53,7 @@ enum magic_s : unsigned char {
 enum condition_s : unsigned char {
 	Identified, NPC, Random, ShowMinimapBullet,
 	NoWounded, Wounded, HeavyWounded,
-	Busy,
+	Busy, NoWebbed,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 	Item, Feature,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
@@ -520,6 +520,11 @@ struct spelli : nameable {
 	variants	conditions;
 	int			getcount(int level) const;
 	bool		is(condition_s v) const { return (target & FG(v)) != 0; }
+	bool		isallow(const creature* target, int level) const;
+	static bool	isallowmana(const void* object);
+	static bool	isallowuse(const void* object);
+	static bool	iscombat(const void* object) { return ((spelli*)object)->is(Enemies); }
+	bool		isready(int level) const;
 	static void	linerow(const void* object);
 };
 struct spella : collection<spelli> {
@@ -582,6 +587,7 @@ struct keybind {
 bool				isnext();
 }
 inline int			d100() { return rand() % 100; }
+extern spella		allowed_spells;
 extern areamap		area;
 extern areaheadi	areahead;
 extern creaturea	creatures, enemies, targets;

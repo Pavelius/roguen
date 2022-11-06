@@ -7,6 +7,7 @@ struct collectiona : adat<void*, 256> {
 	void*	choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const;
 	void	distinct();
 	void	group(fngroup proc);
+	void	match(fnvisible proc, bool keep);
 	void*	random() const;
 	void	select(array& source);
 	void	select(array& source, fnvisible proc);

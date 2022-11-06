@@ -4,13 +4,70 @@ BSDATA(spelli) = {
 	{"CureWounds"},
 	{"Gate"},
 	{"Light"},
-	{"ManaRegeneration", 0, FG(You), Hour1PL},
+	{"ManaRegeneration"},
 	{"Regeneration"},
-	{"Sleep", 5, FG(You), Minute20},
-	{"Teleport", 30, FG(You), Instant},
-	{"Web", 5, FG(Enemies) | FG(Ranged), Instant},
+	{"Sleep"},
+	{"Teleport"},
+	{"Web"},
 };
 assert_enum(spelli, Web)
+
+static void match_creatures(const spelli& ei, int level) {
+	auto ps = targets.begin();
+	for(auto p : targets) {
+		if(!ei.isallow(p, level))
+			continue;
+		*ps++ = p;
+	}
+	targets.count = ps - targets.begin();
+}
+
+bool spelli::isallow(const creature* target, int level) const {
+	if(conditions) {
+		if(!target->isallow(conditions))
+			return false;
+	}
+	if(duration) {
+		if(target->is((spell_s)bsid(this)))
+			return false;
+	}
+	return true;
+}
+
+bool spelli::isallowmana(const void* object) {
+	auto p = (spelli*)object;
+	return player->get(Mana) >= p->mana;
+}
+
+bool spelli::isallowuse(const void* object) {
+	auto p = (spelli*)object;
+	return p->isready(player->get((spell_s)bsid(p)));
+}
+
+int	spelli::getcount(int level) const {
+	return level + count.roll();
+}
+
+bool spelli::isready(int level) const {
+	choose_targets(target);
+	unsigned target_count = 1;
+	if(is(Multitarget))
+		target_count += level;
+	if(targets.count > target_count)
+		targets.count = target_count;
+	match_creatures(*this, level);
+	return targets.getcount() != 0;
+}
+
+void spella::select(const spellable* p) {
+	auto ps = data;
+	for(auto i = (spell_s)0; i <= LastSpell; i = (spell_s)(i + 1)) {
+		if(!p->spells[i])
+			continue;
+		*ps++ = bsdata<spelli>::source.ptr(i);
+	}
+	count = ps - data;
+}
 
 void creature::apply(spell_s v, int level) {
 	auto& ei = bsdata<spelli>::elements[v];
@@ -27,43 +84,6 @@ void creature::apply(spell_s v, int level) {
 		fixvalue(str("%1 %2i %-Minutes", ei.getname(), count), 2);
 		addeffect(v, count);
 	}
-}
-
-bool creature::isallow(const variants& source) const {
-	for(auto v : source) {
-		if(isallow(v))
-			return true;
-	}
-	return false;
-}
-
-bool creature::isallow(spell_s v, int level) const {
-	auto& ei = bsdata<spelli>::elements[v];
-	if(ei.conditions) {
-		if(!isallow(ei.conditions))
-			return false;
-	}
-	if(ei.duration) {
-		unsigned next_stamp = game.getminutes() + bsdata<durationi>::elements[ei.duration].get(level);
-		auto p = boosti::find(this, v);
-		if(p && p->stamp > next_stamp)
-			return false;
-	}
-	return true;
-}
-
-int	spelli::getcount(int level) const {
-	return level + count.roll();
-}
-
-void spella::select(const spellable* p) {
-	auto ps = data;
-	for(auto i = (spell_s)0; i <= LastSpell; i = (spell_s)(i + 1)) {
-		if(!p->spells[i])
-			continue;
-		*ps++ = bsdata<spelli>::source.ptr(i);
-	}
-	count = ps - data;
 }
 
 static const char* object_level(const void* object, stringbuilder& sb) {

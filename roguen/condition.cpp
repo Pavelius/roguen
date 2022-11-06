@@ -9,6 +9,7 @@ BSDATA(conditioni) = {
 	{"Wounded"},
 	{"HeavyWounded"},
 	{"Busy"},
+	{"NoWebbed"},
 	{"NoInt"},
 	{"AnimalInt"},
 	{"LowInt"},
@@ -57,6 +58,8 @@ bool creature::is(condition_s v) const {
 		else if(player->is(Ally))
 			return is(Enemy);
 		return false;
+	case NoWebbed:
+		return !area.is(getposition(), Webbed);
 	default:
 		return true;
 	}

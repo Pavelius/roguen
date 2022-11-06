@@ -23,7 +23,7 @@ GiantLizard avatar(220) appear(1 3) friendly(-20)
  abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(30) DodgeSkill(20) HitsMaximum(20) DamageReduciton(4)
 GiantSpider avatar(591) appear(1 4) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) DodgeSkill(30) HitsMaximum(20)
- use IgnoreWeb
+ use IgnoreWeb Web+4
 Ghoul avatar(305) appear(1 3) friendly(-20)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) DodgeSkill(30) HitsMaximum(10)
 Goblin avatar(0) appear(2 7) friendly(-30)
