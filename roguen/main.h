@@ -546,18 +546,18 @@ public:
 	static void		writelog();
 };
 struct skilluse {
-	ability_s		ability;
-	char			result;
+	variant			ability;
 	unsigned short	player_id;
 	unsigned short	room_id;
 	unsigned		stamp;
-	static skilluse* add(ability_s v, short unsigned player_id, short unsigned room_id);
-	static skilluse* find(ability_s v, short unsigned player_id, short unsigned room_id);
+	static skilluse* add(variant v, short unsigned player_id, short unsigned room_id);
+	static skilluse* find(variant v, short unsigned player_id, short unsigned room_id);
 };
 struct siteskilli : nameable {
-	const sitei*	site;
 	ability_s		skill;
+	const sitei*	site;
 	duration_s		retry;
+	char			bonus;
 	variants		effect, fail;
 	static bool		isvalid(const void* object);
 };

@@ -509,12 +509,15 @@ static void lose_game(int bonus) {
 }
 
 static void choose_action(int bonus) {
-	if(!last_actions) {
+	if(!last_actions)
 		player->actp(getnm("YouDontHaveAnyActions"));
-		player->wait();
-		return;
+	else {
+		auto pa = last_actions.choose(getnm("ChooseAction"), getnm("Cancel"), false);
+		if(!pa)
+			return;
+		runscript(pa);
 	}
-	auto pa = last_actions.choose(getnm("ChooseAction"), getnm("Cancel"), false);
+	player->wait();
 }
 
 static void roll_value(int bonus) {

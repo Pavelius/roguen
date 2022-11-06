@@ -899,7 +899,19 @@ bool creature::speechlocation() const {
 void creature::apply(variant v) {
 	if(v.iskind<spelli>())
 		apply((spell_s)v.value, v.counter, true);
-	else
+	else if(v.iskind<siteskilli>()) {
+		auto pa = bsdata<siteskilli>::elements + v.value;
+		auto rm = getroom();
+		auto result = roll(pa->skill, pa->bonus);
+		skilluse::add(pa, bsid(this), bsid(rm));
+		if(result) {
+			act(getdescription(str("%1Success", pa->id)));
+			runscript(pa->effect);
+		} else {
+			act(getdescription(str("%1Fail", pa->id)));
+			runscript(pa->fail);
+		}
+	} else
 		advance(v);
 }
 

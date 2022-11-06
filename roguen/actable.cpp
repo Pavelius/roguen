@@ -30,6 +30,8 @@ void actable::logv(const char* format, const char* format_param, const char* nam
 }
 
 void actable::actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female, char separator) {
+	if(!format)
+		return;
 	stringact sa(sb, name, female);
 	sa.addsep(separator);
 	auto pb = sa.get();

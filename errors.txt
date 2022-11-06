@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `KnowRumor`
+﻿In file `rules/Sites.txt`:
+ Line 11: Can't find variant `Not`

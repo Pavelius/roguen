@@ -125,6 +125,7 @@ BSMETA(siteskilli) = {
 	BSENM(skill, abilityi),
 	BSREQ(site),
 	BSENM(retry, durationi),
+	BSREQ(bonus),
 	BSREQ(effect), BSREQ(fail),
 	{}};
 BSMETA(sitegeni) = {

@@ -3,6 +3,13 @@
 #include "log.h"
 #include "stringbuilder.h"
 
+namespace {
+struct translate {
+	const char*						id;
+	const char*						name;
+};
+}
+
 static char main_locale[4];
 static array source_name(sizeof(translate));
 static array source_text(sizeof(translate));
@@ -120,7 +127,7 @@ static void setlist(array& source, const char* id, const char* locale, const cha
 	}
 }
 
-void seriall(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
+static void seriall(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
 	char temp[260]; stringbuilder sb(temp);
 	sb.clear(); sb.addlocalefile("core", id, "txt");
 	if(write_mode)
@@ -166,18 +173,24 @@ void initialize_translation(const char* locale) {
 #endif
 }
 
-const char* getnm(const array& source, const char* id) {
+const char* getnme(const char* id) {
 	if(!id || id[0] == 0)
 		return 0;
 	if(!ischa(id[0]))
 		return id;
 	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source.data, source.getcount(), source.getsize(), compare);
+	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
 	return p ? p->name : 0;
 }
 
 const char* getdescription(const char* id) {
-	return getnm(source_text, id);
+	if(!id || id[0] == 0)
+		return 0;
+	if(!ischa(id[0]))
+		return id;
+	translate key = {id, 0};
+	auto p = (translate*)bsearch(&key, source_text.data, source_text.getcount(), source_text.getsize(), compare);
+	return p ? p->name : 0;
 }
 
 const char* getnm(const char* id) {

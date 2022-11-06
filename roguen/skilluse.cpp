@@ -2,7 +2,7 @@
 
 BSDATAD(skilluse)
 
-skilluse* skilluse::find(ability_s v, short unsigned player_id, short unsigned room_id) {
+skilluse* skilluse::find(variant v, short unsigned player_id, short unsigned room_id) {
 	if(player_id == 0xFFFF || room_id == 0xFFFF)
 		return 0;
 	for(auto& e : bsdata<skilluse>()) {
@@ -12,14 +12,17 @@ skilluse* skilluse::find(ability_s v, short unsigned player_id, short unsigned r
 	return 0;
 }
 
-skilluse* skilluse::add(ability_s v, short unsigned player_id, short unsigned room_id) {
+skilluse* skilluse::add(variant v, short unsigned player_id, short unsigned room_id) {
 	if(player_id == 0xFFFF || room_id == 0xFFFF)
 		return 0;
 	auto p = find(v, player_id, room_id);
 	if(!p)
-		p = add(v, player_id, room_id);
+		p = bsdata<skilluse>::add();
 	if(!p)
 		return 0;
+	p->ability = v;
+	p->player_id = player_id;
+	p->room_id = room_id;
 	p->stamp = game.getminutes();
 	return p;
 }
