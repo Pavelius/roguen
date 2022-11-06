@@ -37,8 +37,8 @@ assert_enum(abilityi, Money)
 
 void creature::update_abilities() {
 	abilities[ManaMaximum] += get(Wits);
-	abilities[DamageMelee] += get(Strenght) / 10;
-	abilities[DamageThrown] += get(Strenght) / 10;
+	//abilities[DamageMelee] += get(Strenght) / 10;
+	//abilities[DamageThrown] += get(Strenght) / 10;
 	abilities[Speed] += get(Dexterity);
 	if(is(Light))
 		abilities[LineOfSight] += 3;

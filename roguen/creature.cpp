@@ -277,7 +277,7 @@ void creature::damage(const item& weapon, int effect) {
 	if(damage_reduction < 0)
 		damage_reduction = 0;
 	auto result_damage = weapon_damage - damage_reduction + effect;
-	fixdamage(result_damage, weapon_damage, 0, -damage_reduction, effect, 0);
+	fixdamage(result_damage, weapon_damage, -damage_reduction, effect, 0);
 	damage(result_damage);
 }
 
@@ -313,20 +313,24 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 		logs(getnm("AttackHitButParrySuccess"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
 	else
 		logs(getnm("AttackHitButParryFail"), last_hit, attack_skill, last_parry, enemy.getname(), defences[0].value, defences[1].value, defences[2].value);
-	auto ability_damage = get(damage_ability(v));
-	auto weapon_damage = wears[v].getdamage();
-	auto damage_reduction = enemy.get(DamageReduciton) - wears[v].geti().weapon.pierce;
-	if(damage_reduction < 0)
+	auto pierce = wears[v].geti().weapon.pierce;
+	auto damage_reduction = enemy.get(DamageReduciton);
+	if(v == MeleeWeapon || v == MeleeWeaponOffhand)
+		damage_reduction += (enemy.get(Strenght) - get(Strenght)) / 10;
+	if(pierce > damage_reduction)
 		damage_reduction = 0;
-	auto result_damage = weapon_damage + ability_damage - damage_reduction + last_hit_result - last_parry_result;
-	enemy.fixdamage(result_damage, weapon_damage, ability_damage, -damage_reduction, last_hit_result, -last_parry_result);
+	else
+		damage_reduction -= pierce;
+	damage_reduction += get(damage_ability(v));
+	auto weapon_damage = wears[v].getdamage();
+	auto result_damage = weapon_damage - damage_reduction + last_hit_result - last_parry_result;
+	enemy.fixdamage(result_damage, weapon_damage, -damage_reduction, last_hit_result, -last_parry_result);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
 }
 
-void creature::fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const {
-	logs(getnm("ApplyDamage"), total, damage_weapon, damage_strenght, damage_armor,
-		damage_skill, damage_parry);
+void creature::fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const {
+	logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor, damage_skill, damage_parry);
 }
 
 void creature::heal(int v) {

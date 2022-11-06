@@ -102,7 +102,16 @@ static void standart_script(variant v) {
 		bsdata<script>::elements[v.value].run(v.counter);
 		if(last_variant)
 			last_scipt_proc(last_variant);
-	} else if(v.iskind<monsteri>() || v.iskind<racei>()) {
+	} else if(v.iskind<monsteri>()) {
+		auto count = game.getcount(v, 0);
+		if(count < 0)
+			return;
+		if(count == 0)
+			count = bsdata<monsteri>::elements[v.value].appear.roll();
+		if(!count)
+			count = 1;
+		create_creature(v, count);
+	} else if(v.iskind<racei>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
 			return;

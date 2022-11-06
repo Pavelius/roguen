@@ -301,7 +301,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void		dress(variants v, int multiplier = 1);
 	void		droptreasure() const;
 	void		fixcantgo() const;
-	void		fixdamage(int total, int damage_weapon, int damage_strenght, int damage_armor, int damage_skill, int damage_parry) const;
+	void		fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const;
 	int			getblocking(const item& enemy_weapon, const item& weapon, int value) const;
 	int			getparrying(const item& enemy_weapon, const item& weapon, int value) const;
 	int			getmightpenalty(int enemy_strenght) const;

@@ -30,41 +30,41 @@ GoldAmulet cost(1600) weight(5) avatar(119)
 
 BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar(447) ability(WeaponSkill)
  feats CutWoods
- weapon damage(5) parry(-50) pierce(2)
+ weapon damage(4) parry(-50) pierce(2)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) ability(WeaponSkill)
- weapon damage(1) parry(-50) pierce(1)
+ weapon damage(3) parry(-50)
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar(2) ability(WeaponSkill)
- weapon damage(1) parry(-30)
+ weapon damage(2) parry(-30)
 Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar(566) ability(WeaponSkill)
  feats TwoHanded CutWoods
- weapon damage(3) parry(-30) pierce(1)
+ weapon damage(6) parry(-30) pierce(1)
 HandAxe cost(4) weight(30) wear(MeleeWeapon) wear_index(0) avatar(517) ability(WeaponSkill)
- weapon damage(2) parry(-50) pierce(1)
+ weapon damage(3) parry(-50) pierce(1)
 Mace cost(5) weight(30) wear(MeleeWeapon) avatar(841) ability(WeaponSkill)
- weapon damage(2) parry(-50)
+ weapon damage(3) parry(-50)
 Spear cost(10) weight(30) wear(MeleeWeapon) avatar(559) wear_index(22) ability(WeaponSkill)
  feats Retaliate
- weapon damage(1) parry(-10)
+ weapon damage(2) parry(-10) pierce(1)
 Staff cost(5) weight(20) wear(MeleeWeapon) avatar(558) wear_index(6) ability(WeaponSkill)
  feats TwoHanded
- weapon damage(1)
+ weapon damage(3)
 Sword cost(10) weight(60) wear(MeleeWeapon) avatar(114) wear_index(23) ability(WeaponSkill)
- weapon damage(2) parry(-10)
+ weapon damage(4) parry(-10)
 StrangeSword cost(100) weight(60) wear(MeleeWeapon) avatar(173) wear_index(23) ability(WeaponSkill) mistery(3)
- weapon damage(2) parry(-5)
+ weapon damage(4) parry(-5)
 
 Arrow wear(Ammunition) count(30) avatar(210) count(20) wear_index(0)
 Bolt wear(Ammunition) count(20) avatar(211) wear_index(3)
 
 Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) ability(BalisticSkill)
  feats TwoHanded
- weapon damage(4)
+ weapon damage(5) pierce(2)
 ShortBow cost(25) weight(30) wear(RangedWeapon) avatar(448) ability(BalisticSkill) wear_index(7)
  feats TwoHanded
- weapon damage(2) ammunition(Arrow)
+ weapon damage(3) ammunition(Arrow)
 LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) ability(BalisticSkill) wear_index(5)
  feats TwoHanded
- weapon damage(3) ammunition(Arrow)
+ weapon damage(4) ammunition(Arrow)
 
 LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(DamageReduciton) bonus(1)
 ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(DamageReduciton) bonus(3)
