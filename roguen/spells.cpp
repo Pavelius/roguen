@@ -18,6 +18,9 @@ void creature::apply(spell_s v, int level) {
 	case CureWounds:
 		heal(ei.getcount(level));
 		break;
+	case Web:
+		area.set(getposition(), Webbed);
+		break;
 	}
 	if(ei.duration) {
 		auto count = bsdata<durationi>::elements[ei.duration].get(level);

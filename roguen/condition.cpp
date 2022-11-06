@@ -20,6 +20,7 @@ BSDATA(conditioni) = {
 	{"Allies"},
 	{"Enemies"},
 	{"Neutrals"},
+	{"Multitarget"},
 	{"Ranged"},
 };
 assert_enum(conditioni, Ranged);

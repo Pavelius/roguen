@@ -1,6 +1,5 @@
 #include "main.h"
 
-extern creaturea targets;
 extern itema items;
 
 static void add_creatures(feat_s v) {
@@ -34,4 +33,9 @@ void choose_targets(unsigned flags) {
 		for(auto p : targets)
 			items.select(p);
 	}
+	if(FGT(flags, Random)) {
+		targets.shuffle();
+		items.shuffle();
+	} else
+		targets.sort(player->getposition());
 }

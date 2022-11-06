@@ -55,7 +55,8 @@ enum condition_s : unsigned char {
 	NoWounded, Wounded, HeavyWounded,
 	Busy,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
-	Item, Feature, You, Allies, Enemies, Neutrals, Ranged,
+	Item, Feature,
+	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
@@ -583,7 +584,7 @@ bool				isnext();
 inline int			d100() { return rand() % 100; }
 extern areamap		area;
 extern areaheadi	areahead;
-extern creaturea	creatures, enemies;
+extern creaturea	creatures, enemies, targets;
 extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
@@ -600,6 +601,7 @@ extern creature		*player, *opponent, *enemy;
 extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);
+void				choose_targets(unsigned flags);
 tile_s				getfloor();
 tile_s				getwall();
 void				runscript(const variants& elements);

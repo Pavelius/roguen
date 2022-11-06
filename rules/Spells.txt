@@ -12,6 +12,6 @@ ManaRegeneration duration(Hour1PL)
 Regeneration mana(15) duration(Hour1PL)
  target You
 Sleep mana(5) duration(Minute20)
- target Enemies Neutrals Ranged
-Web mana(5)
- target Enemies Ranged
+ target Enemies Neutrals Multitarget Ranged
+Web mana(4)
+ target Enemies Neutrals Multitarget Ranged

@@ -31,6 +31,7 @@ Minutes: Минут
 Natural: Родное
 No: Нет
 NoCreaturesNearby: Вокруг никого нет.
+NotEnoughtMana: Не хватает маны.
 NothingToSay: Нечего сказать.
 Parry: Парирование
 PickItem: Поднять предмет

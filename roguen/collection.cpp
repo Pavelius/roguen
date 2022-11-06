@@ -83,3 +83,7 @@ void* collectiona::choose(fngetname proc, const char* title, const char* cancel,
 void collectiona::sort(fngetname proc) {
 	qsort(data, count, sizeof(data), compare_proc);
 }
+
+void collectiona::shuffle() {
+	zshuffle(data, count);
+}

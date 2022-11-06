@@ -989,11 +989,29 @@ void creature::cast(spell_s v, int level, int mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!isallow(v, level)) {
+	auto& ei = bsdata<spelli>::elements[v];
+	choose_targets(ei.target);
+	unsigned target_count = 1;
+	if(ei.is(Multitarget))
+		target_count += level;
+	if(targets.count > target_count)
+		targets.count = target_count;
+	auto valid_targets = false;
+	for(auto p : targets) {
+		if(p->isallow(v, level)) {
+			valid_targets = true;
+			break;
+		}
+	}
+	if(!valid_targets) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	apply(v, level);
+	auto pn = getdescription(str("%1Casting", ei.id));
+	if(pn)
+		act(pn);
+	for(auto p : targets)
+		p->apply(v, level);
 	add(Mana, -mana);
 	update();
 	wait();

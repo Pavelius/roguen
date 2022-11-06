@@ -10,6 +10,7 @@ struct collectiona : adat<void*, 256> {
 	void*	random() const;
 	void	select(array& source);
 	void	select(array& source, fnvisible proc);
+	void	shuffle();
 	void	sort(fngetname proc);
 };
 template<typename T>

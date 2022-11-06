@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>26812;26437;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -300,6 +300,7 @@
     <Text Include="..\locale\ru\core\RaceNames.txt" />
     <Text Include="..\locale\ru\core\SiteDescriptions.txt" />
     <Text Include="..\locale\ru\core\SiteNames.txt" />
+    <Text Include="..\locale\ru\core\SpellDescriptions.txt" />
     <Text Include="..\locale\ru\core\SpellNames.txt" />
     <Text Include="..\locale\ru\core\UnknownNames.txt" />
     <Text Include="..\locale\ru\core\WearNames.txt" />
