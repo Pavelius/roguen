@@ -1,33 +1,50 @@
 #include "main.h"
 
 BSDATA(spelli) = {
-	{"CureWounds", 10, FG(Allies) | FG(You), Instant, {1, 4}},
-	{"Gate", 40, FG(You), Instant},
-	{"Light", 2, FG(You), Hour1PL},
+	{"CureWounds"},
+	{"Gate"},
+	{"Light"},
 	{"ManaRegeneration", 0, FG(You), Hour1PL},
-	{"Regeneration", 15, FG(You), Hour1PL},
+	{"Regeneration"},
 	{"Sleep", 5, FG(You), Minute20},
 	{"Teleport", 30, FG(You), Instant},
-	{"Web", 5, FG(Enemies) | FG(FarRange), Instant},
+	{"Web", 5, FG(Enemies) | FG(Ranged), Instant},
 };
 assert_enum(spelli, Web)
 
-bool creature::apply(spell_s v, int level, bool run) {
-	char temp[260]; stringbuilder sb(temp);
+void creature::apply(spell_s v, int level) {
 	auto& ei = bsdata<spelli>::elements[v];
 	switch(v) {
 	case CureWounds:
-		if(is(NoWounded))
-			return false;
-		if(run)
-			heal(ei.getcount(level));
+		heal(ei.getcount(level));
 		break;
 	}
 	if(ei.duration) {
 		auto count = bsdata<durationi>::elements[ei.duration].get(level);
-		sb.add("%1 %2i %-Minutes", ei.getname(), count);
-		fixvalue(temp, 2);
-		apply(v, count);
+		fixvalue(str("%1 %2i %-Minutes", ei.getname(), count), 2);
+		addeffect(v, count);
+	}
+}
+
+bool creature::isallow(const variants& source) const {
+	for(auto v : source) {
+		if(isallow(v))
+			return true;
+	}
+	return false;
+}
+
+bool creature::isallow(spell_s v, int level) const {
+	auto& ei = bsdata<spelli>::elements[v];
+	if(ei.conditions) {
+		if(!isallow(ei.conditions))
+			return false;
+	}
+	if(ei.duration) {
+		unsigned next_stamp = game.getminutes() + bsdata<durationi>::elements[ei.duration].get(level);
+		auto p = boosti::find(this, v);
+		if(p && p->stamp > next_stamp)
+			return false;
 	}
 	return true;
 }

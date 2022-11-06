@@ -40,7 +40,7 @@ AdventureKeys
  elements TestArena "Ctrl+A"
  elements TestRumor "Ctrl+R"
  elements ChooseAction "S"
- elements ChooseSpell "Ctrl+S"
+ elements CastSpell "Ctrl+S"
  elements ToggleFloorRect "Ctrl+F"
  elements UseItem "Ctrl+U"
  elements HealAll "Ctrl+H"

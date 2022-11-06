@@ -48,9 +48,13 @@ int gamei::getrange(point m1, point m2) {
 }
 
 void gamei::all(creature::fnupdate proc) {
+	if(draw::isnext())
+		return;
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid())
 			(e.*proc)();
+		if(draw::isnext())
+			break;
 	}
 }
 

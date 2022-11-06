@@ -1,13 +1,12 @@
 #include "main.h"
 
 BSDATA(conditioni) = {
-	{"NoModifier"},
 	{"Identified"},
 	{"NPC"},
 	{"Random"},
 	{"ShowMinimapBullet"},
 	{"Healthy"},
-	{"LightWounded"},
+	{"Wounded"},
 	{"HeavyWounded"},
 	{"Busy"},
 	{"NoInt"},
@@ -15,8 +14,15 @@ BSDATA(conditioni) = {
 	{"LowInt"},
 	{"AveInt"},
 	{"HighInt"},
+	{"Item"},
+	{"Feature"},
+	{"You"},
+	{"Allies"},
+	{"Enemies"},
+	{"Neutrals"},
+	{"Ranged"},
 };
-assert_enum(conditioni, HighInt);
+assert_enum(conditioni, Ranged);
 
 bool creature::is(condition_s v) const {
 	int n, m;
@@ -29,16 +35,38 @@ bool creature::is(condition_s v) const {
 	case LowInt: return get(Wits) < 20;
 	case AveInt: return get(Wits) < 35;
 	case HighInt: return get(Wits) < 50;
-	case LightWounded:
+	case Wounded:
 		n = get(Hits);
 		m = get(HitsMaximum);
-		return n > 0 && n < m && n >= m / 2;
+		return n > 0 && n < m;
 	case HeavyWounded:
 		n = get(Hits);
 		m = get(HitsMaximum);
 		return n > 0 && n < m / 2;
 	case NoWounded: return get(Hits) == get(HitsMaximum);
+	case Allies:
+		if(player->is(Ally))
+			return is(Ally);
+		else if(player->is(Enemy))
+			return is(Enemy);
+		return false;
+	case Enemies:
+		if(player->is(Enemy))
+			return is(Ally);
+		else if(player->is(Ally))
+			return is(Enemy);
+		return false;
 	default:
 		return true;
+	}
+}
+
+bool item::is(condition_s v) const {
+	switch(v) {
+	case NoWounded: return broken == 0;
+	case Wounded: return broken != 0;
+	case HeavyWounded: return broken >= 2;
+	case Identified: return identified != 0;
+	default: return false;
 	}
 }

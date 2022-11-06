@@ -898,7 +898,7 @@ bool creature::speechlocation() const {
 
 void creature::apply(variant v) {
 	if(v.iskind<spelli>())
-		apply((spell_s)v.value, v.counter, true);
+		apply((spell_s)v.value, v.counter);
 	else if(v.iskind<siteskilli>()) {
 		auto pa = bsdata<siteskilli>::elements + v.value;
 		auto rm = getroom();
@@ -915,7 +915,7 @@ void creature::apply(variant v) {
 		advance(v);
 }
 
-void creature::apply(spell_s v, unsigned minutes) {
+void creature::addeffect(spell_s v, unsigned minutes) {
 	auto p = boosti::add(this, v);
 	auto n = game.getminutes() + minutes;
 	if(p->stamp < n)
@@ -956,12 +956,15 @@ void creature::everyminute() {
 		restore(Mana, ManaMaximum, Charisma);
 }
 
-void creature::every4hour() {
-	restore(Hits, HitsMaximum, Strenght);
+void creature::every10minutes() {
+	restore(Mana, ManaMaximum, Charisma);
 }
 
 void creature::every30minutes() {
-	restore(Mana, ManaMaximum, Charisma);
+}
+
+void creature::every4hour() {
+	restore(Hits, HitsMaximum, Strenght);
 }
 
 void creature::gainexperience(int v) {
@@ -969,4 +972,29 @@ void creature::gainexperience(int v) {
 		fixability(Experience, v);
 		experience += v;
 	}
+}
+
+bool creature::isallow(variant v) const {
+	if(v.iskind<conditioni>())
+		return is((condition_s)v.value);
+	return false;
+}
+
+void creature::cast(spell_s v) {
+	cast(v, get(v), bsdata<spelli>::elements[v].mana);
+}
+
+void creature::cast(spell_s v, int level, int mana) {
+	if(get(Mana) < mana) {
+		actp(getnm("NotEnoughtMana"));
+		return;
+	}
+	if(!isallow(v, level)) {
+		actp(getnm("YouDontValidTargets"));
+		return;
+	}
+	apply(v, level);
+	add(Mana, -mana);
+	update();
+	wait();
 }

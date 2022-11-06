@@ -490,6 +490,12 @@ static void choose_spell(int bonus) {
 	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"));
 }
 
+static void cast_spell(int bonus) {
+	choose_spell(bonus);
+	if(last_variant)
+		player->cast((spell_s)last_variant.value);
+}
+
 static void heal_player(int bonus) {
 	player->heal(bonus);
 	player->wait();
@@ -552,6 +558,7 @@ BSDATA(triggeri) = {
 assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
 BSDATA(script) = {
 	{"AttackForward", attack_forward},
+	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
 	{"ChooseCreature", choose_creature},
 	{"ChooseSpell", choose_spell},

@@ -9,7 +9,9 @@ BSMETA(durationi) = {
 BSDATA(durationi) = {
 	{"Instant"},
 	{"Minute10", 10},
+	{"Minute10PL", 0, 10},
 	{"Minute20", 20},
+	{"Minute20PL", 0, 20},
 	{"Minute30", 30},
 	{"Hour1", 60},
 	{"Hour2", 60 * 2},

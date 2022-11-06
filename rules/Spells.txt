@@ -1,0 +1,17 @@
+#Spell
+
+CureWounds mana(10) count(1 4)
+ target You Allies
+ conditions Wounded
+Gate mana(40)
+ target You
+Light mana(5) duration(Minute20PL)
+ target You
+ManaRegeneration duration(Hour1PL)
+ target You
+Regeneration mana(15) duration(Hour1PL)
+ target You
+Sleep mana(5) duration(Minute20)
+ target Enemies Neutrals Ranged
+Web mana(5)
+ target Enemies Ranged

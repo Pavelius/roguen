@@ -311,6 +311,7 @@
     <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Sites.txt" />
+    <Text Include="..\rules\Spells.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

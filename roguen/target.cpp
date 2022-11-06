@@ -26,7 +26,7 @@ void choose_targets(unsigned flags) {
 		targets = creatures;
 	if(FGT(flags, You))
 		targets.add(player);
-	if(!FGT(flags, FarRange))
+	if(!FGT(flags, Ranged))
 		targets.matchrange(player->getposition(), 1, true);
 	targets.distinct();
 	items.clear();

@@ -51,11 +51,11 @@ enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
 enum condition_s : unsigned char {
-	NoModifier,
 	Identified, NPC, Random, ShowMinimapBullet,
-	NoWounded, LightWounded, HeavyWounded,
+	NoWounded, Wounded, HeavyWounded,
 	Busy,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
+	Item, Feature, You, Allies, Enemies, Neutrals, Ranged,
 };
 enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
@@ -83,9 +83,6 @@ enum tile_s : unsigned char {
 };
 enum trigger_s : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
-};
-enum targetf : unsigned char {
-	Item, Feature, You, Allies, Enemies, FarRange,
 };
 extern stringbuilder console;
 struct featable : flagable<4> {};
@@ -229,6 +226,7 @@ public:
 	void		getstatus(stringbuilder& sb) const;
 	int			getweight() const;
 	bool		is(ability_s v) const { return geti().ability == v; }
+	bool		is(condition_s v) const;
 	bool		is(feat_s v) const { return geti().feats.is(v); }
 	bool		is(wear_s v) const;
 	bool		is(const itemi& v) const;
@@ -306,6 +304,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	int			getparrying(const item& enemy_weapon, const item& weapon, int value) const;
 	int			getmightpenalty(int enemy_strenght) const;
 	void		interaction(point m);
+	bool		isallow(spell_s v, int level) const;
 	void		levelup();
 	void		lookcreatures() const;
 	void		lookitems() const;
@@ -327,10 +326,10 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	void		act(const char* format, ...) const;
 	void		actp(const char* format, ...) const;
+	void		addeffect(spell_s v, unsigned minutes);
 	void		aimove();
 	void		apply(variant v);
-	void		apply(spell_s v, unsigned minutes);
-	bool		apply(spell_s v, int level, bool run);
+	void		apply(spell_s v, int level);
 	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void		attackmelee(creature& enemy);
 	void		attackrange(creature& enemy);
@@ -338,8 +337,10 @@ public:
 	bool		canhear(point i) const;
 	bool		canshoot(bool interactive) const;
 	bool		canthrown(bool interactive) const;
+	void		cast(spell_s v);
+	void		cast(spell_s v, int level, int mana);
 	void		everyminute();
-	void		every10minutes() {}
+	void		every10minutes();
 	void		every30minutes();
 	void		every5minutes() {}
 	void		every1hour() {}
@@ -365,6 +366,8 @@ public:
 	bool		is(condition_s v) const;
 	bool		is(spell_s v) const { return active_spells.is(v); }
 	bool		is(feat_s v) const { return feats.is(v); }
+	bool		isallow(variant v) const;
+	bool		isallow(const variants& source) const;
 	bool		isenemy(const creature& opponent) const;
 	bool		isplayer() const;
 	bool		isvalid() const;
@@ -437,8 +440,7 @@ struct sitei : nameable {
 };
 struct locationi : sitei {
 	variants	sites;
-	const sitegeni*	global;
-	const sitegeni*	global_finish;
+	const sitegeni *global, *global_finish;
 	char		darkness, chance_finale, offset;
 	color		minimap;
 };
@@ -459,6 +461,7 @@ struct boosti {
 	constexpr explicit operator bool() const { return parent.operator bool(); }
 	static boosti* add(variant parent, spell_s effect);
 	void		clear() { memset(this, 0, sizeof(*this)); }
+	static boosti* find(variant parent, spell_s effect);
 	static void	remove(variant parent);
 	static void	updateall();
 };
@@ -510,11 +513,12 @@ struct areaheadi {
 };
 struct spelli : nameable {
 	int			mana;
-	unsigned	flags;
+	unsigned	target;
 	duration_s	duration;
 	dice		count;
+	variants	conditions;
 	int			getcount(int level) const;
-	bool		is(targetf v) const { return (flags & FG(v)) != 0; }
+	bool		is(condition_s v) const { return (target & FG(v)) != 0; }
 	static void	linerow(const void* object);
 };
 struct spella : collection<spelli> {

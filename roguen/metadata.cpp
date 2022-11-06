@@ -41,6 +41,9 @@ BSMETA(classi) = {
 	BSREQ(id),
 	BSREQ(player),
 	{}};
+BSMETA(creature) = {
+	BSREQ(abilities),
+	{}};
 BSMETA(speech) = {
 	BSREQ(id),
 	{}};
@@ -142,6 +145,10 @@ BSMETA(sitegeni) = {
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
+	BSREQ(mana), BSREQ(count),
+	BSENM(duration, durationi),
+	BSFLG(target, conditioni),
+	BSREQ(conditions),
 	{}};
 BSMETA(tilei) = {
 	BSREQ(id),
@@ -168,6 +175,7 @@ BSDATA(varianti) = {
 	{"AreaFlag", VAR(areafi), 1},
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},
+	{"Creature", VAR(creature), 0},
 	{"Dungeon", VAR(dungeon), 0},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},

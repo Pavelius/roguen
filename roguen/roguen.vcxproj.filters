@@ -526,5 +526,8 @@
     <Text Include="..\locale\ru\talk\NPCHouses.txt">
       <Filter>Talk</Filter>
     </Text>
+    <Text Include="..\rules\Spells.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

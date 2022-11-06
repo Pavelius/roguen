@@ -13,6 +13,7 @@ Dog: Собака
 Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка
+GiantBat: Летучая мышь
 GiantLizard: Гиганская ящерица
 GiantSpider: Гиганский паук
 Ghoul: Упырь

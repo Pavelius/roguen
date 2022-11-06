@@ -75,7 +75,7 @@ CaveMonsterLair
  landscape QuestLandscape Bones+2 Blooded+3 RandomCaveMonster
  feats Notable
 DarkestRoom
- landscape QuestLandscape Darkened-100
+ landscape QuestLandscape Darkened-100 Bones+2 Blooded+2 RandomTreasure
  feats Notable
 EmpthyRoom
  landscape QuestLandscape
@@ -130,9 +130,9 @@ AncientSite
  landscape Webbed+4 Bones+2
  loot RandomArtifact
 DarkSite
- sites DarkestRoom+2 DarkestRoom-60 DarkestRoom-40
+ sites DarkestRoom DarkestRoom-60 DarkestRoom-40
 EvilSite
- sites UnholyPlace+3 UnholyPlace-60 UnholyPlace-40 UnholyAltarRoom-70
+ sites UnholyPlace+2 UnholyPlace-60 UnholyPlace-40 UnholyAltarRoom-70
  loot Bones Stones+2
 FrozenSite
  landscape Iced-50
@@ -190,11 +190,11 @@ RandomFarOverlandTiles
 RandomUnknownOverlandTiles
  chance LightForest+3 DeepForest+3 Hills+2 ForestSwamps+6 AshenLand+6
 RandomDungeonModifier
- chance AncientSite DarkSite EvilSite+2 FrozenSite
+ chance DarkSite AncientSite EvilSite FrozenSite
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultCave //DefaultDungeon
+ chance DefaultCave DefaultDungeon
 
 #Trigger
 
