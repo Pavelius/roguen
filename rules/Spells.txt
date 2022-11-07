@@ -4,7 +4,7 @@ CureWounds mana(10) count(1 4)
  target You Allies
  conditions Wounded
 Entaglement mana(6)
- target Enemies Neutrals Multitarget Ranged
+ target Enemies Neutrals Ranged
  conditions NoDangerousFeature
 Gate mana(40)
  target You

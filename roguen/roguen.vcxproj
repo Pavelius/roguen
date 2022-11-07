@@ -258,6 +258,7 @@
     <ClInclude Include="draw_object.h" />
     <ClInclude Include="duration.h" />
     <ClInclude Include="flagable.h" />
+    <ClInclude Include="geoposition.h" />
     <ClInclude Include="listcolumn.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="trigger.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="variantc.h" />
+    <ClInclude Include="visualeffect.h" />
     <ClInclude Include="widget.h" />
     <ClInclude Include="win.h" />
     <ClInclude Include="world.h" />

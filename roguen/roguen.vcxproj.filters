@@ -461,6 +461,12 @@
     <ClInclude Include="trigger.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="geoposition.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="visualeffect.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

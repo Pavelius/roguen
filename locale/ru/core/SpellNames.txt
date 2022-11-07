@@ -1,3 +1,4 @@
+Entaglement: Рост колючек
 Light: Свет
 SummonUndead: Призвать мертвецов
 Teleport: Телепорт

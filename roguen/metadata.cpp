@@ -1,5 +1,6 @@
 #include "bsreq.h"
 #include "main.h"
+#include "visualeffect.h"
 #include "widget.h"
 
 NOBSDATA(color)

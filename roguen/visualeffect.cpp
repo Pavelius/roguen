@@ -1,5 +1,7 @@
 #include "bsreq.h"
 #include "draw.h"
+#include "draw_object.h"
+#include "visualeffect.h"
 #include "main.h"
 
 using namespace draw;

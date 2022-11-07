@@ -7,6 +7,7 @@
 #include "main.h"
 #include "resource.h"
 #include "screenshoot.h"
+#include "visualeffect.h"
 
 using namespace draw;
 

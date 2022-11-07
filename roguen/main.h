@@ -5,6 +5,7 @@
 #include "dice.h"
 #include "direction.h"
 #include "flagable.h"
+#include "geoposition.h"
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
@@ -115,57 +116,50 @@ struct weari : nameable {
 struct indexa : adat<point> {
 	void		select(point m, int range);
 };
-struct geoposition {
-	point		position;
-	short		level;
-	constexpr bool operator==(const geoposition& e) const { return e.position == position && e.level == level; }
-	constexpr bool operator!=(const geoposition& e) const { return e.position != position || e.level != level; }
-	bool		isoutdoor() const { return level == 0; }
-};
 class actable {
-	variant		kind; // Race or monster
-	short unsigned name_id;
+	variant			kind; // Race or monster
+	short unsigned	name_id;
 public:
-	static void	actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n');
-	static void	actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...);
-	static bool confirm(const char* format, ...);
-	variant		getkind() const { return kind; }
+	static void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n');
+	static void		actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...);
+	static bool		confirm(const char* format, ...);
+	variant			getkind() const { return kind; }
 	static const char* getlog();
 	struct monsteri* getmonster() const;
-	const char*	getname() const;
-	bool		ischaracter() const;
-	bool		iskind(variant v) const;
-	static void	logv(const char* format, const char* format_param, const char* name, bool female);
-	static void	pressspace();
-	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
-	void		setkind(variant v) { kind = v; }
-	void		setnoname() { name_id = 0xFFFF; }
-	void		setname(unsigned short v) { name_id = v; }
+	const char*		getname() const;
+	bool			ischaracter() const;
+	bool			iskind(variant v) const;
+	static void		logv(const char* format, const char* format_param, const char* name, bool female);
+	static void		pressspace();
+	void			sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
+	void			setkind(variant v) { kind = v; }
+	void			setnoname() { name_id = 0xFFFF; }
+	void			setname(unsigned short v) { name_id = v; }
 };
 class movable : public actable {
-	point		position;
-	direction_s	direction;
-	bool		mirror;
+	point			position;
+	direction_s		direction;
+	bool			mirror;
 public:
-	void		fixaction() const;
-	void		fixappear() const;
-	void		fixability(ability_s i, int v) const;
-	void		fixcantgo() const;
-	void		fixdisappear() const;
-	void		fixeffect(const char* id) const;
-	static void	fixeffect(point position, const char* id);
-	void		fixmovement() const;
-	void		fixremove() const;
-	void		fixshoot(point target, int frame) const;
-	void		fixthrown(point target, const char* id, int frame) const;
-	void		fixvalue(const char* v, int color = 0) const;
-	void		fixvalue(int v) const;
-	bool		in(const rect& rc) const { return position.in(rc); }
-	bool		ismirror() const { return mirror; }
-	point		getposition() const { return position; }
-	point		getsposition() const;
-	void		setdirection(direction_s v);
-	void		setposition(point m);
+	void			fixaction() const;
+	void			fixappear() const;
+	void			fixability(ability_s i, int v) const;
+	void			fixcantgo() const;
+	void			fixdisappear() const;
+	void			fixeffect(const char* id) const;
+	static void		fixeffect(point position, const char* id);
+	void			fixmovement() const;
+	void			fixremove() const;
+	void			fixshoot(point target, int frame) const;
+	void			fixthrown(point target, const char* id, int frame) const;
+	void			fixvalue(const char* v, int color = 0) const;
+	void			fixvalue(int v) const;
+	bool			in(const rect& rc) const { return position.in(rc); }
+	bool			ismirror() const { return mirror; }
+	point			getposition() const { return position; }
+	point			getsposition() const;
+	void			setdirection(direction_s v);
+	void			setposition(point m);
 };
 struct itemi : nameable {
 	struct weaponi {
@@ -415,13 +409,6 @@ struct advancement {
 	variant		type;
 	char		level;
 	variants	elements;
-};
-struct visualeffect : nameable {
-	res			resid;
-	short unsigned frame, feats;
-	unsigned char priority = 15;
-	int			dy;
-	void		paint(unsigned char random) const;
 };
 struct sitegeni;
 struct sitei : nameable {
