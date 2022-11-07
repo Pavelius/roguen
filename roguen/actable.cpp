@@ -1,3 +1,4 @@
+#include "charname.h"
 #include "stringact.h"
 #include "main.h"
 

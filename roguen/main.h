@@ -1,12 +1,12 @@
 #include "advancement.h"
 #include "answers.h"
 #include "areamap.h"
-#include "charname.h"
 #include "collection.h"
 #include "dice.h"
 #include "direction.h"
 #include "flagable.h"
 #include "geoposition.h"
+#include "global.h"
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
@@ -87,28 +87,23 @@ enum trigger_s : unsigned char {
 extern stringbuilder console;
 extern point m2s(point v);
 struct featable : flagable<4> {};
-struct spellf : flagable<8> {};
 class roomi;
 struct abilityi : nameable {
-	ability_s	basic;
+	ability_s		basic;
 };
 struct conditioni : nameable {
-};
-struct globali : nameable {
-	int			minimum, maximum, current;
-	variants	effect, fail;
 };
 struct racei : nameable {
 };
 struct classi : nameable {
-	char		player;
+	char			player;
 };
 struct feati : nameable {
 };
 struct weari : nameable {
 };
 class actable {
-	variant			kind; // Race or monster
+	variant			kind;
 	short unsigned	name_id;
 public:
 	static void		actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female = false, char separator = '\n');
@@ -290,8 +285,8 @@ public:
 	bool			canhear(point i) const;
 	bool			canshoot(bool interactive) const;
 	bool			canthrown(bool interactive) const;
-	void			cast(const spelli& v);
-	void			cast(const spelli& v, int level, int mana);
+	void			cast(const spelli& e);
+	void			cast(const spelli& e, int level, int mana);
 	void			clear();
 	void			everyminute();
 	void			every10minutes();

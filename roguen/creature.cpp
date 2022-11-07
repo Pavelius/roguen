@@ -1,4 +1,5 @@
 #include "boost.h"
+#include "charname.h"
 #include "main.h"
 
 namespace {

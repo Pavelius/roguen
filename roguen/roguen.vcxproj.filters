@@ -485,6 +485,9 @@
     <ClInclude Include="spell.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

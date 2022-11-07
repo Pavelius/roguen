@@ -261,6 +261,7 @@
     <ClInclude Include="duration.h" />
     <ClInclude Include="flagable.h" />
     <ClInclude Include="geoposition.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="indexa.h" />
     <ClInclude Include="listcolumn.h" />
     <ClInclude Include="hotkey.h" />
