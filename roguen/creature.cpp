@@ -205,11 +205,13 @@ static bool check_place_owner(creature* p, point m) {
 	return true;
 }
 
-static void update_boost(spellf& spells, variant parent) {
-	spells.clear();
+static void update_boost(featable& feats, variant parent) {
+	feats.clear();
 	for(auto& e : bsdata<boosti>()) {
-		if(e.parent == parent)
-			spells.set((spell_s)e.effect.value);
+		if(e.parent != parent)
+			continue;
+		if(e.effect.iskind<feati>())
+			feats.set(e.effect.value);
 	}
 }
 
@@ -832,8 +834,8 @@ void creature::makemove() {
 	set(EnemyAttacks, 0);
 	update();
 	// Sleeped creature don't move
-	if(is(Sleep))
-		return;
+	//if(is(Sleep))
+	//	return;
 	// Unaware attack or others
 	if(is(Unaware))
 		remove(Unaware);
@@ -954,7 +956,7 @@ void creature::update_room_abilities() {
 
 void creature::update() {
 	update_basic(abilities, basic.abilities);
-	update_boost(active_spells, this);
+	update_boost(feats_active, this);
 	update_wears();
 	update_room_abilities();
 	update_abilities();

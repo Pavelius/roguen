@@ -61,14 +61,14 @@ enum condition_s : unsigned char {
 };
 enum feat_s : unsigned char {
 	Darkvision, TwoHanded, CutWoods, Retaliate, Thrown,
-	IgnoreWeb,
+	IgnoreWeb, LightSource, Regeneration, ManaRegeneration,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Unaware,
 };
 enum spell_s : unsigned char {
-	CureWounds, Entaglement, Gate, Light, ManaRegeneration, Regeneration, Sleep, SummonUndead, Teleport, Web,
+	CureWounds, Entaglement, Gate, Light, Sleep, SummonUndead, Teleport, Web,
 	LastSpell = Web
 };
 enum feature_s : unsigned char {
@@ -256,8 +256,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	unsigned short class_id;
 	unsigned short room_id;
 	statable	basic;
-	spellf		active_spells;
-	featable	feats;
+	featable	feats, feats_active;
 	point		moveorder;
 	int			money;
 	unsigned	experience;
@@ -285,7 +284,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	void		update_wears();
 public:
 	geoposition worldpos;
-	typedef void (creature::*fnupdate)();
 	operator bool() const { return abilities[Hits] > 0; }
 	void		act(const char* format, ...) const;
 	void		actp(const char* format, ...) const;
@@ -326,8 +324,7 @@ public:
 	int			getwait() const { return wait_seconds; }
 	void		heal(int v);
 	bool		is(condition_s v) const;
-	bool		is(spell_s v) const { return active_spells.is(v); }
-	bool		is(feat_s v) const { return feats.is(v); }
+	bool		is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
 	bool		isallow(variant v) const;
 	bool		isallow(const variants& source) const;
 	bool		isenemy(const creature& opponent) const;
@@ -454,7 +451,7 @@ struct spelli : nameable {
 	unsigned		target;
 	duration_s		duration;
 	dice			count;
-	variants		conditions, summon;
+	variants		conditions, effect, summon;
 	int				getcount(int level) const;
 	bool			is(condition_s v) const { return (target & FG(v)) != 0; }
 	bool			isallow(const creature* target, int level) const;
@@ -477,7 +474,6 @@ class gamei : public geoposition, public ownerable {
 	static void		setup_rumors(int count);
 public:
 	static point	start_village;
-	static void		all(creature::fnupdate proc);
 	void			clear();
 	void			createarea();
 	static void		endgame();

@@ -1,12 +1,32 @@
 #include "boost.h"
 #include "main.h"
 
+typedef void (creature::*fnupdate)();
+
 areamap			area;
 areaheadi		areahead;
 gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);
 point			gamei::start_village = {128, 128};
+
+static void all(fnupdate proc) {
+	for(auto& e : bsdata<creature>()) {
+		if(e.isvalid())
+			(e.*proc)();
+	}
+}
+
+static void allnext(fnupdate proc) {
+	if(draw::isnext())
+		return;
+	for(auto& e : bsdata<creature>()) {
+		if(e.isvalid())
+			(e.*proc)();
+		if(draw::isnext())
+			break;
+	}
+}
 
 static bool isfreelt(point m) {
 	if(area.is(m, Darkened))
@@ -48,17 +68,6 @@ int gamei::getrange(point m1, point m2) {
 	return (dx > dy) ? dx : dy;
 }
 
-void gamei::all(creature::fnupdate proc) {
-	if(draw::isnext())
-		return;
-	for(auto& e : bsdata<creature>()) {
-		if(e.isvalid())
-			(e.*proc)();
-		if(draw::isnext())
-			break;
-	}
-}
-
 void gamei::passminute() {
 	minutes++;
 	boosti::updateall(getminutes());
@@ -93,7 +102,7 @@ void gamei::playminute() {
 		need_continue = true;
 		for(auto i = 0; i < moves_per_minute; i++) {
 			update_los();
-			all(&creature::makemove);
+			allnext(&creature::makemove);
 			if(!game.getowner() || draw::isnext()) {
 				need_continue = false;
 				break;
@@ -160,8 +169,7 @@ void gamei::set(const globali& e, int v) {
 		v = e.minimum;
 	if(v > e.maximum)
 		v = e.maximum;
-	auto cv = get(e);
-	if(cv == v)
+	if(get(e) == v)
 		return;
 	globals[bsid(&e)] = v;
 	if(v == e.minimum)

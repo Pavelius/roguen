@@ -5,8 +5,6 @@ BSDATA(spelli) = {
 	{"Entaglement"},
 	{"Gate"},
 	{"Light"},
-	{"ManaRegeneration"},
-	{"Regeneration"},
 	{"Sleep"},
 	{"SummonUndead"},
 	{"Teleport"},
@@ -39,8 +37,8 @@ bool spelli::isallow(const creature* target, int level) const {
 			return false;
 	}
 	if(duration) {
-		if(target->is((spell_s)bsid(this)))
-			return false;
+		//if(target->is((spell_s)bsid(this)))
+		//	return false;
 	}
 	return true;
 }
