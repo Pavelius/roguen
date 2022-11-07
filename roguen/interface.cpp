@@ -571,6 +571,30 @@ static void bar(int value, int maximum, color m) {
 	fore = push_fore;
 }
 
+static void fillbarnd(int value) {
+	rectpush push;
+	if(value > 0) {
+		setoffset(1, 1);
+		auto push_width = width;
+		width = value;
+		rectf();
+		width = push_width - value;
+		caret.x += value;
+	}
+}
+
+static void bar_shade(int value, int maximum, color m) {
+	if(!maximum || !value)
+		return;
+	if(value > maximum)
+		value = maximum;
+	auto push_fore = fore;
+	fore = m;
+	fore.a = 128;
+	fillbarnd(value * width / maximum);
+	fore = push_fore;
+}
+
 static point get_top_position(variant v) {
 	point result = {0, 0};
 	if(v.iskind<monsteri>()) {
@@ -589,7 +613,9 @@ static void paint_bars(const creature* player) {
 	caret.y += get_top_position(player->getkind()).y;
 	caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
-	bar(player->get(Hits), player->get(HitsMaximum), colors::red); caret.y += dy - 1;
+	bar(player->get(Hits), player->get(HitsMaximum), colors::red);
+	bar_shade(player->get(Poison), player->get(HitsMaximum), colors::green);
+	caret.y += dy - 1;
 	bar(player->get(Mana), player->get(ManaMaximum), colors::blue);
 }
 

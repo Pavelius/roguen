@@ -61,7 +61,7 @@ void gamei::all(creature::fnupdate proc) {
 void gamei::passminute() {
 	minutes++;
 	boosti::updateall();
-	all(&creature::restoration);
+	all(&creature::everyminute);
 	while(restore_half_turn < minutes) {
 		all(&creature::every5minutes);
 		restore_half_turn += 5;

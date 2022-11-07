@@ -27,18 +27,25 @@ static ability_s damage_ability(wear_s v) {
 	}
 }
 
-static void attack_poison(creature* player, int poison_damage) {
-	auto i = player->get(Poison) + poison_damage;
-	if(i >= 100) {
+static void poison_attack(creature* player, int poison_damage) {
+	auto d = player->get(Poison);
+	auto i = d + poison_damage;
+	if(i >= player->get(HitsMaximum)) {
 		player->fixeffect("PoisonVisual");
 		player->kill();
 		return;
 	} else if(i < 0)
 		i = 0;
+	if(d == i)
+		return;
+	if(area.is(player->getposition(), Visible)) {
+		if(poison_damage)
+			player->fixeffect("PoisonVisual");
+	}
 	player->set(Poison, i);
 }
 
-static void attack_poison(const creature* player, creature* enemy, const item* weapon) {
+static void poison_attack(const creature* player, creature* enemy, const item* weapon) {
 	auto strenght = 0;
 	if(player->is(WeakPoison))
 		strenght += xrand(1, 3);
@@ -52,11 +59,11 @@ static void attack_poison(const creature* player, creature* enemy, const item* w
 		if(weapon->is(StrongPoison))
 			strenght += xrand(3, 6);
 		if(weapon->is(DeathPoison))
-			strenght += xrand(10, 20);
+			strenght += xrand(6, 12);
 	}
 	if(!strenght)
 		return;
-	attack_poison(enemy, strenght);
+	poison_attack(enemy, strenght);
 }
 
 static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
@@ -65,6 +72,16 @@ static void restore(creature* player, ability_s a, ability_s am, ability_s test)
 	if(v < mv) {
 		if(player->roll(test))
 			player->add(a, 1);
+	}
+}
+
+static void test_posion(creature* player, ability_s v) {
+	if(player->get(v) > 0) {
+		player->add(v, -1);
+		if(!player->roll(Strenght)) {
+			player->fixeffect("PoisonVisual");
+			player->damage(1);
+		}
 	}
 }
 
@@ -510,7 +527,7 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 	enemy.fixdamage(result_damage, weapon_damage, -armor, last_hit_result, -last_parry_result);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
-	attack_poison(this, &enemy, wears + v);
+	poison_attack(this, &enemy, wears + v);
 }
 
 void creature::fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const {
@@ -1070,6 +1087,7 @@ void creature::everyminute() {
 		restore(this, Hits, HitsMaximum, Strenght);
 	if(is(ManaRegeneration))
 		restore(this, Mana, ManaMaximum, Charisma);
+	test_posion(this, Poison);
 }
 
 void creature::every10minutes() {
