@@ -1,3 +1,4 @@
+#include "advancement.h"
 #include "answers.h"
 #include "areamap.h"
 #include "charname.h"
@@ -12,14 +13,13 @@
 #include "duration.h"
 #include "list.h"
 #include "listcolumn.h"
+#include "monster.h"
 #include "pushvalue.h"
-#include "randomizer.h"
 #include "script.h"
 #include "shape.h"
 #include "speech.h"
 #include "talk.h"
 #include "trigger.h"
-#include "variantc.h"
 
 #pragma once
 
@@ -41,7 +41,7 @@ enum ability_s : unsigned char {
 	Survival,
 	Level,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana, Mood, Reputation, ParryCount, Experience, Money,
+	Hits, Mana, Poison, Reputation, ParryCount, Experience, Money,
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
@@ -62,6 +62,7 @@ enum condition_s : unsigned char {
 enum feat_s : unsigned char {
 	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
 	IgnoreWeb,
+	WeakPoison, StrongPoison, DeathPoison,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Unaware,
@@ -87,14 +88,10 @@ enum trigger_s : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
 };
 extern stringbuilder console;
+extern point m2s(point v);
 struct featable : flagable<4> {};
 struct spellf : flagable<8> {};
-extern point m2s(point v);
-struct statable {
-	char		abilities[Money + 1];
-	void		add(ability_s i, int v = 1) { abilities[i] += v; }
-	void		create();
-};
+class roomi;
 struct abilityi : nameable {
 	ability_s	basic;
 };
@@ -112,9 +109,6 @@ struct classi : nameable {
 struct feati : nameable {
 };
 struct weari : nameable {
-};
-struct indexa : adat<point> {
-	void		select(point m, int range);
 };
 class actable {
 	variant			kind; // Race or monster
@@ -163,27 +157,27 @@ public:
 };
 struct itemi : nameable {
 	struct weaponi {
-		char	parry, enemy_parry;
-		char	block, enemy_block, block_ranged;
-		char	damage, pierce;
-		short 	ammunition;
+		char		parry, enemy_parry;
+		char		block, enemy_block, block_ranged;
+		char		damage, pierce;
+		short 		ammunition;
 	};
-	int			cost, weight, count;
-	short		avatar;
-	wear_s		wear;
-	ability_s	ability;
-	char		bonus;
-	weaponi		weapon;
-	featable	feats;
-	char		wear_index;
-	char		mistery;
-	variant		dress;
-	variants	use;
+	int				cost, weight, count;
+	short			avatar;
+	wear_s			wear;
+	ability_s		ability;
+	char			bonus;
+	weaponi			weapon;
+	featable		feats;
+	char			wear_index;
+	char			mistery;
+	variant			dress;
+	variants		use;
 	bool operator==(const itemi& v) const { return this == &v; }
-	const itemi* getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
-	int			getindex() const { return this - bsdata<itemi>::elements; }
-	bool		is(feat_s v) const { return feats.is(v); }
-	void		paint() const;
+	const itemi*	getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
+	int				getindex() const { return this - bsdata<itemi>::elements; }
+	bool			is(feat_s v) const { return feats.is(v); }
+	void			paint() const;
 };
 class item {
 	unsigned short type;
@@ -199,78 +193,59 @@ class item {
 	};
 public:
 	explicit operator bool() const { return type != 0; }
-	void		add(item& v);
-	void		addname(stringbuilder& sb) const;
-	bool		canequip(wear_s v) const;
-	void		clear() { type = count = 0; }
-	void		create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
-	void		create(const itemi* pi, int count = 1);
-	void		drop(point m);
-	int			getavatar() const { return geti().wear_index; }
-	const itemi& geti() const { return bsdata<itemi>::elements[type]; }
-	void		getinfo(stringbuilder& sb, bool need_name) const;
-	int			getcost() const;
-	int			getcostall() const;
-	int			getcount() const;
-	int			getdamage() const;
-	magic_s		getmagic() const { return magic; }
-	const char*	getname() const { return geti().getname(); }
+	void			add(item& v);
+	void			addname(stringbuilder& sb) const;
+	bool			canequip(wear_s v) const;
+	void			clear() { type = count = 0; }
+	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
+	void			create(const itemi* pi, int count = 1);
+	void			drop(point m);
+	int				getavatar() const { return geti().wear_index; }
+	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
+	void			getinfo(stringbuilder& sb, bool need_name) const;
+	int				getcost() const;
+	int				getcostall() const;
+	int				getcount() const;
+	int				getdamage() const;
+	magic_s			getmagic() const { return magic; }
+	const char*		getname() const { return geti().getname(); }
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
-	const char*	getfullname() const;
+	const char*		getfullname() const;
 	class creature* getowner() const;
-	void		getstatus(stringbuilder& sb) const;
-	int			getweight() const;
-	bool		is(ability_s v) const { return geti().ability == v; }
-	bool		is(condition_s v) const;
-	bool		is(feat_s v) const { return geti().feats.is(v); }
-	bool		is(wear_s v) const;
-	bool		is(const itemi& v) const;
-	bool		iscountable() const { return geti().count != 0; }
-	bool		isidentified() const { return identified != 0; }
-	void		setcount(int v);
-	void		use() { setcount(getcount() - 1); }
+	void			getstatus(stringbuilder& sb) const;
+	int				getweight() const;
+	bool			is(ability_s v) const { return geti().ability == v; }
+	bool			is(condition_s v) const;
+	bool			is(feat_s v) const { return geti().feats.is(v); }
+	bool			is(wear_s v) const;
+	bool			is(const itemi& v) const;
+	bool			iscountable() const { return geti().count != 0; }
+	bool			isidentified() const { return identified != 0; }
+	void			setcount(int v);
+	void			use() { setcount(getcount() - 1); }
 };
 struct itema : collection<item> {
-	void		select(point m);
-	void		select(creature* p);
-	void		selectbackpack(creature* p);
+	void			select(point m);
+	void			select(creature* p);
+	void			selectbackpack(creature* p);
 };
 struct itemground : item {
-	point		position;
-	static void dropitem(item& it);
+	point			position;
 };
 struct wearable : movable {
-	item		wears[Elbows + 1];
-	int			money;
-	void		additem(item& v);
-	void		equip(item& v);
-	int			getmoney() const { return money; }
-	item*		getwear(wear_s id) { return wears + id; }
-	const char*	getwearname(wear_s id) const;
-	wear_s		getwearslot(const item* data) const;
-	const item*	getwear(const void* data) const;
-};
-struct monsteri : nameable, statable {
-	unsigned short avatar;
-	char		friendly;
-	dice		appear;
-	variants	use;
-	monsteri*	parent;
-	randomizeri* minions;
-	variants	treasure;
-	monsteri*	ally() const;
-	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
-	static bool	isboss(const void* p) { return ((monsteri*)p)->minions != 0; }
+	item			wears[Elbows + 1];
+	int				money;
+	void			additem(item& v);
+	void			equip(item& v);
+	int				getmoney() const { return money; }
+	item*			getwear(wear_s id) { return wears + id; }
+	const char*		getwearname(wear_s id) const;
+	wear_s			getwearslot(const item* data) const;
+	const item*		getwear(const void* data) const;
 };
 struct spellable {
 	char		spells[LastSpell + 1];
 };
-struct skilli {
-	ability_s	skill;
-	int			value;
-};
-typedef skilli defencet[3];
-class roomi;
 class ownerable {
 	short unsigned owner_id;
 public:
@@ -293,28 +268,19 @@ class creature : public wearable, public statable, public spellable, public owne
 	void		damage(const item& weapon, int effect);
 	void		dress(variant v, int multiplier);
 	void		dress(variants v, int multiplier = 1);
-	void		droptreasure() const;
 	void		fixcantgo() const;
 	void		fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const;
-	int			getblocking(const item& enemy_weapon, const item& weapon, int value) const;
-	int			getparrying(const item& enemy_weapon, const item& weapon, int value) const;
-	int			getmightpenalty(int enemy_strenght) const;
 	void		interaction(point m);
 	bool		isallow(spell_s v, int level) const;
 	bool		isfollowmaster() const;
 	void		levelup();
-	void		lookcreatures() const;
 	void		lookitems() const;
 	const speech* matchfirst(const speecha& source) const;
 	bool		matchspeech(variant v) const;
 	bool		matchspeech(const variants& source) const;
 	void		matchspeech(speecha& source) const;
-	void		paintbars() const;
-	void		restore(ability_s a, ability_s m, ability_s test);
 	void		update();
 	void		update_abilities();
-	void		update_basic();
-	void		update_boost();
 	void		update_room_abilities();
 	void		update_wears();
 public:
@@ -351,7 +317,6 @@ public:
 	int			get(spell_s v) const { return spells[v]; }
 	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
 	int			getdamage(wear_s w) const;
-	void		getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const;
 	void		getinfo(stringbuilder& sb) const;
 	int			getloh() const;
 	int			getlos() const;
@@ -366,12 +331,11 @@ public:
 	bool		isallow(variant v) const;
 	bool		isallow(const variants& source) const;
 	bool		isenemy(const creature& opponent) const;
-	bool		isplayer() const;
+	bool		ishuman() const;
 	bool		isvalid() const;
 	void		interaction(creature& opponent);
 	void		kill();
 	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
-	void		lookenemies();
 	void		makemove();
 	void		movestep(direction_s i);
 	void		movestep(point m);
@@ -404,11 +368,6 @@ struct creaturea : collection<creature> {
 	void		remove(const creature* v);
 	void		select(point m, int los, bool visible, const creature* exclude);
 	void		sort(point start);
-};
-struct advancement {
-	variant		type;
-	char		level;
-	variants	elements;
 };
 struct sitegeni;
 struct sitei : nameable {

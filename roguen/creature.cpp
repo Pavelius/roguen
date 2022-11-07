@@ -1,5 +1,13 @@
 #include "main.h"
 
+namespace {
+struct skilli {
+	ability_s	skill;
+	int			value;
+};
+typedef skilli defencet[3];
+}
+
 static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
@@ -19,10 +27,199 @@ static ability_s damage_ability(wear_s v) {
 	}
 }
 
-monsteri* monsteri::ally() const {
-	if(minions)
-		return minions->random();
+static void attack_poison(creature* player, int poison_damage) {
+	auto i = player->get(Poison) + poison_damage;
+	if(i >= 100) {
+		player->fixeffect("PoisonVisual");
+		player->kill();
+		return;
+	} else if(i < 0)
+		i = 0;
+	player->set(Poison, i);
+}
+
+static void attack_poison(const creature* player, creature* enemy, const item* weapon) {
+	auto strenght = 0;
+	if(player->is(WeakPoison))
+		strenght += xrand(1, 3);
+	if(player->is(StrongPoison))
+		strenght += xrand(3, 6);
+	if(player->is(DeathPoison))
+		strenght += xrand(6, 12);
+	if(weapon) {
+		if(weapon->is(WeakPoison))
+			strenght += xrand(1, 3);
+		if(weapon->is(StrongPoison))
+			strenght += xrand(3, 6);
+		if(weapon->is(DeathPoison))
+			strenght += xrand(10, 20);
+	}
+	if(!strenght)
+		return;
+	attack_poison(enemy, strenght);
+}
+
+static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
+	auto v = player->get(a);
+	auto mv = player->get(am);
+	if(v < mv) {
+		if(player->roll(test))
+			player->add(a, 1);
+	}
+}
+
+static direction_s movedirection(point m) {
+	if(m.x < 0)
+		return West;
+	else if(m.y < 0)
+		return North;
+	else if(m.y >= area.mps)
+		return South;
+	else
+		return East;
+}
+
+static void drop_treasure(const creature* player) {
+	monsteri* p = player->getkind();
+	if(!p)
+		return;
+	runscript(p->treasure);
+}
+
+static bool check_stairs_movement(creature* p, point m) {
+	auto f = area.getfeature(m);
+	switch(f) {
+	case StairsUp:
+		if(p->ishuman()) {
+			if(p->confirm(getnm("MoveStairsUp"))) {
+				game.enter(game.position, game.level - 1, StairsDown, Center);
+				return false;
+			}
+		}
+		break;
+	case StairsDown:
+		if(p->ishuman()) {
+			if(p->confirm(getnm("MoveStairsDown"))) {
+				game.enter(game.position, game.level + 1, StairsUp, Center);
+				return false;
+			}
+		}
+		break;
+	}
+	return true;
+}
+
+static bool check_dangerous_feature(creature* p, point m) {
+	auto fo = area.getfeature(m);
+	auto& foi = bsdata<featurei>::elements[fo];
+	if(foi.is(DangerousFeature)) {
+		p->wait(2);
+		if(!p->roll(Strenght)) {
+			p->act(getnme(str("%1Entagled", foi.id)));
+			p->damage(1);
+			p->wait();
+			p->fixaction();
+			return false;
+		}
+		p->act(getnme(str("%1Break", foi.id)));
+		area.set(m, NoFeature);
+	}
+	return true;
+}
+
+static bool check_webbed_tile(creature* p, point m) {
+	if(p->is(IgnoreWeb))
+		return true;
+	if(area.is(m, Webbed)) {
+		p->wait(2);
+		if(!p->roll(Strenght)) {
+			p->act(getnm("WebEntagled"));
+			p->wait();
+			p->fixaction();
+			return false;
+		}
+		p->act(getnm("WebBreak"));
+		area.remove(m, Webbed);
+	}
+	return true;
+}
+
+static bool check_leave_area(creature* p, point m) {
+	if(!area.isvalid(m) && game.level == 0) {
+		if(p->ishuman()) {
+			auto direction = movedirection(m);
+			auto np = to(game.position, direction);
+			if(p->confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
+				game.enter(np, 0, NoFeature, direction);
+		}
+		p->wait();
+		return false;
+	}
+	return true;
+}
+
+static bool check_place_owner(creature* p, point m) {
+	if(p->is(PlaceOwner)) {
+		auto pr = roomi::find(p->worldpos, m);
+		if(p->getroom() != pr) {
+			p->wait();
+			return false;
+		}
+	}
+	return true;
+}
+
+static void update_boost(spellf& spells, variant parent) {
+	spells.clear();
+	for(auto& e : bsdata<boosti>()) {
+		if(e.parent == parent)
+			spells.set(e.effect);
+	}
+}
+
+static void update_basic(char* dest, const char* source) {
+	memcpy(dest, source, Hits * sizeof(statable::abilities[0]));
+}
+
+static int might_penalty(int strenght, int enemy_strenght) {
+	if(strenght < enemy_strenght)
+		return enemy_strenght - strenght;
 	return 0;
+}
+
+static int parry_skill(const item& enemy_weapon, const item& weapon, int value) {
+	if(!weapon)
+		return 0;
+	if(enemy_weapon.is(RangedWeapon))
+		return 0;
+	value += enemy_weapon.geti().weapon.enemy_parry;
+	value += weapon.geti().weapon.parry;
+	return value;
+}
+
+static int block_skill(const item& enemy_weapon, const item& weapon, int value) {
+	if(!weapon || !weapon.is(ShieldUse))
+		return 0;
+	value += enemy_weapon.geti().weapon.enemy_block;
+	if(enemy_weapon.is(RangedWeapon))
+		value += weapon.geti().weapon.block_ranged;
+	else
+		value += weapon.geti().weapon.block;
+	return value;
+}
+
+static void defence_skills(const creature* player, int attacker_strenght, const item& attacker_weapon, defencet& result) {
+	auto penalty = might_penalty(player->get(Strenght), attacker_strenght);
+	result[0].skill = WeaponSkill;
+	result[0].value = parry_skill(attacker_weapon, player->wears[MeleeWeapon], player->get(WeaponSkill)) - penalty;
+	result[1].skill = ShieldUse;
+	result[1].value = block_skill(attacker_weapon, player->wears[MeleeWeaponOffhand], player->get(ShieldUse)) - penalty;
+	result[2].skill = DodgeSkill;
+	result[2].value = player->get(DodgeSkill);
+	for(auto& e : result) {
+		if(e.value < 0)
+			e.value = 0;
+	}
 }
 
 void creature::clear() {
@@ -85,7 +282,7 @@ creature* creature::create(point m, variant kind, variant character, bool female
 			conditions.add("Female");
 		player->setname(charname::random(conditions));
 	}
-	player->basic.create();
+	player->basic.abilities[LineOfSight] += 4;
 	player->advance(kind, 0);
 	if(character.value)
 		player->advance(character, 0);
@@ -104,7 +301,7 @@ creature* creature::create(point m, variant kind, variant character, bool female
 	return player;
 }
 
-bool creature::isplayer() const {
+bool creature::ishuman() const {
 	return game.getowner() == this;
 }
 
@@ -215,7 +412,7 @@ const char* creature::getspeech(const char* id) const {
 void creature::interaction(creature& opponent) {
 	if(opponent.isenemy(*this))
 		attackmelee(opponent);
-	else if(!isplayer())
+	else if(!ishuman())
 		return;
 	else if(opponent.is(PlaceOwner)) {
 		fixaction();
@@ -239,19 +436,6 @@ int creature::getdamage(wear_s v) const {
 	auto result = wears[v].getdamage();
 	result += get(damage_ability(v));
 	return result;
-}
-
-void creature::getdefence(int attacker_strenght, const item& attacker_weapon, defencet& result) const {
-	result[0].skill = WeaponSkill;
-	result[0].value = getparrying(attacker_weapon, wears[MeleeWeapon], get(WeaponSkill)) - getmightpenalty(attacker_strenght);
-	result[1].skill = ShieldUse;
-	result[1].value = getblocking(attacker_weapon, wears[MeleeWeaponOffhand], get(ShieldUse)) - getmightpenalty(attacker_strenght);
-	result[2].skill = DodgeSkill;
-	result[2].value = get(DodgeSkill);
-	for(auto& e : result) {
-		if(e.value < 0)
-			e.value = 0;
-	}
 }
 
 static ability_s getbestdefence(const defencet& defences, int parry_result, int& parry_skill, int& parry_effect) {
@@ -293,9 +477,9 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 		logs(getnm("AttackMiss"), last_hit, attack_skill);
 		return;
 	}
+	defence_skills(&enemy, get(Strenght), wears[v], defences);
 	auto enemy_name = enemy.getname();
 	auto attacker_name = getname();
-	enemy.getdefence(get(Strenght), wears[v], defences);
 	auto parry = getbestdefence(defences, last_parry, parry_skill, last_parry_result);
 	auto parry_delta = parry_skill - last_parry;
 	if(parry) {
@@ -326,6 +510,7 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 	enemy.fixdamage(result_damage, weapon_damage, -armor, last_hit_result, -last_parry_result);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
+	attack_poison(this, &enemy, wears + v);
 }
 
 void creature::fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const {
@@ -344,22 +529,14 @@ void creature::heal(int v) {
 	}
 }
 
-
-void creature::droptreasure() const {
-	monsteri* p = getkind();
-	if(!p)
-		return;
-	runscript(p->treasure);
-}
-
 void creature::kill() {
-	auto player_killed = isplayer();
+	auto human_killed = ishuman();
 	fixeffect("HitVisual");
 	fixremove();
-	droptreasure();
+	drop_treasure(this);
 	trigger::fire(WhenCreatureP1Dead, getkind());
 	clear();
-	if(player_killed)
+	if(human_killed)
 		game.endgame();
 }
 
@@ -448,21 +625,10 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
-static direction_s movedirection(point m) {
-	if(m.x < 0)
-		return West;
-	else if(m.y < 0)
-		return North;
-	else if(m.y >= area.mps)
-		return South;
-	else
-		return East;
-}
-
 void creature::lookitems() const {
 	items.clear();
 	items.select(getposition());
-	if(isplayer() && items) {
+	if(ishuman() && items) {
 		char temp[4096]; stringbuilder sb(temp);
 		auto count = items.getcount();
 		auto index = 0;
@@ -480,89 +646,6 @@ void creature::lookitems() const {
 		sb.add(".");
 		actp(temp);
 	}
-}
-
-static bool check_stairs_movement(creature* p, point m) {
-	auto f = area.getfeature(m);
-	switch(f) {
-	case StairsUp:
-		if(p->isplayer()) {
-			if(p->confirm(getnm("MoveStairsUp"))) {
-				game.enter(game.position, game.level - 1, StairsDown, Center);
-				return false;
-			}
-		}
-		break;
-	case StairsDown:
-		if(p->isplayer()) {
-			if(p->confirm(getnm("MoveStairsDown"))) {
-				game.enter(game.position, game.level + 1, StairsUp, Center);
-				return false;
-			}
-		}
-		break;
-	}
-	return true;
-}
-
-static bool check_dangerous_feature(creature* p, point m) {
-	auto fo = area.getfeature(m);
-	auto& foi = bsdata<featurei>::elements[fo];
-	if(foi.is(DangerousFeature)) {
-		p->wait(2);
-		if(!p->roll(Strenght)) {
-			p->act(getnme(str("%1Entagled", foi.id)));
-			p->damage(1);
-			p->wait();
-			p->fixaction();
-			return false;
-		}
-		p->act(getnme(str("%1Break", foi.id)));
-		area.set(m, NoFeature);
-	}
-	return true;
-}
-
-static bool check_webbed_tile(creature* p, point m) {
-	if(p->is(IgnoreWeb))
-		return true;
-	if(area.is(m, Webbed)) {
-		p->wait(2);
-		if(!p->roll(Strenght)) {
-			p->act(getnm("WebEntagled"));
-			p->wait();
-			p->fixaction();
-			return false;
-		}
-		p->act(getnm("WebBreak"));
-		area.remove(m, Webbed);
-	}
-	return true;
-}
-
-static bool check_leave_area(creature* p, point m) {
-	if(!area.isvalid(m) && game.level == 0) {
-		if(p->isplayer()) {
-			auto direction = movedirection(m);
-			auto np = to(game.position, direction);
-			if(p->confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
-				game.enter(np, 0, NoFeature, direction);
-		}
-		p->wait();
-		return false;
-	}
-	return true;
-}
-
-static bool check_place_owner(creature* p, point m) {
-	if(p->is(PlaceOwner)) {
-		auto pr = roomi::find(p->worldpos, m);
-		if(p->getroom() != pr) {
-			p->wait();
-			return false;
-		}
-	}
-	return true;
 }
 
 void creature::movestep(point ni) {
@@ -654,24 +737,23 @@ bool creature::roll(ability_s v, int bonus) const {
 
 void adventure_mode();
 
-void creature::lookcreatures() const {
-	creatures.select(getposition(), getlos(), isplayer(), this);
-	if(is(Ally)) {
+static void look_creatures() {
+	creatures.select(player->getposition(), player->getlos(), player->ishuman(), player);
+	if(player->is(Ally)) {
 		enemies = creatures;
 		enemies.match(Enemy, true);
-	} else if(is(Enemy)) {
+	} else if(player->is(Enemy)) {
 		enemies = creatures;
 		enemies.match(Ally, true);
 	} else
 		enemies.clear();
 }
 
-void creature::lookenemies() {
-	lookcreatures();
+static void look_enemy() {
+	look_creatures();
 	enemy = 0;
 	if(enemies) {
-		// Combat situation - need eliminate enemy
-		enemies.sort(getposition());
+		enemies.sort(player->getposition());
 		enemy = enemies[0];
 	}
 }
@@ -695,15 +777,15 @@ bool creature::isfollowmaster() const {
 }
 
 void creature::makemove() {
-	auto pt = getposition();
-	pushvalue push_player(player, this);
-	pushvalue push_rect(last_rect, {pt.x, pt.y, pt.x, pt.y});
-	pushvalue push_site(last_site);
 	// Recoil form action
 	if(wait_seconds > 0) {
 		wait_seconds -= get(Speed);
 		return;
 	}
+	auto pt = getposition();
+	pushvalue push_player(player, this);
+	pushvalue push_rect(last_rect, {pt.x, pt.y, pt.x, pt.y});
+	pushvalue push_site(last_site);
 	// Get room
 	auto room = getroom();
 	last_site = 0;
@@ -719,10 +801,10 @@ void creature::makemove() {
 	// Unaware attack or others
 	if(is(Unaware))
 		remove(Unaware);
-	lookenemies();
+	look_enemy();
 	allowed_spells.select(player);
 	last_actions.select(siteskilli::isvalid);
-	if(isplayer())
+	if(ishuman())
 		adventure_mode();
 	else if(enemy) {
 		allowed_spells.match(spelli::iscombat, true);
@@ -812,7 +894,7 @@ void creature::update_room() {
 		auto pb = getroom();
 		auto room_changed = false;
 		if(pn != pb) {
-			if(isplayer()) {
+			if(ishuman()) {
 				auto ps = pn->getsite();
 				auto pd = getdescription(ps->id);
 				if(pd)
@@ -827,19 +909,6 @@ void creature::update_room() {
 		room_id = 0xFFFF;
 }
 
-void creature::update_boost() {
-	variant v = this;
-	active_spells.clear();
-	for(auto& e : bsdata<boosti>()) {
-		if(e.parent == v)
-			active_spells.set(e.effect);
-	}
-}
-
-void creature::update_basic() {
-	memcpy(abilities, basic.abilities, Hits * sizeof(abilities[0]));
-}
-
 void creature::update_room_abilities() {
 	auto p = getroom();
 	if(!p)
@@ -848,14 +917,14 @@ void creature::update_room_abilities() {
 }
 
 void creature::update() {
-	update_basic();
-	update_boost();
+	update_basic(abilities, basic.abilities);
+	update_boost(active_spells, this);
 	update_wears();
 	update_room_abilities();
 	update_abilities();
 }
 
-static void blockcreatures(creature* exclude) {
+static void block_creatures(creature* exclude) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.worldpos != game)
 			continue;
@@ -872,7 +941,7 @@ bool creature::moveto(point ni) {
 	area.blocktiles(DarkWater);
 	area.blockwalls();
 	area.blockfeatures();
-	blockcreatures(this);
+	block_creatures(this);
 	area.makewave(getposition());
 	area.blockzero();
 	auto m0 = getposition();
@@ -897,40 +966,12 @@ void creature::act(const char* format, ...) const {
 }
 
 void creature::actp(const char* format, ...) const {
-	if(isplayer())
+	if(ishuman())
 		actv(console, format, xva_start(format), getname(), is(Female));
 }
 
-int creature::getmightpenalty(int enemy_strenght) const {
-	auto strenght = get(Strenght);
-	if(strenght < enemy_strenght)
-		return enemy_strenght - strenght;
-	return 0;
-}
-
-int creature::getblocking(const item& enemy_weapon, const item& weapon, int value) const {
-	if(!weapon || !weapon.is(ShieldUse))
-		return 0;
-	value += enemy_weapon.geti().weapon.enemy_block;
-	if(enemy_weapon.is(RangedWeapon))
-		value += weapon.geti().weapon.block_ranged;
-	else
-		value += weapon.geti().weapon.block;
-	return value;
-}
-
-int creature::getparrying(const item& enemy_weapon, const item& weapon, int value) const {
-	if(!weapon)
-		return 0;
-	if(enemy_weapon.is(RangedWeapon))
-		return 0;
-	value += enemy_weapon.geti().weapon.enemy_parry;
-	value += weapon.geti().weapon.parry;
-	return value;
-}
-
 void creature::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
-	if(isplayer() || area.is(getposition(), Visible))
+	if(ishuman() || area.is(getposition(), Visible))
 		actable::sayv(sb, format, format_param, name, female);
 }
 
@@ -1024,31 +1065,22 @@ void creature::use(item& v) {
 	wait();
 }
 
-void creature::restore(ability_s a, ability_s am, ability_s test) {
-	auto v = get(a);
-	auto mv = get(am);
-	if(v < mv) {
-		if(roll(test))
-			add(a, 1);
-	}
-}
-
 void creature::everyminute() {
 	if(is(Regeneration))
-		restore(Hits, HitsMaximum, Strenght);
+		restore(this, Hits, HitsMaximum, Strenght);
 	if(is(ManaRegeneration))
-		restore(Mana, ManaMaximum, Charisma);
+		restore(this, Mana, ManaMaximum, Charisma);
 }
 
 void creature::every10minutes() {
-	restore(Mana, ManaMaximum, Charisma);
+	restore(this, Mana, ManaMaximum, Charisma);
 }
 
 void creature::every30minutes() {
 }
 
 void creature::every4hour() {
-	restore(Hits, HitsMaximum, Strenght);
+	restore(this, Hits, HitsMaximum, Strenght);
 }
 
 void creature::gainexperience(int v) {

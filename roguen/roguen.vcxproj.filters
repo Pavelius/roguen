@@ -207,9 +207,6 @@
     <ClCompile Include="creaturea.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="statable.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="spells.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -218,9 +215,6 @@
     </ClCompile>
     <ClCompile Include="visualeffect.cpp">
       <Filter>Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="indexa.cpp">
-      <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="information.cpp">
       <Filter>Logic</Filter>
@@ -311,6 +305,12 @@
     </ClCompile>
     <ClCompile Include="siteskill.cpp">
       <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="monster.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="indexa.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +465,18 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="visualeffect.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="statable.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="monster.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="indexa.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="advancement.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

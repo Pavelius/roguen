@@ -16,19 +16,19 @@ const int tsy = 48;
 const int mst = 260;
 const int panel_width = 130;
 
-static const void* focus_pressed;
-static unsigned long last_tick_message;
-static unsigned long start_stamp;
-static int wears_offset = 80;
-static rect message_rect;
-static keybind* keybinds;
-bool show_floor_rect;
-int window_width = 480;
-int window_height = 280;
-
 void set_dark_theme();
 void initialize_translation(const char* locale);
 void initialize_png();
+
+static const void*		focus_pressed;
+static unsigned long	last_tick_message;
+static unsigned long	start_stamp;
+static int				wears_offset = 80;
+static rect				message_rect;
+static keybind*			keybinds;
+bool					show_floor_rect;
+int						window_width = 480;
+int						window_height = 280;
 
 static point m2s(point v) {
 	return point{(short)(v.x * tsx), (short)(v.y * tsy)};
@@ -583,21 +583,21 @@ static point get_top_position(variant v) {
 	return result;
 }
 
-void creature::paintbars() const {
+static void paint_bars(const creature* player) {
 	const int dy = 4;
 	rectpush push;
-	caret.y += get_top_position(getkind()).y;
+	caret.y += get_top_position(player->getkind()).y;
 	caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
-	bar(get(Hits), get(HitsMaximum), colors::red); caret.y += dy - 1;
-	bar(get(Mana), get(ManaMaximum), colors::blue);
+	bar(player->get(Hits), player->get(HitsMaximum), colors::red); caret.y += dy - 1;
+	bar(player->get(Mana), player->get(ManaMaximum), colors::blue);
 }
 
 void creature::paintbarsall() const {
 	if(!area.is(getposition(), Visible))
 		return;
 	if(game.getowner() == this || is(Enemy))
-		paintbars();
+		paint_bars(this);
 }
 
 void creature::paint() const {

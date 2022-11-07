@@ -13,7 +13,7 @@ BSDATA(visualeffect) = {
 	{"HitVisual", res::Conditions, 0, 0, 15, -8},
 	{"IceSplash", res::Splash, 1},
 	{"LightingSplash", res::Splash, 1},
-	{"PoisionVisual", res::Conditions, 2, 0, 15, -26},
+	{"PoisonVisual", res::Conditions, 2, 0, 15, -26},
 	{"SearchVisual", res::Splash, 3},
 	{"MissileNorth", res::Missile, 0, 0, 15, -32},
 	{"MissileSouth", res::Missile, 0, ImageMirrorV, 15, -32},

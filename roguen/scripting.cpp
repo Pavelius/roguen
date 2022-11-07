@@ -1,5 +1,6 @@
 #include "draw_object.h"
 #include "resource.h"
+#include "indexa.h"
 #include "main.h"
 
 roomi* add_room(const sitei* ps, const rect& rc);
@@ -396,8 +397,8 @@ static void test_arena(int bonus) {
 	auto m = player->getposition();
 	auto p = creature::create(m.to(3, 0), pm);
 	p->set(Enemy);
-	player->lookenemies();
-	animate_figures();
+	p->wait();
+	player->wait();
 }
 
 static void toggle_floor_rect(int bonus) {
@@ -405,7 +406,6 @@ static void toggle_floor_rect(int bonus) {
 }
 
 static void range_attack(int bonud) {
-	player->lookenemies();
 	if(!player->canshoot(true))
 		return;
 	if(!enemy) {
@@ -503,7 +503,7 @@ static void choose_spell(int bonus) {
 
 static void cast_spell(int bonus) {
 	choose_spell(bonus);
-	if(last_variant)
+	if(last_variant.iskind<spelli>())
 		player->cast((spell_s)last_variant.value);
 }
 

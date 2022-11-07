@@ -27,7 +27,7 @@ BSDATA(abilityi) = {
 	{"ManaMaximum"},
 	{"Hits"},
 	{"Mana"},
-	{"Mood"},
+	{"Poison"},
 	{"Alignment"},
 	{"ParryCount"},
 	{"Experience"},

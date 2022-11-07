@@ -1,4 +1,7 @@
-#include "main.h"
+#include "areamap.h"
+#include "indexa.h"
+
+extern areamap area;
 
 void indexa::select(point pt, int range) {
 	auto pb = data;

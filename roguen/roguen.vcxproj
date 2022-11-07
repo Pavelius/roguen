@@ -196,6 +196,7 @@
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
+    <ClCompile Include="monster.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="png.cpp" />
     <ClCompile Include="point.cpp" />
@@ -217,7 +218,6 @@
     <ClCompile Include="speech.cpp" />
     <ClCompile Include="spells.cpp" />
     <ClCompile Include="sprite_util.cpp" />
-    <ClCompile Include="statable.cpp" />
     <ClCompile Include="stringact.cpp" />
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
@@ -239,6 +239,7 @@
     <ClCompile Include="zip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="advancement.h" />
     <ClInclude Include="answers.h" />
     <ClInclude Include="anymap.h" />
     <ClInclude Include="archive.h" />
@@ -259,6 +260,7 @@
     <ClInclude Include="duration.h" />
     <ClInclude Include="flagable.h" />
     <ClInclude Include="geoposition.h" />
+    <ClInclude Include="indexa.h" />
     <ClInclude Include="listcolumn.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />
@@ -267,6 +269,7 @@
     <ClInclude Include="log.h" />
     <ClInclude Include="logparse.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="monster.h" />
     <ClInclude Include="nameable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
@@ -280,6 +283,7 @@
     <ClInclude Include="shape.h" />
     <ClInclude Include="speech.h" />
     <ClInclude Include="sprite_util.h" />
+    <ClInclude Include="statable.h" />
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />
