@@ -24,7 +24,6 @@ BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
 BSDATAC(siteskilli, 256);
-BSDATAC(spelli, 64);
 BSDATAC(trigger, 256);
 
 BSMETA(abilityi) = {

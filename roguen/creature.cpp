@@ -13,6 +13,19 @@ static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
 
+static void action_text(const creature* player, const char* id, const char* action) {
+	if(!player->is(AnimalInt)) {
+		auto pn = player->getspeech(str("%1%2Speech", id, action));
+		if(pn) {
+			player->say(pn);
+			return;
+		}
+	}
+	auto pn = getdescription(str("%1%2", id, action));
+	if(pn)
+		player->act(pn);
+}
+
 static creature* findalive(point m) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid() && e.getposition() == m)
@@ -258,6 +271,50 @@ static void defence_skills(const creature* player, int attacker_strenght, const 
 		if(e.value < 0)
 			e.value = 0;
 	}
+}
+
+static void match_creatures(const spelli& ei, int level) {
+	auto ps = targets.begin();
+	for(auto p : targets) {
+		if(!p->isallow(ei, level))
+			continue;
+		*ps++ = p;
+	}
+	targets.count = ps - targets.begin();
+}
+
+static bool spell_ready(const spelli& e, int level) {
+	choose_targets(e.target);
+	unsigned target_count = 1;
+	if(e.is(Multitarget))
+		target_count += level;
+	if(targets.count > target_count)
+		targets.count = target_count;
+	match_creatures(e, level);
+	return targets.getcount() != 0 || e.summon.size() != 0;
+}
+
+static bool spell_allowmana(const void* object) {
+	auto p = (spelli*)object;
+	return player->get(Mana) >= p->mana;
+}
+
+static bool spell_allowuse(const void* object) {
+	auto p = (spelli*)object;
+	return spell_ready(*p, player->get(*p));
+}
+
+static bool spell_iscombat(const void* object) {
+	auto p = (spelli*)object;
+	if(p->is(Enemies))
+		return true;
+	if(p->summon)
+		return true;
+	return false;
+}
+
+static bool	spell_isnotcombat(const void* object) {
+	return !spell_iscombat(object);
 }
 
 void creature::clear() {
@@ -845,9 +902,9 @@ void creature::makemove() {
 	if(ishuman())
 		adventure_mode();
 	else if(enemy) {
-		allowed_spells.match(spelli::iscombat, true);
-		allowed_spells.match(spelli::isallowmana, true);
-		allowed_spells.match(spelli::isallowuse, true);
+		allowed_spells.match(spell_iscombat, true);
+		allowed_spells.match(spell_allowmana, true);
+		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 40)
 			cast(*((spelli*)allowed_spells.random()));
 		if(canshoot(false))
@@ -855,9 +912,9 @@ void creature::makemove() {
 		else
 			moveto(enemy->getposition());
 	} else {
-		allowed_spells.match(spelli::isnotcombat, true);
-		allowed_spells.match(spelli::isallowmana, true);
-		allowed_spells.match(spelli::isallowuse, true);
+		allowed_spells.match(spell_isnotcombat, true);
+		allowed_spells.match(spell_allowmana, true);
+		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 20)
 			cast(*((spelli*)allowed_spells.random()));
 		else if(isfollowmaster())
@@ -1186,18 +1243,16 @@ void creature::cast(const spelli& e, int level, int mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!e.isready(level)) {
+	if(!spell_ready(e, level)) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	auto pn = getdescription(str("%1Casting", e.id));
-	if(pn)
-		act(pn);
+	action_text(this, e.id, "Casting");
 	for(auto p : targets)
 		p->apply(e, level);
 	if(e.summon) {
 		auto count = e.getcount(level);
-		player->summon(player->getposition(), e.summon, count, level);
+		summon(player->getposition(), e.summon, count, level);
 	}
 	add(Mana, -mana);
 	update();

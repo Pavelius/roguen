@@ -498,7 +498,8 @@ static void site_wall(int bonus) {
 }
 
 static void choose_spell(int bonus) {
-	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"));
+	pushvalue push_width(window_width, 300);
+	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"), player);
 }
 
 static void cast_spell(int bonus) {

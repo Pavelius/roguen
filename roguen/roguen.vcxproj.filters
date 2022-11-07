@@ -207,9 +207,6 @@
     <ClCompile Include="creaturea.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="spells.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="hotkey.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -310,6 +307,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="boost.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="spell.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -480,6 +480,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="boost.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="spell.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

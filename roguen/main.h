@@ -18,6 +18,7 @@
 #include "script.h"
 #include "shape.h"
 #include "speech.h"
+#include "spell.h"
 #include "talk.h"
 #include "trigger.h"
 
@@ -239,29 +240,11 @@ struct wearable : movable {
 	wear_s			getwearslot(const item* data) const;
 	const item*		getwear(const void* data) const;
 };
-struct spellable {
-	char			spells[64];
-};
 class ownerable {
 	short unsigned owner_id;
 public:
-	creature*	getowner() const { return bsdata<creature>::ptr(owner_id); }
-	void		setowner(const creature* v) { bsset(owner_id, v); }
-};
-struct spelli : nameable {
-	int				mana;
-	unsigned		target;
-	duration_s		duration;
-	dice			count;
-	variants		conditions, effect, summon;
-	int				getcount(int level) const;
-	bool			is(condition_s v) const { return (target & FG(v)) != 0; }
-	static bool		isallowmana(const void* object);
-	static bool		isallowuse(const void* object);
-	static bool		iscombat(const void* object);
-	static bool		isnotcombat(const void* object) { return !iscombat(object); }
-	bool			isready(int level) const;
-	static void		linerow(const void* object);
+	creature*		getowner() const { return bsdata<creature>::ptr(owner_id); }
+	void			setowner(const creature* v) { bsset(owner_id, v); }
 };
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
@@ -369,75 +352,75 @@ public:
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : collection<creature> {
-	void		match(feat_s v, bool keep);
-	void		matchrange(point start, int v, bool keep);
-	void		remove(const creature* v);
-	void		select(point m, int los, bool visible, const creature* exclude);
-	void		sort(point start);
+	void			match(feat_s v, bool keep);
+	void			matchrange(point start, int v, bool keep);
+	void			remove(const creature* v);
+	void			select(point m, int los, bool visible, const creature* exclude);
+	void			sort(point start);
 };
 struct sitegeni;
 struct sitei : nameable {
 	typedef void (sitei::*fnproc)() const;
-	variants	landscape, loot;
-	tile_s		walls, floors;
-	featable	feats;
-	const shapei* shape;
+	variants		landscape, loot;
+	tile_s			walls, floors;
+	featable		feats;
+	const shapei*	shape;
 	const sitegeni*	local;
-	void		building() const;
-	void		cityscape() const;
-	void		corridors() const;
-	void		dungeon() const;
-	void		fillfloor() const;
-	void		fillwalls() const;
-	void		fillwallsall() const;
-	void		nogenerate() const {}
-	void		outdoor() const;
-	void		room() const;
+	void			building() const;
+	void			cityscape() const;
+	void			corridors() const;
+	void			dungeon() const;
+	void			fillfloor() const;
+	void			fillwalls() const;
+	void			fillwallsall() const;
+	void			nogenerate() const {}
+	void			outdoor() const;
+	void			room() const;
 };
 struct locationi : sitei {
-	variants	sites;
+	variants		sites;
 	const sitegeni *global, *global_finish;
-	char		darkness, chance_finale, offset;
-	color		minimap;
+	char			darkness, chance_finale, offset;
+	color			minimap;
 };
 class siteable {
-	short unsigned site_id;
+	short unsigned	site_id;
 public:
 	explicit operator bool() const { return site_id != 0xFFFF; }
-	sitei*		getsite() const { return bsdata<sitei>::ptr(site_id); }
-	void		setsite(const sitei* v) { bsset(site_id, v); }
+	sitei*			getsite() const { return bsdata<sitei>::ptr(site_id); }
+	void			setsite(const sitei* v) { bsset(site_id, v); }
 };
 struct sitegeni : nameable {
-	sitei::fnproc proc;
+	sitei::fnproc	proc;
 };
 struct dungeon {
-	point		position;
-	const sitei* entrance;
+	point			position;
+	const sitei*	entrance;
 	const locationi* modifier;
 	const locationi* level;
 	const locationi* final_level;
-	monsteri*	guardian;
-	char		rumor;
-	variant		reward, twist; // Can't be random table
+	monsteri*		guardian;
+	char			rumor;
+	variant			reward, twist; // Can't be random table
 	constexpr operator bool() const { return level != 0; }
 	static dungeon*	add(point position);
 	static dungeon*	add(point position, locationi* modifier, locationi* type, variant reward);
-	void		clear() { memset(this, 0, sizeof(*this)); }
-	static dungeon* find(point position);
+	void			clear() { memset(this, 0, sizeof(*this)); }
+	static dungeon*	find(point position);
 };
 class roomi : public geoposition, public siteable, public ownerable {
-	unsigned char ideftified : 1;
-	unsigned char explored : 1;
+	unsigned char	ideftified : 1;
+	unsigned char	explored : 1;
 public:
-	rect		rc;
+	rect			rc;
 	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
-	void		clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
-	static roomi* find(geoposition gp, point pt);
-	void		getrumor(stringbuilder& sb) const;
-	static bool	notknown(const void* object);
-	const char*	getname() const { return getsite()->getname(); }
-	bool		is(condition_s v) const;
-	bool		is(feat_s v) const;
+	void			clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
+	static roomi*	find(geoposition gp, point pt);
+	void			getrumor(stringbuilder& sb) const;
+	static bool		notknown(const void* object);
+	const char*		getname() const { return getsite()->getname(); }
+	bool			is(condition_s v) const;
+	bool			is(feat_s v) const;
 };
 struct areaheadi {
 	struct totali {
@@ -455,10 +438,6 @@ struct areaheadi {
 	void			clear();
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
-};
-struct spella : collection<spelli> {
-	spelli*			choose(const char* title, const char* cancel) const;
-	void			select(const spellable* p);
 };
 class gamei : public geoposition, public ownerable {
 	unsigned		minutes;

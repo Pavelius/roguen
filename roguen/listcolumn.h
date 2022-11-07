@@ -9,4 +9,4 @@ struct listcolumn {
 	int				totalwidth() const;
 	explicit operator bool() const { return id != 0; }
 };
-extern listcolumn* current_columns;
+extern listcolumn*	current_columns;
