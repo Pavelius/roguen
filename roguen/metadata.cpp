@@ -13,7 +13,6 @@ BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 
 BSDATAD(advancement);
-BSDATAC(boosti, 256);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(dungeon, 256);

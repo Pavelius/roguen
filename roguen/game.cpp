@@ -1,3 +1,4 @@
+#include "boost.h"
 #include "main.h"
 
 areamap			area;
@@ -60,7 +61,7 @@ void gamei::all(creature::fnupdate proc) {
 
 void gamei::passminute() {
 	minutes++;
-	boosti::updateall();
+	boosti::updateall(getminutes());
 	all(&creature::everyminute);
 	while(restore_half_turn < minutes) {
 		all(&creature::every5minutes);

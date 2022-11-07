@@ -244,6 +244,7 @@
     <ClInclude Include="anymap.h" />
     <ClInclude Include="archive.h" />
     <ClInclude Include="areamap.h" />
+    <ClInclude Include="boost.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="charname.h" />

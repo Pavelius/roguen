@@ -403,17 +403,6 @@ public:
 struct sitegeni : nameable {
 	sitei::fnproc proc;
 };
-struct boosti {
-	variant		parent;
-	spell_s		effect;
-	unsigned	stamp;
-	constexpr explicit operator bool() const { return parent.operator bool(); }
-	static boosti* add(variant parent, spell_s effect);
-	void		clear() { memset(this, 0, sizeof(*this)); }
-	static boosti* find(variant parent, spell_s effect);
-	static void	remove(variant parent);
-	static void	updateall();
-};
 struct dungeon {
 	point		position;
 	const sitei* entrance;

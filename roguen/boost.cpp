@@ -1,9 +1,11 @@
-#include "main.h"
+#include "boost.h"
 
-void boosti::updateall() {
+BSDATAC(boosti, 256);
+
+void boosti::updateall(unsigned current_stamp) {
 	auto ps = bsdata<boosti>::elements;
 	for(auto& e : bsdata<boosti>()) {
-		if(e.stamp < game.getminutes())
+		if(e.stamp < current_stamp)
 			continue;
 		*ps++= e;
 	}
@@ -17,7 +19,7 @@ void boosti::remove(variant parent) {
 	}
 }
 
-boosti* boosti::find(variant parent, spell_s effect) {
+boosti* boosti::find(variant parent, variant effect) {
 	for(auto& e : bsdata<boosti>()) {
 		if(e.effect == effect && e.parent == parent)
 			return &e;
@@ -25,13 +27,15 @@ boosti* boosti::find(variant parent, spell_s effect) {
 	return 0;
 }
 
-boosti* boosti::add(variant parent, spell_s effect) {
+boosti* boosti::add(variant parent, variant effect, unsigned stop_time) {
 	auto p = find(parent, effect);
-	if(p)
-		return p;
-	p = bsdata<boosti>::add();
-	p->clear();
-	p->parent = parent;
-	p->effect = effect;
+	if(!p) {
+		p = bsdata<boosti>::add();
+		p->clear();
+		p->parent = parent;
+		p->effect = effect;
+	}
+	if(p->stamp < stop_time)
+		p->stamp = stop_time;
 	return p;
 }

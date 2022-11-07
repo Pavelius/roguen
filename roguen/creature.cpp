@@ -1,3 +1,4 @@
+#include "boost.h"
 #include "main.h"
 
 namespace {
@@ -208,7 +209,7 @@ static void update_boost(spellf& spells, variant parent) {
 	spells.clear();
 	for(auto& e : bsdata<boosti>()) {
 		if(e.parent == parent)
-			spells.set(e.effect);
+			spells.set((spell_s)e.effect.value);
 	}
 }
 
@@ -1076,10 +1077,8 @@ void creature::apply(variant v) {
 }
 
 void creature::addeffect(spell_s v, unsigned minutes) {
-	auto p = boosti::add(this, v);
-	auto n = game.getminutes() + minutes;
-	if(p->stamp < n)
-		p->stamp = n;
+	boosti::add(this, bsdata<spelli>::elements + v,
+		game.getminutes() + minutes);
 }
 
 void creature::use(variants source) {

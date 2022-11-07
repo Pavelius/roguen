@@ -234,9 +234,6 @@
     <ClCompile Include="serial.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="boost.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="direction.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -310,6 +307,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="indexa.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="boost.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -477,6 +477,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="advancement.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="boost.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
