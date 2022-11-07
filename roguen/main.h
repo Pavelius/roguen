@@ -54,7 +54,7 @@ enum magic_s : unsigned char {
 enum condition_s : unsigned char {
 	Identified, NPC, Random, ShowMinimapBullet,
 	NoWounded, Wounded, HeavyWounded,
-	Busy, NoWebbed, NoDangerousFeature,
+	Busy, NoDangerousFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 	Item, Feature,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
@@ -66,10 +66,6 @@ enum feat_s : unsigned char {
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Unaware,
-};
-enum spell_s : unsigned char {
-	CureWounds, Entaglement, Gate, Light, Sleep, SummonUndead, Teleport, Web,
-	LastSpell = Web
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -244,7 +240,7 @@ struct wearable : movable {
 	const item*		getwear(const void* data) const;
 };
 struct spellable {
-	char		spells[LastSpell + 1];
+	char			spells[64];
 };
 class ownerable {
 	short unsigned owner_id;
@@ -252,111 +248,125 @@ public:
 	creature*	getowner() const { return bsdata<creature>::ptr(owner_id); }
 	void		setowner(const creature* v) { bsset(owner_id, v); }
 };
+struct spelli : nameable {
+	int				mana;
+	unsigned		target;
+	duration_s		duration;
+	dice			count;
+	variants		conditions, effect, summon;
+	int				getcount(int level) const;
+	bool			is(condition_s v) const { return (target & FG(v)) != 0; }
+	static bool		isallowmana(const void* object);
+	static bool		isallowuse(const void* object);
+	static bool		iscombat(const void* object);
+	static bool		isnotcombat(const void* object) { return !iscombat(object); }
+	bool			isready(int level) const;
+	static void		linerow(const void* object);
+};
 class creature : public wearable, public statable, public spellable, public ownerable {
-	unsigned short class_id;
-	unsigned short room_id;
-	statable	basic;
-	featable	feats, feats_active;
-	point		moveorder;
-	int			money;
-	unsigned	experience;
-	int			wait_seconds;
-	void		advance(variant kind, int level);
-	void		advance(variants elements);
-	void		advance(variant element);
-	void		damage(const item& weapon, int effect);
-	void		dress(variant v, int multiplier);
-	void		dress(variants v, int multiplier = 1);
-	void		fixcantgo() const;
-	void		fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const;
-	void		interaction(point m);
-	bool		isallow(spell_s v, int level) const;
-	bool		isfollowmaster() const;
-	void		levelup();
-	void		lookitems() const;
-	const speech* matchfirst(const speecha& source) const;
-	bool		matchspeech(variant v) const;
-	bool		matchspeech(const variants& source) const;
-	void		matchspeech(speecha& source) const;
-	void		update();
-	void		update_abilities();
-	void		update_room_abilities();
-	void		update_wears();
+	unsigned short	class_id, room_id;
+	statable		basic;
+	featable		feats, feats_active;
+	point			moveorder;
+	int				money;
+	unsigned		experience;
+	int				wait_seconds;
+	void			advance(variant kind, int level);
+	void			advance(variants elements);
+	void			advance(variant element);
+	void			damage(const item& weapon, int effect);
+	void			dress(variant v, int multiplier);
+	void			dress(variants v, int multiplier = 1);
+	void			fixcantgo() const;
+	void			fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const;
+	void			interaction(point m);
+	bool			isfollowmaster() const;
+	void			levelup();
+	void			lookitems() const;
+	const speech*	matchfirst(const speecha& source) const;
+	bool			matchspeech(variant v) const;
+	bool			matchspeech(const variants& source) const;
+	void			matchspeech(speecha& source) const;
+	void			update();
+	void			update_abilities();
+	void			update_room_abilities();
+	void			update_wears();
 public:
-	geoposition worldpos;
+	geoposition		worldpos;
 	operator bool() const { return abilities[Hits] > 0; }
-	void		act(const char* format, ...) const;
-	void		actp(const char* format, ...) const;
-	void		addeffect(spell_s v, unsigned minutes);
-	void		aimove();
-	void		apply(variant v);
-	void		apply(spell_s v, int level);
-	void		attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
-	void		attackmelee(creature& enemy);
-	void		attackrange(creature& enemy);
-	void		attackthrown(creature& enemy);
-	bool		canhear(point i) const;
-	bool		canshoot(bool interactive) const;
-	bool		canthrown(bool interactive) const;
-	void		cast(spell_s v);
-	void		cast(spell_s v, int level, int mana);
-	void		clear();
-	void		everyminute();
-	void		every10minutes();
-	void		every30minutes();
-	void		every5minutes() {}
-	void		every1hour() {}
-	void		every4hour();
+	void			act(const char* format, ...) const;
+	void			actp(const char* format, ...) const;
+	void			aimove();
+	void			apply(variant v);
+	void			apply(const variants& source);
+	void			apply(const spelli& e, int level);
+	void			attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
+	void			attackmelee(creature& enemy);
+	void			attackrange(creature& enemy);
+	void			attackthrown(creature& enemy);
+	bool			canhear(point i) const;
+	bool			canshoot(bool interactive) const;
+	bool			canthrown(bool interactive) const;
+	void			cast(const spelli& v);
+	void			cast(const spelli& v, int level, int mana);
+	void			clear();
+	void			everyminute();
+	void			every10minutes();
+	void			every30minutes();
+	void			every5minutes() {}
+	void			every1hour() {}
+	void			every4hour();
 	static creature* create(point m, variant v, variant character = {}, bool female = false);
-	void		damage(int v);
-	void		finish();
-	void		gainexperience(int v);
-	int			get(ability_s v) const { return abilities[v]; }
-	int			get(spell_s v) const { return spells[v]; }
-	const classi& getclass() const { return bsdata<classi>::elements[class_id]; }
-	int			getdamage(wear_s w) const;
-	void		getinfo(stringbuilder& sb) const;
-	int			getloh() const;
-	int			getlos() const;
-	roomi*		getroom() const { return bsdata<roomi>::ptr(room_id); }
-	void		getrumor(struct dungeon& e, stringbuilder& sb) const;
-	const char* getspeech(const char* id) const;
-	int			getwait() const { return wait_seconds; }
-	void		heal(int v);
-	bool		is(condition_s v) const;
-	bool		is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
-	bool		isallow(variant v) const;
-	bool		isallow(const variants& source) const;
-	bool		isenemy(const creature& opponent) const;
-	bool		ishuman() const;
-	bool		isvalid() const;
-	void		interaction(creature& opponent);
-	void		kill();
-	void		logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
-	void		makemove();
-	void		movestep(direction_s i);
-	void		movestep(point m);
-	bool		moveto(point m);
-	void		paint() const;
-	void		paintbarsall() const;
-	void		place(point m);
-	void		remove(feat_s v) { feats.remove(v); }
-	bool		roll(ability_s v, int bonus = 0) const;
-	void		say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
-	void		sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
-	void		set(feat_s v) { feats.set(v); }
-	void		set(ability_s i, int v) { abilities[i] = v; }
-	void		setroom(const roomi* v) { bsset(room_id, v); }
-	void		speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
-	bool		speechrumor() const;
-	bool		speechlocation() const;
-	void		summon(point m, const variants& elements, int count, int level);
-	bool		talk(const char* id);
-	void		unlink();
-	void		update_room();
-	void		use(variants source);
-	void		use(item& v);
-	void		wait(int rounds = 1) { wait_seconds += 100 * rounds; }
+	void			damage(int v);
+	void			finish();
+	void			gainexperience(int v);
+	int				get(ability_s v) const { return abilities[v]; }
+	int				get(const spelli& e) const { return spells[bsid(&e)]; }
+	const classi&	getclass() const { return bsdata<classi>::elements[class_id]; }
+	int				getdamage(wear_s w) const;
+	void			getinfo(stringbuilder& sb) const;
+	int				getloh() const;
+	int				getlos() const;
+	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
+	void			getrumor(struct dungeon& e, stringbuilder& sb) const;
+	const char*		getspeech(const char* id) const;
+	int				getwait() const { return wait_seconds; }
+	void			heal(int v);
+	bool			is(condition_s v) const;
+	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
+	bool			isallow(variant v) const;
+	bool			isallow(const variants& source) const;
+	bool			isallow(const spelli& e, int level) const;
+	bool			isenemy(const creature& opponent) const;
+	bool			ishuman() const;
+	bool			isvalid() const;
+	void			interaction(creature& opponent);
+	void			kill();
+	void			logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
+	void			makemove();
+	void			movestep(direction_s i);
+	void			movestep(point m);
+	bool			moveto(point m);
+	void			paint() const;
+	void			paintbarsall() const;
+	void			place(point m);
+	void			remove(feat_s v) { feats.remove(v); }
+	bool			roll(ability_s v, int bonus = 0) const;
+	void			say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
+	void			sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
+	void			set(feat_s v) { feats.set(v); }
+	void			set(ability_s i, int v) { abilities[i] = v; }
+	void			setroom(const roomi* v) { bsset(room_id, v); }
+	void			speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
+	bool			speechrumor() const;
+	bool			speechlocation() const;
+	void			summon(point m, const variants& elements, int count, int level);
+	bool			talk(const char* id);
+	void			unlink();
+	void			update_room();
+	void			use(variants source);
+	void			use(item& v);
+	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 };
 struct creaturea : collection<creature> {
 	void		match(feat_s v, bool keep);
@@ -445,22 +455,6 @@ struct areaheadi {
 	void			clear();
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
-};
-struct spelli : nameable {
-	int				mana;
-	unsigned		target;
-	duration_s		duration;
-	dice			count;
-	variants		conditions, effect, summon;
-	int				getcount(int level) const;
-	bool			is(condition_s v) const { return (target & FG(v)) != 0; }
-	bool			isallow(const creature* target, int level) const;
-	static bool		isallowmana(const void* object);
-	static bool		isallowuse(const void* object);
-	static bool		iscombat(const void* object);
-	static bool		isnotcombat(const void* object) { return !iscombat(object); }
-	bool			isready(int level) const;
-	static void		linerow(const void* object);
 };
 struct spella : collection<spelli> {
 	spelli*			choose(const char* title, const char* cancel) const;

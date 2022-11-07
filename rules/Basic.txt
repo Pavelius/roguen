@@ -7,6 +7,15 @@ Cleric player(1)
 Rogue player(1)
 Mage player(1)
 
+#Spell
+
+CureWounds
+Entaglement
+Gate
+Light
+SummonUndead
+Web
+
 #RandomTable
 
 RandomRace

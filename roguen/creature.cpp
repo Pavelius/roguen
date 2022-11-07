@@ -849,7 +849,7 @@ void creature::makemove() {
 		allowed_spells.match(spelli::isallowmana, true);
 		allowed_spells.match(spelli::isallowuse, true);
 		if(allowed_spells && d100() < 40)
-			cast((spell_s)bsid(allowed_spells.random()));
+			cast(*((spelli*)allowed_spells.random()));
 		if(canshoot(false))
 			attackrange(*enemy);
 		else
@@ -859,7 +859,7 @@ void creature::makemove() {
 		allowed_spells.match(spelli::isallowmana, true);
 		allowed_spells.match(spelli::isallowuse, true);
 		if(allowed_spells && d100() < 20)
-			cast((spell_s)bsid(allowed_spells.random()));
+			cast(*((spelli*)allowed_spells.random()));
 		else if(isfollowmaster())
 			moveto(getowner()->getposition());
 		else if(area.isvalid(moveorder)) {
@@ -1059,30 +1059,6 @@ bool creature::speechlocation() const {
 	return true;
 }
 
-void creature::apply(variant v) {
-	if(v.iskind<spelli>())
-		apply((spell_s)v.value, v.counter);
-	else if(v.iskind<siteskilli>()) {
-		auto pa = bsdata<siteskilli>::elements + v.value;
-		auto rm = getroom();
-		auto result = roll(pa->skill, pa->bonus);
-		skilluse::add(pa, bsid(this), bsid(rm));
-		if(result) {
-			act(getdescription(str("%1Success", pa->id)));
-			runscript(pa->effect);
-		} else {
-			act(getdescription(str("%1Fail", pa->id)));
-			runscript(pa->fail);
-		}
-	} else
-		advance(v);
-}
-
-void creature::addeffect(spell_s v, unsigned minutes) {
-	boosti::add(this, bsdata<spelli>::elements + v,
-		game.getminutes() + minutes);
-}
-
 void creature::use(variants source) {
 	for(auto v : source)
 		apply(v);
@@ -1127,9 +1103,35 @@ void creature::gainexperience(int v) {
 	}
 }
 
+bool creature::isallow(const spelli& e, int level) const {
+	if(e.conditions) {
+		if(!isallow(e.conditions))
+			return false;
+	}
+	if(e.effect) {
+		if(!isallow(e.effect))
+			return false;
+	}
+	return true;
+}
+
 bool creature::isallow(variant v) const {
 	if(v.iskind<conditioni>())
 		return is((condition_s)v.value);
+	else if(v.iskind<feati>())
+		return !is((feat_s)v.value);
+	else if(v.iskind<areafi>()) {
+		auto present = area.is(getposition(), (mapf_s)v.value);
+		if(v.counter < 0)
+			return present;
+		return !present;
+	} else if(v.iskind<featurei>()) {
+		auto present = area.getfeature(getposition());
+		if(v.counter < 0)
+			return present == v.value;
+		return present != v.value;
+	} else if(v.iskind<script>())
+		return true;
 	return false;
 }
 
@@ -1141,28 +1143,61 @@ bool creature::isallow(const variants& source) const {
 	return false;
 }
 
-void creature::cast(spell_s v) {
-	cast(v, get(v), bsdata<spelli>::elements[v].mana);
+void creature::apply(const spelli& ei, int level) {
+	pushvalue push_value(last_value, ei.getcount(level));
+	if(ei.duration) {
+		auto minutes = bsdata<durationi>::elements[ei.duration].get(level);
+		auto stop_time = game.getminutes() + minutes;
+		fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), 2);
+		for(auto v : ei.effect)
+			boosti::add(this, v, stop_time);
+	} else
+		apply(ei.effect);
 }
 
-void creature::cast(spell_s v, int level, int mana) {
+void creature::apply(variant v) {
+	if(v.iskind<spelli>())
+		apply(bsdata<spelli>::elements[v.value], v.counter);
+	else if(v.iskind<areafi>()) {
+		if(v.counter < 0)
+			area.remove(getposition(), (mapf_s)v.value);
+		else
+			area.set(getposition(), (mapf_s)v.value);
+	} else if(v.iskind<featurei>()) {
+		if(v.counter < 0)
+			area.set(getposition(), NoFeature);
+		else
+			area.set(getposition(), (feature_s)v.value);
+	} else
+		advance(v);
+}
+
+void creature::apply(const variants& source) {
+	for(auto v : source)
+		apply(v);
+}
+
+void creature::cast(const spelli& e) {
+	cast(e, get(e), e.mana);
+}
+
+void creature::cast(const spelli& e, int level, int mana) {
 	if(get(Mana) < mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!bsdata<spelli>::elements[v].isready(level)) {
+	if(!e.isready(level)) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	auto pn = getdescription(str("%1Casting", bsdata<spelli>::elements[v].id));
+	auto pn = getdescription(str("%1Casting", e.id));
 	if(pn)
 		act(pn);
 	for(auto p : targets)
-		p->apply(v, level);
-	auto& ei = bsdata<spelli>::elements[v];
-	if(ei.summon) {
-		auto count = ei.getcount(level);
-		player->summon(player->getposition(), ei.summon, count, level);
+		p->apply(e, level);
+	if(e.summon) {
+		auto count = e.getcount(level);
+		player->summon(player->getposition(), e.summon, count, level);
 	}
 	add(Mana, -mana);
 	update();

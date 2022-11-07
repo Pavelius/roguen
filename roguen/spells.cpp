@@ -1,46 +1,14 @@
+#include "boost.h"
 #include "main.h"
-
-BSDATA(spelli) = {
-	{"CureWounds"},
-	{"Entaglement"},
-	{"Gate"},
-	{"Light"},
-	{"Sleep"},
-	{"SummonUndead"},
-	{"Teleport"},
-	{"Web"},
-};
-assert_enum(spelli, Web)
 
 static void match_creatures(const spelli& ei, int level) {
 	auto ps = targets.begin();
 	for(auto p : targets) {
-		if(!ei.isallow(p, level))
+		if(!p->isallow(ei, level))
 			continue;
 		*ps++ = p;
 	}
 	targets.count = ps - targets.begin();
-}
-
-bool spelli::iscombat(const void* object) {
-	auto p = (spelli*)object;
-	if(p->is(Enemies))
-		return true;
-	if(p->summon)
-		return true;
-	return false;
-}
-
-bool spelli::isallow(const creature* target, int level) const {
-	if(conditions) {
-		if(!target->isallow(conditions))
-			return false;
-	}
-	if(duration) {
-		//if(target->is((spell_s)bsid(this)))
-		//	return false;
-	}
-	return true;
 }
 
 bool spelli::isallowmana(const void* object) {
@@ -50,7 +18,16 @@ bool spelli::isallowmana(const void* object) {
 
 bool spelli::isallowuse(const void* object) {
 	auto p = (spelli*)object;
-	return p->isready(player->get((spell_s)bsid(p)));
+	return p->isready(player->get(*p));
+}
+
+bool spelli::iscombat(const void* object) {
+	auto p = (spelli*)object;
+	if(p->is(Enemies))
+		return true;
+	if(p->summon)
+		return true;
+	return false;
 }
 
 int	spelli::getcount(int level) const {
@@ -70,29 +47,12 @@ bool spelli::isready(int level) const {
 
 void spella::select(const spellable* p) {
 	auto ps = data;
-	for(auto i = (spell_s)0; i <= LastSpell; i = (spell_s)(i + 1)) {
+	for(auto i = 0; i< (sizeof(p->spells) / sizeof(p->spells[0])); i++) {
 		if(!p->spells[i])
 			continue;
-		*ps++ = bsdata<spelli>::source.ptr(i);
+		*ps++ = bsdata<spelli>::elements + i;
 	}
 	count = ps - data;
-}
-
-void creature::apply(spell_s v, int level) {
-	auto& ei = bsdata<spelli>::elements[v];
-	switch(v) {
-	case CureWounds:
-		heal(ei.getcount(level));
-		break;
-	case Web:
-		area.set(getposition(), Webbed);
-		break;
-	}
-	if(ei.duration) {
-		auto count = bsdata<durationi>::elements[ei.duration].get(level);
-		fixvalue(str("%1 %2i %-Minutes", ei.getname(), count), 2);
-		addeffect(v, count);
-	}
 }
 
 static const char* object_level(const void* object, stringbuilder& sb) {

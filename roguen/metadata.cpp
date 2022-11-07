@@ -24,6 +24,7 @@ BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
 BSDATAC(siteskilli, 256);
+BSDATAC(spelli, 64);
 BSDATAC(trigger, 256);
 
 BSMETA(abilityi) = {
@@ -148,7 +149,7 @@ BSMETA(spelli) = {
 	BSREQ(mana), BSREQ(count),
 	BSENM(duration, durationi),
 	BSFLG(target, conditioni),
-	BSREQ(conditions), BSREQ(summon),
+	BSREQ(conditions), BSREQ(effect), BSREQ(summon),
 	{}};
 BSMETA(tilei) = {
 	BSREQ(id),

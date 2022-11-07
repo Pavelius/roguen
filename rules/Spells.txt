@@ -20,4 +20,4 @@ SummonUndead mana(20)
  summon Skeleton+4 Zombie+2 Ghoul+1
 Web mana(4)
  target Enemies Neutrals Multitarget Ranged
- conditions NoWebbed
+ effect Webbed+1

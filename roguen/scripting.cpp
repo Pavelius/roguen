@@ -504,7 +504,7 @@ static void choose_spell(int bonus) {
 static void cast_spell(int bonus) {
 	choose_spell(bonus);
 	if(last_variant.iskind<spelli>())
-		player->cast((spell_s)last_variant.value);
+		player->cast(bsdata<spelli>::elements[last_variant.value]);
 }
 
 static void heal_player(int bonus) {
