@@ -170,7 +170,7 @@ BSMETA(visualeffect) = {
 	BSREQ(id),
 	{}};
 BSDATA(varianti) = {
-	{"NoVariant", VAR(script), 1},
+	{"NoVariant"},
 	{"Ability", VAR(abilityi), 1},
 	{"Advancement", VAR(advancement), 2},
 	{"AreaFlag", VAR(areafi), 1},

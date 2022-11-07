@@ -401,7 +401,6 @@ static void create_sites() {
 }
 
 static bool apply_location(geoposition geo, variant tile) {
-	last_site = 0;
 	last_location = tile;
 	if(!last_location)
 		return false;
@@ -534,17 +533,8 @@ void sitei::corridors() const {
 	create_doors(floors, walls);
 }
 
-static void update_dungeon_rumor() {
-	if(last_dungeon)
-		return;
-	auto i = area.find(StairsDown);
-	if(!area.isvalid(i))
-		return;
-	// Add random rumor
-	dungeon::add(game.position);
-}
-
 static void create_area(geoposition geo, variant tile) {
+	pushvalue push_site(last_site, (const sitei*)0);
 	areahead.clear();
 	if(!apply_location(geo, tile))
 		return;
@@ -567,7 +557,6 @@ static void create_area(geoposition geo, variant tile) {
 	if(last_location->global_finish)
 		(last_location->*last_location->global_finish->proc)();
 	update_doors();
-	update_dungeon_rumor();
 }
 
 void gamei::createarea() {

@@ -706,6 +706,7 @@ void creature::makemove() {
 	}
 	// Get room
 	auto room = getroom();
+	last_site = 0;
 	if(room) {
 		last_rect = room->rc;
 		last_site = room->getsite();

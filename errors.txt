@@ -1,2 +1,3 @@
-﻿In file `Names.txt`:
- Define translation for `Entaglement`
+﻿In file `rules/Sites.txt`:
+ Line 121: Can't find variant `AddDungeonRumor`
+ Line 124: Can't find variant `AddDungeonRumor`

@@ -141,6 +141,7 @@ static void standart_script(variant v) {
 	} else if(v.iskind<sitei>()) {
 		pushvalue push_rect(last_rect);
 		pushvalue push_method(last_method);
+		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
 		if(last_site->local)
 			last_method = last_site->local;
@@ -534,6 +535,10 @@ static void win_game(int bonus) {
 static void lose_game(int bonus) {
 }
 
+static void add_dungeon_rumor(int bonus) {
+	dungeon::add(game.position);
+}
+
 static void choose_action(int bonus) {
 	if(!last_actions)
 		player->actp(getnm("YouDontHaveAnyActions"));
@@ -567,6 +572,7 @@ BSDATA(triggeri) = {
 };
 assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
 BSDATA(script) = {
+	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AttackForward", attack_forward},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
