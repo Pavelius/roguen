@@ -5,7 +5,8 @@ CureWounds mana(10) count(1 4)
  conditions Wounded
 Entaglement mana(6)
  target Enemies Neutrals Ranged
- conditions NoDangerousFeature
+ conditions NoAnyFeature
+ effect ThornBush
 Gate mana(40)
  target You
 Light mana(5) duration(Minute20PL)
@@ -20,4 +21,4 @@ SummonUndead mana(20)
  summon Skeleton+4 Zombie+2 Ghoul+1
 Web mana(4)
  target Enemies Neutrals Multitarget Ranged
- effect Webbed+1
+ effect Webbed

@@ -54,7 +54,7 @@ enum magic_s : unsigned char {
 enum condition_s : unsigned char {
 	Identified, NPC, Random, ShowMinimapBullet,
 	NoWounded, Wounded, HeavyWounded,
-	Busy, NoDangerousFeature,
+	Busy, NoAnyFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 	Item, Feature,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
