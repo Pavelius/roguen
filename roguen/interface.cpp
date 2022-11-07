@@ -157,6 +157,8 @@ void movable::fixeffect(point position, const char* id) {
 }
 
 void movable::fixeffect(const char* id) const {
+	if(!area.is(position, Visible))
+		return;
 	auto pt = getsposition(); pt.y -= tsy / 2;
 	fixeffect(pt, id);
 }

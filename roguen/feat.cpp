@@ -2,7 +2,6 @@
 
 BSDATA(feati) = {
 	{"Darkvision"},
-	{"Blunt"},
 	{"TwoHanded"},
 	{"CutWoods"},
 	{"Retaliate"},
@@ -11,6 +10,8 @@ BSDATA(feati) = {
 	{"WeakPoison"},
 	{"StrongPoison"},
 	{"DeathPoison"},
+	{"PoisonResistance"},
+	{"PoisonImmunity"},
 	{"Coins"},
 	{"Notable"},
 	{"Natural"},

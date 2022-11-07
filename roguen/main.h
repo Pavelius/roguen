@@ -41,7 +41,7 @@ enum ability_s : unsigned char {
 	Survival,
 	Level,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana, Poison, Reputation, ParryCount, Experience, Money,
+	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Money,
 };
 enum wear_s : unsigned char {
 	Backpack, Potion, BackpackLast = Backpack + 15,
@@ -60,9 +60,9 @@ enum condition_s : unsigned char {
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 enum feat_s : unsigned char {
-	Darkvision, Blunt, TwoHanded, CutWoods, Retaliate, Thrown,
+	Darkvision, TwoHanded, CutWoods, Retaliate, Thrown,
 	IgnoreWeb,
-	WeakPoison, StrongPoison, DeathPoison,
+	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Unaware,

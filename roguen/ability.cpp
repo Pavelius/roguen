@@ -28,6 +28,7 @@ BSDATA(abilityi) = {
 	{"Hits"},
 	{"Mana"},
 	{"Poison"},
+	{"Illness"},
 	{"Alignment"},
 	{"ParryCount"},
 	{"Experience"},

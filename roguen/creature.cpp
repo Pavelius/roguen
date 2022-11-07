@@ -27,22 +27,22 @@ static ability_s damage_ability(wear_s v) {
 	}
 }
 
-static void poison_attack(creature* player, int poison_damage) {
-	auto d = player->get(Poison);
-	auto i = d + poison_damage;
-	if(i >= player->get(HitsMaximum)) {
-		player->fixeffect("PoisonVisual");
+static void poison_attack(creature* player, int value) {
+	if(value <= 0)
+		return;
+	if(player->is(PoisonImmunity))
+		return;
+	auto bonus = -value;
+	if(player->is(PoisonResistance))
+		bonus += 30;
+	if(player->roll(Strenght, bonus))
+		return;
+	auto v = player->get(Poison) + value;
+	player->fixeffect("PoisonVisual");
+	if(v >= player->get(HitsMaximum))
 		player->kill();
-		return;
-	} else if(i < 0)
-		i = 0;
-	if(d == i)
-		return;
-	if(area.is(player->getposition(), Visible)) {
-		if(poison_damage)
-			player->fixeffect("PoisonVisual");
-	}
-	player->set(Poison, i);
+	else
+		player->set(Poison, v);
 }
 
 static void poison_attack(const creature* player, creature* enemy, const item* weapon) {
@@ -61,9 +61,18 @@ static void poison_attack(const creature* player, creature* enemy, const item* w
 		if(weapon->is(DeathPoison))
 			strenght += xrand(6, 12);
 	}
-	if(!strenght)
-		return;
 	poison_attack(enemy, strenght);
+}
+
+static void illness_attack(creature* player, int value) {
+	if(value <= 0)
+		return;
+	auto v = player->get(Illness) + value;
+	//player->fixeffect("PoisonVisual");
+	if(v >= player->get(Strenght))
+		player->kill();
+	else
+		player->set(Illness, v);
 }
 
 static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
@@ -75,9 +84,18 @@ static void restore(creature* player, ability_s a, ability_s am, ability_s test)
 	}
 }
 
-static void test_posion(creature* player, ability_s v) {
+static void add(creature* player, ability_s id, int value, int minimal = 0) {
+	auto i = player->get(id) + value;
+	if(i < minimal)
+		i = minimal;
+	player->set(id, i);
+}
+
+static void posion_recovery(creature* player, ability_s v) {
 	if(player->get(v) > 0) {
-		player->add(v, -1);
+		add(player, v, -1);
+		if(player->is(PoisonResistance))
+			add(player, v, -1);
 		if(!player->roll(Strenght)) {
 			player->fixeffect("PoisonVisual");
 			player->damage(1);
@@ -1087,7 +1105,7 @@ void creature::everyminute() {
 		restore(this, Hits, HitsMaximum, Strenght);
 	if(is(ManaRegeneration))
 		restore(this, Mana, ManaMaximum, Charisma);
-	test_posion(this, Poison);
+	posion_recovery(this, Poison);
 }
 
 void creature::every10minutes() {
