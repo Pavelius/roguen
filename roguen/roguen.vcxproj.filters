@@ -312,6 +312,9 @@
     <ClCompile Include="spell.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="diceprogress.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -486,6 +489,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="diceprogress.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

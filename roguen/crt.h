@@ -1,6 +1,6 @@
 #pragma once
 
-typedef decltype(sizeof(0)) size_t;
+//typedef decltype(sizeof(0)) size_t;
 
 #ifdef _DEBUG
 #define assert(e) if(!(e)) {exit(255);}
@@ -56,12 +56,8 @@ template<class T> inline T			imax(T a, T b) { return a > b ? a : b; }
 template<class T> inline T			imin(T a, T b) { return a < b ? a : b; }
 template<class T> inline T			iabs(T a) { return a > 0 ? a : -a; }
 template<class T> inline void		iswap(T& a, T& b) { T i = a; a = b; b = i; }
-// Inline sequence functions
-template<class T> inline void		seqclear(T* p) { T* z = p->next; while(z) { T* n = z->next; z->next = 0; delete z; z = n; } p->next = 0; } // Use to clean up sequenced resources if destructor. Use it like 'clear(this)'.
-template<class T> inline T*			seqlast(T* p) { while(p->next) p = p->next; return p; } // Return last element in sequence.
-template<class T> inline void		seqlink(T* p) { p->next = 0; if(!T::first) T::first = p; else seqlast(T::first)->next = p; }
-// Inline strings functions
 template<class T> inline const T*	zchr(const T* p, T e) { while(*p) { if(*p == e) return p; p++; } return 0; }
+template<class T> inline void		zclear(T* p) { memset(p, 0, sizeof(*p)); }
 template<class T> inline void		zcpy(T* p1, const T* p2) { while(*p2) *p1++ = *p2++; *p1 = 0; }
 template<class T> inline void		zcpy(T* p1, const T* p2, int max_count) { while(*p2 && max_count-- > 0) *p1++ = *p2++; *p1 = 0; }
 template<class T> constexpr T*		zend(T* p) { while(*p) p++; return p; }
@@ -69,9 +65,9 @@ template<class T> inline void		zcat(T* p1, const T e) { p1 = zend(p1); p1[0] = e
 template<class T> inline void		zcat(T* p1, const T* p2) { zcpy(zend(p1), p2); }
 template<class T> constexpr size_t	zlen(T* p) { return zend(p) - p; }
 template<class T> inline void		zshuffle(T* p, int count) { for(int i = 0; i < count; i++) iswap(p[i], p[rand() % count]); }
-// Storge like vector
+
 template<class T, size_t count_max = 128>
-struct adat {
+struct adat { // Storge like vector
 	size_t							count;
 	T								data[count_max];
 	constexpr adat() : data{}, count(0) {}
@@ -95,7 +91,7 @@ struct adat {
 	void							remove(int index, int remove_count = 1) { if(index < 0) return; if(index<int(count - 1)) memcpy(data + index, data + index + 1, sizeof(data[0]) * (count - index - 1)); count--; }
 	void							remove(const T t) { remove(find(t), 1); }
 };
-// Simple slice object
+
 template<class T>
 class slice {
 	T*								data;
@@ -103,6 +99,7 @@ class slice {
 public:
 	typedef T data_type;
 	constexpr slice() : data(0), count(0) {}
+	//constexpr slice(const slice& e) = default;
 	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
 	template<int N> constexpr slice(const adat<T, N>& v) : data(const_cast<T*>(v.data)), count(v.count) {}
 	constexpr slice(T* data, unsigned count) : data(data), count(count) {}
@@ -112,7 +109,7 @@ public:
 	constexpr T*					end() const { return data + count; }
 	constexpr unsigned				size() const { return count; }
 };
-// Abstract array vector
+
 class array {
 	size_t							count_maximum;
 	void							grow(unsigned offset, size_t delta);
@@ -164,7 +161,9 @@ public:
 	void							swap(int i1, int i2);
 	void							reserve(unsigned count);
 };
-template<class T> class vector : public array {
+
+template<class T>
+class vector : public array {
 public:
 	typedef T data_type;
 	constexpr vector() : array(sizeof(T)) {}
@@ -184,8 +183,9 @@ public:
 	constexpr T*					ptr(size_t index) const { return (T*)data + index; }
 	constexpr T*					ptrs(size_t index) const { return (index < count) ? (T*)data + index : 0; }
 };
-// Abstract data access class
-template<typename T> struct bsdata {
+
+template<typename T>
+struct bsdata {
 	static T						elements[];
 	static array					source;
 	static constexpr array*			source_ptr = &source;
@@ -209,7 +209,9 @@ NOBSDATA(char)
 NOBSDATA(unsigned char)
 NOBSDATA(const char*)
 NOBSDATA(bool)
-template<typename T> struct sliceu {
+
+template<typename T>
+struct sliceu {
 	unsigned						start, count;
 	constexpr sliceu() : start(0), count(0) {}
 	template<size_t N> sliceu(T(&v)[N]) { set(v, N); }
@@ -221,19 +223,14 @@ template<typename T> struct sliceu {
 	void							set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
 	constexpr unsigned				size() const { return count; }
 };
-// Callback function of any command executing
-typedef void(*fnevent)();
-// Callback function of status probing. Return true if `object` allow `index` status.
-typedef bool(*fnallow)(const void* object, int index);
-// Callback function of choosing one element from array of many elements and storing it into `pointer`
-typedef bool(*fnchoose)(const void* object, array& source, void* pointer);
-// Callback function of checking some functionality of `object`
-typedef bool(*fnvisible)(const void* object);
-// Callback function of get object name
-typedef const char*(*fngetname)(const void* object);
-// Callback function of object command executing
-typedef void(*fncommand)(void* object);
-// Common functions
+
+typedef void(*fnevent)(); // Callback function of any command executing
+typedef bool(*fnallow)(const void* object, int index); // Callback function of status probing. Return true if `object` allow `index` status.
+typedef bool(*fnchoose)(const void* object, array& source, void* pointer); // Callback function of choosing one element from array of many elements and storing it into `pointer`
+typedef bool(*fnvisible)(const void* object); // Callback function of checking some functionality of `object`
+typedef const char*(*fngetname)(const void* object); // Callback function of get object name
+typedef void(*fncommand)(void* object); // Callback function of object command executing
+
 bool								equal(const char* s1, const char* s2);
 const char*							getdescription(const char* id);
 int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
@@ -273,7 +270,7 @@ void								szupper(char* p); // to upper reg
 char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
 char*								szurlc(char* p1);
 inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
-// Get base type
+
 template<class T> struct meta_decoy { typedef T value; };
 template<> struct meta_decoy<const char*> { typedef const char* value; };
 template<class T> struct meta_decoy<T*> : meta_decoy<T> {};

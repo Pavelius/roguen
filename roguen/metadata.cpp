@@ -5,6 +5,7 @@
 
 NOBSDATA(color)
 NOBSDATA(dice)
+NOBSDATA(diceprogress)
 NOBSDATA(itemi::weaponi)
 NOBSDATA(point)
 

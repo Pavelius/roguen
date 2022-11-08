@@ -1,5 +1,16 @@
 #include "crt.h"
 
+template<class T> static void remove(T* p) {
+	T* z = p->next;
+	while(z) {
+		T* n = z->next;
+		z->next = 0;
+		delete z;
+		z = n;
+	}
+	p->next = 0;
+}
+
 // Support class making string copy from strings storage.
 struct strcol {
 
@@ -11,7 +22,7 @@ struct strcol {
 	}
 
 	~strcol() {
-		seqclear(this);
+		remove(this);
 	}
 
 	bool has(const char* value) {

@@ -2,7 +2,10 @@
 #include "dice.h"
 
 int dice::roll() const {
-	return min + ((max == min) ? 0 : (rand() % (max - min + 1)));
+	int v = min;
+	if(min < max)
+		v += rand() % (max - min + 1);
+	return v;
 }
 
 void dice::correct() {

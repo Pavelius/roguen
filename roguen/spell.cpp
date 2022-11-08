@@ -1,5 +1,4 @@
 #include "boost.h"
-#include "bsreq.h"
 #include "listcolumn.h"
 #include "pushvalue.h"
 #include "spell.h"
@@ -7,10 +6,6 @@
 BSDATAC(spelli, spellable::maximum)
 
 static const spellable* current_spellable;
-
-int	spelli::getcount(int level) const {
-	return level + count.roll();
-}
 
 static const char* object_level(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);

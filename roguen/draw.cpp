@@ -2261,6 +2261,22 @@ surface::surface(int width, int height, int bpp) : surface() {
 	resize(width, height, bpp, true);
 }
 
+template<class T>
+static T* seqlast(T* p) {
+	while(p->next)
+		p = p->next;
+	return p;
+}
+
+template<class T>
+static void	seqlink(T* p) {
+	p->next = 0;
+	if(!T::first)
+		T::first = p;
+	else
+		seqlast(T::first)->next = p;
+}
+
 surface::plugin::plugin(const char* name, const char* filter) : name(name), filter(filter), next(0) {
 	seqlink(this);
 }
