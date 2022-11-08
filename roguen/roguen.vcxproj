@@ -226,7 +226,6 @@
     <ClCompile Include="szdup.cpp" />
     <ClCompile Include="talk.cpp" />
     <ClCompile Include="target.cpp" />
-    <ClCompile Include="tile.cpp" />
     <ClCompile Include="trigger.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="variantc.cpp" />

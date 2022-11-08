@@ -5,11 +5,9 @@
 #pragma once
 
 enum direction_s : unsigned char;
-enum tile_s : unsigned char;
+enum tile_s : unsigned char { NoTile };
 enum feature_s : unsigned char;
-enum areaf : unsigned char {
-	Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed,
-};
+enum areaf : unsigned char { Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed };
 enum tilef : unsigned char {
 	Impassable, ImpassableNonActive, CanSwim, AllowActivate, DangerousFeature, BetweenWalls, Woods,
 };
@@ -27,12 +25,12 @@ struct tilei {
 	const char*		id;
 	color			minimap;
 	framerange		floor, decals;
-	int				borders = -1;
+	int				borders;
 	tile_s			tile;
 	framerange		walls;
 	unsigned		flags;
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
-	bool			iswall() const { return tile != (tile_s)0; }
+	bool			iswall() const { return tile != NoTile; }
 };
 struct tilefi {
 	const char*		id;

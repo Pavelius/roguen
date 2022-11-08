@@ -165,9 +165,6 @@
     <ClCompile Include="moveable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="tile.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="feature.cpp">
       <Filter>Logic</Filter>
     </ClCompile>

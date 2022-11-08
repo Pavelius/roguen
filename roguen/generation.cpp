@@ -241,20 +241,20 @@ static bool isallowconnector(point index, direction_s dir, bool deadend = false)
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
-	if(!area.is(index, (tile_s)0))
+	if(!area.is(index, NoTile))
 		return false;
-	if(!area.is(to(index, round(dir, West)), (tile_s)0))
+	if(!area.is(to(index, round(dir, West)), NoTile))
 		return false;
-	if(!area.is(to(index, round(dir, East)), (tile_s)0))
+	if(!area.is(to(index, round(dir, East)), NoTile))
 		return false;
 	index = to(index, dir);
 	if(deadend) {
-		if(!area.is(index, (tile_s)0))
+		if(!area.is(index, NoTile))
 			return false;
 	}
-	if(!area.is(to(index, round(dir, West)), (tile_s)0))
+	if(!area.is(to(index, round(dir, West)), NoTile))
 		return false;
-	if(!area.is(to(index, round(dir, East)), (tile_s)0))
+	if(!area.is(to(index, round(dir, East)), NoTile))
 		return false;
 	return true;
 }
@@ -263,11 +263,11 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
-	if(!area.is(index, (tile_s)0))
+	if(!area.is(index, NoTile))
 		return false;
-	if(!area.is(to(index, round(dir, West)), (tile_s)0))
+	if(!area.is(to(index, round(dir, West)), NoTile))
 		return false;
-	if(!area.is(to(index, round(dir, East)), (tile_s)0))
+	if(!area.is(to(index, round(dir, East)), NoTile))
 		return false;
 	index = to(index, dir);
 	if(linkable) {
@@ -275,9 +275,9 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 		if(pr)
 			return true;
 	}
-	if(!area.is(to(index, round(dir, West)), (tile_s)0))
+	if(!area.is(to(index, round(dir, West)), NoTile))
 		return false;
-	if(!area.is(to(index, round(dir, East)), (tile_s)0))
+	if(!area.is(to(index, round(dir, East)), NoTile))
 		return false;
 	return true;
 }
@@ -529,7 +529,7 @@ void sitei::corridors() const {
 	auto dir = area.getmost(rc);
 	create_corridor(rc, dir, walls, floors);
 	additional_corridors(floors, walls);
-	area.change((tile_s)0, walls);
+	area.change(NoTile, walls);
 	create_corridor_contents();
 	create_doors(floors, walls);
 }

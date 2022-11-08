@@ -32,7 +32,7 @@ tile_s getfloor() {
 		return last_site->floors;
 	if(last_location && last_location->floors)
 		return last_location->floors;
-	return (tile_s)0;
+	return NoTile;
 }
 
 tile_s getwall() {
@@ -40,7 +40,7 @@ tile_s getwall() {
 		return last_site->walls;
 	if(last_location && last_location->walls)
 		return last_location->walls;
-	return (tile_s)0;
+	return NoTile;
 }
 
 static void place_item(point index, const itemi* pe) {
