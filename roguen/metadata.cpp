@@ -18,6 +18,7 @@ BSDATAD(advancement);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(dungeon, 256);
+BSDATAC(featurei, 128);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
@@ -75,6 +76,12 @@ BSMETA(feati) = {
 	{}};
 BSMETA(featurei) = {
 	BSREQ(id),
+	BSREQ(features), BSREQ(overlay),
+	BSREQ(priority),
+	BSFLG(flags, tilefi),
+	BSREQ(minimap),
+	BSENM(leadto, featurei),
+	BSREQ(lead),
 	{}};
 BSMETA(framerange) = {
 	BSREQ(start), BSREQ(count),
@@ -108,6 +115,7 @@ BSMETA(locationi) = {
 	BSREQ(chance_finale),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
+	BSENM(doors, featurei),
 	BSREQ(minimap),
 	{}};
 BSMETA(tilefi) = {
@@ -140,6 +148,7 @@ BSMETA(sitei) = {
 	BSFLG(feats, feati),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
+	BSENM(doors, featurei),
 	{}};
 BSMETA(siteskilli) = {
 	BSREQ(id),

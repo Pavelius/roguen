@@ -1146,24 +1146,24 @@ static void paint_area(point origin, int z) {
 			caret.y = origin.y + i.y * height;
 			fore = p->minimap;
 			rectf();
-			switch(area.features[i]) {
-			case NoFeature: break;
-			case Tree: case TreePalm:
-				fillfade(color(35, 79, 31), 192);
-				break;
-			case FootMud: case FootHill:
-				fillfade(color(35, 79, 31), 192);
-				break;
-			case Herbs: case Plant:
-				fillfade(color(35, 79, 31), 64);
-				break;
-			case Door:
-				fillfade(color(102, 70, 18), 128);
-				break;
-			default:
-				fillfade(color(255, 0, 0), 128);
-				break;
-			}
+			//switch(area.features[i]) {
+			//case NoFeature: break;
+			//case Tree: case TreePalm:
+			//	fillfade(color(35, 79, 31), 192);
+			//	break;
+			//case FootMud: case FootHill:
+			//	fillfade(color(35, 79, 31), 192);
+			//	break;
+			//case Herbs: case Plant:
+			//	fillfade(color(35, 79, 31), 64);
+			//	break;
+			//case Door:
+			//	fillfade(color(102, 70, 18), 128);
+			//	break;
+			//default:
+			//	fillfade(color(255, 0, 0), 128);
+			//	break;
+			//}
 		}
 	}
 }

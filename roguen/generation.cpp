@@ -19,6 +19,30 @@ static point last_door;
 static rect correct_conncetors;
 static direction_s last_direction;
 
+tile_s getfloor() {
+	if(last_site && last_site->floors)
+		return last_site->floors;
+	if(last_location && last_location->floors)
+		return last_location->floors;
+	return NoTile;
+}
+
+tile_s getwall() {
+	if(last_site && last_site->walls)
+		return last_site->walls;
+	if(last_location && last_location->walls)
+		return last_location->walls;
+	return NoTile;
+}
+
+feature_s getdoor() {
+	if(last_site && last_site->doors)
+		return last_site->doors;
+	if(last_location && last_location->doors)
+		return last_location->doors;
+	return (feature_s)0;
+}
+
 static bool iswall(point i, direction_s d1, direction_s d2) {
 	return area.iswall(i, d1)
 		&& area.iswall(i, d2);
@@ -35,18 +59,28 @@ static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
 	return f1 == v || f2 == v;
 }
 
-static bool isvaliddoor(point m) {
-	if(iswall(m, West, East) && !isoneof(m, North, South, Door) && !isonewall(m, North, South))
+static bool isoneofdoor(point i, direction_s d1, direction_s d2) {
+	auto f1 = area.getfeature(to(i, d1));
+	if(bsdata<featurei>::elements[f1].is(BetweenWalls))
 		return true;
-	if(iswall(m, North, South) && !isoneof(m, West, East, Door) && !isonewall(m, West, East))
+	auto f2 = area.getfeature(to(i, d2));
+	if(bsdata<featurei>::elements[f2].is(BetweenWalls))
+		return true;
+	return false;
+}
+
+static bool isvaliddoor(point m) {
+	if(iswall(m, West, East) && !isoneofdoor(m, North, South) && !isonewall(m, North, South))
+		return true;
+	if(iswall(m, North, South) && !isoneofdoor(m, West, East) && !isonewall(m, West, East))
 		return true;
 	return false;
 }
 
 static bool isvaliddoornt(point m) {
-	if(iswall(m, West, East) && !isoneof(m, North, South, Door) && !isonewall(m, North, South))
+	if(iswall(m, West, East) && !isoneofdoor(m, North, South) && !isonewall(m, North, South))
 		return true;
-	if(iswall(m, North, South) && !isoneof(m, West, East, Door) && !isonewall(m, West, East))
+	if(iswall(m, North, South) && !isoneofdoor(m, West, East) && !isonewall(m, West, East))
 		return true;
 	return false;
 }
@@ -61,25 +95,6 @@ static void update_doors() {
 				area.set(i, NoFeature);
 			}
 		}
-	}
-}
-
-static void update_creatures() {
-	for(auto& e : bsdata<creature>()) {
-		if(!e)
-			continue;
-		auto i = e.getposition();
-		if(area.getfeature(i) == Door)
-			e.clear();
-	}
-}
-
-static void update_items() {
-	for(auto& e : bsdata<itemground>()) {
-		if(!e || !area.isvalid(e.position))
-			continue;
-		if(area.getfeature(e.position) == Door)
-			e.clear();
 	}
 }
 
@@ -132,7 +147,7 @@ void sitei::fillwalls() const {
 
 void sitei::building() const {
 	static direction_s rdir[] = {North, South, West, East};
-	const auto door = Door;
+	const auto door = getdoor();
 	// Walls and floors
 	fillfloor();
 	fillwalls();
@@ -284,7 +299,7 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 
 static void create_door(point m, tile_s floor, tile_s wall, bool hidden) {
 	area.set(m, floor);
-	area.set(m, Door);
+	area.set(m, getdoor());
 }
 
 static void create_connector(point index, direction_s dir, tile_s wall, tile_s floor, int& count, bool linkable) {

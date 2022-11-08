@@ -195,7 +195,7 @@
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
-    <ClCompile Include="mapf.cpp" />
+    <ClCompile Include="tilef.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
     <ClCompile Include="monster.cpp" />
@@ -319,6 +319,7 @@
     <Text Include="..\logs.txt" />
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
+    <Text Include="..\rules\Features.txt" />
     <Text Include="..\rules\Items.txt" />
     <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />

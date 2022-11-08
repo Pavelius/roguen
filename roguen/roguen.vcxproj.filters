@@ -312,7 +312,7 @@
     <ClCompile Include="areaf.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="mapf.cpp">
+    <ClCompile Include="tilef.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -566,6 +566,9 @@
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\rules\Tiles.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\rules\Features.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

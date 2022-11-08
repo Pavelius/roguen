@@ -27,22 +27,6 @@ siteskilla			last_actions;
 extern bool			show_floor_rect;
 const sitegeni*		last_method;
 
-tile_s getfloor() {
-	if(last_site && last_site->floors)
-		return last_site->floors;
-	if(last_location && last_location->floors)
-		return last_location->floors;
-	return NoTile;
-}
-
-tile_s getwall() {
-	if(last_site && last_site->walls)
-		return last_site->walls;
-	if(last_location && last_location->walls)
-		return last_location->walls;
-	return NoTile;
-}
-
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
 		return;

@@ -6,7 +6,7 @@
 
 enum direction_s : unsigned char;
 enum tile_s : unsigned char { NoTile };
-enum feature_s : unsigned char;
+enum feature_s : unsigned char { NoFeature };
 enum areaf : unsigned char { Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed };
 enum tilef : unsigned char {
 	Impassable, ImpassableNonActive, CanSwim, AllowActivate, DangerousFeature, BetweenWalls, Woods,
@@ -38,10 +38,13 @@ struct tilefi {
 struct featurei {
 	const char*		id;
 	framerange		features, overlay;
-	unsigned char	priority = 10;
-	unsigned		feats = 0;
+	unsigned char	priority;
+	unsigned		flags;
+	color			minimap;
+	feature_s		leadto;
+	char			lead;
 	void			paint(int random) const;
-	bool			is(tilef v) const { return (feats & (1 << v)) != 0; }
+	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
 };
 struct areamap : anymap<tile_s, 64> {
 	typedef bool (*fntest)(point m);

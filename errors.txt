@@ -1,2 +1,13 @@
-﻿In file `rules/Tiles.txt`:
- Line 16: Invalid source array where read identifier `CanSwim`
+﻿In file `rules/Sites.txt`:
+ Line 140: Not found requisit `doors`
+ Line 145: Not found requisit `doors`
+ Line 148: Not found requisit `doors`
+ Line 152: Not found requisit `doors`
+ Line 155: Not found requisit `doors`
+ Line 158: Not found requisit `doors`
+ Line 162: Not found requisit `doors`
+ Line 166: Not found requisit `doors`
+ Line 170: Not found requisit `doors`
+ Line 173: Not found requisit `doors`
+ Line 175: Not found requisit `doors`
+ Line 178: Not found requisit `doors`

@@ -213,23 +213,14 @@ static void random_walk(creature* p) {
 
 static bool check_stairs_movement(creature* p, point m) {
 	auto f = area.getfeature(m);
-	switch(f) {
-	case StairsUp:
+	auto& ei = bsdata<featurei>::elements[f];
+	if(ei.leadto) {
 		if(p->ishuman()) {
-			if(p->confirm(getnm("MoveStairsUp"))) {
-				game.enter(game.position, game.level - 1, StairsDown, Center);
+			if(p->confirm(getnm(str("Move%1", ei.id)))) {
+				game.enter(game.position, game.level + ei.lead, ei.leadto, Center);
 				return false;
 			}
 		}
-		break;
-	case StairsDown:
-		if(p->ishuman()) {
-			if(p->confirm(getnm("MoveStairsDown"))) {
-				game.enter(game.position, game.level + 1, StairsUp, Center);
-				return false;
-			}
-		}
-		break;
 	}
 	return true;
 }
