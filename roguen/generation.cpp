@@ -35,12 +35,12 @@ tile_s getwall() {
 	return NoTile;
 }
 
-feature_s getdoor() {
-	if(last_site && last_site->doors)
+featuren getdoor() {
+	if(last_site && last_site->doors != featuren::No)
 		return last_site->doors;
-	if(last_location && last_location->doors)
+	if(last_location && last_location->doors != featuren::No)
 		return last_location->doors;
-	return (feature_s)0;
+	return (featuren)0;
 }
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
@@ -53,7 +53,7 @@ static bool isonewall(point i, direction_s d1, direction_s d2) {
 		|| area.iswall(i, d2);
 }
 
-static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
+static bool isoneof(point i, direction_s d1, direction_s d2, featuren v) {
 	auto f1 = area.getfeature(to(i, d1));
 	auto f2 = area.getfeature(to(i, d2));
 	return f1 == v || f2 == v;
@@ -61,10 +61,10 @@ static bool isoneof(point i, direction_s d1, direction_s d2, feature_s v) {
 
 static bool isoneofdoor(point i, direction_s d1, direction_s d2) {
 	auto f1 = area.getfeature(to(i, d1));
-	if(bsdata<featurei>::elements[f1].is(BetweenWalls))
+	if(bsdata<featurei>::elements[int(f1)].is(BetweenWalls))
 		return true;
 	auto f2 = area.getfeature(to(i, d2));
-	if(bsdata<featurei>::elements[f2].is(BetweenWalls))
+	if(bsdata<featurei>::elements[int(f2)].is(BetweenWalls))
 		return true;
 	return false;
 }
@@ -89,10 +89,10 @@ static void update_doors() {
 	point i;
 	for(i.y = 0; i.y < area.mps; i.y++) {
 		for(i.x = 0; i.x < area.mps; i.x++) {
-			if(bsdata<featurei>::elements[area.features[i]].is(BetweenWalls)) {
+			if(bsdata<featurei>::elements[int(area.features[i])].is(BetweenWalls)) {
 				if(isvaliddoor(i))
 					continue;
-				area.set(i, NoFeature);
+				area.set(i, featuren::No);
 			}
 		}
 	}
@@ -159,7 +159,7 @@ void sitei::building() const {
 	auto m1 = to(last_door, last_direction);
 	if(area.iswall(m1))
 		area.set(m1, floors);
-	area.set(m1, NoFeature);
+	area.set(m1, featuren::No);
 	last_rect.offset(1, 1);
 }
 

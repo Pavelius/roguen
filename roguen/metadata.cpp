@@ -80,7 +80,7 @@ BSMETA(featurei) = {
 	BSREQ(priority),
 	BSFLG(flags, tilefi),
 	BSREQ(minimap),
-	BSENM(leadto, featurei),
+	BSREQ(leadto), BSREQ(activateto),
 	BSREQ(lead),
 	{}};
 BSMETA(framerange) = {

@@ -165,9 +165,6 @@
     <ClCompile Include="moveable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="feature.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="main_util.cpp">
       <Filter>Utils</Filter>
     </ClCompile>

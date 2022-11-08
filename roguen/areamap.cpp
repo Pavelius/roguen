@@ -26,6 +26,14 @@ static int d100() {
 	return rand() % 100;
 }
 
+featurei* featurei::gethidden() const {
+	for(auto& e : bsdata<featurei>()) {
+		if(e.activateto == this)
+			return &e;
+	}
+	return 0;
+}
+
 void areamap::clear() {
 	memset(this, 0, sizeof(*this));
 	for(auto& e : random)
@@ -36,10 +44,10 @@ void areamap::set(point m, tile_s v) {
 	if(!isvalid(m))
 		return;
 	(*this)[m] = v;
-	features[m] = (feature_s)0;
+	features[m] = featuren::No;
 }
 
-void areamap::set(point m, feature_s v) {
+void areamap::set(point m, featuren v) {
 	if(!isvalid(m))
 		return;
 	features[m] = v;
@@ -97,7 +105,7 @@ void areamap::set(rect rc, tile_s v, int random_count) {
 	}
 }
 
-void areamap::set(rect rc, feature_s v, int random_count) {
+void areamap::set(rect rc, featuren v, int random_count) {
 	if(random_count <= -100) {
 		set(rc, v);
 		return;
@@ -109,7 +117,7 @@ void areamap::set(rect rc, feature_s v, int random_count) {
 	}
 }
 
-void areamap::set(rect rc, feature_s v) {
+void areamap::set(rect rc, featuren v) {
 	point m;
 	for(m.y = rc.y1; m.y < rc.y2; m.y++)
 		for(m.x = rc.x1; m.x < rc.x2; m.x++)
@@ -148,12 +156,11 @@ bool areamap::isfree(point m) const {
 		return false;
 	if(iswall(m))
 		return false;
-	auto f = features[m];
-	if(f) {
-		auto& ei = bsdata<featurei>::elements[f];
-		if(ei.is(Impassable))
+	auto pe = bsdata<featurei>::elements + (int)features[m];
+	if(!pe->ishidden()) {
+		if(pe->is(Impassable))
 			return false;
-		if(ei.is(ImpassableNonActive) && !is(m, Activated))
+		if(pe->is(ImpassableNonActive) && !is(m, Activated))
 			return false;
 	}
 	return true;
@@ -243,9 +250,9 @@ void areamap::blockfeatures() const {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
-			if(!features[m])
+			if(!int(features[m]))
 				continue;
-			auto& ei = bsdata<featurei>::elements[features[m]];
+			auto& ei = bsdata<featurei>::elements[int(features[m])];
 			if(ei.is(Impassable))
 				movement_rate[m] = Blocked;
 		}
@@ -425,13 +432,13 @@ void areamap::setlos(point m, int r, fntest test) {
 	}
 }
 
-feature_s areamap::getfeature(point m) const {
+featuren areamap::getfeature(point m) const {
 	if(!isvalid(m))
-		return (feature_s)0;
+		return featuren::No;
 	return features[m];
 }
 
-void areamap::set(feature_s v, int bonus) {
+void areamap::set(featuren v, int bonus) {
 	auto count = mps * mps;
 	rect rc = {0, 0, mps - 1, mps - 1};
 	if(bonus < 0)
@@ -529,7 +536,7 @@ void areamap::change(tile_s t1, tile_s t2) {
 		}
 }
 
-point areamap::find(feature_s v) const {
+point areamap::find(featuren v) const {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
@@ -566,4 +573,20 @@ rect areamap::get(const rect& rca, point offset, point minimum, point maximum) {
 	rc.y1 = rca.y1 + offset.y + xrand(0, h - maximum.y);
 	rc.y2 = rc.y1 + xrand(minimum.y, maximum.y);
 	return rc;
+}
+
+void areamap::setreveal(point m, tile_s floor) {
+	auto pe = bsdata<featurei>::elements + (int)features[m];
+	if(!pe->ishidden() || !pe->getactivate())
+		return;
+	set(m, *pe->getactivate());
+	set(m, floor);
+}
+
+void areamap::setactivate(point m) {
+	auto pe = bsdata<featurei>::elements + (int)features[m];
+	auto pa = pe->getactivate();
+	if(!pa)
+		return;
+	set(m, *pa);
 }

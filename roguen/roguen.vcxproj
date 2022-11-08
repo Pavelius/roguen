@@ -175,7 +175,6 @@
     <ClCompile Include="dungeon.cpp" />
     <ClCompile Include="duration.cpp" />
     <ClCompile Include="feat.cpp" />
-    <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="generation.cpp" />

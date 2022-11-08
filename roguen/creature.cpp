@@ -213,11 +213,11 @@ static void random_walk(creature* p) {
 
 static bool check_stairs_movement(creature* p, point m) {
 	auto f = area.getfeature(m);
-	auto& ei = bsdata<featurei>::elements[f];
-	if(ei.leadto) {
+	auto& ei = bsdata<featurei>::elements[int(f)];
+	if(int(ei.leadto)) {
 		if(p->ishuman()) {
 			if(p->confirm(getnm(str("Move%1", ei.id)))) {
-				game.enter(game.position, game.level + ei.lead, ei.leadto, Center);
+				game.enter(game.position, game.level + ei.lead, *ei.leadto, Center);
 				return false;
 			}
 		}
@@ -227,7 +227,7 @@ static bool check_stairs_movement(creature* p, point m) {
 
 static bool check_dangerous_feature(creature* p, point m) {
 	auto fo = area.getfeature(m);
-	auto& foi = bsdata<featurei>::elements[fo];
+	auto& foi = bsdata<featurei>::elements[int(fo)];
 	if(foi.is(DangerousFeature)) {
 		p->wait(2);
 		if(!p->roll(Strenght)) {
@@ -238,7 +238,7 @@ static bool check_dangerous_feature(creature* p, point m) {
 			return false;
 		}
 		p->act(getnme(str("%1Break", foi.id)));
-		area.set(m, NoFeature);
+		area.set(m, featuren::No);
 	}
 	return true;
 }
@@ -266,7 +266,7 @@ static bool check_leave_area(creature* p, point m) {
 			auto direction = movedirection(m);
 			auto np = to(game.position, direction);
 			if(p->confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
-				game.enter(np, 0, NoFeature, direction);
+				game.enter(np, 0, featuren::No, direction);
 		}
 		p->wait();
 		return false;
@@ -497,8 +497,8 @@ void creature::interaction(point m) {
 	if(!area.isvalid(m))
 		return;
 	auto f = area.features[m];
-	if(f) {
-		auto& ei = bsdata<featurei>::elements[f];
+	if(int(f)) {
+		auto& ei = bsdata<featurei>::elements[int(f)];
 		if(ei.is(AllowActivate)) {
 			if(!area.is(m, Activated))
 				area.set(m, Activated);
@@ -513,7 +513,7 @@ void creature::interaction(point m) {
 				chance *= 2;
 			if(d100() < chance) {
 				act(getnm("YouCutWood"), getnm(ei.id));
-				area.features[m] = NoFeature;
+				area.set(m, featuren::No);
 				drop_item(m, "WoodenLagsTable");
 			}
 		}
@@ -1237,8 +1237,8 @@ bool creature::isallow(variant v) const {
 	} else if(v.iskind<featurei>()) {
 		auto present = area.getfeature(getposition());
 		if(v.counter < 0)
-			return present == v.value;
-		return present != v.value;
+			return int(present) == v.value;
+		return int(present) != v.value;
 	} else if(v.iskind<script>())
 		return true;
 	return false;
@@ -1274,9 +1274,9 @@ void creature::apply(variant v) {
 			area.set(getposition(), (areaf)v.value);
 	} else if(v.iskind<featurei>()) {
 		if(v.counter < 0)
-			area.set(getposition(), NoFeature);
+			area.set(getposition(), featuren::No);
 		else
-			area.set(getposition(), (feature_s)v.value);
+			area.set(getposition(), (featuren)v.value);
 	} else
 		advance(v);
 }

@@ -66,7 +66,7 @@ static void place_creature(variant v, int count) {
 
 static void standart_script(variant v) {
 	if(v.iskind<featurei>())
-		area.set(last_rect, (feature_s)v.value, v.counter);
+		area.set(last_rect, (featuren)v.value, v.counter);
 	else if(v.iskind<tilei>())
 		area.set(last_rect, (tile_s)v.value, v.counter);
 	else if(v.iskind<areafi>())

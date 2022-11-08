@@ -69,14 +69,6 @@ enum feat_s : unsigned char {
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Blooding,
 };
-//enum feature_s : unsigned char {
-//	NoFeature,
-//	Tree, TreePalm, DeadTree, ThornBushe,
-//	FootMud, FootHill, Grave, Statue,
-//	HiveHole, Hive, Hole, Plant, Herbs,
-//	AltarGood, AltarNeutral, AltarEvil,
-//	Pit, Trap, Door, StairsUp, StairsDown, GatePortal,
-//};
 enum trigger_s : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
 };
@@ -355,7 +347,7 @@ struct sitei : nameable {
 	variants		landscape, loot;
 	tile_s			walls, floors;
 	featable		feats;
-	feature_s		doors;
+	featuren		doors;
 	const shapei*	shape;
 	const sitegeni*	local;
 	void			building() const;
@@ -442,7 +434,7 @@ public:
 	void			clear();
 	void			createarea();
 	static void		endgame();
-	void			enter(point m, int level, feature_s feature, direction_s appear_side);
+	void			enter(point m, int level, featuren feature, direction_s appear_side);
 	int				get(const globali& e) const { return globals[bsid(&e)]; }
 	static int		getcount(variant v, int minimal = 1);
 	unsigned		getminutes() const { return minutes; }

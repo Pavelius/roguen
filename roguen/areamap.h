@@ -1,12 +1,13 @@
 #include "anymap.h"
 #include "color.h"
+#include "crt.h"
 #include "point.h"
 
 #pragma once
 
 enum direction_s : unsigned char;
 enum tile_s : unsigned char { NoTile };
-enum feature_s : unsigned char { NoFeature };
+enum class featuren : unsigned char { No };
 enum areaf : unsigned char { Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed };
 enum tilef : unsigned char {
 	Impassable, ImpassableNonActive, CanSwim, AllowActivate, DangerousFeature, BetweenWalls, Woods,
@@ -41,14 +42,19 @@ struct featurei {
 	unsigned char	priority;
 	unsigned		flags;
 	color			minimap;
-	feature_s		leadto;
+	featurei		*leadto, *activateto;
 	char			lead;
-	void			paint(int random) const;
+	operator featuren() const { return (featuren)(this - bsdata<featurei>::elements); }
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
+	bool			ishidden() const { return features.count==0; }
+	featurei*		getactivate() const { return activateto; }
+	featurei*		gethidden() const;
+	featurei*		getlead() const { return leadto; }
+	void			paint(int random) const;
 };
 struct areamap : anymap<tile_s, 64> {
 	typedef bool (*fntest)(point m);
-	anymap<feature_s, mps> features;
+	anymap<featuren, mps> features;
 	anymap<unsigned char, mps> random;
 	anymap<unsigned char, mps> feats;
 	void			blockfeatures() const;
@@ -60,12 +66,12 @@ struct areamap : anymap<tile_s, 64> {
 	void			change(tile_s t1, tile_s t2);
 	void			clear();
 	static void		clearpath();
-	point			find(feature_s v) const;
+	point			find(featuren v) const;
 	static direction_s getdirection(point s, point d);
 	static point	get(int x, int y) { return {(short)x, (short)y}; }
 	static point	get(const rect& rc);
 	static rect		get(const rect& rc, point offset, point minimum, point maximum);
-	feature_s		getfeature(point m) const;
+	featuren		getfeature(point m) const;
 	unsigned char	getfow(point m) const;
 	static point	getfree(point m, short maximum, fntest test);
 	int				getindex(point m, tile_s e) const;
@@ -90,16 +96,18 @@ struct areamap : anymap<tile_s, 64> {
 	static int		randomcount(const rect& rc, int v);
 	void			set(point m, areaf v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			set(point m, tile_s v);
-	void			set(point m, feature_s v);
+	void			set(point m, featuren v);
 	void			set(rect rc, tile_s v);
-	void			set(rect rc, feature_s v);
+	void			set(rect rc, featuren v);
 	void			set(rect rc, areaf v);
-	void			set(rect rc, feature_s v, int random_count);
+	void			set(rect rc, featuren v, int random_count);
 	void			set(rect rc, areaf v, int random_count);
 	void			set(rect rc, tile_s v, int random_count);
-	void			set(feature_s v, int bonus);
+	void			set(featuren v, int bonus);
+	void			setactivate(point m);
 	static void		setblock(point m, unsigned short v);
 	void			setlos(point m, int radius, fntest test);
+	void			setreveal(point m, tile_s floor);
 	void			remove(point m, areaf v) { feats[m] &= ~(1 << v); }
 	void			removechance(areaf v, int chance);
 	void			vert(int x1, int y1, int y2, tile_s tile);

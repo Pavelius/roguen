@@ -58,8 +58,8 @@ bool creature::is(condition_s v) const {
 		else if(player->is(Ally))
 			return is(Enemy);
 		return false;
-	case NoFeature:
-		return area.getfeature(getposition()) == NoFeature;
+	case NoAnyFeature:
+		return area.getfeature(getposition()) == featuren::No;
 	default:
 		return true;
 	}

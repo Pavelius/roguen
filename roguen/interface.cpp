@@ -424,8 +424,8 @@ static void paint_floor() {
 						image(pf, ei.features.get(r), 0);
 				}
 				auto f = area.features[i];
-				if(f) {
-					auto& ei = bsdata<featurei>::elements[f];
+				if(f != featuren::No) {
+					auto& ei = bsdata<featurei>::elements[int(f)];
 					if(ei.is(BetweenWalls)) {
 						auto a = area.is(i, Activated) ? 1 : 0;
 						if(area.iswall(i, East) && area.iswall(i, West))
@@ -666,6 +666,8 @@ void creature::paint() const {
 }
 
 void featurei::paint(int r) const {
+	if(ishidden())
+		return;
 	auto pi = gres(res::Features);
 	image(pi, features.get(r), 0);
 	if(overlay)
