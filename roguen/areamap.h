@@ -7,11 +7,11 @@
 enum direction_s : unsigned char;
 enum tile_s : unsigned char;
 enum feature_s : unsigned char;
-enum mapf_s : unsigned char {
+enum areaf : unsigned char {
 	Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed,
 };
-enum areaf : unsigned char {
-	Impassable, ImpassableNonActive, AllowActivate, DangerousFeature, BetweenWalls, Woods,
+enum tilef : unsigned char {
+	Impassable, ImpassableNonActive, CanSwim, AllowActivate, DangerousFeature, BetweenWalls, Woods,
 };
 struct framerange {
 	unsigned char	start;
@@ -26,12 +26,16 @@ struct areafi {
 struct tilei {
 	const char*		id;
 	color			minimap;
-	framerange		floor;
-	framerange		decals;
+	framerange		floor, decals;
 	int				borders = -1;
 	tile_s			tile;
 	framerange		walls;
+	unsigned		flags;
+	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
 	bool			iswall() const { return tile != (tile_s)0; }
+};
+struct tilefi {
+	const char*		id;
 };
 struct featurei {
 	const char*		id;
@@ -39,7 +43,7 @@ struct featurei {
 	unsigned char	priority = 10;
 	unsigned		feats = 0;
 	void			paint(int random) const;
-	bool			is(areaf v) const { return (feats & (1 << v)) != 0; }
+	bool			is(tilef v) const { return (feats & (1 << v)) != 0; }
 };
 struct areamap : anymap<tile_s, 64> {
 	typedef bool (*fntest)(point m);
@@ -72,9 +76,9 @@ struct areamap : anymap<tile_s, 64> {
 	static point	getpoint(const rect& rc, const rect& bound, direction_s dir);
 	static int		getrange(point start, point target);
 	void			horz(int x1, int y1, int x2, tile_s tile);
-	bool			is(point m, mapf_s v) const { return (feats[m] & (1 << v)) != 0; }
+	bool			is(point m, areaf v) const { return (feats[m] & (1 << v)) != 0; }
 	bool			is(point m, tile_s v) const { return isvalid(m) && (*this)[m] == v; }
-	bool			isb(point m, mapf_s v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }
+	bool			isb(point m, areaf v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }
 	bool			isfree(point m) const;
 	bool			iswall(point m) const;
 	bool			iswall(point m, direction_s d) const;
@@ -83,19 +87,19 @@ struct areamap : anymap<tile_s, 64> {
 	static void		makewave(point start_index);
 	static void		makewavex();
 	static int		randomcount(const rect& rc, int v);
-	void			set(point m, mapf_s v) { if(isvalid(m)) feats[m] |= (1 << v); }
+	void			set(point m, areaf v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			set(point m, tile_s v);
 	void			set(point m, feature_s v);
 	void			set(rect rc, tile_s v);
 	void			set(rect rc, feature_s v);
-	void			set(rect rc, mapf_s v);
+	void			set(rect rc, areaf v);
 	void			set(rect rc, feature_s v, int random_count);
-	void			set(rect rc, mapf_s v, int random_count);
+	void			set(rect rc, areaf v, int random_count);
 	void			set(rect rc, tile_s v, int random_count);
 	void			set(feature_s v, int bonus);
 	static void		setblock(point m, unsigned short v);
 	void			setlos(point m, int radius, fntest test);
-	void			remove(point m, mapf_s v) { feats[m] &= ~(1 << v); }
-	void			removechance(mapf_s v, int chance);
+	void			remove(point m, areaf v) { feats[m] &= ~(1 << v); }
+	void			removechance(areaf v, int chance);
 	void			vert(int x1, int y1, int y2, tile_s tile);
 };

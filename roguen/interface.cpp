@@ -416,7 +416,7 @@ static void paint_floor() {
 							image(pd, ei.decals.start + fw, 0);
 					}
 				}
-				for(auto f = Explored; f <= Webbed; f = (mapf_s)(f + 1)) {
+				for(auto f = Explored; f <= Webbed; f = (areaf)(f + 1)) {
 					if(!area.is(i, f))
 						continue;
 					auto& ei = bsdata<areafi>::elements[f];
@@ -1147,7 +1147,7 @@ static void paint_area(point origin, int z) {
 			fore = p->minimap;
 			rectf();
 			switch(area.features[i]) {
-			case NoTile: break;
+			case NoFeature: break;
 			case Tree: case TreePalm:
 				fillfade(color(35, 79, 31), 192);
 				break;

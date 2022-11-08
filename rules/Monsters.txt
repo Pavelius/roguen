@@ -28,6 +28,7 @@ GiantSpider avatar(591) appear(1 4) friendly(-20)
  use Bite StrongPoison IgnoreWeb Web+4
 Ghoul avatar(305) appear(1 3) friendly(-20)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) DodgeSkill(30) HitsMaximum(10)
+ use Claws Undead PoisonImmunity
 Goblin avatar(0) appear(3 8) friendly(-30)
  abilities Strenght(25) Dexterity(40) Wits(14) WeaponSkill(30) DodgeSkill(40) HitsMaximum(5)
  use Dagger
@@ -50,10 +51,10 @@ ShamblingMound avatar(9) friendly(-20)
  abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) HitsMaximum(30)
 Skeleton avatar(574) appear(3 6) friendly(-20)
  abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) HitsMaximum(8) Armor(1)
- use Spear Darkvision
+ use Spear Darkvision Undead PoisonImmunity
 Zombie avatar(101) appear(2 5) friendly(-20)
  abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(25) HitsMaximum(16)
- use Dagger Darkvision
+ use Dagger Darkvision Undead PoisonImmunity
 Wolf avatar(20) appear(2 5) friendly(-10)
  abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(30) DodgeSkill(30) HitsMaximum(10)
  use Bite

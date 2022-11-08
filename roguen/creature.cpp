@@ -411,7 +411,7 @@ static bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
 	auto tile = area[m];
-	if(tile == Water || tile == DarkWater || tile == DeepWater)
+	if(bsdata<tilei>::elements[tile].is(CanSwim))
 		return false;
 	return area.isfree(m);
 }
@@ -1085,11 +1085,16 @@ static void block_creatures(creature* exclude) {
 	}
 }
 
+static void block_swimable() {
+	for(auto& e : bsdata<tilei>()) {
+		if(e.is(CanSwim))
+			area.blocktiles((tile_s)bsid(&e));
+	}
+}
+
 bool creature::moveto(point ni) {
 	area.clearpath();
-	area.blocktiles(Water);
-	area.blocktiles(DeepWater);
-	area.blocktiles(DarkWater);
+	block_swimable();
 	area.blockwalls();
 	area.blockfeatures();
 	block_creatures(this);
@@ -1234,7 +1239,7 @@ bool creature::isallow(variant v) const {
 	else if(v.iskind<feati>())
 		return !is((feat_s)v.value);
 	else if(v.iskind<areafi>()) {
-		auto present = area.is(getposition(), (mapf_s)v.value);
+		auto present = area.is(getposition(), (areaf)v.value);
 		if(v.counter < 0)
 			return present;
 		return !present;
@@ -1273,9 +1278,9 @@ void creature::apply(variant v) {
 		apply(bsdata<spelli>::elements[v.value], v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)
-			area.remove(getposition(), (mapf_s)v.value);
+			area.remove(getposition(), (areaf)v.value);
 		else
-			area.set(getposition(), (mapf_s)v.value);
+			area.set(getposition(), (areaf)v.value);
 	} else if(v.iskind<featurei>()) {
 		if(v.counter < 0)
 			area.set(getposition(), NoFeature);

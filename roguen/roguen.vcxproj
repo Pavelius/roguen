@@ -195,6 +195,7 @@
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
+    <ClCompile Include="mapf.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
     <ClCompile Include="monster.cpp" />
@@ -324,6 +325,7 @@
     <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Sites.txt" />
     <Text Include="..\rules\Spells.txt" />
+    <Text Include="..\rules\Tiles.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

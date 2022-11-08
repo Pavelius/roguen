@@ -16,6 +16,7 @@ void initialize_script();
 
 static void initializating() {
 	initialize_script();
+	bsreq::read("rules/Tiles.txt");
 	bsreq::read("rules/Items.txt");
 	bsreq::read("rules/Monsters.txt");
 	bsreq::read("rules/Advancement.txt");

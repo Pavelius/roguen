@@ -32,7 +32,7 @@ tile_s getfloor() {
 		return last_site->floors;
 	if(last_location && last_location->floors)
 		return last_location->floors;
-	return DungeonFloor;
+	return (tile_s)0;
 }
 
 tile_s getwall() {
@@ -40,7 +40,7 @@ tile_s getwall() {
 		return last_site->walls;
 	if(last_location && last_location->walls)
 		return last_location->walls;
-	return WallDungeon;
+	return (tile_s)0;
 }
 
 static void place_item(point index, const itemi* pe) {
@@ -86,7 +86,7 @@ static void standart_script(variant v) {
 	else if(v.iskind<tilei>())
 		area.set(last_rect, (tile_s)v.value, v.counter);
 	else if(v.iskind<areafi>())
-		area.set(last_rect, (mapf_s)v.value, v.counter);
+		area.set(last_rect, (areaf)v.value, v.counter);
 	else if(v.iskind<globali>()) {
 		last_global = bsdata<globali>::elements + v.value;
 		last_value = game.get(*last_global);

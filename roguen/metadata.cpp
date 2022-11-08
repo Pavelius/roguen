@@ -6,6 +6,7 @@
 NOBSDATA(color)
 NOBSDATA(dice)
 NOBSDATA(diceprogress)
+NOBSDATA(framerange)
 NOBSDATA(itemi::weaponi)
 NOBSDATA(point)
 
@@ -25,10 +26,16 @@ BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
 BSDATAC(siteskilli, 256);
+BSDATAC(tilei, 64);
 BSDATAC(trigger, 256);
 
 BSMETA(abilityi) = {
 	BSREQ(id),
+	{}};
+BSMETA(advancement) = {
+	BSREQ(type),
+	BSREQ(level),
+	BSREQ(elements),
 	{}};
 BSMETA(globali) = {
 	BSREQ(id),
@@ -69,6 +76,9 @@ BSMETA(feati) = {
 BSMETA(featurei) = {
 	BSREQ(id),
 	{}};
+BSMETA(framerange) = {
+	BSREQ(start), BSREQ(count),
+	{}};
 BSMETA(itemi) = {
 	BSREQ(id),
 	BSREQ(cost), BSREQ(weight), BSREQ(count),
@@ -88,10 +98,20 @@ BSMETA(itemi::weaponi) = {
 	BSREQ(damage), BSREQ(pierce),
 	BSENM(ammunition, itemi),
 	{}};
-BSMETA(advancement) = {
-	BSREQ(type),
-	BSREQ(level),
-	BSREQ(elements),
+BSMETA(locationi) = {
+	BSREQ(id),
+	BSREQ(global), BSREQ(global_finish),
+	BSREQ(local),
+	BSREQ(landscape), BSREQ(sites), BSREQ(loot),
+	BSREQ(darkness), BSREQ(offset),
+	BSFLG(feats, feati),
+	BSREQ(chance_finale),
+	BSENM(walls, tilei),
+	BSENM(floors, tilei),
+	BSREQ(minimap),
+	{}};
+BSMETA(tilefi) = {
+	BSREQ(id),
 	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
@@ -121,18 +141,6 @@ BSMETA(sitei) = {
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	{}};
-BSMETA(locationi) = {
-	BSREQ(id),
-	BSREQ(global), BSREQ(global_finish),
-	BSREQ(local),
-	BSREQ(landscape), BSREQ(sites), BSREQ(loot),
-	BSREQ(darkness), BSREQ(offset),
-	BSFLG(feats, feati),
-	BSREQ(chance_finale),
-	BSENM(walls, tilei),
-	BSENM(floors, tilei),
-	BSREQ(minimap),
-	{}};
 BSMETA(siteskilli) = {
 	BSREQ(id),
 	BSENM(skill, abilityi),
@@ -153,6 +161,11 @@ BSMETA(spelli) = {
 	{}};
 BSMETA(tilei) = {
 	BSREQ(id),
+	BSREQ(minimap),
+	BSREQ(floor), BSREQ(decals), BSREQ(walls),
+	BSREQ(borders),
+	BSENM(tile, tilei),
+	BSFLG(flags, tilefi),
 	{}};
 BSMETA(triggeri) = {
 	BSREQ(id),
@@ -197,6 +210,7 @@ BSDATA(varianti) = {
 	{"Spell", VAR(spelli), 1},
 	{"Speech", VAR(speech), 1},
 	{"Tile", VAR(tilei), 1},
+	{"TileFlags", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},

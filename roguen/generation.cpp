@@ -180,6 +180,7 @@ void place_shape(const shapei& e, point m, tile_s floor, tile_s walls) {
 
 static void create_road(const rect& rc) {
 	pushvalue push_rect(last_rect, rc);
+	variant road = "Rock";
 	if(last_rect.width() > last_rect.height()) {
 		if(last_rect.x1 <= 6)
 			last_rect.x1 = 0;
@@ -191,7 +192,7 @@ static void create_road(const rect& rc) {
 		if(last_rect.y2 >= area.mps - 6)
 			last_rect.y2 = area.mps - 1;
 	}
-	area.set(last_rect, Rock);
+	area.set(last_rect, (tile_s)road.value);
 	variant v = "RandomCommoner";
 	v.counter = xrand(3, 6);
 	runscript(v);
@@ -240,20 +241,20 @@ static bool isallowconnector(point index, direction_s dir, bool deadend = false)
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
-	if(!area.is(index, NoTile))
+	if(!area.is(index, (tile_s)0))
 		return false;
-	if(!area.is(to(index, round(dir, West)), NoTile))
+	if(!area.is(to(index, round(dir, West)), (tile_s)0))
 		return false;
-	if(!area.is(to(index, round(dir, East)), NoTile))
+	if(!area.is(to(index, round(dir, East)), (tile_s)0))
 		return false;
 	index = to(index, dir);
 	if(deadend) {
-		if(!area.is(index, NoTile))
+		if(!area.is(index, (tile_s)0))
 			return false;
 	}
-	if(!area.is(to(index, round(dir, West)), NoTile))
+	if(!area.is(to(index, round(dir, West)), (tile_s)0))
 		return false;
-	if(!area.is(to(index, round(dir, East)), NoTile))
+	if(!area.is(to(index, round(dir, East)), (tile_s)0))
 		return false;
 	return true;
 }
@@ -262,11 +263,11 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
-	if(!area.is(index, NoTile))
+	if(!area.is(index, (tile_s)0))
 		return false;
-	if(!area.is(to(index, round(dir, West)), NoTile))
+	if(!area.is(to(index, round(dir, West)), (tile_s)0))
 		return false;
-	if(!area.is(to(index, round(dir, East)), NoTile))
+	if(!area.is(to(index, round(dir, East)), (tile_s)0))
 		return false;
 	index = to(index, dir);
 	if(linkable) {
@@ -274,9 +275,9 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 		if(pr)
 			return true;
 	}
-	if(!area.is(to(index, round(dir, West)), NoTile))
+	if(!area.is(to(index, round(dir, West)), (tile_s)0))
 		return false;
-	if(!area.is(to(index, round(dir, East)), NoTile))
+	if(!area.is(to(index, round(dir, East)), (tile_s)0))
 		return false;
 	return true;
 }
@@ -528,7 +529,7 @@ void sitei::corridors() const {
 	auto dir = area.getmost(rc);
 	create_corridor(rc, dir, walls, floors);
 	additional_corridors(floors, walls);
-	area.change(NoTile, walls);
+	area.change((tile_s)0, walls);
 	create_corridor_contents();
 	create_doors(floors, walls);
 }

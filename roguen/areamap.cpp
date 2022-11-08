@@ -52,7 +52,7 @@ void areamap::set(rect rc, tile_s v) {
 			set(m, v);
 }
 
-void areamap::set(rect rc, mapf_s v) {
+void areamap::set(rect rc, areaf v) {
 	point m;
 	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
 		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
@@ -73,7 +73,7 @@ point areamap::get(const rect& rc) {
 	return {x, y};
 }
 
-void areamap::set(rect rc, mapf_s v, int random_count) {
+void areamap::set(rect rc, areaf v, int random_count) {
 	if(random_count <= -100) {
 		set(rc, v);
 		return;
@@ -126,7 +126,7 @@ int areamap::randomcount(const rect& rc, int v) {
 	return v;
 }
 
-void areamap::removechance(mapf_s v, int chance) {
+void areamap::removechance(areaf v, int chance) {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++) {
 		for(m.x = 0; m.x < mps; m.x++) {

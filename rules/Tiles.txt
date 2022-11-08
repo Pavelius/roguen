@@ -1,0 +1,26 @@
+#Tile
+
+NoTile borders(-1)
+
+WoodenFloor minimap(130 104 86) floor(0 1) borders(-1)
+Cave minimap(89 97 101) floor(9 3) decals(14 3) borders(1)
+DungeonFloor minimap(89 97 101) floor(12 8) decals(14 3) borders(3)
+Grass minimap(60 176 67) floor(1 4) decals(0 8) borders(0)
+GrassCorupted minimap(66 63 48) floor(5 4) decals(8 6) borders(2)
+Rock minimap(96 71 52) floor(44 1) borders(-1)
+Sand floor(35 4) borders(-1)
+Snow floor(31 4) borders(-1)
+Lava floor(28 3) borders(-1)
+
+Water floor(40 4) borders(-1)
+ flags CanSwim
+DarkWater minimap(22 68 59) floor(45 8) borders(-1)
+ flags CanSwim
+DeepWater minimap(29 80 120) floor(53 8) borders(-1)
+ flags CanSwim
+
+WallCave borders(-1) tile(Cave) walls(0 2)
+WallBuilding borders(-1) tile(WoodenFloor) walls(13 1)
+WallDungeon borders(-1) tile(DungeonFloor) walls(25 3)
+WallFire borders(-1) tile(Lava) walls(39 5)
+WallIce borders(-1) tile(Snow) walls(55 3)

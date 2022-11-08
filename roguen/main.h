@@ -77,11 +77,6 @@ enum feature_s : unsigned char {
 	AltarGood, AltarNeutral, AltarEvil,
 	Pit, Trap, Door, StairsUp, StairsDown, GatePortal,
 };
-enum tile_s : unsigned char {
-	NoTile, WoodenFloor, Cave, DungeonFloor, Grass, GrassCorupted, Rock, Sand, Snow, Lava,
-	Water, DarkWater, DeepWater,
-	WallCave, WallBuilding, WallDungeon, WallFire, WallIce,
-};
 enum trigger_s : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
 };
@@ -153,6 +148,7 @@ struct itemi : nameable {
 		char		parry, enemy_parry;
 		char		block, enemy_block, block_ranged;
 		char		damage, pierce;
+		char		wait;
 		short 		ammunition;
 	};
 	int				cost, weight, count;
