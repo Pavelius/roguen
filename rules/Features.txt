@@ -2,9 +2,9 @@
 
 NoFeature priority(10)
 
-Tree priority(10) features(7 4) overlay(11 3)
+Tree priority(10) features(7 4) overlay(11 3) minimap(35 79 31 192)
  flags Impassable Woods
-TreePalm priority(10) features(101 6)
+TreePalm priority(10) features(101 6) minimap(35 79 31 192)
  flags Impassable Woods
 DeadTree priority(10) features(45 4) overlay(49 3)
  flags Impassable Woods
@@ -19,8 +19,8 @@ Statue priority(10) features(43 2)
 HiveHole priority(5) features(18 1)
 Hive priority(10) features(19 1)
 Hole priority(10) features(20 1)
-Plant priority(10) features(21 3)
-Herbs priority(6) features(24 3)
+Plant priority(10) features(21 3) minimap(77 111 62 160)
+Herbs priority(6) features(24 3) minimap(77 111 62 128)
 
 AltarGood priority(6) features(56 1)
 AltarNeutral priority(6) features(57 1)
@@ -28,13 +28,15 @@ AltarEvil priority(6) features(58 1)
 
 Pit priority(6) features(76 1)
  flags Impassable
-Door priority(7) features(39 1)
+Door priority(7) features(39 1) minimap(102 70 18 128)
  flags BetweenWalls Impassable
-OpenedDoor priority(7) features(41 1)
+OpenedDoor priority(7) features(41 1) minimap(102 70 18 128)
  flags BetweenWalls
 StairsUp priority(4) features(52 1) lead(1)
 StairsDown priority(4) features(53 1) lead(-1)
-Pool priority(3) features(77 10)
+
+GreenPool priority(3) features(77 1)
+RedPool priority(3) features(78 1)
 
 GatePortal priority(4) features(54 1)
 OpenedGatePortal priority(4) features(55 1)

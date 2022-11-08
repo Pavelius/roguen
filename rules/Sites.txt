@@ -59,9 +59,6 @@ StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape StairsDown
  feats Notable
 
-TestArea
- landscape Pool+5 GatePortal
- feats Notable
 AltarRoom
  landscape QuestLandscape RandomAltar
  feats Notable
@@ -125,6 +122,10 @@ DefaultCaveEntrance
  feats Notable
 DefaultDungeonEntrance
  landscape StairsDown AddDungeonRumor
+ feats Notable
+
+TestArea
+ landscape GreenPool RedPool GatePortal
  feats Notable
 
 #Location

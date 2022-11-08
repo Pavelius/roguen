@@ -1,2 +1,3 @@
-﻿In file `Names.txt`:
- Define translation for `TestPool`
+﻿In file `rules/Features.txt`:
+ Line 5: Unknown type in requisit ``
+ Line 7: Unknown type in requisit ``

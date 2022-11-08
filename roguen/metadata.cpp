@@ -57,7 +57,7 @@ BSMETA(speech) = {
 	BSREQ(id),
 	{}};
 BSMETA(color) = {
-	BSREQ(r), BSREQ(g), BSREQ(b),
+	BSREQ(r), BSREQ(g), BSREQ(b), BSREQ(a),
 	{}};
 BSMETA(conditioni) = {
 	BSREQ(id),
