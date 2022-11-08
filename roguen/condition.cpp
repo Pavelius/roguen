@@ -8,7 +8,7 @@ BSDATA(conditioni) = {
 	{"Healthy"},
 	{"Wounded"},
 	{"HeavyWounded"},
-	{"Busy"},
+	{"Unaware"},
 	{"NoAnyFeature"},
 	{"NoInt"},
 	{"AnimalInt"},
@@ -29,7 +29,7 @@ assert_enum(conditioni, Ranged);
 bool creature::is(condition_s v) const {
 	int n, m;
 	switch(v) {
-	case Busy: return wait_seconds > 1000;
+	case Unaware: return wait_seconds > 1000;
 	case NPC: return ischaracter();
 	case Random: return d100() < 40;
 	case NoInt: return get(Wits) == 10;

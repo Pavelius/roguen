@@ -38,7 +38,18 @@ assert_enum(abilityi, Money)
 
 void creature::update_abilities() {
 	abilities[ManaMaximum] += get(Wits);
-	abilities[Speed] += get(Dexterity);
+	abilities[Speed] += 25 + get(Dexterity) / 5;
+	if(is(Stun)) {
+		abilities[WeaponSkill] -= 10;
+		abilities[BalisticSkill] -= 10;
+		abilities[DodgeSkill] -= 20;
+		abilities[ShieldUse] -= 10;
+	}
+	if(!is(IgnoreWeb) && ispresent() && area.is(getposition(), Webbed)) {
+		abilities[WeaponSkill] -= 10;
+		abilities[DodgeSkill] -= 20;
+		abilities[ShieldUse] -= 10;
+	}
 	if(is(LightSource))
 		abilities[LineOfSight] += 3;
 }

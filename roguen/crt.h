@@ -58,6 +58,7 @@ template<class T> inline T			iabs(T a) { return a > 0 ? a : -a; }
 template<class T> inline void		iswap(T& a, T& b) { T i = a; a = b; b = i; }
 template<class T> inline const T*	zchr(const T* p, T e) { while(*p) { if(*p == e) return p; p++; } return 0; }
 template<class T> inline void		zclear(T* p) { memset(p, 0, sizeof(*p)); }
+template<class T> inline void		zclear(T& e) { memset(&e, 0, sizeof(e)); }
 template<class T> inline void		zcpy(T* p1, const T* p2) { while(*p2) *p1++ = *p2++; *p1 = 0; }
 template<class T> inline void		zcpy(T* p1, const T* p2, int max_count) { while(*p2 && max_count-- > 0) *p1++ = *p2++; *p1 = 0; }
 template<class T> constexpr T*		zend(T* p) { while(*p) p++; return p; }

@@ -3,11 +3,32 @@
 #include "main.h"
 
 namespace {
-struct skilli {
-	ability_s	skill;
-	int			value;
+struct rollg {
+	int			roll, chance, delta;
+	bool		miss() const { return roll >= 5 && roll > chance; }
+	void		make(int chance);
+	void		make(ability_s& result, ability_s v, int chance);
 };
-typedef skilli defencet[3];
+struct defenceg {
+	int			dodge, parry, block;
+};
+}
+
+void rollg::make(int v) {
+	roll = 1 + rand() % 100;
+	chance = v;
+	delta = v - roll;
+}
+
+void rollg::make(ability_s& result, ability_s v, int difficult) {
+	if(!difficult)
+		return;
+	auto d = difficult - roll;
+	if(d <= delta)
+		return;
+	result = v;
+	chance = difficult;
+	delta = d;
 }
 
 static void copy(statable& v1, const statable& v2) {
@@ -27,6 +48,10 @@ static void action_text(const creature* player, const char* id, const char* acti
 		player->act(pn);
 }
 
+static void fixdamage(const creature* p, int total, int damage_weapon, int damage_armor, int damage_bonus) {
+	p->logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor, damage_bonus);
+}
+
 static creature* findalive(point m) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid() && e.getposition() == m)
@@ -40,6 +65,12 @@ static ability_s damage_ability(wear_s v) {
 	case RangedWeapon: return DamageRanged;
 	default: return DamageMelee;
 	}
+}
+
+static bool attack_effect(const creature* p, const item& w, feat_s v) {
+	if(w.is(v))
+		return true;
+	return p->is(v);
 }
 
 static void poison_attack(creature* player, int value) {
@@ -60,22 +91,14 @@ static void poison_attack(creature* player, int value) {
 		player->set(Poison, v);
 }
 
-static void poison_attack(const creature* player, creature* enemy, const item* weapon) {
+static void poison_attack(const creature* player, creature* enemy, const item& weapon) {
 	auto strenght = 0;
-	if(player->is(WeakPoison))
+	if(attack_effect(player, weapon, WeakPoison))
 		strenght += xrand(1, 3);
-	if(player->is(StrongPoison))
+	if(attack_effect(player, weapon, StrongPoison))
 		strenght += xrand(3, 6);
-	if(player->is(DeathPoison))
+	if(attack_effect(player, weapon, DeathPoison))
 		strenght += xrand(6, 12);
-	if(weapon) {
-		if(weapon->is(WeakPoison))
-			strenght += xrand(1, 3);
-		if(weapon->is(StrongPoison))
-			strenght += xrand(3, 6);
-		if(weapon->is(DeathPoison))
-			strenght += xrand(6, 12);
-	}
 	poison_attack(enemy, strenght);
 }
 
@@ -88,6 +111,17 @@ static void illness_attack(creature* player, int value) {
 		player->kill();
 	else
 		player->set(Illness, v);
+}
+
+static void special_attack(creature* player, const item& weapon, creature& enemy, int& pierce, int& damage) {
+	if(attack_effect(player, weapon, StunningHit)) {
+		enemy.set(Stun);
+		enemy.fixeffect("SearchVisual");
+	}
+	if(attack_effect(player, weapon, PierceHit))
+		pierce += 4;
+	if(attack_effect(player, weapon, MightyHit))
+		damage += 2;
 }
 
 static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
@@ -134,6 +168,31 @@ static void drop_treasure(const creature* player) {
 	if(!p)
 		return;
 	runscript(p->treasure);
+}
+
+static void check_blooding(creature* p) {
+	if(p->is(Blooding)) {
+		p->damage(1);
+		area.set(p->getposition(), Blooded);
+		if(p->roll(Strenght))
+			p->remove(Blooding);
+	}
+}
+
+static void check_stun(creature* p) {
+	if(p->is(Stun)) {
+		if(p->roll(Strenght))
+			p->remove(Stun);
+	}
+}
+
+static void random_walk(creature* p) {
+	if(d100() < 60)
+		p->wait();
+	else {
+		static direction_s allaround[] = {North, South, East, West};
+		p->movestep(maprnd(allaround));
+	}
 }
 
 static bool check_stairs_movement(creature* p, point m) {
@@ -260,18 +319,17 @@ static int block_skill(const item& enemy_weapon, const item& weapon, int value) 
 	return value;
 }
 
-static void defence_skills(const creature* player, int attacker_strenght, const item& attacker_weapon, defencet& result) {
+static void defence_skills(defenceg& result, const creature* player, int attacker_strenght, const item& attacker_weapon) {
 	auto penalty = might_penalty(player->get(Strenght), attacker_strenght);
-	result[0].skill = WeaponSkill;
-	result[0].value = parry_skill(attacker_weapon, player->wears[MeleeWeapon], player->get(WeaponSkill)) - penalty;
-	result[1].skill = ShieldUse;
-	result[1].value = block_skill(attacker_weapon, player->wears[MeleeWeaponOffhand], player->get(ShieldUse)) - penalty;
-	result[2].skill = DodgeSkill;
-	result[2].value = player->get(DodgeSkill);
-	for(auto& e : result) {
-		if(e.value < 0)
-			e.value = 0;
-	}
+	result.parry = parry_skill(attacker_weapon, player->wears[MeleeWeapon], player->get(WeaponSkill)) - penalty;
+	result.block = block_skill(attacker_weapon, player->wears[MeleeWeaponOffhand], player->get(ShieldUse)) - penalty;
+	result.dodge = player->get(DodgeSkill);
+	if(result.parry < 0)
+		result.parry = 0;
+	if(result.block < 0)
+		result.block = 0;
+	if(result.dodge < 0)
+		result.dodge = 0;
 }
 
 static void match_creatures(const spelli& ei, int level) {
@@ -322,6 +380,7 @@ void creature::clear() {
 	memset(this, 0, sizeof(*this));
 	worldpos = {-1000, -1000};
 	moveorder = {-1000, -1000};
+	guardorder = {-1000, -1000};
 	setroom(0);
 	setowner(0);
 	if(game.getowner() == this)
@@ -534,21 +593,14 @@ int creature::getdamage(wear_s v) const {
 	return result;
 }
 
-static ability_s getbestdefence(const defencet& defences, int parry_result, int& parry_skill, int& parry_effect) {
-	auto parry = (ability_s)0;
-	parry_skill = 0;
-	parry_effect = 0;
-	for(auto& e : defences) {
-		if(parry_result <= e.value) {
-			auto v = (e.value - parry_result) / 10;
-			if(!parry_skill || parry_effect < v) {
-				parry = e.skill;
-				parry_skill = e.value;
-				parry_effect = v;
-			}
-		}
-	}
-	return parry;
+static ability_s best_defence(rollg& check, const defenceg& defences) {
+	auto result = (ability_s)0;
+	zclear(check);
+	check.roll = 1 + rand() % 100;
+	check.make(result, WeaponSkill, defences.parry);
+	check.make(result, ShieldUse, defences.block);
+	check.make(result, DodgeSkill, defences.dodge);
+	return result;
 }
 
 void creature::damage(const item& weapon, int effect) {
@@ -557,60 +609,63 @@ void creature::damage(const item& weapon, int effect) {
 	if(damage_reduction < 0)
 		damage_reduction = 0;
 	auto result_damage = weapon_damage - damage_reduction + effect;
-	fixdamage(result_damage, weapon_damage, -damage_reduction, effect, 0);
+	fixdamage(this, result_damage, weapon_damage, -damage_reduction, effect);
 	damage(result_damage);
 }
 
 void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_multiplier) {
-	skilli defences[3] = {};
-	int parry_skill = 0;
-	last_hit = 1 + d100(); last_hit_result = 0;
-	last_parry = 1 + d100(); last_parry_result = 0;
-	attack_skill += get(wears[v].geti().ability);
-	auto attack_delta = attack_skill - last_hit;
-	last_hit_result = attack_delta / 10;
-	if(last_hit > 5 && last_hit > attack_skill) {
-		logs(getnm("AttackMiss"), last_hit, attack_skill);
-		return;
-	}
-	defence_skills(&enemy, get(Strenght), wears[v], defences);
+	rollg check, parry;
+	defenceg defence;
 	auto enemy_name = enemy.getname();
 	auto attacker_name = getname();
-	auto parry = getbestdefence(defences, last_parry, parry_skill, last_parry_result);
-	auto parry_delta = parry_skill - last_parry;
-	if(parry) {
-		if(parry_delta > attack_delta) {
-			logs(getnm("AttackHitButParryCritical"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
-			if(parry == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate)) {
+	auto weapon_damage = wears[v].getdamage() + get(damage_ability(v));
+	check.make(attack_skill + get(wears[v].geti().ability));
+	if(check.miss()) {
+		logs(getnm("AttackMiss"), check.roll, check.chance);
+		return;
+	}
+	defence_skills(defence, &enemy, get(Strenght), wears[v]);
+	auto parry_ability = best_defence(parry, defence);
+	auto ability_id = "";
+	if(parry_ability) {
+		ability_id = bsdata<abilityi>::elements[parry_ability].id;
+		if(parry.delta > check.delta) {
+			logs(getnm("AttackHitButParryCritical"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
+			if(parry_ability == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate)) {
 				auto range = area.getrange(enemy.getposition(), getposition());
 				if(range <= 1)
-					damage(enemy.wears[MeleeWeapon], last_parry_result - last_hit_result);
+					damage(enemy.wears[MeleeWeapon], (parry.delta - check.delta) / 10);
+			} else {
+				switch(parry_ability) {
+				case DodgeSkill: enemy.fixvalue(getnm("DodgeSuccess"), 2); break;
+				case ShieldUse: enemy.fixvalue(getnm("BlockSuccess"), 2); break;
+				case WeaponSkill: enemy.fixvalue(getnm("ParrySuccess"), 2); break;
+				}
 			}
 			return;
 		}
 	}
-	if(parry)
-		logs(getnm("AttackHitButParrySuccess"), last_hit, attack_skill, last_parry, parry_skill, enemy.getname(), getnm(bsdata<abilityi>::elements[parry].id));
+	if(parry_ability)
+		logs(getnm("AttackHitButParrySuccess"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
 	else
-		logs(getnm("AttackHitButParryFail"), last_hit, attack_skill, last_parry, enemy.getname(), defences[0].value, defences[1].value, defences[2].value);
-	auto pierce = wears[v].geti().weapon.pierce;
-	auto armor = enemy.get(Armor);
+		logs(getnm("AttackHitButParryFail"), check.roll, check.chance, parry.roll, enemy.getname(), defence.parry, defence.block, defence.dodge);
+	int pierce = wears[v].geti().weapon.pierce;
+	int armor = enemy.get(Armor);
 	if(v == MeleeWeapon || v == MeleeWeaponOffhand)
 		armor += (enemy.get(Strenght) - get(Strenght)) / 10;
-	if(pierce > armor)
-		armor = 0;
-	else
-		armor -= pierce;
-	auto weapon_damage = wears[v].getdamage() + get(damage_ability(v));
-	auto result_damage = weapon_damage - armor + last_hit_result - last_parry_result;
-	enemy.fixdamage(result_damage, weapon_damage, -armor, last_hit_result, -last_parry_result);
+	if(check.roll < check.chance / 2)
+		special_attack(this, wears[v], enemy, pierce, weapon_damage);
+	if(armor > 0) {
+		if(pierce > armor)
+			armor = 0;
+		else
+			armor -= pierce;
+	}
+	int result_damage = weapon_damage - armor + (check.delta - parry.delta) / 10;
+	fixdamage(&enemy, result_damage, weapon_damage, -armor, (check.delta - parry.delta) / 10);
 	result_damage = result_damage * damage_multiplier / 100;
 	enemy.damage(result_damage);
-	poison_attack(this, &enemy, wears + v);
-}
-
-void creature::fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const {
-	logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor, damage_skill, damage_parry);
+	poison_attack(this, &enemy, wears[v]);
 }
 
 void creature::heal(int v) {
@@ -778,16 +833,6 @@ void creature::finish() {
 	fixappear();
 }
 
-void creature::aimove() {
-	// When stay on ground you do some work
-	if(d100() < 60) {
-		wait();
-		return;
-	}
-	static direction_s allaround[] = {North, South, East, West};
-	movestep(maprnd(allaround));
-}
-
 void creature::advance(variant kind, int level) {
 	for(auto& e : bsdata<advancement>()) {
 		if(e.type == kind && e.level == level)
@@ -845,13 +890,19 @@ static void look_creatures() {
 		enemies.clear();
 }
 
-static void look_enemy() {
-	look_creatures();
+static void ready_enemy() {
 	enemy = 0;
 	if(enemies) {
 		enemies.sort(player->getposition());
 		enemy = enemies[0];
 	}
+}
+
+static void ready_actions() {
+	look_creatures();
+	ready_enemy();
+	allowed_spells.select(player);
+	last_actions.select(siteskilli::isvalid);
 }
 
 int creature::getloh() const {
@@ -872,34 +923,23 @@ bool creature::isfollowmaster() const {
 	return true;
 }
 
+static const sitei* get_site(creature* p) {
+	return p->getroom() ? p->getroom()->getsite() : 0;
+}
+
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {
 		wait_seconds -= get(Speed);
 		return;
 	}
-	auto pt = getposition();
 	pushvalue push_player(player, this);
-	pushvalue push_rect(last_rect, {pt.x, pt.y, pt.x, pt.y});
-	pushvalue push_site(last_site);
-	// Get room
-	auto room = getroom();
-	last_site = 0;
-	if(room) {
-		last_rect = room->rc;
-		last_site = room->getsite();
-	}
+	pushvalue push_rect(last_rect, getposition().rectangle());
+	pushvalue push_site(last_site, get_site(this));
 	set(EnemyAttacks, 0);
 	update();
-	// Sleeped creature don't move
-	//if(is(Sleep))
-	//	return;
-	// Unaware attack or others
-	if(is(Unaware))
-		remove(Unaware);
-	look_enemy();
-	allowed_spells.select(player);
-	last_actions.select(siteskilli::isvalid);
+	check_blooding(this);
+	ready_actions();
 	if(ishuman())
 		adventure_mode();
 	else if(enemy) {
@@ -925,14 +965,13 @@ void creature::makemove() {
 				moveorder = {-1000, -1000};
 			else if(!moveto(moveorder))
 				moveorder = {-1000, -1000};
+		} else if(area.isvalid(guardorder)) {
+			if(guardorder != getposition())
+				moveorder = guardorder;
 		} else
-			aimove();
+			random_walk(this);
 	}
-	// Stun creature may remove this state at end of it turn
-	if(is(Stun)) {
-		if(roll(Strenght))
-			remove(Stun);
-	}
+	check_stun(this);
 }
 
 static int getmultiplier(magic_s v) {
@@ -1277,4 +1316,8 @@ void creature::summon(point m, const variants& elements, int count, int level) {
 		p->set(Summoned);
 		p->setowner(this);
 	}
+}
+
+bool creature::ispresent() const {
+	return worldpos == game;
 }

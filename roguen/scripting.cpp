@@ -15,7 +15,7 @@ creaturea			creatures, enemies, targets;
 spella				allowed_spells;
 itema				items;
 creature			*player, *opponent, *enemy;
-int					last_hit, last_hit_result, last_parry, last_parry_result, last_value;
+int					last_parry, last_parry_result, last_value;
 ability_s			last_ability;
 variant				last_variant;
 dungeon*			last_dungeon;

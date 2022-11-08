@@ -6,6 +6,9 @@ BSDATA(feati) = {
 	{"CutWoods"},
 	{"Retaliate"},
 	{"Thrown"},
+	{"StunningHit"},
+	{"PierceHit"},
+	{"MightyHit"},
 	{"IgnoreWeb"},
 	{"LightSource"},
 	{"Regeneration"},
@@ -28,6 +31,6 @@ BSDATA(feati) = {
 	{"Ally"},
 	{"Enemy"},
 	{"Stun"},
-	{"Unaware"},
+	{"Blooding"},
 };
-assert_enum(feati, Unaware)
+assert_enum(feati, Blooding)

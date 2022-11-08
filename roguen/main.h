@@ -55,18 +55,19 @@ enum magic_s : unsigned char {
 enum condition_s : unsigned char {
 	Identified, NPC, Random, ShowMinimapBullet,
 	NoWounded, Wounded, HeavyWounded,
-	Busy, NoAnyFeature,
+	Unaware, NoAnyFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 	Item, Feature,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 enum feat_s : unsigned char {
 	Darkvision, TwoHanded, CutWoods, Retaliate, Thrown,
+	StunningHit, PierceHit, MightyHit,
 	IgnoreWeb, LightSource, Regeneration, ManaRegeneration,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
-	Stun, Unaware,
+	Stun, Blooding,
 };
 enum feature_s : unsigned char {
 	NoFeature,
@@ -245,7 +246,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	unsigned short	class_id, room_id;
 	statable		basic;
 	featable		feats, feats_active;
-	point			moveorder;
+	point			moveorder, guardorder;
 	int				money;
 	unsigned		experience;
 	int				wait_seconds;
@@ -256,7 +257,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			dress(variant v, int multiplier);
 	void			dress(variants v, int multiplier = 1);
 	void			fixcantgo() const;
-	void			fixdamage(int total, int damage_weapon, int damage_armor, int damage_skill, int damage_parry) const;
 	void			interaction(point m);
 	bool			isfollowmaster() const;
 	void			levelup();
@@ -274,7 +274,6 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
-	void			aimove();
 	void			apply(variant v);
 	void			apply(const variants& source);
 	void			apply(const spelli& e, int level);
@@ -317,6 +316,7 @@ public:
 	bool			isallow(const spelli& e, int level) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;
+	bool			ispresent() const;
 	bool			isvalid() const;
 	void			interaction(creature& opponent);
 	void			kill();
@@ -496,7 +496,7 @@ extern creaturea	creatures, enemies, targets;
 extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
-extern int			last_hit, last_parry, last_hit_result, last_parry_result, last_damage, last_value;
+extern int			last_damage, last_value;
 extern ability_s	last_ability;
 extern variant		last_variant;
 extern dungeon*		last_dungeon;

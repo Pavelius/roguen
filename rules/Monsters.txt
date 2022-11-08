@@ -34,7 +34,7 @@ Goblin avatar(0) appear(3 8) friendly(-30)
  treasure SP-20
 GoblinFemale avatar(1) parent(Goblin) appear(1 3) friendly(-30)
  abilities Strenght(20) Dexterity(40) Wits(15) WeaponSkill(15) DodgeSkill(30) HitsMaximum(4)
- use Female
+ use Dagger Female
  treasure SP-10
 OrcWarrior avatar(2) appear(2 4) friendly(-30)
  abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(35) HitsMaximum(15)

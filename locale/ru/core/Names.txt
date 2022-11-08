@@ -1,5 +1,5 @@
 And: и
-ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i%+5i) урона.
+ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i) урона.
 ApplyKill: %герой убит%а.
 AppTitle: Приключения в забытых Королевствах
 Armor: Броня
@@ -8,6 +8,7 @@ AttackMiss: %герой промазал%а ([-%1i]>[%2i]).
 AttackHitButParrySuccess: %герой попал%а ([%1i]<[%2i]), но %-5 частично парировал навыком %-6 ([%3i]<[%4i]).
 AttackHitButParryFail: %герой попал%а ([%1i]<[%2i]) и %-4 не смог парировать ([-%3i]>[%5i],[%6i],[%7i]).
 AttackHitButParryCritical: %герой попал%а ([%1i]<[%2i]), но %-5 полностью парировал навыком %-6 ([%3i]<[%4i]).
+BlockSuccess: Блок
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
@@ -16,6 +17,7 @@ ChooseImageSet: Выбирайте набор изображений
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 ChooseSpell: Выбирайте заклинание
 Continue: Продолжить
+DodgeSuccess: Уклонение
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Experience: Опыт
@@ -34,6 +36,7 @@ NoCreaturesNearby: Вокруг никого нет.
 NotEnoughtMana: Не хватает маны.
 NothingToSay: Нечего сказать.
 Parry: Парирование
+ParrySuccess: Парировано
 PickItem: Поднять предмет
 PickupItem: %герой поднял%а %-1.
 Pieces: шт
