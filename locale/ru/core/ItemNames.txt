@@ -28,6 +28,7 @@ SilverAmulet: Серебрянный амулет
 SilverRing: Серебрянное кольцо
 
 BattleAxe: Боевой топор
+Dagger: Кинжал
 Halberd: Алебарда
 Spear: Копье
 Sword: Меч

@@ -163,10 +163,26 @@ static direction_s movedirection(point m) {
 		return East;
 }
 
-static void drop_treasure(const creature* player) {
-	monsteri* p = player->getkind();
+static void drop_wears(creature* player, int chance) {
+	point pt = player->getposition();
+	for(auto& e : player->wears) {
+		if(!e || e.is(Natural))
+			continue;
+		if(d100() >= chance)
+			continue;
+		e.drop(pt);
+	}
+}
+
+static void drop_treasure(creature* pe) {
+	if(pe->is(Summoned))
+		return;
+	drop_wears(pe, 15);
+	monsteri* p = pe->getkind();
 	if(!p)
 		return;
+	pushvalue push_player(player, pe);
+	pushvalue push_rect(last_rect, pe->getposition().rectangle());
 	runscript(p->treasure);
 }
 
