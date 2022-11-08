@@ -3,7 +3,6 @@
 
 BSDATA(tilefi) = {
 	{"Impassable"},
-	{"ImpassableNonActive"},
 	{"CanSwim"},
 	{"AllowActivate"},
 	{"DangerousFeature"},

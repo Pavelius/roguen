@@ -9,9 +9,7 @@ enum direction_s : unsigned char;
 enum tile_s : unsigned char { NoTile };
 enum class featuren : unsigned char { No };
 enum areaf : unsigned char { Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed };
-enum tilef : unsigned char {
-	Impassable, ImpassableNonActive, CanSwim, AllowActivate, DangerousFeature, BetweenWalls, Woods,
-};
+enum tilef : unsigned char { Impassable, CanSwim, AllowActivate, DangerousFeature, BetweenWalls, Woods };
 struct framerange {
 	unsigned char	start;
 	unsigned char	count;

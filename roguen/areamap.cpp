@@ -160,8 +160,6 @@ bool areamap::isfree(point m) const {
 	if(!pe->ishidden()) {
 		if(pe->is(Impassable))
 			return false;
-		if(pe->is(ImpassableNonActive) && !is(m, Activated))
-			return false;
 	}
 	return true;
 }

@@ -423,17 +423,15 @@ static void paint_floor() {
 					if(ei.features)
 						image(pf, ei.features.get(r), 0);
 				}
-				auto f = area.features[i];
-				if(f != featuren::No) {
-					auto& ei = bsdata<featurei>::elements[int(f)];
-					if(ei.is(BetweenWalls)) {
-						auto a = area.is(i, Activated) ? 1 : 0;
+				auto pf = bsdata<featurei>::elements + (int)area.features[i];
+				if(!pf->ishidden()) {
+					if(pf->is(BetweenWalls)) {
 						if(area.iswall(i, East) && area.iswall(i, West))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + a, ei.priority);
+							add_object(pt, bsdata<resource>::elements + (int)res::Features, pf->features.start, pf->priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, ei.features.start + 2 + a, ei.priority);
+							add_object(pt, bsdata<resource>::elements + (int)res::Features, pf->features.start + 1, pf->priority);
 					} else
-						add_object(pt, &ei, r, ei.priority);
+						add_object(pt, pf, r, pf->priority);
 				}
 				if(show_floor_rect)
 					floorrect();

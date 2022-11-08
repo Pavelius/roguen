@@ -496,15 +496,12 @@ static void drop_item(point m, const char* id) {
 void creature::interaction(point m) {
 	if(!area.isvalid(m))
 		return;
-	auto f = area.features[m];
-	if(int(f)) {
-		auto& ei = bsdata<featurei>::elements[int(f)];
-		if(ei.is(AllowActivate)) {
-			if(!area.is(m, Activated))
-				area.set(m, Activated);
-			else
-				area.remove(m, Activated);
-		} else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
+	auto pf = bsdata<featurei>::elements + (int)area.features[m];
+	if(!pf->ishidden()) {
+		auto pa = pf->getactivate();
+		if(pa)
+			area.setactivate(m);
+		else if(pf->is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = wears[MeleeWeapon].geti();
 			auto chance = get(Strenght) / 10 + wei.weapon.damage;
 			if(chance < 1)
@@ -512,7 +509,7 @@ void creature::interaction(point m) {
 			if(wei.is(TwoHanded))
 				chance *= 2;
 			if(d100() < chance) {
-				act(getnm("YouCutWood"), getnm(ei.id));
+				act(getnm("YouCutWood"), getnm(pf->id));
 				area.set(m, featuren::No);
 				drop_item(m, "WoodenLagsTable");
 			}

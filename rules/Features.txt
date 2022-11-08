@@ -29,8 +29,8 @@ AltarEvil priority(6) features(58 1)
 Pit priority(6) features(76 1)
  flags Impassable
 Door priority(7) features(39 1)
- flags BetweenWalls ImpassableNonActive AllowActivate
-OpenedDoor priority(7) features(40 1)
+ flags BetweenWalls Impassable AllowActivate
+OpenedDoor priority(7) features(41 1)
  flags BetweenWalls
 StairsUp priority(4) features(52 1)
 StairsDown priority(4) features(53 1)
