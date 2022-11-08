@@ -29,17 +29,19 @@ AltarEvil priority(6) features(58 1)
 Pit priority(6) features(76 1)
  flags Impassable
 Door priority(7) features(39 1)
- flags BetweenWalls Impassable AllowActivate
+ flags BetweenWalls Impassable
 OpenedDoor priority(7) features(41 1)
  flags BetweenWalls
-StairsUp priority(4) features(52 1)
-StairsDown priority(4) features(53 1)
+StairsUp priority(4) features(52 1) lead(1)
+StairsDown priority(4) features(53 1) lead(-1)
+Pool priority(3) features(77 10)
 
-GatePortal priority(4) features(54 2)
- flags AllowActivate
+GatePortal priority(4) features(54 1)
+OpenedGatePortal priority(4) features(55 1)
 
-StairsUp leadto(StairsDown) lead(1)
-StairsDown leadto(StairsUp) lead(-1)
-
+StairsUp leadto(StairsDown)
+StairsDown leadto(StairsUp)
 Door activateto(OpenedDoor)
 OpenedDoor activateto(Door)
+GatePortal activateto(OpenedGatePortal)
+OpenedGatePortal activateto(GatePortal)
