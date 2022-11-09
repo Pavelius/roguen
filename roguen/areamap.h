@@ -8,7 +8,7 @@
 enum direction_s : unsigned char;
 enum tile_s : unsigned char { NoTile };
 enum class featuren : unsigned char { No };
-enum areaf : unsigned char { Explored, Visible, Activated, Hidden, Darkened, Blooded, Iced, Webbed };
+enum areaf : unsigned char { Explored, Visible, Hidden, Darkened, Blooded, Iced, Webbed };
 enum tilef : unsigned char { Impassable, CanSwim, DangerousFeature, BetweenWalls, Woods };
 struct framerange {
 	unsigned char	start;
@@ -44,7 +44,7 @@ struct featurei {
 	char			lead;
 	operator featuren() const { return (featuren)(this - bsdata<featurei>::elements); }
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
-	bool			ishidden() const { return features.count==0; }
+	bool			isvisible() const { return features.count != 0; }
 	featurei*		getactivate() const { return activateto; }
 	featurei*		gethidden() const;
 	featurei*		getlead() const { return leadto; }
@@ -69,7 +69,7 @@ struct areamap : anymap<tile_s, 64> {
 	static point	get(int x, int y) { return {(short)x, (short)y}; }
 	static point	get(const rect& rc);
 	static rect		get(const rect& rc, point offset, point minimum, point maximum);
-	featuren		getfeature(point m) const;
+	const featurei&	getfeature(point m) const;
 	unsigned char	getfow(point m) const;
 	static point	getfree(point m, short maximum, fntest test);
 	int				getindex(point m, tile_s e) const;
@@ -95,6 +95,7 @@ struct areamap : anymap<tile_s, 64> {
 	void			set(point m, areaf v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			set(point m, tile_s v);
 	void			set(point m, featuren v);
+	void			set(point m, const featurei& v);
 	void			set(rect rc, tile_s v);
 	void			set(rect rc, featuren v);
 	void			set(rect rc, areaf v);

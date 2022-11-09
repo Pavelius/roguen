@@ -28,7 +28,7 @@ static int d100() {
 
 featurei* featurei::gethidden() const {
 	for(auto& e : bsdata<featurei>()) {
-		if(e.activateto == this)
+		if(!e.isvisible() && e.activateto == this)
 			return &e;
 	}
 	return 0;
@@ -51,6 +51,12 @@ void areamap::set(point m, featuren v) {
 	if(!isvalid(m))
 		return;
 	features[m] = v;
+}
+
+void areamap::set(point m, const featurei& v) {
+	if(!isvalid(m))
+		return;
+	features[m] = (featuren)bsid(&v);
 }
 
 void areamap::set(rect rc, tile_s v) {
@@ -157,7 +163,7 @@ bool areamap::isfree(point m) const {
 	if(iswall(m))
 		return false;
 	auto pe = bsdata<featurei>::elements + (int)features[m];
-	if(!pe->ishidden()) {
+	if(pe->isvisible()) {
 		if(pe->is(Impassable))
 			return false;
 	}
@@ -430,10 +436,10 @@ void areamap::setlos(point m, int r, fntest test) {
 	}
 }
 
-featuren areamap::getfeature(point m) const {
+const featurei& areamap::getfeature(point m) const {
 	if(!isvalid(m))
-		return featuren::No;
-	return features[m];
+		return bsdata<featurei>::elements[0];
+	return bsdata<featurei>::elements[(int)features[m]];
 }
 
 void areamap::set(featuren v, int bonus) {
@@ -574,16 +580,17 @@ rect areamap::get(const rect& rca, point offset, point minimum, point maximum) {
 }
 
 void areamap::setreveal(point m, tile_s floor) {
-	auto pe = bsdata<featurei>::elements + (int)features[m];
-	if(!pe->ishidden() || !pe->getactivate())
+	auto& ei = getfeature(m);
+	auto pa = ei.getactivate();
+	if(ei.isvisible() || !pa)
 		return;
-	set(m, *pe->getactivate());
+	set(m, *pa);
 	set(m, floor);
 }
 
 void areamap::setactivate(point m) {
-	auto pe = bsdata<featurei>::elements + (int)features[m];
-	auto pa = pe->getactivate();
+	auto& ei = getfeature(m);
+	auto pa = ei.getactivate();
 	if(!pa)
 		return;
 	set(m, *pa);

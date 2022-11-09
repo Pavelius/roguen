@@ -34,7 +34,7 @@ AdventureKeys
  elements MoveDownRight "PageDown"
  elements MoveRight "Right"
  elements MoveLeft "Left"
- elements OpenNearestDoor "O"
+ elements OpenNearestDoor "U"
  elements ChatSomeone "C"
  elements PickUp "P"
  elements PickUpAll "Ctrl+P"

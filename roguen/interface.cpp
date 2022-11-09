@@ -423,15 +423,15 @@ static void paint_floor() {
 					if(ei.features)
 						image(pf, ei.features.get(r), 0);
 				}
-				auto pf = bsdata<featurei>::elements + (int)area.features[i];
-				if(!pf->ishidden()) {
-					if(pf->is(BetweenWalls)) {
+				auto& ef = area.getfeature(i);
+				if(ef.isvisible()) {
+					if(ef.is(BetweenWalls)) {
 						if(area.iswall(i, East) && area.iswall(i, West))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, pf->features.start, pf->priority);
+							add_object(pt, bsdata<resource>::elements + (int)res::Features, ef.features.start, ef.priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, pf->features.start + 1, pf->priority);
+							add_object(pt, bsdata<resource>::elements + (int)res::Features, ef.features.start + 1, ef.priority);
 					} else
-						add_object(pt, pf, r, pf->priority);
+						add_object(pt, const_cast<featurei*>(&ef), r, ef.priority);
 				}
 				if(show_floor_rect)
 					floorrect();
@@ -664,7 +664,7 @@ void creature::paint() const {
 }
 
 void featurei::paint(int r) const {
-	if(ishidden())
+	if(!isvisible())
 		return;
 	auto pi = gres(res::Features);
 	image(pi, features.get(r), 0);
@@ -1147,7 +1147,7 @@ static void paint_area(point origin, int z) {
 			fore = p->minimap;
 			rectf();
 			auto pf = bsdata<featurei>::elements + (int)area.features[i];
-			if(!pf->ishidden()) {
+			if(pf->isvisible()) {
 				color v = pf->minimap; v.a = 0;
 				fillfade(v, pf->minimap.a);
 			}

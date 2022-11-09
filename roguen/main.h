@@ -347,7 +347,7 @@ struct sitei : nameable {
 	variants		landscape, loot;
 	tile_s			walls, floors;
 	featable		feats;
-	featuren		doors;
+	unsigned char	doors;
 	const shapei*	shape;
 	const sitegeni*	local;
 	void			building() const;

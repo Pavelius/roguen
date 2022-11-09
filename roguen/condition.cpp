@@ -59,7 +59,7 @@ bool creature::is(condition_s v) const {
 			return is(Enemy);
 		return false;
 	case NoAnyFeature:
-		return area.getfeature(getposition()) == featuren::No;
+		return area.features[getposition()] == featuren::No;
 	default:
 		return true;
 	}

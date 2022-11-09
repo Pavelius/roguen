@@ -35,12 +35,12 @@ tile_s getwall() {
 	return NoTile;
 }
 
-featuren getdoor() {
-	if(last_site && last_site->doors != featuren::No)
-		return last_site->doors;
-	if(last_location && last_location->doors != featuren::No)
-		return last_location->doors;
-	return (featuren)0;
+static const featurei& getdoor() {
+	if(last_site && last_site->doors)
+		return bsdata<featurei>::elements[last_site->doors];
+	if(last_location && last_location->doors)
+		return bsdata<featurei>::elements[last_location->doors];
+	return bsdata<featurei>::elements[0];
 }
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
@@ -53,18 +53,10 @@ static bool isonewall(point i, direction_s d1, direction_s d2) {
 		|| area.iswall(i, d2);
 }
 
-static bool isoneof(point i, direction_s d1, direction_s d2, featuren v) {
-	auto f1 = area.getfeature(to(i, d1));
-	auto f2 = area.getfeature(to(i, d2));
-	return f1 == v || f2 == v;
-}
-
 static bool isoneofdoor(point i, direction_s d1, direction_s d2) {
-	auto f1 = area.getfeature(to(i, d1));
-	if(bsdata<featurei>::elements[int(f1)].is(BetweenWalls))
+	if(area.getfeature(to(i, d1)).is(BetweenWalls))
 		return true;
-	auto f2 = area.getfeature(to(i, d2));
-	if(bsdata<featurei>::elements[int(f2)].is(BetweenWalls))
+	if(area.getfeature(to(i, d2)).is(BetweenWalls))
 		return true;
 	return false;
 }
@@ -298,8 +290,18 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 }
 
 static void create_door(point m, tile_s floor, tile_s wall, bool hidden) {
-	area.set(m, floor);
-	area.set(m, getdoor());
+	auto& door = getdoor();
+	if(!door.isvisible())
+		return;
+	if(hidden) {
+		area.set(m, wall);
+		auto ph = door.gethidden();
+		if(ph)
+			area.set(m, *ph);
+	} else {
+		area.set(m, floor);
+		area.set(m, door);
+	}
 }
 
 static void create_connector(point index, direction_s dir, tile_s wall, tile_s floor, int& count, bool linkable) {
@@ -361,9 +363,9 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
-	const int chance_hidden_door = 20;
+	const int chance_hidden_door = 10;
 	points.clear();
-	auto hidden_room = d100() < chance_hidden_door / 2;
+	auto hidden_room = d100() < chance_hidden_door;
 	add_possible_doors(rc, true);
 	zshuffle(points.data, points.count);
 	auto door_count = xrand(2, 5);

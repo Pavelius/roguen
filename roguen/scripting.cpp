@@ -267,12 +267,12 @@ static void debug_message(int bonus) {
 
 static void open_nearest_door(int bonus) {
 	indexa source;
-	source.select(player->getposition(), 2);
+	source.select(player->getposition(), 1);
 	for(auto i : source) {
-		if(!area.is(i, Activated))
-			area.set(i, Activated);
-		else
-			area.remove(i, Activated);
+		auto& ei = area.getfeature(i);
+		auto fa = ei.getactivate();
+		if(fa)
+			area.set(i, *fa);
 	}
 }
 

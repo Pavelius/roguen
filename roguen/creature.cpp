@@ -212,12 +212,12 @@ static void random_walk(creature* p) {
 }
 
 static bool check_stairs_movement(creature* p, point m) {
-	auto f = area.getfeature(m);
-	auto& ei = bsdata<featurei>::elements[int(f)];
-	if(int(ei.leadto)) {
+	auto& ei = area.getfeature(m);
+	auto pf = ei.getlead();
+	if(pf) {
 		if(p->ishuman()) {
 			if(p->confirm(getnm(str("Move%1", ei.id)))) {
-				game.enter(game.position, game.level + ei.lead, *ei.leadto, Center);
+				game.enter(game.position, game.level + ei.lead, *pf, Center);
 				return false;
 			}
 		}
@@ -226,18 +226,17 @@ static bool check_stairs_movement(creature* p, point m) {
 }
 
 static bool check_dangerous_feature(creature* p, point m) {
-	auto fo = area.getfeature(m);
-	auto& foi = bsdata<featurei>::elements[int(fo)];
-	if(foi.is(DangerousFeature)) {
+	auto& ei = area.getfeature(m);
+	if(ei.is(DangerousFeature)) {
 		p->wait(2);
 		if(!p->roll(Strenght)) {
-			p->act(getnme(str("%1Entagled", foi.id)));
+			p->act(getnme(str("%1Entagled", ei.id)));
 			p->damage(1);
 			p->wait();
 			p->fixaction();
 			return false;
 		}
-		p->act(getnme(str("%1Break", foi.id)));
+		p->act(getnme(str("%1Break", ei.id)));
 		area.set(m, featuren::No);
 	}
 	return true;
@@ -494,14 +493,12 @@ static void drop_item(point m, const char* id) {
 }
 
 void creature::interaction(point m) {
-	if(!area.isvalid(m))
-		return;
-	auto pf = bsdata<featurei>::elements + (int)area.features[m];
-	if(!pf->ishidden()) {
-		auto pa = pf->getactivate();
+	auto& ei = area.getfeature(m);
+	if(ei.isvisible()) {
+		auto pa = ei.getactivate();
 		if(pa)
 			area.setactivate(m);
-		else if(pf->is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
+		else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = wears[MeleeWeapon].geti();
 			auto chance = get(Strenght) / 10 + wei.weapon.damage;
 			if(chance < 1)
@@ -509,7 +506,7 @@ void creature::interaction(point m) {
 			if(wei.is(TwoHanded))
 				chance *= 2;
 			if(d100() < chance) {
-				act(getnm("YouCutWood"), getnm(pf->id));
+				act(getnm("YouCutWood"), getnm(ei.id));
 				area.set(m, featuren::No);
 				drop_item(m, "WoodenLagsTable");
 			}
@@ -1232,7 +1229,10 @@ bool creature::isallow(variant v) const {
 			return present;
 		return !present;
 	} else if(v.iskind<featurei>()) {
-		auto present = area.getfeature(getposition());
+		auto m = getposition();
+		if(!area.isvalid(m))
+			return false;
+		auto present = area.features[m];
 		if(v.counter < 0)
 			return int(present) == v.value;
 		return int(present) != v.value;
