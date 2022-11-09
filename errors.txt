@@ -1,3 +1,2 @@
-﻿In file `rules/Features.txt`:
- Line 5: Unknown type in requisit ``
- Line 7: Unknown type in requisit ``
+﻿In file `rules/Sites.txt`:
+ Line 71: Not found requisit `door_count`

@@ -363,12 +363,22 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
-	const int chance_hidden_door = 10;
+	auto room = roomi::find(game, center(rc));
+	auto door_count = xrand(2, 5);
+	auto chance_hidden_doors = 10;
+	if(room) {
+		auto site = room->getsite();
+		if(site) {
+			if(site->chance_hidden_doors)
+				chance_hidden_doors = site->chance_hidden_doors;
+			if(site->doors_count)
+				door_count = site->doors_count;
+		}
+	}
 	points.clear();
-	auto hidden_room = d100() < chance_hidden_door;
+	auto hidden_room = d100() < chance_hidden_doors;
 	add_possible_doors(rc, true);
 	zshuffle(points.data, points.count);
-	auto door_count = xrand(2, 5);
 	for(auto m : points) {
 		if(!isvaliddoor(m))
 			continue;

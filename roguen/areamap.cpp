@@ -584,8 +584,8 @@ void areamap::setreveal(point m, tile_s floor) {
 	auto pa = ei.getactivate();
 	if(ei.isvisible() || !pa)
 		return;
-	set(m, *pa);
 	set(m, floor);
+	set(m, *pa);
 }
 
 void areamap::setactivate(point m) {

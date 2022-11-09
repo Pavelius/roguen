@@ -68,7 +68,7 @@ ArtifactStatueRoom
 AncientLabRoom
  landscape QuestLandscape UndeadHorde-30
  feats Notable
-BossRoom
+BossRoom doors_count(1)
  landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
  feats Notable
 CaveMonsterLair
@@ -151,7 +151,7 @@ DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) d
 
 DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
  sites StairsUpRoom StairsDownRoom DeepLake-10 MinionsRoom MinionsRoom-60 FalseRoom\
-  CaveMonsterLair-50 SpiderNest-50 PitRoom-50 StrangeFloraRoom\
+  CaveMonsterLair-50 SpiderNest PitRoom-50 StrangeFloraRoom\
   EmpthyRoom+16
 DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) chance_finale(40) offset(10)
  sites StairsUpRoom BossRoom MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16

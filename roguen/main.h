@@ -348,6 +348,7 @@ struct sitei : nameable {
 	tile_s			walls, floors;
 	featable		feats;
 	unsigned char	doors;
+	char			chance_hidden_doors, doors_count;
 	const shapei*	shape;
 	const sitegeni*	local;
 	void			building() const;

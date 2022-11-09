@@ -1,5 +1,6 @@
 #include "boost.h"
 #include "charname.h"
+#include "indexa.h"
 #include "main.h"
 
 namespace {
@@ -282,6 +283,26 @@ static bool check_place_owner(creature* p, point m) {
 		}
 	}
 	return true;
+}
+
+static void check_hidden_doors(creature* p) {
+	if(!last_location)
+		return;
+	auto floor = last_location->floors;
+	indexa source;
+	source.select(p->getposition(), 1);
+	auto found_doors = 0;
+	for(auto m : source) {
+		auto& ei = area.getfeature(m);
+		if(ei.isvisible())
+			continue;
+		if(!p->roll(Wits, -2000))
+			continue;
+		found_doors++;
+		area.setreveal(m, floor);
+	}
+	if(found_doors)
+		p->actp(getnm("YouFoundSecretDoor"), found_doors);
 }
 
 static void update_boost(featable& feats, variant parent) {
@@ -869,6 +890,10 @@ void creature::advance(variant v) {
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	auto result = d100();
+	if(bonus == -2000) {
+		value = value / 2;
+		bonus = 0;
+	}
 	last_value = (value - result) / 10;
 	if(result <= 5)
 		return true;
@@ -940,6 +965,8 @@ void creature::makemove() {
 	set(EnemyAttacks, 0);
 	update();
 	check_blooding(this);
+	if(!is(Local))
+		check_hidden_doors(this);
 	ready_actions();
 	if(ishuman())
 		adventure_mode();
