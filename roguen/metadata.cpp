@@ -104,7 +104,7 @@ BSMETA(locationi) = {
 	BSREQ(global), BSREQ(global_finish),
 	BSREQ(local),
 	BSREQ(landscape), BSREQ(sites), BSREQ(loot),
-	BSREQ(darkness), BSREQ(offset),
+	BSREQ(darkness), BSREQ(offset), BSREQ(chance_hidden_doors),
 	BSFLG(feats, feati),
 	BSREQ(chance_finale),
 	BSENM(walls, tilei),
@@ -170,15 +170,6 @@ BSMETA(tilei) = {
 	BSENM(tile, tilei),
 	BSFLG(flags, tilefi),
 	{}};
-BSMETA(triggeri) = {
-	BSREQ(id),
-	{}};
-BSMETA(trigger) = {
-	BSENM(type, triggeri),
-	BSREQ(p1),
-	BSREQ(p2),
-	BSREQ(effect),
-	{}};
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
@@ -215,6 +206,7 @@ BSDATA(varianti) = {
 	{"Tile", VAR(tilei), 1},
 	{"TileFlags", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},
+	{"Variant", VAR(varianti), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1},
 };

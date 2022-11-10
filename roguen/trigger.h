@@ -3,14 +3,16 @@
 
 #pragma once
 
-enum trigger_s : unsigned char;
+enum triggern : unsigned char;
 
-struct triggeri : nameable {
+struct triggerni : nameable {
 };
 struct trigger {
-	trigger_s		type;
+	triggern		type;
 	variant			p1, p2;
 	variants		effect;
-	static void		fire(trigger_s t, variant p1 = {}, variant p2 = {});
+	bool			match(variant v1, variant v2) const { return (!p1 || p1 == v1) && (!p2 || p2 == v2); }
+	static void		fire(triggern t, variant p1 = {}, variant p2 = {});
 };
+extern variant		param1, param2;
 extern trigger*		last_trigger;

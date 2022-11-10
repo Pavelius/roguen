@@ -179,7 +179,7 @@ Hills minimap(152 191 100) floors(Grass) walls(WallCave) doors(Door) global(Gene
 AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) doors(Door) global(GenerateOutdoor)
  landscape FootMud+30 DeadTree+20
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
-StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global(GenerateVillage) offset(4)
+StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global(GenerateVillage) offset(4) chance_hidden_doors(-1)
  landscape Tree+50 FootMud+20 FootHill+90
  sites TestArea GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
 

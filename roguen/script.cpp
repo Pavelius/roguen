@@ -5,6 +5,7 @@
 bool			stop_script;
 const script*	last_script;
 fnvariant		last_scipt_proc;
+variant			param1, param2;
 
 BSMETA(script) = {
 	BSREQ(id),

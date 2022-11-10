@@ -75,6 +75,16 @@ void collectiona::match(fnvisible proc, bool keep) {
 	count = ps - data;
 }
 
+void collectiona::match(fnallow proc, int param, bool keep) {
+	auto ps = data;
+	for(auto p : *this) {
+		if(proc(p, param) != keep)
+			continue;
+		*ps++ = p;
+	}
+	count = ps - data;
+}
+
 void* collectiona::random() const {
 	if(!count)
 		return 0;

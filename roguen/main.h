@@ -71,8 +71,9 @@ enum feat_s : unsigned char {
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Blooding,
 };
-enum trigger_s : unsigned char {
+enum triggern : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
+	EverySeveralDaysForP1,
 };
 extern stringbuilder console;
 extern point m2s(point v);

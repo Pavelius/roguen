@@ -3,14 +3,25 @@
 #include "trigger.h"
 #include "script.h"
 
+BSMETA(triggerni) = {
+	BSREQ(id),
+	{}};
+BSMETA(trigger) = {
+	BSENM(type, triggerni),
+	BSREQ(p1),
+	BSREQ(p2),
+	BSREQ(effect),
+	{}};
 trigger* last_trigger;
 
-void trigger::fire(trigger_s type, variant p1, variant p2) {
+void trigger::fire(triggern type, variant p1, variant p2) {
 	for(auto& e : bsdata<trigger>()) {
 		if(e.type == type
 			&& (!e.p1 || e.p1 == p1)
 			&& (!e.p2 || e.p2 == p2)) {
 			pushvalue last_push(last_trigger, &e);
+			pushvalue push_param1(param1, p1);
+			pushvalue push_param2(param2, p2);
 			runscript(e.effect);
 		}
 	}

@@ -8,6 +8,7 @@ struct collectiona : adat<void*, 256> {
 	void	distinct();
 	void	group(fngroup proc);
 	void	match(fnvisible proc, bool keep);
+	void	match(fnallow proc, int param, bool keep);
 	void*	random() const;
 	void	select(array& source);
 	void	select(array& source, fnvisible proc);

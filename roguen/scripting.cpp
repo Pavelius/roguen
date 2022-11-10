@@ -555,12 +555,13 @@ void initialize_script() {
 	last_scipt_proc = standart_script;
 }
 
-BSDATA(triggeri) = {
+BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
-	{"WhenCreatureP1InSiteP2UpdateAbilities"}
+	{"WhenCreatureP1InSiteP2UpdateAbilities"},
+	{"EverySeveralDaysForP1"}
 };
-assert_enum(triggeri, WhenCreatureP1InSiteP2UpdateAbilities)
+assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AttackForward", attack_forward},

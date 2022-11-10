@@ -13,6 +13,7 @@ struct script {
 extern bool			stop_script;
 extern const script* last_script;
 extern fnvariant	last_scipt_proc;
+extern variant		param1, param2;
 
 void				runscript(variant v);
 void				runscript(const variants& elements);

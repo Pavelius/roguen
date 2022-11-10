@@ -1,7 +1,10 @@
 #include "boost.h"
 #include "main.h"
 
-typedef void (creature::*fnupdate)();
+template<typename T>
+struct func {
+	typedef void (T::*command)();
+};
 
 areamap			area;
 areaheadi		areahead;
@@ -10,14 +13,21 @@ static char		console_text[4096];
 stringbuilder	console(console_text);
 point			gamei::start_village = {128, 128};
 
-static void all(fnupdate proc) {
+static int getbase(const char* id) {
+	auto p = varianti::getsource(id);
+	if(!p)
+		return -1;
+	return p - bsdata<varianti>::elements;
+}
+
+static void all(func<creature>::command proc) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid())
 			(e.*proc)();
 	}
 }
 
-static void allnext(fnupdate proc) {
+static void allnext(func<creature>::command proc) {
 	if(draw::isnext())
 		return;
 	for(auto& e : bsdata<creature>()) {
@@ -25,6 +35,70 @@ static void allnext(fnupdate proc) {
 			(e.*proc)();
 		if(draw::isnext())
 			break;
+	}
+}
+
+static bool istriggertype(const void* object, int param) {
+	auto p = (trigger*)object;
+	return p->type == param;
+}
+
+static bool iscreature(const void* object) {
+	auto p = (trigger*)object;
+	if(p->p1.iskind<variant>()) {
+		auto pv = bsdata<varianti>::elements + p->p1.value;
+		return pv == varianti::getsource("Creature");
+	}
+	return p->p1.iskind<creature>();
+}
+
+static bool isfeature(const void* object) {
+	auto p = (trigger*)object;
+	if(p->p1.iskind<varianti>()) {
+		auto pv = bsdata<varianti>::elements + p->p1.value;
+		return pv == varianti::getsource("Feature");
+	}
+	return p->p1.iskind<featurei>();
+}
+
+static collection<trigger>& get_triggers(triggern type, fnvisible proc) {
+	static collection<trigger> source;
+	source.select();
+	source.match(istriggertype, type, true);
+	source.match(proc, true);
+	return source;
+}
+
+static void all_creatures(triggern type) {
+	auto& source = get_triggers(type, iscreature);
+	for(auto& e : bsdata<creature>()) {
+		if(!e.isvalid())
+			continue;
+		auto v1 = &e;
+		for(auto p : source) {
+			if(!p->match(v1, {}))
+				continue;
+			e.apply(p->effect);
+		}
+	}
+}
+
+static void all_features(triggern type) {
+	point m;
+	pushvalue push_point(last_rect);
+	auto& source = get_triggers(type, isfeature);
+	for(m.y = 0; m.y < area.mps; m.y++) {
+		for(m.x = 0; m.x < area.mps; m.x++) {
+			if(area.features[m] == featuren::No)
+				continue;
+			auto v1 = bsdata<featurei>::elements + (int)area.features[m];
+			for(auto p : source) {
+				if(!p->match(v1, {}))
+					continue;
+				last_rect = m.rectangle();
+				runscript(p->effect);
+			}
+		}
 	}
 }
 
@@ -92,6 +166,11 @@ void gamei::passminute() {
 	while(restore_day < minutes) {
 		growth_plant();
 		restore_day += 60 * 24;
+	}
+	while(restore_several_days < minutes) {
+		all_creatures(EverySeveralDaysForP1);
+		all_features(EverySeveralDaysForP1);
+		restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
 	}
 }
 

@@ -35,6 +35,14 @@ tile_s getwall() {
 	return NoTile;
 }
 
+static int get_chance_hidden_doors() {
+	if(last_site && last_site->chance_hidden_doors)
+		return last_site->chance_hidden_doors;
+	if(last_location && last_location->chance_hidden_doors)
+		return last_location->chance_hidden_doors;
+	return 10;
+}
+
 static const featurei& getdoor() {
 	if(last_site && last_site->doors)
 		return bsdata<featurei>::elements[last_site->doors];
@@ -139,7 +147,7 @@ void sitei::fillwalls() const {
 
 void sitei::building() const {
 	static direction_s rdir[] = {North, South, West, East};
-	const auto door = getdoor();
+	const auto& door = getdoor();
 	// Walls and floors
 	fillfloor();
 	fillwalls();
@@ -366,6 +374,10 @@ static void create_doors(const rect& rc, tile_s floor, tile_s wall) {
 	auto room = roomi::find(game, center(rc));
 	auto door_count = xrand(2, 5);
 	auto chance_hidden_doors = 10;
+	if(last_location->doors_count)
+		door_count = last_location->doors_count;
+	if(last_location->chance_hidden_doors)
+		chance_hidden_doors = last_location->chance_hidden_doors;
 	if(room) {
 		auto site = room->getsite();
 		if(site) {

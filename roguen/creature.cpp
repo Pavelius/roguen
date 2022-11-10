@@ -296,7 +296,7 @@ static void check_hidden_doors(creature* p) {
 		auto& ei = area.getfeature(m);
 		if(ei.isvisible())
 			continue;
-		if(!p->roll(Wits, -2000))
+		if(!p->roll(Wits, -3000))
 			continue;
 		found_doors++;
 		area.setreveal(m, floor);
@@ -892,6 +892,9 @@ bool creature::roll(ability_s v, int bonus) const {
 	auto result = d100();
 	if(bonus == -2000) {
 		value = value / 2;
+		bonus = 0;
+	} else if(bonus == -3000) {
+		value = value / 3;
 		bonus = 0;
 	}
 	last_value = (value - result) / 10;

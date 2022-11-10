@@ -28,10 +28,12 @@ SilverAmulet: Серебрянный амулет
 SilverRing: Серебрянное кольцо
 
 BattleAxe: Боевой топор
+BruteSword: Брутальный меч
 Claws: Когти
 Dagger: Кинжал
 Halberd: Алебарда
 Spear: Копье
+StrangeSword: Меч
 Sword: Меч
 
 LeatherArmor: Кожанная броня
@@ -55,7 +57,6 @@ StrangeBlueSphere: Синяя сфера
 StrangeGreenSphere: Зеленая сфера
 StrangeRedSphere: Красная сфера
 StrangeRod: Прутик
-StrangeSword: Меч
 
 Bones: Кости
 MonsterSkull: Череп монстра
