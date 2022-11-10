@@ -1,7 +1,5 @@
 #pragma once
 
-//typedef decltype(sizeof(0)) size_t;
-
 #ifdef _DEBUG
 #define assert(e) if(!(e)) {exit(255);}
 #else

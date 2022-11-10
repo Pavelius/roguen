@@ -194,6 +194,7 @@
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
+    <ClCompile Include="quest.cpp" />
     <ClCompile Include="tilef.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="pointl.h" />
     <ClInclude Include="price.h" />
     <ClInclude Include="pushvalue.h" />
+    <ClInclude Include="quest.h" />
     <ClInclude Include="randomizer.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resource.h" />
@@ -326,6 +328,9 @@
     <Text Include="..\rules\Sites.txt" />
     <Text Include="..\rules\Spells.txt" />
     <Text Include="..\rules\Tiles.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

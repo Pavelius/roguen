@@ -374,14 +374,6 @@ struct dungeon {
 	void			clear() { memset(this, 0, sizeof(*this)); }
 	static dungeon*	find(point position);
 };
-struct missioni {
-	point			position;
-	variant			rescue, problem, reward, twist, level, final_level, modifier, entrance;
-	char			rumor;
-	constexpr operator bool() const { return problem.operator bool(); }
-	static missioni* add(point position);
-	static missioni* add(point position, variant modifier, variant type, variant reward);
-};
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char	ideftified : 1;
 	unsigned char	explored : 1;

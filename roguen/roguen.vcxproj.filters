@@ -312,6 +312,9 @@
     <ClCompile Include="actable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="quest.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -494,6 +497,9 @@
     <ClInclude Include="actable.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="quest.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -571,5 +577,10 @@
     <Text Include="..\rules\Features.txt">
       <Filter>Data</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint">
+      <Filter>Utils</Filter>
+    </None>
   </ItemGroup>
 </Project>
