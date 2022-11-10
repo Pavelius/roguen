@@ -55,6 +55,7 @@ int start_application(fnevent proc, fnevent initializing);
 int main(int argc, char *argv[]) {
 	auto seed = getcputime();
 	//auto seed = 99738890;
+	answers::console = &console;
 	actable::logv(str("Seed is %1i", seed), 0, 0, false);
 	srand(seed);
 	return start_application(main_start, initializating);

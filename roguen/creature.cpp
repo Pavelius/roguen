@@ -217,7 +217,7 @@ static bool check_stairs_movement(creature* p, point m) {
 	auto pf = ei.getlead();
 	if(pf) {
 		if(p->ishuman()) {
-			if(p->confirm(getnm(str("Move%1", ei.id)))) {
+			if(answers::confirm(getnm(str("Move%1", ei.id)))) {
 				game.enter(game.position, game.level + ei.lead, *pf, Center);
 				return false;
 			}
@@ -265,7 +265,7 @@ static bool check_leave_area(creature* p, point m) {
 		if(p->ishuman()) {
 			auto direction = movedirection(m);
 			auto np = to(game.position, direction);
-			if(p->confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
+			if(answers::confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
 				game.enter(np, 0, featuren::No, direction);
 		}
 		p->wait();
@@ -1130,12 +1130,12 @@ void creature::unlink() {
 
 void creature::act(const char* format, ...) const {
 	if(game.getowner() == this || area.is(getposition(), Visible))
-		actv(console, format, xva_start(format), getname(), is(Female));
+		actv(console, format, xva_start(format), getname(), is(Female), '\n');
 }
 
 void creature::actp(const char* format, ...) const {
 	if(ishuman())
-		actv(console, format, xva_start(format), getname(), is(Female));
+		actv(console, format, xva_start(format), getname(), is(Female), '\n');
 }
 
 void creature::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {

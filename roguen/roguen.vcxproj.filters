@@ -147,9 +147,6 @@
     <ClCompile Include="creature.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="actable.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="io_bsreq.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -310,6 +307,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="tilef.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="actable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -489,6 +489,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="diceprogress.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="actable.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

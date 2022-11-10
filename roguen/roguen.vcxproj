@@ -239,6 +239,7 @@
     <ClCompile Include="zip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="actable.h" />
     <ClInclude Include="advancement.h" />
     <ClInclude Include="answers.h" />
     <ClInclude Include="anymap.h" />

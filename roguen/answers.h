@@ -35,6 +35,7 @@ public:
 	void*				choose() const;
 	void				clear();
 	static int			compare(const void* v1, const void* v2);
+	static bool			confirm(const char* format, ...);
 	const element*		end() const { return elements.end(); }
 	int					getcount() const { return elements.getcount(); }
 	const char*			getname(void* v);

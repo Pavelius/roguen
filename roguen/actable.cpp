@@ -1,6 +1,7 @@
+#include "actable.h"
 #include "charname.h"
+#include "monster.h"
 #include "stringact.h"
-#include "main.h"
 
 static array gamelog(1);
 
@@ -52,29 +53,18 @@ void actable::actvf(stringbuilder& sb, const char* name, bool female, char separ
 void actable::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
 	if(!name)
 		name = getname();
-	if(format[0] == '>') {
-		actv(sb, format + 1, format_param, name, female);
-		return;
+	if(format[0] == '>')
+		actv(sb, format + 1, format_param, name, female, '\n');
+	else {
+		stringact sa(sb, getname(), female);
+		sa.addsep('\n');
+		auto pb = sa.get();
+		sa.add("[%1] \"", name);
+		sa.addv(format, format_param);
+		sa.add("\"");
+		sb = sa;
+		logv(pb, 0, 0, false);
 	}
-	stringact sa(sb, getname(), female);
-	sa.addsep('\n');
-	auto pb = sa.get();
-	sa.add("[%1] \"", name);
-	sa.addv(format, format_param);
-	sa.add("\"");
-	sb = sa;
-	logv(pb, 0, 0, false);
-}
-
-bool actable::confirm(const char* format, ...) {
-	console.clear();
-	console.addv(format, xva_start(format));
-	answers an;
-	an.add((void*)1, getnm("Yes"));
-	an.add((void*)0, getnm("No"));
-	auto result = an.choose();
-	console.clear();
-	return result != 0;
 }
 
 bool actable::iskind(variant v) const {
@@ -89,7 +79,7 @@ bool actable::iskind(variant v) const {
 }
 
 bool actable::ischaracter() const {
-	return kind.iskind<racei>();
+	return !kind.iskind<monsteri>();
 }
 
 const char* actable::getname() const {

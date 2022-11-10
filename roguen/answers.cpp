@@ -143,3 +143,16 @@ void answers::message(const char* format) {
 	an.choose(0, getnm("Continue"), 1);
 	answers::prompt = push_prompt;
 }
+
+bool answers::confirm(const char* format, ...) {
+	if(!console)
+		return false;
+	console->clear();
+	console->addv(format, xva_start(format));
+	answers an;
+	an.add((void*)1, getnm("Yes"));
+	an.add((void*)0, getnm("No"));
+	auto result = an.choose();
+	console->clear();
+	return result != 0;
+}
