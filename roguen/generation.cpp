@@ -409,12 +409,14 @@ static void add_area_sites(variant v) {
 }
 
 static void add_area_events(geoposition v) {
-	if(!last_dungeon)
+	if(!last_quest)
 		return;
-	if(v.level == 0)
-		add_area_sites(last_dungeon->entrance);
-	else
-		add_area_sites(last_dungeon->modifier);
+	if(v.level == 0) {
+		auto v = bsdata<sitei>::find(str("%1Entrance", last_quest->level.getid()));
+		if(v)
+			add_area_sites(v);
+	} else
+		add_area_sites(last_quest->modifier);
 }
 
 static void create_sites() {
@@ -534,10 +536,11 @@ static void create_doors(tile_s floor, tile_s wall) {
 
 static void create_corridor_content(point i) {
 	variant treasure = "RandomTreasure";
+	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->loot && d100() < 40)
 		treasure = randomizeri::random(last_location->loot);
-	else if(last_dungeon && last_dungeon->modifier && last_dungeon->modifier->loot && d100() < 40)
-		treasure = randomizeri::random(last_dungeon->modifier->loot);
+	else if(quest_modifier && quest_modifier->loot && d100() < 40)
+		treasure = randomizeri::random(quest_modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	runscript(treasure);
 }
@@ -589,7 +592,7 @@ static void create_area(geoposition geo, variant tile) {
 
 void gamei::createarea() {
 	variant rt;
-	last_dungeon = dungeon::find(position);
+	last_quest = quest::find(position);
 	if(level == 0) {
 		auto range = getrange(position, start_village);
 		if(range == 0)
@@ -603,14 +606,14 @@ void gamei::createarea() {
 		else
 			rt = single("RandomUnknownOverlandTiles");
 	} else {
-		if(last_dungeon) {
+		if(last_quest) {
 			auto chance_finale = level * 10;
-			if(last_dungeon->final_level && d100() < (last_dungeon->final_level->chance_finale + chance_finale))
-				rt = last_dungeon->final_level;
-			else if(last_dungeon->level)
-				rt = last_dungeon->level;
-			else
-				rt = single("DefaultDungeon");
+			auto default_level = last_quest->level;
+			auto final_level = bsdata<locationi>::find(str("%1Final", default_level.getid()));
+			if(final_level && d100() < (final_level->chance_finale + chance_finale))
+				rt = final_level;
+			else if(last_quest->level)
+				rt = last_quest->level;
 		}
 		if(!rt)
 			rt = single("DefaultDungeon");

@@ -145,12 +145,12 @@ void gamei::setup_globals() {
 
 void gamei::setup_rumors(int count) {
 	point pt;
-	dungeon::add(start_village);
+	quest::add(KillBossQuest, start_village);
 	const int r = 6;
 	for(auto i = 0; i < count; i++) {
 		pt.x = xrand(start_village.x - r, start_village.x + r);
 		pt.y = xrand(start_village.x - r, start_village.x + r);
-		dungeon::add(pt);
+		quest::add(KillBossQuest, pt);
 	}
 }
 

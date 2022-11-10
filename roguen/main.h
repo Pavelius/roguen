@@ -16,6 +16,7 @@
 #include "listcolumn.h"
 #include "monster.h"
 #include "pushvalue.h"
+#include "quest.h"
 #include "script.h"
 #include "shape.h"
 #include "speech.h"
@@ -274,7 +275,7 @@ public:
 	int				getloh() const;
 	int				getlos() const;
 	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
-	void			getrumor(struct dungeon& e, stringbuilder& sb) const;
+	void			getrumor(quest& e, stringbuilder& sb) const;
 	const char*		getspeech(const char* id) const;
 	int				getwait() const { return wait_seconds; }
 	void			heal(int v);
@@ -359,21 +360,6 @@ public:
 struct sitegeni : nameable {
 	sitei::fnproc	proc;
 };
-struct dungeon {
-	point			position;
-	const sitei*	entrance;
-	const locationi* modifier;
-	const locationi* level;
-	const locationi* final_level;
-	monsteri*		guardian;
-	char			rumor;
-	variant			reward, twist; // Can't be random table
-	constexpr operator bool() const { return level != 0; }
-	static dungeon*	add(point position);
-	static dungeon*	add(point position, locationi* modifier, locationi* type, variant reward);
-	void			clear() { memset(this, 0, sizeof(*this)); }
-	static dungeon*	find(point position);
-};
 class roomi : public geoposition, public siteable, public ownerable {
 	unsigned char	ideftified : 1;
 	unsigned char	explored : 1;
@@ -407,7 +393,7 @@ struct areaheadi {
 };
 class gamei : public geoposition, public ownerable {
 	unsigned		minutes;
-	unsigned		restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day;
+	unsigned		restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day, restore_several_days;
 	int				globals[128];
 	void			setup_globals();
 	static void		setup_rumors(int count);
@@ -470,7 +456,7 @@ extern creature*	last_enemy;
 extern int			last_damage, last_value;
 extern ability_s	last_ability;
 extern variant		last_variant;
-extern dungeon*		last_dungeon;
+extern quest*		last_quest;
 extern rect			last_rect;
 extern const sitei*	last_site;
 extern locationi*	last_location;

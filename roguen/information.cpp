@@ -103,12 +103,12 @@ const char*	item::getfullname() const {
 	return temp;
 }
 
-void creature::getrumor(dungeon& e, stringbuilder& sb) const {
+void creature::getrumor(quest& e, stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
 	auto direction = area.getdirection(game.position, e.position);
 	auto range = game.getrange(game.position, e.position);
-	auto site_name = e.level->getname();
-	sba.adjective(e.modifier->getname(), stringbuilder::getgender(site_name));
+	auto site_name = e.level.getname();
+	sba.adjective(e.modifier.getname(), stringbuilder::getgender(site_name));
 	auto part_one = "RumorDungeon";
 	if(!range)
 		part_one = "RumorDungeonHere";
@@ -118,13 +118,16 @@ void creature::getrumor(dungeon& e, stringbuilder& sb) const {
 		site_name,
 		temp,
 		range);
-	actvf(sb, getname(), is(Female), ' ',
-		getnm("RumorDungeonMore"),
-		e.reward.getname(),
-		e.guardian->minions->getname());
-	actvf(sb, getname(), is(Female), ' ',
-		getnm("RumorDungeonGuardian"),
-		e.guardian->getname());
+	monsteri* guardian = e.problem;
+	if(guardian) {
+		actvf(sb, getname(), is(Female), ' ',
+			getnm("RumorDungeonMore"),
+			e.reward.getname(),
+			guardian->minions->getname());
+		actvf(sb, getname(), is(Female), ' ',
+			getnm("RumorDungeonGuardian"),
+			guardian->getname());
+	}
 }
 
 void roomi::getrumor(stringbuilder& sb) const {

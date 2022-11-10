@@ -1,2 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 71: Not found requisit `door_count`
+﻿In file `Names.txt`:
+ Define translation for `StrangeBlueSphere`

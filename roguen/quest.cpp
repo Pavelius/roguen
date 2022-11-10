@@ -12,6 +12,12 @@ assert_enum(questni, RescueQuest)
 BSMETA(questni) = {
 	{"id"},
 	{}};
+BSMETA(quest) = {
+	{"object"},
+	{"problem"},
+	{"twist"},
+	{"treasure"},
+	{}};
 BSDATAC(quest, 256)
 
 static monsteri* random_boss() {
@@ -20,26 +26,32 @@ static monsteri* random_boss() {
 	return source.random();
 }
 
-quest* quest::add(point position, variant modifier, variant type, variant reward) {
+quest* quest::add(questn type, point position, variant modifier, variant level, variant reward) {
 	auto p = find(position);
 	if(p)
 		return p;
-	if(!modifier || !type)
+	if(!modifier || !level)
 		return 0;
 	auto boss = random_boss();
 	if(!boss)
 		return 0;
 	p = bsdata<quest>::addz();
 	p->clear();
+	p->type = type;
 	p->position = position;
 	p->modifier = modifier;
-	//p->entrance = bsdata<sitei>::find(word(type->id, "Entrance"));
-	p->level = type;
-	//p->final_level = bsdata<locationi>::find(word(type->id, "Final"));
+	p->level = level;
 	p->reward = reward;
 	p->problem = boss;
 	p->rumor = xrand(20, 70);
 	return p;
+}
+
+quest* quest::add(questn type, point position) {
+	return add(type, position,
+		single("RandomDungeonModifier"),
+		single("RandomDungeonType"),
+		single("RandomDungeonTreasure"));
 }
 
 quest* quest::find(point v) {

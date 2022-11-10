@@ -51,6 +51,7 @@ BluePotion: Синее зелье
 Ration: Сухпаек
 
 StrangeAquaSphere: Голубая сфера
+StrangeBlueSphere: Синяя сфера
 StrangeGreenSphere: Зеленая сфера
 StrangeRedSphere: Красная сфера
 StrangeRod: Прутик

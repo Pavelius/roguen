@@ -1163,12 +1163,12 @@ bool creature::isvalid() const {
 }
 
 bool creature::speechrumor() const {
-	collection<dungeon> source;
+	collection<quest> source;
 	source.select();
 	if(!source)
 		return false;
 	auto seed = game.getminutes() / (60 * 12);
-	auto p = (dungeon*)source.data[seed % source.getcount()];
+	auto p = (quest*)source.data[seed % source.getcount()];
 	if(!p)
 		return false;
 	char temp[1024]; stringbuilder sb(temp);

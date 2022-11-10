@@ -17,7 +17,6 @@ BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAD(advancement);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
-BSDATAC(dungeon, 256);
 BSDATAC(featurei, 128);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
@@ -65,11 +64,6 @@ BSMETA(conditioni) = {
 BSMETA(dice) = {
 	BSREQ(min),
 	BSREQ(max),
-	{}};
-BSMETA(dungeon) = {
-	BSREQ(rumor),
-	BSREQ(level),
-	BSREQ(final_level),
 	{}};
 BSMETA(feati) = {
 	BSREQ(id),
@@ -199,7 +193,6 @@ BSDATA(varianti) = {
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},
 	{"Creature", VAR(creature), 0},
-	{"Dungeon", VAR(dungeon), 0},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},
 	{"Global", VAR(globali), 1},
@@ -209,6 +202,7 @@ BSDATA(varianti) = {
 	{"List", VAR(listi), 1},
 	{"Location", VAR(locationi), 1},
 	{"Monster", VAR(monsteri), 1},
+	{"Quest", VAR(quest), 0},
 	{"Race", VAR(racei), 1},
 	{"RandomTable", VAR(randomizeri), 1},
 	{"Script", VAR(script), 1},

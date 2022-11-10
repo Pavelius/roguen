@@ -15,8 +15,8 @@ struct quest {
 	variant			object, problem, reward, twist, level, final_level, modifier, entrance;
 	char			rumor;
 	constexpr operator bool() const { return problem.operator bool(); }
-	static quest*	add(point position);
-	static quest*	add(point position, variant modifier, variant type, variant reward);
+	static quest*	add(questn type, point position);
+	static quest*	add(questn type, point position, variant modifier, variant level, variant reward);
 	void			clear() { zclear(this); }
 	static quest*	find(point v);
 };

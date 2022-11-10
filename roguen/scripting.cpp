@@ -18,7 +18,7 @@ creature			*player, *opponent, *enemy;
 int					last_parry, last_parry_result, last_value;
 ability_s			last_ability;
 variant				last_variant;
-dungeon*			last_dungeon;
+quest*				last_quest;
 locationi*			last_location;
 const sitei*		last_site;
 globali*			last_global;
@@ -443,26 +443,31 @@ static void set_result(variant v, int bonus) {
 
 static void quest_minion(int bonus) {
 	last_variant.clear();
-	if(last_dungeon && last_dungeon->guardian)
-		set_result(last_dungeon->guardian->ally(), bonus);
+	if(!last_quest)
+		return;
+	monsteri* pm = last_quest->problem;
+	if(pm)
+		set_result(pm->ally(), bonus);
 }
 
 static void quest_guardian(int bonus) {
 	last_variant.clear();
-	if(last_dungeon && last_dungeon->guardian)
-		set_result(last_dungeon->guardian, bonus);
+	if(last_quest)
+		set_result(last_quest->problem, bonus);
 }
 
 static void quest_reward(int bonus) {
 	last_variant.clear();
-	if(last_dungeon && last_dungeon->reward)
-		set_result(last_dungeon->reward, bonus);
+	if(last_quest && last_quest->reward)
+		set_result(last_quest->reward, bonus);
 }
 
 static void quest_landscape(int bonus) {
-	if(!last_dungeon || !last_dungeon->modifier)
+	if(!last_quest)
 		return;
-	runscript(last_dungeon->modifier->landscape);
+	locationi* pm = last_quest->modifier;
+	if(pm)
+		runscript(pm->landscape);
 }
 
 static void site_floor(int bonus) {
@@ -521,7 +526,7 @@ static void lose_game(int bonus) {
 }
 
 static void add_dungeon_rumor(int bonus) {
-	dungeon::add(game.position);
+	quest::add(KillBossQuest, game.position);
 }
 
 static void choose_action(int bonus) {

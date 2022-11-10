@@ -3,7 +3,7 @@
 NoTile borders(-1)
 
 WoodenFloor minimap(130 104 86) floor(0 1) borders(-1)
-Cave minimap(89 97 101) floor(9 3) decals(14 3) borders(1)
+Cave minimap(89 97 101) floor(9 3) borders(1)
 DungeonFloor minimap(89 97 101) floor(12 8) decals(14 3) borders(3)
 Grass minimap(60 176 67) floor(1 4) decals(0 8) borders(0)
 GrassCorupted minimap(66 63 48) floor(5 4) decals(8 6) borders(2)
