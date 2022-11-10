@@ -5,6 +5,7 @@
 #include "hotkey.h"
 
 static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
+void dialog_message(const char* url, const char* format);
 
 using namespace draw;
 
@@ -41,6 +42,7 @@ static void equip_item(const char* id) {
 }
 
 static void main_start() {
+	dialog_message("images/village/tavern7.png", "How area you little one?");
 	player = creature::create({5, 5}, "Human", "Fighter", true);
 	player->set(Ally);
 	equip_item("LongBow");

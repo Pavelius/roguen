@@ -170,6 +170,7 @@ void gamei::passminute() {
 	while(restore_several_days < minutes) {
 		all_creatures(EverySeveralDaysForP1);
 		all_features(EverySeveralDaysForP1);
+		trigger::fire(EverySeveralDays);
 		restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
 	}
 }

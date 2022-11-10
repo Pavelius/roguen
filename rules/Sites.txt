@@ -4,6 +4,9 @@ ChurchOfBlessedOne maximum(1500) current(100)
  effect WinGame
  fail LoseGame
 
+EldersComing maximum(50)
+ effect LoseGame
+
 GoblinInvasion maximum(20) current(3)
  effect LoseGame
 
@@ -204,6 +207,9 @@ RandomDungeonType
 
 WhenCreatureP1EnterSiteP2 0 Tavern
  effect ILoveThisPlace-40
+
+EverySeveralDays 0 0
+ effect EldersComing+1
 
 #SiteSkill
 

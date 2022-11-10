@@ -1359,6 +1359,31 @@ void show_logs(int bonus) {
 	}
 }
 
+void dialog_message(const char* url, const char* format) {
+	surface bitmap(url);
+	if(!bitmap)
+		return;
+	pushvalue push_font(font, (const sprite*)metrics::h2);
+	fillwindow();
+	caret.y = 20;
+	canvas->blit((getwidth() - bitmap.width) / 2, caret.y, bitmap.width, bitmap.height, 0, bitmap, 0, 0);
+	caret.y += bitmap.height + metrics::padding + texth();
+	caret.x = 20;
+	width = getwidth() - 20 * 2;
+	height = texth() * 6;
+	texta(format, AlignCenter);
+	while(ismodal()) {
+		domodal();
+		switch(hot.key) {
+		case KeyEnter:
+		case KeyEscape:
+		case KeySpace:
+			breakmodal(1);
+			break;
+		}
+	}
+}
+
 static void textcn(const char* format) {
 	auto push_caret = caret;
 	caret.x -= (textw(format) + 1) / 2;

@@ -559,7 +559,8 @@ BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
 	{"WhenCreatureP1InSiteP2UpdateAbilities"},
-	{"EverySeveralDaysForP1"}
+	{"EverySeveralDays"},
+	{"EverySeveralDaysForP1"},
 };
 assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {

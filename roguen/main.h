@@ -73,7 +73,7 @@ enum feat_s : unsigned char {
 };
 enum triggern : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
-	EverySeveralDaysForP1,
+	EverySeveralDays, EverySeveralDaysForP1,
 };
 extern stringbuilder console;
 extern point m2s(point v);
