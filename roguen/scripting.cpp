@@ -25,6 +25,7 @@ globali*			last_global;
 rect				last_rect;
 siteskilla			last_actions;
 extern bool			show_floor_rect;
+static bool			stop_script;
 const sitegeni*		last_method;
 
 static void place_item(point index, const itemi* pe) {
@@ -64,7 +65,7 @@ static void place_creature(variant v, int count) {
 	}
 }
 
-static void standart_script(variant v) {
+void runscript(variant v) {
 	if(v.iskind<featurei>())
 		area.set(last_rect, (featuren)v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -77,18 +78,18 @@ static void standart_script(variant v) {
 		game.set(*last_global, last_value + v.counter);
 	} else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
-			last_scipt_proc(v);
+			runscript(v);
 	} else if(v.iskind<randomizeri>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++)
-			last_scipt_proc(bsdata<randomizeri>::elements[v.value].random());
+			runscript(bsdata<randomizeri>::elements[v.value].random());
 	} else if(v.iskind<script>()) {
 		pushvalue push_result(last_variant, {});
 		bsdata<script>::elements[v.value].run(v.counter);
 		if(last_variant)
-			last_scipt_proc(last_variant);
+			runscript(last_variant);
 	} else if(v.iskind<monsteri>()) {
 		auto count = game.getcount(v, 0);
 		if(count < 0)
@@ -556,8 +557,18 @@ static void roll_value(int bonus) {
 		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
 }
 
+void runscript(const variants& elements) {
+	if(stop_script)
+		return;
+	pushvalue push_stop(stop_script);
+	for(auto v : elements) {
+		if(stop_script)
+			break;
+		runscript(v);
+	}
+}
+
 void initialize_script() {
-	last_scipt_proc = standart_script;
 }
 
 BSDATA(triggerni) = {

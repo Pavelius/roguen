@@ -472,5 +472,3 @@ point				center(const rect& rc);
 void				choose_targets(unsigned flags);
 tile_s				getfloor();
 tile_s				getwall();
-void				runscript(const variants& elements);
-void				runscript(const variants& elements, fnvariant proc);
