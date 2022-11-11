@@ -100,8 +100,10 @@ Farmer avatar(273)
  use KnowLocation
 FarmerFemale avatar(276)
  abilities Strenght(26) Dexterity(40) Wits(25) WeaponSkill(30) HitsMaximum(5)
- use Female
- use KnowLocation
+ use Female KnowLocation
+PriestOfTheOne avatar(118) appear(1)
+ abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(30) HitsMaximum(8)
+ use PlaceOwner
 SmallBoy avatar(274)
  abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) HitsMaximum(2)
 SmallGirl avatar(275) parent(SmallBoy)

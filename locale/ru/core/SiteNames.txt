@@ -4,6 +4,7 @@ ArtifactStatueRoom: Статуя
 AshenLand: Земли пепла
 BossRoom: Логово
 CaveMonsterLair: Зверинное логово
+ChurchOneBuilding: Церковь единого
 DarkestRoom: Истинная тьма
 DeepForest: Дремучий лес
 DefaultCave: Пещера

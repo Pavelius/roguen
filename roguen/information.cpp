@@ -139,3 +139,14 @@ void roomi::getrumor(stringbuilder& sb) const {
 		site_name);
 	area.set(rc, Explored);
 }
+
+bool creature::speechneed(const greatneed& ev) const {
+	char temp[1024]; stringbuilder sb(temp);
+	auto id = ev.geti().getid();
+	auto pn = getdescription(id);
+	if(!pn)
+		return false;
+	sb.add(pn);
+	say(temp);
+	return true;
+}

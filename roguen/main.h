@@ -8,6 +8,7 @@
 #include "flagable.h"
 #include "geoposition.h"
 #include "global.h"
+#include "greatneed.h"
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
@@ -307,6 +308,7 @@ public:
 	void			set(ability_s i, int v) { abilities[i] = v; }
 	void			setroom(const roomi* v) { bsset(room_id, v); }
 	void			speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
+	bool			speechneed(const greatneed& v) const;
 	bool			speechrumor() const;
 	bool			speechlocation() const;
 	void			summon(point m, const variants& elements, int count, int level);

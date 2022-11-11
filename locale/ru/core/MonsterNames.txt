@@ -24,6 +24,7 @@ Minotaur: Минотавр
 Necromant: Некромант
 OrcWarrior: Орк
 Outsider: Древний
+PriestOfTheOne: Священник Единого
 Rabbit: Кролик
 RabbitFemale: Крольчиха
 ShamblingMound: Ползущая насыпь

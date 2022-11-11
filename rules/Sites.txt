@@ -39,6 +39,9 @@ DeepLake walls(DeepWater) floors(DeepWater)
 PlantsGround
  landscape Plant+4
 
+ChurchOneBuilding walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
+ landscape PriestOfTheOne
+ feats Notable
 FamousHeroMonument
  landscape Offset+2 Statue+1
  feats Notable
@@ -184,7 +187,7 @@ AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) doors(Door)
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
 StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global(GenerateVillage) offset(4) chance_hidden_doors(-1)
  landscape Tree+50 FootMud+20 FootHill+90
- sites TestArea GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 NPCHouses+3 Building+22
+ sites TestArea GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 ChurchOneBuilding NPCHouses+2 Building+22
 
 #RandomTable
 

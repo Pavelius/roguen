@@ -40,8 +40,8 @@ StairsDown priority(4) features(53 1) lead(-1)
 GreenPool priority(3) features(77 1)
 RedPool priority(3) features(78 1)
 
-GatePortal priority(4) features(54 1)
-OpenedGatePortal priority(4) features(55 1)
+GatePortal priority(10) features(54 1)
+OpenedGatePortal priority(10) features(55 1)
 
 StairsUp leadto(StairsDown)
 StairsDown leadto(StairsUp)

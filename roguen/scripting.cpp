@@ -287,6 +287,11 @@ static void chat_someone() {
 		if(player->talk(room->getsite()->id))
 			return;
 	}
+	auto need = greatneed::find(player);
+	if(need && d100() < 70) {
+		if(opponent->speechneed(*need))
+			return;
+	}
 	if(opponent->is(KnowRumor) && d100() < 70) {
 		if(opponent->speechrumor())
 			return;

@@ -177,6 +177,7 @@
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="generation.cpp" />
+    <ClCompile Include="greatneed.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="indexa.cpp" />
     <ClCompile Include="information.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="flagable.h" />
     <ClInclude Include="geoposition.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="greatneed.h" />
     <ClInclude Include="indexa.h" />
     <ClInclude Include="listcolumn.h" />
     <ClInclude Include="hotkey.h" />
