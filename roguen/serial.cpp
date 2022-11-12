@@ -2,6 +2,7 @@
 #include "boost.h"
 #include "draw.h"
 #include "draw_object.h"
+#include "greatneed.h"
 #include "main.h"
 
 static vector<creature> saved_creatures;
@@ -77,6 +78,7 @@ static void serial_game(bool write_mode) {
 	a.set(bsdata<boosti>::source);
 	a.set(bsdata<creature>::source);
 	a.set(bsdata<roomi>::source);
+	a.set(bsdata<greatneed>::source);
 }
 
 static bool serial_area(const char* url, bool write_mode) {

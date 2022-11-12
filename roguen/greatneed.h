@@ -4,13 +4,17 @@
 #pragma once
 
 enum needn : unsigned char {
-	NeedKnown,
+	NeedAccepted
 };
-
+struct needni : nameable {
+};
 struct greatneedi : nameable {
-	variants			need, conditions;
+	variants			targets;
+	variants			need;
 	variant				special;
 	variants			fail, success;
+	char				level;
+	unsigned			flags;
 };
 struct greatneed {
 	short unsigned		type;

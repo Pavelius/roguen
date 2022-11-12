@@ -238,10 +238,13 @@ void gamei::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
+void prepare_need();
+
 void gamei::randomworld() {
 	clear();
 	setup_globals();
 	setup_rumors(xrand(4, 7));
+	prepare_need();
 }
 
 void gamei::set(const globali& e, int v) {

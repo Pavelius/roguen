@@ -1,11 +1,20 @@
 #include "bsreq.h"
 #include "greatneed.h"
 
+BSDATA(needni) = {
+	{"NeedAccepted"},
+};
+assert_enum(needni, NeedAccepted)
+BSMETA(needni) = {
+	BSREQ(id),
+	{}};
 BSMETA(greatneedi) = {
 	BSREQ(id),
 	BSREQ(need),
-	BSREQ(conditions),
+	BSREQ(targets),
 	BSREQ(special),
+	BSREQ(level),
+	BSREQ(flags),
 	BSREQ(fail), BSREQ(success),
 	{}};
 BSDATAC(greatneedi, 32)

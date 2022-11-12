@@ -1,7 +1,5 @@
 #include "main.h"
 
-static talki* current_talk;
-
 static const phrasei* ask_answer(const phrasei* p) {
 	answers an;
 	for(auto pa = p->nextanswer(); pa; pa = pa->nextanswer())
@@ -14,13 +12,15 @@ static const phrasei* ask_answer(const phrasei* p) {
 static const phrasei* apply_answer(const phrasei* p) {
 	if(!p)
 		return 0;
+	runscript(p->elements);
 	auto pt = talki::owner(p);
 	return pt->find(p->next);
 }
 
-void talk_entry(const phrasei* p) {
+static void talk_entry(const phrasei* p) {
 	while(p) {
 		console.clear();
+		runscript(p->elements);
 		opponent->say(p->text);
 		p = ask_answer(p);
 		p = apply_answer(p);
@@ -28,8 +28,7 @@ void talk_entry(const phrasei* p) {
 }
 
 bool creature::talk(const char* id) {
-	pushvalue push(current_talk);
-	current_talk = bsdata<talki>::find(id);
+	auto current_talk = bsdata<talki>::find(id);
 	if(!current_talk)
 		return false;
 	talk_entry(current_talk->find(1));

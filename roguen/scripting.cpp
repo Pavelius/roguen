@@ -1,4 +1,6 @@
 #include "draw_object.h"
+#include "ifscript.h"
+#include "greatneed.h"
 #include "resource.h"
 #include "stringact.h"
 #include "indexa.h"
@@ -146,10 +148,39 @@ void runscript(variant v) {
 			return;
 		if(player)
 			player->speech(bsdata<speech>::elements[v.value].id);
+	} else if(v.iskind<needni>()) {
+		if(!last_need)
+			return;
+		if(v.counter >= 0)
+			last_need->set((needn)v.value);
+		else
+			last_need->remove((needn)v.value);
 	} else {
 		if(player)
 			player->apply(v);
 	}
+}
+
+static bool ifscript(variant v) {
+	if(v.iskind<ifscripti>())
+		stop_script = !bsdata<ifscripti>::elements[v.value].proc(v.counter);
+	else if(v.iskind<needni>()) {
+		if(v.counter <= 0)
+			stop_script = !last_need || !last_need->is((needn)v.value);
+	} else if(v.iskind<abilityi>()) {
+		if(v.counter > 0)
+			return false;
+		else if(v.counter < 0 && player->get((ability_s)v.value) < -v.counter)
+			stop_script = true;
+		else
+			last_value = player->get((ability_s)v.value);
+	} else if(v.iskind<monsteri>()) {
+		if(v.counter != 0)
+			return false;
+		stop_script = !player->iskind(v);
+	} else
+		return false;
+	return true;
 }
 
 static void choose_creature(int bonus) {
@@ -567,19 +598,57 @@ void runscript(const variants& elements) {
 	}
 }
 
+bool ifscript(const variants& elements) {
+	pushvalue push_stop(stop_script, false);
+	for(auto v : elements) {
+		if(!ifscript(v) || stop_script)
+			break;
+	}
+	return !stop_script;
+}
+
+static const char* day_left(unsigned end_stamp) {
+	auto stamp = game.getminutes();
+	if(end_stamp <= stamp)
+		return getnm("FewTime");
+	auto value = (stamp - end_stamp) / (24 * 60);
+	if(value > 0)
+		return str("%1i %2", value, stringbuilder::getbycount("Day", value));
+	value = (stamp - end_stamp) / 60;
+	if(value > 0)
+		return str("%1i %2", value, stringbuilder::getbycount("Hour", value));
+	value = stamp - end_stamp;
+	return str("%1i %2", value, stringbuilder::getbycount("Minute", value));
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
 	auto pn = getdescription(last_need->geti().getid());
 	if(!pn)
 		return;
-	sb.add(pn);
+	sb.add(pn, day_left(last_need->deadline));
 }
+
+static bool if_lesser(int bonus) {
+	return last_value < bonus;
+}
+
+static bool if_greater(int bonus) {
+	return last_value > bonus;
+}
+
+void add_need(int bonus);
 
 BSDATA(textscript) = {
 	{"NeedHelpIntro", need_help_info},
 };
 BSDATAF(textscript)
+BSDATA(ifscripti) = {
+	{"Greater", if_greater},
+	{"Lesser", if_lesser},
+};
+BSDATAF(ifscripti)
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -590,6 +659,7 @@ BSDATA(triggerni) = {
 assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {
 	{"AddDungeonRumor", add_dungeon_rumor},
+	{"AddNeed", add_need},
 	{"AttackForward", attack_forward},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},

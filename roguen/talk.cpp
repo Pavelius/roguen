@@ -1,5 +1,6 @@
 #include "io_stream.h"
 #include "logparse.h"
+#include "script.h"
 #include "talk.h"
 
 using namespace log;
@@ -40,9 +41,11 @@ static void add(variants& e, variant v) {
 }
 
 static const char* read_variants(const char* p, stringbuilder& result, variants& source, phrasei* pe) {
-	while(allowparse && ischa(*p)) {
-		p = readidn(p, result);
+	while(*p && allowparse) {
 		p = skipws(p);
+		if(!ischa(*p))
+			break;
+		p = readidn(p, result);
 		auto pn = result.begin();
 		int bonus; p = readbon(p, bonus);
 		p = skipws(p);
@@ -132,7 +135,7 @@ void talki::read(const char* url) {
 	}
 	log::close();
 	auto n2 = bsdata<phrasei>::source.getcount();
-	if(n1<n2)
+	if(n1 < n2)
 		ptb->elements.set(&bsdata<phrasei>::get(n1), n2 - n1);
 }
 
@@ -152,7 +155,7 @@ void talki::read() {
 
 phrasei* talki::find(short v) const {
 	for(auto& e : elements) {
-		if(e.index==v && e.next==-1)
+		if(e.index == v && !e.isanswer() && ifscript(e.elements))
 			return &e;
 	}
 	return 0;
@@ -165,9 +168,9 @@ const phrasei* phrasei::nextanswer() const {
 	auto pb = this + 1;
 	auto pe = pt->elements.end();
 	while(pb < pe) {
-		if(pb->index != index)
+		if(pb->index != index || !pb->isanswer())
 			break;
-		if(pb->next != -1)
+		if(ifscript(pb->elements))
 			return pb;
 		pb++;
 	}

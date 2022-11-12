@@ -1,4 +1,6 @@
 #include "bsreq.h"
+#include "ifscript.h"
+#include "greatneed.h"
 #include "main.h"
 #include "visualeffect.h"
 #include "widget.h"
@@ -189,11 +191,13 @@ BSDATA(varianti) = {
 	{"Global", VAR(globali), 1},
 	{"Hotkey", VAR(hotkey), 2},
 	{"HotkeyList", VAR(hotkeylist), 1},
+	{"IfScript", VAR(ifscripti), 1},
 	{"Item", VAR(itemi), 1},
 	{"List", VAR(listi), 1},
 	{"Location", VAR(locationi), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Need", VAR(greatneedi), 1},
+	{"NeedFlag", VAR(needni), 1},
 	{"Quest", VAR(quest), 0},
 	{"Race", VAR(racei), 1},
 	{"RandomTable", VAR(randomizeri), 1},
@@ -205,7 +209,7 @@ BSDATA(varianti) = {
 	{"Spell", VAR(spelli), 1},
 	{"Speech", VAR(speech), 1},
 	{"Tile", VAR(tilei), 1},
-	{"TileFlags", VAR(tilefi), 1},
+	{"TileFlag", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},
 	{"Variant", VAR(varianti), 1},
 	{"VisualEffect", VAR(visualeffect), 1},

@@ -58,9 +58,6 @@ static void main_start() {
 	equip_item("Torch");
 	game.setowner(player);
 	game.newgame();
-	greatneed::add(bsdata<greatneedi>::find("SkullInvestigation"),
-		find_monster_id("PriestOfTheOne"),
-		game.getminutes() + xrand(24 * 60 * 6, 24 * 60 * 10));
 }
 
 int start_application(fnevent proc, fnevent initializing);

@@ -9,7 +9,9 @@ struct collectiona : adat<void*, 256> {
 	void	group(fngroup proc);
 	void	match(fnvisible proc, bool keep);
 	void	match(fnallow proc, int param, bool keep);
+	void	match(const collectiona& source, bool keep);
 	void*	random() const;
+	void*	pick();
 	void	select(array& source);
 	void	select(array& source, fnvisible proc);
 	void	shuffle();
@@ -23,6 +25,7 @@ struct collection : collectiona {
 		return (T*)collectiona::choose(T::getname, title, cancel, autochoose);
 	}
 	T**		end() const { return (T**)data + count; }
+	T*		pick() { return (T*)collectiona::pick(); }
 	T*		random() const { return (T*)collectiona::random(); }
 	void	select() { collectiona::select(bsdata<T>::source); }
 	void	select(fnvisible proc) { collectiona::select(bsdata<T>::source, proc); }

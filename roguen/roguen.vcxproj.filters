@@ -315,6 +315,12 @@
     <ClCompile Include="greatneed.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="ifscript.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="creature_need.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -501,6 +507,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="greatneed.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ifscript.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,5 +10,6 @@ struct script {
 	static void		run(const char* id, int bonus = 0);
 };
 extern variant		param1, param2;
+extern bool			ifscript(const variants& source);
 extern void			runscript(variant v);
 extern void			runscript(const variants& elements);

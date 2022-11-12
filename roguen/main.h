@@ -8,7 +8,6 @@
 #include "flagable.h"
 #include "geoposition.h"
 #include "global.h"
-#include "greatneed.h"
 #include "hotkey.h"
 #include "color.h"
 #include "crt.h"
@@ -288,7 +287,10 @@ public:
 	bool			isallow(const spelli& e, int level) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;
+	static bool		ishuman(const void* p) { return ((creature*)p)->ishuman(); }
+	static bool		isneed(const void* p);
 	bool			ispresent() const;
+	static bool		ispresent(const void* p) { return ((creature*)p)->ispresent(); }
 	bool			isvalid() const;
 	void			interaction(creature& opponent);
 	void			kill();
@@ -460,7 +462,6 @@ extern int			last_value;
 extern ability_s	last_ability;
 extern variant		last_variant;
 extern quest*		last_quest;
-extern greatneed*	last_need;
 extern rect			last_rect;
 extern const sitei*	last_site;
 extern locationi*	last_location;

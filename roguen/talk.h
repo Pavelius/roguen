@@ -10,6 +10,7 @@ struct phrasei {
 	const char*		text;
 	void			clear() { memset(this, 0, sizeof(*this)); }
 	const phrasei*	nextanswer() const;
+	bool			isanswer() const { return next != -1; }
 };
 struct talki : nameable {
 	sliceu<phrasei>	elements;

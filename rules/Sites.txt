@@ -17,6 +17,16 @@ SkullInvestigation special(MonsterSkull+1)
  fail EldersComing+1
  success ChurchOfBlessedOne+2
 
+DeepDwarfTradeRoute
+ need OrnamentalStones+4 SemiPreciousStones+2 FancyStones
+ fail EldersComing+1
+ success ChurchOfBlessedOne+1
+
+AccumulationWeaponArsenal
+ need BattleAxe BruteSword Dagger+2 HandAxe Mace Spear Sword
+ fail EldersComing+1
+ success ChurchOfBlessedOne+1
+
 #RandomTable
 
 RandomAltar
@@ -47,7 +57,7 @@ PlantsGround
  landscape Plant+4
 
 ChurchOneBuilding walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape PriestOfTheOne
+ landscape PriestOfTheOne AddNeed
  feats Notable
 FamousHeroMonument
  landscape Offset+2 Statue+1

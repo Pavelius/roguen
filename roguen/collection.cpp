@@ -75,6 +75,16 @@ void collectiona::match(fnvisible proc, bool keep) {
 	count = ps - data;
 }
 
+void collectiona::match(const collectiona& source, bool keep) {
+	auto ps = data;
+	for(auto p : *this) {
+		if((source.find(p)!=-1) != keep)
+			continue;
+		*ps++ = p;
+	}
+	count = ps - data;
+}
+
 void collectiona::match(fnallow proc, int param, bool keep) {
 	auto ps = data;
 	for(auto p : *this) {
@@ -106,4 +116,10 @@ void collectiona::sort(fngetname proc) {
 
 void collectiona::shuffle() {
 	zshuffle(data, count);
+}
+
+void* collectiona::pick() {
+	auto result = (count > 0) ? data[0] : 0;
+	remove(0, 1);
+	return result;
 }

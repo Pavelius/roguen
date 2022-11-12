@@ -17,11 +17,14 @@ ChooseImageSet: Выбирайте набор изображений
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 ChooseSpell: Выбирайте заклинание
 Continue: Продолжить
+Day: День
 DodgeSuccess: Уклонение
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Experience: Опыт
+FewTime: Совсем мало времени
 GlobalMapPosition: Позиция на карте мира %1i, %2i
+Hour: Час
 IcedSlice: %герой подскалзнул%ась на льду.
 Inventory: Одетые предметы
 KnowRumor: Узнать сплетни
@@ -29,6 +32,7 @@ Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
+Minute: Минута
 Minutes: Минут
 Natural: Родное
 No: Нет
