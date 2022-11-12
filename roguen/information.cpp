@@ -143,7 +143,7 @@ void roomi::getrumor(stringbuilder& sb) const {
 bool creature::speechneed(const greatneed& ev) const {
 	char temp[1024]; stringbuilder sb(temp);
 	auto id = ev.geti().getid();
-	auto pn = getdescription(id);
+	auto pn = getdescription(str("%1Intro", id));
 	if(!pn)
 		return false;
 	sb.add(pn);

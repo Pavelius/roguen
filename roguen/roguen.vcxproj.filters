@@ -580,6 +580,9 @@
     <Text Include="..\rules\Features.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="..\locale\ru\core\NeedDescriptions.txt">
+      <Filter>Locale</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">

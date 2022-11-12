@@ -1,2 +1,3 @@
-﻿In file `Names.txt`:
- Define translation for `BruteSword`
+﻿In file `rules/Sites.txt`:
+ Line 17: Not found requisit `MonsterSkull`
+ Line 17: Expected symbol `(`, but you have string `+1`

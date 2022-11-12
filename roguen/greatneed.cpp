@@ -4,8 +4,9 @@
 BSMETA(greatneedi) = {
 	BSREQ(id),
 	BSREQ(need),
+	BSREQ(conditions),
 	BSREQ(special),
-	BSREQ(fail), BSREQ(partial), BSREQ(success),
+	BSREQ(fail), BSREQ(success),
 	{}};
 BSDATAC(greatneedi, 32)
 BSDATAC(greatneed, 32)

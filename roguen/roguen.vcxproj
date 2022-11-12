@@ -311,6 +311,7 @@
     <Text Include="..\locale\ru\core\MonsterNames.txt" />
     <Text Include="..\locale\ru\core\NameCharacters.txt" />
     <Text Include="..\locale\ru\core\Names.txt" />
+    <Text Include="..\locale\ru\core\NeedDescriptions.txt" />
     <Text Include="..\locale\ru\core\RaceNames.txt" />
     <Text Include="..\locale\ru\core\SiteDescriptions.txt" />
     <Text Include="..\locale\ru\core\SiteNames.txt" />

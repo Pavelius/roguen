@@ -1,6 +1,6 @@
 #Global
 
-ChurchOfBlessedOne maximum(1500) current(100)
+ChurchOfBlessedOne maximum(20)
  effect WinGame
  fail LoseGame
 
@@ -9,6 +9,13 @@ EldersComing maximum(50)
 
 GoblinInvasion maximum(20) current(3)
  effect LoseGame
+
+#Need
+
+SkullInvestigation special(MonsterSkull+1)
+ need Bones+10
+ fail EldersComing+1
+ success ChurchOfBlessedOne+2
 
 #RandomTable
 

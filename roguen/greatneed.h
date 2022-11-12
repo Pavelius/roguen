@@ -6,7 +6,7 @@
 struct greatneedi : nameable {
 	variants			need, conditions;
 	variant				special;
-	variants			fail, partial, success;
+	variants			fail, success;
 };
 struct greatneed {
 	short unsigned		type;

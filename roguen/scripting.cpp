@@ -288,8 +288,8 @@ static void chat_someone() {
 		if(player->talk(room->getsite()->id))
 			return;
 	}
-	auto need = greatneed::find(player);
-	if(need && d100() < 70) {
+	auto need = greatneed::find(opponent);
+	if(need) {
 		if(opponent->speechneed(*need))
 			return;
 	}

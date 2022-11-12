@@ -9,7 +9,6 @@ struct script {
 	void			run(int bonus);
 	static void		run(const char* id, int bonus = 0);
 };
-extern const script* last_script;
 extern variant		param1, param2;
 extern void			runscript(variant v);
 extern void			runscript(const variants& elements);

@@ -41,8 +41,19 @@ static void equip_item(const char* id) {
 		player->additem(it);
 }
 
+static creature* find_monster_id(const char* id) {
+	variant v = bsdata<monsteri>::find(id);
+	if(!v)
+		return 0;
+	for(auto& e : bsdata<creature>()) {
+		if(e.iskind(v))
+			return &e;
+	}
+	return 0;
+}
+
 static void main_start() {
-	dialog_message("images/village/tavern7.png", "How area you little one?");
+	//dialog_message("images/village/tavern7.png", "How area you little one?");
 	player = creature::create({5, 5}, "Human", "Fighter", true);
 	player->set(Ally);
 	equip_item("LongBow");
@@ -50,6 +61,9 @@ static void main_start() {
 	equip_item("Torch");
 	game.setowner(player);
 	game.newgame();
+	greatneed::add(bsdata<greatneedi>::find("SkullInvestigation"),
+		find_monster_id("PriestOfTheOne"),
+		game.getminutes() + xrand(24 * 60 * 6, 24 * 60 * 10));
 }
 
 int start_application(fnevent proc, fnevent initializing);
