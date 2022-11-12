@@ -41,6 +41,12 @@ void stringact::addidentifier(const char* identifier) {
 				add(e.male);
 			return;
 		}
+		for(auto& e : bsdata<textscript>()) {
+			if(strcmp(e.id, identifier) != 0)
+				continue;
+			e.proc(*this);
+			return;
+		}
 		stringbuilder::addidentifier(identifier);
 	}
 }

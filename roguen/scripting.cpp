@@ -1,5 +1,6 @@
 #include "draw_object.h"
 #include "resource.h"
+#include "stringact.h"
 #include "indexa.h"
 #include "main.h"
 
@@ -15,7 +16,8 @@ creaturea			creatures, enemies, targets;
 spella				allowed_spells;
 itema				items;
 creature			*player, *opponent, *enemy;
-int					last_parry, last_parry_result, last_value;
+int					last_value;
+greatneed*			last_need;
 ability_s			last_ability;
 variant				last_variant;
 quest*				last_quest;
@@ -288,11 +290,8 @@ static void chat_someone() {
 		if(player->talk(room->getsite()->id))
 			return;
 	}
-	auto need = greatneed::find(opponent);
-	if(need) {
-		if(opponent->speechneed(*need))
-			return;
-	}
+	if(opponent->speechneed())
+		return;
 	if(opponent->is(KnowRumor) && d100() < 70) {
 		if(opponent->speechrumor())
 			return;
@@ -568,9 +567,19 @@ void runscript(const variants& elements) {
 	}
 }
 
-void initialize_script() {
+static void need_help_info(stringbuilder& sb) {
+	if(!last_need)
+		return;
+	auto pn = getdescription(last_need->geti().getid());
+	if(!pn)
+		return;
+	sb.add(pn);
 }
 
+BSDATA(textscript) = {
+	{"NeedHelpIntro", need_help_info},
+};
+BSDATAF(textscript)
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},

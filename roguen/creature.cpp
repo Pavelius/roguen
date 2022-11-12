@@ -457,6 +457,9 @@ creature* creature::create(point m, variant kind, variant character, bool female
 	if(pm) {
 		copy(player->basic, *pm);
 		player->advance(pm->use);
+		adat<variant> conditions;
+		conditions.add(kind);
+		player->setname(charname::random(conditions));
 	} else {
 		adat<variant> conditions;
 		conditions.add(kind);
@@ -1359,4 +1362,11 @@ void creature::summon(point m, const variants& elements, int count, int level) {
 
 bool creature::ispresent() const {
 	return worldpos == game;
+}
+
+bool creature::speechneed() {
+	pushvalue push_need(last_need, greatneed::find(this));
+	if(!last_need)
+		return false;
+	return talk("NeedTalk");
 }

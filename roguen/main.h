@@ -308,7 +308,7 @@ public:
 	void			set(ability_s i, int v) { abilities[i] = v; }
 	void			setroom(const roomi* v) { bsset(room_id, v); }
 	void			speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
-	bool			speechneed(const greatneed& v) const;
+	bool			speechneed();
 	bool			speechrumor() const;
 	bool			speechlocation() const;
 	void			summon(point m, const variants& elements, int count, int level);
@@ -456,10 +456,11 @@ extern creaturea	creatures, enemies, targets;
 extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
-extern int			last_damage, last_value;
+extern int			last_value;
 extern ability_s	last_ability;
 extern variant		last_variant;
 extern quest*		last_quest;
+extern greatneed*	last_need;
 extern rect			last_rect;
 extern const sitei*	last_site;
 extern locationi*	last_location;

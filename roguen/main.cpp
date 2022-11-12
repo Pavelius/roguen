@@ -13,10 +13,7 @@ using namespace draw;
 void main_util();
 #endif
 
-void initialize_script();
-
 static void initializating() {
-	initialize_script();
 	bsreq::read("rules/Tiles.txt");
 	bsreq::read("rules/Features.txt");
 	bsreq::read("rules/Items.txt");

@@ -21,4 +21,3 @@ public:
 	void			setnoname() { name_id = 0xFFFF; }
 	void			setname(unsigned short v) { name_id = v; }
 };
-
