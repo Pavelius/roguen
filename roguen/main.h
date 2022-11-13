@@ -195,6 +195,7 @@ struct itemground : item {
 struct wearable : movable {
 	item			wears[Elbows + 1];
 	int				money;
+	void			addcoins(unsigned v);
 	void			additem(item& v);
 	slice<item>		backpack() { return slice<item>(wears + Backpack, wears + BackpackLast + 1); }
 	void			equip(item& v);
@@ -413,7 +414,9 @@ public:
 	static int		getpositivecount(variant v);
 	static int		getrange(point m1, point m2);
 	static bool		isvalid(point m) { return m.x > 0 && m.x < 256 && m.y > 0 && m.y < 256; }
+	static void		next(fnevent proc);
 	static void		newgame();
+	static void		mainmenu();
 	void			pass(unsigned minutes);
 	void			passminute();
 	static void		play();

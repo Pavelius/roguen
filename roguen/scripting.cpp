@@ -19,6 +19,7 @@ spella				allowed_spells;
 itema				items;
 creature			*player, *opponent, *enemy;
 int					last_value;
+int					last_coins;
 greatneed*			last_need;
 ability_s			last_ability;
 variant				last_variant;
@@ -558,9 +559,15 @@ static void trigger_text(int bonus) {
 }
 
 static void win_game(int bonus) {
+	auto pn = bonus ? str("WinGame%1i", bonus) : "WinGame";
+	dialog_message(getdescription(pn));
+	game.next(game.mainmenu);
 }
 
 static void lose_game(int bonus) {
+	auto pn = bonus ? str("LoseGame%1i", bonus) : "LoseGame";
+	dialog_message(getdescription(pn));
+	game.next(game.mainmenu);
 }
 
 static void add_dungeon_rumor(int bonus) {
@@ -632,6 +639,10 @@ static void need_help_info(stringbuilder& sb) {
 	sb.add(pn, day_left(last_need->deadline));
 }
 
+static void last_coins_info(stringbuilder& sb) {
+	sb.add(sb, last_coins);
+}
+
 static bool if_lesser(int bonus) {
 	return last_value < bonus;
 }
@@ -644,6 +655,7 @@ void add_need(int bonus);
 void add_need_answers(int bonus);
 
 BSDATA(textscript) = {
+	{"LastCoins", last_coins_info},
 	{"NeedHelpIntro", need_help_info},
 };
 BSDATAF(textscript)

@@ -198,8 +198,11 @@ void gamei::play() {
 }
 
 void gamei::endgame() {
-	actable::actv(console, getnm("PlayerKilled"), 0, 0, 0, '\n');
-	actable::pressspace();
+	dialog_message(getdescription("LoseGame"));
+	next(game.mainmenu);
+}
+
+void gamei::mainmenu() {
 	writelog();
 }
 

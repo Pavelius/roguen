@@ -3,6 +3,7 @@
 
 extern greatneed* last_need;
 static collection<greatneedi> needs;
+extern int last_coins;
 
 static creature* random_target(const greatneedi* p) {
 	collection<creature> source;
@@ -53,10 +54,17 @@ static void apply_answer(void* pv) {
 		if(count > rest_count)
 			count = rest_count;
 		if(count > 0) {
-			last_need->score += getprogress(count, need_count);
+			auto last_percent = getprogress(count, need_count);
+			last_need->score += last_percent;
 			player->logs(getnm("YouGiveItemTo"), pi->getname(), opponent->getname(), count);
 			pi->setcount(pi->getcount() - count);
 			last_value = 10;
+			auto total_coins = last_need->geti().coins;
+			if(total_coins) {
+				last_coins = last_percent * total_coins / 100;
+				player->addcoins(last_coins);
+				last_value = 11;
+			}
 		}
 	}
 }

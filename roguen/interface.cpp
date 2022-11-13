@@ -233,6 +233,10 @@ void movable::fixthrown(point target, const char* id, int frame) const {
 	pr->position.y += pe->dy;
 }
 
+void gamei::next(fnevent proc) {
+	setnext(proc);
+}
+
 static void paint_items() {
 	remove_temp_objects(bsdata<itemi>::source);
 	auto p1 = s2m(camera);

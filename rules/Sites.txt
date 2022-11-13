@@ -1,14 +1,10 @@
 #Global
 
 ChurchOfBlessedOne maximum(20)
- effect WinGame
- fail LoseGame
+ effect WinGame+1
 
 EldersComing maximum(50)
- effect LoseGame
-
-GoblinInvasion maximum(20) current(3)
- effect LoseGame
+ effect LoseGame+1
 
 #Need
 
@@ -17,8 +13,8 @@ SkullInvestigation special(MonsterSkull+1)
  fail EldersComing+1
  success ChurchOfBlessedOne+2
 
-DeepDwarfTradeRoute
- need OrnamentalStones+14 SemiPreciousStones+8 FancyStones+4
+DeepDwarfTradeRoute coins(1000)
+ need Ration+10 Torch+30
  fail EldersComing+1
  success ChurchOfBlessedOne+1
 

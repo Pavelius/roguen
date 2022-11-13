@@ -4,19 +4,18 @@
 
 using namespace draw;
 
-static surface			dialog_bitmap;
-static char				dialog_text[512];
+static surface	dialog_bitmap;
+static char		dialog_text[128];
 
 static void center_bitmap(const surface& bm) {
 	auto push_width = width;
 	auto push_height = height;
-	auto push_x = caret.x;
 	width = bm.width - 1;
 	height = bm.height;
 	caret.x = (getwidth() - width) / 2;
+	caret.y = (getheight() - height) / 2 - texth() * 2;
 	canvas->blit(caret.x, caret.y, bm.width, bm.height, 0, bm, 0, 0);
 	caret.y += height + texth();
-	caret.x = push_x;
 	width = push_width;
 	height = push_height;
 }
@@ -29,11 +28,10 @@ static void dialog_scene() {
 	fillwindow();
 	auto push_font = font;
 	font = metrics::h2;
+	center_bitmap(dialog_bitmap);
 	caret.x = 20;
-	caret.y = 40;
 	width = getwidth() - 20 * 2;
 	height = texth() * 6;
-	center_bitmap(dialog_bitmap);
 	texta(dialog_text, AlignCenter);
 	font = push_font;
 }
@@ -55,10 +53,10 @@ static void dialog_modal(fnevent proc) {
 
 static bool command(const char*& p, const char* id) {
 	auto pb = p;
-	while(*id==*pb) {
+	while(*id == *pb) {
 		id++; pb++;
 	}
-	if(*id==0) {
+	if(*id == 0) {
 		p = skipsp(pb);
 		return true;
 	}
@@ -67,7 +65,7 @@ static bool command(const char*& p, const char* id) {
 
 static const char* read_url(const char* p, stringbuilder& sb) {
 	sb.clear();
-	while(*p && (ischa(*p) || isnum(*p) || *p == '_' || *p == '/' || *p == '\\' || *p=='.'))
+	while(*p && (ischa(*p) || isnum(*p) || *p == '_' || *p == '/' || *p == '\\' || *p == '.'))
 		sb.addch(*p++);
 	return p;
 }
@@ -86,7 +84,7 @@ static const char* skipncr(const char* p) {
 
 static const char* parse_format(const char* p) {
 	char temp[512]; stringbuilder sb(temp);
-	while(*p=='/') {
+	while(*p == '/') {
 		if(command(p, "/IMAGE")) {
 			p = read_url(p, sb);
 			if(temp[0])

@@ -71,6 +71,7 @@ YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
 YouNeedThrownWeapon: Чтобы метать, вам нужно иметь в руках метательное оружие.
 YouSeeRoom: Это %-1.
+YouTakeCoins: %герой получил% %1i монет.
 YouUseItem: %герой использовал%а %-1.
 
 Strenght: Сила

@@ -59,4 +59,5 @@ void screenshoot::fade(fnevent proc, unsigned milliseconds) {
 	proc();
 	screenshoot after;
 	before.blend(after, milliseconds);
+	after.restore();
 }

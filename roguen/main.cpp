@@ -55,6 +55,7 @@ static void main_start() {
 	equip_item("LongBow");
 	equip_item("Arrow");
 	equip_item("Torch");
+	equip_item("Ration");
 	equip_item("Bones");
 	equip_item("OrnamentalStones");
 	game.setowner(player);

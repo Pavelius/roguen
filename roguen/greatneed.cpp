@@ -3,8 +3,9 @@
 
 BSDATA(needni) = {
 	{"NeedAccepted"},
+	{"NeedSpecialApplied"},
 };
-assert_enum(needni, NeedAccepted)
+assert_enum(needni, NeedSpecialApplied)
 BSMETA(needni) = {
 	BSREQ(id),
 	{}};
@@ -15,6 +16,7 @@ BSMETA(greatneedi) = {
 	BSREQ(special),
 	BSREQ(level),
 	BSREQ(flags),
+	BSREQ(coins),
 	BSREQ(fail), BSREQ(success),
 	{}};
 BSDATAC(greatneedi, 32)
@@ -37,7 +39,6 @@ greatneed* greatneed::add(const greatneedi* type, variant owner, unsigned deadli
 	p = bsdata<greatneed>::addz();
 	p->clear();
 	p->type = type - bsdata<greatneedi>::elements;
-	p->random = rand();
 	p->owner = owner;
 	p->deadline = deadline;
 	return p;

@@ -4,7 +4,7 @@
 #pragma once
 
 enum needn : unsigned char {
-	NeedAccepted
+	NeedAccepted, NeedSpecialApplied,
 };
 struct needni : nameable {
 };
@@ -14,13 +14,13 @@ struct greatneedi : nameable {
 	variant				special;
 	variants			fail, success;
 	char				level;
+	unsigned			coins;
 	unsigned			flags;
 };
 struct greatneed {
 	short unsigned		type;
 	unsigned			deadline;
 	variant				owner;
-	int					random;
 	unsigned			flags;
 	int					score; // percent of completion
 	explicit operator bool() const { return deadline != 0; }
