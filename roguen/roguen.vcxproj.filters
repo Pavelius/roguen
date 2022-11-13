@@ -22,7 +22,7 @@
     <Filter Include="Talk">
       <UniqueIdentifier>{8b5ad259-2ea2-4d82-9254-415b3c164511}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\Data">
+    <Filter Include="Data">
       <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -521,28 +521,28 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\errors.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Items.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Advancement.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Shapes.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Sites.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Monsters.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\logs.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\locale\ru\core\Chats.txt">
       <Filter>Locale</Filter>
@@ -584,22 +584,25 @@
       <Filter>Talk</Filter>
     </Text>
     <Text Include="..\rules\Spells.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\locale\ru\core\SpellDescriptions.txt">
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\rules\Tiles.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\rules\Features.txt">
-      <Filter>Interface\Data</Filter>
+      <Filter>Data</Filter>
     </Text>
     <Text Include="..\locale\ru\core\NeedDescriptions.txt">
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\locale\ru\talk\NeedTalk.txt">
       <Filter>Talk</Filter>
+    </Text>
+    <Text Include="..\locale\ru\core\EndGameDescriptions.txt">
+      <Filter>Locale</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

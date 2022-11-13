@@ -86,7 +86,7 @@ static const char* skipncr(const char* p) {
 
 static const char* parse_format(const char* p) {
 	char temp[512]; stringbuilder sb(temp);
-	while(*p) {
+	while(*p=='/') {
 		if(command(p, "/IMAGE")) {
 			p = read_url(p, sb);
 			if(temp[0])
@@ -98,22 +98,28 @@ static const char* parse_format(const char* p) {
 	return p;
 }
 
-static void add_format(const char* format, const char* format_param) {
+static const char* parse_string(const char* format) {
+	auto pe = skipncr(format);
+	auto len = pe - format;
+	if(len > sizeof(dialog_text) - 16)
+		len = sizeof(dialog_text) - 16;
+	memcpy(dialog_text, format, len);
+	dialog_text[len] = 0;
+	return format + len;
+}
+
+static const char* add_format(const char* format) {
 	format = parse_format(format);
-	stringbuilder sb(dialog_text);
-	sb.addv(format, format_param);
+	return parse_string(format);
 }
 
 void dialog_message(const char* format) {
 	if(!format)
 		return;
-	add_format(format, 0);
-	if(!dialog_bitmap)
-		return;
-	//rectpush push;
-	//caret.clear();
-	//width = getwidth();
-	//height = getheight();
-	//fillwindow();
-	dialog_modal(dialog_scene);
+	while(format[0]) {
+		format = add_format(format);
+		if(!dialog_bitmap)
+			return;
+		dialog_modal(dialog_scene);
+	}
 }

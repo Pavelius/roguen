@@ -312,6 +312,7 @@
     <Text Include="..\errors.txt" />
     <Text Include="..\locale\ru\core\Chats.txt" />
     <Text Include="..\locale\ru\core\DirectionNames.txt" />
+    <Text Include="..\locale\ru\core\EndGameDescriptions.txt" />
     <Text Include="..\locale\ru\core\ItemNames.txt" />
     <Text Include="..\locale\ru\core\MonsterNames.txt" />
     <Text Include="..\locale\ru\core\NameCharacters.txt" />
