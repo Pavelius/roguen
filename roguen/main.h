@@ -23,6 +23,7 @@
 #include "spell.h"
 #include "talk.h"
 #include "trigger.h"
+#include "wear.h"
 
 #pragma once
 
@@ -45,11 +46,6 @@ enum ability_s : unsigned char {
 	Level,
 	HitsMaximum, ManaMaximum,
 	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Money,
-};
-enum wear_s : unsigned char {
-	Backpack, Potion, BackpackLast = Backpack + 15,
-	MeleeWeapon, MeleeWeaponOffhand, RangedWeapon, Ammunition,
-	Head, Torso, Backward, Legs, Gloves, FingerRight, FingerLeft, Elbows,
 };
 enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
@@ -90,8 +86,6 @@ struct classi : nameable {
 	char			player;
 };
 struct feati : nameable {
-};
-struct weari : nameable {
 };
 class movable : public actable {
 	point			position;
@@ -164,6 +158,7 @@ public:
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
 	void			drop(point m);
+	short unsigned	getkind() const { return type; }
 	int				getavatar() const { return geti().wear_index; }
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
 	void			getinfo(stringbuilder& sb, bool need_name) const;
@@ -183,6 +178,7 @@ public:
 	bool			is(feat_s v) const { return geti().feats.is(v); }
 	bool			is(wear_s v) const;
 	bool			is(const itemi& v) const;
+	bool			is(const item& v) const { return type == v.type; }
 	bool			iscountable() const { return geti().count != 0; }
 	bool			isidentified() const { return identified != 0; }
 	void			setcount(int v);
@@ -200,7 +196,10 @@ struct wearable : movable {
 	item			wears[Elbows + 1];
 	int				money;
 	void			additem(item& v);
+	slice<item>		backpack() { return slice<item>(wears + Backpack, wears + BackpackLast + 1); }
 	void			equip(item& v);
+	slice<item>		equipment() { return slice<item>(wears + MeleeWeapon, wears + Elbows + 1); }
+	bool			iswear(const item* p) const { return p >= wears && p <= wears + Elbows; }
 	int				getmoney() const { return money; }
 	item*			getwear(wear_s id) { return wears + id; }
 	const char*		getwearname(wear_s id) const;

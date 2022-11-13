@@ -1,4 +1,5 @@
-#include "main.h"
+#include "crt.h"
+#include "wear.h"
 
 BSDATA(weari) = {
 	{"Backpack"},

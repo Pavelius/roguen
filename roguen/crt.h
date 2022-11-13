@@ -98,7 +98,6 @@ class slice {
 public:
 	typedef T data_type;
 	constexpr slice() : data(0), count(0) {}
-	//constexpr slice(const slice& e) = default;
 	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
 	template<int N> constexpr slice(const adat<T, N>& v) : data(const_cast<T*>(v.data)), count(v.count) {}
 	constexpr slice(T* data, unsigned count) : data(data), count(count) {}

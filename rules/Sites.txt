@@ -13,7 +13,7 @@ GoblinInvasion maximum(20) current(3)
 #Need
 
 SkullInvestigation special(MonsterSkull+1)
- need Bones+10
+ need Bones+50
  fail EldersComing+1
  success ChurchOfBlessedOne+2
 

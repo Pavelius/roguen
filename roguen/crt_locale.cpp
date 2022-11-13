@@ -53,6 +53,7 @@ static const char* read_string_v1(const char* p, char* ps, const char* pe) {
 
 static const char* read_string_v2(const char* p, char* ps, const char* pe) {
 	char sym;
+	auto pb = ps;
 	while(*p && *p != '#') {
 		sym = *p++;
 		switch(sym) {
@@ -64,6 +65,9 @@ static const char* read_string_v2(const char* p, char* ps, const char* pe) {
 			*ps++ = sym;
 	}
 	*ps = 0;
+	while(ps > pb && (ps[-1]=='\n' || ps[-1]=='\r')) {
+		ps--; ps[0] = 0;
+	}
 	return p;
 }
 

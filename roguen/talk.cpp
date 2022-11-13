@@ -59,33 +59,33 @@ static const char* read_variants(const char* p, stringbuilder& result, variants&
 	return p;
 }
 
-//static const char* read_params(const char* p, short& v) {
-//	if(!checksym(p, '('))
-//		return p;
-//	p = skipws(p + 1);
-//	p = stringbuilder::read(p, v);
-//	p = skipws(p);
-//	if(!checksym(p, ')'))
-//		return p;
-//	p = skipws(p + 1);
-//	return p;
-//}
-//
-//static const char* read_params(const char* p, stringbuilder& result) {
-//	if(!checksym(p, '('))
-//		return p;
-//	p = skipws(p + 1);
-//	if(p[0] == '\"') {
-//		result.clear();
-//		p = result.psstr(p + 1, p[0]);
-//	} else
-//		p = readidn(p, result);
-//	p = skipws(p);
-//	if(!checksym(p, ')'))
-//		return p;
-//	p = skipws(p + 1);
-//	return p;
-//}
+static const char* read_params(const char* p, short& v) {
+	if(!checksym(p, '('))
+		return p;
+	p = skipws(p + 1);
+	p = stringbuilder::read(p, v);
+	p = skipws(p);
+	if(!checksym(p, ')'))
+		return p;
+	p = skipws(p + 1);
+	return p;
+}
+
+static const char* read_params(const char* p, stringbuilder& result) {
+	if(!checksym(p, '('))
+		return p;
+	p = skipws(p + 1);
+	if(p[0] == '\"') {
+		result.clear();
+		p = result.psstr(p + 1, p[0]);
+	} else
+		p = readidn(p, result);
+	p = skipws(p);
+	if(!checksym(p, ')'))
+		return p;
+	p = skipws(p + 1);
+	return p;
+}
 
 static const char* read_event(const char* p, short& parent, stringbuilder& sb) {
 	if(!allowparse)

@@ -1,12 +1,53 @@
 #include "main.h"
 
+static int maximum_count(const variants& source) {
+	auto result = 0;
+	for(auto v : source) {
+		if(v.counter > result)
+			result = v.counter;
+	}
+	return result;
+}
+
+static void remove_item(creature* p, const itemi& ei, int count) {
+	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i + 1)) {
+		auto& e = p->wears[i];
+		if(!e)
+			continue;
+		if(e.is(ei)) {
+			auto allow_count = e.getcount();
+			if(count < allow_count) {
+				e.setcount(allow_count - count);
+				count = 0;
+			} else {
+				e.setcount(0);
+				count -= allow_count;
+			}
+			if(count <= 0)
+				break;
+		}
+	}
+}
+
 static const phrasei* ask_answer(const phrasei* p) {
 	answers an;
-	for(auto pa = p->nextanswer(); pa; pa = pa->nextanswer())
-		an.add(pa, pa->text);
+	pushvalue push_an(answers::last, &an);
+	for(auto pa = p->nextanswer(); pa; pa = pa->nextanswer()) {
+		if(!pa->text)
+			continue;
+		if(pa->text[0] == '@') {
+			auto ps = bsdata<script>::find(pa->text + 1);
+			if(ps)
+				ps->run(0);
+		} else
+			an.add(pa, pa->text);
+	}
 	if(!an)
 		an.add(0, getnm("Continue"));
-	return (phrasei*)an.choose();
+	auto pv = an.choose();
+	if(bsdata<phrasei>::have(pv))
+		return (phrasei*)pv;
+	return 0;
 }
 
 static const phrasei* apply_answer(const phrasei* p) {

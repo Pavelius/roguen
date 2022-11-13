@@ -639,6 +639,7 @@ static bool if_greater(int bonus) {
 }
 
 void add_need(int bonus);
+void add_need_answers(int bonus);
 
 BSDATA(textscript) = {
 	{"NeedHelpIntro", need_help_info},
@@ -660,6 +661,7 @@ assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
+	{"AddNeedAnswers", add_need_answers},
 	{"AttackForward", attack_forward},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},

@@ -19,6 +19,28 @@ void add_need(int bonus) {
 	greatneed::add(p, pc, game.getminutes() + xrand(24 * 60 * 5, 24 * 60 * 8));
 }
 
+static int getneedcount(const item& e, const variants& source) {
+	if(!e)
+		return 0;
+	auto type = e.getkind();
+	for(auto v : source) {
+		if(v.iskind<itemi>() && v.value == type)
+			return v.counter;
+	}
+	return 0;
+}
+
+void add_need_answers(int bonus) {
+	if(!last_need)
+		return;
+	for(auto& e : player->backpack()) {
+		auto need_count = getneedcount(e, last_need->geti().need);
+		if(!need_count)
+			continue;
+		answers::last->add(&e, getnm("IHaveItem"), e.getname());
+	}
+}
+
 void prepare_need() {
 	needs.select();
 	needs.shuffle();

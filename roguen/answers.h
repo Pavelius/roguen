@@ -13,6 +13,7 @@ class answers {
 	adat<element, 32>	elements;
 public:
 	typedef void(*fnpaint)(int index, const void* value, const char* text, fnevent press_event);
+	static answers*		last;
 	static fnevent		afterpaint;
 	static fnevent		beforepaint;
 	static fnpaint		paintcell;

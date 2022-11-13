@@ -302,6 +302,7 @@
     <ClInclude Include="variant.h" />
     <ClInclude Include="variantc.h" />
     <ClInclude Include="visualeffect.h" />
+    <ClInclude Include="wear.h" />
     <ClInclude Include="widget.h" />
     <ClInclude Include="win.h" />
     <ClInclude Include="world.h" />
