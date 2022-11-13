@@ -18,12 +18,12 @@ SkullInvestigation special(MonsterSkull+1)
  success ChurchOfBlessedOne+2
 
 DeepDwarfTradeRoute
- need OrnamentalStones+4 SemiPreciousStones+2 FancyStones
+ need OrnamentalStones+14 SemiPreciousStones+8 FancyStones+4
  fail EldersComing+1
  success ChurchOfBlessedOne+1
 
 AccumulationWeaponArsenal
- need BattleAxe BruteSword Dagger+2 HandAxe Mace Spear Sword
+ need BattleAxe+10 BruteSword+10 Dagger+20 HandAxe+14 Mace+10 Spear+10 Sword+10
  fail EldersComing+1
  success ChurchOfBlessedOne+1
 

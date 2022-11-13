@@ -24,10 +24,41 @@ static int getneedcount(const item& e, const variants& source) {
 		return 0;
 	auto type = e.getkind();
 	for(auto v : source) {
-		if(v.iskind<itemi>() && v.value == type)
+		if(v.iskind<itemi>() && v.value == type) {
+			if(!v.counter)
+				return 1;
 			return v.counter;
+		}
 	}
 	return 0;
+}
+
+static int getrestcount(int score, int maximum) {
+	auto n = maximum * score / 100;
+	return maximum - n;
+}
+
+static int getprogress(int count, int maximum) {
+	return count * 100 / maximum;
+}
+
+static void apply_answer(void* pv) {
+	if(!last_need)
+		return;
+	if(player->iswear(pv)) {
+		auto pi = (item*)pv;
+		auto count = pi->getcount();
+		auto need_count = getneedcount(*pi, last_need->geti().need);
+		auto rest_count = getrestcount(last_need->score, need_count);
+		if(count > rest_count)
+			count = rest_count;
+		if(count > 0) {
+			last_need->score += getprogress(count, need_count);
+			player->logs(getnm("YouGiveItemTo"), pi->getname(), opponent->getname(), count);
+			pi->setcount(pi->getcount() - count);
+			last_value = 10;
+		}
+	}
 }
 
 void add_need_answers(int bonus) {
@@ -55,5 +86,5 @@ bool creature::speechneed() {
 	pushvalue push_need(last_need, greatneed::find(this));
 	if(!last_need)
 		return false;
-	return talk("NeedTalk");
+	return talk("NeedTalk", apply_answer);
 }

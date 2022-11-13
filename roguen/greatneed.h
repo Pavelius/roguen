@@ -28,7 +28,6 @@ struct greatneed {
 	void				clear() { zclear(this); }
 	static greatneed*	find(variant owner);
 	const greatneedi&	geti() const { return bsdata<greatneedi>::elements[type]; }
-	static int			getprogress(int count, int maximum) { return count * 100 / maximum; }
 	bool				is(needn v) const { return (flags & (1 << v)) != 0; }
 	void				set(needn v) { flags |= (1 << v); }
 	void				remove(needn v) { flags &= ~(1 << v); }

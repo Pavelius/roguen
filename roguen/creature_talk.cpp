@@ -1,5 +1,7 @@
 #include "main.h"
 
+static fncommand talk_proc;
+
 static int maximum_count(const variants& source) {
 	auto result = 0;
 	for(auto v : source) {
@@ -44,18 +46,23 @@ static const phrasei* ask_answer(const phrasei* p) {
 	}
 	if(!an)
 		an.add(0, getnm("Continue"));
-	auto pv = an.choose();
-	if(bsdata<phrasei>::have(pv))
-		return (phrasei*)pv;
-	return 0;
+	return (phrasei*)an.choose();
 }
 
-static const phrasei* apply_answer(const phrasei* p) {
+static const phrasei* apply_answer(const phrasei* p, const talki* owner) {
 	if(!p)
 		return 0;
-	runscript(p->elements);
-	auto pt = talki::owner(p);
-	return pt->find(p->next);
+	if(bsdata<phrasei>::have(p)) {
+		runscript(p->elements);
+		return owner->find(p->next);
+	}
+	if(talk_proc) {
+		last_value = 0;
+		talk_proc((void*)p);
+		if(last_value)
+			return owner->find(last_value);
+	}
+	return 0;
 }
 
 static void talk_entry(const phrasei* p) {
@@ -63,15 +70,17 @@ static void talk_entry(const phrasei* p) {
 		console.clear();
 		runscript(p->elements);
 		opponent->say(p->text);
+		auto owner = talki::owner(p);
 		p = ask_answer(p);
-		p = apply_answer(p);
+		p = apply_answer(p, owner);
 	}
 }
 
-bool creature::talk(const char* id) {
+bool creature::talk(const char* id, fncommand proc) {
 	auto current_talk = bsdata<talki>::find(id);
 	if(!current_talk)
 		return false;
+	pushvalue push_proc(talk_proc, proc);
 	talk_entry(current_talk->find(1));
 	return true;
 }

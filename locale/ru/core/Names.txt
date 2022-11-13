@@ -65,7 +65,8 @@ YouCutWood: %герой срубил%а %-1.
 YouDontSeeAnyEnemy: Вы не видите ни одного врага.
 YouDontHaveAnyActions: Здесь вы не можете выполнить никаких особых действий.
 YouDontValidTargets: Вы не видите подходящих целей.
-YouFoundSecretDoor: Вы обнаружили [%1i] секретную дверь.
+YouFoundSecretDoor: %герой обнаружил%а [%1i] секретную дверь.
+YouGiveItemTo: %герой отдал%а %-1 %@2.
 YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
 YouNeedThrownWeapon: Чтобы метать, вам нужно иметь в руках метательное оружие.

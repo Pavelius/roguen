@@ -199,7 +199,7 @@ struct wearable : movable {
 	slice<item>		backpack() { return slice<item>(wears + Backpack, wears + BackpackLast + 1); }
 	void			equip(item& v);
 	slice<item>		equipment() { return slice<item>(wears + MeleeWeapon, wears + Elbows + 1); }
-	bool			iswear(const item* p) const { return p >= wears && p <= wears + Elbows; }
+	bool			iswear(const void* p) const { return p >= wears && p <= wears + Elbows; }
 	int				getmoney() const { return money; }
 	item*			getwear(wear_s id) { return wears + id; }
 	const char*		getwearname(wear_s id) const;
@@ -313,7 +313,7 @@ public:
 	bool			speechrumor() const;
 	bool			speechlocation() const;
 	void			summon(point m, const variants& elements, int count, int level);
-	bool			talk(const char* id);
+	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update_room();
 	void			use(variants source);
@@ -443,8 +443,8 @@ struct siteskilli : nameable {
 typedef collection<siteskilli> siteskilla;
 namespace draw {
 struct keybind {
-	unsigned	key;
-	const void*	data;
+	unsigned		key;
+	const void*		data;
 	constexpr explicit operator bool() const { return key != 0; }
 };
 bool				isnext();
