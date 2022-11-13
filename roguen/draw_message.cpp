@@ -71,6 +71,7 @@ static const char* read_url(const char* p, stringbuilder& sb) {
 }
 
 static const char* read_idf(const char* p, stringbuilder& sb) {
+	sb.clear();
 	while(*p && (ischa(*p) || isnum(*p) || *p == '_'))
 		sb.addch(*p);
 	return p;

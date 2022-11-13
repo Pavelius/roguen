@@ -1,4 +1,5 @@
 #include "boost.h"
+#include "greatneed.h"
 #include "main.h"
 
 template<typename T>
@@ -130,6 +131,19 @@ static void decoy_food() {
 static void growth_plant() {
 }
 
+static void update_need() {
+	auto stamp = game.getminutes();
+	for(auto& e : bsdata<greatneed>()) {
+		if(e.deadline > stamp)
+			continue;
+		if(e.score < 40)
+			runscript(e.geti().fail);
+		else if(e.score >= 100)
+			runscript(e.geti().success);
+		e.clear();
+	}
+}
+
 static bool checkalive() {
 	if(!player || !(*player))
 		return false;
@@ -158,6 +172,7 @@ void gamei::passminute() {
 	while(restore_hour < minutes) {
 		all(&creature::every1hour);
 		restore_hour += 60;
+		update_need();
 	}
 	while(restore_day_part < minutes) {
 		decoy_food();
@@ -260,6 +275,6 @@ void gamei::set(const globali& e, int v) {
 	globals[bsid(&e)] = v;
 	if(v == e.minimum)
 		runscript(e.fail);
-	else if(v==e.maximum)
+	else if(v == e.maximum)
 		runscript(e.effect);
 }

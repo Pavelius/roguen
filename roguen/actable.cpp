@@ -50,21 +50,57 @@ void actable::actvf(stringbuilder& sb, const char* name, bool female, char separ
 	sb = sa;
 }
 
+static void do_say(stringbuilder& sb, const char* format, const char* name) {
+	sb.addsep('\n');
+	auto pb = sb.get();
+	sb.add("[%1] \"", name);
+	sb.addv(format, 0);
+	sb.add("\"");
+	actable::logv(pb, 0, 0, false);
+}
+
+static const char* skipncr(const char* p) {
+	while(*p && !(*p == 10 || *p == 13))
+		p++;
+	return skipspcr(p);
+}
+
+static void complex_say(stringbuilder& sb, const char* format, const char* name) {
+	char dialog_text[260];
+	while(format[0]) {
+		auto pe = skipncr(format);
+		auto len = pe - format;
+		if(format[len] == 0) {
+			do_say(sb, format, name);
+			break;
+		} else {
+			if(len > sizeof(dialog_text) - 16)
+				len = sizeof(dialog_text) - 16;
+			memcpy(dialog_text, format, len);
+			dialog_text[len] = 0;
+			while(len > 0 && (dialog_text[len-1] == 10 || dialog_text[len-1] == 13))
+				dialog_text[--len] = 0;
+			do_say(sb, dialog_text, name);
+			actable::pressspace();
+			format = skipspcr(format + len);
+		}
+	}
+}
+
+static void say_format(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool isfemale) {
+	char temp[4096]; stringbuilder sbx(temp);
+	stringact sa(sbx, name, isfemale);
+	sa.addv(format, format_param);
+	complex_say(sb, temp, name);
+}
+
 void actable::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
 	if(!name)
 		name = getname();
 	if(format[0] == '>')
 		actv(sb, format + 1, format_param, name, female, '\n');
-	else {
-		stringact sa(sb, getname(), female);
-		sa.addsep('\n');
-		auto pb = sa.get();
-		sa.add("[%1] \"", name);
-		sa.addv(format, format_param);
-		sa.add("\"");
-		sb = sa;
-		logv(pb, 0, 0, false);
-	}
+	else
+		say_format(sb, format, format_param, name, female);
 }
 
 bool actable::iskind(variant v) const {
