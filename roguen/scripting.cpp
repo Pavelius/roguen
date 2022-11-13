@@ -296,7 +296,7 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	dialog_message(getdescription("LoseGame1"));
+	dialog_message(getdescription("WinGame1"));
 	//console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
 	//actable::pressspace();
 }
