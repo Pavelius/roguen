@@ -50,7 +50,7 @@ void actable::actvf(stringbuilder& sb, const char* name, bool female, char separ
 	sb = sa;
 }
 
-static void do_say(stringbuilder& sb, const char* format, const char* name) {
+static void named_say(stringbuilder& sb, const char* format, const char* name) {
 	sb.addsep('\n');
 	auto pb = sb.get();
 	sb.add("[%1] \"", name);
@@ -66,12 +66,12 @@ static const char* skipncr(const char* p) {
 }
 
 static void complex_say(stringbuilder& sb, const char* format, const char* name) {
-	char dialog_text[260];
+	char dialog_text[512];
 	while(format[0]) {
 		auto pe = skipncr(format);
 		auto len = pe - format;
 		if(format[len] == 0) {
-			do_say(sb, format, name);
+			named_say(sb, format, name);
 			break;
 		} else {
 			if(len > sizeof(dialog_text) - 16)
@@ -80,7 +80,7 @@ static void complex_say(stringbuilder& sb, const char* format, const char* name)
 			dialog_text[len] = 0;
 			while(len > 0 && (dialog_text[len-1] == 10 || dialog_text[len-1] == 13))
 				dialog_text[--len] = 0;
-			do_say(sb, dialog_text, name);
+			named_say(sb, dialog_text, name);
 			actable::pressspace();
 			format = skipspcr(format + len);
 		}

@@ -4,8 +4,9 @@
 BSDATA(needni) = {
 	{"NeedAccepted"},
 	{"NeedSpecialApplied"},
+	{"NeedCompeted"},
 };
-assert_enum(needni, NeedSpecialApplied)
+assert_enum(needni, NeedCompeted)
 BSMETA(needni) = {
 	BSREQ(id),
 	{}};

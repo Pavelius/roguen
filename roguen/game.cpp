@@ -14,6 +14,8 @@ static char		console_text[4096];
 stringbuilder	console(console_text);
 point			gamei::start_village = {128, 128};
 
+void update_need();
+
 static int getbase(const char* id) {
 	auto p = varianti::getsource(id);
 	if(!p)
@@ -129,19 +131,6 @@ static void decoy_food() {
 }
 
 static void growth_plant() {
-}
-
-static void update_need() {
-	auto stamp = game.getminutes();
-	for(auto& e : bsdata<greatneed>()) {
-		if(e.deadline > stamp)
-			continue;
-		if(e.score < 40)
-			runscript(e.geti().fail);
-		else if(e.score >= 100)
-			runscript(e.geti().success);
-		e.clear();
-	}
 }
 
 static bool checkalive() {

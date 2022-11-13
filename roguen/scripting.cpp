@@ -639,7 +639,7 @@ static void need_help_info(stringbuilder& sb) {
 }
 
 static void last_coins_info(stringbuilder& sb) {
-	sb.add(sb, last_coins);
+	sb.add("%1i", last_coins);
 }
 
 static bool if_lesser(int bonus) {

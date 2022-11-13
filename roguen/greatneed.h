@@ -4,7 +4,7 @@
 #pragma once
 
 enum needn : unsigned char {
-	NeedAccepted, NeedSpecialApplied,
+	NeedAccepted, NeedSpecialApplied, NeedCompeted
 };
 struct needni : nameable {
 };

@@ -34,6 +34,22 @@ static int getneedcount(const item& e, const variants& source) {
 	return 0;
 }
 
+void update_need() {
+	auto stamp = game.getminutes();
+	for(auto& e : bsdata<greatneed>()) {
+		if(e.deadline > stamp)
+			continue;
+		auto& ei = e.geti();
+		if(e.score < 40)
+			runscript(ei.fail);
+		else if(e.score >= 100)
+			runscript(ei.success);
+		e.clear();
+		needs.add(const_cast<greatneedi*>(&ei));
+		add_need(0);
+	}
+}
+
 static int getrestcount(int score, int maximum) {
 	auto n = maximum * score / 100;
 	return maximum - n;
@@ -56,6 +72,8 @@ static void apply_answer(void* pv) {
 		if(count > 0) {
 			auto last_percent = getprogress(count, need_count);
 			last_need->score += last_percent;
+			if(last_need->score >= 100)
+				last_need->set(NeedCompeted);
 			player->logs(getnm("YouGiveItemTo"), pi->getname(), opponent->getname(), count);
 			pi->setcount(pi->getcount() - count);
 			last_value = 10;
@@ -94,5 +112,11 @@ bool creature::speechneed() {
 	pushvalue push_need(last_need, greatneed::find(this));
 	if(!last_need)
 		return false;
+	if(last_need->is(NeedCompeted)) {
+		if(d100() < 60)
+			return false;
+		speech("VisitMeLater");
+		return true;
+	}
 	return talk("NeedTalk", apply_answer);
 }
