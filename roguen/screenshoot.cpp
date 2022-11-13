@@ -1,4 +1,5 @@
-﻿#include "screenshoot.h"
+﻿#include "crt.h"
+#include "screenshoot.h"
 
 using namespace draw;
 
@@ -31,8 +32,31 @@ screenshoot::screenshoot(bool fade) : screenshoot({0, 0, getwidth(), getheight()
 screenshoot::~screenshoot() {
 }
 
-void screenshoot::restore() {
+void screenshoot::restore() const {
 	setclip();
 	if(draw::canvas)
 		draw::canvas->blit(x, y, width, height, 0, *this, 0, 0);
+}
+
+void screenshoot::blend(const surface& destination, unsigned milliseconds) const {
+	if(!milliseconds)
+		return;
+	auto start = getcputime();
+	auto finish = start + milliseconds;
+	auto current = start;
+	while(ismodal() && current < finish) {
+		auto alpha = ((current - start) << 8) / milliseconds;
+		restore();
+		canvas->blend(destination, alpha);
+		doredraw();
+		waitcputime(1);
+		current = getcputime();
+	}
+}
+
+void screenshoot::fade(fnevent proc, unsigned milliseconds) {
+	screenshoot before;
+	proc();
+	screenshoot after;
+	before.blend(after, milliseconds);
 }

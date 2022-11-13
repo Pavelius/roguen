@@ -1359,45 +1359,6 @@ void show_logs(int bonus) {
 	}
 }
 
-static void center_bitmap(const surface& bm) {
-	auto push_width = width;
-	auto push_height = height;
-	auto push_x = caret.x;
-	width = bm.width - 1;
-	height = bm.height;
-	caret.x = (getwidth() - width) / 2;
-	canvas->blit(caret.x, caret.y, bm.width, bm.height, 0, bm, 0, 0);
-	//strokeout(rectb, 2, 2);
-	caret.y += height + texth();
-	caret.x = push_x;
-	width = push_width;
-	height = push_height;
-}
-
-void dialog_message(const char* url, const char* format) {
-	surface bitmap(url);
-	if(!bitmap)
-		return;
-	pushvalue push_font(font, (const sprite*)metrics::h2);
-	fillwindow();
-	caret.x = 20;
-	caret.y = 40;
-	width = getwidth() - 20 * 2;
-	height = texth() * 6;
-	center_bitmap(bitmap);
-	texta(format, AlignCenter);
-	while(ismodal()) {
-		domodal();
-		switch(hot.key) {
-		case KeyEnter:
-		case KeyEscape:
-		case KeySpace:
-			breakmodal(1);
-			break;
-		}
-	}
-}
-
 static void textcn(const char* format) {
 	auto push_caret = caret;
 	caret.x -= (textw(format) + 1) / 2;

@@ -295,8 +295,10 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
-	actable::pressspace();
+	auto pn = getdescription("LoseGame");
+	dialog_message(pn);
+	//console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
+	//actable::pressspace();
 }
 
 static void open_nearest_door(int bonus) {
@@ -611,14 +613,14 @@ static const char* day_left(unsigned end_stamp) {
 	auto stamp = game.getminutes();
 	if(end_stamp <= stamp)
 		return getnm("FewTime");
-	auto value = (stamp - end_stamp) / (24 * 60);
+	auto value = (end_stamp - stamp) / (24 * 60);
 	if(value > 0)
-		return str("%1i %2", value, stringbuilder::getbycount("Day", value));
-	value = (stamp - end_stamp) / 60;
+		return str("%1i %-2", value, stringbuilder::getbycount("Day", value));
+	value = (end_stamp - stamp) / 60;
 	if(value > 0)
-		return str("%1i %2", value, stringbuilder::getbycount("Hour", value));
-	value = stamp - end_stamp;
-	return str("%1i %2", value, stringbuilder::getbycount("Minute", value));
+		return str("%1i %-2", value, stringbuilder::getbycount("Hour", value));
+	value = end_stamp - stamp;
+	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
 }
 
 static void need_help_info(stringbuilder& sb) {

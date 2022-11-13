@@ -16,14 +16,14 @@
     <Filter Include="Logic">
       <UniqueIdentifier>{7cf5775d-6b38-46b8-98eb-0fe35e570235}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Locale">
       <UniqueIdentifier>{81120db4-ed34-452d-a87a-05f6a5bbf804}</UniqueIdentifier>
     </Filter>
     <Filter Include="Talk">
       <UniqueIdentifier>{8b5ad259-2ea2-4d82-9254-415b3c164511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Data">
+      <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +321,9 @@
     <ClCompile Include="wear.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="draw_message.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -518,28 +521,28 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\errors.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\rules\Items.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\rules\Advancement.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\rules\Shapes.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\rules\Sites.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\rules\Monsters.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\logs.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\locale\ru\core\Chats.txt">
       <Filter>Locale</Filter>
@@ -581,16 +584,16 @@
       <Filter>Talk</Filter>
     </Text>
     <Text Include="..\rules\Spells.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\locale\ru\core\SpellDescriptions.txt">
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\rules\Tiles.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\rules\Features.txt">
-      <Filter>Data</Filter>
+      <Filter>Interface\Data</Filter>
     </Text>
     <Text Include="..\locale\ru\core\NeedDescriptions.txt">
       <Filter>Locale</Filter>

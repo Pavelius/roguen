@@ -471,5 +471,6 @@ extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);
 void				choose_targets(unsigned flags);
+void				dialog_message(const char* format);
 tile_s				getfloor();
 tile_s				getwall();
