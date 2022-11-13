@@ -25,6 +25,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{67ec43f9-3859-4284-a8da-fbab3a3dda7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="answers.cpp">
@@ -603,6 +606,9 @@
     </Text>
     <Text Include="..\locale\ru\core\EndGameDescriptions.txt">
       <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\modules\ChurchOfOne.txt">
+      <Filter>Modules</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,7 @@ static void initializating() {
 	bsreq::read("rules/Spells.txt");
 	bsreq::read("rules/Sites.txt");
 	talki::read();
+	readurl("modules", "*.txt", bsreq::read);
 #ifdef _DEBUG
 	main_util();
 #endif

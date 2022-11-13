@@ -1,0 +1,32 @@
+#Global
+
+ChurchOfBlessedOne maximum(10)
+ effect WinGame+1
+
+EldersComing maximum(15)
+ effect LoseGame+1
+
+#Need
+
+SkullInvestigation special(MonsterSkull+1)
+ need Bones+50
+ fail EldersComing+1
+ success ChurchOfBlessedOne+2
+
+DeepDwarfTradeRoute coins(1000)
+ need Ration+10 Torch+30
+ fail EldersComing+1
+ success ChurchOfBlessedOne+1
+
+AccumulationWeaponArsenal
+ need BattleAxe+10 BruteSword+10 Dagger+20 HandAxe+14 Mace+10 Spear+10 Sword+10
+ fail EldersComing+1
+ success ChurchOfBlessedOne+1
+
+#Trigger
+
+WhenCreatureP1EnterSiteP2 0 Tavern
+ effect ILoveThisPlace-40
+
+EverySeveralDays 0 0
+ effect EldersComing+1

@@ -133,3 +133,15 @@ char* szfnamewe(char* result, const char* name) {
 		p[-1] = 0;
 	return result;
 }
+
+void readurl(const char* folder, const char* mask, fnread proc) {
+	char temp[260];
+	for(io::file::find file(folder); file; file.next()) {
+		auto pn = file.name();
+		if(pn[0] == '.')
+			continue;
+		if(mask && !szpmatch(pn, mask))
+			continue;
+		proc(file.fullname(temp));
+	}
+}
