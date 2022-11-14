@@ -17,7 +17,13 @@ static creature* random_target(const greatneedi* p) {
 void add_need(int bonus) {
 	auto p = needs.pick();
 	auto pc = random_target(p);
-	greatneed::add(p, pc, game.getminutes() + xrand(24 * 60 * 5, 24 * 60 * 8));
+	auto days = p->days;
+	if(!days) {
+		days.min = 4;
+		days.max = 8;
+	}
+	days.correct();
+	greatneed::add(p, pc, game.getminutes() + xrand(24 * 60 * days.min, 24 * 60 * days.max));
 }
 
 static void add_need(variant owner) {
@@ -121,7 +127,11 @@ void add_need_answers(int bonus) {
 		auto need_count = getneedcount(e, last_need->geti().need);
 		if(!need_count)
 			continue;
-		answers::last->add(&e, getnm("IHaveItem"), e.getname());
+		auto count = e.getcount();
+		auto rest_count = getrestcount(last_need->score, need_count);
+		if(count > rest_count)
+			count = rest_count;
+		answers::last->add(&e, getnm("IHaveItem"), e.getname(), count);
 	}
 }
 

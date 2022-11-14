@@ -4,6 +4,8 @@
 
 void check_description(const char* id, const char** psuffix);
 
+NOBSDATA(dice)
+
 BSDATA(needni) = {
 	{"NeedAccepted"},
 	{"NeedSpecialApplied"},
@@ -21,7 +23,7 @@ BSMETA(greatneedi) = {
 	BSREQ(need),
 	BSREQ(targets),
 	BSREQ(special),
-	BSREQ(level),
+	BSREQ(days),
 	BSREQ(flags),
 	BSREQ(coins),
 	BSREQ(fail), BSREQ(success),

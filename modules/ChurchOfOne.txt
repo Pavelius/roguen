@@ -8,12 +8,12 @@ EldersComing maximum(15)
 
 #Need
 
-SkullInvestigation special(MonsterSkull+1)
+SkullInvestigation special(MonsterSkull+1) days(3 6)
  need Bones+50
  fail EldersComing+1
  success ChurchOfBlessedOne+2
 
-DeepDwarfTradeRoute coins(1000)
+DeepDwarfTradeRoute coins(1000) days(2 3)
  need Ration+10 Torch+30
  fail EldersComing+1
  success ChurchOfBlessedOne+1

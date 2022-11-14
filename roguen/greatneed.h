@@ -1,3 +1,4 @@
+#include "dice.h"
 #include "nameable.h"
 #include "variant.h"
 
@@ -14,7 +15,7 @@ struct greatneedi : nameable {
 	variants			need;
 	variant				special;
 	variants			fail, success;
-	char				level;
+	dice				days;
 	unsigned			coins;
 	unsigned			flags;
 	const char*			get(const char* suffix) const { return getdescription(str("%1%2", id, suffix)); }
