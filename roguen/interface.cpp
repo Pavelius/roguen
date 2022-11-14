@@ -1009,21 +1009,6 @@ void* answers::choose() const {
 	return (void*)getresult();
 }
 
-void actable::pressspace() {
-	static keybind keys[] = {
-		{KeyEscape, (void*)1},
-		{KeyEnter, (void*)1},
-		{}
-	};
-	if(!console)
-		return;
-	pushvalue push_key(keybinds);
-	answers an;
-	an.add((void*)1, getnm("Continue"));
-	auto result = an.choose();
-	console.clear();
-}
-
 static bool backward_button(const char* format, void* value) {
 	auto format_width = textw(format);
 	auto push_width = width;

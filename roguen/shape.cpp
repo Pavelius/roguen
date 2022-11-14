@@ -20,10 +20,6 @@ point shapei::find(char sym) const {
 	return {-1000, -1000};
 }
 
-point shapei::center(point c) const {
-	return c.to(origin.x, origin.y);
-}
-
 point shapei::translate(point c, point v, direction_s d) const {
 	switch(d) {
 	case North: return c.to(v.x, v.y);
@@ -32,6 +28,16 @@ point shapei::translate(point c, point v, direction_s d) const {
 	case East: return c.to(v.y, -v.x);
 	default: return c;
 	}
+}
+
+rect shapei::bounding(point c, direction_s d) const {
+	point ul = translate(c, origin, d);
+	point dr = translate(c, origin + size, d);
+	auto x1 = imin(ul.x, dr.x);
+	auto x2 = imax(ul.x, dr.x);
+	auto y1 = imin(ul.y, dr.y);
+	auto y2 = imax(ul.y, dr.y);
+	return {x1, y1, x2, y2};
 }
 
 static bool isallowed(char sym) {
@@ -70,7 +76,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 	size_t mr = e.size.x * e.size.y;
 	size_t mn = sb.getmaximum();
 	if(mr > mn)
-		error(pb, "Shape size %1ix%2i is too big. Try make it smallest. Multiplied sized of shape must be not greater that %3i.", e.size.x, e.size.y, mn);
+		error(pb, "Shape size %1ix%2i is too big. Try make it smallest. Multiplied width and height of shape must be not greater that %3i.", e.size.x, e.size.y, mn);
 	e.content = szdup(sb.begin());
 	for(auto sym : "0123456789")
 		e.points[sym - '0'] = e.find(sym);

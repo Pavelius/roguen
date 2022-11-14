@@ -157,3 +157,12 @@ bool answers::confirm(const char* format, ...) {
 	console->clear();
 	return result != 0;
 }
+
+void answers::pressspace() {
+	if(!console || !(*console))
+		return;
+	answers an;
+	an.add((void*)1, getnm("Continue"));
+	auto result = an.choose();
+	console->clear();
+}

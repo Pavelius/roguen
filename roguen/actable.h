@@ -16,7 +16,6 @@ public:
 	bool			iskind(variant v) const;
 	static bool		isnamed(const void* p) { return ((actable*)p)->name_id != 0xFFFF; }
 	static void		logv(const char* format, const char* format_param, const char* name, bool female);
-	static void		pressspace();
 	void			sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void			setkind(variant v) { kind = v; }
 	void			setnoname() { name_id = 0xFFFF; }
