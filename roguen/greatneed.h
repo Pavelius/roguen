@@ -4,7 +4,8 @@
 #pragma once
 
 enum needn : unsigned char {
-	NeedAccepted, NeedSpecialApplied, NeedCompeted
+	NeedAccepted, NeedSpecialApplied, NeedCompleted, NeedFinished,
+	NeedFail, NeedSuccess,
 };
 struct needni : nameable {
 };
@@ -16,6 +17,11 @@ struct greatneedi : nameable {
 	char				level;
 	unsigned			coins;
 	unsigned			flags;
+	const char*			get(const char* suffix) const { return getdescription(str("%1%2", id, suffix)); }
+	const char*			getcompleted() const { return get("Completed"); }
+	const char*			getfail() const { return get("Fail"); }
+	const char*			getpartial() const { return get("Partial"); }
+	const char*			getsuccess() const { return get("Success"); }
 };
 struct greatneed {
 	short unsigned		type;
@@ -27,8 +33,10 @@ struct greatneed {
 	static greatneed*	add(const greatneedi* type, variant owner, unsigned deadline);
 	void				clear() { zclear(this); }
 	static greatneed*	find(variant owner);
+	static greatneed*	find(variant owner, needn f);
 	const greatneedi&	geti() const { return bsdata<greatneedi>::elements[type]; }
 	bool				is(needn v) const { return (flags & (1 << v)) != 0; }
-	void				set(needn v) { flags |= (1 << v); }
 	void				remove(needn v) { flags &= ~(1 << v); }
+	void				set(needn v) { flags |= (1 << v); }
+	static void			shrink();
 };

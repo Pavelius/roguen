@@ -4,9 +4,12 @@
 BSDATA(needni) = {
 	{"NeedAccepted"},
 	{"NeedSpecialApplied"},
-	{"NeedCompeted"},
+	{"NeedCompleted"},
+	{"NeedFinished"},
+	{"NeedFail"},
+	{"NeedSuccess"},
 };
-assert_enum(needni, NeedCompeted)
+assert_enum(needni, NeedSuccess)
 BSMETA(needni) = {
 	BSREQ(id),
 	{}};
@@ -21,7 +24,7 @@ BSMETA(greatneedi) = {
 	BSREQ(fail), BSREQ(success),
 	{}};
 BSDATAC(greatneedi, 32)
-BSDATAC(greatneed, 32)
+BSDATAC(greatneed, 64)
 
 greatneed* greatneed::find(variant owner) {
 	if(!owner)
@@ -33,14 +36,34 @@ greatneed* greatneed::find(variant owner) {
 	return 0;
 }
 
+greatneed* greatneed::find(variant owner, needn f) {
+	if(!owner)
+		return 0;
+	for(auto& e : bsdata<greatneed>()) {
+		if(e.owner == owner && e.is(f))
+			return &e;
+	}
+	return 0;
+}
+
 greatneed* greatneed::add(const greatneedi* type, variant owner, unsigned deadline) {
-	auto p = find(owner);
-	if(p)
-		return p;
-	p = bsdata<greatneed>::addz();
+	//auto p = find(owner);
+	//if(p)
+	//	return p;
+	auto p = bsdata<greatneed>::addz();
 	p->clear();
 	p->type = type - bsdata<greatneedi>::elements;
 	p->owner = owner;
 	p->deadline = deadline;
 	return p;
+}
+
+void greatneed::shrink() {
+	auto ps = bsdata<greatneed>::elements;
+	for(auto& e : bsdata<greatneed>()) {
+		if(!e)
+			continue;
+		*ps++ = e;
+	}
+	bsdata<greatneed>::source.count = ps - bsdata<greatneed>::elements;
 }

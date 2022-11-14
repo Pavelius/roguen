@@ -20,6 +20,11 @@ void add_need(int bonus) {
 	greatneed::add(p, pc, game.getminutes() + xrand(24 * 60 * 5, 24 * 60 * 8));
 }
 
+static void add_need(variant owner) {
+	auto p = needs.pick();
+	greatneed::add(p, owner, game.getminutes() + xrand(24 * 60 * 5, 24 * 60 * 8));
+}
+
 static int getneedcount(const item& e, const variants& source) {
 	if(!e)
 		return 0;
@@ -41,12 +46,13 @@ void update_need() {
 			continue;
 		auto& ei = e.geti();
 		if(e.score < 40)
-			runscript(ei.fail);
+			e.set(NeedFail);
 		else if(e.score >= 100)
-			runscript(ei.success);
-		e.clear();
+			e.set(NeedSuccess);
+		e.set(NeedFinished);
+		// Add new need
 		needs.add(const_cast<greatneedi*>(&ei));
-		add_need(0);
+		add_need(e.owner);
 	}
 }
 
@@ -73,7 +79,12 @@ static void say_thank_you(const char* item_name, int count, int coins) {
 	draw::pause();
 }
 
-static void say_complete() {
+static void say_need(const char* suffix, ...) {
+	auto pn = getdescription(str("%1%2", last_need->geti().getid(), suffix));
+	if(!pn)
+		return;
+	opponent->sayv(console, pn, xva_start(suffix), opponent->getname(), opponent->is(Female));
+	draw::pause();
 }
 
 static void apply_answer(void* pv) {
@@ -90,15 +101,15 @@ static void apply_answer(void* pv) {
 			auto last_percent = getprogress(count, need_count);
 			last_need->score += last_percent;
 			if(last_need->score >= 100)
-				last_need->set(NeedCompeted);
+				last_need->set(NeedCompleted);
 			const char* item_name = pi->getname();
 			player->logs(getnm("YouGiveItemTo"), item_name, opponent->getname(), count);
 			pi->setcount(pi->getcount() - count);
 			last_coins = last_need->geti().coins * last_percent / 100;
 			player->addcoins(last_coins);
 			say_thank_you(item_name, count, last_coins);
-			if(last_need->is(NeedCompeted))
-				say_complete();
+			if(last_need->is(NeedCompleted))
+				say_need("Completed");
 		}
 	}
 }
@@ -125,14 +136,36 @@ bool creature::isneed(const void* object) {
 }
 
 bool creature::speechneed() {
-	pushvalue push_need(last_need, greatneed::find(this));
-	if(!last_need)
-		return false;
-	if(last_need->is(NeedCompeted)) {
-		if(d100() < 60)
+	pushvalue push_need(last_need);
+	last_need = greatneed::find(this, NeedFinished);
+	if(last_need) {
+		if(last_need->is(NeedSuccess)) {
+			say_need("Success");
+			runscript(last_need->geti().success);
+		} else if(last_need->is(NeedFail)) {
+			say_need("Fail");
+			runscript(last_need->geti().fail);
+		} else
+			say_need("Partial");
+		last_need->clear();
+		last_need->shrink();
+		return true;
+	}
+	last_need = greatneed::find(this, NeedCompleted);
+	if(last_need) {
+		if(d100() < 30)
 			return false;
 		speech("VisitMeLater");
 		return true;
 	}
+	last_need = greatneed::find(this);
+	if(!last_need)
+		return false;
 	return talk("NeedTalk", apply_answer);
+}
+
+void check_need_loading() {
+	for(auto& e : bsdata<greatneedi>()) {
+		auto pn = e.get();
+	}
 }

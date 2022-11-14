@@ -959,6 +959,12 @@ static const sitei* get_site(creature* p) {
 	return p->getroom() ? p->getroom()->getsite() : 0;
 }
 
+void creature::makemovelong() {
+	if(wait_seconds < 100 * 6)
+		return;
+	wait_seconds -= 100 * 6;
+}
+
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {

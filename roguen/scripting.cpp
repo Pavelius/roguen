@@ -585,6 +585,10 @@ static void choose_action(int bonus) {
 	player->wait();
 }
 
+static void wait_hour(int bonus) {
+	player->wait(6 * 60 * 24);
+}
+
 static void roll_value(int bonus) {
 	if(!player)
 		return;
@@ -615,27 +619,13 @@ bool ifscript(const variants& elements) {
 	return !stop_script;
 }
 
-static const char* day_left(unsigned end_stamp) {
-	auto stamp = game.getminutes();
-	if(end_stamp <= stamp)
-		return getnm("FewTime");
-	auto value = (end_stamp - stamp) / (24 * 60);
-	if(value > 0)
-		return str("%1i %-2", value, stringbuilder::getbycount("Day", value));
-	value = (end_stamp - stamp) / 60;
-	if(value > 0)
-		return str("%1i %-2", value, stringbuilder::getbycount("Hour", value));
-	value = end_stamp - stamp;
-	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
-}
-
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
 	auto pn = getdescription(last_need->geti().getid());
 	if(!pn)
 		return;
-	sb.add(pn, day_left(last_need->deadline));
+	sb.add(pn, game.timeleft(last_need->deadline));
 }
 
 static void last_coins_info(stringbuilder& sb) {
@@ -718,6 +708,7 @@ BSDATA(script) = {
 	{"TriggerText", trigger_text},
 	{"ViewStuff", view_stuff},
 	{"WinGame", win_game},
+	{"WaitHour", wait_hour},
 	{"UseItem", use_item},
 };
 BSDATAF(script)

@@ -56,8 +56,10 @@ static void main_start() {
 	equip_item("LongBow");
 	equip_item("Arrow");
 	equip_item("Torch");
-	equip_item("Ration");
-	equip_item("Bones");
+	for(auto i =0; i<20; i++)
+		equip_item("Ration");
+	for(auto i = 0; i < 60; i++)
+		equip_item("Bones");
 	equip_item("OrnamentalStones");
 	game.setowner(player);
 	game.newgame();

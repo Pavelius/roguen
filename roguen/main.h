@@ -291,11 +291,13 @@ public:
 	static bool		isneed(const void* p);
 	bool			ispresent() const;
 	static bool		ispresent(const void* p) { return ((creature*)p)->ispresent(); }
+	bool			isunaware() const { return wait_seconds >= 100 * 6; }
 	bool			isvalid() const;
 	void			interaction(creature& opponent);
 	void			kill();
 	void			logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
 	void			makemove();
+	void			makemovelong();
 	void			movestep(direction_s i);
 	void			movestep(point m);
 	bool			moveto(point m);
@@ -424,6 +426,7 @@ public:
 	void			randomworld();
 	void			read();
 	void			set(const globali& e, int v);
+	const char*		timeleft(unsigned end_stamp) const;
 	void			write();
 	static void		writelog();
 };

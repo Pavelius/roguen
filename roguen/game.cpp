@@ -179,6 +179,16 @@ void gamei::passminute() {
 	}
 }
 
+static void skip_long_time() {
+	auto human = game.getowner();
+	if(!human)
+		return;
+	while(human->isunaware()) {
+		allnext(&creature::makemovelong);
+		game.passminute();
+	}
+}
+
 void gamei::playminute() {
 	const int moves_per_minute = 6 * 4;
 	bool need_continue = true;
@@ -193,6 +203,7 @@ void gamei::playminute() {
 			}
 		}
 		passminute();
+		skip_long_time();
 	}
 }
 
@@ -266,4 +277,18 @@ void gamei::set(const globali& e, int v) {
 		runscript(e.fail);
 	else if(v == e.maximum)
 		runscript(e.effect);
+}
+
+const char* gamei::timeleft(unsigned end_stamp) const {
+	auto stamp = getminutes();
+	if(end_stamp <= stamp)
+		return getnm("FewTime");
+	auto value = (end_stamp - stamp) / (24 * 60);
+	if(value > 0)
+		return str("%1i %-2", value, stringbuilder::getbycount("Day", value));
+	value = (end_stamp - stamp) / 60;
+	if(value > 0)
+		return str("%1i %-2", value, stringbuilder::getbycount("Hour", value));
+	value = end_stamp - stamp;
+	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
 }
