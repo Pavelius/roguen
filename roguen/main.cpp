@@ -1,6 +1,7 @@
 #include "bsreq.h"
 #include "charname.h"
 #include "draw.h"
+#include "greatneed.h"
 #include "main.h"
 #include "hotkey.h"
 
@@ -27,6 +28,7 @@ static void initializating() {
 	bsreq::read("rules/Sites.txt");
 	talki::read();
 	readurl("modules", "*.txt", bsreq::read);
+	check_need_loading();
 #ifdef _DEBUG
 	main_util();
 #endif

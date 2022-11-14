@@ -1,2 +1,2 @@
-﻿In file `modules/ChurchOfOne.txt`:
- Line 4: Can't find variant `Win12Game`
+﻿In file `Descriptions.txt`:
+ Define description for `SkullInvestigationPartial`

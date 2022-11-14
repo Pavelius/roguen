@@ -163,9 +163,3 @@ bool creature::speechneed() {
 		return false;
 	return talk("NeedTalk", apply_answer);
 }
-
-void check_need_loading() {
-	for(auto& e : bsdata<greatneedi>()) {
-		auto pn = e.get();
-	}
-}

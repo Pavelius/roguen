@@ -40,3 +40,4 @@ struct greatneed {
 	void				set(needn v) { flags |= (1 << v); }
 	static void			shrink();
 };
+void					check_need_loading();

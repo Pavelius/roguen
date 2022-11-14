@@ -1,5 +1,8 @@
 #include "bsreq.h"
 #include "greatneed.h"
+#include "log.h"
+
+void check_description(const char* id, const char** psuffix);
 
 BSDATA(needni) = {
 	{"NeedAccepted"},
@@ -66,4 +69,11 @@ void greatneed::shrink() {
 		*ps++ = e;
 	}
 	bsdata<greatneed>::source.count = ps - bsdata<greatneed>::elements;
+}
+
+void check_need_loading() {
+	static const char* suffix[] = {"Completed", "Fail", "Partial", "Success", 0};
+	log::seturl("Descriptions.txt");
+	for(auto& e : bsdata<greatneedi>())
+		check_description(e.id, suffix);
 }

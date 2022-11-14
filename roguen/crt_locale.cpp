@@ -259,3 +259,13 @@ void readl(const char* id, void(*proc)(const char* url)) {
 	sb.addlocalefile("core", id, "txt");
 	proc(temp);
 }
+
+void check_description(const char* id, const char** psuffix) {
+	if(!getdescription(id))
+		log::error(0, " Define description for `%1`", id);
+	for(auto p = psuffix; *p; p++) {
+		auto name = str("%1%2", id, *p);
+		if(!getdescription(name))
+			log::error(0, " Define description for `%1`", name);
+	}
+}
