@@ -303,9 +303,6 @@
     <ClCompile Include="areaf.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="tilef.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="actable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -326,6 +323,12 @@
     </ClCompile>
     <ClCompile Include="draw_message.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="feature.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="tile.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -519,6 +522,15 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="wear.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="framerange.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="feature.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="tile.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

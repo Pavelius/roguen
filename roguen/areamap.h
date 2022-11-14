@@ -1,54 +1,16 @@
 #include "anymap.h"
 #include "color.h"
 #include "crt.h"
+#include "feature.h"
 #include "point.h"
 
 #pragma once
 
 enum direction_s : unsigned char;
-enum tile_s : unsigned char { NoTile };
-enum class featuren : unsigned char { No };
 enum areaf : unsigned char { Explored, Visible, Hidden, Darkened, Blooded, Iced, Webbed };
-enum tilef : unsigned char { Impassable, CanSwim, DangerousFeature, BetweenWalls, Woods };
-struct framerange {
-	unsigned char	start;
-	unsigned char	count;
-	int				get(int s) const { return start + s % count; }
-	explicit constexpr operator bool() const { return count != 0; }
-};
 struct areafi {
 	const char*		id;
 	framerange		features;
-};
-struct tilei {
-	const char*		id;
-	color			minimap;
-	framerange		floor, decals;
-	int				borders;
-	tile_s			tile;
-	framerange		walls;
-	unsigned		flags;
-	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
-	bool			iswall() const { return tile != NoTile; }
-};
-struct tilefi {
-	const char*		id;
-};
-struct featurei {
-	const char*		id;
-	framerange		features, overlay;
-	unsigned char	priority;
-	unsigned		flags;
-	color			minimap;
-	featurei		*leadto, *activateto;
-	char			lead;
-	operator featuren() const { return (featuren)(this - bsdata<featurei>::elements); }
-	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
-	bool			isvisible() const { return features.count != 0; }
-	featurei*		getactivate() const { return activateto; }
-	featurei*		gethidden() const;
-	featurei*		getlead() const { return leadto; }
-	void			paint(int random) const;
 };
 struct areamap : anymap<tile_s, 64> {
 	typedef bool (*fntest)(point m);

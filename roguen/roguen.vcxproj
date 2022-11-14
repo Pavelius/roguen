@@ -176,6 +176,7 @@
     <ClCompile Include="draw_theme.cpp" />
     <ClCompile Include="duration.cpp" />
     <ClCompile Include="feat.cpp" />
+    <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="generation.cpp" />
@@ -198,7 +199,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="quest.cpp" />
-    <ClCompile Include="tilef.cpp" />
+    <ClCompile Include="tile.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
     <ClCompile Include="monster.cpp" />
@@ -256,6 +257,8 @@
     <ClInclude Include="collection.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
+    <ClInclude Include="feature.h" />
+    <ClInclude Include="framerange.h" />
     <ClInclude Include="ifscript.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="datamap.h" />
@@ -299,6 +302,7 @@
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />
+    <ClInclude Include="tile.h" />
     <ClInclude Include="trigger.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="variantc.h" />

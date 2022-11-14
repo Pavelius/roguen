@@ -26,14 +26,6 @@ static int d100() {
 	return rand() % 100;
 }
 
-featurei* featurei::gethidden() const {
-	for(auto& e : bsdata<featurei>()) {
-		if(!e.isvisible() && e.activateto == this)
-			return &e;
-	}
-	return 0;
-}
-
 void areamap::clear() {
 	memset(this, 0, sizeof(*this));
 	for(auto& e : random)

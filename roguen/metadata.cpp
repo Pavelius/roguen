@@ -114,9 +114,6 @@ BSMETA(locationi) = {
 	BSENM(doors, featurei),
 	BSREQ(minimap),
 	{}};
-BSMETA(tilefi) = {
-	BSREQ(id),
-	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
@@ -163,14 +160,6 @@ BSMETA(spelli) = {
 	BSENM(duration, durationi),
 	BSFLG(target, conditioni),
 	BSREQ(conditions), BSREQ(effect), BSREQ(summon),
-	{}};
-BSMETA(tilei) = {
-	BSREQ(id),
-	BSREQ(minimap),
-	BSREQ(floor), BSREQ(decals), BSREQ(walls),
-	BSREQ(borders),
-	BSENM(tile, tilei),
-	BSFLG(flags, tilefi),
 	{}};
 BSMETA(weari) = {
 	BSREQ(id),

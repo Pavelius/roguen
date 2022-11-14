@@ -130,7 +130,19 @@ static void update_los() {
 static void decoy_food() {
 }
 
-static void growth_plant() {
+static void auto_activate_features() {
+	point m;
+	for(m.y = 0; m.y < area.mps; m.y++)
+		for(m.x = 0; m.x < area.mps; m.x++) {
+			auto f = area.features[m];
+			if(f==featuren::No)
+				continue;
+			auto p = bsdata<featurei>::elements + (int)f;
+			if(!p->autoactivated())
+				continue;
+			if(d100() < p->chance_auto_activate)
+				area.set(m, *p->getactivate());
+		}
 }
 
 static bool checkalive() {
@@ -168,7 +180,7 @@ void gamei::passminute() {
 		restore_day_part += 60 * 4;
 	}
 	while(restore_day < minutes) {
-		growth_plant();
+		auto_activate_features();
 		restore_day += 60 * 24;
 	}
 	while(restore_several_days < minutes) {
