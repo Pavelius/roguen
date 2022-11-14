@@ -8,14 +8,8 @@
 #include "stringbuilder.h"
 
 BSDATAC(hotkey, 256)
-BSDATAC(hotkeylist, 32)
-
 BSMETA(hotkey) = {
-	BSREQ(id), BSREQ(keyid), BSREQ(key),
-	{}};
-BSMETA(hotkeylist) = {
-	BSREQ(id),
-	BSREQ(elements),
+	BSREQ(keyid), BSREQ(id), BSREQ(key),
 	{}};
 
 static unsigned parse_key(const char* p) {

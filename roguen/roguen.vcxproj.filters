@@ -195,9 +195,6 @@
     <ClCompile Include="creaturea.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="hotkey.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="visualeffect.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
@@ -221,9 +218,6 @@
     </ClCompile>
     <ClCompile Include="direction.cpp">
       <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="world.cpp">
-      <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="shape.cpp">
       <Filter>Support</Filter>
@@ -330,6 +324,12 @@
     <ClCompile Include="tile.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="hotkey.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -422,9 +422,6 @@
     <ClInclude Include="nameable.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="hotkey.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="pushvalue.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -439,9 +436,6 @@
     </ClInclude>
     <ClInclude Include="direction.h">
       <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="shape.h">
       <Filter>Support</Filter>
@@ -531,6 +525,12 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="tile.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="hotkey.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

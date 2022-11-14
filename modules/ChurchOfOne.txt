@@ -25,8 +25,5 @@ AccumulationWeaponArsenal
 
 #Trigger
 
-WhenCreatureP1EnterSiteP2 0 Tavern
- effect ILoveThisPlace-40
-
 EverySeveralDays 0 0
  effect EldersComing+1

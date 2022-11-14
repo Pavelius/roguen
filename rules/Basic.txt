@@ -21,36 +21,37 @@ Web
 RandomRace
  chance Human+8 HightElf+1
 
-#HotkeyList
+#Hotkey
 
-AdventureKeys
- elements DropDown "D"
- elements Inventory "I"
- elements MoveUp "Up"
- elements MoveUpLeft "Home"
- elements MoveUpRight "PageUp"
- elements MoveDown "Down"
- elements MoveDownLeft "End"
- elements MoveDownRight "PageDown"
- elements MoveRight "Right"
- elements MoveLeft "Left"
- elements OpenNearestDoor "U"
- elements ChatSomeone "C"
- elements PickUp "P"
- elements PickUpAll "Ctrl+P"
- elements RangeAttack "Q"
- elements ShowMinimap "M"
- elements ShowLogs "L"
- elements ThrownAttack "T"
+"D" DropDown
+"I" Inventory
+"U" OpenNearestDoor
+"C" ChatSomeone
+"P" PickUp
+"Q" RangeAttack
+"M" ShowMinimap
+"L" ShowLogs
+"T" ThrownAttack
+"S" ChooseAction
 
- elements ChooseAction "S"
- elements CastSpell "Ctrl+S"
- elements DebugMessage "Ctrl+D"
- elements ExploreArea "Ctrl+E"
- elements HealAll "Ctrl+H"
- elements ShowImages "Ctrl+I"
- elements TestArena "Ctrl+A"
- elements TestRumor "Ctrl+R"
- elements ToggleFloorRect "Ctrl+F"
- elements UseItem "Ctrl+U"
- elements WaitHour "Ctrl+W"
+"Up" MoveUp
+"Home" MoveUpLeft
+"PageUp" MoveUpRight
+"Down" MoveDown
+"End" MoveDownLeft
+"PageDown" MoveDownRight
+"Right" MoveRight
+"Left" MoveLeft
+
+"Ctrl+P" PickUpAll
+"Ctrl+U" UseItem
+"Ctrl+S" CastSpell
+
+"Ctrl+D" DebugMessage
+"Ctrl+E" ExploreArea
+"Ctrl+H" HealAll
+"Ctrl+I" ShowImages
+"Ctrl+A" TestArena
+"Ctrl+R" TestRumor
+"Ctrl+F" ToggleFloorRect
+"Ctrl+W" WaitHour

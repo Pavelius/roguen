@@ -831,8 +831,8 @@ static void execute_script() {
 		pn(hot.param);
 }
 
-static void presskey(const sliceu<hotkey>& source) {
-	for(auto& e : source) {
+static void presskey() {
+	for(auto& e : bsdata<hotkey>()) {
 		if(hot.key == e.key) {
 			execute(execute_script, 0, 0, e.proc);
 			return;
@@ -848,9 +848,6 @@ void animate_figures() {
 }
 
 void adventure_mode() {
-	auto pk = bsdata<hotkeylist>::find("AdventureKeys");
-	if(!pk)
-		return;
 	animate_figures();
 	auto human = player;
 	if(!human)
@@ -859,7 +856,7 @@ void adventure_mode() {
 	while((start == human->getwait()) && ismodal()) {
 		paintstart();
 		paintobjects();
-		presskey(pk->elements);
+		presskey();
 		paintfinish();
 		domodal();
 	}

@@ -10,7 +10,3 @@ struct hotkey {
 	fnevent			proc;
 	static void		initialize();
 };
-struct hotkeylist {
-	const char*		id;
-	sliceu<hotkey>	elements;
-};

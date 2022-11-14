@@ -1,2 +1,2 @@
-﻿In file `Descriptions.txt`:
- Define description for `SkullInvestigationPartial`
+﻿In file `rules/Advancement.txt`:
+Empthy key mapping for script 'Ctrl+U'

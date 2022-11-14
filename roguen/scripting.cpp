@@ -277,12 +277,19 @@ static item* choose_stuff(wear_s wear) {
 	return (item*)an.choose(temp, getnm("Cancel"));
 }
 
+static creature* getowner(const item* pi) {
+	auto i = bsdata<creature>::source.indexof(pi);
+	if(i == -1)
+		return 0;
+	return bsdata<creature>::elements + i;
+}
+
 static void inventory(int bonus) {
 	while(true) {
 		auto pi = choose_wear();
 		if(!pi)
 			break;
-		auto owner = pi->getowner();
+		auto owner = getowner(pi);
 		if(!owner)
 			break;
 		if((*pi))
@@ -628,8 +635,21 @@ static void need_help_info(stringbuilder& sb) {
 	sb.add(pn, game.timeleft(last_need->deadline));
 }
 
-static void last_coins_info(stringbuilder& sb) {
-	sb.add("%1i", last_coins);
+static const char* visualize_progress(int score) {
+	if(score == 0)
+		return "NoAnyProgress";
+	else if(score < 40)
+		return "LittleProgress";
+	else if(score < 70)
+		return "HalfwayProgress";
+	else
+		return "AlmostFinishProgress";
+}
+
+static void actual_need_state(stringbuilder& sb) {
+	if(!last_need)
+		return;
+	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), game.timeleft(last_need->deadline));
 }
 
 static bool if_lesser(int bonus) {
@@ -644,7 +664,7 @@ void add_need(int bonus);
 void add_need_answers(int bonus);
 
 BSDATA(textscript) = {
-	{"LastCoins", last_coins_info},
+	{"ActualNeedState", actual_need_state},
 	{"NeedHelpIntro", need_help_info},
 };
 BSDATAF(textscript)

@@ -1,3 +1,4 @@
+AlmostFinishProgress: Почти уже закончили
 And: и
 ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i) урона.
 ApplyKill: %герой убит%а.
@@ -24,6 +25,7 @@ DropdownItem: %герой положил%а %-1.
 Experience: Опыт
 FewTime: Совсем мало времени
 GlobalMapPosition: Позиция на карте мира %1i, %2i
+HalfwayProgress: Находимся на полпути
 Hour: Час
 IcedSlice: %герой подскалзнул%ась на льду.
 IHaveItem: У меня есть [%1].
@@ -31,12 +33,14 @@ Inventory: Одетые предметы
 KnowRumor: Узнать сплетни
 Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
+LittleProgress: Немного двинулись вперед
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
 Minute: Минута
 Minutes: Минут
 Natural: Родное
 No: Нет
+NoAnyProgress: Еще даже не начинали
 NoCreaturesNearby: Вокруг никого нет.
 NotEnoughtMana: Не хватает маны.
 NothingToSay: Нечего сказать.
@@ -58,6 +62,7 @@ Torch: Факел
 Tree: Дерево
 TwoHanded: Двуручное
 UseItem: Использовать предмет
+VisualizeProgress: Мы %-1 и осталось примерно %-2.
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да

@@ -89,13 +89,6 @@ bool item::is(wear_s v) const {
 	}
 }
 
-creature* item::getowner() const {
-	auto i = bsdata<creature>::source.indexof(this);
-	if(i == -1)
-		return 0;
-	return bsdata<creature>::elements + i;
-}
-
 void item::drop(point m) {
 	if(!area.isvalid(m))
 		return;
