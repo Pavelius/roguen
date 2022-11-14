@@ -25,7 +25,7 @@ static void named_say(stringbuilder& sb, const char* format, const char* name) {
 	sb.add("[%1] \"", name);
 	sb.addv(format, 0);
 	sb.add("\"");
-	actable::logv(pb, 0, 0, false);
+	actable::logv(pb);
 }
 
 static const char* skipncr(const char* p) {
@@ -50,7 +50,7 @@ static void complex_say(stringbuilder& sb, const char* format, const char* name)
 			while(len > 0 && (dialog_text[len - 1] == 10 || dialog_text[len - 1] == 13))
 				dialog_text[--len] = 0;
 			named_say(sb, dialog_text, name);
-			answers::pressspace();
+			draw::pause();
 			format = skipspcr(format + len);
 		}
 	}
@@ -67,13 +67,19 @@ const char* actable::getlog() {
 	return gamelog.begin();
 }
 
+void actable::logv(const char* format) {
+	if(!format || format[0] == 0)
+		return;
+	if(gamelog.getcount() > 0)
+		add_log("\n");
+	add_log(format);
+}
+
 void actable::logv(const char* format, const char* format_param, const char* name, bool female) {
 	char temp[1024]; stringbuilder sb(temp); sb.clear();
 	stringact sa(sb, name, female);
-	if(gamelog.getcount() > 0)
-		sa.add("\n");
 	sa.addv(format, format_param);
-	add_log(temp);
+	logv(temp);
 }
 
 void actable::actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female, char separator) {
@@ -84,7 +90,7 @@ void actable::actv(stringbuilder& sb, const char* format, const char* format_par
 	auto pb = sa.get();
 	sa.addv(format, format_param);
 	sb = sa;
-	logv(pb, 0, 0, false);
+	logv(pb);
 }
 
 void actable::actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...) {

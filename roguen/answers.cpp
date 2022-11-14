@@ -64,9 +64,9 @@ void draw::pause(const char* title, ...) {
 		if(!(*answers::console))
 			return;
 	}
-	char temp[260]; stringbuilder sb(temp);
-	answers an; sb.addv(title, xva_start(title));
-	an.choose(0, temp, true);
+	answers an;
+	an.addv((void*)1, title, xva_start(title));
+	an.choose();
 	if(answers::console)
 		answers::console->clear();
 }
@@ -78,12 +78,13 @@ void draw::pausenc(const char* title, ...) {
 }
 
 bool draw::yesno(const char* title, ...) {
-	char temp[260]; stringbuilder sb(temp);
-	sb.addv(title, xva_start(title));
+	if(!answers::console)
+		return false;
+	answers::console->addv(title, xva_start(title));
 	answers an;
 	an.add((void*)1, getnm("Yes"));
 	an.add((void*)0, getnm("No"));
-	return an.choose(temp);
+	return an.choose();
 }
 
 void draw::information(const char* format, ...) {
@@ -143,26 +144,4 @@ void answers::message(const char* format) {
 	an.prompt = format;
 	an.choose(0, getnm("Continue"), 1);
 	answers::prompt = push_prompt;
-}
-
-bool answers::confirm(const char* format, ...) {
-	if(!console)
-		return false;
-	console->clear();
-	console->addv(format, xva_start(format));
-	answers an;
-	an.add((void*)1, getnm("Yes"));
-	an.add((void*)0, getnm("No"));
-	auto result = an.choose();
-	console->clear();
-	return result != 0;
-}
-
-void answers::pressspace() {
-	if(!console || !(*console))
-		return;
-	answers an;
-	an.add((void*)1, getnm("Continue"));
-	auto result = an.choose();
-	console->clear();
 }

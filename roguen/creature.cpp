@@ -217,7 +217,7 @@ static bool check_stairs_movement(creature* p, point m) {
 	auto pf = ei.getlead();
 	if(pf) {
 		if(p->ishuman()) {
-			if(answers::confirm(getnm(str("Move%1", ei.id)))) {
+			if(draw::yesno(getnm(str("Move%1", ei.id)))) {
 				game.enter(game.position, game.level + ei.lead, *pf, Center);
 				return false;
 			}
@@ -265,7 +265,7 @@ static bool check_leave_area(creature* p, point m) {
 		if(p->ishuman()) {
 			auto direction = movedirection(m);
 			auto np = to(game.position, direction);
-			if(answers::confirm(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
+			if(draw::yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
 				game.enter(np, 0, featuren::No, direction);
 		}
 		p->wait();

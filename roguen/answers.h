@@ -36,7 +36,6 @@ public:
 	void*				choose() const;
 	void				clear();
 	static int			compare(const void* v1, const void* v2);
-	static bool			confirm(const char* format, ...);
 	const element*		end() const { return elements.end(); }
 	int					getcount() const { return elements.getcount(); }
 	const char*			getname(void* v);
@@ -44,7 +43,6 @@ public:
 	static void			message(const char* format);
 	void				modal(const char* title, const char* cancel) const;
 	void				paintanswers(int columns, const char* cancel_text) const;
-	static void			pressspace();
 	void*				random() const;
 	void				remove(int index) { elements.remove(index, 1); }
 	void				sort();

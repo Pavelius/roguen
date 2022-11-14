@@ -3,8 +3,8 @@
 void wearable::addcoins(unsigned v) {
 	if(!v)
 		return;
-	if(answers::console)
-		answers::console->addn(getnm("YouTakeCoins"), v);
+	//if(answers::console)
+	//	answers::console->addn(getnm("YouTakeCoins"), v);
 	money += v;
 }
 

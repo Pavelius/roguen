@@ -59,6 +59,23 @@ static int getprogress(int count, int maximum) {
 	return count * 100 / maximum;
 }
 
+static void say_thank_you(const char* item_name, int count, int coins) {
+	char temp[512]; stringbuilder sb(temp);
+	auto t1 = opponent->getspeech("ThankYouForService");
+	auto name = opponent->getname();
+	auto female = opponent->is(Female);
+	opponent->actvf(sb, name, female, 0, t1, item_name, count);
+	if(coins) {
+		auto t2 = opponent->getspeech("HereYourMoney");
+		opponent->actvf(sb, name, female, ' ', t2, coins);
+	}
+	opponent->say(temp);
+	draw::pause();
+}
+
+static void say_complete() {
+}
+
 static void apply_answer(void* pv) {
 	if(!last_need)
 		return;
@@ -74,15 +91,14 @@ static void apply_answer(void* pv) {
 			last_need->score += last_percent;
 			if(last_need->score >= 100)
 				last_need->set(NeedCompeted);
-			player->logs(getnm("YouGiveItemTo"), pi->getname(), opponent->getname(), count);
+			const char* item_name = pi->getname();
+			player->logs(getnm("YouGiveItemTo"), item_name, opponent->getname(), count);
 			pi->setcount(pi->getcount() - count);
-			last_value = 10;
-			auto total_coins = last_need->geti().coins;
-			if(total_coins) {
-				last_coins = last_percent * total_coins / 100;
-				player->addcoins(last_coins);
-				last_value = 11;
-			}
+			last_coins = last_need->geti().coins * last_percent / 100;
+			player->addcoins(last_coins);
+			say_thank_you(item_name, count, last_coins);
+			if(last_need->is(NeedCompeted))
+				say_complete();
 		}
 	}
 }
