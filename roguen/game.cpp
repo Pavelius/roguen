@@ -172,16 +172,16 @@ void gamei::passminute() {
 	}
 	while(restore_hour < minutes) {
 		all(&creature::every1hour);
-		restore_hour += 60;
+		restore_hour = (restore_hour / 60 + 1) * 60 + rand() % 60;
 		update_need();
 	}
 	while(restore_day_part < minutes) {
 		decoy_food();
-		restore_day_part += 60 * 4;
+		restore_day_part = (restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
 	}
 	while(restore_day < minutes) {
 		auto_activate_features();
-		restore_day += 60 * 24;
+		restore_day = (restore_day / (60 * 24) + 1) * (60 * 24) + rand() % (60 * 24);
 	}
 	while(restore_several_days < minutes) {
 		all_creatures(EverySeveralDaysForP1);
