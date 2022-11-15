@@ -259,6 +259,7 @@
     <ClInclude Include="collection.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
+    <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="framerange.h" />
     <ClInclude Include="ifscript.h" />
@@ -276,6 +277,7 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="greatneed.h" />
     <ClInclude Include="indexa.h" />
+    <ClInclude Include="item.h" />
     <ClInclude Include="listcolumn.h" />
     <ClInclude Include="hotkey.h" />
     <ClInclude Include="io_stream.h" />

@@ -1042,13 +1042,13 @@ void creature::dress(variants source, int multiplier) {
 }
 
 void creature::update_wears() {
-	for(auto i = MeleeWeapon; i <= Elbows; i = (wear_s)(i + 1)) {
-		if(!wears[i])
+	for(auto& e : gears()) {
+		if(!e)
 			continue;
-		auto& ei = wears[i].geti();
-		auto magic = wears[i].getmagic();
+		auto& ei = e.geti();
+		auto magic = e.getmagic();
 		feats.add(ei.feats);
-		if(wears[i].isidentified()) {
+		if(e.isidentified()) {
 			if(ei.dress)
 				dress(ei.dress, getmultiplier(magic));
 		}
@@ -1190,8 +1190,8 @@ bool creature::speechrumor() const {
 
 bool creature::speechlocation() const {
 	collection<roomi> source;
-	source.select(fntis<roomi, &roomi::isnotable>::proc);
-	source.match(fntis<roomi, &roomi::isexplored>::proc, false);
+	source.select(fntis<roomi, &roomi::isnotable>);
+	source.match(fntis<roomi, &roomi::isexplored>, false);
 	auto p = source.random();
 	if(!p)
 		return false;

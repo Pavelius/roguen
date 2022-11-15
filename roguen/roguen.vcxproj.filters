@@ -168,13 +168,7 @@
     <ClCompile Include="sprite_util.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="feat.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="game.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="item.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="list.cpp">
@@ -328,6 +322,12 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="moveable.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="feat.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -543,6 +543,12 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="moveable.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="feat.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

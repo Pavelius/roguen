@@ -17,7 +17,7 @@ void main_util();
 static bool test_creatures() {
 	collection<creature> source;
 	source.select();
-	source.match(fntis<creature, &creature::ishuman>::proc, true);
+	source.match(fntis<creature, &creature::ishuman>, true);
 	return source.getcount() == 1;
 }
 

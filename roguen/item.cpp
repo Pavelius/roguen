@@ -1,4 +1,7 @@
-#include "main.h"
+#include "areamap.h"
+#include "item.h"
+
+extern areamap area;
 
 int item::getcost() const {
 	return geti().cost;

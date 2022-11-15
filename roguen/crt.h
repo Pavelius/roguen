@@ -184,18 +184,18 @@ public:
 
 template<typename T>
 struct bsdata {
-	static T						elements[];
-	static array					source;
-	static constexpr array*			source_ptr = &source;
-	static T*						add() { return (T*)source.add(); }
-	static T*						addz() { for(auto& e : bsdata<T>()) if(!e) return &e; return add(); }
-	static constexpr bool			have(const void* p) { return source.have(p); }
-	static T*						find(const char* id) { return (T*)source.findv(id, 0); }
-	static constexpr T&				get(int i) { return begin()[i]; }
-	static constexpr T*				get(const void* p) { return have(p) ? (T*)p : 0; }
-	static constexpr T*				begin() { return (T*)source.data; }
-	static constexpr T*				end() { return (T*)source.data + source.getcount(); }
-	static constexpr T*				ptr(short unsigned i) { return (i==0xFFFF) ? 0 : elements + i; }
+	static T				elements[];
+	static array			source;
+	static constexpr array*	source_ptr = &source;
+	static T*				add() { return (T*)source.add(); }
+	static T*				addz() { for(auto& e : bsdata<T>()) if(!e) return &e; return add(); }
+	static constexpr bool	have(const void* p) { return source.have(p); }
+	static T*				find(const char* id) { return (T*)source.findv(id, 0); }
+	static constexpr T&		get(int i) { return begin()[i]; }
+	static constexpr T*		get(const void* p) { return have(p) ? (T*)p : 0; }
+	static constexpr T*		begin() { return (T*)source.data; }
+	static constexpr T*		end() { return (T*)source.data + source.getcount(); }
+	static constexpr T*		ptr(short unsigned i) { return (i==0xFFFF) ? 0 : elements + i; }
 };
 template<typename T> inline void	bsset(short unsigned& v, const T* p) { v = (p == 0) ? 0xFFFF : p - bsdata<T>::elements; }
 template<typename T> inline unsigned short bsid(const T* p) { return bsdata<T>::source.indexof(p); }
@@ -210,16 +210,16 @@ NOBSDATA(bool)
 
 template<typename T>
 struct sliceu {
-	unsigned						start, count;
+	unsigned				start, count;
 	constexpr sliceu() : start(0), count(0) {}
 	template<size_t N> sliceu(T(&v)[N]) { set(v, N); }
 	constexpr explicit operator bool() const { return count != 0; }
-	T*								begin() const { return (T*)bsdata<T>::source.ptr(start); }
-	void							clear() { start = count = 0; }
-	T*								end() const { return (T*)bsdata<T>::source.ptr(start + count); }
-	void							set(unsigned p1, unsigned count) { start = p1; this->count = count; }
-	void							set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
-	constexpr unsigned				size() const { return count; }
+	T*						begin() const { return (T*)bsdata<T>::source.ptr(start); }
+	void					clear() { start = count = 0; }
+	T*						end() const { return (T*)bsdata<T>::source.ptr(start + count); }
+	void					set(unsigned p1, unsigned count) { start = p1; this->count = count; }
+	void					set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
+	constexpr unsigned		size() const { return count; }
 };
 
 template<typename T>
@@ -227,10 +227,7 @@ struct funct {
 	typedef void (T::*command)(); // typical object command
 	typedef bool (T::*visible)() const; // object visibility
 };
-template<typename T, funct<T>::visible F>
-struct fntis {
-	static bool proc(const void* p) { return (((T*)p)->*F)(); }
-};
+template<typename T, funct<T>::visible F> inline bool fntis(const void* p) { return (((T*)p)->*F)(); }
 typedef void(*fnevent)(); // Callback function of any command executing
 typedef bool(*fnallow)(const void* object, int index); // Callback function of status probing. Return true if `object` allow `index` status.
 typedef bool(*fnchoose)(const void* object, array& source, void* pointer); // Callback function of choosing one element from array of many elements and storing it into `pointer`
@@ -239,46 +236,46 @@ typedef const char*(*fngetname)(const void* object); // Callback function of get
 typedef void(*fncommand)(void* object); // Callback function of object command executing
 typedef void(*fnread)(const char* url);
 
-bool								equal(const char* s1, const char* s2);
-const char*							getdescription(const char* id);
-int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
-const char*							getnm(const char* id);
-const char*							getnme(const char* id);
-bool								ischa(unsigned u); // is alphabetical character?
-inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
-int									isqrt(const int x); // Return aquare root of 'x'
-void*								loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
-char*								loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
-bool								matchuc(const char* name, const char* filter);
-void								readl(const char* id, void(*proc)(const char* url));
-void								readurl(const char* folder, const char* mask, fnread proc);
-float								sqrt(const float x); // Return aquare root of 'x'
-inline const char*					skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }
-inline const char*					skipspcr(const char* p) { if(p) while(*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++; return p; }
-const char*							skipcr(const char* p);
-void								szchange(char* p, char s1, char s2);
-void								szencode(char* output, int output_count, codepage output_code, const char* input, int input_count, codepage input_code);
-unsigned							szget(const char** input, codepage page = metrics::code);
-int									szcmpi(const char* p1, const char* p2);
-int									szcmpi(const char* p1, const char* p2, int count);
-const char*							szdup(const char* text);
-const char*							szext(const char* path);
-const char*							szfind(const char* text, const char* name);
-const char*							szfname(const char* text); // Get file name from string (no fail, always return valid value)
-char*								szfnamewe(char* result, const char* name); // get file name without extension (no fail)
-const char*							szfurl(const char* url); // get full absolute url
-unsigned							szlower(unsigned u); // to lower reg
-void								szlower(char* p); // to lower reg
-bool								szmatch(const char* text, const char* name); //
-bool								szpmatch(const char* text, const char* pattern);
-void								szput(char** output, unsigned u, codepage page = metrics::code);
-char*								szput(char* output, unsigned u, codepage page = metrics::code); // Fast symbol put function. Return 'output'.
-bool								szstart(const char* text, const char* name);
-unsigned							szupper(unsigned u);
-void								szupper(char* p); // to upper reg
-char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
-char*								szurlc(char* p1);
-inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
+bool						equal(const char* s1, const char* s2);
+const char*					getdescription(const char* id);
+int							getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
+const char*					getnm(const char* id);
+const char*					getnme(const char* id);
+bool						ischa(unsigned u); // is alphabetical character?
+inline bool					isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
+int							isqrt(const int x); // Return aquare root of 'x'
+void*						loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
+char*						loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
+bool						matchuc(const char* name, const char* filter);
+void						readl(const char* id, void(*proc)(const char* url));
+void						readurl(const char* folder, const char* mask, fnread proc);
+float						sqrt(const float x); // Return aquare root of 'x'
+inline const char*			skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }
+inline const char*			skipspcr(const char* p) { if(p) while(*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++; return p; }
+const char*					skipcr(const char* p);
+void						szchange(char* p, char s1, char s2);
+void						szencode(char* output, int output_count, codepage output_code, const char* input, int input_count, codepage input_code);
+unsigned					szget(const char** input, codepage page = metrics::code);
+int							szcmpi(const char* p1, const char* p2);
+int							szcmpi(const char* p1, const char* p2, int count);
+const char*					szdup(const char* text);
+const char*					szext(const char* path);
+const char*					szfind(const char* text, const char* name);
+const char*					szfname(const char* text); // Get file name from string (no fail, always return valid value)
+char*						szfnamewe(char* result, const char* name); // get file name without extension (no fail)
+const char*					szfurl(const char* url); // get full absolute url
+unsigned					szlower(unsigned u); // to lower reg
+void						szlower(char* p); // to lower reg
+bool						szmatch(const char* text, const char* name); //
+bool						szpmatch(const char* text, const char* pattern);
+void						szput(char** output, unsigned u, codepage page = metrics::code);
+char*						szput(char* output, unsigned u, codepage page = metrics::code); // Fast symbol put function. Return 'output'.
+bool						szstart(const char* text, const char* name);
+unsigned					szupper(unsigned u);
+void						szupper(char* p); // to upper reg
+char*						szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
+char*						szurlc(char* p1);
+inline int					xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
 
 template<class T> struct meta_decoy { typedef T value; };
 template<> struct meta_decoy<const char*> { typedef const char* value; };

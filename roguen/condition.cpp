@@ -63,13 +63,3 @@ bool creature::is(condition_s v) const {
 		return true;
 	}
 }
-
-bool item::is(condition_s v) const {
-	switch(v) {
-	case NoWounded: return broken == 0;
-	case Wounded: return broken != 0;
-	case HeavyWounded: return broken >= 2;
-	case Identified: return identified != 0;
-	default: return false;
-	}
-}
