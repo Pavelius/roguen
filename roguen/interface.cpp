@@ -30,6 +30,10 @@ bool					show_floor_rect;
 int						window_width = 480;
 int						window_height = 280;
 
+static point straight_directions[] = {
+	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
+};
+
 static point m2s(point v) {
 	return point{(short)(v.x * tsx), (short)(v.y * tsy)};
 }
@@ -114,6 +118,30 @@ static void remove_temp_objects() {
 	}
 }
 
+static unsigned char getlos(point m) {
+	unsigned char r = 0;
+	unsigned char f = 1;
+	for(auto d : straight_directions) {
+		auto m1 = m + d;
+		if(area.isvalid(m1) && !area.is(m1, Visible))
+			r |= f;
+		f = f << 1;
+	}
+	return r;
+}
+
+static unsigned char getfow(point m) {
+	unsigned char r = 0;
+	unsigned char f = 1;
+	for(auto d : straight_directions) {
+		auto m1 = m + d;
+		if(area.isvalid(m1) && !area.is(m1, Explored))
+			r |= f;
+		f = f << 1;
+	}
+	return r;
+}
+
 static object* add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
 	auto po = addobject(pt);
 	po->data = data;
@@ -192,6 +220,8 @@ void movable::fixvalue(const char* format, int format_color) const {
 }
 
 void movable::fixaction() const {
+	if(!area.is(position, Visible))
+		return;
 	auto po = draw::findobject(this);
 	if(!po)
 		return;
@@ -260,11 +290,11 @@ static void link_camera() {
 	}
 }
 
-static void paint_overlapped(point i, tile_s tile) {
+static void paint_overlapped(point i, int tile) {
 	for(auto& ei : bsdata<tilei>()) {
 		if(ei.borders == -1)
 			continue;
-		auto t0 = (tile_s)(&ei - bsdata<tilei>::elements);
+		auto t0 = bsid(&ei);
 		if(tile == t0)
 			return;
 		auto f = area.getindex(i, t0);
@@ -281,7 +311,7 @@ static bool iswall(point i, direction_s d) {
 		return true;
 	if(!area.is(i1, Explored))
 		return true;
-	return bsdata<tilei>::elements[area[i1]].iswall();
+	return area.iswall(i1);
 }
 
 static void fillwalls() {
@@ -406,7 +436,7 @@ static void paint_floor() {
 				continue;
 			setcaret(pt);
 			auto r = area.random[i];
-			auto t = area[i];
+			auto t = area.tiles[i];
 			auto& ei = bsdata<tilei>::elements[t];
 			if(ei.iswall())
 				paint_wall(pt, i, r, ei);
@@ -466,7 +496,7 @@ static void paint_fow() {
 			if(!area.is(i, Explored))
 				fillfow();
 			else {
-				auto f = area.getfow(i);
+				auto f = getfow(i);
 				if((f & 1) != 0)
 					image(pi, 0, ImageMirrorV);
 				if((f & 2) != 0)
@@ -512,8 +542,8 @@ static void paint_los() {
 			if(!area.is(i, Visible))
 				filllos();
 			else {
-				auto f = area.getlos(i);
-				if(f != area.getfow(i)) {
+				auto f = getlos(i);
+				if(f != getfow(i)) {
 					// 1 - North
 					// 2 - South
 					// 4 - West
@@ -1124,7 +1154,7 @@ static void paint_area(point origin, int z) {
 	point i;
 	for(i.y = 0; i.y < area.mps; i.y++) {
 		for(i.x = 0; i.x < area.mps; i.x++) {
-			auto t = area[i];
+			auto t = area.tiles[i];
 			if(!t || !area.is(i, Explored))
 				continue;
 			auto p = bsdata<tilei>::elements + t;

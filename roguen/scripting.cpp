@@ -9,7 +9,7 @@
 roomi* add_room(const sitei* ps, const rect& rc);
 void animate_figures();
 void choose_targets(unsigned flags);
-void place_shape(const shapei& e, point m, tile_s floor, tile_s walls);
+void place_shape(const shapei& e, point m, int floor, int walls);
 void show_area(int bonus);
 void show_logs(int bonus);
 void visualize_images(res pid, point size, point offset);
@@ -72,11 +72,11 @@ static void place_creature(variant v, int count) {
 
 void runscript(variant v) {
 	if(v.iskind<featurei>())
-		area.set(last_rect, (featuren)v.value, v.counter);
+		area.set(last_rect, &areamap::setfeature, v.value, v.counter);
 	else if(v.iskind<tilei>())
-		area.set(last_rect, (tile_s)v.value, v.counter);
+		area.set(last_rect, &areamap::settile, v.value, v.counter);
 	else if(v.iskind<areafi>())
-		area.set(last_rect, (areaf)v.value, v.counter);
+		area.set(last_rect, &areamap::setflag, v.value, v.counter);
 	else if(v.iskind<globali>()) {
 		last_global = bsdata<globali>::elements + v.value;
 		last_value = game.get(*last_global);
@@ -303,7 +303,7 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	dialog_message(getdescription("WinGame1"));
+	dialog_message(getdescription("LoseGame1"));
 	//console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
 	//actable::pressspace();
 }
@@ -315,7 +315,7 @@ static void open_nearest_door(int bonus) {
 		auto& ei = area.getfeature(i);
 		auto fa = ei.getactivate();
 		if(fa)
-			area.set(i, *fa);
+			area.setfeature(i, bsid(fa));
 	}
 }
 
@@ -405,10 +405,7 @@ static void view_stuff(int bonus) {
 }
 
 static void explore_area(int bonus) {
-	point m;
-	for(m.y = 0; m.y < area.mps; m.y++)
-		for(m.x = 0; m.x < area.mps; m.x++)
-			area.set(m, Explored);
+	area.set({0, 0, area.mps, area.mps}, &areamap::setflag, Explored);
 }
 
 static void test_arena(int bonus) {

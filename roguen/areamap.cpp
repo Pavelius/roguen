@@ -26,103 +26,13 @@ static int d100() {
 	return rand() % 100;
 }
 
-void areamap::clear() {
-	memset(this, 0, sizeof(*this));
-	for(auto& e : random)
-		e = (unsigned char)(rand() % 256);
-}
-
-void areamap::set(point m, tile_s v) {
-	if(!isvalid(m))
-		return;
-	(*this)[m] = v;
-	features[m] = featuren::No;
-}
-
-void areamap::set(point m, featuren v) {
-	if(!isvalid(m))
-		return;
-	features[m] = v;
-}
-
-void areamap::set(point m, const featurei& v) {
-	if(!isvalid(m))
-		return;
-	features[m] = (featuren)bsid(&v);
-}
-
-void areamap::set(rect rc, tile_s v) {
-	point m;
-	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
-		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
-			set(m, v);
-}
-
-void areamap::set(rect rc, areaf v) {
-	point m;
-	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
-		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
-			set(m, v);
-}
-
-point randomr(const rect& rc) {
+static point randomr(const rect& rc) {
 	short x = rc.x1 + rand() % (rc.width() + 1);
 	short y = rc.y1 + rand() % (rc.height() + 1);
 	return {x, y};
 }
 
-point areamap::get(const rect& rc) {
-	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)
-		return {-1000, -1000};
-	short x = xrand(rc.x1, rc.x2);
-	short y = xrand(rc.y1, rc.y2);
-	return {x, y};
-}
-
-void areamap::set(rect rc, areaf v, int random_count) {
-	if(random_count <= -100) {
-		set(rc, v);
-		return;
-	}
-	random_count = randomcount(rc, random_count);
-	while(random_count > 0) {
-		set(randomr(rc), v);
-		random_count--;
-	}
-}
-
-void areamap::set(rect rc, tile_s v, int random_count) {
-	if(random_count <= -100) {
-		set(rc, v);
-		return;
-	}
-	random_count = randomcount(rc, random_count);
-	while(random_count > 0) {
-		set(randomr(rc), v);
-		random_count--;
-	}
-}
-
-void areamap::set(rect rc, featuren v, int random_count) {
-	if(random_count <= -100) {
-		set(rc, v);
-		return;
-	}
-	random_count = randomcount(rc, random_count);
-	while(random_count > 0) {
-		set(randomr(rc), v);
-		random_count--;
-	}
-}
-
-void areamap::set(rect rc, featuren v) {
-	point m;
-	for(m.y = rc.y1; m.y < rc.y2; m.y++)
-		for(m.x = rc.x1; m.x < rc.x2; m.x++)
-			features[m] = v;
-}
-
-int areamap::randomcount(const rect& rc, int v) {
+static int randomcount(const rect& rc, int v) {
 	if(v <= -100)
 		return 0;
 	if(v < 0)
@@ -132,21 +42,23 @@ int areamap::randomcount(const rect& rc, int v) {
 	return v;
 }
 
-void areamap::removechance(areaf v, int chance) {
-	point m;
-	for(m.y = 0; m.y < mps; m.y++) {
-		for(m.x = 0; m.x < mps; m.x++) {
-			if(!is(m, v))
-				continue;
-			if(d100() >= chance)
-				continue;
-			remove(m, v);
-		}
-	}
+void areamap::clear() {
+	memset(this, 0, sizeof(*this));
+	for(auto& e : random)
+		e = (unsigned char)(rand() % 256);
 }
 
-bool areamap::iswall(point m) const {
-	return bsdata<tilei>::elements[(*this)[m]].iswall();
+void areamap::clearpath() {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++)
+			movement_rate[m] = NotCalculatedMovement;
+	push_counter = stack;
+	pop_counter = stack;
+}
+
+point areamap::get(const rect& rc) {
+	return (rc.x1 <= rc.x2 && rc.y1 <= rc.y2) ? randomr(rc) : point{-1000, -1000};
 }
 
 bool areamap::isfree(point m) const {
@@ -162,13 +74,30 @@ bool areamap::isfree(point m) const {
 	return true;
 }
 
-void areamap::clearpath() {
+void areamap::set(rect rc, fnset proc, int v) {
 	point m;
-	for(m.y = 0; m.y < mps; m.y++)
-		for(m.x = 0; m.x < mps; m.x++)
-			movement_rate[m] = NotCalculatedMovement;
-	push_counter = stack;
-	pop_counter = stack;
+	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
+		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
+			(this->*proc)(m, v);
+}
+
+void areamap::set(rect rc, fnset proc, int v, int random_count) {
+	if(random_count <= -100) {
+		set(rc, proc, v);
+		return;
+	}
+	random_count = randomcount(rc, random_count);
+	while(random_count > 0) {
+		(this->*proc)(randomr(rc), v);
+		random_count--;
+	}
+}
+
+void areamap::settile(point m, int v) {
+	if(!isvalid(m))
+		return;
+	tiles[m] = (unsigned char)v;
+	features[m] = 0;
 }
 
 point areamap::getnext(point start, point goal) {
@@ -211,7 +140,7 @@ unsigned areamap::getpath(point start, point goal, point* result, unsigned maxim
 }
 
 void areamap::setblock(point m, unsigned short v) {
-	if(m)
+	if(isvalid(m))
 		movement_rate[m] = v;
 }
 
@@ -224,11 +153,11 @@ void areamap::blockzero() {
 		}
 }
 
-void areamap::blocktiles(tile_s v) const {
+void areamap::blocktiles(int v) const {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
-			if((*this)[m] == v)
+			if(tiles[m] == (unsigned char)v)
 				movement_rate[m] = Blocked;
 		}
 }
@@ -323,37 +252,13 @@ direction_s	areamap::getdirection(point s, point d) {
 	return orientations_7b7[(ay + (osize / 2)) * osize + ax + (osize / 2)];
 }
 
-int areamap::getindex(point m, tile_s tile) const {
+int areamap::getindex(point m, int tile) const {
 	auto r = 0;
 	auto f = 1;
 	for(auto d : straight_directions) {
 		auto m1 = m + d;
-		auto t1 = (*this)[m1];
+		auto t1 = tiles[m1];
 		if(isvalid(m1) && ((t1 == tile) || bsdata<tilei>::elements[t1].tile == tile))
-			r |= f;
-		f = f << 1;
-	}
-	return r;
-}
-
-unsigned char areamap::getlos(point m) const {
-	unsigned char r = 0;
-	unsigned char f = 1;
-	for(auto d : straight_directions) {
-		auto m1 = m + d;
-		if(isvalid(m1) && !is(m1, Visible))
-			r |= f;
-		f = f << 1;
-	}
-	return r;
-}
-
-unsigned char areamap::getfow(point m) const {
-	unsigned char r = 0;
-	unsigned char f = 1;
-	for(auto d : straight_directions) {
-		auto m1 = m + d;
-		if(isvalid(m1) && !is(m1, Explored))
 			r |= f;
 		f = f << 1;
 	}
@@ -364,33 +269,7 @@ bool areamap::iswall(point m, direction_s d) const {
 	auto m1 = to(m, d);
 	if(!isvalid(m1))
 		return false;
-	return bsdata<tilei>::elements[(*this)[m1]].iswall();
-}
-
-bool areamap::linelossv(int x0, int y0, int x1, int y1, fntest test) {
-	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-	int err = (dx > dy ? dx : -dy) / 2, e2;
-	for(;;) {
-		if(x0 >= 0 && x0 < mps && y0 >= 0 && y0 < mps) {
-			point m = {(short)x0, (short)y0};
-			set(m, Visible);
-			set(m, Explored);
-			if(!test(m))
-				return false;
-		}
-		if(x0 == x1 && y0 == y1)
-			return true;
-		e2 = err;
-		if(e2 > -dx) {
-			err -= dy;
-			x0 += sx;
-		}
-		if(e2 < dy) {
-			err += dx;
-			y0 += sy;
-		}
-	}
+	return bsdata<tilei>::elements[tiles[m1]].iswall();
 }
 
 bool areamap::linelos(int x0, int y0, int x1, int y1, fntest test) const {
@@ -419,28 +298,13 @@ bool areamap::linelos(int x0, int y0, int x1, int y1, fntest test) const {
 
 void areamap::setlos(point m, int r, fntest test) {
 	for(auto x = m.x - r; x <= m.x + r; x++) {
-		linelossv(m.x, m.y, x, m.y - r, test);
-		linelossv(m.x, m.y, x, m.y + r, test);
+		linelos(m.x, m.y, x, m.y - r, test);
+		linelos(m.x, m.y, x, m.y + r, test);
 	}
 	for(auto y = m.y - r; y <= m.y + r; y++) {
-		linelossv(m.x, m.y, m.x - r, y, test);
-		linelossv(m.x, m.y, m.x + r, y, test);
+		linelos(m.x, m.y, m.x - r, y, test);
+		linelos(m.x, m.y, m.x + r, y, test);
 	}
-}
-
-const featurei& areamap::getfeature(point m) const {
-	if(!isvalid(m))
-		return bsdata<featurei>::elements[0];
-	return bsdata<featurei>::elements[(int)features[m]];
-}
-
-void areamap::set(featuren v, int bonus) {
-	auto count = mps * mps;
-	rect rc = {0, 0, mps - 1, mps - 1};
-	if(bonus < 0)
-		set(rc, v, xrand(-bonus / 2, -bonus));
-	else
-		set(rc, v, count * bonus / 100);
 }
 
 point areamap::getpoint(const rect& rc, direction_s dir) {
@@ -470,18 +334,18 @@ point areamap::getpoint(const rect& rco, const rect& bound, direction_s dir) {
 	}
 }
 
-void areamap::horz(int x1, int y1, int x2, tile_s tile) {
+void areamap::horz(int x1, int y1, int x2, fnset proc, int v) {
 	while(x1 <= x2) {
 		if(x1 >= 0 && x1 < mps)
-			set(point{short(x1), short(y1)}, tile);
+			(this->*proc)(point{short(x1), short(y1)}, v);
 		x1++;
 	}
 }
 
-void areamap::vert(int x1, int y1, int y2, tile_s tile) {
+void areamap::vert(int x1, int y1, int y2, fnset proc, int v) {
 	while(y1 <= y2) {
 		if(y1 >= 0 && y1 < mps)
-			set(point{short(x1), short(y1)}, tile);
+			(this->*proc)(point{short(x1), short(y1)}, v);
 		y1++;
 	}
 }
@@ -523,16 +387,16 @@ point areamap::bordered(direction_s d) {
 	}
 }
 
-void areamap::change(tile_s t1, tile_s t2) {
+void areamap::change(int t1, int t2) {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
-			if((*this)[m] == t1)
-				(*this)[m] = t2;
+			if(tiles[m] == t1)
+				tiles[m] = t2;
 		}
 }
 
-point areamap::find(featuren v) const {
+point areamap::findfeature(unsigned char v) const {
 	point m;
 	for(m.y = 0; m.y < mps; m.y++)
 		for(m.x = 0; m.x < mps; m.x++) {
@@ -571,13 +435,13 @@ rect areamap::get(const rect& rca, point offset, point minimum, point maximum) {
 	return rc;
 }
 
-void areamap::setreveal(point m, tile_s floor) {
+void areamap::setreveal(point m, int floor) {
 	auto& ei = getfeature(m);
 	auto pa = ei.getactivate();
 	if(ei.isvisible() || !pa)
 		return;
-	set(m, floor);
-	set(m, *pa);
+	settile(m, floor);
+	setfeature(m, (unsigned char)bsid(pa));
 }
 
 void areamap::setactivate(point m) {
@@ -585,5 +449,5 @@ void areamap::setactivate(point m) {
 	auto pa = ei.getactivate();
 	if(!pa)
 		return;
-	set(m, *pa);
+	setfeature(m, (unsigned char)bsid(pa));
 }

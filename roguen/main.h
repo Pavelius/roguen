@@ -1,6 +1,7 @@
 #include "actable.h"
 #include "advancement.h"
 #include "answers.h"
+#include "areaf.h"
 #include "areamap.h"
 #include "collection.h"
 #include "dice.h"
@@ -208,7 +209,7 @@ struct wearable : movable {
 	const item*		getwear(const void* data) const;
 };
 class ownerable {
-	short unsigned owner_id;
+	short unsigned	owner_id;
 public:
 	creature*		getowner() const { return bsdata<creature>::ptr(owner_id); }
 	void			setowner(const creature* v) { bsset(owner_id, v); }
@@ -228,7 +229,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			dress(variant v, int multiplier);
 	void			dress(variants v, int multiplier = 1);
 	void			fixcantgo() const;
-	void			interaction(point m);
 	bool			isfollowmaster() const;
 	void			levelup();
 	void			lookitems() const;
@@ -334,7 +334,7 @@ struct sitegeni;
 struct sitei : nameable {
 	typedef void (sitei::*fnproc)() const;
 	variants		landscape, loot;
-	tile_s			walls, floors;
+	unsigned char	walls, floors;
 	featable		feats;
 	unsigned char	doors;
 	char			chance_hidden_doors, doors_count;
@@ -409,7 +409,7 @@ public:
 	void			clear();
 	void			createarea();
 	static void		endgame();
-	void			enter(point m, int level, featuren feature, direction_s appear_side);
+	void			enter(point m, int level, const featurei* entry, direction_s appear_side);
 	int				get(const globali& e) const { return globals[bsid(&e)]; }
 	static int		getcount(variant v, int minimal = 1);
 	unsigned		getminutes() const { return minutes; }
@@ -478,5 +478,5 @@ extern int			window_height;
 point				center(const rect& rc);
 void				choose_targets(unsigned flags);
 void				dialog_message(const char* format);
-tile_s				getfloor();
-tile_s				getwall();
+int					getfloor();
+int					getwall();

@@ -533,6 +533,9 @@
     <ClInclude Include="world.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="areaf.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

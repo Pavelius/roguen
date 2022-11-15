@@ -19,7 +19,6 @@ BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAD(advancement);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
-BSDATAC(featurei, 128);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
@@ -69,15 +68,6 @@ BSMETA(dice) = {
 	{}};
 BSMETA(feati) = {
 	BSREQ(id),
-	{}};
-BSMETA(featurei) = {
-	BSREQ(id),
-	BSREQ(features), BSREQ(overlay),
-	BSREQ(priority),
-	BSFLG(flags, tilefi),
-	BSREQ(minimap),
-	BSREQ(leadto), BSREQ(activateto),
-	BSREQ(lead),
 	{}};
 BSMETA(framerange) = {
 	BSREQ(start), BSREQ(count),

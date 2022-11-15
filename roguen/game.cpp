@@ -92,7 +92,7 @@ static void all_features(triggern type) {
 	auto& source = get_triggers(type, isfeature);
 	for(m.y = 0; m.y < area.mps; m.y++) {
 		for(m.x = 0; m.x < area.mps; m.x++) {
-			if(area.features[m] == featuren::No)
+			if(area.features[m] == 0)
 				continue;
 			auto v1 = bsdata<featurei>::elements + (int)area.features[m];
 			for(auto p : source) {
@@ -111,6 +111,14 @@ static bool isfreelt(point m) {
 	return area.isfree(m);
 }
 
+static bool isfreeltsv(point m) {
+	area.setflag(m, Visible);
+	area.setflag(m, Explored);
+	if(area.is(m, Darkened))
+		return false;
+	return area.isfree(m);
+}
+
 static void update_los() {
 	point m;
 	for(m.y = 0; m.y < area.mps; m.y++)
@@ -123,7 +131,7 @@ static void update_los() {
 	if(human) {
 		auto i = human->getposition();
 		if(area.isvalid(i))
-			area.setlos(i, human->getlos(), isfreelt);
+			area.setlos(i, human->getlos(), isfreeltsv);
 	}
 }
 
@@ -135,13 +143,13 @@ static void auto_activate_features() {
 	for(m.y = 0; m.y < area.mps; m.y++)
 		for(m.x = 0; m.x < area.mps; m.x++) {
 			auto f = area.features[m];
-			if(f==featuren::No)
+			if(f==0)
 				continue;
 			auto p = bsdata<featurei>::elements + (int)f;
 			if(!p->autoactivated())
 				continue;
 			if(d100() < p->chance_auto_activate)
-				area.set(m, *p->getactivate());
+				area.setfeature(m, bsid(p->getactivate()));
 		}
 }
 
@@ -149,6 +157,19 @@ static bool checkalive() {
 	if(!player || !(*player))
 		return false;
 	return true;
+}
+
+static void remove_flags(areaf v, int chance) {
+	point m;
+	for(m.y = 0; m.y < area.mps; m.y++) {
+		for(m.x = 0; m.x < area.mps; m.x++) {
+			if(!area.is(m, v))
+				continue;
+			if(d100() >= chance)
+				continue;
+			area.remove(m, v);
+		}
+	}
 }
 
 int gamei::getrange(point m1, point m2) {
@@ -164,7 +185,7 @@ void gamei::passminute() {
 	while(restore_half_turn < minutes) {
 		all(&creature::every5minutes);
 		restore_half_turn += 5;
-		area.removechance(Iced, 20);
+		remove_flags(Iced, 20);
 	}
 	while(restore_turn < minutes) {
 		all(&creature::every10minutes);

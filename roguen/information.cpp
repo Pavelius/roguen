@@ -137,5 +137,5 @@ void roomi::getrumor(stringbuilder& sb) const {
 	sb.add(getnm("RumorLocation"),
 		getnm(bsdata<directioni>::elements[direction].id),
 		site_name);
-	area.set(rc, Explored);
+	area.set(rc, &areamap::setflag, Explored);
 }

@@ -29,13 +29,11 @@ struct object : drawable {
 	const char*		string;
 	unsigned char	priority, random;
 	constexpr explicit operator bool() const { return data != 0 || string != 0; }
-	static object	def;
 	static fnevent	beforepaintall, afterpaintall, correctcamera;
 	static fnpaint	afterpaint, afterpaintallpo;
 	draworder*		add(int milliseconds = 1000, draworder* depend = 0);
 	void			clear();
 	void			disappear(int milliseconds);
-	static void		initialize();
 	void			move(point goal, int speed, int correct = 0);
 	void			paint() const;
 	void			paintns() const;
@@ -43,7 +41,7 @@ struct object : drawable {
 object*				addobject(point pt);
 bool				cameravisible(point goal, int border = 48);
 void*				chooseobject();
-void				cleanup();
+void				shrink();
 void				clearobjects();
 void				focusing(point goal);
 object*				findobject(const void* p);

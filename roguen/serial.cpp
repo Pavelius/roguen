@@ -105,7 +105,7 @@ static void serial_area(bool write_mode) {
 		serial_area(temp, write_mode);
 }
 
-void gamei::enter(point m, int level, featuren feature, direction_s appear_side) {
+void gamei::enter(point m, int level, const featurei* feature, direction_s appear_side) {
 	before_serial_game();
 	remove_summoned();
 	geoposition old_game = game;
@@ -117,8 +117,8 @@ void gamei::enter(point m, int level, featuren feature, direction_s appear_side)
 	this->level = level;
 	serial_area(false);
 	point start = {-1000, -1000};
-	if(feature != featuren::No)
-		start = area.find(feature);
+	if(feature)
+		start = area.findfeature((unsigned char)bsid(feature));
 	if(!game.isvalid(start))
 		start = area.bordered(round(appear_side, South));
 	set_allies_position(old_game, game, start);
@@ -141,7 +141,7 @@ static void cleanup_saves() {
 void gamei::newgame() {
 	cleanup_saves();
 	game.randomworld();
-	game.enter(start_village, 0, (featuren)bsid(bsdata<featurei>::find("StairsDown")), NorthEast);
+	game.enter(start_village, 0, bsdata<featurei>::find("StairsDown"), NorthEast);
 }
 
 void gamei::writelog() {

@@ -1,75 +1,62 @@
 #include "anymap.h"
-#include "color.h"
 #include "crt.h"
 #include "feature.h"
-#include "point.h"
 
 #pragma once
 
-enum direction_s : unsigned char;
-enum areaf : unsigned char { Explored, Visible, Hidden, Darkened, Blooded, Iced, Webbed };
-struct areafi {
-	const char*		id;
-	framerange		features;
-};
-struct areamap : anymap<tile_s, 64> {
+enum areaf : unsigned char;
+
+struct areamap {
+	static const auto mps = 64;
+	typedef anymap<unsigned char, mps> arrayt;
+	typedef void(areamap::*fnset)(point m, int v);
 	typedef bool (*fntest)(point m);
-	anymap<featuren, mps> features;
-	anymap<unsigned char, mps> random;
-	anymap<unsigned char, mps> feats;
+	arrayt			tiles;
+	arrayt			features;
+	arrayt			random;
+	arrayt			feats;
 	void			blockfeatures() const;
 	static void		blockrange(int range);
-	void			blocktiles(tile_s v) const;
+	void			blocktiles(int v) const;
 	void			blockwalls() const;
 	static void		blockzero();
 	static point	bordered(direction_s d);
-	void			change(tile_s t1, tile_s t2);
+	void			change(int t1, int t2);
 	void			clear();
 	static void		clearpath();
-	point			find(featuren v) const;
+	point			findfeature(unsigned char v) const;
 	static direction_s getdirection(point s, point d);
-	static point	get(int x, int y) { return {(short)x, (short)y}; }
 	static point	get(const rect& rc);
 	static rect		get(const rect& rc, point offset, point minimum, point maximum);
-	const featurei&	getfeature(point m) const;
-	unsigned char	getfow(point m) const;
+	const featurei&	getfeature(point m) const { return bsdata<featurei>::elements[isvalid(m) ? features[m] : 0]; }
 	static point	getfree(point m, short maximum, fntest test);
-	int				getindex(point m, tile_s e) const;
-	unsigned char	getlos(point m) const;
+	int				getindex(point m, int e) const;
 	direction_s		getmost(const rect& rc) const;
 	static point	getnext(point start, point goal);
 	static unsigned getpath(point start, point goal, point* result, unsigned maximum);
 	static point	getpoint(const rect& rc, direction_s dir);
 	static point	getpoint(const rect& rc, const rect& bound, direction_s dir);
 	static int		getrange(point start, point target);
-	void			horz(int x1, int y1, int x2, tile_s tile);
+	void			horz(int x1, int y1, int x2, fnset proc, int v);
 	bool			is(point m, areaf v) const { return (feats[m] & (1 << v)) != 0; }
-	bool			is(point m, tile_s v) const { return isvalid(m) && (*this)[m] == v; }
 	bool			isb(point m, areaf v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }
+	bool			istile(point m, int v) const { return isvalid(m) && tiles[m] == v; }
 	bool			isfree(point m) const;
-	bool			iswall(point m) const;
+	static bool		isvalid(point m) { return ((unsigned short)m.x) < ((unsigned short)mps) && ((unsigned short)m.y) < ((unsigned short)mps); }
+	bool			iswall(point m) const { return bsdata<tilei>::elements[tiles[m]].iswall(); }
 	bool			iswall(point m, direction_s d) const;
 	bool			linelos(int x0, int y0, int x1, int y1, fntest test) const;
-	bool			linelossv(int x0, int y0, int x1, int y1, fntest test);
 	static void		makewave(point start_index);
 	static void		makewavex();
-	static int		randomcount(const rect& rc, int v);
-	void			set(point m, areaf v) { if(isvalid(m)) feats[m] |= (1 << v); }
-	void			set(point m, tile_s v);
-	void			set(point m, featuren v);
-	void			set(point m, const featurei& v);
-	void			set(rect rc, tile_s v);
-	void			set(rect rc, featuren v);
-	void			set(rect rc, areaf v);
-	void			set(rect rc, featuren v, int random_count);
-	void			set(rect rc, areaf v, int random_count);
-	void			set(rect rc, tile_s v, int random_count);
-	void			set(featuren v, int bonus);
+	void			remove(point m, int v) { feats[m] &= ~(1 << v); }
+	void			set(rect rc, fnset proc, int v);
+	void			set(rect rc, fnset proc, int v, int random_count);
 	void			setactivate(point m);
 	static void		setblock(point m, unsigned short v);
+	void			setfeature(point m, int v) { if(isvalid(m)) features[m] = (unsigned char)v; }
+	void			setflag(point m, int v) { if(isvalid(m)) feats[m] |= (1 << v); }
 	void			setlos(point m, int radius, fntest test);
-	void			setreveal(point m, tile_s floor);
-	void			remove(point m, areaf v) { feats[m] &= ~(1 << v); }
-	void			removechance(areaf v, int chance);
-	void			vert(int x1, int y1, int y2, tile_s tile);
+	void			settile(point m, int v);
+	void			setreveal(point m, int floor);
+	void			vert(int x1, int y1, int y2, fnset proc, int v);
 };

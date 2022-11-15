@@ -15,10 +15,7 @@ BSMETA(featurei) = {
 	BSREQ(lead),
 	BSREQ(chance_auto_activate),
 	{}};
-
-featurei::operator featuren() const {
-	return (featuren)(this - bsdata<featurei>::elements);
-}
+BSDATAC(featurei, 250);
 
 featurei* featurei::gethidden() const {
 	for(auto& e : bsdata<featurei>()) {

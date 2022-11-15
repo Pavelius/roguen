@@ -1,4 +1,4 @@
-#include "areamap.h"
+#include "areaf.h"
 #include "bsreq.h"
 
 BSDATA(areafi) = {

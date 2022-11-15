@@ -2,8 +2,6 @@
 
 #pragma once
 
-enum class featuren : unsigned char { No };
-
 struct featurei {
 	const char*		id;
 	framerange		features, overlay;
@@ -13,7 +11,6 @@ struct featurei {
 	featurei		*leadto, *activateto;
 	char			lead;
 	char			chance_auto_activate;
-	operator featuren() const;
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
 	bool			isvisible() const { return features.count != 0; }
 	featurei*		getactivate() const { return activateto; }

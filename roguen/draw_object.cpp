@@ -18,7 +18,6 @@ fnpaint				draw::object::afterpaintallpo;
 static rect			last_screen, last_area;
 static unsigned long timestamp;
 static unsigned long timestamp_last;
-object				object::def;
 
 long distance(point from, point to);
 
@@ -132,15 +131,8 @@ draworder* object::add(int milliseconds, draworder* depend) {
 	return p;
 }
 
-void object::initialize() {
-	def.fore = colors::text;
-	def.position.x = def.position.y = -10000;
-	def.priority = 64;
-	def.alpha = 255;
-}
-
 void object::clear() {
-	*this = def;
+	zclear(this);
 }
 
 void object::disappear(int milliseconds) {
@@ -250,7 +242,7 @@ void draw::paintobjects() {
 			object::afterpaintallpo(source[i]);
 		}
 	}
-	cleanup();
+	shrink();
 	clipping = push_clip;
 }
 
@@ -273,7 +265,7 @@ void draw::showobjects() {
 
 object*	draw::addobject(point pt) {
 	auto p = bsdata<object>::addz();
-	*p = object::def;
+	p->clear();
 	p->position = pt;
 	return p;
 }
@@ -290,7 +282,7 @@ void draw::clearobjects() {
 	bsdata<object>::source.clear();
 }
 
-void draw::cleanup() {
+void draw::shrink() {
 	auto pb = bsdata<object>::begin();
 	auto pe = bsdata<object>::end();
 	while(pe > pb) {

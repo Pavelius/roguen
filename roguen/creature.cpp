@@ -190,7 +190,7 @@ static void drop_treasure(creature* pe) {
 static void check_blooding(creature* p) {
 	if(p->is(Blooding)) {
 		p->damage(1);
-		area.set(p->getposition(), Blooded);
+		area.setflag(p->getposition(), Blooded);
 		if(p->roll(Strenght))
 			p->remove(Blooding);
 	}
@@ -218,7 +218,7 @@ static bool check_stairs_movement(creature* p, point m) {
 	if(pf) {
 		if(p->ishuman()) {
 			if(draw::yesno(getnm(str("Move%1", ei.id)))) {
-				game.enter(game.position, game.level + ei.lead, *pf, Center);
+				game.enter(game.position, game.level + ei.lead, pf, Center);
 				return false;
 			}
 		}
@@ -238,7 +238,7 @@ static bool check_dangerous_feature(creature* p, point m) {
 			return false;
 		}
 		p->act(getnme(str("%1Break", ei.id)));
-		area.set(m, featuren::No);
+		area.setfeature(m, 0);
 	}
 	return true;
 }
@@ -266,7 +266,7 @@ static bool check_leave_area(creature* p, point m) {
 			auto direction = movedirection(m);
 			auto np = to(game.position, direction);
 			if(draw::yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
-				game.enter(np, 0, featuren::No, direction);
+				game.enter(np, 0, 0, direction);
 		}
 		p->wait();
 		return false;
@@ -421,7 +421,7 @@ void creature::levelup() {
 static bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
-	auto tile = area[m];
+	auto tile = area.tiles[m];
 	if(bsdata<tilei>::elements[tile].is(CanSwim))
 		return false;
 	return area.isfree(m);
@@ -516,22 +516,22 @@ static void drop_item(point m, const char* id) {
 	it.drop(m);
 }
 
-void creature::interaction(point m) {
+static void check_interaction(creature* player, point m) {
 	auto& ei = area.getfeature(m);
 	if(ei.isvisible()) {
 		auto pa = ei.getactivate();
 		if(pa)
 			area.setactivate(m);
-		else if(ei.is(Woods) && wears[MeleeWeapon].geti().is(CutWoods)) {
-			auto& wei = wears[MeleeWeapon].geti();
-			auto chance = get(Strenght) / 10 + wei.weapon.damage;
+		else if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
+			auto& wei = player->wears[MeleeWeapon].geti();
+			auto chance = player->get(Strenght) / 10 + wei.weapon.damage;
 			if(chance < 1)
 				chance = 1;
 			if(wei.is(TwoHanded))
 				chance *= 2;
 			if(d100() < chance) {
-				act(getnm("YouCutWood"), getnm(ei.id));
-				area.set(m, featuren::No);
+				player->act(getnm("YouCutWood"), getnm(ei.id));
+				area.setfeature(m, 0);
 				drop_item(m, "WoodenLagsTable");
 			}
 		}
@@ -725,7 +725,7 @@ void creature::damage(int v) {
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
 		if(d100() < 40)
-			area.set(getposition(), Blooded);
+			area.setflag(getposition(), Blooded);
 		logs(getnm("ApplyKill"), v);
 		kill();
 	}
@@ -844,7 +844,7 @@ void creature::movestep(point ni) {
 		fixmovement();
 		lookitems();
 	} else {
-		interaction(ni);
+		check_interaction(this, ni);
 		fixaction();
 	}
 	update_room();
@@ -1112,7 +1112,7 @@ static void block_creatures(creature* exclude) {
 static void block_swimable() {
 	for(auto& e : bsdata<tilei>()) {
 		if(e.is(CanSwim))
-			area.blocktiles((tile_s)bsid(&e));
+			area.blocktiles(bsid(&e));
 	}
 }
 
@@ -1305,14 +1305,14 @@ void creature::apply(variant v) {
 		apply(bsdata<spelli>::elements[v.value], v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)
-			area.remove(getposition(), (areaf)v.value);
+			area.remove(getposition(), v.value);
 		else
-			area.set(getposition(), (areaf)v.value);
+			area.setflag(getposition(), v.value);
 	} else if(v.iskind<featurei>()) {
 		if(v.counter < 0)
-			area.set(getposition(), featuren::No);
+			area.setfeature(getposition(), 0);
 		else
-			area.set(getposition(), (featuren)v.value);
+			area.setfeature(getposition(), v.value);
 	} else
 		advance(v);
 }
