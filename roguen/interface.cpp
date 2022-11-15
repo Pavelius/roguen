@@ -12,9 +12,6 @@
 
 using namespace draw;
 
-const int tsx = 64;
-const int tsy = 48;
-const int mst = 260;
 const int panel_width = 130;
 
 void set_dark_theme();
@@ -35,14 +32,6 @@ static point straight_directions[] = {
 	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
 };
 
-static point m2s(point v) {
-	return point{(short)(v.x * tsx), (short)(v.y * tsy)};
-}
-
-static point s2m(point v) {
-	return point{(short)(v.x / tsx), (short)(v.y / tsy)};
-}
-
 static point right(point v) {
 	return {(short)(v.x - tsx), v.y};
 }
@@ -57,16 +46,6 @@ static point up(point v) {
 
 static point down(point v) {
 	return {v.x, (short)(v.y + tsy)};
-}
-
-static color getcolor(int format_color) {
-	switch(format_color) {
-	case 1: return colors::red;
-	case 2: return colors::green;
-	case 3: return colors::blue;
-	case 4: return colors::yellow;
-	default: return colors::text;
-	}
 }
 
 static void strokedown() {
@@ -91,18 +70,6 @@ static void strokeup() {
 	line(caret.x, caret.y - height + 1);
 	line(caret.x - width + 1, caret.y);
 	fore = push_fore;
-}
-
-static point to(point pt, direction_s d, int sx, int sy) {
-	if(d == North || d == NorthEast || d == NorthWest)
-		pt.y -= sy;
-	if(d == South || d == SouthEast || d == SouthWest)
-		pt.y += sy;
-	if(d == East || d == SouthEast || d == NorthEast)
-		pt.x += sx;
-	if(d == West || d == SouthWest || d == NorthWest)
-		pt.x -= sx;
-	return pt;
 }
 
 static void remove_temp_objects(const array& source) {
@@ -150,118 +117,6 @@ static object* add_object(point pt, void* data, unsigned char random, unsigned c
 	po->random = random;
 	po->alpha = 0xFF;
 	return po;
-}
-
-point movable::getsposition() const {
-	return m2s(getposition());
-}
-
-void movable::fixmovement() const {
-	auto po = draw::findobject(this);
-	if(!po)
-		return;
-	auto pt = getsposition();
-	if(po->position == pt)
-		return;
-	auto pr = po->add(mst);
-	pr->position = pt;
-}
-
-void movable::fixdisappear() const {
-	auto po = draw::findobject(this);
-	if(po)
-		po->disappear(mst);
-}
-
-void movable::fixeffect(point position, const char* id) {
-	auto pv = bsdata<visualeffect>::find(id);
-	if(!pv)
-		return;
-	position.y += pv->dy;
-	auto po = draw::addobject(position);
-	po->data = pv;
-	po->priority = pv->priority;
-	po->alpha = 0xFF;
-	po->add(mst);
-}
-
-void movable::fixeffect(const char* id) const {
-	if(!area.is(position, Visible))
-		return;
-	auto pt = getsposition(); pt.y -= tsy / 2;
-	fixeffect(pt, id);
-}
-
-void movable::fixappear() const {
-	auto po = draw::findobject(this);
-	if(po)
-		return;
-	po = addobject(getsposition());
-	po->data = this;
-	po->alpha = 0xFF;
-	po->priority = 11;
-}
-
-void movable::fixremove() const {
-	auto po = draw::findobject(this);
-	if(po)
-		po->clear();
-}
-
-void movable::fixvalue(const char* format, int format_color) const {
-	auto pt = getsposition(); pt.y -= tsy;
-	auto pa = addobject(pt);
-	pa->alpha = 0xFF;
-	pa->string = szdup(format);
-	pa->priority = 20;
-	pa->fore = getcolor(format_color);
-	auto po = pa->add(mst);
-	pt.y -= tsy;
-	po->position = pt;
-}
-
-void movable::fixaction() const {
-	if(!area.is(position, Visible))
-		return;
-	auto po = draw::findobject(this);
-	if(!po)
-		return;
-	auto pr = po->add(mst / 2);
-	pr->position = to(po->position, direction, tsx / 8, tsy / 8);
-	pr = pr->add(mst / 2);
-	pr->position = po->position;
-}
-
-const char* missilename(direction_s v) {
-	switch(v) {
-	case North: return "MissileNorth";
-	case South: return "MissileSouth";
-	case East: return "MissileEast";
-	case West: return "MissileWest";
-	default: return "MissileNorthWest";
-	}
-}
-
-void movable::fixshoot(point target, int frame) const {
-	fixthrown(target, missilename(direction), frame);
-}
-
-void movable::fixthrown(point target, const char* id, int frame) const {
-	if(!area.isvalid(target))
-		return;
-	auto pe = bsdata<visualeffect>::find(id);
-	if(!pe)
-		return;
-	auto range = area.getrange(getposition(), target);
-	if(range == 0xFFFF)
-		return;
-	auto po = add_object(m2s(getposition()), pe, frame);
-	po->position.y += pe->dy;
-	if(!po)
-		return;
-	auto pr = po->add(mst * range / 3);
-	pr->position = m2s(target);
-	pr->position.y += pe->dy;
 }
 
 void gamei::next(fnevent proc) {

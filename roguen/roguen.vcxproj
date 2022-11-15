@@ -244,6 +244,7 @@
     <ClCompile Include="zip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ability.h" />
     <ClInclude Include="actable.h" />
     <ClInclude Include="advancement.h" />
     <ClInclude Include="answers.h" />
@@ -284,6 +285,7 @@
     <ClInclude Include="logparse.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="monster.h" />
+    <ClInclude Include="moveable.h" />
     <ClInclude Include="nameable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />

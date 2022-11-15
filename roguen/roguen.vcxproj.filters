@@ -159,9 +159,6 @@
     <ClCompile Include="ability.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="moveable.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="main_util.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -328,6 +325,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="race.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="moveable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -537,6 +537,12 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="race.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ability.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="moveable.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

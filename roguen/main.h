@@ -1,3 +1,4 @@
+#include "ability.h"
 #include "actable.h"
 #include "advancement.h"
 #include "answers.h"
@@ -15,6 +16,7 @@
 #include "duration.h"
 #include "list.h"
 #include "listcolumn.h"
+#include "moveable.h"
 #include "monster.h"
 #include "pushvalue.h"
 #include "quest.h"
@@ -76,40 +78,12 @@ extern stringbuilder console;
 extern point m2s(point v);
 struct featable : flagable<4> {};
 class roomi;
-struct abilityi : nameable {
-	ability_s		basic;
-};
 struct conditioni : nameable {
 };
 struct classi : nameable {
 	char			player;
 };
 struct feati : nameable {
-};
-class movable : public actable {
-	point			position;
-	direction_s		direction;
-	bool			mirror;
-public:
-	void			fixaction() const;
-	void			fixappear() const;
-	void			fixability(ability_s i, int v) const;
-	void			fixcantgo() const;
-	void			fixdisappear() const;
-	void			fixeffect(const char* id) const;
-	static void		fixeffect(point position, const char* id);
-	void			fixmovement() const;
-	void			fixremove() const;
-	void			fixshoot(point target, int frame) const;
-	void			fixthrown(point target, const char* id, int frame) const;
-	void			fixvalue(const char* v, int color = 0) const;
-	void			fixvalue(int v) const;
-	bool			in(const rect& rc) const { return position.in(rc); }
-	bool			ismirror() const { return mirror; }
-	point			getposition() const { return position; }
-	point			getsposition() const;
-	void			setdirection(direction_s v);
-	void			setposition(point m);
 };
 struct itemi : nameable {
 	struct weaponi {
