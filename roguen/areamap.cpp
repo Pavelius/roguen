@@ -26,6 +26,19 @@ static int d100() {
 	return rand() % 100;
 }
 
+static void addwave(point v) {
+	*push_counter++ = v;
+	if(push_counter >= stack + sizeof(stack) / sizeof(stack[0]))
+		push_counter = stack;
+}
+
+static point getwave() {
+	auto index = *pop_counter++;
+	if(pop_counter >= stack + sizeof(stack) / sizeof(stack[0]))
+		pop_counter = stack;
+	return index;
+}
+
 static point randomr(const rect& rc) {
 	short x = rc.x1 + rand() % (rc.width() + 1);
 	short y = rc.y1 + rand() % (rc.height() + 1);
@@ -40,6 +53,54 @@ static int randomcount(const rect& rc, int v) {
 	if(v == 0)
 		v = 1;
 	return v;
+}
+
+void areamap::blockfeatures() const {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if(!int(features[m]))
+				continue;
+			auto& ei = bsdata<featurei>::elements[int(features[m])];
+			if(ei.is(Impassable))
+				movement_rate[m] = Blocked;
+		}
+}
+
+void areamap::blocktiles(int v) const {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if(tiles[m] == (unsigned char)v)
+				movement_rate[m] = Blocked;
+		}
+}
+
+void areamap::blockwalls() const {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if(iswall(m))
+				movement_rate[m] = Blocked;
+		}
+}
+
+void areamap::blockzero() {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if(movement_rate[m] >= NotCalculatedMovement)
+				movement_rate[m] = Blocked;
+		}
+}
+
+void areamap::change(int t1, int t2) {
+	point m;
+	for(m.y = 0; m.y < mps; m.y++)
+		for(m.x = 0; m.x < mps; m.x++) {
+			if(tiles[m] == t1)
+				tiles[m] = t2;
+		}
 }
 
 void areamap::clear() {
@@ -59,45 +120,6 @@ void areamap::clearpath() {
 
 point areamap::get(const rect& rc) {
 	return (rc.x1 <= rc.x2 && rc.y1 <= rc.y2) ? randomr(rc) : point{-1000, -1000};
-}
-
-bool areamap::isfree(point m) const {
-	if(!isvalid(m))
-		return false;
-	if(iswall(m))
-		return false;
-	auto pe = bsdata<featurei>::elements + (int)features[m];
-	if(pe->isvisible()) {
-		if(pe->is(Impassable))
-			return false;
-	}
-	return true;
-}
-
-void areamap::set(rect rc, fnset proc, int v) {
-	point m;
-	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
-		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
-			(this->*proc)(m, v);
-}
-
-void areamap::set(rect rc, fnset proc, int v, int random_count) {
-	if(random_count <= -100) {
-		set(rc, proc, v);
-		return;
-	}
-	random_count = randomcount(rc, random_count);
-	while(random_count > 0) {
-		(this->*proc)(randomr(rc), v);
-		random_count--;
-	}
-}
-
-void areamap::settile(point m, int v) {
-	if(!isvalid(m))
-		return;
-	tiles[m] = (unsigned char)v;
-	features[m] = 0;
 }
 
 point areamap::getnext(point start, point goal) {
@@ -139,61 +161,48 @@ unsigned areamap::getpath(point start, point goal, point* result, unsigned maxim
 	return pb - result;
 }
 
+bool areamap::isfree(point m) const {
+	if(!isvalid(m))
+		return false;
+	if(iswall(m))
+		return false;
+	auto pe = bsdata<featurei>::elements + (int)features[m];
+	if(pe->isvisible()) {
+		if(pe->is(Impassable))
+			return false;
+	}
+	return true;
+}
+
+void areamap::set(rect rc, fnset proc, int v) {
+	point m;
+	for(m.y = rc.y1; m.y <= rc.y2; m.y++)
+		for(m.x = rc.x1; m.x <= rc.x2; m.x++)
+			(this->*proc)(m, v);
+}
+
+void areamap::set(rect rc, fnset proc, int v, int random_count) {
+	if(random_count <= -100) {
+		set(rc, proc, v);
+		return;
+	}
+	random_count = randomcount(rc, random_count);
+	while(random_count > 0) {
+		(this->*proc)(randomr(rc), v);
+		random_count--;
+	}
+}
+
+void areamap::settile(point m, int v) {
+	if(!isvalid(m))
+		return;
+	tiles[m] = (unsigned char)v;
+	features[m] = 0;
+}
+
 void areamap::setblock(point m, unsigned short v) {
 	if(isvalid(m))
 		movement_rate[m] = v;
-}
-
-void areamap::blockzero() {
-	point m;
-	for(m.y = 0; m.y < mps; m.y++)
-		for(m.x = 0; m.x < mps; m.x++) {
-			if(movement_rate[m] >= NotCalculatedMovement)
-				movement_rate[m] = Blocked;
-		}
-}
-
-void areamap::blocktiles(int v) const {
-	point m;
-	for(m.y = 0; m.y < mps; m.y++)
-		for(m.x = 0; m.x < mps; m.x++) {
-			if(tiles[m] == (unsigned char)v)
-				movement_rate[m] = Blocked;
-		}
-}
-
-void areamap::blockwalls() const {
-	point m;
-	for(m.y = 0; m.y < mps; m.y++)
-		for(m.x = 0; m.x < mps; m.x++) {
-			if(iswall(m))
-				movement_rate[m] = Blocked;
-		}
-}
-
-void areamap::blockfeatures() const {
-	point m;
-	for(m.y = 0; m.y < mps; m.y++)
-		for(m.x = 0; m.x < mps; m.x++) {
-			if(!int(features[m]))
-				continue;
-			auto& ei = bsdata<featurei>::elements[int(features[m])];
-			if(ei.is(Impassable))
-				movement_rate[m] = Blocked;
-		}
-}
-
-static void addwave(point v) {
-	*push_counter++ = v;
-	if(push_counter >= stack + sizeof(stack) / sizeof(stack[0]))
-		push_counter = stack;
-}
-
-static point getwave() {
-	auto index = *pop_counter++;
-	if(pop_counter >= stack + sizeof(stack) / sizeof(stack[0]))
-		pop_counter = stack;
-	return index;
 }
 
 void areamap::makewavex() {
@@ -385,15 +394,6 @@ point areamap::bordered(direction_s d) {
 	case East: return {mps - 1, mps / 2};
 	default: return {mps / 2, mps / 2};
 	}
-}
-
-void areamap::change(int t1, int t2) {
-	point m;
-	for(m.y = 0; m.y < mps; m.y++)
-		for(m.x = 0; m.x < mps; m.x++) {
-			if(tiles[m] == t1)
-				tiles[m] = t2;
-		}
 }
 
 point areamap::findfeature(unsigned char v) const {
