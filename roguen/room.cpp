@@ -23,3 +23,7 @@ bool roomi::isexplored() const {
 bool roomi::ismarkable() const {
 	return is(Notable) && isexplored();
 }
+
+bool roomi::islocal() const {
+	return *this==game;
+}

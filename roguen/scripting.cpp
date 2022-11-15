@@ -9,13 +9,14 @@
 
 roomi* add_room(const sitei* ps, const rect& rc);
 void animate_figures();
-void choose_targets(unsigned flags);
+bool isfreeltsv(point m);
 void place_shape(const shapei& e, point m, int floor, int walls);
 void show_area(int bonus);
 void show_logs(int bonus);
 void visualize_images(res pid, point size, point offset);
 
 creaturea			creatures, enemies, targets;
+collection<roomi>	rooms;
 spella				allowed_spells;
 itema				items;
 creature			*player, *opponent, *enemy;
@@ -29,6 +30,7 @@ locationi*			last_location;
 const sitei*		last_site;
 globali*			last_global;
 rect				last_rect;
+roomi*				last_room;
 siteskilla			last_actions;
 extern bool			show_floor_rect;
 static bool			stop_script;
@@ -236,6 +238,77 @@ static void attack_forward(int bonus) {
 	player->fixaction();
 	player->fixeffect("HitVisual");
 	player->wait();
+}
+
+static void add_creatures(feat_s v) {
+	for(auto p : creatures) {
+		if(p->is(v))
+			targets.add(p);
+	}
+}
+
+static void match_creatures(const spelli& ei, int level) {
+	auto ps = targets.begin();
+	for(auto p : targets) {
+		if(!p->isallow(ei, level))
+			continue;
+		*ps++ = p;
+	}
+	targets.count = ps - targets.begin();
+}
+
+bool spell_ready(const spelli& e, int level) {
+	choose_targets(e.target);
+	unsigned target_count = 1;
+	if(e.is(Multitarget))
+		target_count += level;
+	if(targets.count > target_count)
+		targets.count = target_count;
+	match_creatures(e, level);
+	return targets.getcount() != 0 || rooms.getcount() != 0 || e.summon.size() != 0;
+}
+
+static void choose_rooms(const char* title) {
+	last_room = (roomi*)rooms.choose(title, getnm("Cancel"), false);
+}
+
+void choose_targets(unsigned flags) {
+	items.clear();
+	rooms.clear();
+	targets.clear();
+	if(FGT(flags, Allies)) {
+		if(player->is(Ally))
+			add_creatures(Ally);
+		if(player->is(Enemy))
+			add_creatures(Enemy);
+	}
+	if(FGT(flags, Enemies)) {
+		for(auto p : enemies)
+			targets.add(p);
+	}
+	if((flags & (FG(Allies) & FG(Enemies))) == 0)
+		targets = creatures;
+	if(FGT(flags, You))
+		targets.add(player);
+	if(!FGT(flags, Ranged))
+		targets.matchrange(player->getposition(), 1, true);
+	targets.distinct();
+	if(FGT(flags, Item)) {
+		for(auto p : targets)
+			items.select(p);
+	}
+	if(FGT(flags, Site)) {
+		rooms.select(fntis<roomi, &roomi::islocal>);
+		if(!FGT(flags, You))
+			rooms.remove(player->getroom());
+		if(!FGT(flags, Ranged))
+			rooms.match(fntis<roomi, &roomi::ismarkable>, true);
+	}
+	if(FGT(flags, Random)) {
+		targets.shuffle();
+		items.shuffle();
+	} else
+		targets.sort(player->getposition());
 }
 
 static item* choose_wear() {
@@ -590,6 +663,21 @@ static void choose_action(int bonus) {
 	player->wait();
 }
 
+static void jump_to_site(int bonus) {
+	auto pn = getdescription(str("%1%2", "Teleport", "Choose"));
+	if(player->ishuman())
+		last_room = rooms.choose(pn, getnm("Cancel"), false);
+	else
+		last_room = rooms.random();
+	if(last_room) {
+		auto m = center(last_room->rc);
+		player->setposition(m);
+		area.setlos(m, player->getlos(), isfreeltsv);
+		player->fixteleport(player->ishuman());
+		//player->update_room();
+	}
+}
+
 static void wait_hour(int bonus) {
 	player->wait(6 * 60 * 24);
 }
@@ -692,6 +780,7 @@ BSDATA(script) = {
 	{"DebugMessage", debug_message},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
+	{"JumpToSite", jump_to_site},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
 	{"MoveDown", move_down},

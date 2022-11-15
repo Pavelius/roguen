@@ -15,6 +15,9 @@ struct defenceg {
 };
 }
 
+extern collection<roomi> rooms;
+bool spell_ready(const spelli& e, int level);
+
 void rollg::make(int v) {
 	roll = 1 + rand() % 100;
 	chance = v;
@@ -357,27 +360,6 @@ static void defence_skills(defenceg& result, const creature* player, int attacke
 		result.block = 0;
 	if(result.dodge < 0)
 		result.dodge = 0;
-}
-
-static void match_creatures(const spelli& ei, int level) {
-	auto ps = targets.begin();
-	for(auto p : targets) {
-		if(!p->isallow(ei, level))
-			continue;
-		*ps++ = p;
-	}
-	targets.count = ps - targets.begin();
-}
-
-static bool spell_ready(const spelli& e, int level) {
-	choose_targets(e.target);
-	unsigned target_count = 1;
-	if(e.is(Multitarget))
-		target_count += level;
-	if(targets.count > target_count)
-		targets.count = target_count;
-	match_creatures(e, level);
-	return targets.getcount() != 0 || e.summon.size() != 0;
 }
 
 static bool spell_allowmana(const void* object) {
@@ -1336,12 +1318,16 @@ void creature::cast(const spelli& e, int level, int mana) {
 		return;
 	}
 	action_text(this, e.id, "Casting");
-	for(auto p : targets)
-		p->apply(e, level);
+	if(targets) {
+		for(auto p : targets)
+			p->apply(e, level);
+	}
 	if(e.summon) {
 		auto count = e.getcount(level);
 		summon(player->getposition(), e.summon, count, level);
 	}
+	if(rooms)
+		runscript(e.effect);
 	add(Mana, -mana);
 	update();
 	wait();

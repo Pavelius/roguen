@@ -3,8 +3,10 @@
 #include "areaf.h"
 #include "areamap.h"
 #include "direction.h"
+#include "draw.h"
 #include "draw_object.h"
 #include "moveable.h"
+#include "screenshoot.h"
 #include "visualeffect.h"
 
 extern areamap area;
@@ -172,4 +174,30 @@ void movable::fixthrown(point target, const char* id, int frame) const {
 	auto pr = po->add(mst * range / 3);
 	pr->position = m2s(target);
 	pr->position.y += pe->dy;
+}
+
+static void paint_black_screen() {
+	rectpush push;
+	width = getwidth();
+	height = getheight();
+	caret.clear();
+	fillwindow();
+}
+
+static void paint_main_scene() {
+	rectpush push;
+	paintstart();
+	paintobjects();
+}
+
+void movable::fixteleport(bool ishuman) const {
+	auto po = draw::findobject(this);
+	if(po) {
+		if(ishuman) {
+			screenshoot::fade(paint_black_screen, 1000);
+			po->position = getsposition();
+			screenshoot::fade(paint_main_scene, 1000);
+		} else
+			po->position = getsposition();
+	}
 }

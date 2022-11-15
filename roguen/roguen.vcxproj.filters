@@ -177,9 +177,6 @@
     <ClCompile Include="nameable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="wearable.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="creaturea.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -236,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="variantc.cpp">
       <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="target.cpp">
-      <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="collection.cpp">
       <Filter>Support</Filter>
@@ -328,6 +322,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="feat.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="wearable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -549,6 +546,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="feat.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="wearable.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

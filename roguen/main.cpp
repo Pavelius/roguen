@@ -26,16 +26,16 @@ static void initializating() {
 	bsreq::read("rules/Features.txt");
 	bsreq::read("rules/Items.txt");
 	bsreq::read("rules/Monsters.txt");
-	bsreq::read("rules/Advancement.txt");
-	hotkey::initialize();
-	readl("Chats", speech::read);
-	readl("NameCharacters", charname::read);
 	shapei::read("rules/Shapes.txt");
 	bsreq::read("rules/Spells.txt");
 	bsreq::read("rules/Sites.txt");
+	bsreq::read("rules/Advancement.txt");
+	readl("Chats", speech::read);
+	readl("NameCharacters", charname::read);
 	talki::read();
 	readurl("modules", "*.txt", bsreq::read);
 	check_need_loading();
+	hotkey::initialize();
 #ifdef _DEBUG
 	main_util();
 #endif

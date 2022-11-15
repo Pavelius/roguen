@@ -27,6 +27,7 @@ public:
 	void			fixmovement() const;
 	void			fixremove() const;
 	void			fixshoot(point target, int frame) const;
+	void			fixteleport(bool ishuman) const;
 	void			fixthrown(point target, const char* id, int frame) const;
 	void			fixvalue(const char* v, int color = 0) const;
 	void			fixvalue(int v) const;

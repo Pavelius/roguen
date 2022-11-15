@@ -1,2 +1,2 @@
 ﻿In file `rules/Advancement.txt`:
-Empthy key mapping for script 'Ctrl+U'
+ Line 5: Can't find variant `Teleport`

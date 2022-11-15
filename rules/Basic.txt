@@ -9,7 +9,6 @@ Mage player(1)
 
 #Spell
 
-CureWounds
 Entaglement
 Gate
 Light

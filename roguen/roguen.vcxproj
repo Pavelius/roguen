@@ -229,7 +229,6 @@
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />
     <ClCompile Include="talk.cpp" />
-    <ClCompile Include="target.cpp" />
     <ClCompile Include="trigger.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="variantc.cpp" />
@@ -314,6 +313,7 @@
     <ClInclude Include="variantc.h" />
     <ClInclude Include="visualeffect.h" />
     <ClInclude Include="wear.h" />
+    <ClInclude Include="wearable.h" />
     <ClInclude Include="widget.h" />
     <ClInclude Include="win.h" />
     <ClInclude Include="world.h" />

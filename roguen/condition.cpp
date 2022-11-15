@@ -16,6 +16,7 @@ BSDATA(conditioni) = {
 	{"HighInt"},
 	{"Item"},
 	{"Feature"},
+	{"Site"},
 	{"You"},
 	{"Allies"},
 	{"Enemies"},

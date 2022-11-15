@@ -1,4 +1,4 @@
-#include "main.h"
+#include "wearable.h"
 
 void wearable::addcoins(unsigned v) {
 	if(!v)

@@ -27,6 +27,7 @@
 #include "talk.h"
 #include "trigger.h"
 #include "wear.h"
+#include "wearable.h"
 
 #pragma once
 
@@ -55,7 +56,7 @@ enum condition_s : unsigned char {
 	NoWounded, Wounded, HeavyWounded,
 	Unaware, NoAnyFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
-	Item, Feature,
+	Item, Feature, Site,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 enum triggern : unsigned char {
@@ -74,22 +75,6 @@ struct itema : collection<item> {
 	void			select(point m);
 	void			select(creature* p);
 	void			selectbackpack(creature* p);
-};
-struct wearable : movable {
-	item			wears[Elbows + 1];
-	int				money;
-	void			addcoins(unsigned v);
-	void			additem(item& v);
-	slice<item>		backpack() { return slice<item>(wears + Backpack, wears + BackpackLast + 1); }
-	void			equip(item& v);
-	slice<item>		equipment() { return slice<item>(wears + MeleeWeapon, wears + Elbows + 1); }
-	bool			iswear(const void* p) const { return p >= wears && p <= wears + Elbows; }
-	slice<item>		gears() { return slice<item>(wears + Head, wears + Elbows + 1); }
-	int				getmoney() const { return money; }
-	item*			getwear(wear_s id) { return wears + id; }
-	const char*		getwearname(wear_s id) const;
-	wear_s			getwearslot(const item* data) const;
-	const item*		getwear(const void* data) const;
 };
 class ownerable {
 	short unsigned	owner_id;
@@ -254,8 +239,10 @@ public:
 	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
 	void			getrumor(stringbuilder& sb) const;
 	const char*		getname() const { return geti().getname(); }
+	static const char* getname(const void* p) { return ((roomi*)p)->getname(); }
 	bool			is(feat_s v) const { return geti().feats.is(v); }
 	bool			isexplored() const;
+	bool			islocal() const;
 	bool			ismarkable() const;
 	bool			isnotable() const { return is(Notable); }
 	void			setsite(short unsigned v) { site_id = v; }

@@ -106,7 +106,7 @@ static bool isfreelt(point m) {
 	return area.isfree(m);
 }
 
-static bool isfreeltsv(point m) {
+bool isfreeltsv(point m) {
 	area.setflag(m, Visible);
 	area.setflag(m, Explored);
 	if(area.is(m, Darkened))
