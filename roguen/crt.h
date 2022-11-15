@@ -222,6 +222,15 @@ struct sliceu {
 	constexpr unsigned				size() const { return count; }
 };
 
+template<typename T>
+struct funct {
+	typedef void (T::*command)(); // typical object command
+	typedef bool (T::*visible)() const; // object visibility
+};
+template<typename T, funct<T>::visible F>
+struct fntis {
+	static bool proc(const void* p) { return (((T*)p)->*F)(); }
+};
 typedef void(*fnevent)(); // Callback function of any command executing
 typedef bool(*fnallow)(const void* object, int index); // Callback function of status probing. Return true if `object` allow `index` status.
 typedef bool(*fnchoose)(const void* object, array& source, void* pointer); // Callback function of choosing one element from array of many elements and storing it into `pointer`

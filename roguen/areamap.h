@@ -5,6 +5,7 @@
 #pragma once
 
 enum areaf : unsigned char;
+enum direction_s : unsigned char;
 
 struct areamap {
 	static const auto mps = 64;

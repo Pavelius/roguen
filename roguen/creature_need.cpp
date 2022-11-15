@@ -10,7 +10,7 @@ static creature* random_target(const greatneedi* p) {
 	source.select(creature::ispresent);
 	source.match(creature::isnamed, true);
 	source.match(creature::isneed, false);
-	source.match(creature::ishuman, false);
+	source.match(fntis<creature, &creature::ishuman>::proc, false);
 	return source.random();
 }
 

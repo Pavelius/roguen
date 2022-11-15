@@ -2,11 +2,6 @@
 #include "greatneed.h"
 #include "main.h"
 
-template<typename T>
-struct func {
-	typedef void (T::*command)();
-};
-
 areamap			area;
 areaheadi		areahead;
 gamei			game;
@@ -23,14 +18,14 @@ static int getbase(const char* id) {
 	return p - bsdata<varianti>::elements;
 }
 
-static void all(func<creature>::command proc) {
+static void all(funct<creature>::command proc) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid())
 			(e.*proc)();
 	}
 }
 
-static void allnext(func<creature>::command proc) {
+static void allnext(funct<creature>::command proc) {
 	if(draw::isnext())
 		return;
 	for(auto& e : bsdata<creature>()) {

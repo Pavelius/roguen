@@ -287,7 +287,6 @@ public:
 	bool			isallow(const spelli& e, int level) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;
-	static bool		ishuman(const void* p) { return ((creature*)p)->ishuman(); }
 	static bool		isneed(const void* p);
 	bool			ispresent() const;
 	static bool		ispresent(const void* p) { return ((creature*)p)->ispresent(); }

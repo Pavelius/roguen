@@ -14,6 +14,13 @@ using namespace draw;
 void main_util();
 #endif
 
+static bool test_creatures() {
+	collection<creature> source;
+	source.select();
+	source.match(fntis<creature, &creature::ishuman>::proc, true);
+	return source.getcount() == 1;
+}
+
 static void initializating() {
 	bsreq::read("rules/Tiles.txt");
 	bsreq::read("rules/Features.txt");
@@ -64,6 +71,8 @@ static void main_start() {
 		equip_item("Bones");
 	equip_item("OrnamentalStones");
 	game.setowner(player);
+	if(!test_creatures())
+		return;
 	game.newgame();
 }
 
