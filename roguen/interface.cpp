@@ -1115,7 +1115,7 @@ static void paint_legends(point origin, int z) {
 	font = metrics::font;
 	auto index = 1;
 	for(auto& e : bsdata<roomi>()) {
-		if(e != game || !e.is(ShowMinimapBullet))
+		if(e != game || !e.ismarkable())
 			continue;
 		caret.x = origin.x + center(e.rc).x * z + z / 2;
 		caret.y = origin.y + center(e.rc).y * z + z / 2;
@@ -1144,7 +1144,7 @@ static void paint_legends_text(point origin) {
 	auto index = 1;
 	char temp[260]; stringbuilder sb(temp);
 	for(auto& e : bsdata<roomi>()) {
-		if(e != game || !e.is(ShowMinimapBullet))
+		if(e != game || !e.ismarkable())
 			continue;
 		caret.x = origin.x;
 		sb.clear(); sb.add("%1i.", index);

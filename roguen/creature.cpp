@@ -956,7 +956,7 @@ bool creature::isfollowmaster() const {
 }
 
 static const sitei* get_site(creature* p) {
-	return p->getroom() ? p->getroom()->getsite() : 0;
+	return p->getroom() ? &p->getroom()->geti() : 0;
 }
 
 void creature::makemovelong() {
@@ -1070,8 +1070,7 @@ void creature::update_room() {
 		auto room_changed = false;
 		if(pn != pb) {
 			if(ishuman()) {
-				auto ps = pn->getsite();
-				auto pd = getdescription(ps->id);
+				auto pd = getdescription(pn->geti().id);
 				if(pd)
 					actp(pd);
 			}
@@ -1079,7 +1078,7 @@ void creature::update_room() {
 		}
 		room_id = bsdata<roomi>::source.indexof(pn);
 		if(room_changed)
-			trigger::fire(WhenCreatureP1EnterSiteP2, getkind(), pn->getsite());
+			trigger::fire(WhenCreatureP1EnterSiteP2, getkind(), &pn->geti());
 	} else
 		room_id = 0xFFFF;
 }
@@ -1088,7 +1087,7 @@ void creature::update_room_abilities() {
 	auto p = getroom();
 	if(!p)
 		return;
-	trigger::fire(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), p->getsite());
+	trigger::fire(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), &p->geti());
 }
 
 void creature::update() {
@@ -1191,7 +1190,8 @@ bool creature::speechrumor() const {
 
 bool creature::speechlocation() const {
 	collection<roomi> source;
-	source.select(roomi::notknown);
+	source.select(fntis<roomi, &roomi::isnotable>::proc);
+	source.match(fntis<roomi, &roomi::isexplored>::proc, false);
 	auto p = source.random();
 	if(!p)
 		return false;

@@ -4,7 +4,6 @@ BSDATA(conditioni) = {
 	{"Identified"},
 	{"NPC"},
 	{"Random"},
-	{"ShowMinimapBullet"},
 	{"Healthy"},
 	{"Wounded"},
 	{"HeavyWounded"},

@@ -328,7 +328,7 @@ static void chat_someone() {
 	}
 	auto room = opponent->getroom();
 	if(room) {
-		if(player->talk(room->getsite()->id))
+		if(player->talk(room->geti().id))
 			return;
 	}
 	if(opponent->speechneed())

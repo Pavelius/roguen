@@ -1,5 +1,4 @@
 #include "ability.h"
-#include "actable.h"
 #include "advancement.h"
 #include "answers.h"
 #include "areaf.h"
@@ -54,7 +53,7 @@ enum magic_s : unsigned char {
 	Mudane, Blessed, Cursed, Artifact,
 };
 enum condition_s : unsigned char {
-	Identified, NPC, Random, ShowMinimapBullet,
+	Identified, NPC, Random,
 	NoWounded, Wounded, HeavyWounded,
 	Unaware, NoAnyFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
@@ -75,7 +74,6 @@ enum triggern : unsigned char {
 	EverySeveralDays, EverySeveralDaysForP1,
 };
 extern stringbuilder console;
-extern point m2s(point v);
 struct featable : flagable<4> {};
 class roomi;
 struct conditioni : nameable {
@@ -328,29 +326,26 @@ struct locationi : sitei {
 	char			darkness, chance_finale, offset;
 	color			minimap;
 };
-class siteable {
-	short unsigned	site_id;
-public:
-	explicit operator bool() const { return site_id != 0xFFFF; }
-	sitei*			getsite() const { return bsdata<sitei>::ptr(site_id); }
-	void			setsite(const sitei* v) { bsset(site_id, v); }
-};
 struct sitegeni : nameable {
 	sitei::fnproc	proc;
 };
-class roomi : public geoposition, public siteable, public ownerable {
-	unsigned char	ideftified : 1;
+class roomi : public geoposition, public ownerable {
+	short unsigned	site_id;
+	unsigned char	identified : 1;
 	unsigned char	explored : 1;
 public:
 	rect			rc;
-	static void* operator new(size_t size) { return bsdata<roomi>::addz(); }
-	void			clear() { memset(this, 0, sizeof(*this)); setsite(0); setowner(0); }
+	static void* operator new(size_t size) { return bsdata<roomi>::add(); }
+	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
 	static roomi*	find(geoposition gp, point pt);
+	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
 	void			getrumor(stringbuilder& sb) const;
-	static bool		notknown(const void* object);
-	const char*		getname() const { return getsite()->getname(); }
-	bool			is(condition_s v) const;
-	bool			is(feat_s v) const;
+	const char*		getname() const { return geti().getname(); }
+	bool			is(feat_s v) const { return geti().feats.is(v); }
+	bool			isexplored() const;
+	bool			ismarkable() const;
+	bool			isnotable() const { return is(Notable); }
+	void			setsite(short unsigned v) { site_id = v; }
 };
 struct areaheadi {
 	struct totali {

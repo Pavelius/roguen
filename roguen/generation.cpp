@@ -124,7 +124,7 @@ static void remove_trail_locations(size_t count) {
 roomi* add_room(const sitei* ps, const rect& rc) {
 	auto p = new roomi();
 	p->clear();
-	p->setsite(ps);
+	p->setsite(ps - bsdata<sitei>::elements);
 	*static_cast<geoposition*>(p) = game;
 	p->rc = rc;
 	return p;
@@ -379,13 +379,11 @@ static void create_doors(const rect& rc, int floor, int wall) {
 	if(last_location->chance_hidden_doors)
 		chance_hidden_doors = last_location->chance_hidden_doors;
 	if(room) {
-		auto site = room->getsite();
-		if(site) {
-			if(site->chance_hidden_doors)
-				chance_hidden_doors = site->chance_hidden_doors;
-			if(site->doors_count)
-				door_count = site->doors_count;
-		}
+		auto& ei = room->geti();
+		if(ei.chance_hidden_doors)
+			chance_hidden_doors = ei.chance_hidden_doors;
+		if(ei.doors_count)
+			door_count = ei.doors_count;
 	}
 	points.clear();
 	auto hidden_room = d100() < chance_hidden_doors;
