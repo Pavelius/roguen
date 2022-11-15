@@ -290,6 +290,7 @@
     <ClInclude Include="price.h" />
     <ClInclude Include="pushvalue.h" />
     <ClInclude Include="quest.h" />
+    <ClInclude Include="race.h" />
     <ClInclude Include="randomizer.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resource.h" />

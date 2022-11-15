@@ -2,6 +2,7 @@
 #include "ifscript.h"
 #include "greatneed.h"
 #include "main.h"
+#include "race.h"
 #include "visualeffect.h"
 #include "widget.h"
 
@@ -117,9 +118,6 @@ BSMETA(monsteri) = {
 	{}};
 BSMETA(point) = {
 	BSREQ(x), BSREQ(y),
-	{}};
-BSMETA(racei) = {
-	BSREQ(id),
 	{}};
 BSMETA(shapei) = {
 	BSREQ(id),

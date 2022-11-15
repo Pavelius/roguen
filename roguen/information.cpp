@@ -1,4 +1,5 @@
 #include "main.h"
+#include "race.h"
 
 const char* getnameshort(ability_s id) {
 	return getnm(bsdata<abilityi>::elements[id].id);

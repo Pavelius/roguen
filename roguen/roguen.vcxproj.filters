@@ -159,9 +159,6 @@
     <ClCompile Include="ability.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="race.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="moveable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -328,6 +325,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="world.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="race.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -534,6 +534,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="areaf.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="race.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

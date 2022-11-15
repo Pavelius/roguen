@@ -5,6 +5,7 @@
 #include "keyname.h"
 #include "log.h"
 #include "main.h"
+#include "race.h"
 #include "resource.h"
 #include "screenshoot.h"
 #include "visualeffect.h"

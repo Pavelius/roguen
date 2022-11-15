@@ -81,8 +81,6 @@ struct abilityi : nameable {
 };
 struct conditioni : nameable {
 };
-struct racei : nameable {
-};
 struct classi : nameable {
 	char			player;
 };

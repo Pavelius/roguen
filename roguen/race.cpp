@@ -1,5 +1,10 @@
-#include "main.h"
+#include "bsreq.h"
+#include "crt.h"
+#include "race.h"
 
+BSMETA(racei) = {
+	BSREQ(id),
+	{}};
 BSDATA(racei) = {
 	{"DarkElf"},
 	{"Drake"},

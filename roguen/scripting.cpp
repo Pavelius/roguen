@@ -1,6 +1,7 @@
 #include "draw_object.h"
 #include "ifscript.h"
 #include "greatneed.h"
+#include "race.h"
 #include "resource.h"
 #include "stringact.h"
 #include "indexa.h"
