@@ -22,7 +22,7 @@ SummonUndead mana(20)
  summon Skeleton+4 Zombie+2 Ghoul+1
 Teleport mana(5)
  target Site
- effect JumpToSite
+ effect ChooseSite JumpToSite
 Web mana(4)
  target Enemies Neutrals Multitarget Ranged
  effect Webbed

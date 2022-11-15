@@ -400,7 +400,7 @@ void creature::levelup() {
 	basic.abilities[Level] += 1;
 }
 
-static bool isfreecr(point m) {
+bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
 	auto tile = area.tiles[m];

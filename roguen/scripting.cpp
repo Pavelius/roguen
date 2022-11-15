@@ -10,6 +10,7 @@
 roomi* add_room(const sitei* ps, const rect& rc);
 void animate_figures();
 bool isfreeltsv(point m);
+bool isfreecr(point m);
 void place_shape(const shapei& e, point m, int floor, int walls);
 void show_area(int bonus);
 void show_logs(int bonus);
@@ -663,19 +664,27 @@ static void choose_action(int bonus) {
 	player->wait();
 }
 
-static void jump_to_site(int bonus) {
-	auto pn = getdescription(str("%1%2", "Teleport", "Choose"));
-	if(player->ishuman())
+static void choose_site(int bonus) {
+	if(player->ishuman()) {
+		auto pn = getdescription(str("%1%2", "Teleport", "Choose"));
 		last_room = rooms.choose(pn, getnm("Cancel"), false);
-	else
+	} else
 		last_room = rooms.random();
-	if(last_room) {
-		auto m = center(last_room->rc);
-		player->setposition(m);
+}
+
+static void jump_to_site(int bonus) {
+	if(!last_room)
+		return;
+	if(!player->ishuman())
+		player->act(getnm("YouSundellyDisappear"));
+	auto m = area.getfree(center(last_room->rc), 8, isfreecr);
+	player->setposition(m);
+	if(!player->ishuman())
+		player->act(getnm("YouSundellyAppear"));
+	else
 		area.setlos(m, player->getlos(), isfreeltsv);
-		player->fixteleport(player->ishuman());
-		//player->update_room();
-	}
+	player->fixteleport(player->ishuman());
+	player->update_room();
 }
 
 static void wait_hour(int bonus) {
@@ -776,6 +785,7 @@ BSDATA(script) = {
 	{"ChooseAction", choose_action},
 	{"ChooseCreature", choose_creature},
 	{"ChooseSpell", choose_spell},
+	{"ChooseSite", choose_site},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"DropDown", dropdown},
