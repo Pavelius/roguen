@@ -56,7 +56,6 @@ enum condition_s : unsigned char {
 	NoWounded, Wounded, HeavyWounded,
 	Unaware, NoAnyFeature,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
-	Item, Feature, Site,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 enum triggern : unsigned char {
@@ -143,6 +142,8 @@ public:
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
+	const char*		getname() const { return actable::getname(); }
+	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
 	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
 	void			getrumor(quest& e, stringbuilder& sb) const;
 	const char*		getspeech(const char* id) const;
@@ -152,7 +153,6 @@ public:
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
 	bool			isallow(variant v) const;
 	bool			isallow(const variants& source) const;
-	bool			isallow(const spelli& e, int level) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;
 	static bool		isneed(const void* p);
@@ -342,7 +342,6 @@ extern creature		*player, *opponent, *enemy;
 extern int			window_width;
 extern int			window_height;
 point				center(const rect& rc);
-void				choose_targets(unsigned flags);
 void				dialog_message(const char* format);
 int					getfloor();
 int					getwall();

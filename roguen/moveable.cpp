@@ -194,6 +194,7 @@ void movable::fixteleport(bool ishuman) const {
 	auto po = draw::findobject(this);
 	if(po) {
 		if(ishuman) {
+			paint_main_scene();
 			screenshoot::fade(paint_black_screen, 1000);
 			po->position = getsposition();
 			screenshoot::fade(paint_main_scene, 1000);

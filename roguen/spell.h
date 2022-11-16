@@ -7,6 +7,7 @@
 
 struct spelli : nameable {
 	int				mana;
+	unsigned char	goal;
 	unsigned		target;
 	duration_s		duration;
 	diceprogress	count;

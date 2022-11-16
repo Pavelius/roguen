@@ -33,9 +33,15 @@ globali*			last_global;
 rect				last_rect;
 roomi*				last_room;
 siteskilla			last_actions;
+const char*			last_id;
 extern bool			show_floor_rect;
 static bool			stop_script;
 const sitegeni*		last_method;
+
+template<typename T>
+static bool istkind(int i) {
+	return bsdata<varianti>::elements[i].source == bsdata<T>::source_ptr;
+}
 
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
@@ -191,18 +197,6 @@ static bool ifscript(variant v) {
 static void choose_creature(int bonus) {
 }
 
-static void choose_opponent(unsigned flags) {
-	opponent = 0;
-	choose_targets(flags);
-	if(!targets)
-		return;
-	else if(targets.getcount() == 1) {
-		opponent = targets[0];
-		return;
-	}
-	opponent = targets[0];
-}
-
 static void move_left(int bonus) {
 	player->movestep(West);
 }
@@ -248,57 +242,56 @@ static void add_creatures(feat_s v) {
 	}
 }
 
+static bool isallow(creature* player, const variants& conditions, const variants& effect) {
+	if(conditions) {
+		if(!player->isallow(conditions))
+			return false;
+	}
+	if(effect) {
+		if(!player->isallow(effect))
+			return false;
+	}
+	return true;
+}
+
 static void match_creatures(const spelli& ei, int level) {
 	auto ps = targets.begin();
 	for(auto p : targets) {
-		if(!p->isallow(ei, level))
+		if(!isallow(p, ei.conditions, ei.effect))
 			continue;
 		*ps++ = p;
 	}
 	targets.count = ps - targets.begin();
 }
 
-bool spell_ready(const spelli& e, int level) {
-	choose_targets(e.target);
-	unsigned target_count = 1;
-	if(e.is(Multitarget))
-		target_count += level;
-	if(targets.count > target_count)
-		targets.count = target_count;
-	match_creatures(e, level);
-	return targets.getcount() != 0 || rooms.getcount() != 0 || e.summon.size() != 0;
-}
-
-static void choose_rooms(const char* title) {
-	last_room = (roomi*)rooms.choose(title, getnm("Cancel"), false);
-}
-
-void choose_targets(unsigned flags) {
+void choose_targets(int kind, unsigned flags) {
 	items.clear();
 	rooms.clear();
 	targets.clear();
-	if(FGT(flags, Allies)) {
-		if(player->is(Ally))
-			add_creatures(Ally);
-		if(player->is(Enemy))
-			add_creatures(Enemy);
+	if(istkind<creature>(kind)) {
+		if(FGT(flags, Allies)) {
+			if(player->is(Ally))
+				add_creatures(Ally);
+			if(player->is(Enemy))
+				add_creatures(Enemy);
+		}
+		if(FGT(flags, Enemies)) {
+			for(auto p : enemies)
+				targets.add(p);
+		}
+		if((flags & (FG(Allies) & FG(Enemies))) == 0)
+			targets = creatures;
+		if(FGT(flags, You))
+			targets.add(player);
+		if(!FGT(flags, Ranged))
+			targets.matchrange(player->getposition(), 1, true);
+		targets.distinct();
 	}
-	if(FGT(flags, Enemies)) {
-		for(auto p : enemies)
-			targets.add(p);
-	}
-	if((flags & (FG(Allies) & FG(Enemies))) == 0)
-		targets = creatures;
-	if(FGT(flags, You))
-		targets.add(player);
-	if(!FGT(flags, Ranged))
-		targets.matchrange(player->getposition(), 1, true);
-	targets.distinct();
-	if(FGT(flags, Item)) {
+	if(istkind<itemi>(kind)) {
 		for(auto p : targets)
 			items.select(p);
 	}
-	if(FGT(flags, Site)) {
+	if(istkind<sitei>(kind)) {
 		rooms.select(fntis<roomi, &roomi::islocal>);
 		if(!FGT(flags, You))
 			rooms.remove(player->getroom());
@@ -308,8 +301,89 @@ void choose_targets(unsigned flags) {
 	if(FGT(flags, Random)) {
 		targets.shuffle();
 		items.shuffle();
+		rooms.shuffle();
 	} else
 		targets.sort(player->getposition());
+}
+
+static bool choose_target_interactive(const char* id, int kind, bool autochooseone) {
+	auto pn = id ? getdescription(str("%1Choose", id)) : 0;
+	opponent = 0;
+	last_room = 0;
+	pushvalue push_width(window_width, 300);
+	if(istkind<creature>(kind))
+		opponent = targets.choose(pn, getnm("Cancel"), autochooseone);
+	else if(istkind<sitei>(kind))
+		last_room = rooms.choose(pn, getnm("Cancel"), autochooseone);
+	return opponent || last_room;
+}
+
+bool spell_ready(const spelli& e, int level) {
+	choose_targets(e.goal, e.target);
+	match_creatures(e, level);
+	return targets.getcount() != 0 || rooms.getcount() != 0 || e.summon.size() != 0;
+}
+
+static void choose_rooms(const char* title) {
+	last_room = (roomi*)rooms.choose(title, getnm("Cancel"), false);
+}
+
+static void action_text(const creature* player, const char* id, const char* action) {
+	if(!player->is(AnimalInt)) {
+		auto pn = player->getspeech(str("%1%2Speech", id, action));
+		if(pn) {
+			player->say(pn);
+			return;
+		}
+	}
+	auto pn = getdescription(str("%1%2", id, action));
+	if(pn)
+		player->act(pn);
+}
+
+static bool bound_targets(const char* id, int kind, int multi_targets, bool interactive) {
+	pushvalue push_interactive(answers::interactive, interactive);
+	unsigned target_count = 1 + multi_targets;
+	if(!multi_targets) {
+		if(!choose_target_interactive(id, kind, false))
+			return false;
+		if(istkind<sitei>(kind))
+			rooms.data[0] = last_room;
+		else if(istkind<creature>(kind))
+			targets.data[0] = opponent;
+	}
+	if(targets.count > target_count)
+		targets.count = target_count;
+	if(rooms.count > target_count)
+		rooms.count = target_count;
+	return true;
+}
+
+void creature::cast(const spelli& e, int level, int mana) {
+	if(get(Mana) < mana) {
+		actp(getnm("NotEnoughtMana"));
+		return;
+	}
+	if(!spell_ready(e, level)) {
+		actp(getnm("YouDontValidTargets"));
+		return;
+	}
+	if(!bound_targets(e.id, e.goal, e.is(Multitarget) ? level : 0, ishuman()))
+		return;
+	action_text(this, e.id, "Casting");
+	if(targets) {
+		for(auto p : targets)
+			p->apply(e, level);
+	}
+	if(e.summon) {
+		auto count = e.getcount(level);
+		summon(player->getposition(), e.summon, count, level);
+	}
+	if(rooms)
+		runscript(e.effect);
+	add(Mana, -mana);
+	update();
+	wait();
 }
 
 static item* choose_wear() {
@@ -419,11 +493,14 @@ static void chat_someone() {
 }
 
 static void chat_someone(int bonus) {
-	choose_opponent(0);
-	if(!opponent) {
+	auto kind = bsid(bsdata<varianti>::find("Creature"));
+	choose_targets(kind, 0);
+	if(!targets) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
 	}
+	if(!choose_target_interactive("Creature", kind, true))
+		return;
 	chat_someone();
 	player->wait();
 	opponent->wait();

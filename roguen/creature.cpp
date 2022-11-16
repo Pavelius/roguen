@@ -39,19 +39,6 @@ static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
 
-static void action_text(const creature* player, const char* id, const char* action) {
-	if(!player->is(AnimalInt)) {
-		auto pn = player->getspeech(str("%1%2Speech", id, action));
-		if(pn) {
-			player->say(pn);
-			return;
-		}
-	}
-	auto pn = getdescription(str("%1%2", id, action));
-	if(pn)
-		player->act(pn);
-}
-
 static void fixdamage(const creature* p, int total, int damage_weapon, int damage_armor, int damage_bonus) {
 	p->logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor, damage_bonus);
 }
@@ -1227,17 +1214,17 @@ void creature::gainexperience(int v) {
 	}
 }
 
-bool creature::isallow(const spelli& e, int level) const {
-	if(e.conditions) {
-		if(!isallow(e.conditions))
-			return false;
-	}
-	if(e.effect) {
-		if(!isallow(e.effect))
-			return false;
-	}
-	return true;
-}
+//bool creature::isallow(const spelli& e, int level) const {
+//	if(e.conditions) {
+//		if(!isallow(e.conditions))
+//			return false;
+//	}
+//	if(e.effect) {
+//		if(!isallow(e.effect))
+//			return false;
+//	}
+//	return true;
+//}
 
 bool creature::isallow(variant v) const {
 	if(v.iskind<conditioni>())
@@ -1306,31 +1293,6 @@ void creature::apply(const variants& source) {
 
 void creature::cast(const spelli& e) {
 	cast(e, get(e), e.mana);
-}
-
-void creature::cast(const spelli& e, int level, int mana) {
-	if(get(Mana) < mana) {
-		actp(getnm("NotEnoughtMana"));
-		return;
-	}
-	if(!spell_ready(e, level)) {
-		actp(getnm("YouDontValidTargets"));
-		return;
-	}
-	action_text(this, e.id, "Casting");
-	if(targets) {
-		for(auto p : targets)
-			p->apply(e, level);
-	}
-	if(e.summon) {
-		auto count = e.getcount(level);
-		summon(player->getposition(), e.summon, count, level);
-	}
-	if(rooms)
-		runscript(e.effect);
-	add(Mana, -mana);
-	update();
-	wait();
 }
 
 void creature::summon(point m, const variants& elements, int count, int level) {
