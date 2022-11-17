@@ -242,29 +242,17 @@ static void add_creatures(feat_s v) {
 	}
 }
 
-static bool isallow(creature* player, const variants& conditions, const variants& effect) {
-	if(conditions) {
-		if(!player->isallow(conditions))
-			return false;
-	}
-	if(effect) {
-		if(!player->isallow(effect))
-			return false;
-	}
-	return true;
-}
-
-static void match_creatures(const spelli& ei, int level) {
+static void match_creatures(const variants& source) {
 	auto ps = targets.begin();
 	for(auto p : targets) {
-		if(!isallow(p, ei.conditions, ei.effect))
+		if(!p->isallow(source))
 			continue;
 		*ps++ = p;
 	}
 	targets.count = ps - targets.begin();
 }
 
-void choose_targets(int kind, unsigned flags) {
+static void choose_targets(int kind, unsigned flags) {
 	items.clear();
 	rooms.clear();
 	targets.clear();
@@ -286,12 +274,10 @@ void choose_targets(int kind, unsigned flags) {
 		if(!FGT(flags, Ranged))
 			targets.matchrange(player->getposition(), 1, true);
 		targets.distinct();
-	}
-	if(istkind<itemi>(kind)) {
+	} else if(istkind<itemi>(kind)) {
 		for(auto p : targets)
 			items.select(p);
-	}
-	if(istkind<sitei>(kind)) {
+	} else if(istkind<sitei>(kind)) {
 		rooms.select(fntis<roomi, &roomi::islocal>);
 		if(!FGT(flags, You))
 			rooms.remove(player->getroom());
@@ -306,10 +292,18 @@ void choose_targets(int kind, unsigned flags) {
 		targets.sort(player->getposition());
 }
 
+static bool choose_targets(int kind, unsigned flags, const variants& conditions, const variants& effects) {
+	choose_targets(kind, flags);
+	if(istkind<creature>(kind)) {
+		match_creatures(conditions);
+		match_creatures(effects);
+	} else if(istkind<itemi>(kind)) {
+	}
+	return targets.getcount() != 0 || rooms.getcount() != 0;
+}
+
 static bool choose_target_interactive(const char* id, int kind, bool autochooseone) {
 	auto pn = id ? getdescription(str("%1Choose", id)) : 0;
-	opponent = 0;
-	last_room = 0;
 	pushvalue push_width(window_width, 300);
 	if(istkind<creature>(kind))
 		opponent = targets.choose(pn, getnm("Cancel"), autochooseone);
@@ -319,18 +313,17 @@ static bool choose_target_interactive(const char* id, int kind, bool autochooseo
 }
 
 bool spell_ready(const spelli& e, int level) {
-	choose_targets(e.goal, e.target);
-	match_creatures(e, level);
-	return targets.getcount() != 0 || rooms.getcount() != 0 || e.summon.size() != 0;
-}
-
-static void choose_rooms(const char* title) {
-	last_room = (roomi*)rooms.choose(title, getnm("Cancel"), false);
+	if(choose_targets(e.goal, e.target, e.conditions, e.effect))
+		return true;
+	return e.summon.size() != 0;
 }
 
 static void action_text(const creature* player, const char* id, const char* action) {
 	if(!player->is(AnimalInt)) {
-		auto pn = player->getspeech(str("%1%2Speech", id, action));
+		auto dsid = str("%1%2Speech", id, action);
+		if(!bsdata<speech>::find(dsid))
+			return;
+		auto pn = player->getspeech(dsid);
 		if(pn) {
 			player->say(pn);
 			return;
@@ -344,6 +337,7 @@ static void action_text(const creature* player, const char* id, const char* acti
 static bool bound_targets(const char* id, int kind, int multi_targets, bool interactive) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
+	opponent = 0; last_room = 0;
 	if(!multi_targets) {
 		if(!choose_target_interactive(id, kind, false))
 			return false;

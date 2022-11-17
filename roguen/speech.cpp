@@ -6,11 +6,12 @@ using namespace log;
 BSDATAC(speech, 1024)
 
 void speecha::select(const char* id) {
+	if(!id || id[0] == 0)
+		return;
 	auto ps = data;
 	auto pe = endof();
-	id = szdup(id);
 	for(auto& e : bsdata<speech>()) {
-		if(e.id != id)
+		if(strcmp(e.id, id)!=0)
 			continue;
 		if(ps < pe)
 			*ps++ = &e;
