@@ -91,17 +91,7 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 		addv(sb, Armor, ei.bonus);
 		break;
 	}
-	addv(sb, ei.feats);
-}
-
-const char*	item::getfullname() const {
-	static char temp[260];
-	stringbuilder sb(temp);
-	auto count = getcount();
-	sb.add(getname());
-	if(count>1)
-		sb.adds("%1i %Pieces", count);
-	return temp;
+	//addv(sb, ei.feats);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

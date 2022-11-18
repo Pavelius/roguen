@@ -11,7 +11,7 @@ struct spelli : nameable {
 	unsigned		target;
 	duration_s		duration;
 	diceprogress	count;
-	variants		conditions, effect, summon;
+	variants		effect, summon;
 	int				getcount(int level) const { return count.roll(level); }
 	bool			is(int v) const { return (target & FG(v)) != 0; }
 };

@@ -107,3 +107,31 @@ void item::drop(point m) {
 	pi->position = m;
 	clear();
 }
+
+const char*	item::getfullname() const {
+	static const char* adjective[] = {"", "AdjFemale", "AdjIt"};
+	static char temp[260];
+	stringbuilder sb(temp);
+	auto count = getcount();
+	auto pn = getname();
+	auto vw = stringbuilder::getgender(pn);
+	if(!iscountable()) {
+		auto magic = getmagic();
+		if(isidentified()) {
+			sb.addsep(' ');
+			sb.adjective(getnm(bsdata<magici>::elements[magic].id), vw);
+		}
+	}
+	sb.adds("%1", getname());
+	if(count > 1)
+		sb.adds("%1i %-Pieces", count);
+	sb.lower();
+	//temp[0] = sb.upper(temp[0]);
+	return temp;
+}
+
+void item::set(magic_s v) {
+	if(iscountable())
+		return;
+	magic = v;
+}

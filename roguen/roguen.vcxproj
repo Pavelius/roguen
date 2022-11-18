@@ -196,6 +196,7 @@
     <ClCompile Include="location.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
+    <ClCompile Include="magic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="quest.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="logparse.h" />
+    <ClInclude Include="magic.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="moveable.h" />

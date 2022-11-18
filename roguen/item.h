@@ -1,5 +1,5 @@
 #include "feat.h"
-#include "nameable.h"
+#include "magic.h"
 #include "point.h"
 #include "wear.h"
 #include "variant.h"
@@ -7,11 +7,6 @@
 #pragma once
 
 enum ability_s : unsigned char;
-
-enum magic_s : unsigned char {
-	Mudane, Blessed, Cursed, Artifact,
-};
-struct magici : nameable {};
 
 struct itemi : nameable {
 	struct weaponi {
@@ -77,7 +72,9 @@ public:
 	bool			is(const item& v) const { return type == v.type; }
 	bool			iscountable() const { return geti().count != 0; }
 	bool			isidentified() const { return identified != 0; }
+	void			set(magic_s v);
 	void			setcount(int v);
+	void			setidentified(int v) { identified = v; }
 	void			use() { setcount(getcount() - 1); }
 };
 struct itemground : item {

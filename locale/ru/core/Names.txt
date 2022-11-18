@@ -5,10 +5,13 @@ ApplyKill: %герой убит%а.
 AppTitle: Приключения в забытых Королевствах
 Armor: Броня
 ArmorNegateDamage: Броня поглатила урон.
+Artifact: Могучий
 AttackMiss: %герой промазал%а ([-%1i]>[%2i]).
 AttackHitButParrySuccess: %герой попал%а ([%1i]<[%2i]), но %-5 частично парировал навыком %-6 ([%3i]<[%4i]).
 AttackHitButParryFail: %герой попал%а ([%1i]<[%2i]) и %-4 не смог парировать ([-%3i]>[%5i],[%6i],[%7i]).
 AttackHitButParryCritical: %герой попал%а ([%1i]<[%2i]), но %-5 полностью парировал навыком %-6 ([%3i]<[%4i]).
+Backpack: Рюкзак
+Blessed: Благословенный
 BlockSuccess: Блок
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
@@ -38,6 +41,7 @@ MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
 Minute: Минута
 Minutes: Минут
+Mundane: Обычный
 Natural: Родное
 No: Нет
 NoAnyProgress: Еще даже не начинали

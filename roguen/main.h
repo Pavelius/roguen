@@ -114,7 +114,7 @@ public:
 	void			actp(const char* format, ...) const;
 	void			apply(variant v);
 	void			apply(const variants& source);
-	void			apply(const spelli& e, int level);
+	//void			apply(const spelli& e, int level);
 	void			attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void			attackmelee(creature& enemy);
 	void			attackrange(creature& enemy);

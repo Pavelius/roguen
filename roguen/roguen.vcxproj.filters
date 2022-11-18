@@ -327,6 +327,9 @@
     <ClCompile Include="wearable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="magic.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -549,6 +552,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="wearable.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="magic.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

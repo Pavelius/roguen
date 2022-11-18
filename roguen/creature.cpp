@@ -16,7 +16,8 @@ struct defenceg {
 }
 
 extern collection<roomi> rooms;
-bool spell_ready(const spelli& e, int level);
+void apply_spell(creature* player, const spelli& ei, int level);
+bool choose_targets(int kind, unsigned flags, const variants& effects);
 
 void rollg::make(int v) {
 	roll = 1 + rand() % 100;
@@ -97,7 +98,6 @@ static void illness_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
 	auto v = player->get(Illness) + value;
-	//player->fixeffect("PoisonVisual");
 	if(v >= player->get(Strenght))
 		player->kill();
 	else
@@ -356,7 +356,9 @@ static bool spell_allowmana(const void* object) {
 
 static bool spell_allowuse(const void* object) {
 	auto p = (spelli*)object;
-	return spell_ready(*p, player->get(*p));
+	if(p->summon.size() != 0)
+		return true;
+	return choose_targets(p->goal, p->target, p->effect);
 }
 
 static bool spell_iscombat(const void* object) {
@@ -1214,17 +1216,13 @@ void creature::gainexperience(int v) {
 	}
 }
 
-//bool creature::isallow(const spelli& e, int level) const {
-//	if(e.conditions) {
-//		if(!isallow(e.conditions))
-//			return false;
-//	}
-//	if(e.effect) {
-//		if(!isallow(e.effect))
-//			return false;
-//	}
-//	return true;
-//}
+bool creature::isallow(const variants& source) const {
+	for(auto v : source) {
+		if(!isallow(v))
+			return false;
+	}
+	return true;
+}
 
 bool creature::isallow(variant v) const {
 	if(v.iskind<conditioni>())
@@ -1241,37 +1239,14 @@ bool creature::isallow(variant v) const {
 		if(!area.isvalid(m))
 			return false;
 		auto present = area.features[m];
-		if(v.counter < 0)
-			return int(present) == v.value;
-		return int(present) != v.value;
-	} else if(v.iskind<script>())
-		return true;
-	return false;
-}
-
-bool creature::isallow(const variants& source) const {
-	for(auto v : source) {
-		if(isallow(v))
-			return true;
+		return (v.counter < 0) ? present == v.value : present != v.value;
 	}
-	return false;
-}
-
-void creature::apply(const spelli& ei, int level) {
-	pushvalue push_value(last_value, ei.getcount(level));
-	if(ei.duration) {
-		auto minutes = bsdata<durationi>::elements[ei.duration].get(level);
-		auto stop_time = game.getminutes() + minutes;
-		fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), 2);
-		for(auto v : ei.effect)
-			boosti::add(this, v, stop_time);
-	} else
-		apply(ei.effect);
+	return true;
 }
 
 void creature::apply(variant v) {
 	if(v.iskind<spelli>())
-		apply(bsdata<spelli>::elements[v.value], v.counter);
+		apply_spell(this, bsdata<spelli>::elements[v.value], v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)
 			area.remove(getposition(), v.value);

@@ -148,7 +148,7 @@ BSMETA(spelli) = {
 	BSENM(goal, varianti),
 	BSENM(duration, durationi),
 	BSFLG(target, conditioni),
-	BSREQ(conditions), BSREQ(effect), BSREQ(summon),
+	BSREQ(effect), BSREQ(summon),
 	{}};
 BSMETA(weari) = {
 	BSREQ(id),

@@ -1,2 +1,2 @@
-﻿In file `rules/Spells.txt`:
- Line 24: Not found identifier `Site`
+﻿In file `Descriptions.txt`:
+Can't find script named 'OpenNearestDoor' in hotkey mapping

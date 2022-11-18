@@ -32,6 +32,7 @@ RandomRace
 "L" ShowLogs
 "T" ThrownAttack
 "S" ChooseAction
+"V" ViewStuff
 
 "Up" MoveUp
 "Home" MoveUpLeft

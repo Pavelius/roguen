@@ -1,3 +1,4 @@
+#include "boost.h"
 #include "draw_object.h"
 #include "ifscript.h"
 #include "greatneed.h"
@@ -229,12 +230,6 @@ static void move_down_right(int bonus) {
 	player->movestep(SouthEast);
 }
 
-static void attack_forward(int bonus) {
-	player->fixaction();
-	player->fixeffect("HitVisual");
-	player->wait();
-}
-
 static void add_creatures(feat_s v) {
 	for(auto p : creatures) {
 		if(p->is(v))
@@ -292,12 +287,11 @@ static void choose_targets(int kind, unsigned flags) {
 		targets.sort(player->getposition());
 }
 
-static bool choose_targets(int kind, unsigned flags, const variants& conditions, const variants& effects) {
+bool choose_targets(int kind, unsigned flags, const variants& effects) {
 	choose_targets(kind, flags);
-	if(istkind<creature>(kind)) {
-		match_creatures(conditions);
+	if(istkind<creature>(kind))
 		match_creatures(effects);
-	} else if(istkind<itemi>(kind)) {
+	else if(istkind<itemi>(kind)) {
 	}
 	return targets.getcount() != 0 || rooms.getcount() != 0;
 }
@@ -310,12 +304,6 @@ static bool choose_target_interactive(const char* id, int kind, bool autochooseo
 	else if(istkind<sitei>(kind))
 		last_room = rooms.choose(pn, getnm("Cancel"), autochooseone);
 	return opponent || last_room;
-}
-
-bool spell_ready(const spelli& e, int level) {
-	if(choose_targets(e.goal, e.target, e.conditions, e.effect))
-		return true;
-	return e.summon.size() != 0;
 }
 
 static void action_text(const creature* player, const char* id, const char* action) {
@@ -353,28 +341,39 @@ static bool bound_targets(const char* id, int kind, int multi_targets, bool inte
 	return true;
 }
 
+void apply_spell(creature* player, const spelli& ei, int level) {
+	pushvalue push_value(last_value, ei.getcount(level));
+	if(ei.duration) {
+		auto minutes = bsdata<durationi>::elements[ei.duration].get(level);
+		auto stop_time = game.getminutes() + minutes;
+		player->fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), 2);
+		for(auto v : ei.effect)
+			boosti::add(player, v, stop_time);
+	} else
+		player->apply(ei.effect);
+}
+
 void creature::cast(const spelli& e, int level, int mana) {
 	if(get(Mana) < mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!spell_ready(e, level)) {
+	if(!choose_targets(e.goal, e.target, e.effect) && !e.summon) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
 	if(!bound_targets(e.id, e.goal, e.is(Multitarget) ? level : 0, ishuman()))
 		return;
 	action_text(this, e.id, "Casting");
-	if(targets) {
+	if(istkind<creature>(e.goal)) {
 		for(auto p : targets)
-			p->apply(e, level);
-	}
+			apply_spell(p, e, level);
+	} else
+		runscript(e.effect);
 	if(e.summon) {
 		auto count = e.getcount(level);
 		summon(player->getposition(), e.summon, count, level);
 	}
-	if(rooms)
-		runscript(e.effect);
 	add(Mana, -mana);
 	update();
 	wait();
@@ -386,17 +385,13 @@ static item* choose_wear() {
 		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
 	};
 	answers an;
-	for(auto i : source) {
-		auto pi = player->getwear(i);
-		auto pn = player->getwearname(i);
-		if(!pn) {
-			pn = "-";
-			an.add(pi, pn);
-		} else {
+	for(auto& e : player->equipment()) {
+		if(!e)
+			an.add(&e, "-");
+		else {
 			char temp[512]; stringbuilder sb(temp);
-			sb.add(pn);
-			pi->getinfo(sb, false);
-			an.add(pi, temp);
+			e.getinfo(sb, true);
+			an.add(&e, temp);
 		}
 	}
 	return (item*)an.choose(getnm("Inventory"), getnm("Cancel"));
@@ -405,18 +400,17 @@ static item* choose_wear() {
 static item* choose_stuff(wear_s wear) {
 	answers an;
 	char temp[512]; stringbuilder sb(temp);
-	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i + 1)) {
-		auto pi = player->getwear(i);
-		if(!(*pi))
+	for(auto& e : player->backpack()) {
+		if(!e)
 			continue;
-		if(wear && !pi->is(wear))
+		if(wear && !e.is(wear))
 			continue;
 		sb.clear();
-		pi->getinfo(sb, true);
-		an.add(pi, temp);
+		e.getinfo(sb, true);
+		an.add(&e, temp);
 	}
 	sb.clear();
-	sb.add("%Choose %1", bsdata<weari>::elements[wear].getname());
+	sb.add("%Choose %-1", bsdata<weari>::elements[wear].getname());
 	return (item*)an.choose(temp, getnm("Cancel"));
 }
 
@@ -548,6 +542,7 @@ static void use_item(int bonus) {
 }
 
 static void view_stuff(int bonus) {
+	choose_stuff(Backpack);
 }
 
 static void explore_area(int bonus) {
@@ -851,7 +846,6 @@ BSDATA(script) = {
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
-	{"AttackForward", attack_forward},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
 	{"ChooseCreature", choose_creature},
