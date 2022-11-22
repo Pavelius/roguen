@@ -80,7 +80,8 @@ void draw::pausenc(const char* title, ...) {
 bool draw::yesno(const char* title, ...) {
 	if(!answers::console)
 		return false;
-	answers::console->addv(title, xva_start(title));
+	if(title)
+		answers::console->addv(title, xva_start(title));
 	answers an;
 	an.add((void*)1, getnm("Yes"));
 	an.add((void*)0, getnm("No"));

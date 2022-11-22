@@ -69,9 +69,12 @@ Tree: Дерево
 TwoHanded: Двуручное
 UseItem: Использовать предмет
 VisualizeProgress: Мы %-1 и осталось примерно %-2.
+WantBuyItem: Вы действительно хотите купить %1 за [%2i] монет?
+WantSellItem: Хотите продать %1 за [%2i] монет?
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
+YouCantPickUpAllForCost: Вы не можете поднять все предметы если а каждый из них надо платить.
 YouCutWood: %герой срубил%а %-1.
 YouDontSeeAnyEnemy: Вы не видите ни одного врага.
 YouDontHaveAnyActions: Здесь вы не можете выполнить никаких особых действий.

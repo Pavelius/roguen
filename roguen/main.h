@@ -142,9 +142,10 @@ public:
 	int				getlos() const;
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
-	int				getpaypercent(int opponent_skill) const;
+	int				getpaymentcost() const;
 	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
 	void			getrumor(quest& e, stringbuilder& sb) const;
+	int				getsellingcost() const;
 	const char*		getspeech(const char* id) const;
 	int				getwait() const { return wait_seconds; }
 	void			heal(int v);

@@ -498,6 +498,37 @@ static void test_rumor(int bonus) {
 	player->speechrumor();
 }
 
+static bool payment(creature* player, creature* keeper, const char* object, int coins) {
+	if(answers::console)
+		answers::console->clear();
+	if(player->ishuman()) {
+		player->actp(getnm("WantBuyItem"), object, coins);
+		if(!draw::yesno(0))
+			return false;
+	}
+	auto allow_coins = player->getmoney();
+	if(player->getmoney() < coins) {
+		keeper->speech("NotEnoughCoins", allow_coins, coins, coins - allow_coins);
+		return false;
+	}
+	keeper->addcoins(coins);
+	player->addcoins(-coins);
+	return true;
+}
+
+static bool selling(creature* player, creature* opponent, const char* object, int coins) {
+	//if(answers::console)
+	//	answers::console->clear();
+	if(player->ishuman()) {
+		player->actp(getnm("WantSellItem"), object, coins);
+		if(!draw::yesno(0))
+			return false;
+	}
+	player->addcoins(coins);
+	//opponent->addcoins(-coins);
+	return true;
+}
+
 static void pickup(int bonus) {
 	itema items;
 	items.select(player->getposition());
@@ -505,12 +536,23 @@ static void pickup(int bonus) {
 		return;
 	auto p = items.choose(getnm("PickItem"), getnm("Cancel"));
 	if(p) {
+		auto payment_cost = player->getpaymentcost();
+		if(payment_cost) {
+			auto item_cost = p->getcostall() * payment_cost / 100;
+			auto keeper = player->getroom()->getowner();
+			if(!payment(player, keeper, p->getfullname(), item_cost))
+				return;
+		}
 		player->act(getnm("PickupItem"), p->getfullname());
 		player->additem(*p);
 	}
 }
 
 static void pickup_all(int bonus) {
+	if(player->getpaymentcost()) {
+		player->actp("YouCantPickUpAllForCost");
+		return;
+	}
 	itema items;
 	items.select(player->getposition());
 	for(auto p : items) {
@@ -526,6 +568,13 @@ static void dropdown(int bonus) {
 		return;
 	auto p = items.choose(getnm("DropItem"), getnm("Cancel"));
 	if(p) {
+		auto payment_cost = player->getsellingcost();
+		if(payment_cost) {
+			auto item_cost = p->getcostall() * payment_cost / 100;
+			auto keeper = player->getroom()->getowner();
+			if(!selling(player, keeper, p->getfullname(), item_cost))
+				return;
+		}
 		player->act(getnm("DropdownItem"), p->getfullname());
 		p->drop(player->getposition());
 	}

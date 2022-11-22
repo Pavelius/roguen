@@ -520,15 +520,10 @@ static void look_items(creature* player, point m) {
 	items.clear();
 	items.select(m);
 	if(player->ishuman() && items) {
-		auto pay_percent = 0;
 		char temp[4096]; stringbuilder sb(temp);
 		auto count = items.getcount();
 		auto index = 0;
-		auto room = roomi::find(game, m);
-		if(room) {
-			auto keeper = room->getowner();
-			pay_percent = keeper->getpaypercent(player->get(Charisma));
-		}
+		auto payment_cost = player->getpaymentcost();
 		sb.add(getnm("ThereIsLying"));
 		for(auto p : items) {
 			if(index > 0) {
@@ -537,7 +532,7 @@ static void look_items(creature* player, point m) {
 				else
 					sb.add(",");
 			}
-			sb.adds("%-1", p->getfullname(pay_percent));
+			sb.adds("%-1", p->getfullname(payment_cost));
 			index++;
 		}
 		sb.add(".");
@@ -1306,7 +1301,27 @@ bool creature::ispresent() const {
 	return worldpos == game;
 }
 
-int	creature::getpaypercent(int opponent_skill) const {
-	auto skill = get(Charisma);
-	return 150 + skill - opponent_skill;
+int	creature::getpaymentcost() const {
+	auto room = getroom();
+	if(!room)
+		return 0;
+	auto keeper = room->getowner();
+	if(!keeper)
+		return 0;
+	auto skill_delta = keeper->get(Charisma) - get(Charisma);
+	return 200 + skill_delta;
+}
+
+int	creature::getsellingcost() const {
+	auto room = getroom();
+	if(!room)
+		return 0;
+	auto keeper = room->getowner();
+	if(!keeper)
+		return 0;
+	auto skill_delta = get(Charisma) - keeper->get(Charisma);
+	auto result = 40 + skill_delta;
+	if(result < 10)
+		result = 10;
+	return result;
 }
