@@ -499,9 +499,9 @@ static void test_rumor(int bonus) {
 }
 
 static bool payment(creature* player, creature* keeper, const char* object, int coins) {
-	if(answers::console)
-		answers::console->clear();
 	if(player->ishuman()) {
+		if(answers::console)
+			answers::console->clear();
 		player->actp(getnm("WantBuyItem"), object, coins);
 		if(!draw::yesno(0))
 			return false;
@@ -517,15 +517,20 @@ static bool payment(creature* player, creature* keeper, const char* object, int 
 }
 
 static bool selling(creature* player, creature* opponent, const char* object, int coins) {
-	//if(answers::console)
-	//	answers::console->clear();
 	if(player->ishuman()) {
+		if(answers::console)
+			answers::console->clear();
 		player->actp(getnm("WantSellItem"), object, coins);
 		if(!draw::yesno(0))
 			return false;
 	}
+	auto allow_coins = opponent->getmoney();
+	if(opponent->getmoney() < coins) {
+		opponent->speech("KeeperNotEnoughCoins", allow_coins, coins, coins - allow_coins);
+		return false;
+	}
 	player->addcoins(coins);
-	//opponent->addcoins(-coins);
+	opponent->addcoins(-coins);
 	return true;
 }
 

@@ -86,7 +86,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	statable		basic;
 	featable		feats, feats_active;
 	point			moveorder, guardorder;
-	int				money;
 	unsigned		experience;
 	int				wait_seconds;
 	void			advance(variant kind, int level);

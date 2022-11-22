@@ -43,6 +43,8 @@ void wearable::equip(item& v) {
 		v.clear();
 		break;
 	}
+	if(v)
+		additem(v);
 }
 
 const item*	wearable::getwear(const void* data) const {

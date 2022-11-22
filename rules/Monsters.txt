@@ -89,7 +89,7 @@ Bartender avatar(51)
  use PlaceOwner KnowRumor
 Shopkeeper avatar(581)
  abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(30) HitsMaximum(5)
- use PlaceOwner
+ use PlaceOwner GP+30
 Theif avatar(313)
  abilities Strenght(30) Dexterity(40) Wits(30) WeaponSkill(30) HitsMaximum(12)
 TheifFemale avatar(314)
