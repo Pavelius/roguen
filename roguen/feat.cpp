@@ -11,6 +11,7 @@ BSDATA(feati) = {
 	{"PierceHit"},
 	{"MightyHit"},
 	{"IgnoreWeb"},
+	{"Fly"},
 	{"LightSource"},
 	{"Regeneration"},
 	{"ManaRegeneration"},

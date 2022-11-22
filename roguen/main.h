@@ -188,6 +188,7 @@ public:
 	void			use(variants source);
 	void			use(item& v);
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }
+	void			waitseconds(int value) { wait_seconds += value; }
 };
 struct creaturea : collection<creature> {
 	void			match(feat_s v, bool keep);

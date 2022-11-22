@@ -78,10 +78,6 @@ int item::getdamage() const {
 	}
 }
 
-bool item::is(const itemi& v) const {
-	return geti() == v;
-}
-
 bool item::is(wear_s v) const {
 	auto wear = geti().wear;
 	switch(v) {

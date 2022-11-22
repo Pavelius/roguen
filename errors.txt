@@ -1,2 +1,2 @@
-﻿In file `Descriptions.txt`:
-Can't find script named 'OpenNearestDoor' in hotkey mapping
+﻿In file `rules/Features.txt`:
+ Line 39: Can't find variant `TinyKey`

@@ -67,3 +67,13 @@ const char* wearable::getwearname(wear_s id) const {
 		return getnm("Fist");
 	return 0;
 }
+
+bool wearable::useitem(const itemi* pi) {
+	for(auto& v : backpack()) {
+		if(!v.is(pi))
+			continue;
+		v.use();
+		return true;
+	}
+	return false;
+}

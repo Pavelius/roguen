@@ -8,11 +8,11 @@ TreePalm priority(10) features(101 6) minimap(35 79 31 192)
  flags Impassable Woods
 DeadTree priority(10) features(45 4) overlay(49 3)
  flags Impassable Woods
-ThornBush priority(10) features(98 3)
+ThornBush priority(10) features(98 3) movedifficult(150)
  flags DangerousFeature Woods
 
-FootMud priority(5) features(14 1)
-FootHill priority(5) features(15 1)
+FootMud priority(5) features(14 1) movedifficult(300)
+FootHill priority(5) features(15 1) movedifficult(200)
 Grave priority(10) features(16 2)
 Statue priority(10) features(43 2)
  flags Impassable
@@ -30,12 +30,16 @@ AltarEvil priority(6) features(58 1)
 
 Pit priority(6) features(76 1)
  flags Impassable
+
 Door priority(7) features(39 1) minimap(102 70 18 128)
  flags BetweenWalls Impassable
 OpenedDoor priority(7) features(41 1) minimap(102 70 18 128)
  flags BetweenWalls
 HiddenDoor priority(7)
  flags BetweenWalls
+LockedDoor priority(7) features(39 1) minimap(102 70 18 128) activate_item(TinyKey) activateto(OpenedDoor) random_count(6)
+ flags BetweenWalls Impassable
+
 StairsUp priority(4) features(52 1) lead(1)
 StairsDown priority(4) features(53 1) lead(-1)
 

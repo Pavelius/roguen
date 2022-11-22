@@ -18,4 +18,5 @@ struct wearable : movable {
 	const char*		getwearname(wear_s id) const;
 	wear_s			getwearslot(const item* data) const;
 	const item*		getwear(const void* data) const;
+	bool			useitem(const itemi* pi);
 };

@@ -405,6 +405,15 @@ bool isfreecr(point m) {
 	return area.isfree(m);
 }
 
+bool isfreecrfly(point m) {
+	if(findalive(m))
+		return false;
+	auto tile = area.tiles[m];
+	if(bsdata<tilei>::elements[tile].is(CanSwim))
+		return false;
+	return area.isfree(m);
+}
+
 void creature::place(point m) {
 	m = area.getfree(m, 10, isfreecr);
 	setposition(m);
@@ -498,9 +507,20 @@ static void check_interaction(creature* player, point m) {
 	auto& ei = area.getfeature(m);
 	if(ei.isvisible()) {
 		auto pa = ei.getactivate();
-		if(pa)
+		if(pa) {
+			auto activate_item = ei.activate_item;
+			if(activate_item) {
+				if(ei.random_count)
+					activate_item.value += area.random[m] % ei.random_count;
+				if(activate_item.iskind<itemi>()) {
+					if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
+						player->actp(getnm(str("%1%2", pa->id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+						return;
+					}
+				}
+			}
 			area.setactivate(m);
-		else if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
+		} else if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
 			auto& wei = player->wears[MeleeWeapon].geti();
 			auto chance = player->get(Strenght) / 10 + wei.weapon.damage;
 			if(chance < 1)
@@ -520,9 +540,9 @@ static void look_items(creature* player, point m) {
 	items.clear();
 	items.select(m);
 	if(player->ishuman() && items) {
+		auto index = 0;
 		char temp[4096]; stringbuilder sb(temp);
 		auto count = items.getcount();
-		auto index = 0;
 		auto payment_cost = player->getpaymentcost();
 		sb.add(getnm("ThereIsLying"));
 		for(auto p : items) {
@@ -803,6 +823,16 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
+static void pay_movement(creature* player) {
+	auto cost = 100;
+	if(!player->is(Fly)) {
+		auto& ei = area.getfeature(player->getposition());
+		if(ei.movedifficult)
+			cost = cost * ei.movedifficult / 100;
+	}
+	player->waitseconds(cost);
+}
+
 void creature::movestep(point ni) {
 	if(!check_leave_area(this, ni))
 		return;
@@ -827,7 +857,7 @@ void creature::movestep(point ni) {
 		fixaction();
 	}
 	update_room();
-	wait();
+	pay_movement(this);
 }
 
 void creature::finish() {
@@ -1096,7 +1126,8 @@ static void block_swimable() {
 
 bool creature::moveto(point ni) {
 	area.clearpath();
-	block_swimable();
+	if(!is(Fly))
+		block_swimable();
 	area.blockwalls();
 	area.blockfeatures();
 	block_creatures(this);

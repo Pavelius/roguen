@@ -1,4 +1,5 @@
 #include "tile.h"
+#include "variant.h"
 
 #pragma once
 
@@ -7,8 +8,11 @@ struct featurei {
 	framerange		features, overlay;
 	unsigned char	priority;
 	unsigned		flags;
+	int				movedifficult;
 	color			minimap;
 	featurei		*leadto, *activateto;
+	variant			activate_item;
+	char			random_count;
 	char			lead;
 	char			chance_auto_activate;
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
