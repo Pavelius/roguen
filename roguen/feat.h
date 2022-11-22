@@ -12,6 +12,6 @@ enum feat_s : unsigned char {
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Blooding,
 };
-struct featable : flagable<4> {};
+struct featable : flagable<8> {};
 struct feati : nameable {};
 

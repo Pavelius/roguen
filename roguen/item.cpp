@@ -3,6 +3,8 @@
 
 extern areamap area;
 
+static_assert(sizeof(item) == 4, "Invalid size of `item` structure");
+
 int item::getcost() const {
 	return geti().cost;
 }
@@ -26,9 +28,7 @@ void item::setcount(int v) {
 }
 
 int item::getcount() const {
-	if(!type)
-		return 0;
-	return iscountable() ? count + 1 : 1;
+	return type ? (iscountable() ? count + 1 : 1) : 0;
 }
 
 void item::add(item& v) {
@@ -108,8 +108,7 @@ void item::drop(point m) {
 	clear();
 }
 
-const char*	item::getfullname() const {
-	static const char* adjective[] = {"", "AdjFemale", "AdjIt"};
+const char*	item::getfullname(int price_percent) const {
 	static char temp[260];
 	stringbuilder sb(temp);
 	auto count = getcount();
@@ -126,7 +125,10 @@ const char*	item::getfullname() const {
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
 	sb.lower();
-	//temp[0] = sb.upper(temp[0]);
+	if(price_percent) {
+		auto cost = getcost() * price_percent / 100;
+		sb.adds("%-Cost %1i %-Coins", cost);
+	}
 	return temp;
 }
 

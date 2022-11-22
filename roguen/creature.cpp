@@ -65,15 +65,22 @@ static bool attack_effect(const creature* p, const item& w, feat_s v) {
 	return p->is(v);
 }
 
+static bool resist_test(creature* player, feat_s resist, feat_s immunity) {
+	if(player->is(immunity))
+		return true;
+	if(player->is(resist)) {
+		if(d100() < 50)
+			return true;
+	}
+	return false;
+}
+
 static void poison_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
-	if(player->is(PoisonImmunity))
+	if(resist_test(player, PoisonResistance, PoisonImmunity))
 		return;
-	auto bonus = -value;
-	if(player->is(PoisonResistance))
-		bonus += 30;
-	if(player->roll(Strenght, bonus))
+	if(player->roll(Strenght, -value))
 		return;
 	auto v = player->get(Poison) + value;
 	player->fixeffect("PoisonVisual");
@@ -509,6 +516,35 @@ static void check_interaction(creature* player, point m) {
 	}
 }
 
+static void look_items(creature* player, point m) {
+	items.clear();
+	items.select(m);
+	if(player->ishuman() && items) {
+		auto pay_percent = 0;
+		char temp[4096]; stringbuilder sb(temp);
+		auto count = items.getcount();
+		auto index = 0;
+		auto room = roomi::find(game, m);
+		if(room) {
+			auto keeper = room->getowner();
+			pay_percent = keeper->getpaypercent(player->get(Charisma));
+		}
+		sb.add(getnm("ThereIsLying"));
+		for(auto p : items) {
+			if(index > 0) {
+				if(index == count - 1)
+					sb.adds(getnm("And"));
+				else
+					sb.add(",");
+			}
+			sb.adds("%-1", p->getfullname(pay_percent));
+			index++;
+		}
+		sb.add(".");
+		player->actp(temp);
+	}
+}
+
 bool creature::matchspeech(variant v) const {
 	if(v.iskind<monsteri>())
 		return iskind(v);
@@ -772,29 +808,6 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
-void creature::lookitems() const {
-	items.clear();
-	items.select(getposition());
-	if(ishuman() && items) {
-		char temp[4096]; stringbuilder sb(temp);
-		auto count = items.getcount();
-		auto index = 0;
-		sb.add(getnm("ThereIsLying"));
-		for(auto p : items) {
-			if(index > 0) {
-				if(index == count - 1)
-					sb.adds(getnm("And"));
-				else
-					sb.add(",");
-			}
-			sb.adds("%-1", p->getfullname());
-			index++;
-		}
-		sb.add(".");
-		actp(temp);
-	}
-}
-
 void creature::movestep(point ni) {
 	if(!check_leave_area(this, ni))
 		return;
@@ -813,7 +826,7 @@ void creature::movestep(point ni) {
 	else if(isfreecr(ni)) {
 		setposition(ni);
 		fixmovement();
-		lookitems();
+		look_items(this, getposition());
 	} else {
 		check_interaction(this, ni);
 		fixaction();
@@ -1291,4 +1304,9 @@ void creature::summon(point m, const variants& elements, int count, int level) {
 
 bool creature::ispresent() const {
 	return worldpos == game;
+}
+
+int	creature::getpaypercent(int opponent_skill) const {
+	auto skill = get(Charisma);
+	return 150 + skill - opponent_skill;
 }

@@ -98,7 +98,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			fixcantgo() const;
 	bool			isfollowmaster() const;
 	void			levelup();
-	void			lookitems() const;
 	const speech*	matchfirst(const speecha& source) const;
 	bool			matchspeech(variant v) const;
 	bool			matchspeech(const variants& source) const;
@@ -114,7 +113,6 @@ public:
 	void			actp(const char* format, ...) const;
 	void			apply(variant v);
 	void			apply(const variants& source);
-	//void			apply(const spelli& e, int level);
 	void			attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void			attackmelee(creature& enemy);
 	void			attackrange(creature& enemy);
@@ -144,6 +142,7 @@ public:
 	int				getlos() const;
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
+	int				getpaypercent(int opponent_skill) const;
 	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
 	void			getrumor(quest& e, stringbuilder& sb) const;
 	const char*		getspeech(const char* id) const;

@@ -34,15 +34,16 @@ struct itemi : nameable {
 	void			paint() const; // Exported paint function
 };
 class item {
-	unsigned short type;
+	unsigned short	type;
 	union {
-		unsigned short	count;
-		unsigned char	b[2];
+		unsigned short count;
 		struct {
 			magic_s	magic : 2;
-			unsigned char broken : 2;
 			unsigned char identified : 1;
+			unsigned char broken : 2;
 			unsigned char charges : 3;
+			unsigned char prefix : 4;
+			unsigned char suffix : 4;
 		};
 	};
 public:
@@ -64,7 +65,7 @@ public:
 	magic_s			getmagic() const { return magic; }
 	const char*		getname() const { return geti().getname(); }
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
-	const char*		getfullname() const;
+	const char*		getfullname(int price_percent = 0) const;
 	bool			is(ability_s v) const { return geti().ability == v; }
 	bool			is(feat_s v) const { return geti().feats.is(v); }
 	bool			is(wear_s v) const;
@@ -76,6 +77,7 @@ public:
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
 	void			use() { setcount(getcount() - 1); }
+	void			usecharge() { if(charges) charges--; else use(); }
 };
 struct itemground : item {
 	point			position;

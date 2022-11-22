@@ -21,6 +21,8 @@ ChooseImageSet: Выбирайте набор изображений
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 ChooseSpell: Выбирайте заклинание
 Continue: Продолжить
+Coins: Монет
+Cost: Стоит
 Day: День
 DodgeSuccess: Уклонение
 DropItem: Избавиться от предмета
