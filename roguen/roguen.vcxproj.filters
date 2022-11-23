@@ -476,9 +476,6 @@
     <ClInclude Include="geoposition.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="visualeffect.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="statable.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -556,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="magic.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="visualeffect.h">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

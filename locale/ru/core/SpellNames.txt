@@ -1,4 +1,5 @@
 Entaglement: Рост колючек
+KnockDoor: Вскрыть замки
 Light: Свет
 SummonUndead: Призвать мертвецов
 Teleport: Телепорт

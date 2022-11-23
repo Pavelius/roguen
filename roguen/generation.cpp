@@ -12,6 +12,7 @@ BSDATA(sitegeni) = {
 };
 BSDATAF(sitegeni)
 
+extern roomi* last_room;
 static adat<point, 512> points;
 static adat<rect, 32> locations;
 static adat<variant, 32> sites;
@@ -322,15 +323,18 @@ static void create_door(point m, int floor, int wall, bool hidden, bool locked) 
 		auto ph = door.gethidden();
 		if(ph)
 			area.setfeature(m, ph - bsdata<featurei>::elements);
+		areahead.total.doors_hidden++;
 	} else if(locked) {
 		area.settile(m, floor);
 		auto ph = door.getlocked();
 		if(ph)
 			area.setfeature(m, ph - bsdata<featurei>::elements);
+		areahead.total.doors_locked++;
 	} else {
 		area.settile(m, floor);
 		area.setfeature(m, &door - bsdata<featurei>::elements);
 	}
+	areahead.total.doors++;
 }
 
 static void create_connector(point index, direction_s dir, int wall, int floor, int& count, bool linkable) {
@@ -391,15 +395,9 @@ static int add_possible_doors(const rect& rc, bool run) {
 	return result;
 }
 
-static const sitei* find_site(const rect& rc) {
-	auto p = roomi::find(game, center(rc));
-	if(!p)
-		return 0;
-	return &p->geti();
-}
-
 static void create_doors(const rect& rc, int floor, int wall) {
-	pushvalue push_site(last_site, find_site(rc));
+	pushvalue push_room(last_room, roomi::find(game, center(rc)));
+	pushvalue push_site(last_site, last_room ? &last_room->geti() : 0);
 	auto door_count = get_doors_count();
 	auto chance_hidden_doors = get_chance_hidden_doors();
 	auto chance_locked_doors = get_chance_locked_doors();
@@ -415,6 +413,8 @@ static void create_doors(const rect& rc, int floor, int wall) {
 			break;
 		create_door(m, floor, wall, hidden_room, locked_room);
 	}
+	if(last_room && hidden_room)
+		areahead.total.rooms_hidden++;
 }
 
 static void add_area_sites(variant v) {
@@ -495,6 +495,7 @@ void sitei::outdoor() const {
 
 void sitei::room() const {
 	fillfloor();
+	areahead.total.rooms++;
 }
 
 static rect bounding_locations() {
@@ -560,6 +561,7 @@ static void create_corridor_content(point i) {
 		treasure = randomizeri::random(quest_modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	runscript(treasure);
+	areahead.total.loots++;
 }
 
 static void create_corridor_contents() {

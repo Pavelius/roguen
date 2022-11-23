@@ -3,6 +3,21 @@
 
 extern areamap area;
 
+static point compare_position;
+
+static int compare_distace(const void* v1, const void* v2) {
+	auto p1 = *((point*)v1);
+	auto p2 = *((point*)v2);
+	auto d1 = area.getrange(p1, compare_position);
+	auto d2 = area.getrange(p2, compare_position);
+	return d1 - d2;
+}
+
+void indexa::sort(point m) {
+	compare_position = m;
+	qsort(data, count, sizeof(data[0]), compare_distace);
+}
+
 void indexa::select(point pt, int range) {
 	auto pb = data;
 	auto pe = endof();
@@ -18,4 +33,19 @@ void indexa::select(point pt, int range) {
 		}
 	}
 	count = pb - data;
+}
+
+void indexa::shuffle() {
+	zshuffle(data, count);
+}
+
+void indexa::match(fnvisible proc, bool keep) {
+	auto ps = data;
+	for(auto p : *this) {
+		auto& ei = area.getfeature(p);
+		if(proc(&ei) != keep)
+			continue;
+		*ps++ = p;
+	}
+	count = ps - data;
 }

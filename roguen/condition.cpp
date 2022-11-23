@@ -9,6 +9,7 @@ BSDATA(conditioni) = {
 	{"HeavyWounded"},
 	{"Unaware"},
 	{"NoAnyFeature"},
+	{"Locked"},
 	{"NoInt"},
 	{"AnimalInt"},
 	{"LowInt"},
@@ -21,7 +22,7 @@ BSDATA(conditioni) = {
 	{"Multitarget"},
 	{"Ranged"},
 };
-assert_enum(conditioni, Ranged);
+assert_enum(conditioni, Ranged)
 
 bool creature::is(condition_s v) const {
 	int n, m;

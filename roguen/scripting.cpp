@@ -18,27 +18,28 @@ void show_area(int bonus);
 void show_logs(int bonus);
 void visualize_images(res pid, point size, point offset);
 
-creaturea			creatures, enemies, targets;
-collection<roomi>	rooms;
-spella				allowed_spells;
-itema				items;
-creature			*player, *opponent, *enemy;
-int					last_value;
-int					last_coins;
-greatneed*			last_need;
-ability_s			last_ability;
-variant				last_variant;
-quest*				last_quest;
-locationi*			last_location;
-const sitei*		last_site;
-globali*			last_global;
-rect				last_rect;
-roomi*				last_room;
-siteskilla			last_actions;
-const char*			last_id;
-extern bool			show_floor_rect;
-static bool			stop_script;
-const sitegeni*		last_method;
+creaturea		creatures, enemies, targets;
+rooma			rooms;
+spella			allowed_spells;
+itema			items;
+indexa			indecies;
+creature		*player, *opponent, *enemy;
+int				last_value;
+int				last_coins;
+greatneed*		last_need;
+ability_s		last_ability;
+variant			last_variant;
+quest*			last_quest;
+locationi*		last_location;
+const sitei*	last_site;
+globali*		last_global;
+rect			last_rect;
+roomi*			last_room;
+siteskilla		last_actions;
+const char*		last_id;
+extern bool		show_floor_rect;
+static bool		stop_script;
+const sitegeni*	last_method;
 
 template<typename T>
 static bool istkind(int i) {
@@ -79,7 +80,15 @@ static void place_creature(variant v, int count) {
 	for(auto i = 0; i < count; i++) {
 		auto p = creature::create(area.get(last_rect), v);
 		p->set(Local);
+		if(p->is(Enemy))
+			areahead.total.monsters++;
 	}
+}
+
+static void visualize_activity(point m) {
+	if(!area.is(m, Visible))
+		return;
+	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
 void runscript(variant v) {
@@ -248,7 +257,40 @@ static void match_creatures(const variants& source) {
 	targets.count = ps - targets.begin();
 }
 
-static void choose_targets(int kind, unsigned flags) {
+static bool is(const featurei& ei, condition_s v) {
+	switch(v) {
+	case Locked: return ei.islocked();
+	default: return false;
+	}
+}
+
+static bool isallow(const featurei& ei, variant v) {
+	if(v.iskind<conditioni>())
+		return is(ei, (condition_s)v.value);
+	return true;
+}
+
+static bool isallow(const featurei& ei, const variants source) {
+	for(auto v : source) {
+		if(!isallow(ei, v))
+			return false;
+	}
+	return true;
+}
+
+static void match_features(const variants& source) {
+	auto ps = indecies.begin();
+	for(auto m : indecies) {
+		auto& ei = area.getfeature(m);
+		if(!isallow(ei, source))
+			continue;
+		*ps++ = m;
+	}
+	indecies.count = ps - indecies.begin();
+}
+
+bool choose_targets(int kind, unsigned flags, const variants& effects) {
+	indecies.clear();
 	items.clear();
 	rooms.clear();
 	targets.clear();
@@ -270,9 +312,17 @@ static void choose_targets(int kind, unsigned flags) {
 		if(!FGT(flags, Ranged))
 			targets.matchrange(player->getposition(), 1, true);
 		targets.distinct();
+		match_creatures(effects);
+		targets.sort(player->getposition());
 	} else if(istkind<itemi>(kind)) {
 		for(auto p : targets)
 			items.select(p);
+	} else if(istkind<featurei>(kind)) {
+		indecies.clear();
+		indecies.select(player->getposition(), FGT(flags, Ranged) ? 3 : 1);
+		indecies.match(fntis<featurei, &featurei::isvisible>, true);
+		match_features(effects);
+		indecies.sort(player->getposition());
 	} else if(istkind<sitei>(kind)) {
 		rooms.select(fntis<roomi, &roomi::islocal>);
 		if(!FGT(flags, You))
@@ -284,17 +334,12 @@ static void choose_targets(int kind, unsigned flags) {
 		targets.shuffle();
 		items.shuffle();
 		rooms.shuffle();
-	} else
-		targets.sort(player->getposition());
-}
-
-bool choose_targets(int kind, unsigned flags, const variants& effects) {
-	choose_targets(kind, flags);
-	if(istkind<creature>(kind))
-		match_creatures(effects);
-	else if(istkind<itemi>(kind)) {
+		indecies.shuffle();
 	}
-	return targets.getcount() != 0 || rooms.getcount() != 0;
+	return targets.getcount() != 0
+		|| rooms.getcount() != 0
+		|| items.getcount() != 0
+		|| indecies.getcount() != 0;
 }
 
 static bool choose_target_interactive(const char* id, int kind, bool autochooseone) {
@@ -304,15 +349,14 @@ static bool choose_target_interactive(const char* id, int kind, bool autochooseo
 		opponent = targets.choose(pn, getnm("Cancel"), autochooseone);
 	else if(istkind<sitei>(kind))
 		last_room = rooms.choose(pn, getnm("Cancel"), autochooseone);
+	else
+		return true;
 	return opponent || last_room;
 }
 
 static void action_text(const creature* player, const char* id, const char* action) {
 	if(!player->is(AnimalInt)) {
-		auto dsid = str("%1%2Speech", id, action);
-		if(!bsdata<speech>::find(dsid))
-			return;
-		auto pn = player->getspeech(dsid);
+		auto pn = player->getspeech(str("%1%2Speech", id, action));
 		if(pn) {
 			player->say(pn);
 			return;
@@ -339,6 +383,8 @@ static bool bound_targets(const char* id, int kind, int multi_targets, bool inte
 		targets.count = target_count;
 	if(rooms.count > target_count)
 		rooms.count = target_count;
+	if(indecies.count > target_count)
+		indecies.count = target_count;
 	return true;
 }
 
@@ -369,6 +415,11 @@ void creature::cast(const spelli& e, int level, int mana) {
 	if(istkind<creature>(e.goal)) {
 		for(auto p : targets)
 			apply_spell(p, e, level);
+	} else if(istkind<featurei>(e.goal)) {
+		for(auto p : indecies) {
+			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
+			runscript(e.effect);
+		}
 	} else
 		runscript(e.effect);
 	if(e.summon) {
@@ -483,7 +534,7 @@ static void chat_someone() {
 
 static void chat_someone(int bonus) {
 	auto kind = bsid(bsdata<varianti>::find("Creature"));
-	choose_targets(kind, 0);
+	choose_targets(kind, 0, {});
 	if(!targets) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
@@ -690,8 +741,11 @@ static void quest_minion(int bonus) {
 
 static void quest_guardian(int bonus) {
 	last_variant.clear();
-	if(last_quest)
+	if(last_quest) {
+		if(last_quest->problem.iskind<monsteri>())
+			areahead.total.boss++;
 		set_result(last_quest->problem, bonus);
+	}
 }
 
 static void quest_reward(int bonus) {
@@ -822,6 +876,15 @@ static void roll_value(int bonus) {
 		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
 }
 
+static void activate_feature(int bonus) {
+	point m = center(last_rect);
+	auto& ei = area.getfeature(m);
+	if(ei.activateto) {
+		visualize_activity(m);
+		area.setfeature(m, ei.activateto - bsdata<featurei>::elements);
+	}
+}
+
 void runscript(const variants& elements) {
 	if(stop_script)
 		return;
@@ -901,6 +964,7 @@ BSDATA(script) = {
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
+	{"Activate", activate_feature},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
 	{"ChooseCreature", choose_creature},

@@ -611,11 +611,14 @@ const speech* creature::matchfirst(const speecha& source) const {
 	return 0;
 }
 
-const char* creature::getspeech(const char* id) const {
+const char* creature::getspeech(const char* id, bool always_speak) const {
 	speecha source;
 	source.select(id);
-	if(!source)
+	if(!source) {
+		if(!always_speak)
+			return 0;
 		return getnm("NothingToSay");
+	}
 	auto conditional = source[0]->condition.count > 0;
 	if(conditional) {
 		auto p = matchfirst(source);

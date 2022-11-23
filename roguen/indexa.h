@@ -4,5 +4,8 @@
 #pragma once
 
 struct indexa : adat<point> {
-	void			select(point m, int range);
+	void	match(fnvisible proc, bool keep);
+	void	select(point m, int range);
+	void	shuffle();
+	void	sort(point m);
 };

@@ -54,7 +54,7 @@ enum ability_s : unsigned char {
 enum condition_s : unsigned char {
 	Identified, NPC, Random,
 	NoWounded, Wounded, HeavyWounded,
-	Unaware, NoAnyFeature,
+	Unaware, NoAnyFeature, Locked,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
@@ -145,7 +145,7 @@ public:
 	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
 	void			getrumor(quest& e, stringbuilder& sb) const;
 	int				getsellingcost() const;
-	const char*		getspeech(const char* id) const;
+	const char*		getspeech(const char* id, bool always_speak = true) const;
 	int				getwait() const { return wait_seconds; }
 	void			heal(int v);
 	bool			is(condition_s v) const;
@@ -218,14 +218,14 @@ struct sitei : nameable {
 	void			outdoor() const;
 	void			room() const;
 };
+struct sitegeni : nameable {
+	sitei::fnproc	proc;
+};
 struct locationi : sitei {
 	variants		sites;
 	const sitegeni *global, *global_finish;
 	char			darkness, chance_finale, offset;
 	color			minimap;
-};
-struct sitegeni : nameable {
-	sitei::fnproc	proc;
 };
 class roomi : public geoposition, public ownerable {
 	short unsigned	site_id;
@@ -247,12 +247,13 @@ public:
 	bool			isnotable() const { return is(Notable); }
 	void			setsite(short unsigned v) { site_id = v; }
 };
+typedef collection<roomi> rooma;
 struct areaheadi {
 	struct totali {
 		short		mysteries;
 		short		traps;
-		short		doors;
-		short		rooms;
+		short		doors, doors_locked, doors_hidden;
+		short		rooms, rooms_hidden;
 		short		monsters;
 		short		boss;
 		short		loots;

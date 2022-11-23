@@ -8,6 +8,9 @@ Entaglement mana(6) goal(Creature)
  effect NoAnyFeature ThornBush
 Gate mana(40) goal(Feature)
  target You
+KnockDoor mana(10) goal(Feature)
+ target Ranged
+ effect Locked Activate
 Light mana(5) duration(Minute20PL) goal(Creature)
  target You
  effect LightSource

@@ -14,7 +14,7 @@ BSMETA(featurei) = {
 	BSREQ(minimap),
 	BSREQ(activate_item),
 	BSREQ(random_count),
-	BSREQ(leadto), BSREQ(activateto),
+	BSREQ(leadto), BSREQ(activateto), BSREQ(activate_script),
 	BSREQ(lead),
 	BSREQ(chance_auto_activate),
 	{}};
@@ -29,14 +29,9 @@ featurei* featurei::gethidden() const {
 }
 
 featurei* featurei::getlocked() const {
-	auto alternative = activateto;
 	for(auto& e : bsdata<featurei>()) {
-		if(!e.isvisible())
-			continue;
-		if(e.activate_item) {
-			if(e.activateto == this)
-				return &e;
-			if(alternative && e.activateto == alternative)
+		if(e.activateto == this && e.isvisible()) {
+			if(e.activate_item)
 				return &e;
 		}
 	}
