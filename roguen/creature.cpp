@@ -503,36 +503,51 @@ static void drop_item(point m, const char* id) {
 	it.drop(m);
 }
 
+bool check_activate(creature* player, point m, const featurei& ei) {
+	auto pa = ei.getactivate();
+	if(!pa)
+		return false;
+	auto activate_item = ei.activate_item;
+	if(activate_item) {
+		if(ei.random_count)
+			activate_item.value += area.random[m] % ei.random_count;
+		if(activate_item.iskind<itemi>()) {
+			if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
+				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+				return false;
+			} else
+				player->actp(getnm(str("%1%2", ei.id, "UseActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+		}
+	}
+	area.setactivate(m);
+	return true;
+}
+
+static bool check_cut_wood(creature* player, point m, const featurei& ei) {
+	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
+		auto& wei = player->wears[MeleeWeapon].geti();
+		auto chance = player->get(Strenght) / 10 + wei.weapon.damage;
+		if(chance < 1)
+			chance = 1;
+		if(wei.is(TwoHanded))
+			chance *= 2;
+		if(d100() < chance) {
+			player->act(getnm("YouCutWood"), getnm(ei.id));
+			area.setfeature(m, 0);
+			drop_item(m, "WoodenLagsTable");
+			return true;
+		}
+	}
+	return false;
+}
+
 static void check_interaction(creature* player, point m) {
 	auto& ei = area.getfeature(m);
 	if(ei.isvisible()) {
-		auto pa = ei.getactivate();
-		if(pa) {
-			auto activate_item = ei.activate_item;
-			if(activate_item) {
-				if(ei.random_count)
-					activate_item.value += area.random[m] % ei.random_count;
-				if(activate_item.iskind<itemi>()) {
-					if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
-						player->actp(getnm(str("%1%2", pa->id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
-						return;
-					}
-				}
-			}
-			area.setactivate(m);
-		} else if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
-			auto& wei = player->wears[MeleeWeapon].geti();
-			auto chance = player->get(Strenght) / 10 + wei.weapon.damage;
-			if(chance < 1)
-				chance = 1;
-			if(wei.is(TwoHanded))
-				chance *= 2;
-			if(d100() < chance) {
-				player->act(getnm("YouCutWood"), getnm(ei.id));
-				area.setfeature(m, 0);
-				drop_item(m, "WoodenLagsTable");
-			}
-		}
+		if(check_activate(player, m, ei))
+			return;
+		if(check_cut_wood(player, m, ei))
+			return;
 	}
 }
 

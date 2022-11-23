@@ -10,6 +10,7 @@
 
 roomi* add_room(const sitei* ps, const rect& rc);
 void animate_figures();
+bool check_activate(creature* player, point m, const featurei& ei);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
 void place_shape(const shapei& e, point m, int floor, int walls);
@@ -450,9 +451,9 @@ static void open_nearest_door(int bonus) {
 	source.select(player->getposition(), 1);
 	for(auto i : source) {
 		auto& ei = area.getfeature(i);
-		auto fa = ei.getactivate();
-		if(fa)
-			area.setfeature(i, bsid(fa));
+		if(!ei.isvisible())
+			continue;
+		check_activate(player, i, ei);
 	}
 }
 

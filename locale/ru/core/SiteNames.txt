@@ -35,6 +35,7 @@ StrangeFloraRoom: Дивная растительность
 TheifGuild: Гильдия воров
 Tavern: Таверна
 TestArea: Тестовая область
+TreasureRoom: Сокровища
 UnholyAltarRoom: Алтарь проклятых
 UnholyPlace: Проклятое место
 

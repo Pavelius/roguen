@@ -39,6 +39,7 @@ KnowRumor: Узнать сплетни
 Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 LittleProgress: Немного двинулись вперед
+LockedDoorNoActivateItem: Дверь закрыта на [%1].
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
 Minute: Минута

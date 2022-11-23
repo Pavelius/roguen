@@ -20,6 +20,7 @@ struct featurei {
 	featurei*		getactivate() const { return activateto; }
 	featurei*		gethidden() const;
 	featurei*		getlead() const { return leadto; }
+	featurei*		getlocked() const;
 	void			paint(int random) const;
 	bool			autoactivated() const { return activateto && chance_auto_activate; }
 	bool			handactivated() const { return activateto && !chance_auto_activate; }

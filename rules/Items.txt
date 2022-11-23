@@ -123,6 +123,8 @@ RandomTreasure
  chance RandomCoins+4 RandomJewelry
 RandomKeys
  chance TinyKey SmallKey HexagonalKey TriangularKey RectangularKey RoundKey
+RandomLoot
+ chance RandomTreasure+4 RandomKeys
 WoodenLagsTable
  chance Lags SmallLags+2
 

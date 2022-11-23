@@ -335,6 +335,8 @@ point areamap::getpoint(const rect& rco, const rect& bound, direction_s dir) {
 		rc.x2 = bound.x2;
 	if(rc.y2 > bound.y2)
 		rc.y2 = bound.y2;
+	if(rc.width() < 3 || rc.height() < 3)
+		return point{(short)rc.x1, (short)rc.y1};
 	switch(dir) {
 	case West: return {short(rco.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))};
 	case East: return {short(rco.x2), short(xrand(rc.y1 + 1, rc.y2 - 1))};

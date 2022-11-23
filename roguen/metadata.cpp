@@ -125,7 +125,8 @@ BSMETA(shapei) = {
 BSMETA(sitei) = {
 	BSREQ(id),
 	BSREQ(local),
-	BSREQ(landscape), BSREQ(loot), BSREQ(chance_hidden_doors), BSREQ(doors_count),
+	BSREQ(landscape), BSREQ(loot),
+	BSREQ(chance_hidden_doors), BSREQ(chance_locked_doors), BSREQ(doors_count),
 	BSFLG(feats, feati),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),

@@ -204,7 +204,7 @@ struct sitei : nameable {
 	unsigned char	walls, floors;
 	featable		feats;
 	unsigned char	doors;
-	char			chance_hidden_doors, doors_count;
+	char			chance_hidden_doors, chance_locked_doors, doors_count;
 	const shapei*	shape;
 	const sitegeni*	local;
 	void			building() const;

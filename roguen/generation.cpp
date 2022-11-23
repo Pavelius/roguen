@@ -43,6 +43,22 @@ static int get_chance_hidden_doors() {
 	return 10;
 }
 
+static int get_chance_locked_doors() {
+	if(last_site && last_site->chance_locked_doors)
+		return last_site->chance_locked_doors;
+	if(last_location && last_location->chance_locked_doors)
+		return last_location->chance_locked_doors;
+	return 0;
+}
+
+static int get_doors_count() {
+	if(last_site && last_site->doors_count)
+		return last_site->doors_count;
+	if(last_location && last_location->doors_count)
+		return last_location->doors_count;
+	return xrand(1, 4);
+}
+
 static const featurei& getdoor() {
 	if(last_site && last_site->doors)
 		return bsdata<featurei>::elements[last_site->doors];
@@ -297,13 +313,18 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 	return true;
 }
 
-static void create_door(point m, int floor, int wall, bool hidden) {
+static void create_door(point m, int floor, int wall, bool hidden, bool locked) {
 	auto& door = getdoor();
 	if(!door.isvisible())
 		return;
 	if(hidden) {
 		area.settile(m, wall);
 		auto ph = door.gethidden();
+		if(ph)
+			area.setfeature(m, ph - bsdata<featurei>::elements);
+	} else if(locked) {
+		area.settile(m, floor);
+		auto ph = door.getlocked();
 		if(ph)
 			area.setfeature(m, ph - bsdata<featurei>::elements);
 	} else {
@@ -370,23 +391,21 @@ static int add_possible_doors(const rect& rc, bool run) {
 	return result;
 }
 
+static const sitei* find_site(const rect& rc) {
+	auto p = roomi::find(game, center(rc));
+	if(!p)
+		return 0;
+	return &p->geti();
+}
+
 static void create_doors(const rect& rc, int floor, int wall) {
-	auto room = roomi::find(game, center(rc));
-	auto door_count = xrand(2, 5);
-	auto chance_hidden_doors = 10;
-	if(last_location->doors_count)
-		door_count = last_location->doors_count;
-	if(last_location->chance_hidden_doors)
-		chance_hidden_doors = last_location->chance_hidden_doors;
-	if(room) {
-		auto& ei = room->geti();
-		if(ei.chance_hidden_doors)
-			chance_hidden_doors = ei.chance_hidden_doors;
-		if(ei.doors_count)
-			door_count = ei.doors_count;
-	}
+	pushvalue push_site(last_site, find_site(rc));
+	auto door_count = get_doors_count();
+	auto chance_hidden_doors = get_chance_hidden_doors();
+	auto chance_locked_doors = get_chance_locked_doors();
 	points.clear();
 	auto hidden_room = d100() < chance_hidden_doors;
+	auto locked_room = d100() < chance_locked_doors;
 	add_possible_doors(rc, true);
 	zshuffle(points.data, points.count);
 	for(auto m : points) {
@@ -394,7 +413,7 @@ static void create_doors(const rect& rc, int floor, int wall) {
 			continue;
 		if(--door_count < 0)
 			break;
-		create_door(m, floor, wall, hidden_room);
+		create_door(m, floor, wall, hidden_room, locked_room);
 	}
 }
 
@@ -545,7 +564,7 @@ static void create_doors(int floor, int wall) {
 }
 
 static void create_corridor_content(point i) {
-	variant treasure = "RandomTreasure";
+	variant treasure = "RandomLoot";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->loot && d100() < 40)
 		treasure = randomizeri::random(last_location->loot);

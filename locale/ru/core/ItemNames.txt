@@ -52,6 +52,13 @@ BluePotion: Синее зелье
 
 Ration: Сухпаек
 
+TinyKey: Крошечный ключ
+SmallKey: Маленький ключ
+HexagonalKey: Пятиугольный ключ
+RoundKey: Круглый ключ
+TriangularKey: Треугольный ключ
+RectangularKey: Квадратный ключ
+
 StrangeAquaSphere: Голубая сфера
 StrangeBlueSphere: Синяя сфера
 StrangeGreenSphere: Зеленая сфера
