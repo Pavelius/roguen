@@ -48,7 +48,7 @@ static int get_chance_locked_doors() {
 		return last_site->chance_locked_doors;
 	if(last_location && last_location->chance_locked_doors)
 		return last_location->chance_locked_doors;
-	return 0;
+	return 5;
 }
 
 static int get_doors_count() {
@@ -546,18 +546,6 @@ static direction_s findvalid(point i, int t) {
 	return North;
 }
 
-static void additional_corridors(int floor, int wall) {
-	for(auto& rc : locations) {
-		//auto m = area.getpoint(rc, area.getmost(rc));
-		//if(!isvaliddoor(m))
-		//	continue;
-		//int result_count = 0;
-		//create_connector(m, findvalid(m, NoTile), wall, floor, result_count, true);
-		//if(result_count)
-		//	break;
-	}
-}
-
 static void create_doors(int floor, int wall) {
 	for(auto& rc : locations)
 		create_doors(rc, floor, wall);
@@ -587,7 +575,6 @@ void sitei::corridors() const {
 	const auto& rc = locations[0];
 	auto dir = area.getmost(rc);
 	create_corridor(rc, dir, walls, floors);
-	additional_corridors(floors, walls);
 	area.change(0, walls);
 	create_corridor_contents();
 	create_doors(floors, walls);
