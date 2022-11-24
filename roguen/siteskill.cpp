@@ -1,5 +1,19 @@
+#include "ability.h"
+#include "bsreq.h"
+#include "duration.h"
 #include "skilluse.h"
+#include "siteskill.h"
 #include "main.h"
+
+BSMETA(siteskilli) = {
+	BSREQ(id),
+	BSENM(skill, abilityi),
+	BSREQ(site),
+	BSENM(retry, durationi),
+	BSREQ(bonus),
+	BSREQ(effect), BSREQ(fail),
+	{}};
+BSDATAC(siteskilli, 256);
 
 bool siteskilli::isvalid(const void* object) {
 	auto p = (siteskilli*)object;

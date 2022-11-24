@@ -303,6 +303,7 @@
     <ClInclude Include="script.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="site.h" />
+    <ClInclude Include="siteskill.h" />
     <ClInclude Include="skilluse.h" />
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />

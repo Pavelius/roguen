@@ -383,9 +383,9 @@ static void create_doors(int floor, int wall) {
 }
 
 roomi* add_room(const sitei* ps, const rect& rc) {
-	auto p = new roomi();
+	auto p = roomi::add();
 	p->clear();
-	p->setsite(ps - bsdata<sitei>::elements);
+	p->set(ps);
 	*static_cast<geoposition*>(p) = game;
 	p->rc = rc;
 	return p;

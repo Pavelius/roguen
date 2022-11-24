@@ -3,6 +3,7 @@
 #include "greatneed.h"
 #include "main.h"
 #include "race.h"
+#include "siteskill.h"
 #include "visualeffect.h"
 #include "widget.h"
 
@@ -27,7 +28,6 @@ BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
-BSDATAC(siteskilli, 256);
 BSDATAC(tilei, 64);
 BSDATAC(trigger, 256);
 
@@ -134,14 +134,6 @@ BSMETA(sitei) = {
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSENM(doors, featurei),
-	{}};
-BSMETA(siteskilli) = {
-	BSREQ(id),
-	BSENM(skill, abilityi),
-	BSREQ(site),
-	BSENM(retry, durationi),
-	BSREQ(bonus),
-	BSREQ(effect), BSREQ(fail),
 	{}};
 BSMETA(sitegeni) = {
 	BSREQ(id),

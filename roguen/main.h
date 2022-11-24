@@ -200,11 +200,9 @@ struct creaturea : collection<creature> {
 };
 class roomi : public geoposition, public ownerable {
 	short unsigned	site_id;
-	unsigned char	identified : 1;
-	unsigned char	explored : 1;
 public:
 	rect			rc;
-	static void* operator new(size_t size) { return bsdata<roomi>::add(); }
+	static roomi*	add() { return bsdata<roomi>::add(); }
 	point			center() const { return {(short)(rc.x1 + rc.width() / 2), (short)(rc.y1 + rc.height() / 2)}; }
 	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
 	static roomi*	find(geoposition gp, point pt);
@@ -217,7 +215,7 @@ public:
 	bool			islocal() const;
 	bool			ismarkable() const;
 	bool			isnotable() const { return is(Notable); }
-	void			setsite(short unsigned v) { site_id = v; }
+	void			set(const sitei* p) { bsset(site_id, p); }
 };
 typedef collection<roomi> rooma;
 class gamei : public geoposition, public ownerable {
@@ -252,15 +250,6 @@ public:
 	void			write();
 	static void		writelog();
 };
-struct siteskilli : nameable {
-	ability_s		skill;
-	const sitei*	site;
-	duration_s		retry;
-	char			bonus;
-	variants		effect, fail;
-	static bool		isvalid(const void* object);
-};
-typedef collection<siteskilli> siteskilla;
 namespace draw {
 struct keybind {
 	unsigned		key;
@@ -284,7 +273,6 @@ extern quest*		last_quest;
 extern rect			last_rect;
 extern const sitei*	last_site;
 extern locationi*	last_location;
-extern siteskilla	last_actions;
 extern const sitegeni* last_method;
 extern creature		*player, *opponent, *enemy;
 extern int			window_width;

@@ -2,6 +2,7 @@
 #include "charname.h"
 #include "indexa.h"
 #include "main.h"
+#include "siteskill.h"
 
 namespace {
 struct rollg {
@@ -16,6 +17,7 @@ struct defenceg {
 }
 
 extern collection<roomi> rooms;
+extern siteskilla last_actions;
 void apply_spell(creature* player, const spelli& ei, int level);
 bool choose_targets(int kind, unsigned flags, const variants& effects);
 

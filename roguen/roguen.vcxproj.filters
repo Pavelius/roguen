@@ -563,6 +563,9 @@
     <ClInclude Include="skilluse.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="siteskill.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

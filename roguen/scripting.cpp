@@ -4,6 +4,7 @@
 #include "greatneed.h"
 #include "race.h"
 #include "resource.h"
+#include "siteskill.h"
 #include "stringact.h"
 #include "indexa.h"
 #include "main.h"
@@ -24,6 +25,7 @@ spella			allowed_spells;
 itema			items;
 indexa			indecies;
 creature		*player, *opponent, *enemy;
+siteskilla		last_actions;
 int				last_value;
 int				last_coins;
 greatneed*		last_need;
@@ -35,7 +37,6 @@ const sitei*	last_site;
 globali*		last_global;
 rect			last_rect;
 roomi*			last_room;
-siteskilla		last_actions;
 const char*		last_id;
 extern bool		show_floor_rect;
 static bool		stop_script;
