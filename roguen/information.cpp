@@ -123,7 +123,7 @@ void creature::getrumor(quest& e, stringbuilder& sb) const {
 
 void roomi::getrumor(stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
-	auto direction = area.getdirection(player->getposition(), center(rc));
+	auto direction = area.getdirection(player->getposition(), center());
 	auto site_name = getname();
 	sb.add(getnm("RumorLocation"),
 		getnm(bsdata<directioni>::elements[direction].id),

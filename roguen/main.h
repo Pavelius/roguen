@@ -22,6 +22,7 @@
 #include "quest.h"
 #include "script.h"
 #include "shape.h"
+#include "site.h"
 #include "speech.h"
 #include "spell.h"
 #include "talk.h"
@@ -197,36 +198,6 @@ struct creaturea : collection<creature> {
 	void			select(point m, int los, bool visible, const creature* exclude);
 	void			sort(point start);
 };
-struct sitegeni;
-struct sitei : nameable {
-	typedef void (sitei::*fnproc)() const;
-	variants		landscape, loot;
-	unsigned char	walls, floors;
-	featable		feats;
-	unsigned char	doors;
-	char			chance_hidden_doors, chance_stuck_doors, chance_locked_doors, doors_count;
-	const shapei*	shape;
-	const sitegeni*	local;
-	void			building() const;
-	void			cityscape() const;
-	void			corridors() const;
-	void			dungeon() const;
-	void			fillfloor() const;
-	void			fillwalls() const;
-	void			fillwallsall() const;
-	void			nogenerate() const {}
-	void			outdoor() const;
-	void			room() const;
-};
-struct sitegeni : nameable {
-	sitei::fnproc	proc;
-};
-struct locationi : sitei {
-	variants		sites;
-	const sitegeni *global, *global_finish;
-	char			darkness, chance_finale, offset;
-	color			minimap;
-};
 class roomi : public geoposition, public ownerable {
 	short unsigned	site_id;
 	unsigned char	identified : 1;
@@ -234,6 +205,7 @@ class roomi : public geoposition, public ownerable {
 public:
 	rect			rc;
 	static void* operator new(size_t size) { return bsdata<roomi>::add(); }
+	point			center() const { return {(short)(rc.x1 + rc.width() / 2), (short)(rc.y1 + rc.height() / 2)}; }
 	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
 	static roomi*	find(geoposition gp, point pt);
 	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
@@ -248,23 +220,6 @@ public:
 	void			setsite(short unsigned v) { site_id = v; }
 };
 typedef collection<roomi> rooma;
-struct areaheadi {
-	struct totali {
-		short		mysteries;
-		short		traps;
-		short		doors, doors_locked, doors_hidden, doors_stuck;
-		short		rooms, rooms_hidden;
-		short		monsters;
-		short		boss;
-		short		loots;
-	};
-	short unsigned	site_id;
-	totali			total;
-	char			darkness;
-	void			clear();
-	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
-	void			setloc(const locationi* v) { bsset(site_id, v); }
-};
 class gamei : public geoposition, public ownerable {
 	unsigned		minutes;
 	unsigned		restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day, restore_several_days;
@@ -296,14 +251,6 @@ public:
 	const char*		timeleft(unsigned end_stamp) const;
 	void			write();
 	static void		writelog();
-};
-struct skilluse {
-	variant			ability;
-	unsigned short	player_id;
-	unsigned short	room_id;
-	unsigned		stamp;
-	static skilluse* add(variant v, short unsigned player_id, short unsigned room_id);
-	static skilluse* find(variant v, short unsigned player_id, short unsigned room_id);
 };
 struct siteskilli : nameable {
 	ability_s		skill;

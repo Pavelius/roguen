@@ -195,9 +195,6 @@
     <ClCompile Include="keyname.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="generation.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="serial.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -247,9 +244,6 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="creature_talk.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="skilluse.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="duration.cpp">
@@ -328,6 +322,12 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="magic.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="site.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="skilluse.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -556,6 +556,12 @@
     </ClInclude>
     <ClInclude Include="visualeffect.h">
       <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="site.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="skilluse.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -179,7 +179,6 @@
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="generation.cpp" />
     <ClCompile Include="greatneed.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="ifscript.cpp" />
@@ -200,6 +199,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="quest.cpp" />
+    <ClCompile Include="site.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
@@ -302,6 +302,8 @@
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="shape.h" />
+    <ClInclude Include="site.h" />
+    <ClInclude Include="skilluse.h" />
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />

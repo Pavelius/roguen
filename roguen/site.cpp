@@ -1,3 +1,8 @@
+#include "areamap.h"
+#include "direction.h"
+#include "pushvalue.h"
+#include "script.h"
+#include "site.h"
 #include "main.h"
 
 BSDATA(sitegeni) = {
@@ -12,13 +17,24 @@ BSDATA(sitegeni) = {
 };
 BSDATAF(sitegeni)
 
+extern areamap area;
+extern areaheadi areahead;
+extern rect last_rect;
+extern locationi* last_location;
+extern const sitei* last_site;
 extern roomi* last_room;
-static adat<point, 512> points;
+
 static adat<rect, 32> locations;
-static adat<variant, 32> sites;
+static adat<point, 512> points;
+
 static point last_door;
 static rect correct_conncetors;
 static direction_s last_direction;
+static adat<variant, 32> sites;
+
+//inline int d100() {
+//	return rand() % 100;
+//}
 
 int getfloor() {
 	if(last_site && last_site->floors)
@@ -33,6 +49,14 @@ int getwall() {
 		return last_site->walls;
 	if(last_location && last_location->walls)
 		return last_location->walls;
+	return 0;
+}
+
+static int getdoor() {
+	if(last_site && last_site->doors)
+		return last_site->doors;
+	if(last_location && last_location->doors)
+		return last_location->doors;
 	return 0;
 }
 
@@ -66,14 +90,6 @@ static int get_doors_count() {
 	if(last_location && last_location->doors_count)
 		return last_location->doors_count;
 	return xrand(1, 4);
-}
-
-static const featurei& getdoor() {
-	if(last_site && last_site->doors)
-		return bsdata<featurei>::elements[last_site->doors];
-	if(last_location && last_location->doors)
-		return bsdata<featurei>::elements[last_location->doors];
-	return bsdata<featurei>::elements[0];
 }
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
@@ -139,85 +155,6 @@ static void sort_locations() {
 	qsort(locations.data, locations.count, sizeof(locations.data[0]), compare_locations);
 }
 
-static void remove_trail_locations(size_t count) {
-	if(locations.count >= count)
-		locations.count -= count;
-	else
-		locations.count = 0;
-}
-
-roomi* add_room(const sitei* ps, const rect& rc) {
-	auto p = new roomi();
-	p->clear();
-	p->setsite(ps - bsdata<sitei>::elements);
-	*static_cast<geoposition*>(p) = game;
-	p->rc = rc;
-	return p;
-}
-
-void sitei::fillfloor() const {
-	area.set(last_rect, &areamap::settile, getfloor());
-}
-
-void sitei::fillwallsall() const {
-	area.set(last_rect, &areamap::settile, getwall());
-}
-
-void sitei::fillwalls() const {
-	area.horz(last_rect.x1, last_rect.y1, last_rect.x2, &areamap::settile, walls);
-	area.vert(last_rect.x1, last_rect.y1, last_rect.y2, &areamap::settile, walls);
-	area.horz(last_rect.x1, last_rect.y2, last_rect.x2, &areamap::settile, walls);
-	area.vert(last_rect.x2, last_rect.y1, last_rect.y2, &areamap::settile, walls);
-}
-
-void sitei::building() const {
-	static direction_s rdir[] = {North, South, West, East};
-	auto door = &getdoor() - bsdata<featurei>::elements;
-	// Walls and floors
-	fillfloor();
-	fillwalls();
-	// Doors
-	last_direction = maprnd(rdir);;
-	last_door = area.getpoint(last_rect, last_direction);
-	area.settile(last_door, floors);
-	area.setfeature(last_door, door);
-	auto m1 = to(last_door, last_direction);
-	if(area.iswall(m1))
-		area.settile(m1, floors);
-	area.setfeature(m1, 0);
-	last_rect.offset(1, 1);
-}
-
-static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
-	auto c = e.center(m);
-	for(m.y = 0; m.y < e.size.y; m.y++) {
-		for(m.x = 0; m.x < e.size.x; m.x++) {
-			auto pm = e.translate(c, m, d);
-			auto sm = e[m];
-			switch(sm) {
-			case ' ':
-				break;
-			case '.':
-				area.settile(pm, floor);
-				break;
-			case 'X':
-				area.settile(pm, wall);
-				break;
-			case '0':
-				area.settile(pm, floor);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-}
-
-void place_shape(const shapei& e, point m, int floor, int walls) {
-	static direction_s direction[] = {North, South, West, East};
-	place_shape(e, m, maprnd(direction), floor, walls);
-}
-
 static void create_road(const rect& rc) {
 	pushvalue push_rect(last_rect, rc);
 	variant road = "Rock";
@@ -236,11 +173,6 @@ static void create_road(const rect& rc) {
 	variant v = "RandomCommoner";
 	v.counter = xrand(3, 6);
 	runscript(v);
-}
-
-static void show_debug_minimap() {
-	script::run("ExploreArea");
-	script::run("ShowMinimap");
 }
 
 static void create_city_level(const rect& rc, int level) {
@@ -323,7 +255,7 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 }
 
 static void create_door(point m, int floor, int wall, bool hidden, bool locked, bool stuck) {
-	auto& door = getdoor();
+	const auto& door = bsdata<featurei>::elements[getdoor()];
 	if(!door.isvisible())
 		return;
 	if(hidden) {
@@ -433,6 +365,67 @@ static void create_doors(const rect& rc, int floor, int wall) {
 		areahead.total.rooms_hidden++;
 }
 
+static direction_s findvalid(point i, int t) {
+	static direction_s source[] = {North, South, East, West};
+	for(auto d : source) {
+		auto i1 = to(i, d);
+		if(!area.isvalid(i1))
+			continue;
+		if(area.tiles[i1] == t)
+			return d;
+	}
+	return North;
+}
+
+static void create_doors(int floor, int wall) {
+	for(auto& rc : locations)
+		create_doors(rc, floor, wall);
+}
+
+roomi* add_room(const sitei* ps, const rect& rc) {
+	auto p = new roomi();
+	p->clear();
+	p->setsite(ps - bsdata<sitei>::elements);
+	*static_cast<geoposition*>(p) = game;
+	p->rc = rc;
+	return p;
+}
+
+static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
+	auto c = e.center(m);
+	for(m.y = 0; m.y < e.size.y; m.y++) {
+		for(m.x = 0; m.x < e.size.x; m.x++) {
+			auto pm = e.translate(c, m, d);
+			auto sm = e[m];
+			switch(sm) {
+			case ' ':
+				break;
+			case '.':
+				area.settile(pm, floor);
+				break;
+			case 'X':
+				area.settile(pm, wall);
+				break;
+			case '0':
+				area.settile(pm, floor);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
+
+void place_shape(const shapei& e, point m, int floor, int walls) {
+	static direction_s direction[] = {North, South, West, East};
+	place_shape(e, m, maprnd(direction), floor, walls);
+}
+
+static void show_debug_minimap() {
+	script::run("ExploreArea");
+	script::run("ShowMinimap");
+}
+
 static void add_area_sites(variant v) {
 	if(!v)
 		return;
@@ -484,36 +477,6 @@ static bool apply_location(geoposition geo, variant tile) {
 	return true;
 }
 
-void sitei::cityscape() const {
-	fillfloor();
-	runscript(this);
-	last_rect.offset(last_location->offset, last_location->offset);
-	create_city_level(last_rect, 0);
-	sort_locations();
-}
-
-void sitei::outdoor() const {
-	fillfloor();
-	runscript(this);
-	last_rect.offset(last_location->offset, last_location->offset);
-	const auto parts = 4;
-	const auto size = last_rect.width() / parts;
-	for(auto i = 0; i < parts * parts; i++) {
-		rect rc;
-		rc.x1 = last_rect.x1 + (i % parts) * size + 1;
-		rc.y1 = last_rect.y1 + (i / parts) * size + 1;
-		rc.x2 = rc.x1 + size - 2;
-		rc.y2 = rc.y1 + size - 2;
-		locations.add(rc);
-	}
-	shuffle_locations();
-}
-
-void sitei::room() const {
-	fillfloor();
-	areahead.total.rooms++;
-}
-
 static rect bounding_locations() {
 	rect rc = {1000, 1000, 0, 0};
 	for(auto& e : locations) {
@@ -528,44 +491,6 @@ static rect bounding_locations() {
 			rc.y2 = pt.y;
 	}
 	return rc;
-}
-
-void sitei::dungeon() const {
-	last_rect.offset(last_location->offset, last_location->offset);
-	auto parts = 4;
-	if(last_rect.width() <= 48)
-		parts = 3;
-	if(last_rect.width() <= 32)
-		parts = 2;
-	auto size = last_rect.width() / parts;
-	for(auto i = 0; i < parts * parts; i++) {
-		rect rc;
-		rc.x1 = last_rect.x1 + (i % parts) * size;
-		rc.y1 = last_rect.y1 + (i / parts) * size;
-		rc.x2 = rc.x1 + size;
-		rc.y2 = rc.y1 + size;
-		auto r1 = area.get(rc, {2, 2}, {5, 3}, {8, 6});
-		locations.add(r1);
-	}
-	shuffle_locations();
-	correct_conncetors = bounding_locations();
-}
-
-static direction_s findvalid(point i, int t) {
-	static direction_s source[] = {North, South, East, West};
-	for(auto d : source) {
-		auto i1 = to(i, d);
-		if(!area.isvalid(i1))
-			continue;
-		if(area.tiles[i1] == t)
-			return d;
-	}
-	return North;
-}
-
-static void create_doors(int floor, int wall) {
-	for(auto& rc : locations)
-		create_doors(rc, floor, wall);
 }
 
 static void create_corridor_content(point i) {
@@ -587,15 +512,6 @@ static void create_corridor_contents() {
 		count = points.count;
 	for(auto i = 0; i < count; i++)
 		create_corridor_content(points.data[i]);
-}
-
-void sitei::corridors() const {
-	const auto& rc = locations[0];
-	auto dir = area.getmost(rc);
-	create_corridor(rc, dir, walls, floors);
-	area.change(0, walls);
-	create_corridor_contents();
-	create_doors(floors, walls);
 }
 
 static void create_area(geoposition geo, variant tile) {
@@ -622,6 +538,99 @@ static void create_area(geoposition geo, variant tile) {
 	if(last_location->global_finish)
 		(last_location->*last_location->global_finish->proc)();
 	update_doors();
+}
+
+void sitei::fillfloor() const {
+	area.set(last_rect, &areamap::settile, getfloor());
+}
+
+void sitei::fillwallsall() const {
+	area.set(last_rect, &areamap::settile, getwall());
+}
+
+void sitei::fillwalls() const {
+	area.horz(last_rect.x1, last_rect.y1, last_rect.x2, &areamap::settile, walls);
+	area.vert(last_rect.x1, last_rect.y1, last_rect.y2, &areamap::settile, walls);
+	area.horz(last_rect.x1, last_rect.y2, last_rect.x2, &areamap::settile, walls);
+	area.vert(last_rect.x2, last_rect.y1, last_rect.y2, &areamap::settile, walls);
+}
+
+void sitei::building() const {
+	static direction_s rdir[] = {North, South, West, East};
+	auto door = getdoor();
+	// Walls and floors
+	fillfloor();
+	fillwalls();
+	// Doors
+	last_direction = maprnd(rdir);;
+	last_door = area.getpoint(last_rect, last_direction);
+	area.settile(last_door, floors);
+	area.setfeature(last_door, door);
+	auto m1 = to(last_door, last_direction);
+	if(area.iswall(m1))
+		area.settile(m1, floors);
+	area.setfeature(m1, 0);
+	last_rect.offset(1, 1);
+}
+
+void sitei::cityscape() const {
+	fillfloor();
+	runscript(this);
+	last_rect.offset(last_location->offset, last_location->offset);
+	create_city_level(last_rect, 0);
+	sort_locations();
+}
+
+void sitei::outdoor() const {
+	fillfloor();
+	runscript(this);
+	last_rect.offset(last_location->offset, last_location->offset);
+	const auto parts = 4;
+	const auto size = last_rect.width() / parts;
+	for(auto i = 0; i < parts * parts; i++) {
+		rect rc;
+		rc.x1 = last_rect.x1 + (i % parts) * size + 1;
+		rc.y1 = last_rect.y1 + (i / parts) * size + 1;
+		rc.x2 = rc.x1 + size - 2;
+		rc.y2 = rc.y1 + size - 2;
+		locations.add(rc);
+	}
+	shuffle_locations();
+}
+
+void sitei::dungeon() const {
+	last_rect.offset(last_location->offset, last_location->offset);
+	auto parts = 4;
+	if(last_rect.width() <= 48)
+		parts = 3;
+	if(last_rect.width() <= 32)
+		parts = 2;
+	auto size = last_rect.width() / parts;
+	for(auto i = 0; i < parts * parts; i++) {
+		rect rc;
+		rc.x1 = last_rect.x1 + (i % parts) * size;
+		rc.y1 = last_rect.y1 + (i / parts) * size;
+		rc.x2 = rc.x1 + size;
+		rc.y2 = rc.y1 + size;
+		auto r1 = area.get(rc, {2, 2}, {5, 3}, {8, 6});
+		locations.add(r1);
+	}
+	shuffle_locations();
+	correct_conncetors = bounding_locations();
+}
+
+void sitei::room() const {
+	fillfloor();
+	areahead.total.rooms++;
+}
+
+void sitei::corridors() const {
+	const auto& rc = locations[0];
+	auto dir = area.getmost(rc);
+	create_corridor(rc, dir, walls, floors);
+	area.change(0, walls);
+	create_corridor_contents();
+	create_doors(floors, walls);
 }
 
 void gamei::createarea() {
