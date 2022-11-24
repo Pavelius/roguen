@@ -49,6 +49,14 @@ static int get_chance_locked_doors() {
 		return last_site->chance_locked_doors;
 	if(last_location && last_location->chance_locked_doors)
 		return last_location->chance_locked_doors;
+	return 0;
+}
+
+static int get_chance_stuck_doors() {
+	if(last_site && last_site->chance_stuck_doors)
+		return last_site->chance_stuck_doors;
+	if(last_location && last_location->chance_stuck_doors)
+		return last_location->chance_stuck_doors;
 	return 5;
 }
 
@@ -314,7 +322,7 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 	return true;
 }
 
-static void create_door(point m, int floor, int wall, bool hidden, bool locked) {
+static void create_door(point m, int floor, int wall, bool hidden, bool locked, bool stuck) {
 	auto& door = getdoor();
 	if(!door.isvisible())
 		return;
@@ -330,6 +338,12 @@ static void create_door(point m, int floor, int wall, bool hidden, bool locked) 
 		if(ph)
 			area.setfeature(m, ph - bsdata<featurei>::elements);
 		areahead.total.doors_locked++;
+	} else if(stuck) {
+		area.settile(m, floor);
+		auto ph = door.getstuck();
+		if(ph)
+			area.setfeature(m, ph - bsdata<featurei>::elements);
+		areahead.total.doors_stuck++;
 	} else {
 		area.settile(m, floor);
 		area.setfeature(m, &door - bsdata<featurei>::elements);
@@ -401,9 +415,11 @@ static void create_doors(const rect& rc, int floor, int wall) {
 	auto door_count = get_doors_count();
 	auto chance_hidden_doors = get_chance_hidden_doors();
 	auto chance_locked_doors = get_chance_locked_doors();
+	auto chance_stuck_doors = get_chance_stuck_doors();
 	points.clear();
 	auto hidden_room = d100() < chance_hidden_doors;
 	auto locked_room = d100() < chance_locked_doors;
+	auto stuck_room = d100() < chance_stuck_doors;
 	add_possible_doors(rc, true);
 	zshuffle(points.data, points.count);
 	for(auto m : points) {
@@ -411,7 +427,7 @@ static void create_doors(const rect& rc, int floor, int wall) {
 			continue;
 		if(--door_count < 0)
 			break;
-		create_door(m, floor, wall, hidden_room, locked_room);
+		create_door(m, floor, wall, hidden_room, locked_room, stuck_room);
 	}
 	if(last_room && hidden_room)
 		areahead.total.rooms_hidden++;

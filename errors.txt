@@ -1,2 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 198: Expected line feed
+﻿In file `Names.txt`:
+ Define translation for `StuckDoor`

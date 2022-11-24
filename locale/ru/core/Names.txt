@@ -25,6 +25,7 @@ Coins: Монет
 Cost: Стоит
 Day: День
 DodgeSuccess: Уклонение
+Door: Дверь
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Experience: Опыт
@@ -39,6 +40,7 @@ KnowRumor: Узнать сплетни
 Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 LittleProgress: Немного двинулись вперед
+LockedDoor: Дверь с замком
 LockedDoorNoActivateItem: Дверь закрыта на [%1].
 LockedDoorUseActivateItem: Использовав [%1] герой отркыл%а закрытую дверь.
 MoveStairsUp: Поднятся по лестнице наверх?
@@ -65,6 +67,7 @@ RumorDungeonMore: Я слышал%а что там находятся %-1, которые охраняет %-2.
 RumorDungeonGuardian: Но, поберегись. Я слышал%а что командует ими %-1.
 RumorLocation: Не так далеко отсюда на %-1, есть %2. Возможно, вам не мешало бы посетить это место.
 Rounds: Раунды
+StuckDoor: Заевшая дверь
 ThereIsLying: Здесь лежит
 Torch: Факел
 Tree: Дерево
@@ -81,11 +84,13 @@ YouCutWood: %герой срубил%а %-1.
 YouDontSeeAnyEnemy: Вы не видите ни одного врага.
 YouDontHaveAnyActions: Здесь вы не можете выполнить никаких особых действий.
 YouDontValidTargets: Вы не видите подходящих целей.
+YouFailToOpenStuckDoor: %герой не смог%ла открыть заевшую дверь.
 YouFoundSecretDoor: %герой обнаружил%а [%1i] секретную дверь.
 YouGiveItemTo: %герой отдал%а %-1 %@2.
 YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
 YouNeedThrownWeapon: Чтобы метать, вам нужно иметь в руках метательное оружие.
+YouOpenStuckDoor: %герой открыл%а заклинившую дверь.
 YouSeeRoom: Это %-1.
 YouSundellyAppear: %герой внезапно появил%ась из неоткуда.
 YouSundellyDisappear: %герой внезапно исчез%ла из виду.

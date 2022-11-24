@@ -333,7 +333,7 @@
     <Text Include="..\locale\ru\core\RaceNames.txt" />
     <Text Include="..\locale\ru\core\SiteDescriptions.txt" />
     <Text Include="..\locale\ru\core\SiteNames.txt" />
-    <Text Include="..\locale\ru\core\SpellDescriptions.txt" />
+    <Text Include="..\locale\ru\core\EffectDescriptions.txt" />
     <Text Include="..\locale\ru\core\SpellNames.txt" />
     <Text Include="..\locale\ru\core\UnknownNames.txt" />
     <Text Include="..\locale\ru\core\WearNames.txt" />

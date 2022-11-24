@@ -39,6 +39,8 @@ HiddenDoor priority(7) activateto(Door)
  flags BetweenWalls
 LockedDoor priority(7) features(39 1) minimap(102 70 18 128) activateto(Door) activate_item(TinyKey) random_count(6)
  flags BetweenWalls Impassable
+StuckDoor priority(7) features(39 1) minimap(102 70 18 128) activateto(Door)
+ flags BetweenWalls Impassable StuckFeature
 
 StairsUp priority(4) features(52 1) lead(1)
 StairsDown priority(4) features(53 1) lead(-1)
@@ -55,3 +57,18 @@ StairsDown leadto(StairsUp)
 Door activateto(OpenedDoor)
 GatePortal activateto(OpenedGatePortal)
 HerbsFull activateto(Herbs)
+
+#List
+
+YouAngryAboutDoor
+ elements Mana-1
+YouHitByDoor
+ elements Hits-1
+YouTrampedByDoor
+ elements Hits-4 DestroyFeature
+YouFailToOpenStuckDoor
+
+#RandomTable
+
+StuckDoorFail
+ chance YouFailToOpenStuckDoor+2 YouAngryAboutDoor YouHitByDoor YouTrampedByDoor

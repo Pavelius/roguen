@@ -503,6 +503,30 @@ static void drop_item(point m, const char* id) {
 	it.drop(m);
 }
 
+static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
+	if(!ei.is(StuckFeature))
+		return false;
+	if(p->roll(Strenght, -10)) {
+		area.setactivate(m);
+		area.setactivate(m);
+		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
+	} else {
+		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
+		if(random_table) {
+			auto effect = random_table->random();
+			if(effect.iskind<listi>()) {
+				auto p = bsdata<listi>::elements + effect.value;
+				auto pn = getdescription(p->id);
+				if(pn)
+					player->act(pn, getnm(ei.id));
+				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
+				runscript(p->elements);
+			}
+		}
+	}
+	return true;
+}
+
 bool check_activate(creature* player, point m, const featurei& ei) {
 	auto pa = ei.getactivate();
 	if(!pa)
@@ -544,6 +568,8 @@ static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 static void check_interaction(creature* player, point m) {
 	auto& ei = area.getfeature(m);
 	if(ei.isvisible()) {
+		if(check_stuck_doors(player, m, ei))
+			return;
 		if(check_activate(player, m, ei))
 			return;
 		if(check_cut_wood(player, m, ei))
@@ -1302,7 +1328,24 @@ bool creature::isallow(variant v) const {
 }
 
 void creature::apply(variant v) {
-	if(v.iskind<spelli>())
+	if(v.iskind<abilityi>()) {
+		last_ability = (ability_s)v.value;
+		if(!v.counter)
+			return;
+		switch(v.value) {
+		case Mana:
+			if(v.counter < 0) {
+				fixvalue(v.counter);
+				abilities[v.value] += v.counter;
+			}
+			break;
+		case Hits:
+			if(v.counter<0)
+				damage(-v.counter);
+			break;
+		default: advance(v); break;
+		}
+	} else if(v.iskind<spelli>())
 		apply_spell(this, bsdata<spelli>::elements[v.value], v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)

@@ -878,11 +878,14 @@ static void roll_value(int bonus) {
 
 static void activate_feature(int bonus) {
 	point m = center(last_rect);
-	auto& ei = area.getfeature(m);
-	if(ei.activateto) {
-		visualize_activity(m);
-		area.setfeature(m, ei.activateto - bsdata<featurei>::elements);
-	}
+	visualize_activity(m);
+	area.setactivate(m);
+}
+
+static void destroy_feature(int bonus) {
+	point m = center(last_rect);
+	visualize_activity(m);
+	area.setfeature(m, 0);
 }
 
 void runscript(const variants& elements) {
@@ -972,6 +975,7 @@ BSDATA(script) = {
 	{"ChooseSite", choose_site},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
+	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
 	{"JumpToSite", jump_to_site},

@@ -625,7 +625,7 @@
     <Text Include="..\rules\Spells.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\SpellDescriptions.txt">
+    <Text Include="..\locale\ru\core\EffectDescriptions.txt">
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\rules\Tiles.txt">

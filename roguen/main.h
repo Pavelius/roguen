@@ -204,7 +204,7 @@ struct sitei : nameable {
 	unsigned char	walls, floors;
 	featable		feats;
 	unsigned char	doors;
-	char			chance_hidden_doors, chance_locked_doors, doors_count;
+	char			chance_hidden_doors, chance_stuck_doors, chance_locked_doors, doors_count;
 	const shapei*	shape;
 	const sitegeni*	local;
 	void			building() const;
@@ -252,7 +252,7 @@ struct areaheadi {
 	struct totali {
 		short		mysteries;
 		short		traps;
-		short		doors, doors_locked, doors_hidden;
+		short		doors, doors_locked, doors_hidden, doors_stuck;
 		short		rooms, rooms_hidden;
 		short		monsters;
 		short		boss;

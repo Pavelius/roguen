@@ -28,6 +28,14 @@ featurei* featurei::gethidden() const {
 	return 0;
 }
 
+featurei* featurei::getstuck() const {
+	for(auto& e : bsdata<featurei>()) {
+		if(e.isvisible() && e.activateto == this && e.is(StuckFeature))
+			return &e;
+	}
+	return 0;
+}
+
 featurei* featurei::getlocked() const {
 	for(auto& e : bsdata<featurei>()) {
 		if(e.activateto == this && e.isvisible()) {

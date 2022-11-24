@@ -1,5 +1,4 @@
 #include "ability.h"
-#include "answers.h"
 #include "areaf.h"
 #include "areamap.h"
 #include "direction.h"
@@ -118,8 +117,6 @@ void movable::fixvalue(int v) const {
 }
 
 void movable::fixability(ability_s i, int v) const {
-	if(!answers::interactive)
-		return;
 	if(!area.is(position, Visible))
 		return;
 	char temp[260]; stringbuilder sb(temp);

@@ -21,6 +21,7 @@ BSDATA(tilefi) = {
 	{"CanSwim"},
 	{"DangerousFeature"},
 	{"BetweenWalls"},
+	{"StuckFeature"},
 	{"Woods"},
 };
 assert_enum(tilefi, Woods)
