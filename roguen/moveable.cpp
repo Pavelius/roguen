@@ -111,9 +111,13 @@ void movable::fixeffect(const char* id) const {
 }
 
 void movable::fixvalue(int v) const {
+	fixvalue(v, (v > 0) ? 2 : 1);
+}
+
+void movable::fixvalue(int v, int color) const {
 	char temp[260]; stringbuilder sb(temp);
 	sb.add("%1i", v);
-	fixvalue(temp, (v > 0) ? 2 : 1);
+	fixvalue(temp, color);
 }
 
 void movable::fixability(ability_s i, int v) const {

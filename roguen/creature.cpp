@@ -1327,22 +1327,28 @@ bool creature::isallow(variant v) const {
 	return true;
 }
 
+static void apply_ability(creature* player, ability_s i, int value, int minimum, int maximum, int color) {
+	auto current_value = player->abilities[i];
+	value += current_value;
+	if(value < minimum)
+		value = minimum;
+	else if(value > maximum)
+		value = maximum;
+	value -= current_value;
+	if(value == 0)
+		return;
+	player->fixvalue(value, color);
+	player->abilities[i] = value;
+}
+
 void creature::apply(variant v) {
 	if(v.iskind<abilityi>()) {
 		last_ability = (ability_s)v.value;
 		if(!v.counter)
 			return;
 		switch(v.value) {
-		case Mana:
-			if(v.counter < 0) {
-				fixvalue(v.counter);
-				abilities[v.value] += v.counter;
-			}
-			break;
-		case Hits:
-			if(v.counter<0)
-				damage(-v.counter);
-			break;
+		case Mana: apply_ability(this, last_ability, v.counter, 0, abilities[ManaMaximum], 3); break;
+		case Hits: (v.counter < 0) ? damage(-v.counter) : heal(v.counter); break;
 		default: advance(v); break;
 		}
 	} else if(v.iskind<spelli>())

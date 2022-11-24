@@ -5,5 +5,5 @@
 enum ability_s : unsigned char;
 
 struct abilityi : nameable {
-	ability_s		basic;
+	ability_s	basic;
 };
