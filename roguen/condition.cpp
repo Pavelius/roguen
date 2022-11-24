@@ -3,7 +3,6 @@
 BSDATA(conditioni) = {
 	{"Identified"},
 	{"NPC"},
-	{"Random"},
 	{"Healthy"},
 	{"Wounded"},
 	{"HeavyWounded"},
@@ -15,6 +14,10 @@ BSDATA(conditioni) = {
 	{"LowInt"},
 	{"AveInt"},
 	{"HighInt"},
+	{"TargetCreatures"},
+	{"TargetFeatures"},
+	{"TargetRooms"},
+	{"Random"},
 	{"You"},
 	{"Allies"},
 	{"Enemies"},
@@ -56,6 +59,7 @@ bool creature::is(condition_s v) const {
 		else if(player->is(Ally))
 			return is(Enemy);
 		return false;
+	case Neutrals: return !is(Ally) && !is(Enemy);
 	case NoAnyFeature:
 		return area.features[getposition()] == 0;
 	default:

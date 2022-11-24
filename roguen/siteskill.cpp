@@ -1,6 +1,9 @@
 #include "ability.h"
+#include "areamap.h"
 #include "bsreq.h"
 #include "duration.h"
+#include "feature.h"
+#include "indexa.h"
 #include "skilluse.h"
 #include "siteskill.h"
 #include "main.h"
@@ -8,19 +11,41 @@
 BSMETA(siteskilli) = {
 	BSREQ(id),
 	BSENM(skill, abilityi),
-	BSREQ(site),
 	BSENM(retry, durationi),
 	BSREQ(bonus),
 	BSREQ(effect), BSREQ(fail),
 	{}};
 BSDATAC(siteskilli, 256);
 
+extern areamap area;
+extern indexa indecies;
+extern point last_index;
+
+static bool testing(variant v) {
+	if(v.iskind<featurei>()) {
+		if(v.counter < 0)
+			return area.features[last_index] == v.value;
+		else if(v.counter > 0)
+			return area.features[last_index] != v.value;
+	}
+	return true;
+}
+
+static void applying(variant v) {
+	if(v.iskind<featurei>()) {
+		if(v.counter < 0)
+			area.features[last_index] = 0;
+		else if(v.counter > 0)
+			area.features[last_index] = (unsigned char)v.value;
+	} else if(v.iskind<script>())
+		bsdata<script>::elements[v.value].proc(v.counter);
+}
+
 bool siteskilli::isvalid(const void* object) {
 	auto p = (siteskilli*)object;
-	auto rm = player->getroom();
-	if(!rm)
+	if(!player->get(p->skill))
 		return false;
-	auto su = skilluse::find(p, rm->center(), bsid(player));
+	auto su = skilluse::find(p, player->getposition(), bsid(player));
 	if(!p->retry) {
 		if(su)
 			return false;
@@ -29,5 +54,10 @@ bool siteskilli::isvalid(const void* object) {
 		if(su && game.getminutes() < next_time)
 			return false;
 	}
-	return p->site == last_site && player->get(p->skill) != 0;
+	return true;
+}
+
+void siteskilli::apply() const {
+	for(auto v : effect) {
+	}
 }

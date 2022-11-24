@@ -25,27 +25,22 @@ spella			allowed_spells;
 itema			items;
 indexa			indecies;
 creature		*player, *opponent, *enemy;
-siteskilla		last_actions;
-int				last_value;
-int				last_coins;
-greatneed*		last_need;
 ability_s		last_ability;
-variant			last_variant;
-quest*			last_quest;
-locationi*		last_location;
-const sitei*	last_site;
+siteskilla		last_actions;
+int				last_coins;
+const char*		last_id;
+point			last_index;
 globali*		last_global;
+locationi*		last_location;
+const sitegeni*	last_method;
+quest*			last_quest;
 rect			last_rect;
 roomi*			last_room;
-const char*		last_id;
+const sitei*	last_site;
+greatneed*		last_need;
+int				last_value;
 extern bool		show_floor_rect;
 static bool		stop_script;
-const sitegeni*	last_method;
-
-template<typename T>
-static bool istkind(int i) {
-	return bsdata<varianti>::elements[i].source == bsdata<T>::source_ptr;
-}
 
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
@@ -112,12 +107,9 @@ void runscript(variant v) {
 			return;
 		for(auto i = 0; i < count; i++)
 			runscript(bsdata<randomizeri>::elements[v.value].random());
-	} else if(v.iskind<script>()) {
-		pushvalue push_result(last_variant, {});
+	} else if(v.iskind<script>())
 		bsdata<script>::elements[v.value].run(v.counter);
-		if(last_variant)
-			runscript(last_variant);
-	} else if(v.iskind<monsteri>()) {
+	else if(v.iskind<monsteri>()) {
 		auto count = game.getcount(v, 0);
 		if(count < 0)
 			return;
@@ -184,6 +176,11 @@ void runscript(variant v) {
 	}
 }
 
+static void runscript(variant v, int bonus) {
+	v.counter = bonus;
+	runscript(v);
+}
+
 static bool ifscript(variant v) {
 	if(v.iskind<ifscripti>())
 		stop_script = !bsdata<ifscripti>::elements[v.value].proc(v.counter);
@@ -248,6 +245,14 @@ static void add_creatures(feat_s v) {
 	}
 }
 
+static void add_neutrals() {
+	for(auto p : creatures) {
+		if(p->is(Ally) || p->is(Enemy))
+			continue;
+		targets.add(p);
+	}
+}
+
 static void match_creatures(const variants& source) {
 	auto ps = targets.begin();
 	for(auto p : targets) {
@@ -290,12 +295,12 @@ static void match_features(const variants& source) {
 	indecies.count = ps - indecies.begin();
 }
 
-bool choose_targets(int kind, unsigned flags, const variants& effects) {
+bool choose_targets(unsigned flags, const variants& effects) {
 	indecies.clear();
 	items.clear();
 	rooms.clear();
 	targets.clear();
-	if(istkind<creature>(kind)) {
+	if(FGT(flags, TargetCreatures)) {
 		if(FGT(flags, Allies)) {
 			if(player->is(Ally))
 				add_creatures(Ally);
@@ -303,11 +308,13 @@ bool choose_targets(int kind, unsigned flags, const variants& effects) {
 				add_creatures(Enemy);
 		}
 		if(FGT(flags, Enemies)) {
-			for(auto p : enemies)
-				targets.add(p);
+			if(player->is(Ally))
+				add_creatures(Enemy);
+			if(player->is(Enemy))
+				add_creatures(Ally);
 		}
-		if((flags & (FG(Allies) & FG(Enemies))) == 0)
-			targets = creatures;
+		if(FGT(flags, Neutrals))
+			add_neutrals();
 		if(FGT(flags, You))
 			targets.add(player);
 		if(!FGT(flags, Ranged))
@@ -315,16 +322,15 @@ bool choose_targets(int kind, unsigned flags, const variants& effects) {
 		targets.distinct();
 		match_creatures(effects);
 		targets.sort(player->getposition());
-	} else if(istkind<itemi>(kind)) {
-		for(auto p : targets)
-			items.select(p);
-	} else if(istkind<featurei>(kind)) {
+	}
+	if(FGT(flags, TargetFeatures)) {
 		indecies.clear();
 		indecies.select(player->getposition(), FGT(flags, Ranged) ? 3 : 1);
 		indecies.match(fntis<featurei, &featurei::isvisible>, true);
 		match_features(effects);
 		indecies.sort(player->getposition());
-	} else if(istkind<sitei>(kind)) {
+	}
+	if(FGT(flags, TargetRooms)) {
 		rooms.select(fntis<roomi, &roomi::islocal>);
 		if(!FGT(flags, You))
 			rooms.remove(player->getroom());
@@ -343,16 +349,24 @@ bool choose_targets(int kind, unsigned flags, const variants& effects) {
 		|| indecies.getcount() != 0;
 }
 
-static bool choose_target_interactive(const char* id, int kind, bool autochooseone) {
-	auto pn = id ? getdescription(str("%1Choose", id)) : 0;
-	pushvalue push_width(window_width, 300);
-	if(istkind<creature>(kind))
-		opponent = targets.choose(pn, getnm("Cancel"), autochooseone);
-	else if(istkind<sitei>(kind))
-		last_room = rooms.choose(pn, getnm("Cancel"), autochooseone);
-	else
+static bool choose_target_interactive(const char* id, unsigned flags, bool autochooseone) {
+	if(!id)
 		return true;
-	return opponent || last_room;
+	auto pn = getdescription(str("%1Choose", id));
+	if(!pn)
+		return true;
+	pushvalue push_width(window_width, 300);
+	if(FGT(flags, TargetCreatures)) {
+		targets.data[0] = targets.choose(pn, getnm("Cancel"), autochooseone);
+		if(!targets.data[0])
+			return false;
+	}
+	if(FGT(flags, TargetRooms)) {
+		rooms.data[0] = rooms.choose(pn, getnm("Cancel"), autochooseone);
+		if(!rooms.data[0])
+			return false;
+	}
+	return true;
 }
 
 static void action_text(const creature* player, const char* id, const char* action) {
@@ -368,17 +382,13 @@ static void action_text(const creature* player, const char* id, const char* acti
 		player->act(pn);
 }
 
-static bool bound_targets(const char* id, int kind, int multi_targets, bool interactive) {
+static bool bound_targets(const char* id, unsigned flags, int multi_targets, bool interactive) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
 	opponent = 0; last_room = 0;
 	if(!multi_targets) {
-		if(!choose_target_interactive(id, kind, false))
+		if(!choose_target_interactive(id, flags, false))
 			return false;
-		if(istkind<sitei>(kind))
-			rooms.data[0] = last_room;
-		else if(istkind<creature>(kind))
-			targets.data[0] = opponent;
 	}
 	if(targets.count > target_count)
 		targets.count = target_count;
@@ -406,23 +416,27 @@ void creature::cast(const spelli& e, int level, int mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!choose_targets(e.goal, e.target, e.effect) && !e.summon) {
+	if(!choose_targets(e.target, e.effect) && !e.summon) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	if(!bound_targets(e.id, e.goal, e.is(Multitarget) ? level : 0, ishuman()))
+	if(!bound_targets(e.id, e.target, e.is(Multitarget) ? level : 0, ishuman()))
 		return;
 	action_text(this, e.id, "Casting");
-	if(istkind<creature>(e.goal)) {
+	if(FGT(e.target, TargetCreatures)) {
 		for(auto p : targets)
 			apply_spell(p, e, level);
-	} else if(istkind<featurei>(e.goal)) {
+	} else if(FGT(e.target, TargetFeatures)) {
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
 			runscript(e.effect);
 		}
-	} else
-		runscript(e.effect);
+	} else if(FGT(e.target, TargetRooms)) {
+		for(auto p : rooms) {
+			pushvalue push_rect(last_room, p);
+			runscript(e.effect);
+		}
+	}
 	if(e.summon) {
 		auto count = e.getcount(level);
 		summon(player->getposition(), e.summon, count, level);
@@ -534,13 +548,13 @@ static void chat_someone() {
 }
 
 static void chat_someone(int bonus) {
-	auto kind = bsid(bsdata<varianti>::find("Creature"));
-	choose_targets(kind, 0, {});
+	unsigned target = FG(TargetFeatures);
+	choose_targets(target, {});
 	if(!targets) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
 	}
-	if(!choose_target_interactive("Creature", kind, true))
+	if(!choose_target_interactive("Creature", target, true))
 		return;
 	chat_someone();
 	player->wait();
@@ -725,34 +739,25 @@ static void show_images(int bonus) {
 	}
 }
 
-static void set_result(variant v, int bonus) {
-	last_variant = v;
-	if(last_variant)
-		last_variant.counter = bonus;
-}
-
 static void quest_minion(int bonus) {
-	last_variant.clear();
 	if(!last_quest)
 		return;
 	monsteri* pm = last_quest->problem;
 	if(pm)
-		set_result(pm->ally(), bonus);
+		runscript(pm->ally(), bonus);
 }
 
 static void quest_guardian(int bonus) {
-	last_variant.clear();
 	if(last_quest) {
 		if(last_quest->problem.iskind<monsteri>())
 			areahead.total.boss++;
-		set_result(last_quest->problem, bonus);
+		runscript(last_quest->problem, bonus);
 	}
 }
 
 static void quest_reward(int bonus) {
-	last_variant.clear();
 	if(last_quest && last_quest->reward)
-		set_result(last_quest->reward, bonus);
+		runscript(last_quest->reward, bonus);
 }
 
 static void quest_landscape(int bonus) {
@@ -764,30 +769,28 @@ static void quest_landscape(int bonus) {
 }
 
 static void site_floor(int bonus) {
-	last_variant.clear();
 	if(last_site && last_site->floors)
-		set_result(bsdata<tilei>::elements + last_site->floors, bonus);
+		runscript(bsdata<tilei>::elements + last_site->floors, bonus);
 	else if(last_location && last_location->floors)
-		set_result(bsdata<tilei>::elements + last_location->floors, bonus);
+		runscript(bsdata<tilei>::elements + last_location->floors, bonus);
 }
 
 static void site_wall(int bonus) {
-	last_variant.clear();
 	if(last_site && last_site->walls)
-		set_result(bsdata<tilei>::elements + last_site->walls, bonus);
+		runscript(bsdata<tilei>::elements + last_site->walls, bonus);
 	else if(last_location && last_location->walls)
-		set_result(bsdata<tilei>::elements + last_location->walls, bonus);
+		runscript(bsdata<tilei>::elements + last_location->walls, bonus);
 }
 
-static void choose_spell(int bonus) {
+static const spelli* choose_spell(int bonus) {
 	pushvalue push_width(window_width, 300);
-	last_variant = allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"), player);
+	return allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"), player);
 }
 
 static void cast_spell(int bonus) {
-	choose_spell(bonus);
-	if(last_variant.iskind<spelli>())
-		player->cast(bsdata<spelli>::elements[last_variant.value]);
+	auto p = choose_spell(bonus);
+	if(p)
+		player->cast(*p);
 }
 
 static void heal_player(int bonus) {
@@ -972,7 +975,6 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
 	{"ChooseCreature", choose_creature},
-	{"ChooseSpell", choose_spell},
 	{"ChooseSite", choose_site},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},

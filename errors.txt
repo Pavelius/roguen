@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `StuckDoor`
+﻿In file `Descriptions.txt`:
+Can't find script named 'CastSpell' in hotkey mapping

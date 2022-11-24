@@ -1,29 +1,31 @@
 #Spell
 
-CureWounds mana(10) count(1 4) goal(Creature)
- target You Allies
+CureWounds mana(10) count(1 4)
+ target TargetCreatures You Allies
  effect Wounded
-Entaglement mana(6) goal(Creature)
- target Enemies Neutrals Ranged
+Entaglement mana(6)
+ target TargetCreatures Enemies Ranged
  effect NoAnyFeature ThornBush
-Gate mana(40) goal(Feature)
- target You
-KnockDoor mana(10) goal(Feature)
- target Ranged
+Gate mana(40)
+ target TargetFeatures
+KnockDoor mana(10)
+ target TargetFeatures Ranged
  effect Locked Activate
-Light mana(5) duration(Minute20PL) goal(Creature)
- target You
+Light mana(5) duration(Minute20PL)
+ target TargetCreatures You
  effect LightSource
-ManaRegeneration duration(Hour1PL) goal(Creature)
- target You
-Regeneration mana(15) duration(Hour1PL) goal(Creature)
- target You
-Sleep mana(5) duration(Minute20) goal(Creature)
- target Enemies Neutrals Multitarget Ranged
-SummonUndead mana(20) goal(Creature)
+ManaRegeneration duration(Hour1PL)
+ target TargetCreatures You
+Regeneration mana(15) duration(Hour1PL)
+ target TargetCreatures You
+Sleep mana(5) duration(Minute20)
+ target TargetCreatures Enemies Neutrals Multitarget Ranged
+SummonUndead mana(20)
+ target TargetCreatures You
  summon Skeleton+4 Zombie+2 Ghoul+1
-Teleport mana(5) goal(Site)
+Teleport mana(5)
+ target TargetRooms
  effect JumpToSite
-Web mana(4) goal(Creature)
- target Enemies Neutrals Multitarget Ranged
+Web mana(4)
+ target TargetCreatures Enemies Neutrals Multitarget Ranged
  effect Webbed

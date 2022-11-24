@@ -19,7 +19,7 @@ struct defenceg {
 extern collection<roomi> rooms;
 extern siteskilla last_actions;
 void apply_spell(creature* player, const spelli& ei, int level);
-bool choose_targets(int kind, unsigned flags, const variants& effects);
+bool choose_targets(unsigned flags, const variants& effects);
 
 void rollg::make(int v) {
 	roll = 1 + rand() % 100;
@@ -367,7 +367,7 @@ static bool spell_allowuse(const void* object) {
 	auto p = (spelli*)object;
 	if(p->summon.size() != 0)
 		return true;
-	return choose_targets(p->goal, p->target, p->effect);
+	return choose_targets(p->target, p->effect);
 }
 
 static bool spell_iscombat(const void* object) {

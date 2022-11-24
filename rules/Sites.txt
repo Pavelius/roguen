@@ -198,8 +198,3 @@ RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
  chance DefaultDungeon
-
-#SiteSkill
-
-KnowRumor site(Tavern) skill(Charisma)
- effect Experience+10

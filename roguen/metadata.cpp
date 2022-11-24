@@ -141,7 +141,6 @@ BSMETA(sitegeni) = {
 BSMETA(spelli) = {
 	BSREQ(id),
 	BSREQ(mana), BSREQ(count),
-	BSENM(goal, varianti),
 	BSENM(duration, durationi),
 	BSFLG(target, conditioni),
 	BSREQ(effect), BSREQ(summon),

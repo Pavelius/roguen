@@ -53,10 +53,11 @@ enum ability_s : unsigned char {
 	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Money,
 };
 enum condition_s : unsigned char {
-	Identified, NPC, Random,
+	Identified, NPC,
 	NoWounded, Wounded, HeavyWounded,
 	Unaware, NoAnyFeature, Locked,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
+	TargetCreatures, TargetFeatures, TargetRooms, Random,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 enum triggern : unsigned char {
@@ -268,7 +269,6 @@ extern gamei		game;
 extern creature*	last_enemy;
 extern int			last_value;
 extern ability_s	last_ability;
-extern variant		last_variant;
 extern quest*		last_quest;
 extern rect			last_rect;
 extern const sitei*	last_site;
