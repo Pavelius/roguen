@@ -20,7 +20,7 @@ Regeneration mana(15) duration(Hour1PL)
  target TargetCreatures You
 Sleep mana(5) duration(Minute20)
  target TargetCreatures Enemies Neutrals Multitarget Ranged
-SummonUndead mana(20)
+SummonUndead mana(20) count(0 0 1)
  target TargetCreatures You
  summon Skeleton+4 Zombie+2 Ghoul+1
 Teleport mana(5)

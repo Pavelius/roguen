@@ -527,7 +527,6 @@ static void create_area(geoposition geo, variant tile) {
 	add_area_sites(tile);
 	rect all = {0, 0, area.mps - 1, area.mps - 1};
 	pushvalue push_rect(last_rect, all);
-	pushvalue push_method(last_method, last_location->local);
 	if(last_location->global)
 		(last_location->*last_location->global->proc)();
 	else

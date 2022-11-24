@@ -21,9 +21,9 @@ void visualize_images(res pid, point size, point offset);
 
 creaturea		creatures, enemies, targets;
 rooma			rooms;
-spella			allowed_spells;
 itema			items;
 indexa			indecies;
+spella			allowed_spells;
 creature		*player, *opponent, *enemy;
 ability_s		last_ability;
 siteskilla		last_actions;
@@ -32,7 +32,6 @@ const char*		last_id;
 point			last_index;
 globali*		last_global;
 locationi*		last_location;
-const sitegeni*	last_method;
 quest*			last_quest;
 rect			last_rect;
 roomi*			last_room;
@@ -41,6 +40,14 @@ greatneed*		last_need;
 int				last_value;
 extern bool		show_floor_rect;
 static bool		stop_script;
+
+static const sitegeni* get_local_method() {
+	if(last_site && last_site->local)
+		return last_site->local;
+	if(last_location && last_location->local)
+		return last_location->local;
+	return 0;
+}
 
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
@@ -145,11 +152,9 @@ void runscript(variant v) {
 			place_item(area.get(last_rect), bsdata<itemi>::elements + v.value);
 	} else if(v.iskind<sitei>()) {
 		pushvalue push_rect(last_rect);
-		pushvalue push_method(last_method);
 		pushvalue push_site(last_site);
 		last_site = bsdata<sitei>::elements + v.value;
-		if(last_site->local)
-			last_method = last_site->local;
+		auto last_method = get_local_method();
 		if(last_method)
 			(last_site->*last_method->proc)();
 		add_room(last_site, last_rect);
@@ -201,9 +206,6 @@ static bool ifscript(variant v) {
 	} else
 		return false;
 	return true;
-}
-
-static void choose_creature(int bonus) {
 }
 
 static void move_left(int bonus) {
@@ -385,17 +387,16 @@ static void action_text(const creature* player, const char* id, const char* acti
 static bool bound_targets(const char* id, unsigned flags, int multi_targets, bool interactive) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
-	opponent = 0; last_room = 0;
 	if(!multi_targets) {
 		if(!choose_target_interactive(id, flags, false))
 			return false;
 	}
 	if(targets.count > target_count)
 		targets.count = target_count;
-	if(rooms.count > target_count)
-		rooms.count = target_count;
 	if(indecies.count > target_count)
 		indecies.count = target_count;
+	if(rooms.count > target_count)
+		rooms.count = target_count;
 	return true;
 }
 
@@ -437,10 +438,8 @@ void creature::cast(const spelli& e, int level, int mana) {
 			runscript(e.effect);
 		}
 	}
-	if(e.summon) {
-		auto count = e.getcount(level);
-		summon(player->getposition(), e.summon, count, level);
-	}
+	if(e.summon)
+		summon(player->getposition(), e.summon, e.getcount(level), level);
 	add(Mana, -mana);
 	update();
 	wait();
@@ -507,9 +506,9 @@ static void inventory(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	dialog_message(getdescription("LoseGame1"));
-	//console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
-	//actable::pressspace();
+	//dialog_message(getdescription("LoseGame1"));
+	console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
+	draw::pause();
 }
 
 static void open_nearest_door(int bonus) {
@@ -548,7 +547,7 @@ static void chat_someone() {
 }
 
 static void chat_someone(int bonus) {
-	unsigned target = FG(TargetFeatures);
+	unsigned target = FG(TargetCreatures) | FG(Allies) | FG(Neutrals);
 	choose_targets(target, {});
 	if(!targets) {
 		player->actp(getnm("NoCreaturesNearby"));
@@ -556,9 +555,12 @@ static void chat_someone(int bonus) {
 	}
 	if(!choose_target_interactive("Creature", target, true))
 		return;
-	chat_someone();
-	player->wait();
-	opponent->wait();
+	for(auto p : targets) {
+		pushvalue push(opponent, p);
+		chat_someone();
+		player->wait();
+		opponent->wait();
+	}
 }
 
 static void test_rumor(int bonus) {
@@ -748,9 +750,11 @@ static void quest_minion(int bonus) {
 }
 
 static void quest_guardian(int bonus) {
-	if(last_quest) {
-		if(last_quest->problem.iskind<monsteri>())
-			areahead.total.boss++;
+	if(!last_quest)
+		return;
+	monsteri* pm = last_quest->problem;
+	if(pm) {
+		areahead.total.boss++;
 		runscript(last_quest->problem, bonus);
 	}
 }
@@ -841,14 +845,6 @@ static void choose_action(int bonus) {
 		runscript(pa);
 	}
 	player->wait();
-}
-
-static void choose_site(int bonus) {
-	if(player->ishuman()) {
-		auto pn = getdescription(str("%1%2", "Teleport", "Choose"));
-		last_room = rooms.choose(pn, getnm("Cancel"), false);
-	} else
-		last_room = rooms.random();
 }
 
 static void jump_to_site(int bonus) {
@@ -974,8 +970,6 @@ BSDATA(script) = {
 	{"Activate", activate_feature},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
-	{"ChooseCreature", choose_creature},
-	{"ChooseSite", choose_site},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},

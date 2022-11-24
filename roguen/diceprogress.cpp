@@ -14,7 +14,7 @@ int diceprogress::roll(int level) const {
 		level = bound;
 	int v = 0;
 	if(multiplier)
-		v = level * multiplier;
+		v += level * multiplier;
 	if(divider)
 		v = v / divider;
 	return v + dice::roll();
