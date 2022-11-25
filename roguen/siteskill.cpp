@@ -31,6 +31,14 @@ static bool testing(variant v) {
 	return true;
 }
 
+static bool testing(const variants& source) {
+	for(auto v : source) {
+		if(!testing(v))
+			return false;
+	}
+	return true;
+}
+
 static void applying(variant v) {
 	if(v.iskind<featurei>()) {
 		if(v.counter < 0)
@@ -41,23 +49,30 @@ static void applying(variant v) {
 		bsdata<script>::elements[v.value].proc(v.counter);
 }
 
+static void applying(const variants& source) {
+	for(auto v : source)
+		applying(v);
+}
+
 bool siteskilli::isvalid(const void* object) {
 	auto p = (siteskilli*)object;
 	if(!player->get(p->skill))
 		return false;
-	auto su = skilluse::find(p, player->getposition(), bsid(player));
-	if(!p->retry) {
-		if(su)
-			return false;
-	} else {
-		auto next_time = su->stamp + bsdata<durationi>::get(p->retry).get(1);
-		if(su && game.getminutes() < next_time)
-			return false;
+	auto rm = player->getroom();
+	if(rm) {
+		auto su = skilluse::find(p, player->getposition(), bsid(player));
+		if(!p->retry) {
+			if(su)
+				return false;
+		} else {
+			auto next_time = su->stamp + bsdata<durationi>::get(p->retry).get(1);
+			if(su && game.getminutes() < next_time)
+				return false;
+		}
 	}
-	return true;
+	return testing(p->effect);
 }
 
 void siteskilli::apply() const {
-	for(auto v : effect) {
-	}
+	applying(effect);
 }

@@ -359,13 +359,11 @@ static bool choose_target_interactive(const char* id, unsigned flags, bool autoc
 		return true;
 	pushvalue push_width(window_width, 300);
 	if(FGT(flags, TargetCreatures)) {
-		targets.data[0] = targets.choose(pn, getnm("Cancel"), autochooseone);
-		if(!targets.data[0])
+		if(!targets.chooseu(pn, getnm("Cancel")))
 			return false;
 	}
 	if(FGT(flags, TargetRooms)) {
-		rooms.data[0] = rooms.choose(pn, getnm("Cancel"), autochooseone);
-		if(!rooms.data[0])
+		if(!rooms.chooseu(pn, getnm("Cancel")))
 			return false;
 	}
 	return true;

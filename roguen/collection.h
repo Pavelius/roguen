@@ -5,6 +5,7 @@
 struct collectiona : adat<void*, 256> {
 	typedef void* fngroup(const void* object);
 	void*	choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const;
+	bool	chooseu(fngetname proc, const char* title, const char* cancel) const;
 	void	distinct();
 	void	group(fngroup proc);
 	void	match(fnvisible proc, bool keep);
@@ -24,6 +25,7 @@ struct collection : collectiona {
 	T*		choose(const char* title, const char* cancel = 0, bool autochoose = true) const {
 		return (T*)collectiona::choose(T::getname, title, cancel, autochoose);
 	}
+	bool	chooseu(const char* title, const char* cancel = 0) const { return collectiona::chooseu(T::getname, title, cancel); }
 	T**		end() const { return (T**)data + count; }
 	T*		pick() { return (T*)collectiona::pick(); }
 	T*		random() const { return (T*)collectiona::random(); }
