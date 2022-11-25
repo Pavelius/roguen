@@ -30,6 +30,8 @@ AltarEvil priority(6) features(58 1)
 
 Pit priority(6) features(76 1)
  flags Impassable
+AcidTrap priority(6) features(28 1)
+ flags TrappedFeature
 
 Door priority(7) features(39 1) minimap(102 70 18 128)
  flags BetweenWalls Impassable

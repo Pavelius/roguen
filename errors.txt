@@ -1,2 +1,21 @@
 ﻿In file `Descriptions.txt`:
-Can't find script named 'CastSpell' in hotkey mapping
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/attack_frame_01.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/attack_frame_02.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/attack_frame_03.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/attack_frame_04.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/attack_frame_05.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/command_frame_01.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/command_frame_02.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/command_frame_03.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/command_frame_04.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/command_frame_05.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/look_frame_01.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/look_frame_02.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/look_frame_03.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/look_frame_04.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/look_frame_05.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/teleport_frame_01.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/teleport_frame_02.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/teleport_frame_03.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/teleport_frame_04.png
+Can't convert file d:/games/adom/gfx/adom/nterface/cursor/teleport_frame_05.png

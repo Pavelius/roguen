@@ -14,7 +14,7 @@ BSMETA(featurei) = {
 	BSREQ(minimap),
 	BSREQ(activate_item),
 	BSREQ(random_count),
-	BSREQ(leadto), BSREQ(activateto), BSREQ(activate_script),
+	BSREQ(leadto), BSREQ(activateto), BSREQ(effect),
 	BSREQ(lead),
 	BSREQ(chance_auto_activate),
 	{}};

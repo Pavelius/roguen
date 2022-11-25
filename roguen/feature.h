@@ -12,7 +12,7 @@ struct featurei {
 	color			minimap;
 	featurei		*leadto, *activateto;
 	variant			activate_item;
-	variants		activate_script;
+	variants		effect;
 	char			random_count;
 	char			lead;
 	char			chance_auto_activate;

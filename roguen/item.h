@@ -53,6 +53,7 @@ public:
 	void			clear() { type = count = 0; }
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
+	void			damage() {}
 	void			drop(point m);
 	short unsigned	getkind() const { return type; }
 	int				getavatar() const { return geti().wear_index; }

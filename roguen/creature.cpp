@@ -97,14 +97,16 @@ static void poison_attack(const creature* player, creature* enemy, const item& w
 	if(attack_effect(player, weapon, WeakPoison))
 		strenght += xrand(1, 3);
 	if(attack_effect(player, weapon, StrongPoison))
-		strenght += xrand(3, 6);
+		strenght += xrand(2, 6);
 	if(attack_effect(player, weapon, DeathPoison))
-		strenght += xrand(6, 12);
+		strenght += xrand(3, 9);
 	poison_attack(enemy, strenght);
 }
 
 static void illness_attack(creature* player, int value) {
 	if(value <= 0)
+		return;
+	if(resist_test(player, DiseaseResist, DiseaseImmunity))
 		return;
 	auto v = player->get(Illness) + value;
 	if(v >= player->get(Strenght))
@@ -122,6 +124,22 @@ static void special_attack(creature* player, const item& weapon, creature& enemy
 		pierce += 4;
 	if(attack_effect(player, weapon, MightyHit))
 		damage += 2;
+}
+
+static void acid_attack(creature* player, int value) {
+	player->damage(value);
+	for(auto& e : player->equipment()) {
+		if(value <= 0)
+			break;
+		if(!e)
+			continue;
+		if(d100() < (60 - value * 4))
+			continue;
+		value--;
+		if(resist_test(player, AcidResistance, AcidImmunity))
+			continue;
+		e.damage();
+	}
 }
 
 static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
@@ -238,6 +256,20 @@ static bool check_dangerous_feature(creature* p, point m) {
 		}
 		p->act(getnme(str("%1Break", ei.id)));
 		area.setfeature(m, 0);
+	}
+	return true;
+}
+
+static bool check_trap(creature* p, point m) {
+	auto& ei = area.getfeature(m);
+	if(ei.is(TrappedFeature)) {
+		auto bonus = ei.isvisible() ? 20 : -30;
+		if(!p->roll(Wits, bonus)) {
+			auto pn = getdescription(ei.id);
+			if(pn)
+				p->act(pn, getnm(ei.id));
+			p->apply(ei.effect);
+		}
 	}
 	return true;
 }
@@ -904,6 +936,7 @@ void creature::movestep(point ni) {
 	}
 	update_room();
 	pay_movement(this);
+	check_trap(this, getposition());
 }
 
 void creature::finish() {
