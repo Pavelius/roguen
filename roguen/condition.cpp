@@ -1,3 +1,4 @@
+#include "condition.h"
 #include "main.h"
 
 BSDATA(conditioni) = {

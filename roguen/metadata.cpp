@@ -1,4 +1,5 @@
 #include "bsreq.h"
+#include "condition.h"
 #include "ifscript.h"
 #include "greatneed.h"
 #include "main.h"

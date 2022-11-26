@@ -2149,7 +2149,7 @@ void surface::blend(const surface& source, int alpha) {
 		width, height, alpha);
 }
 
-void surface::blit(int x1, int y1, int w, int h, unsigned feats, const surface& ss, int xs, int ys) {
+void surface::blit(int x1, int y1, int w, int h, bool transparent, const surface& ss, int xs, int ys) {
 	if(ss.bpp != bpp)
 		return;
 	int ox;
@@ -2159,7 +2159,7 @@ void surface::blit(int x1, int y1, int w, int h, unsigned feats, const surface& 
 		h = ss.height;
 	if(w > ss.width)
 		w = ss.width;
-	if(feats & ImageTransparent)
+	if(transparent)
 		cpy32t(
 			ptr(x1, y1), scanline,
 			const_cast<surface&>(ss).ptr(xs, ys) + ox * 4, ss.scanline,
@@ -2171,9 +2171,9 @@ void surface::blit(int x1, int y1, int w, int h, unsigned feats, const surface& 
 			w, h, 4);
 }
 
-void surface::blit(int x, int y, int width, int height, unsigned feats, const surface& source, int x_source, int y_source, int width_source, int height_source) {
+void surface::blit(int x, int y, int width, int height, bool transparent, const surface& source, int x_source, int y_source, int width_source, int height_source) {
 	if(width == width_source && height == height_source) {
-		blit(x, y, width, height, feats, source, x_source, y_source);
+		blit(x, y, width, height, transparent, source, x_source, y_source);
 		return;
 	}
 	if(source.bpp != bpp)

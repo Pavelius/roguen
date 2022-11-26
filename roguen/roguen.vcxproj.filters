@@ -566,6 +566,15 @@
     <ClInclude Include="siteskill.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="resid.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="class.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="condition.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

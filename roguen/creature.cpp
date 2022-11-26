@@ -1,5 +1,6 @@
 #include "boost.h"
 #include "charname.h"
+#include "condition.h"
 #include "indexa.h"
 #include "main.h"
 #include "siteskill.h"

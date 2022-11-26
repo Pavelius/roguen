@@ -256,9 +256,11 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="charname.h" />
+    <ClInclude Include="class.h" />
     <ClInclude Include="collection.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
+    <ClInclude Include="condition.h" />
     <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="framerange.h" />
@@ -298,6 +300,7 @@
     <ClInclude Include="race.h" />
     <ClInclude Include="randomizer.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="resid.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="script.h" />

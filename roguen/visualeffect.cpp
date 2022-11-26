@@ -2,7 +2,7 @@
 #include "draw.h"
 #include "draw_object.h"
 #include "visualeffect.h"
-#include "main.h"
+#include "resid.h"
 
 using namespace draw;
 

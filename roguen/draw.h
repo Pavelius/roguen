@@ -143,8 +143,8 @@ struct surface {
 	constexpr explicit operator bool() const { return bits != 0; }
 	static unsigned char* allocator(unsigned char* bits, unsigned size);
 	void				blend(const surface& source, int alpha);
-	void				blit(int x, int y, int width, int height, unsigned feats, const surface& source, int x_source, int y_source);
-	void				blit(int x, int y, int width, int height, unsigned feats, const surface& source, int x_source, int y_source, int width_source, int height_source);
+	void				blit(int x, int y, int width, int height, bool transparent, const surface& source, int x_source, int y_source);
+	void				blit(int x, int y, int width, int height, bool transparent, const surface& source, int x_source, int y_source, int width_source, int height_source);
 	void				clear() { resize(0, 0, 0, true); }
 	void				convert(int bpp, color* pallette);
 	void				flipv();

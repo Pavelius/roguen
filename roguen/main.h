@@ -3,6 +3,7 @@
 #include "answers.h"
 #include "areaf.h"
 #include "areamap.h"
+#include "class.h"
 #include "collection.h"
 #include "color.h"
 #include "crt.h"
@@ -32,13 +33,8 @@
 
 #pragma once
 
-enum class res {
-	Monsters,
-	Borders, Floor, Walls, Decals, Features, Shadows, Items,
-	Attack, Conditions, Splash,
-	Fow, Los, Missile,
-	PCBody, PCArms, PCAccessories,
-};
+enum condition_s : unsigned char;
+
 enum ability_s : unsigned char {
 	LineOfSight,
 	Strenght, Dexterity, Wits, Charisma,
@@ -52,14 +48,6 @@ enum ability_s : unsigned char {
 	HitsMaximum, ManaMaximum,
 	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Money,
 };
-enum condition_s : unsigned char {
-	Identified, NPC,
-	NoWounded, Wounded, HeavyWounded,
-	Unaware, NoAnyFeature, Locked,
-	NoInt, AnimalInt, LowInt, AveInt, HighInt,
-	TargetCreatures, TargetFeatures, TargetRooms, Random,
-	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
-};
 enum triggern : unsigned char {
 	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
 	EverySeveralDays, EverySeveralDaysForP1,
@@ -67,11 +55,6 @@ enum triggern : unsigned char {
 extern stringbuilder console;
 class roomi;
 class creature;
-struct conditioni : nameable {
-};
-struct classi : nameable {
-	char			player;
-};
 struct itema : collection<item> {
 	void			select(point m);
 	void			select(creature* p);
@@ -252,11 +235,6 @@ public:
 	static void		writelog();
 };
 namespace draw {
-struct keybind {
-	unsigned		key;
-	const void*		data;
-	constexpr explicit operator bool() const { return key != 0; }
-};
 bool				isnext();
 }
 inline int			d100() { return rand() % 100; }

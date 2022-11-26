@@ -7,6 +7,7 @@
 #include "main.h"
 #include "race.h"
 #include "resource.h"
+#include "resid.h"
 #include "screenshoot.h"
 #include "visualeffect.h"
 
@@ -23,7 +24,6 @@ static unsigned long	last_tick_message;
 static unsigned long	start_stamp;
 static int				wears_offset = 80;
 static rect				message_rect;
-static keybind*			keybinds;
 bool					show_floor_rect;
 int						window_width = 480;
 int						window_height = 280;
