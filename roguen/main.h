@@ -91,7 +91,6 @@ public:
 	void			apply(variant v);
 	void			apply(const featable& v) { feats.add(v); }
 	void			apply(const variants& source);
-	void			attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void			attackmelee(creature& enemy);
 	void			attackrange(creature& enemy);
 	void			attackthrown(creature& enemy);
@@ -116,7 +115,6 @@ public:
 	int				get(ability_s v) const { return abilities[v]; }
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
 	const classi&	getclass() const { return bsdata<classi>::elements[class_id]; }
-	int				getdamage(wear_s w) const;
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;

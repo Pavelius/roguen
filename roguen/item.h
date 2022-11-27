@@ -1,6 +1,7 @@
 #include "feat.h"
 #include "magic.h"
 #include "point.h"
+#include "list.h"
 #include "wear.h"
 #include "variant.h"
 
@@ -8,34 +9,27 @@
 
 enum ability_s : unsigned char;
 
-struct itemupgrade : nameable {
-	char			damage, parry, block, dodge;
+struct itemstat : nameable {
+	char			damage, armor, skill, parry, dodge, block, block_ranged, pierce, speed, mistery;
+	char			enemy_parry, enemy_block;
 	short			weight, cost;
+	featable		feats;
+	variants		dress;
 };
-struct itemi : nameable {
-	struct weaponi {
-		char		parry, enemy_parry;
-		char		block, enemy_block, block_ranged;
-		char		damage, pierce;
-		char		wait;
-		short 		ammunition;
-	};
-	int				cost, weight, count;
+struct itemi : itemstat {
+	short			count;
 	short			avatar;
 	wear_s			wear;
-	ability_s		ability;
-	char			dodge;
-	char			bonus;
-	weaponi			weapon;
-	featable		feats;
 	char			wear_index;
-	char			mistery;
-	variant			dress;
 	variants		use;
+	const listi*	prefix;
+	const listi*	suffix;
+	const itemi*	ammunition;
 	bool operator==(const itemi& v) const { return this == &v; }
-	const itemi*	getammunition() const { return weapon.ammunition ? bsdata<itemi>::elements + weapon.ammunition : 0; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
 	bool			is(feat_s v) const { return feats.is(v); }
+	bool			isblock() const { return block || block_ranged; }
+	bool			ismelee() const { return wear == MeleeWeapon || wear == MeleeWeaponOffhand; }
 	void			paint() const; // Exported paint function
 };
 class item {
@@ -44,8 +38,8 @@ class item {
 		unsigned short count;
 		struct {
 			magic_s	magic : 2;
-			unsigned char identified : 1;
 			unsigned char broken : 2;
+			unsigned char identified : 1;
 			unsigned char charges : 3;
 			unsigned char prefix : 4;
 			unsigned char suffix : 4;
@@ -72,7 +66,8 @@ public:
 	const char*		getname() const { return geti().getname(); }
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*		getfullname(int price_percent = 0) const;
-	bool			is(ability_s v) const { return geti().ability == v; }
+	const itemstat* getprefix() const;
+	const itemstat* getsuffix() const;
 	bool			is(feat_s v) const { return geti().feats.is(v); }
 	bool			is(wear_s v) const;
 	bool			is(const itemi& v) const { return v == geti(); }

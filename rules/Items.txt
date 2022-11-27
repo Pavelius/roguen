@@ -1,6 +1,40 @@
+#ItemUpgrade
+
+Ashen
+ feats NoDamageUndead
+Balanced skill(20) parry(-20)
+Barbaric skill(-15) damage(3)
+Barbed damage(1)
+Brutal damage(2) parry(-10)
+ExtraHeavy weight(400)
+Fickle
+ feats MissHalfTime
+Flaming
+ feats FireDamage
+Green
+ feats AcidResistance
+Heavy weight(200)
+Hefty weight(120) damage(3) skill(-5)
+Light weight(50)
+Masterwork skill(15)
+Mild damage(-2)
+Nasty damage(1)
+Red
+ feats FireResistance
+Swift speed(5)
+UltraHeavy weight(800)
+Unwieldy skill(-30)
+Weeping
+ feats BleedingHit
+White
+ feats ColdResistance
+Wicked damage(3) parry(-10)
+Yellow
+ feats StunResistance
+
 #Item
 
-NoItem avatar(1) wear(MeleeWeapon) ability(WeaponSkill)
+NoItem avatar(1) wear(MeleeWeapon)
  feats Natural
 
 SP cost(1) avatar(898) count(1)
@@ -28,58 +62,41 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 
-BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar(447) ability(WeaponSkill)
+BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2)
  feats CutWoods
- weapon damage(4) parry(-50) pierce(2)
-Bite wear(MeleeWeapon) ability(WeaponSkill)
+Bite wear(MeleeWeapon) damage(3) parry(-20) enemy_parry(-50)
  feats Natural
- weapon damage(3) parry(-20) enemy_parry(-50)
-BruteSword cost(10) weight(80) wear(MeleeWeapon) avatar(65) wear_index(1) ability(WeaponSkill)
- weapon damage(4) parry(-20)
-Claws wear(MeleeWeapon) ability(WeaponSkill)
+BruteSword cost(10) weight(80) wear(MeleeWeapon) wear_index(1) avatar(65) damage(4) parry(-20)
+Claws wear(MeleeWeapon) damage(2) parry(-10)
  feats Natural
- weapon damage(2) parry(-10)
-Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) ability(WeaponSkill)
- weapon damage(3) parry(-50)
-Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar(2) ability(WeaponSkill)
- weapon damage(2) parry(-30)
-Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar(566) ability(WeaponSkill)
+Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3) parry(-50)
+Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30)
+Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1)
  feats TwoHanded CutWoods MightyHit
- weapon damage(6) parry(-30) pierce(1)
-HandAxe cost(4) weight(30) wear(MeleeWeapon) wear_index(0) avatar(517) ability(WeaponSkill)
- weapon damage(3) parry(-50) pierce(1)
-Mace cost(5) weight(30) wear(MeleeWeapon) avatar(841) ability(WeaponSkill)
- weapon damage(3) parry(-50)
+HandAxe cost(4) weight(30) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) parry(-50) pierce(1)
+Mace cost(5) weight(30) wear(MeleeWeapon) avatar(841) damage(3) parry(-50)
  feats StunningHit
-Spear cost(10) weight(30) wear(MeleeWeapon) avatar(559) wear_index(22) ability(WeaponSkill)
+Spear cost(10) weight(30) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) parry(-10) pierce(1)
  feats Retaliate PierceHit
- weapon damage(2) parry(-10) pierce(1)
-Staff cost(5) weight(20) wear(MeleeWeapon) avatar(558) wear_index(6) ability(WeaponSkill)
+Staff cost(5) weight(20) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) parry(-5)
  feats TwoHanded
- weapon damage(3)
-Sword cost(10) weight(60) wear(MeleeWeapon) avatar(114) wear_index(23) ability(WeaponSkill)
- weapon damage(4) parry(-15)
-StrangeSword cost(100) weight(60) wear(MeleeWeapon) avatar(173) wear_index(23) ability(WeaponSkill) mistery(3)
- weapon damage(4) parry(-10)
+Sword cost(10) weight(60) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) parry(-15)
+StrangeSword cost(100) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) parry(-10) mistery(3)
 
-Arrow wear(Ammunition) count(30) avatar(210) count(20) wear_index(0)
-Bolt wear(Ammunition) count(20) avatar(211) wear_index(3)
+Arrow wear(Ammunition) count(30) wear_index(0) avatar(210) count(20)
+Bolt wear(Ammunition) count(20) wear_index(3) avatar(211)
 
-Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) ability(BalisticSkill)
+Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) damage(5) pierce(2)
  feats TwoHanded
- weapon damage(5) pierce(2)
-ShortBow cost(25) weight(30) wear(RangedWeapon) avatar(448) ability(BalisticSkill) wear_index(7)
+ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448) damage(3) ammunition(Arrow)
  feats TwoHanded
- weapon damage(3) ammunition(Arrow)
-LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) ability(BalisticSkill) wear_index(5)
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) damage(4) ammunition(Arrow)
  feats TwoHanded
- weapon damage(4) ammunition(Arrow)
 
-LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(Armor) bonus(1) dodge(-5)
-ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(Armor) bonus(3) dodge(-20)
-PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) ability(Armor) bonus(4) dodge(-50)
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) ability(ShieldUse) dodge(-10)
- weapon block_ranged(10)
+LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) armor(1) dodge(-5)
+ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) armor(3) dodge(-20)
+PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) armor(4) dodge(-50)
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) dodge(-10) block_ranged(10)
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar(430)
 BlackPotion cost(50) weight(10) wear(Potion) avatar(603)

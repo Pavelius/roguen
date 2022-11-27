@@ -12,7 +12,6 @@ NOBSDATA(color)
 NOBSDATA(dice)
 NOBSDATA(diceprogress)
 NOBSDATA(framerange)
-NOBSDATA(itemi::weaponi)
 NOBSDATA(point)
 
 BSDATAD(variant)
@@ -24,6 +23,7 @@ BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
+BSDATAC(itemstat, 128);
 BSDATAC(itemground, 1024);
 BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
@@ -76,28 +76,26 @@ BSMETA(framerange) = {
 	{}};
 BSMETA(itemi) = {
 	BSREQ(id),
-	BSREQ(cost), BSREQ(weight), BSREQ(count),
-	BSREQ(avatar),
-	BSENM(ability, abilityi),
+	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(parry), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
+	BSREQ(enemy_parry), BSREQ(enemy_block),
+	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
+	BSREQ(dress),
+	BSREQ(count),
+	BSREQ(avatar),
 	BSENM(wear, weari),
-	BSREQ(weapon),
-	BSREQ(bonus),
-	BSREQ(mistery),
 	BSREQ(wear_index),
-	BSREQ(dodge),
+	BSREQ(prefix), BSREQ(suffix),
+	BSREQ(ammunition),
 	BSREQ(use),
 	{}};
-BSMETA(itemupgrade) = {
+BSMETA(itemstat) = {
 	BSREQ(id),
-	BSREQ(damage), BSREQ(parry), BSREQ(block), BSREQ(dodge),
+	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(parry), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
+	BSREQ(enemy_parry), BSREQ(enemy_block),
 	BSREQ(weight), BSREQ(cost),
-	{}};
-BSMETA(itemi::weaponi) = {
-	BSREQ(parry), BSREQ(enemy_parry),
-	BSREQ(block), BSREQ(enemy_block), BSREQ(block_ranged),
-	BSREQ(damage), BSREQ(pierce),
-	BSENM(ammunition, itemi),
+	BSFLG(feats, feati),
+	BSREQ(dress),
 	{}};
 BSMETA(locationi) = {
 	BSREQ(id),
@@ -172,6 +170,7 @@ BSDATA(varianti) = {
 	{"Hotkey", VAR(hotkey), 2},
 	{"IfScript", VAR(ifscripti), 1},
 	{"Item", VAR(itemi), 1},
+	{"ItemUpgrade", VAR(itemstat), 1},
 	{"List", VAR(listi), 1},
 	{"Location", VAR(locationi), 1},
 	{"Monster", VAR(monsteri), 1},

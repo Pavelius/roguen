@@ -56,9 +56,9 @@ static creature* findalive(point m) {
 	return 0;
 }
 
-static ability_s damage_ability(wear_s v) {
+static ability_s damage_ability(ability_s v) {
 	switch(v) {
-	case RangedWeapon: return DamageRanged;
+	case BalisticSkill: return DamageRanged;
 	default: return DamageMelee;
 	}
 }
@@ -117,10 +117,12 @@ static void illness_attack(creature* player, int value) {
 		player->set(Illness, v);
 }
 
-static void special_attack(creature* player, const item& weapon, creature& enemy, int& pierce, int& damage) {
+static void special_attack(creature* player, const item& weapon, creature* enemy, int& pierce, int& damage) {
+	if(attack_effect(player, weapon, BleedingHit))
+		enemy->set(Blooding);
 	if(attack_effect(player, weapon, StunningHit)) {
-		enemy.set(Stun);
-		enemy.fixeffect("SearchVisual");
+		enemy->set(Stun);
+		enemy->fixeffect("SearchVisual");
 	}
 	if(attack_effect(player, weapon, PierceHit))
 		pierce += 4;
@@ -363,19 +365,19 @@ static int parry_skill(const item& enemy_weapon, const item& weapon, int value) 
 		return 0;
 	if(enemy_weapon.is(RangedWeapon))
 		return 0;
-	value += enemy_weapon.geti().weapon.enemy_parry;
-	value += weapon.geti().weapon.parry;
+	value += enemy_weapon.geti().enemy_parry;
+	value += weapon.geti().parry;
 	return value;
 }
 
 static int block_skill(const item& enemy_weapon, const item& weapon, int value) {
-	if(!weapon || !weapon.is(ShieldUse))
+	if(!weapon)
 		return 0;
-	value += enemy_weapon.geti().weapon.enemy_block;
+	value += enemy_weapon.geti().enemy_block;
 	if(enemy_weapon.is(RangedWeapon))
-		value += weapon.geti().weapon.block_ranged;
+		value += weapon.geti().block_ranged;
 	else
-		value += weapon.geti().weapon.block;
+		value += weapon.geti().block;
 	return value;
 }
 
@@ -599,14 +601,19 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 	return true;
 }
 
+static int chance_cut_wood(const item& weapon) {
+	auto& ei = player->wears[MeleeWeapon].geti();
+	auto chance = player->get(Strenght) / 10 + ei.damage;
+	if(chance < 1)
+		chance = 1;
+	if(ei.is(TwoHanded))
+		chance *= 2;
+	return chance;
+}
+
 static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
-		auto& wei = player->wears[MeleeWeapon].geti();
-		auto chance = player->get(Strenght) / 10 + wei.weapon.damage;
-		if(chance < 1)
-			chance = 1;
-		if(wei.is(TwoHanded))
-			chance *= 2;
+		auto chance = chance_cut_wood(player->wears[MeleeWeapon]);
 		if(d100() < chance) {
 			player->act(getnm("YouCutWood"), getnm(ei.id));
 			area.setfeature(m, 0);
@@ -732,12 +739,6 @@ void creature::interaction(creature& opponent) {
 	}
 }
 
-int creature::getdamage(wear_s v) const {
-	auto result = wears[v].getdamage();
-	result += get(damage_ability(v));
-	return result;
-}
-
 static ability_s best_defence(rollg& check, const defenceg& defences) {
 	auto result = (ability_s)0;
 	zclear(check);
@@ -748,58 +749,72 @@ static ability_s best_defence(rollg& check, const defenceg& defences) {
 	return result;
 }
 
-void creature::damage(const item& weapon, int effect) {
+static void apply_damage(creature* player, const item& weapon, int effect) {
 	auto weapon_damage = weapon.getdamage();
-	auto damage_reduction = get(Armor) - weapon.geti().weapon.pierce;
+	auto damage_reduction = player->get(Armor) - weapon.geti().pierce;
 	if(damage_reduction < 0)
 		damage_reduction = 0;
 	auto result_damage = weapon_damage - damage_reduction + effect;
-	fixdamage(this, result_damage, weapon_damage, -damage_reduction, effect);
-	damage(result_damage);
+	fixdamage(player, result_damage, weapon_damage, -damage_reduction, effect);
+	player->damage(result_damage);
 }
 
-void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_multiplier) {
+static ability_s weapon_skill(const item& weapon) {
+	auto& ei = weapon.geti();
+	switch(ei.wear) {
+	case RangedWeapon: return BalisticSkill;
+	default: return WeaponSkill;
+	}
+}
+
+static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_multiplier) {
 	rollg check, parry;
 	defenceg defence;
-	auto enemy_name = enemy.getname();
-	auto attacker_name = getname();
-	auto weapon_damage = wears[v].getdamage() + get(damage_ability(v));
-	check.make(attack_skill + get(wears[v].geti().ability));
-	if(check.miss()) {
-		logs(getnm("AttackMiss"), check.roll, check.chance);
+	auto enemy_name = enemy->getname();
+	auto attacker_name = player->getname();
+	auto weapon_ability = weapon_skill(weapon);
+	auto weapon_damage = weapon.getdamage() + player->get(damage_ability(weapon_ability));
+	if(enemy->is(Undead) && weapon.is(NoDamageUndead))
+		weapon_damage = 0;
+	check.make(attack_skill + player->get(weapon_ability));
+	auto attack_miss = check.miss();
+	if(!attack_miss && weapon.is(MissHalfTime))
+		attack_miss = true;
+	if(attack_miss) {
+		player->logs(getnm("AttackMiss"), check.roll, check.chance);
 		return;
 	}
-	defence_skills(defence, &enemy, get(Strenght), wears[v]);
+	defence_skills(defence, enemy, player->get(Strenght), weapon);
 	auto parry_ability = best_defence(parry, defence);
 	auto ability_id = "";
 	if(parry_ability) {
 		ability_id = bsdata<abilityi>::elements[parry_ability].id;
 		if(parry.delta > check.delta) {
-			logs(getnm("AttackHitButParryCritical"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
-			if(parry_ability == MeleeWeapon && enemy.wears[MeleeWeapon].is(Retaliate)) {
-				auto range = area.getrange(enemy.getposition(), getposition());
+			player->logs(getnm("AttackHitButParryCritical"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
+			if(parry_ability == MeleeWeapon && enemy->wears[MeleeWeapon].is(Retaliate)) {
+				auto range = area.getrange(enemy->getposition(), player->getposition());
 				if(range <= 1)
-					damage(enemy.wears[MeleeWeapon], (parry.delta - check.delta) / 10);
+					apply_damage(enemy, enemy->wears[MeleeWeapon], (parry.delta - check.delta) / 10);
 			} else {
 				switch(parry_ability) {
-				case DodgeSkill: enemy.fixvalue(getnm("DodgeSuccess"), 2); break;
-				case ShieldUse: enemy.fixvalue(getnm("BlockSuccess"), 2); break;
-				case WeaponSkill: enemy.fixvalue(getnm("ParrySuccess"), 2); break;
+				case DodgeSkill: enemy->fixvalue(getnm("DodgeSuccess"), 2); break;
+				case ShieldUse: enemy->fixvalue(getnm("BlockSuccess"), 2); break;
+				case WeaponSkill: enemy->fixvalue(getnm("ParrySuccess"), 2); break;
 				}
 			}
 			return;
 		}
 	}
 	if(parry_ability)
-		logs(getnm("AttackHitButParrySuccess"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
+		player->logs(getnm("AttackHitButParrySuccess"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
 	else
-		logs(getnm("AttackHitButParryFail"), check.roll, check.chance, parry.roll, enemy.getname(), defence.parry, defence.block, defence.dodge);
-	int pierce = wears[v].geti().weapon.pierce;
-	int armor = enemy.get(Armor);
-	if(v == MeleeWeapon || v == MeleeWeaponOffhand)
-		armor += (enemy.get(Strenght) - get(Strenght)) / 10;
+		player->logs(getnm("AttackHitButParryFail"), check.roll, check.chance, parry.roll, enemy->getname(), defence.parry, defence.block, defence.dodge);
+	int pierce = weapon.geti().pierce;
+	int armor = enemy->get(Armor);
+	if(weapon.geti().ismelee())
+		armor += (enemy->get(Strenght) - player->get(Strenght)) / 10;
 	if(check.roll < check.chance / 2)
-		special_attack(this, wears[v], enemy, pierce, weapon_damage);
+		special_attack(player, weapon, enemy, pierce, weapon_damage);
 	if(armor > 0) {
 		if(pierce > armor)
 			armor = 0;
@@ -807,10 +822,10 @@ void creature::attack(creature& enemy, wear_s v, int attack_skill, int damage_mu
 			armor -= pierce;
 	}
 	int result_damage = weapon_damage - armor + (check.delta - parry.delta) / 10;
-	fixdamage(&enemy, result_damage, weapon_damage, -armor, (check.delta - parry.delta) / 10);
+	fixdamage(enemy, result_damage, weapon_damage, -armor, (check.delta - parry.delta) / 10);
 	result_damage = result_damage * damage_multiplier / 100;
-	enemy.damage(result_damage);
-	poison_attack(this, &enemy, wears[v]);
+	enemy->damage(result_damage);
+	poison_attack(player, enemy, weapon);
 }
 
 void creature::heal(int v) {
@@ -856,7 +871,7 @@ void creature::attackmelee(creature& enemy) {
 	auto number_attackers = enemy.get(EnemyAttacks);
 	if(number_attackers > 3)
 		number_attackers = 3;
-	attack(enemy, MeleeWeapon, number_attackers * 10, 100);
+	make_attack(this, &enemy, wears[MeleeWeapon], number_attackers * 10, 100);
 	enemy.add(EnemyAttacks, 1);
 }
 
@@ -866,7 +881,7 @@ bool creature::canshoot(bool interactive) const {
 			actp(getnm("YouNeedRangeWeapon"));
 		return false;
 	}
-	auto ammo = wears[RangedWeapon].geti().getammunition();
+	auto ammo = wears[RangedWeapon].geti().ammunition;
 	if(ammo && !wears[Ammunition].is(*ammo)) {
 		if(interactive)
 			actp(getnm("YouNeedAmmunition"), ammo->getname());
@@ -887,12 +902,12 @@ bool creature::canthrown(bool interactive) const {
 void creature::attackrange(creature& enemy) {
 	if(!canshoot(false))
 		return;
-	auto pa = wears[RangedWeapon].geti().getammunition();
+	auto pa = wears[RangedWeapon].geti().ammunition;
 	if(pa)
 		fixshoot(enemy.getposition(), pa->wear_index);
 	else
 		fixaction();
-	attack(enemy, RangedWeapon, 0, 100);
+	make_attack(this, &enemy, wears[RangedWeapon], 0, 100);
 	if(pa) {
 		wears[Ammunition].use();
 		if(d100() < 50) {
@@ -908,7 +923,7 @@ void creature::attackthrown(creature& enemy) {
 	if(!canthrown(false))
 		return;
 	fixthrown(enemy.getposition(), "FlyingItem", wears[MeleeWeapon].geti().getindex());
-	attack(enemy, MeleeWeapon, 0, 100);
+	make_attack(this, &enemy, wears[MeleeWeapon], 0, 100);
 	item it;
 	it.create(&wears[MeleeWeapon].geti(), 1);
 	it.setcount(1);
@@ -1167,8 +1182,6 @@ static void update_wears(creature* player) {
 		player->apply(ei.feats);
 		if(ei.dress)
 			player->dress(ei.dress, getmultiplier(magic));
-		if(ei.ability)
-			player->abilities[ei.ability] += ei.bonus + getmagicbonus(magic);
 		player->abilities[DodgeSkill] += ei.dodge;
 	}
 	for(auto& e : player->weapons()) {

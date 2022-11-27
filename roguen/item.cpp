@@ -5,6 +5,12 @@ extern areamap area;
 
 static_assert(sizeof(item) == 4, "Invalid size of `item` structure");
 
+static int random_upgrade(const listi* p) {
+	if(!p)
+		return 0;
+	return rand() % p->elements.count;
+}
+
 int item::getcost() const {
 	return geti().cost;
 }
@@ -72,7 +78,7 @@ int item::getdamage() const {
 	case MeleeWeapon:
 	case MeleeWeaponOffhand:
 	case RangedWeapon:
-		return geti().weapon.damage;
+		return geti().damage;
 	default:
 		return 0;
 	}
@@ -132,4 +138,22 @@ void item::set(magic_s v) {
 	if(iscountable())
 		return;
 	magic = v;
+}
+
+const itemstat* item::getprefix() const {
+	if(iscountable() || !prefix)
+		return 0;
+	auto v = geti().prefix->elements.begin()[prefix - 1];
+	if(v.iskind<itemstat>())
+		return bsdata<itemstat>::elements + v.value;
+	return 0;
+}
+
+const itemstat* item::getsuffix() const {
+	if(iscountable() || !suffix)
+		return 0;
+	auto v = geti().suffix->elements.begin()[suffix - 1];
+	if(v.iskind<itemstat>())
+		return bsdata<itemstat>::elements + v.value;
+	return 0;
 }

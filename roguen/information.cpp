@@ -89,13 +89,13 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 	auto& ei = geti();
 	if(need_name)
 		sb.adds(getfullname());
-	addv(sb, Damage, ei.weapon.damage);
-	addv(sb, "Pierce", ei.weapon.pierce);
-	addv(sb, "Parry", ei.weapon.parry);
-	addv(sb, "EnemyParry", ei.weapon.enemy_parry);
+	addv(sb, Damage, ei.damage);
+	addv(sb, "Pierce", ei.pierce);
+	addv(sb, "Parry", ei.parry);
+	addv(sb, "EnemyParry", ei.enemy_parry);
 	switch(ei.wear) {
 	case Torso:
-		addv(sb, Armor, ei.bonus);
+		addv(sb, Armor, ei.armor);
 		break;
 	}
 	//addv(sb, ei.feats);
