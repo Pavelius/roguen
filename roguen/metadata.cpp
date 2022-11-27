@@ -80,7 +80,6 @@ BSMETA(itemi) = {
 	BSREQ(enemy_parry), BSREQ(enemy_block),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
-	BSREQ(dress),
 	BSREQ(count),
 	BSREQ(avatar),
 	BSENM(wear, weari),
@@ -95,7 +94,6 @@ BSMETA(itemstat) = {
 	BSREQ(enemy_parry), BSREQ(enemy_block),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
-	BSREQ(dress),
 	{}};
 BSMETA(locationi) = {
 	BSREQ(id),

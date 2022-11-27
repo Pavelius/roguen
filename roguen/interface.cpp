@@ -787,6 +787,7 @@ static unsigned answer_key(int index) {
 
 static void answer_paint_cell(int index, const void* value, const char* format, fnevent proc) {
 	auto push_caret = caret;
+	auto push_width = width;
 	unsigned key = value ? answer_key(index) : KeyEscape;
 	auto need_execute = button(key, 24);
 	if(bsdata<creature>::have(value)) {
@@ -798,7 +799,9 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 			caret.x += wears_offset; width -= wears_offset;
 		}
 	}
-	text(format);
+	textf(format);
+	width = push_width;
+	caret.y = push_caret.y;
 	if(current_columns) {
 		auto total_width = current_columns->totalwidth();
 		char temp[260]; stringbuilder sb(temp);
@@ -807,7 +810,15 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 			for(auto p = current_columns; *p; p++) {
 				sb.clear();
 				auto push_caret = caret;
-				textf(p->proc(value, sb));
+				auto pn = p->proc(value, sb);
+				if(p->rightalign) {
+					pushvalue push_width(width);
+					pushvalue push_height(height);
+					textfs(pn);
+					caret.x += p->width - width;
+					textf(pn);
+				} else
+					textf(pn);
 				caret = push_caret;
 				caret.x += p->width;
 			}
@@ -817,6 +828,7 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 		execute(proc, (long)value);
 	caret = push_caret;
 	caret.y += texth() + 1;
+	width = push_width;
 }
 
 static void answer_paint_cell_small(int index, const void* value, const char* format, fnevent proc) {

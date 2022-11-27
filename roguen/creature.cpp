@@ -56,6 +56,21 @@ static creature* findalive(point m) {
 	return 0;
 }
 
+static void pay_movement(creature* player) {
+	auto cost = 100;
+	if(!player->is(Fly)) {
+		auto& ei = area.getfeature(player->getposition());
+		if(ei.movedifficult)
+			cost = cost * ei.movedifficult / 100;
+	}
+	player->waitseconds(cost);
+}
+
+static void pay_attack(creature* player, const item& weapon) {
+	auto cost = 120 - weapon.get(FO(itemstat, speed)) * 2;
+	player->waitseconds(cost);
+}
+
 static ability_s damage_ability(ability_s v) {
 	switch(v) {
 	case BalisticSkill: return DamageRanged;
@@ -365,19 +380,19 @@ static int parry_skill(const item& enemy_weapon, const item& weapon, int value) 
 		return 0;
 	if(enemy_weapon.is(RangedWeapon))
 		return 0;
-	value += enemy_weapon.geti().enemy_parry;
-	value += weapon.geti().parry;
+	value += enemy_weapon.get(FO(itemstat, enemy_parry));
+	value += weapon.get(FO(itemstat, parry));
 	return value;
 }
 
 static int block_skill(const item& enemy_weapon, const item& weapon, int value) {
 	if(!weapon)
 		return 0;
-	value += enemy_weapon.geti().enemy_block;
+	value += enemy_weapon.get(FO(itemstat, enemy_block));
 	if(enemy_weapon.is(RangedWeapon))
-		value += weapon.geti().block_ranged;
+		value += weapon.get(FO(itemstat, block_ranged));
 	else
-		value += weapon.geti().block;
+		value += weapon.get(FO(itemstat, block));
 	return value;
 }
 
@@ -386,6 +401,8 @@ static void defence_skills(defenceg& result, const creature* player, int attacke
 	result.parry = parry_skill(attacker_weapon, player->wears[MeleeWeapon], player->get(WeaponSkill)) - penalty;
 	result.block = block_skill(attacker_weapon, player->wears[MeleeWeaponOffhand], player->get(ShieldUse)) - penalty;
 	result.dodge = player->get(DodgeSkill);
+	if(result.dodge > 80)
+		result.dodge = 80;
 	if(result.parry < 0)
 		result.parry = 0;
 	if(result.block < 0)
@@ -718,13 +735,13 @@ void creature::interaction(creature& opponent) {
 	if(opponent.isenemy(*this))
 		attackmelee(opponent);
 	else if(!ishuman())
-		return;
+		pay_movement(this);
 	else if(opponent.is(PlaceOwner)) {
 		fixaction();
 		opponent.wait();
 		if(d100() < 40 && !opponent.is(AnimalInt))
 			opponent.speech("DontPushMePlaceOwner");
-		return;
+		pay_movement(this);
 	} else {
 		auto pt = opponent.getposition();
 		opponent.setposition(getposition());
@@ -736,6 +753,7 @@ void creature::interaction(creature& opponent) {
 		fixmovement();
 		if(d100() < 40 && !opponent.is(AnimalInt))
 			opponent.speech("DontPushMe");
+		pay_movement(this);
 	}
 }
 
@@ -750,8 +768,8 @@ static ability_s best_defence(rollg& check, const defenceg& defences) {
 }
 
 static void apply_damage(creature* player, const item& weapon, int effect) {
-	auto weapon_damage = weapon.getdamage();
-	auto damage_reduction = player->get(Armor) - weapon.geti().pierce;
+	auto weapon_damage = weapon.get(FO(itemstat, damage));
+	auto damage_reduction = player->get(Armor) - weapon.get(FO(itemstat, pierce));
 	if(damage_reduction < 0)
 		damage_reduction = 0;
 	auto result_damage = weapon_damage - damage_reduction + effect;
@@ -773,7 +791,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
-	auto weapon_damage = weapon.getdamage() + player->get(damage_ability(weapon_ability));
+	auto weapon_damage = weapon.get(FO(itemstat, damage)) + player->get(damage_ability(weapon_ability));
 	if(enemy->is(Undead) && weapon.is(NoDamageUndead))
 		weapon_damage = 0;
 	check.make(attack_skill + player->get(weapon_ability));
@@ -809,7 +827,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		player->logs(getnm("AttackHitButParrySuccess"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
 	else
 		player->logs(getnm("AttackHitButParryFail"), check.roll, check.chance, parry.roll, enemy->getname(), defence.parry, defence.block, defence.dodge);
-	int pierce = weapon.geti().pierce;
+	int pierce = weapon.get(FO(itemstat, pierce));
 	int armor = enemy->get(Armor);
 	if(weapon.geti().ismelee())
 		armor += (enemy->get(Strenght) - player->get(Strenght)) / 10;
@@ -872,6 +890,7 @@ void creature::attackmelee(creature& enemy) {
 	if(number_attackers > 3)
 		number_attackers = 3;
 	make_attack(this, &enemy, wears[MeleeWeapon], number_attackers * 10, 100);
+	pay_attack(this, wears[MeleeWeapon]);
 	enemy.add(EnemyAttacks, 1);
 }
 
@@ -908,6 +927,7 @@ void creature::attackrange(creature& enemy) {
 	else
 		fixaction();
 	make_attack(this, &enemy, wears[RangedWeapon], 0, 100);
+	pay_attack(this, wears[RangedWeapon]);
 	if(pa) {
 		wears[Ammunition].use();
 		if(d100() < 50) {
@@ -924,6 +944,7 @@ void creature::attackthrown(creature& enemy) {
 		return;
 	fixthrown(enemy.getposition(), "FlyingItem", wears[MeleeWeapon].geti().getindex());
 	make_attack(this, &enemy, wears[MeleeWeapon], 0, 100);
+	pay_attack(this, wears[MeleeWeapon]);
 	item it;
 	it.create(&wears[MeleeWeapon].geti(), 1);
 	it.setcount(1);
@@ -934,16 +955,6 @@ void creature::attackthrown(creature& enemy) {
 void creature::fixcantgo() const {
 	fixaction();
 	act(getnm("CantGoThisWay"));
-}
-
-static void pay_movement(creature* player) {
-	auto cost = 100;
-	if(!player->is(Fly)) {
-		auto& ei = area.getfeature(player->getposition());
-		if(ei.movedifficult)
-			cost = cost * ei.movedifficult / 100;
-	}
-	player->waitseconds(cost);
 }
 
 void creature::movestep(point ni) {
@@ -966,11 +977,12 @@ void creature::movestep(point ni) {
 		update_room(this);
 		fixmovement();
 		look_items(this, getposition());
+		pay_movement(this);
 	} else {
 		check_interaction(this, ni);
 		fixaction();
+		pay_movement(this);
 	}
-	pay_movement(this);
 	check_trap(this, getposition());
 }
 
@@ -1171,24 +1183,28 @@ void creature::dress(variants source, int multiplier) {
 		dress(v, multiplier);
 }
 
+static void update_dress(creature* player, const item& e) {
+	auto& ei = e.geti();
+	auto magic = e.getmagic();
+	if(!e.isidentified())
+		magic = Mundane;
+	auto multiplier = getmultiplier(magic);
+	player->apply(ei.feats);
+	player->abilities[Armor] += e.get(FO(itemstat, armor));
+	player->abilities[DodgeSkill] += e.get(FO(itemstat, dodge));
+	player->abilities[Speed] += e.get(FO(itemstat, speed)) * multiplier;
+}
+
 static void update_wears(creature* player) {
 	for(auto& e : player->gears()) {
 		if(!e)
 			continue;
-		auto& ei = e.geti();
-		auto magic = e.getmagic();
-		if(!e.isidentified())
-			magic = Mundane;
-		player->apply(ei.feats);
-		if(ei.dress)
-			player->dress(ei.dress, getmultiplier(magic));
-		player->abilities[DodgeSkill] += ei.dodge;
+		update_dress(player, e);
 	}
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
-		auto& ei = e.geti();
-		player->abilities[DodgeSkill] += ei.dodge;
+		player->abilities[DodgeSkill] += e.get(FO(itemstat, dodge));
 	}
 }
 
@@ -1199,12 +1215,22 @@ void creature::update_room_abilities() {
 	trigger::fire(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), &p->geti());
 }
 
+static void update_negative_skills(creature* player) {
+	for(auto i = (ability_s)0; i < Hits; i = (ability_s)(i + 1)) {
+		if(!bsdata<abilityi>::elements[i].basic)
+			continue;
+		if(player->abilities[i] < 0)
+			player->abilities[i] = 0;
+	}
+}
+
 void creature::update() {
 	update_basic(abilities, basic.abilities);
 	update_boost(feats_active, this);
 	update_wears(this);
 	update_room_abilities();
 	update_abilities();
+	update_negative_skills(this);
 }
 
 static void block_creatures(creature* exclude) {

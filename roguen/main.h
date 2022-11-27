@@ -80,7 +80,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	bool			matchspeech(variant v) const;
 	bool			matchspeech(const variants& source) const;
 	void			matchspeech(speecha& source) const;
-	void			update();
 	void			update_abilities();
 	void			update_room_abilities();
 public:
@@ -163,6 +162,7 @@ public:
 	void			summon(point m, const variants& elements, int count, int level);
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
+	void			update();
 	void			use(variants source);
 	void			use(item& v);
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }

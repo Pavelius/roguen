@@ -446,6 +446,15 @@ void creature::cast(const spelli& e, int level, int mana) {
 	wait();
 }
 
+static const char* item_weight(const void* object, stringbuilder& sb) {
+	auto p = (item*)object;
+	if(!(*p))
+		return "";
+	auto w = p->getweight();
+	sb.add("%1i.%2i%3i %Kg", w / 100, (w/10) % 10, w % 10);
+	return sb.begin();
+}
+
 static item* choose_wear() {
 	static wear_s source[] = {
 		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon,
@@ -461,6 +470,10 @@ static item* choose_wear() {
 			an.add(&e, temp);
 		}
 	}
+	static listcolumn columns[] = {
+		{"Weight", 60, item_weight, true},
+		{}};
+	pushvalue push_columns(current_columns, columns);
 	return (item*)an.choose(getnm("Inventory"), getnm("Cancel"));
 }
 
@@ -496,12 +509,14 @@ static void inventory(int bonus) {
 		auto owner = getowner(pi);
 		if(!owner)
 			break;
-		if((*pi))
+		if((*pi)) {
 			player->additem(*pi);
-		else {
+			player->update();
+		} else {
 			auto ni = choose_stuff(owner->getwearslot(pi));
 			if(ni)
 				iswap(*ni, *pi);
+			player->update();
 		}
 	}
 }

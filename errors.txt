@@ -1,3 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 70: Not found requisit `ability`
- Line 93: Not found requisit `ability`
+﻿In file `Names.txt`:
+ Define translation for `Speed`

@@ -73,17 +73,6 @@ void item::create(const itemi* pi, int count) {
 		setcount(count);
 }
 
-int item::getdamage() const {
-	switch(geti().wear) {
-	case MeleeWeapon:
-	case MeleeWeaponOffhand:
-	case RangedWeapon:
-		return geti().damage;
-	default:
-		return 0;
-	}
-}
-
 bool item::is(wear_s v) const {
 	auto wear = geti().wear;
 	switch(v) {
@@ -92,6 +81,20 @@ bool item::is(wear_s v) const {
 	default:
 		return wear == v;
 	}
+}
+
+bool item::is(feat_s v) const {
+	if(geti().feats.is(v))
+		return true;
+	if(!iscountable()) {
+		auto p = getprefix();
+		if(p && p->feats.is(v))
+			return true;
+		p = getsuffix();
+		if(p && p->feats.is(v))
+			return true;
+	}
+	return false;
 }
 
 void item::drop(point m) {
@@ -156,4 +159,32 @@ const itemstat* item::getsuffix() const {
 	if(v.iskind<itemstat>())
 		return bsdata<itemstat>::elements + v.value;
 	return 0;
+}
+
+int	item::getweight() const {
+	auto& ei = geti();
+	auto result = ei.weight;
+	if(!ei.iscountable()) {
+		auto p = getprefix();
+		if(p && p->weight)
+			result = result * p->weight / 100;
+		p = getsuffix();
+		if(p && p->weight)
+			result = result * p->weight / 100;
+	}
+	return result * getcount();
+}
+
+int	item::get(unsigned fo) const {
+	auto& ei = geti();
+	int result = *((char*)&ei + fo);
+	if(!ei.iscountable()) {
+		auto prefix = getprefix();
+		if(prefix)
+			result += *((char*)prefix + fo);
+		auto suffix = getsuffix();
+		if(suffix)
+			result += *((char*)suffix + fo);
+	}
+	return result;
 }

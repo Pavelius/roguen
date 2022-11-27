@@ -11,7 +11,7 @@ Gate mana(40)
 KnockDoor mana(10)
  target TargetFeatures Ranged
  effect Locked Activate
-Light mana(5) duration(Minute20PL)
+TorchLight mana(5) duration(Minute20PL)
  target TargetCreatures You
  effect LightSource
 ManaRegeneration duration(Hour1PL)

@@ -42,7 +42,7 @@ void creature::update_abilities() {
 	if(is(Stun)) {
 		abilities[WeaponSkill] -= 10;
 		abilities[BalisticSkill] -= 10;
-		abilities[DodgeSkill] -= 20;
+		abilities[DodgeSkill] -= 100;
 		abilities[ShieldUse] -= 10;
 	}
 	if(!is(IgnoreWeb) && ispresent() && area.is(getposition(), Webbed)) {

@@ -66,7 +66,7 @@ static void addv(stringbuilder& sb, const char* id, int value, const char* forma
 	if(!value)
 		return;
 	if(!format)
-		format = "%-1%+2i";
+		format = "[~%-1%+2i]";
 	sb.adds(format, getnameshort(id), value);
 }
 
@@ -75,7 +75,7 @@ static void addv(stringbuilder& sb, const char* id) {
 }
 
 static void addv(stringbuilder& sb, ability_s id, int value) {
-	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1:%2i");
+	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1 [%2i]");
 }
 
 static void addv(stringbuilder& sb, const featable& feats) {
@@ -89,13 +89,14 @@ void item::getinfo(stringbuilder& sb, bool need_name) const {
 	auto& ei = geti();
 	if(need_name)
 		sb.adds(getfullname());
-	addv(sb, Damage, ei.damage);
-	addv(sb, "Pierce", ei.pierce);
-	addv(sb, "Parry", ei.parry);
-	addv(sb, "EnemyParry", ei.enemy_parry);
+	addv(sb, Damage, get(FO(itemstat, damage)));
+	addv(sb, "Pierce", get(FO(itemstat, pierce)));
+	addv(sb, "Parry", get(FO(itemstat, parry)));
+	addv(sb, "EnemyParry", get(FO(itemstat, enemy_parry)));
+	addv(sb, "Speed", get(FO(itemstat, speed)));
 	switch(ei.wear) {
 	case Torso:
-		addv(sb, Armor, ei.armor);
+		addv(sb, Armor, get(FO(itemstat, armor)));
 		break;
 	}
 	//addv(sb, ei.feats);

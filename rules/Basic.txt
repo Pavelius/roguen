@@ -11,7 +11,7 @@ Mage player(1)
 
 Entaglement
 Gate
-Light
+TorchLight
 SummonUndead
 Web
 

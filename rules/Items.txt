@@ -62,40 +62,40 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 
-BattleAxe cost(7) weight(50) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2)
+BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8)
  feats CutWoods
-Bite wear(MeleeWeapon) damage(3) parry(-20) enemy_parry(-50)
+Bite wear(MeleeWeapon) damage(3) parry(-20) enemy_parry(-50) speed(-2)
  feats Natural
-BruteSword cost(10) weight(80) wear(MeleeWeapon) wear_index(1) avatar(65) damage(4) parry(-20)
-Claws wear(MeleeWeapon) damage(2) parry(-10)
+BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(4) parry(-20) speed(-6)
+Claws wear(MeleeWeapon) damage(2) parry(-10) speed(10)
  feats Natural
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3) parry(-50)
-Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30)
-Halberd cost(7) weight(150) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1)
+Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30) speed(5)
+Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1) speed(-10)
  feats TwoHanded CutWoods MightyHit
-HandAxe cost(4) weight(30) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) parry(-50) pierce(1)
-Mace cost(5) weight(30) wear(MeleeWeapon) avatar(841) damage(3) parry(-50)
+HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) parry(-50) pierce(1) speed(-2)
+Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) damage(3) parry(-50) speed(-5)
  feats StunningHit
-Spear cost(10) weight(30) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) parry(-10) pierce(1)
+Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) parry(-10) pierce(1) speed(-4)
  feats Retaliate PierceHit
-Staff cost(5) weight(20) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) parry(-5)
+Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) parry(-5)
  feats TwoHanded
-Sword cost(10) weight(60) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) parry(-15)
-StrangeSword cost(100) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) parry(-10) mistery(3)
+Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) parry(-15) speed(-5)
+StrangeSword cost(150) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) parry(-10) mistery(3) speed(-4)
 
-Arrow wear(Ammunition) count(30) wear_index(0) avatar(210) count(20)
-Bolt wear(Ammunition) count(20) wear_index(3) avatar(211)
+Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
+Bolt wear(Ammunition) weight(2) count(20) wear_index(3) avatar(211)
 
 Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) damage(5) pierce(2)
  feats TwoHanded
-ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448) damage(3) ammunition(Arrow)
+ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448) damage(3) ammunition(Arrow) speed(20)
  feats TwoHanded
-LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) damage(4) ammunition(Arrow)
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) damage(4) ammunition(Arrow) speed(18)
  feats TwoHanded
 
-LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) armor(1) dodge(-5)
-ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) armor(3) dodge(-20)
-PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) armor(4) dodge(-50)
+LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) armor(1) dodge(-5)
+ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) armor(3) dodge(-20)
+PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) armor(4) dodge(-50)
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) dodge(-10) block_ranged(10)
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar(430)
@@ -104,9 +104,9 @@ BluePotion cost(60) weight(10) wear(Potion) avatar(433)
 GreenPotion cost(70) weight(10) wear(Potion) avatar(428)
 YellowPotion cost(100) weight(10) wear(Potion) avatar(435)
 
-Ration cost(10) weight(50) avatar(126) count(1)
+Ration cost(100) weight(50) avatar(126) count(1)
 Torch cost(10) avatar(207) weight(30) count(3)
- use Light+3
+ use TorchLight+3
 
 StrangeBlueSphere cost(100) weight(50) avatar(229) mistery(2)
 StrangeAquaSphere cost(100) weight(50) avatar(230) mistery(3)
@@ -117,11 +117,11 @@ StrangeRod cost(50) weight(10) avatar(80) mistery(3)
 
 Bones cost(2) weight(3) avatar(899) count(1)
 MonsterSkull cost(50) weight(50) avatar(519) count(1)
-Stones weight(4) avatar(900) count(6)
+Stones weight(5) avatar(900) count(6)
 
 TinyKey weight(1) avatar(284) count(1)
 SmallKey weight(1) avatar(283) count(1)
-HexagonalKey weight(1) avatar(282) count(1)
+HexagonalKey weight(2) avatar(282) count(1)
 TriangularKey weight(1) avatar(287) count(1)
 RectangularKey weight(1) avatar(285) count(1)
 RoundKey weight(1) avatar(286) count(1)
