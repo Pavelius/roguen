@@ -5,10 +5,14 @@ extern areamap area;
 
 static_assert(sizeof(item) == 4, "Invalid size of `item` structure");
 
-static int random_upgrade(const listi* p) {
+static int d100() {
+	return rand() % 100;
+}
+
+static int random_upgrade(const listi* p, int level) {
 	if(!p)
 		return 0;
-	return rand() % p->elements.count;
+	return 1 + rand() % p->elements.count;
 }
 
 int item::getcost() const {
@@ -124,9 +128,19 @@ const char*	item::getfullname(int price_percent) const {
 		if(isidentified()) {
 			sb.addsep(' ');
 			sb.adjective(getnm(bsdata<magici>::elements[magic].id), vw);
+			auto p = getprefix();
+			if(p) {
+				sb.addsep(' ');
+				sb.adjective(getnm(p->id), vw);
+			}
 		}
 	}
 	sb.adds("%1", getname());
+	auto sf = getsuffix();
+	if(sf) {
+		sb.addsep(' ');
+		sb.adjective(getnm(sf->id), vw);
+	}
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
 	sb.lower();
@@ -187,4 +201,13 @@ int	item::get(unsigned fo) const {
 			result += *((char*)suffix + fo);
 	}
 	return result;
+}
+
+void item::upgrade(int chance_suffix, int chance_prefix, int level) {
+	if(iscountable())
+		return;
+	if(d100() < chance_prefix)
+		prefix = random_upgrade(geti().prefix, level);
+	if(d100() < chance_suffix)
+		suffix = random_upgrade(geti().suffix, level);
 }

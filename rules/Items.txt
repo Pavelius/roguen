@@ -32,6 +32,11 @@ Wicked damage(3) parry(-10)
 Yellow
  feats StunResistance
 
+#List
+
+MeleeWeaponPrefix
+ elements Ashen Masterwork Balanced Barbaric Barbed Brutal ExtraHeavy Flaming Heavy Light Weeping Red Swift Yellow White
+
 #Item
 
 NoItem avatar(1) wear(MeleeWeapon)
@@ -62,25 +67,25 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 
-BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8)
+BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8) prefix(MeleeWeaponPrefix)
  feats CutWoods
 Bite wear(MeleeWeapon) damage(3) parry(-20) enemy_parry(-50) speed(-2)
  feats Natural
-BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(4) parry(-20) speed(-6)
+BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) parry(-12) speed(-6)
 Claws wear(MeleeWeapon) damage(2) parry(-10) speed(10)
  feats Natural
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3) parry(-50)
-Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30) speed(5)
-Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1) speed(-10)
+Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30) speed(5) prefix(MeleeWeaponPrefix)
+Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1) speed(-10) prefix(MeleeWeaponPrefix)
  feats TwoHanded CutWoods MightyHit
-HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) parry(-50) pierce(1) speed(-2)
-Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) damage(3) parry(-50) speed(-5)
+HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) parry(-50) pierce(1) speed(-2) prefix(MeleeWeaponPrefix)
+Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) damage(3) parry(-50) speed(-5) prefix(MeleeWeaponPrefix)
  feats StunningHit
-Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) parry(-10) pierce(1) speed(-4)
+Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) parry(-10) pierce(1) speed(-4) prefix(MeleeWeaponPrefix)
  feats Retaliate PierceHit
-Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) parry(-5)
+Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) parry(-5) prefix(MeleeWeaponPrefix)
  feats TwoHanded
-Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) parry(-15) speed(-5)
+Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) parry(-15) speed(-5) prefix(MeleeWeaponPrefix)
 StrangeSword cost(150) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) parry(-10) mistery(3) speed(-4)
 
 Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
@@ -90,7 +95,7 @@ Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) damage(5) pierce(2)
  feats TwoHanded
 ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448) damage(3) ammunition(Arrow) speed(20)
  feats TwoHanded
-LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) damage(4) ammunition(Arrow) speed(18)
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) damage(4) ammunition(Arrow) speed(18) prefix(MeleeWeaponPrefix)
  feats TwoHanded
 
 LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) armor(1) dodge(-5)

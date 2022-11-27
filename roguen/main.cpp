@@ -42,8 +42,10 @@ static void initializating() {
 }
 
 static void equip_item(const char* id, magic_s m = Mundane) {
-	item it; it.create(id);
+	item it;
+	it.create(id);
 	it.set(m);
+	it.upgrade(100, 100, 3);
 	if(m)
 		it.setidentified(1);
 	player->equip(it);

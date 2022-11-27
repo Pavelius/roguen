@@ -464,11 +464,8 @@ static item* choose_wear() {
 	for(auto& e : player->equipment()) {
 		if(!e)
 			an.add(&e, "-");
-		else {
-			char temp[512]; stringbuilder sb(temp);
-			e.getinfo(sb, true);
-			an.add(&e, temp);
-		}
+		else
+			an.add(&e, e.getfullname());
 	}
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},
@@ -486,7 +483,7 @@ static item* choose_stuff(wear_s wear) {
 		if(wear && !e.is(wear))
 			continue;
 		sb.clear();
-		e.getinfo(sb, true);
+		e.getinfo(sb);
 		an.add(&e, temp);
 	}
 	sb.clear();

@@ -85,10 +85,9 @@ static void addv(stringbuilder& sb, const featable& feats) {
 	}
 }
 
-void item::getinfo(stringbuilder& sb, bool need_name) const {
+void item::getinfo(stringbuilder& sb) const {
 	auto& ei = geti();
-	if(need_name)
-		sb.adds(getfullname());
+	sb.adds(getfullname());
 	addv(sb, Damage, get(FO(itemstat, damage)));
 	addv(sb, "Pierce", get(FO(itemstat, pierce)));
 	addv(sb, "Parry", get(FO(itemstat, parry)));

@@ -1,4 +1,28 @@
-﻿Fist: Кулаки
+﻿Ashen: Пепельный
+Balanced: Сбалансированный
+Barbaric: Варварский
+Barbed: Колючий
+Brutal: Брутальный
+ExtraHeavy: Тяжеленный
+Fickle: Непредсказуемый
+Flaming: Огненный
+Green: Зеленый
+Heavy: Тяжелый
+Hefty: Здоровенный
+Light: Легкий
+Masterwork: Мастерский
+Mild: Незначительный
+Nasty: Противный
+Red: Красный
+Swift: Быстрый
+UltraHeavy: Ультратяжелый
+Unwieldy: Громоздкий
+Weeping: Слезный
+White: Белый
+Wicked: Безнравственный
+Yellow: Желтый
+
+Fist: Кулаки
 
 CP: Медная монета
 SP: Серебрянная монета

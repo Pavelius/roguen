@@ -58,7 +58,7 @@ public:
 	short unsigned	getkind() const { return type; }
 	int				getavatar() const { return geti().wear_index; }
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
-	void			getinfo(stringbuilder& sb, bool need_name) const;
+	void			getinfo(stringbuilder& sb) const;
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
@@ -79,6 +79,7 @@ public:
 	void			set(magic_s v);
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
+	void			upgrade(int chance_suffix, int chance_prefix, int level);
 	void			use() { setcount(getcount() - 1); }
 	void			usecharge() { if(charges) charges--; else use(); }
 };
