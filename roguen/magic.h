@@ -3,7 +3,7 @@
 #pragma once
 
 enum magic_s : unsigned char {
-	Mudane, Blessed, Cursed, Artifact,
+	Mundane, Blessed, Cursed, Artifact,
 };
 struct magici : nameable {
 	int		bonus;

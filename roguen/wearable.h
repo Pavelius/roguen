@@ -19,4 +19,5 @@ struct wearable : movable {
 	wear_s			getwearslot(const item* data) const;
 	const item*		getwear(const void* data) const;
 	bool			useitem(const itemi* pi);
+	slice<item>		weapons() { return slice<item>(wears + MeleeWeapon, wears + RangedWeapon + 1); }
 };

@@ -8,6 +8,7 @@
 #include "resource.h"
 #include "siteskill.h"
 #include "stringact.h"
+#include "triggern.h"
 #include "indexa.h"
 #include "main.h"
 
@@ -853,13 +854,12 @@ static void jump_to_site(int bonus) {
 	if(!player->ishuman())
 		player->act(getnm("YouSundellyDisappear"));
 	auto m = area.getfree(center(last_room->rc), 8, isfreecr);
-	player->setposition(m);
+	player->place(m);
 	if(!player->ishuman())
 		player->act(getnm("YouSundellyAppear"));
 	else
 		area.setlos(m, player->getlos(), isfreeltsv);
 	player->fixteleport(player->ishuman());
-	player->update_room();
 }
 
 static void wait_hour(int bonus) {

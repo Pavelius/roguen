@@ -1,3 +1,4 @@
+#include "geoposition.h"
 #include "feat.h"
 #include "nameable.h"
 #include "shape.h"
@@ -35,7 +36,7 @@ struct locationi : sitei {
 	char			darkness, chance_finale, offset;
 	color			minimap;
 };
-struct areaheadi {
+struct areaheadi : geoposition {
 	struct totali {
 		short		mysteries;
 		short		traps;
@@ -49,6 +50,7 @@ struct areaheadi {
 	totali			total;
 	char			darkness;
 	void			clear();
+	void			createarea(point start_village);
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
 };

@@ -4,6 +4,7 @@
 #include "indexa.h"
 #include "main.h"
 #include "siteskill.h"
+#include "triggern.h"
 
 namespace {
 struct rollg {
@@ -449,10 +450,30 @@ bool isfreecrfly(point m) {
 	return area.isfree(m);
 }
 
+static void update_room(creature* player) {
+	auto pn = roomi::find(player->worldpos, player->getposition());
+	if(pn) {
+		auto pb = player->getroom();
+		auto room_changed = false;
+		if(pn != pb) {
+			if(player->ishuman()) {
+				auto pd = getdescription(pn->geti().id);
+				if(pd)
+					player->actp(pd);
+			}
+			room_changed = true;
+		}
+		player->setroom(pn);
+		if(room_changed)
+			trigger::fire(WhenCreatureP1EnterSiteP2, player->getkind(), &pn->geti());
+	} else
+		player->setroom(0);
+}
+
 void creature::place(point m) {
 	m = area.getfree(m, 10, isfreecr);
 	setposition(m);
-	update_room();
+	update_room(this);
 }
 
 creature* creature::create(point m, variant kind, variant character, bool female) {
@@ -462,13 +483,9 @@ creature* creature::create(point m, variant kind, variant character, bool female
 		character = "Monster";
 	if(!character.iskind<classi>())
 		return 0;
-	m = area.getfree(m, 10, isfreecr);
-	if(!area.isvalid(m))
-		return 0;
 	pushvalue push_player(player);
 	player = bsdata<creature>::addz();
 	player->clear();
-	player->setposition(m);
 	player->worldpos = game;
 	player->setkind(kind);
 	player->setnoname();
@@ -495,7 +512,7 @@ creature* creature::create(point m, variant kind, variant character, bool female
 		player->advance(character, 0);
 	player->levelup();
 	player->finish();
-	player->update_room();
+	player->place(m);
 	if(pm) {
 		if(pm->friendly <= -10)
 			player->set(Enemy);
@@ -706,7 +723,9 @@ void creature::interaction(creature& opponent) {
 		opponent.setposition(getposition());
 		opponent.fixmovement();
 		opponent.wait();
+		update_room(&opponent);
 		setposition(pt);
+		update_room(this);
 		fixmovement();
 		if(d100() < 40 && !opponent.is(AnimalInt))
 			opponent.speech("DontPushMe");
@@ -929,13 +948,13 @@ void creature::movestep(point ni) {
 		interaction(*opponent);
 	else if(isfreecr(ni)) {
 		setposition(ni);
+		update_room(this);
 		fixmovement();
 		look_items(this, getposition());
 	} else {
 		check_interaction(this, ni);
 		fixaction();
 	}
-	update_room();
 	pay_movement(this);
 	check_trap(this, getposition());
 }
@@ -1105,10 +1124,17 @@ void creature::makemove() {
 
 static int getmultiplier(magic_s v) {
 	switch(v) {
-	case Cursed: return -2;
-	case Blessed: return 2;
-	case Artifact: return 4;
+	case Cursed: return -1;
 	default: return 1;
+	}
+}
+
+static int getmagicbonus(magic_s v) {
+	switch(v) {
+	case Cursed: return -2;
+	case Blessed: return 1;
+	case Artifact: return 2;
+	default: return 0;
 	}
 }
 
@@ -1130,46 +1156,27 @@ void creature::dress(variants source, int multiplier) {
 		dress(v, multiplier);
 }
 
-void creature::update_wears() {
-	for(auto& e : gears()) {
+static void update_wears(creature* player) {
+	for(auto& e : player->gears()) {
 		if(!e)
 			continue;
 		auto& ei = e.geti();
 		auto magic = e.getmagic();
-		feats.add(ei.feats);
-		if(e.isidentified()) {
-			if(ei.dress)
-				dress(ei.dress, getmultiplier(magic));
-		}
-		if(ei.ability) {
-			abilities[ei.ability] += ei.bonus;
-			switch(magic) {
-			case Cursed: abilities[ei.ability] -= 2; break;
-			case Blessed: case Artifact: abilities[ei.ability] += 1; break;
-			default: break;
-			}
-		}
+		if(!e.isidentified())
+			magic = Mundane;
+		player->apply(ei.feats);
+		if(ei.dress)
+			player->dress(ei.dress, getmultiplier(magic));
+		if(ei.ability)
+			player->abilities[ei.ability] += ei.bonus + getmagicbonus(magic);
+		player->abilities[DodgeSkill] += ei.dodge;
 	}
-}
-
-void creature::update_room() {
-	auto pn = roomi::find(worldpos, getposition());
-	if(pn) {
-		auto pb = getroom();
-		auto room_changed = false;
-		if(pn != pb) {
-			if(ishuman()) {
-				auto pd = getdescription(pn->geti().id);
-				if(pd)
-					actp(pd);
-			}
-			room_changed = true;
-		}
-		room_id = bsdata<roomi>::source.indexof(pn);
-		if(room_changed)
-			trigger::fire(WhenCreatureP1EnterSiteP2, getkind(), &pn->geti());
-	} else
-		room_id = 0xFFFF;
+	for(auto& e : player->weapons()) {
+		if(!e)
+			continue;
+		auto& ei = e.geti();
+		player->abilities[DodgeSkill] += ei.dodge;
+	}
 }
 
 void creature::update_room_abilities() {
@@ -1182,7 +1189,7 @@ void creature::update_room_abilities() {
 void creature::update() {
 	update_basic(abilities, basic.abilities);
 	update_boost(feats_active, this);
-	update_wears();
+	update_wears(this);
 	update_room_abilities();
 	update_abilities();
 }

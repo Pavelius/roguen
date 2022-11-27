@@ -2,7 +2,7 @@
 #include "magic.h"
 
 BSDATA(magici) = {
-	{"Mudane"},
+	{"Mundane"},
 	{"Blessed", 2},
 	{"Cursed", -2},
 	{"Artifact", 4},

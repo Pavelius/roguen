@@ -99,7 +99,10 @@ static void serial_area(bool write_mode) {
 	if(!write_mode) {
 		if(!serial_area(temp, false)) {
 			saved_creatures.clear();
-			game.createarea();
+			areahead.clear();
+			areahead.position = game.position;
+			areahead.level = game.level;
+			areahead.createarea(game.start_village);
 		}
 	} else
 		serial_area(temp, write_mode);

@@ -1,6 +1,7 @@
 #include "areamap.h"
 #include "direction.h"
 #include "pushvalue.h"
+#include "randomizer.h"
 #include "script.h"
 #include "site.h"
 #include "main.h"
@@ -32,9 +33,11 @@ static rect correct_conncetors;
 static direction_s last_direction;
 static adat<variant, 32> sites;
 
-//inline int d100() {
-//	return rand() % 100;
-//}
+static int getrange(point m1, point m2) {
+	auto dx = iabs(m1.x - m2.x);
+	auto dy = iabs(m1.y - m2.y);
+	return (dx > dy) ? dx : dy;
+}
 
 int getfloor() {
 	if(last_site && last_site->floors)
@@ -243,7 +246,7 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 		return false;
 	index = to(index, dir);
 	if(linkable) {
-		auto pr = roomi::find(game, index);
+		auto pr = roomi::find(areahead, index);
 		if(pr)
 			return true;
 	}
@@ -342,7 +345,7 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, int floor, int wall) {
-	pushvalue push_room(last_room, roomi::find(game, center(rc)));
+	pushvalue push_room(last_room, roomi::find(areahead, center(rc)));
 	pushvalue push_site(last_site, last_room ? &last_room->geti() : 0);
 	auto door_count = get_doors_count();
 	auto chance_hidden_doors = get_chance_hidden_doors();
@@ -386,7 +389,7 @@ roomi* add_room(const sitei* ps, const rect& rc) {
 	auto p = roomi::add();
 	p->clear();
 	p->set(ps);
-	*static_cast<geoposition*>(p) = game;
+	*static_cast<geoposition*>(p) = areahead;
 	p->rc = rc;
 	return p;
 }
@@ -516,7 +519,6 @@ static void create_corridor_contents() {
 
 static void create_area(geoposition geo, variant tile) {
 	pushvalue push_site(last_site, (const sitei*)0);
-	areahead.clear();
 	if(!apply_location(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
@@ -632,7 +634,7 @@ void sitei::corridors() const {
 	create_doors(floors, walls);
 }
 
-void gamei::createarea() {
+void areaheadi::createarea(point start_village) {
 	variant rt;
 	last_quest = quest::find(position);
 	if(level == 0) {

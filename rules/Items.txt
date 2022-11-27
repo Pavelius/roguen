@@ -38,7 +38,7 @@ BruteSword cost(10) weight(80) wear(MeleeWeapon) avatar(65) wear_index(1) abilit
  weapon damage(4) parry(-20)
 Claws wear(MeleeWeapon) ability(WeaponSkill)
  feats Natural
- weapon damage(2) parry(-5)
+ weapon damage(2) parry(-10)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) ability(WeaponSkill)
  weapon damage(3) parry(-50)
 Dagger cost(3) weight(10) wear(MeleeWeapon) wear_index(3) avatar(2) ability(WeaponSkill)
@@ -58,9 +58,9 @@ Staff cost(5) weight(20) wear(MeleeWeapon) avatar(558) wear_index(6) ability(Wea
  feats TwoHanded
  weapon damage(3)
 Sword cost(10) weight(60) wear(MeleeWeapon) avatar(114) wear_index(23) ability(WeaponSkill)
- weapon damage(4) parry(-10)
+ weapon damage(4) parry(-15)
 StrangeSword cost(100) weight(60) wear(MeleeWeapon) avatar(173) wear_index(23) ability(WeaponSkill) mistery(3)
- weapon damage(4) parry(-5)
+ weapon damage(4) parry(-10)
 
 Arrow wear(Ammunition) count(30) avatar(210) count(20) wear_index(0)
 Bolt wear(Ammunition) count(20) avatar(211) wear_index(3)
@@ -75,10 +75,10 @@ LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) ability(BalisticSkill
  feats TwoHanded
  weapon damage(4) ammunition(Arrow)
 
-LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(Armor) bonus(1)
-ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(Armor) bonus(3)
-PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) ability(Armor) bonus(4)
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) ability(ShieldUse)
+LeatherArmor cost(20) weight(200) wear(Torso) wear_index(1) avatar(4) ability(Armor) bonus(1) dodge(-5)
+ChainArmor cost(40) weight(400) wear(Torso) wear_index(2) avatar(26) ability(Armor) bonus(3) dodge(-20)
+PlateArmor cost(60) weight(500) wear(Torso) wear_index(2) avatar(37) ability(Armor) bonus(4) dodge(-50)
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) ability(ShieldUse) dodge(-10)
  weapon block_ranged(10)
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar(430)

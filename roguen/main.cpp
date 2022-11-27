@@ -41,7 +41,7 @@ static void initializating() {
 #endif
 }
 
-static void equip_item(const char* id, magic_s m = Mudane) {
+static void equip_item(const char* id, magic_s m = Mundane) {
 	item it; it.create(id);
 	it.set(m);
 	if(m)

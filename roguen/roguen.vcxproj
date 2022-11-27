@@ -317,6 +317,7 @@
     <ClInclude Include="talk.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="trigger.h" />
+    <ClInclude Include="triggern.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="variantc.h" />
     <ClInclude Include="visualeffect.h" />

@@ -85,7 +85,13 @@ BSMETA(itemi) = {
 	BSREQ(bonus),
 	BSREQ(mistery),
 	BSREQ(wear_index),
+	BSREQ(dodge),
 	BSREQ(use),
+	{}};
+BSMETA(itemupgrade) = {
+	BSREQ(id),
+	BSREQ(damage), BSREQ(parry), BSREQ(block), BSREQ(dodge),
+	BSREQ(weight), BSREQ(cost),
 	{}};
 BSMETA(itemi::weaponi) = {
 	BSREQ(parry), BSREQ(enemy_parry),

@@ -8,6 +8,10 @@
 
 enum ability_s : unsigned char;
 
+struct itemupgrade : nameable {
+	char			damage, parry, block, dodge;
+	short			weight, cost;
+};
 struct itemi : nameable {
 	struct weaponi {
 		char		parry, enemy_parry;
@@ -20,6 +24,7 @@ struct itemi : nameable {
 	short			avatar;
 	wear_s			wear;
 	ability_s		ability;
+	char			dodge;
 	char			bonus;
 	weaponi			weapon;
 	featable		feats;

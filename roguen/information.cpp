@@ -1,8 +1,15 @@
 #include "main.h"
 #include "race.h"
 
-const char* getnameshort(ability_s id) {
-	return getnm(bsdata<abilityi>::elements[id].id);
+static const char* getnameshort(const char* id) {
+	auto pn = getnme(str("%1Short", id));
+	if(pn)
+		return pn;
+	return getnm(id);
+}
+
+static const char* getnameshort(ability_s i) {
+	return getnameshort(bsdata<abilityi>::elements[i].id);
 }
 
 static void addv(stringbuilder& sb, const dice& value) {
@@ -39,16 +46,14 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn(getname());
 	sb.addn(getrace(getkind(), is(Female)));
 	sb.addn("%1 %2i [~%-Level]", getnm(getclass().id), get(Level));
+	sb.addn("$Tab -40");
 	sb.addn("---");
-	sb.addn("$Tab -25");
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
-	sb.addn("$Tab -25");
 	for(auto i = WeaponSkill; i <= ShieldUse; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
-	sb.addn("$Tab -40");
 	addf(sb, Armor, abilities[Armor]);
 	addf(sb, Hits, abilities[Hits], abilities[HitsMaximum]);
 	addf(sb, Mana, abilities[Mana], abilities[ManaMaximum]);
@@ -57,10 +62,12 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());
 }
 
-static void addv(stringbuilder& sb, const char* id, int value) {
+static void addv(stringbuilder& sb, const char* id, int value, const char* format = 0) {
 	if(!value)
 		return;
-	sb.adds("%-1%+2i", getnm(id), value);
+	if(!format)
+		format = "%-1%+2i";
+	sb.adds(format, getnameshort(id), value);
 }
 
 static void addv(stringbuilder& sb, const char* id) {
@@ -68,7 +75,7 @@ static void addv(stringbuilder& sb, const char* id) {
 }
 
 static void addv(stringbuilder& sb, ability_s id, int value) {
-	addv(sb, bsdata<abilityi>::elements[id].getname(), value);
+	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1:%2i");
 }
 
 static void addv(stringbuilder& sb, const featable& feats) {

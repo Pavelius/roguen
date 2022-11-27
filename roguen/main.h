@@ -48,10 +48,6 @@ enum ability_s : unsigned char {
 	HitsMaximum, ManaMaximum,
 	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Money,
 };
-enum triggern : unsigned char {
-	WhenCreatureP1EnterSiteP2, WhenCreatureP1Dead, WhenCreatureP1InSiteP2UpdateAbilities,
-	EverySeveralDays, EverySeveralDaysForP1,
-};
 extern stringbuilder console;
 class roomi;
 class creature;
@@ -77,8 +73,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			advance(variants elements);
 	void			advance(variant element);
 	void			damage(const item& weapon, int effect);
-	void			dress(variant v, int multiplier);
-	void			dress(variants v, int multiplier = 1);
 	void			fixcantgo() const;
 	bool			isfollowmaster() const;
 	void			levelup();
@@ -89,13 +83,13 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			update();
 	void			update_abilities();
 	void			update_room_abilities();
-	void			update_wears();
 public:
 	geoposition		worldpos;
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
 	void			apply(variant v);
+	void			apply(const featable& v) { feats.add(v); }
 	void			apply(const variants& source);
 	void			attack(creature& enemy, wear_s v, int bonus = 0, int damage_multiplier = 100);
 	void			attackmelee(creature& enemy);
@@ -107,6 +101,8 @@ public:
 	void			cast(const spelli& e);
 	void			cast(const spelli& e, int level, int mana);
 	void			clear();
+	void			dress(variant v, int multiplier);
+	void			dress(variants v, int multiplier = 1);
 	void			everyminute();
 	void			every10minutes();
 	void			every30minutes();
@@ -169,7 +165,6 @@ public:
 	void			summon(point m, const variants& elements, int count, int level);
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
-	void			update_room();
 	void			use(variants source);
 	void			use(item& v);
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }
@@ -211,7 +206,6 @@ class gamei : public geoposition, public ownerable {
 public:
 	static point	start_village;
 	void			clear();
-	void			createarea();
 	static void		endgame();
 	void			enter(point m, int level, const featurei* entry, direction_s appear_side);
 	int				get(const globali& e) const { return globals[bsid(&e)]; }

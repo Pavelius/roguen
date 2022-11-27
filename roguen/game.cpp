@@ -1,6 +1,7 @@
 #include "boost.h"
 #include "greatneed.h"
 #include "main.h"
+#include "triggern.h"
 
 areamap			area;
 areaheadi		areahead;
