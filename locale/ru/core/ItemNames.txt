@@ -22,6 +22,25 @@ White: Белый
 Wicked: Безнравственный
 Yellow: Желтый
 
+Corruption: Порча
+Defence: Защита
+Devastation: Взрыв
+Fumbling: Неуклюжесть
+Hunting: Охота
+Lighting: Молния
+Mayhem: Погром
+Might: Сила
+Penetration: Проницание
+Power: Власть
+Slaughtering: Убийство
+Surrendering: Паника
+TheEagle: Орел
+TheSun: Солнце
+TheVoid: Пустота
+Thunder: Гром
+Vampirism: Вампиризм
+Weakness: Слабость
+
 Fist: Кулаки
 
 CP: Медная монета

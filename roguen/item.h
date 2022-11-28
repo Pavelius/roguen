@@ -14,6 +14,10 @@ struct itemstat : nameable {
 	char			enemy_parry, enemy_block;
 	short			weight, cost;
 	featable		feats;
+	variants		dress;
+};
+struct itemvariety : nameable {
+	const itemstat*	elements[15];
 };
 struct itemi : itemstat {
 	short			count;
@@ -21,8 +25,8 @@ struct itemi : itemstat {
 	wear_s			wear;
 	char			wear_index;
 	variants		use;
-	const listi*	prefix;
-	const listi*	suffix;
+	const itemvariety* prefix;
+	const itemvariety* suffix;
 	const itemi*	ammunition;
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }

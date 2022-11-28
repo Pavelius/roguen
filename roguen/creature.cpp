@@ -8,13 +8,13 @@
 
 namespace {
 struct rollg {
-	int			roll, chance, delta;
-	bool		miss() const { return roll >= 5 && roll > chance; }
-	void		make(int chance);
-	void		make(ability_s& result, ability_s v, int chance);
+	int	roll, chance, delta;
+	bool miss() const { return roll >= 5 && roll > chance; }
+	void make(int chance);
+	void make(ability_s& result, ability_s v, int chance);
 };
 struct defenceg {
-	int			dodge, parry, block;
+	int dodge, parry, block;
 };
 }
 
@@ -67,7 +67,7 @@ static void pay_movement(creature* player) {
 }
 
 static void pay_attack(creature* player, const item& weapon) {
-	auto cost = 120 - weapon.get(FO(itemstat, speed)) * 2;
+	auto cost = 110 - weapon.get(FO(itemstat, speed)) * 2;
 	player->waitseconds(cost);
 }
 
@@ -355,6 +355,119 @@ static void check_hidden_doors(creature* p) {
 		p->actp(getnm("YouFoundSecretDoor"), found_doors);
 }
 
+static void drop_item(point m, const char* id) {
+	if(!area.isvalid(m) || !id)
+		return;
+	itemi* pi = single(id);
+	if(!pi)
+		return;
+	item it; it.create(pi);
+	it.drop(m);
+}
+
+static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
+	if(!ei.is(StuckFeature))
+		return false;
+	if(p->roll(Strenght, -10)) {
+		area.setactivate(m);
+		area.setactivate(m);
+		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
+	} else {
+		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
+		if(random_table) {
+			auto effect = random_table->random();
+			if(effect.iskind<listi>()) {
+				auto p = bsdata<listi>::elements + effect.value;
+				auto pn = getdescription(p->id);
+				if(pn)
+					player->act(pn, getnm(ei.id));
+				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
+				runscript(p->elements);
+			}
+		}
+	}
+	return true;
+}
+
+bool check_activate(creature* player, point m, const featurei& ei) {
+	auto pa = ei.getactivate();
+	if(!pa)
+		return false;
+	auto activate_item = ei.activate_item;
+	if(activate_item) {
+		if(ei.random_count)
+			activate_item.value += area.random[m] % ei.random_count;
+		if(activate_item.iskind<itemi>()) {
+			if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
+				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+				return false;
+			} else
+				player->actp(getnm(str("%1%2", ei.id, "UseActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+		}
+	}
+	area.setactivate(m);
+	return true;
+}
+
+static int chance_cut_wood(const item& weapon) {
+	auto& ei = player->wears[MeleeWeapon].geti();
+	auto chance = player->get(Strenght) / 10 + ei.damage;
+	if(chance < 1)
+		chance = 1;
+	if(ei.is(TwoHanded))
+		chance *= 2;
+	return chance;
+}
+
+static bool check_cut_wood(creature* player, point m, const featurei& ei) {
+	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
+		auto chance = chance_cut_wood(player->wears[MeleeWeapon]);
+		if(d100() < chance) {
+			player->act(getnm("YouCutWood"), getnm(ei.id));
+			area.setfeature(m, 0);
+			drop_item(m, "WoodenLagsTable");
+			return true;
+		}
+	}
+	return false;
+}
+
+static void check_interaction(creature* player, point m) {
+	auto& ei = area.getfeature(m);
+	if(ei.isvisible()) {
+		if(check_stuck_doors(player, m, ei))
+			return;
+		if(check_activate(player, m, ei))
+			return;
+		if(check_cut_wood(player, m, ei))
+			return;
+	}
+}
+
+static void look_items(creature* player, point m) {
+	items.clear();
+	items.select(m);
+	if(player->ishuman() && items) {
+		auto index = 0;
+		char temp[4096]; stringbuilder sb(temp);
+		auto count = items.getcount();
+		auto payment_cost = player->getpaymentcost();
+		sb.add(getnm("ThereIsLying"));
+		for(auto p : items) {
+			if(index > 0) {
+				if(index == count - 1)
+					sb.adds(getnm("And"));
+				else
+					sb.add(",");
+			}
+			sb.adds("%-1", p->getfullname(payment_cost));
+			index++;
+		}
+		sb.add(".");
+		player->actp(temp);
+	}
+}
+
 static void update_boost(featable& feats, variant parent) {
 	feats.clear();
 	for(auto& e : bsdata<boosti>()) {
@@ -562,119 +675,6 @@ void creature::movestep(direction_s v) {
 	}
 	setdirection(v);
 	movestep(to(getposition(), v));
-}
-
-static void drop_item(point m, const char* id) {
-	if(!area.isvalid(m) || !id)
-		return;
-	itemi* pi = single(id);
-	if(!pi)
-		return;
-	item it; it.create(pi);
-	it.drop(m);
-}
-
-static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
-	if(!ei.is(StuckFeature))
-		return false;
-	if(p->roll(Strenght, -10)) {
-		area.setactivate(m);
-		area.setactivate(m);
-		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
-	} else {
-		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
-		if(random_table) {
-			auto effect = random_table->random();
-			if(effect.iskind<listi>()) {
-				auto p = bsdata<listi>::elements + effect.value;
-				auto pn = getdescription(p->id);
-				if(pn)
-					player->act(pn, getnm(ei.id));
-				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
-				runscript(p->elements);
-			}
-		}
-	}
-	return true;
-}
-
-bool check_activate(creature* player, point m, const featurei& ei) {
-	auto pa = ei.getactivate();
-	if(!pa)
-		return false;
-	auto activate_item = ei.activate_item;
-	if(activate_item) {
-		if(ei.random_count)
-			activate_item.value += area.random[m] % ei.random_count;
-		if(activate_item.iskind<itemi>()) {
-			if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
-				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
-				return false;
-			} else
-				player->actp(getnm(str("%1%2", ei.id, "UseActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
-		}
-	}
-	area.setactivate(m);
-	return true;
-}
-
-static int chance_cut_wood(const item& weapon) {
-	auto& ei = player->wears[MeleeWeapon].geti();
-	auto chance = player->get(Strenght) / 10 + ei.damage;
-	if(chance < 1)
-		chance = 1;
-	if(ei.is(TwoHanded))
-		chance *= 2;
-	return chance;
-}
-
-static bool check_cut_wood(creature* player, point m, const featurei& ei) {
-	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
-		auto chance = chance_cut_wood(player->wears[MeleeWeapon]);
-		if(d100() < chance) {
-			player->act(getnm("YouCutWood"), getnm(ei.id));
-			area.setfeature(m, 0);
-			drop_item(m, "WoodenLagsTable");
-			return true;
-		}
-	}
-	return false;
-}
-
-static void check_interaction(creature* player, point m) {
-	auto& ei = area.getfeature(m);
-	if(ei.isvisible()) {
-		if(check_stuck_doors(player, m, ei))
-			return;
-		if(check_activate(player, m, ei))
-			return;
-		if(check_cut_wood(player, m, ei))
-			return;
-	}
-}
-
-static void look_items(creature* player, point m) {
-	items.clear();
-	items.select(m);
-	if(player->ishuman() && items) {
-		auto index = 0;
-		char temp[4096]; stringbuilder sb(temp);
-		auto count = items.getcount();
-		auto payment_cost = player->getpaymentcost();
-		sb.add(getnm("ThereIsLying"));
-		for(auto p : items) {
-			if(index > 0) {
-				if(index == count - 1)
-					sb.adds(getnm("And"));
-				else
-					sb.add(",");
-			}
-			sb.adds("%-1", p->getfullname(payment_cost));
-			index++;
-		}
-		sb.add(".");
-		player->actp(temp);
-	}
 }
 
 bool creature::matchspeech(variant v) const {
@@ -1165,11 +1165,11 @@ static int getmagicbonus(magic_s v) {
 	}
 }
 
-void creature::dress(variant v, int multiplier) {
+void creature::dress(variant v) {
 	if(v.iskind<abilityi>())
-		abilities[v.value] += v.counter * multiplier;
+		abilities[v.value] += v.counter;
 	else if(v.iskind<listi>())
-		dress(bsdata<listi>::elements[v.value].elements, multiplier);
+		dress(bsdata<listi>::elements[v.value].elements);
 	else if(v.iskind<feati>()) {
 		if(v.counter > 0)
 			feats.set(v.value);
@@ -1178,21 +1178,26 @@ void creature::dress(variant v, int multiplier) {
 	}
 }
 
-void creature::dress(variants source, int multiplier) {
+void creature::dress(variants source) {
 	for(auto v : source)
-		dress(v, multiplier);
+		dress(v);
+}
+
+static void apply_dress(creature* player, const item& e) {
+	player->dress(e.geti().dress);
+	auto p = e.getprefix();
+	if(p)
+		player->dress(p->dress);
+	p = e.getsuffix();
+	if(p)
+		player->dress(p->dress);
 }
 
 static void update_dress(creature* player, const item& e) {
-	auto& ei = e.geti();
-	auto magic = e.getmagic();
-	if(!e.isidentified())
-		magic = Mundane;
-	auto multiplier = getmultiplier(magic);
-	player->apply(ei.feats);
+	player->apply(e.geti().feats);
 	player->abilities[Armor] += e.get(FO(itemstat, armor));
 	player->abilities[DodgeSkill] += e.get(FO(itemstat, dodge));
-	player->abilities[Speed] += e.get(FO(itemstat, speed)) * multiplier;
+	player->abilities[Speed] += e.get(FO(itemstat, speed));
 }
 
 static void update_wears(creature* player) {
@@ -1200,11 +1205,13 @@ static void update_wears(creature* player) {
 		if(!e)
 			continue;
 		update_dress(player, e);
+		apply_dress(player, e);
 	}
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
 		player->abilities[DodgeSkill] += e.get(FO(itemstat, dodge));
+		apply_dress(player, e);
 	}
 }
 

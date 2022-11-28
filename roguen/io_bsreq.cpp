@@ -109,6 +109,14 @@ static bool isequal(const char* pn) {
 	return true;
 }
 
+static varianti* find_metadata(const array* source) {
+	for(auto& e : bsdata<varianti>()) {
+		if(e.source == source)
+			return &e;
+	}
+	return 0;
+}
+
 static void read_value(valuei& e, const bsreq* req) {
 	e.clear();
 	if(*p == '\"') {
@@ -150,7 +158,11 @@ static void read_value(valuei& e, const bsreq* req) {
 			else {
 				e.number = req->source->find(temp, shift);
 				if(e.number == -1) {
-					log::error(p, "Not found identifier `%1`", temp);
+					auto pm = find_metadata(req->source);
+					if(pm)
+						log::error(p, "Not found object `%1` in type `%2`", temp, pm->id);
+					else
+						log::error(p, "Not found object `%1`", temp);
 					e.number = 0;
 				} else
 					e.data = req->source->ptr(e.number);

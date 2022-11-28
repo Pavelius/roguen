@@ -99,8 +99,8 @@ public:
 	void			cast(const spelli& e);
 	void			cast(const spelli& e, int level, int mana);
 	void			clear();
-	void			dress(variant v, int multiplier);
-	void			dress(variants v, int multiplier = 1);
+	void			dress(variant v);
+	void			dress(variants v);
 	void			everyminute();
 	void			every10minutes();
 	void			every30minutes();

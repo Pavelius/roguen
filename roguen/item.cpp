@@ -9,10 +9,21 @@ static int d100() {
 	return rand() % 100;
 }
 
-static int random_upgrade(const listi* p, int level) {
+static int random_count(const itemvariety* p) {
+	auto pe = p->elements + sizeof(itemvariety::elements) / sizeof(itemvariety::elements[0]);
+	auto count = 0;
+	for(auto pb = p->elements; pb < pe && *pb; pb++)
+		count++;
+	return count;
+}
+
+static int random_upgrade(const itemvariety* p, int level) {
 	if(!p)
 		return 0;
-	return 1 + rand() % p->elements.count;
+	auto count = random_count(p);
+	if(!count)
+		return 0;
+	return 1 + rand() % count;
 }
 
 int item::getcost() const {
@@ -136,10 +147,12 @@ const char*	item::getfullname(int price_percent) const {
 		}
 	}
 	sb.adds("%1", getname());
-	auto sf = getsuffix();
-	if(sf) {
-		sb.addsep(' ');
-		sb.adjective(getnm(sf->id), vw);
+	if(isidentified()) {
+		auto sf = getsuffix();
+		if(sf) {
+			sb.addsep(' ');
+			sb.addof(getnm(sf->id));
+		}
 	}
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
@@ -160,19 +173,13 @@ void item::set(magic_s v) {
 const itemstat* item::getprefix() const {
 	if(iscountable() || !prefix)
 		return 0;
-	auto v = geti().prefix->elements.begin()[prefix - 1];
-	if(v.iskind<itemstat>())
-		return bsdata<itemstat>::elements + v.value;
-	return 0;
+	return geti().prefix->elements[prefix - 1];
 }
 
 const itemstat* item::getsuffix() const {
 	if(iscountable() || !suffix)
 		return 0;
-	auto v = geti().suffix->elements.begin()[suffix - 1];
-	if(v.iskind<itemstat>())
-		return bsdata<itemstat>::elements + v.value;
-	return 0;
+	return geti().suffix->elements[suffix - 1];
 }
 
 int	item::getweight() const {
@@ -203,7 +210,7 @@ int	item::get(unsigned fo) const {
 	return result;
 }
 
-void item::upgrade(int chance_suffix, int chance_prefix, int level) {
+void item::upgrade(int chance_prefix, int chance_suffix, int level) {
 	if(iscountable())
 		return;
 	if(d100() < chance_prefix)

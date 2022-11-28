@@ -57,8 +57,15 @@ static void place_item(point index, const itemi* pe) {
 		return;
 	if(area.iswall(index))
 		return;
+	auto chance_prefix = (areahead.level - 1) * 15;
+	auto chance_suffix = chance_prefix / 2;
+	if(chance_prefix > 80)
+		chance_prefix = 80;
+	if(chance_suffix > 70)
+		chance_suffix = 70;
 	item it; it.clear();
 	it.create(pe);
+	it.upgrade(chance_prefix, chance_suffix, areahead.level);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);

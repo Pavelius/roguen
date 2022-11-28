@@ -24,6 +24,7 @@ BSDATAC(creature, 256);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
 BSDATAC(itemstat, 128);
+BSDATAC(itemvariety, 32);
 BSDATAC(itemground, 1024);
 BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
@@ -80,6 +81,7 @@ BSMETA(itemi) = {
 	BSREQ(enemy_parry), BSREQ(enemy_block),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
+	BSREQ(dress),
 	BSREQ(count),
 	BSREQ(avatar),
 	BSENM(wear, weari),
@@ -94,6 +96,11 @@ BSMETA(itemstat) = {
 	BSREQ(enemy_parry), BSREQ(enemy_block),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
+	BSREQ(dress),
+	{}};
+BSMETA(itemvariety) = {
+	BSREQ(id),
+	BSREQ(elements),
 	{}};
 BSMETA(locationi) = {
 	BSREQ(id),
@@ -169,6 +176,7 @@ BSDATA(varianti) = {
 	{"IfScript", VAR(ifscripti), 1},
 	{"Item", VAR(itemi), 1},
 	{"ItemUpgrade", VAR(itemstat), 1},
+	{"ItemVariety", VAR(itemvariety), 1},
 	{"List", VAR(listi), 1},
 	{"Location", VAR(locationi), 1},
 	{"Monster", VAR(monsteri), 1},
