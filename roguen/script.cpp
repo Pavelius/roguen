@@ -2,7 +2,7 @@
 #include "pushvalue.h"
 #include "script.h"
 
-variant			param1, param2;
+variant	param1, param2;
 
 BSMETA(script) = {
 	BSREQ(id),

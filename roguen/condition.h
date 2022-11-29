@@ -7,7 +7,7 @@ enum condition_s : unsigned char {
 	NoWounded, Wounded, HeavyWounded,
 	Unaware, NoAnyFeature, Locked,
 	NoInt, AnimalInt, LowInt, AveInt, HighInt,
-	TargetCreatures, TargetFeatures, TargetRooms, Random,
+	TargetCreatures, TargetFeatures, TargetRooms, TargetItems, Random,
 	You, Allies, Enemies, Neutrals, Multitarget, Ranged,
 };
 

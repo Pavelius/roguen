@@ -307,6 +307,39 @@ static void match_features(const variants& source) {
 	indecies.count = ps - indecies.begin();
 }
 
+static bool iscondition(const void* object, int v) {
+	auto p = (item*)object;
+	switch(v) {
+	case Identified: return p->isidentified();
+	case Unaware: return !p->isidentified() && !p->iscountable();
+	default: return false;
+	}
+}
+
+static bool isallow(const item& e, variant v) {
+	if(v.iskind<conditioni>())
+		return iscondition(&e, v.value);
+	return true;
+}
+
+static bool isallow(const item& e, const variants& source) {
+	for(auto v : source) {
+		if(!isallow(e, v))
+			return false;
+	}
+	return true;
+}
+
+static void match_items(const variants& source) {
+	auto ps = items.begin();
+	for(auto p : items) {
+		if(!isallow(*p, source))
+			continue;
+		*ps++ = p;
+	}
+	items.count = ps - items.begin();
+}
+
 bool choose_targets(unsigned flags, const variants& effects) {
 	indecies.clear();
 	items.clear();
@@ -349,6 +382,13 @@ bool choose_targets(unsigned flags, const variants& effects) {
 		if(!FGT(flags, Ranged))
 			rooms.match(fntis<roomi, &roomi::ismarkable>, true);
 	}
+	if(FGT(flags, TargetItems)) {
+		items.select(player);
+		if(FGT(flags, Unaware))
+			items.match(iscondition, Unaware, true);
+		if(FGT(flags, Identified))
+			items.match(iscondition, Identified, true);
+	}
 	if(FGT(flags, Random)) {
 		targets.shuffle();
 		items.shuffle();
@@ -376,12 +416,16 @@ static bool choose_target_interactive(const char* id, unsigned flags, bool autoc
 		if(!rooms.chooseu(pn, getnm("Cancel")))
 			return false;
 	}
+	if(FGT(flags, TargetItems)) {
+		if(!items.chooseu(pn, getnm("Cancel")))
+			return false;
+	}
 	return true;
 }
 
 static void action_text(const creature* player, const char* id, const char* action) {
 	if(!player->is(AnimalInt)) {
-		auto pn = player->getspeech(str("%1%2Speech", id, action));
+		auto pn = player->getspeech(str("%1%2Speech", id, action), false);
 		if(pn) {
 			player->say(pn);
 			return;
@@ -443,6 +487,11 @@ void creature::cast(const spelli& e, int level, int mana) {
 	} else if(FGT(e.target, TargetRooms)) {
 		for(auto p : rooms) {
 			pushvalue push_rect(last_room, p);
+			runscript(e.effect);
+		}
+	} else if(FGT(e.target, TargetItems)) {
+		for(auto p : items) {
+			pushvalue push_object(last_item, p);
 			runscript(e.effect);
 		}
 	}
@@ -907,6 +956,10 @@ static void destroy_feature(int bonus) {
 	area.setfeature(m, 0);
 }
 
+static void identify_item(int bonus) {
+	last_item->setidentified(bonus);
+}
+
 void runscript(const variants& elements) {
 	if(stop_script)
 		return;
@@ -1005,6 +1058,7 @@ BSDATA(script) = {
 	{"MoveUp", move_up},
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
+	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
 	{"LoseGame", lose_game},
 	{"Offset", set_offset},

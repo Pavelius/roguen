@@ -1,4 +1,5 @@
 Entaglement: Рост колючек
+IdentifySpell: Опознание
 KnockDoor: Вскрыть замки
 SummonUndead: Призвать мертвецов
 Teleport: Телепорт

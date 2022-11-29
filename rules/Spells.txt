@@ -6,6 +6,9 @@ CureWounds mana(10) count(1 4)
 Entaglement mana(6)
  target TargetCreatures Enemies Ranged
  effect NoAnyFeature ThornBush
+IdentifySpell mana(10)
+ target TargetItems Unaware
+ effect IdentifyItem+1
 Gate mana(40)
  target TargetFeatures
 KnockDoor mana(10)

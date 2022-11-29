@@ -10,6 +10,7 @@ Mage player(1)
 #Spell
 
 Entaglement
+IdentifySpell
 Gate
 TorchLight
 SummonUndead

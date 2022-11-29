@@ -18,6 +18,7 @@ BSDATA(conditioni) = {
 	{"TargetCreatures"},
 	{"TargetFeatures"},
 	{"TargetRooms"},
+	{"TargetItems"},
 	{"Random"},
 	{"You"},
 	{"Allies"},
