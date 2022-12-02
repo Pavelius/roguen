@@ -93,7 +93,9 @@ SmallLags: Маленькая ветка
 AquaPotion: Водяное зелье
 BluePotion: Синее зелье
 
+LoafOfBread: Кусок хлеба
 Ration: Сухпаек
+Sausage: Колбаса
 
 TinyKey: Крошечный ключ
 SmallKey: Маленький ключ

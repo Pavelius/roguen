@@ -11,7 +11,7 @@ enum ability_s : unsigned char;
 
 struct itemstat : nameable {
 	char			damage, armor, skill, parry, dodge, block, block_ranged, pierce, speed, mistery;
-	char			enemy_parry, enemy_block;
+	char			enemy_parry, enemy_block, rotting;
 	short			weight, cost;
 	featable		feats;
 	variants		dress;

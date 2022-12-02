@@ -46,7 +46,7 @@ enum ability_s : unsigned char {
 	Survival,
 	Level,
 	HitsMaximum, ManaMaximum,
-	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Money,
+	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Satiation, Money,
 };
 extern stringbuilder console;
 class roomi;
@@ -68,7 +68,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	featable		feats, feats_active;
 	point			moveorder, guardorder;
 	unsigned		experience;
-	int				wait_seconds;
+	int				satiation, wait_seconds;
 	void			advance(variant kind, int level);
 	void			advance(variants elements);
 	void			advance(variant element);
@@ -237,7 +237,7 @@ extern creaturea	creatures, enemies, targets;
 extern itema		items;
 extern gamei		game;
 extern creature*	last_enemy;
-extern int			last_value;
+extern int			last_value, last_cap;
 extern ability_s	last_ability;
 extern quest*		last_quest;
 extern rect			last_rect;

@@ -132,6 +132,15 @@ static void update_los() {
 }
 
 static void decoy_food() {
+	for(auto& e : bsdata<itemground>()) {
+		if(!e)
+			continue;
+		auto rotting = e.geti().rotting;
+		if(!rotting)
+			continue;
+		if(d100() < rotting)
+			e.damage();
+	}
 }
 
 static void auto_activate_features() {

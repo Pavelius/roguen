@@ -135,7 +135,14 @@ BluePotion cost(60) weight(10) wear(Potion) avatar(433)
 GreenPotion cost(70) weight(10) wear(Potion) avatar(428)
 YellowPotion cost(100) weight(10) wear(Potion) avatar(435)
 
+Apple weight(2) avatar(503) count(1) rotting(20)
+ use Satiation+20 Chance+1 Strenght+1
+LoafOfBread weight(40) avatar(160) count(1)
+ use Satiation+500
+Sausage weight(20) avatar(157) count(1)
+ use Satiation+500 Chance+3 Strenght+1
 Ration cost(100) weight(50) avatar(126) count(1)
+ use Satiation+800
 Torch cost(10) avatar(207) weight(30) count(3)
  use TorchLight+3
 

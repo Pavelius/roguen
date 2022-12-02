@@ -1008,8 +1008,23 @@ void creature::advance(variants elements) {
 void creature::advance(variant v) {
 	if(v.iskind<abilityi>()) {
 		last_ability = (ability_s)v.value;
+		if(v.counter > 0) {
+			if(last_cap && basic.abilities[v.value] >= last_cap) {
+				last_cap = 0;
+				return;
+			}
+			last_cap = 0;
+		} else if(v.counter < 0) {
+			if(last_cap && basic.abilities[v.value] <= last_cap) {
+				last_cap = 0;
+				return;
+			}
+			last_cap = 0;
+		}
 		switch(v.value) {
 		case Experience: gainexperience(v.counter); break;
+		case Satiation: satiation += v.counter; break;
+		case Money: money += v.counter * 10; break;
 		default: basic.abilities[v.value] += v.counter; break;
 		}
 	} else if(v.iskind<itemi>()) {

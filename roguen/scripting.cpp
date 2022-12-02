@@ -40,7 +40,7 @@ rect			last_rect;
 roomi*			last_room;
 const sitei*	last_site;
 greatneed*		last_need;
-int				last_value;
+int				last_value, last_cap;
 extern bool		show_floor_rect;
 static bool		stop_script;
 
@@ -944,6 +944,11 @@ static void roll_value(int bonus) {
 		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
 }
 
+static void random_chance(int bonus) {
+	if(d100() >= bonus)
+		stop_script = true;
+}
+
 static void activate_feature(int bonus) {
 	point m = center(last_rect);
 	visualize_activity(m);
@@ -964,6 +969,7 @@ void runscript(const variants& elements) {
 	if(stop_script)
 		return;
 	pushvalue push_stop(stop_script);
+	pushvalue push_cap(last_cap, 0);
 	for(auto v : elements) {
 		if(stop_script)
 			break;
@@ -1042,6 +1048,7 @@ BSDATA(script) = {
 	{"Activate", activate_feature},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
+	{"Chance", random_chance},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
