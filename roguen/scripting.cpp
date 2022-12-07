@@ -43,6 +43,7 @@ greatneed*		last_need;
 int				last_value, last_cap;
 extern bool		show_floor_rect;
 static bool		stop_script;
+static itemstat *item_prefix, *item_suffix;
 
 static const sitegeni* get_local_method() {
 	if(last_site && last_site->local)
@@ -57,15 +58,21 @@ static void place_item(point index, const itemi* pe) {
 		return;
 	if(area.iswall(index))
 		return;
-	auto chance_prefix = (areahead.level - 1) * 15;
-	auto chance_suffix = chance_prefix / 2;
-	if(chance_prefix > 80)
-		chance_prefix = 80;
-	if(chance_suffix > 70)
-		chance_suffix = 70;
 	item it; it.clear();
 	it.create(pe);
-	it.upgrade(chance_prefix, chance_suffix, areahead.level);
+	if(item_prefix || item_suffix) {
+		it.setupgrade(item_prefix);
+		it.setupgrade(item_suffix);
+		item_prefix = item_suffix = 0;
+	} else {
+		auto chance_prefix = (areahead.level - 1) * 15;
+		auto chance_suffix = chance_prefix / 2;
+		if(chance_prefix > 80)
+			chance_prefix = 80;
+		if(chance_suffix > 70)
+			chance_suffix = 70;
+		it.upgrade(chance_prefix, chance_suffix, areahead.level);
+	}
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
@@ -104,7 +111,7 @@ static void visualize_activity(point m) {
 	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
-void runscript(variant v) {
+void script::run(variant v) {
 	if(v.iskind<featurei>())
 		area.set(last_rect, &areamap::setfeature, v.value, v.counter);
 	else if(v.iskind<tilei>())
@@ -117,13 +124,13 @@ void runscript(variant v) {
 		game.set(*last_global, last_value + v.counter);
 	} else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements)
-			runscript(v);
+			script::run(v);
 	} else if(v.iskind<randomizeri>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++)
-			runscript(bsdata<randomizeri>::elements[v.value].random());
+			script::run(bsdata<randomizeri>::elements[v.value].random());
 	} else if(v.iskind<script>())
 		bsdata<script>::elements[v.value].run(v.counter);
 	else if(v.iskind<monsteri>()) {
@@ -154,6 +161,11 @@ void runscript(variant v) {
 			place_shape(bsdata<shapei>::elements[v.value],
 				area.get(last_rect), getfloor(), getwall());
 		}
+	} else if(v.iskind<itemstat>()) {
+		if(!item_prefix)
+			item_prefix = v;
+		if(!item_suffix)
+			item_suffix = v;
 	} else if(v.iskind<itemi>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
@@ -168,10 +180,10 @@ void runscript(variant v) {
 		if(last_method)
 			(last_site->*last_method->proc)();
 		add_room(last_site, last_rect);
-		runscript(bsdata<sitei>::elements[v.value].landscape);
+		script::run(bsdata<sitei>::elements[v.value].landscape);
 	} else if(v.iskind<locationi>()) {
 		pushvalue push_rect(last_rect);
-		runscript(bsdata<locationi>::elements[v.value].landscape);
+		script::run(bsdata<locationi>::elements[v.value].landscape);
 	} else if(v.iskind<speech>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
@@ -189,11 +201,6 @@ void runscript(variant v) {
 		if(player)
 			player->apply(v);
 	}
-}
-
-static void runscript(variant v, int bonus) {
-	v.counter = bonus;
-	runscript(v);
 }
 
 static bool ifscript(variant v) {
@@ -482,17 +489,17 @@ void creature::cast(const spelli& e, int level, int mana) {
 	} else if(FGT(e.target, TargetFeatures)) {
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
-			runscript(e.effect);
+			script::run(e.effect);
 		}
 	} else if(FGT(e.target, TargetRooms)) {
 		for(auto p : rooms) {
 			pushvalue push_rect(last_room, p);
-			runscript(e.effect);
+			script::run(e.effect);
 		}
 	} else if(FGT(e.target, TargetItems)) {
 		for(auto p : items) {
 			pushvalue push_object(last_item, p);
-			runscript(e.effect);
+			script::run(e.effect);
 		}
 	}
 	if(e.summon)
@@ -815,7 +822,7 @@ static void quest_minion(int bonus) {
 		return;
 	monsteri* pm = last_quest->problem;
 	if(pm)
-		runscript(pm->ally(), bonus);
+		script::runv(pm->ally(), bonus);
 }
 
 static void quest_guardian(int bonus) {
@@ -824,13 +831,16 @@ static void quest_guardian(int bonus) {
 	monsteri* pm = last_quest->problem;
 	if(pm) {
 		areahead.total.boss++;
-		runscript(last_quest->problem, bonus);
+		script::runv((monsteri*)last_quest->problem, bonus);
 	}
 }
 
 static void quest_reward(int bonus) {
-	if(last_quest && last_quest->reward)
-		runscript(last_quest->reward, bonus);
+	if(last_quest && last_quest->reward) {
+		variant v = last_quest->reward;
+		v.counter = bonus;
+		script::run(v);
+	}
 }
 
 static void quest_landscape(int bonus) {
@@ -838,21 +848,21 @@ static void quest_landscape(int bonus) {
 		return;
 	locationi* pm = last_quest->modifier;
 	if(pm)
-		runscript(pm->landscape);
+		script::run(pm->landscape);
 }
 
 static void site_floor(int bonus) {
 	if(last_site && last_site->floors)
-		runscript(bsdata<tilei>::elements + last_site->floors, bonus);
+		script::runv(bsdata<tilei>::elements + last_site->floors, bonus);
 	else if(last_location && last_location->floors)
-		runscript(bsdata<tilei>::elements + last_location->floors, bonus);
+		script::runv(bsdata<tilei>::elements + last_location->floors, bonus);
 }
 
 static void site_wall(int bonus) {
 	if(last_site && last_site->walls)
-		runscript(bsdata<tilei>::elements + last_site->walls, bonus);
+		script::runv(bsdata<tilei>::elements + last_site->walls, bonus);
 	else if(last_location && last_location->walls)
-		runscript(bsdata<tilei>::elements + last_location->walls, bonus);
+		script::runv(bsdata<tilei>::elements + last_location->walls, bonus);
 }
 
 static const spelli* choose_spell(int bonus) {
@@ -911,7 +921,7 @@ static void choose_action(int bonus) {
 		auto pa = last_actions.choose(getnm("ChooseAction"), getnm("Cancel"), false);
 		if(!pa)
 			return;
-		runscript(pa);
+		script::run(pa);
 	}
 	player->wait();
 }
@@ -965,7 +975,7 @@ static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
 }
 
-void runscript(const variants& elements) {
+void script::run(const variants& elements) {
 	if(stop_script)
 		return;
 	pushvalue push_stop(stop_script);
@@ -973,7 +983,7 @@ void runscript(const variants& elements) {
 	for(auto v : elements) {
 		if(stop_script)
 			break;
-		runscript(v);
+		script::run(v);
 	}
 }
 

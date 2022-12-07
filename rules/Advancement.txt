@@ -4,7 +4,7 @@ Fighter 0
  elements Strenght+40 Dexterity+30 Wits+25 Charisma+20 WeaponSkill+40 BalisticSkill+30 ShieldUse+10 HitsMaximum+20\
   Web+3 SummonUndead+4 Entaglement+2 Teleport+2 KnockDoor+4 IdentifySpell+1
 Fighter 0
- elements ChainArmor Sword
+ elements ChainArmor Brutal Sword
 
 DarkElf 0
  elements LeatherArmor Dagger

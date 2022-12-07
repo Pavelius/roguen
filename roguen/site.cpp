@@ -175,7 +175,7 @@ static void create_road(const rect& rc) {
 	area.set(last_rect, &areamap::settile, road.value);
 	variant v = "RandomCommoner";
 	v.counter = xrand(3, 6);
-	runscript(v);
+	script::run(v);
 }
 
 static void create_city_level(const rect& rc, int level) {
@@ -467,7 +467,7 @@ static void create_sites() {
 		sites.count = locations.count;
 	for(size_t i = 0; i < locations.count; i++) {
 		pushvalue push_rect(last_rect, locations.data[i]);
-		runscript(sites.data[i]);
+		script::run(sites.data[i]);
 	}
 }
 
@@ -504,7 +504,7 @@ static void create_corridor_content(point i) {
 	else if(quest_modifier && quest_modifier->loot && d100() < 40)
 		treasure = randomizeri::random(quest_modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
-	runscript(treasure);
+	script::run(treasure);
 	areahead.total.loots++;
 }
 
@@ -576,7 +576,7 @@ void sitei::building() const {
 
 void sitei::cityscape() const {
 	fillfloor();
-	runscript(this);
+	script::run(this);
 	last_rect.offset(last_location->offset, last_location->offset);
 	create_city_level(last_rect, 0);
 	sort_locations();
@@ -584,7 +584,7 @@ void sitei::cityscape() const {
 
 void sitei::outdoor() const {
 	fillfloor();
-	runscript(this);
+	script::run(this);
 	last_rect.offset(last_location->offset, last_location->offset);
 	const auto parts = 4;
 	const auto size = last_rect.width() / parts;

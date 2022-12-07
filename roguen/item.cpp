@@ -18,6 +18,19 @@ static int random_count(const itemvariety* p) {
 	return count;
 }
 
+static int find_upgrade(const itemvariety* p, const itemstat* upgrade) {
+	if(!upgrade)
+		return 0;
+	auto pe = p->elements + sizeof(itemvariety::elements) / sizeof(itemvariety::elements[0]);
+	auto count = 0;
+	for(auto pb = p->elements; pb < pe && *pb; pb++) {
+		if(*pb == upgrade)
+			return count + 1;
+		count++;
+	}
+	return 0;
+}
+
 static int random_upgrade(const itemvariety* p, int level) {
 	if(!p)
 		return 0;
@@ -211,6 +224,15 @@ int	item::get(unsigned fo) const {
 	return result;
 }
 
+void item::setupgrade(const itemstat* pv) {
+	if(!pv)
+		return;
+	switch(pv->upgrade) {
+	case 1: prefix = find_upgrade(geti().prefix, pv); break;
+	default: suffix = find_upgrade(geti().suffix, pv); break;
+	}
+}
+
 void item::upgrade(int chance_prefix, int chance_suffix, int level) {
 	if(iscountable())
 		return;
@@ -218,4 +240,22 @@ void item::upgrade(int chance_prefix, int chance_suffix, int level) {
 		prefix = random_upgrade(geti().prefix, level);
 	if(d100() < chance_suffix)
 		suffix = random_upgrade(geti().suffix, level);
+}
+
+const variants& itemstat::getdress(magic_s magic) const {
+	switch(magic) {
+	case Artifact:
+		if(dress_artifact)
+			return dress_artifact;
+		return getdress(Blessed);
+	case Blessed:
+		if(dress_bless)
+			return dress_bless;
+		return getdress(Mundane);
+	case Cursed:
+		if(dress_cursed)
+			return dress_cursed;
+		return getdress(Mundane);
+	default: return dress;
+	}
 }

@@ -82,7 +82,7 @@ BSMETA(itemi) = {
 	BSREQ(rotting),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
-	BSREQ(dress),
+	BSREQ(dress), BSREQ(dress_bless), BSREQ(dress_artifact), BSREQ(dress_cursed),
 	BSREQ(count),
 	BSREQ(avatar),
 	BSENM(wear, weari),
@@ -98,7 +98,8 @@ BSMETA(itemstat) = {
 	BSREQ(rotting),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
-	BSREQ(dress),
+	BSREQ(dress), BSREQ(dress_bless), BSREQ(dress_artifact), BSREQ(dress_cursed),
+	BSREQ(upgrade),
 	{}};
 BSMETA(itemvariety) = {
 	BSREQ(id),

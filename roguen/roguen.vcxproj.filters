@@ -312,12 +312,6 @@
     <ClCompile Include="moveable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="item.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="feat.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="wearable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -329,6 +323,12 @@
     </ClCompile>
     <ClCompile Include="skilluse.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="feat.cpp">
+      <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,12 +542,6 @@
     <ClInclude Include="moveable.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="item.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="feat.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="wearable.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -576,6 +570,12 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="triggern.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="feat.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

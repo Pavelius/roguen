@@ -1,6 +1,8 @@
 ﻿#include "crt.h"
 #include "draw.h"
 
+int decode_zip(unsigned char* output, const unsigned char* input, int input_size);
+
 namespace {
 enum colortypes {
 	PngColorGrey = 0, // greyscale: 1,2,4,8,16 bit
@@ -419,8 +421,6 @@ static void postprocess_scanlines(unsigned char* out, unsigned char* in, unsigne
 		Adam7_deinterlace(out, in, w, h, bpp);
 	}
 }
-
-int decode_zip(unsigned char* output, const unsigned char* input, int input_size);
 
 static void apply_transparent(color* p, int w, int h, color transparent) {
 	for(auto y = 0; y < h; y++) {

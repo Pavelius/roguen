@@ -151,10 +151,10 @@ bool creature::speechneed() {
 	if(last_need) {
 		if(last_need->is(NeedSuccess)) {
 			say_need("Success");
-			runscript(last_need->geti().success);
+			script::run(last_need->geti().success);
 		} else if(last_need->is(NeedFail)) {
 			say_need("Fail");
-			runscript(last_need->geti().fail);
+			script::run(last_need->geti().fail);
 		} else
 			say_need("Partial");
 		last_need->clear();

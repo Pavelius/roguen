@@ -220,7 +220,7 @@ static void drop_treasure(creature* pe) {
 		return;
 	pushvalue push_player(player, pe);
 	pushvalue push_rect(last_rect, pe->getposition().rectangle());
-	runscript(p->treasure);
+	script::run(p->treasure);
 }
 
 static void check_blooding(creature* p) {
@@ -382,7 +382,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 				if(pn)
 					player->act(pn, getnm(ei.id));
 				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
-				runscript(p->elements);
+				script::run(p->elements);
 			}
 		}
 	}
@@ -1199,13 +1199,14 @@ void creature::dress(variants source) {
 }
 
 static void apply_dress(creature* player, const item& e) {
-	player->dress(e.geti().dress);
+	auto magic = e.getmagic();
+	player->dress(e.geti().getdress(magic));
 	auto p = e.getprefix();
 	if(p)
-		player->dress(p->dress);
+		player->dress(p->getdress(magic));
 	p = e.getsuffix();
 	if(p)
-		player->dress(p->dress);
+		player->dress(p->getdress(magic));
 }
 
 static void update_dress(creature* player, const item& e) {

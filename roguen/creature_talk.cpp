@@ -53,7 +53,7 @@ static const phrasei* apply_answer(const phrasei* p, const talki* owner) {
 	if(!p)
 		return 0;
 	if(bsdata<phrasei>::have(p)) {
-		runscript(p->elements);
+		script::run(p->elements);
 		return owner->find(p->next);
 	}
 	if(talk_proc) {
@@ -68,7 +68,7 @@ static const phrasei* apply_answer(const phrasei* p, const talki* owner) {
 static void talk_entry(const phrasei* p) {
 	while(p) {
 		console.clear();
-		runscript(p->elements);
+		script::run(p->elements);
 		opponent->say(p->text);
 		auto owner = talki::owner(p);
 		p = ask_answer(p);

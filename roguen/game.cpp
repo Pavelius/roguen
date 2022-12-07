@@ -95,7 +95,7 @@ static void all_features(triggern type) {
 				if(!p->match(v1, {}))
 					continue;
 				last_rect = m.rectangle();
-				runscript(p->effect);
+				script::run(p->effect);
 			}
 		}
 	}
@@ -312,9 +312,9 @@ void gamei::set(const globali& e, int v) {
 		return;
 	globals[bsid(&e)] = v;
 	if(v == e.minimum)
-		runscript(e.fail);
+		script::run(e.fail);
 	else if(v == e.maximum)
-		runscript(e.effect);
+		script::run(e.effect);
 }
 
 const char* gamei::timeleft(unsigned end_stamp) const {

@@ -13,8 +13,10 @@ struct itemstat : nameable {
 	char			damage, armor, skill, parry, dodge, block, block_ranged, pierce, speed, mistery;
 	char			enemy_parry, enemy_block, rotting;
 	short			weight, cost;
+	char			upgrade;
 	featable		feats;
-	variants		dress;
+	variants		dress, dress_bless, dress_artifact, dress_cursed;
+	const variants& getdress(magic_s v) const;
 };
 struct itemvariety : nameable {
 	const itemstat*	elements[15];
@@ -24,7 +26,7 @@ struct itemi : itemstat {
 	short			avatar;
 	wear_s			wear;
 	char			wear_index;
-	variants		use;
+	variants		use, use_blessed, use_artifact;
 	const itemvariety* prefix;
 	const itemvariety* suffix;
 	const itemi*	ammunition;
@@ -83,6 +85,7 @@ public:
 	void			set(magic_s v);
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
+	void			setupgrade(const itemstat* pv);
 	void			upgrade(int chance_suffix, int chance_prefix, int level);
 	void			use() { setcount(getcount() - 1); }
 	void			usecharge() { if(charges) charges--; else use(); }
@@ -90,4 +93,4 @@ public:
 struct itemground : item {
 	point			position;
 };
-extern item* last_item;
+extern item *last_item;

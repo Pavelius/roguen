@@ -43,9 +43,15 @@ Lighting
 Mayhem damage(2)
 Might
  dress Strenght+10
+ dress_cursed Strenght-10
+ dress_bless Strenght+20
+ dress_artifact Strenght+30
 Penetration
 Power
  dress ManaMaximum+20
+ dress_cursed Strenght-20
+ dress_bless Strenght+30
+ dress_artifact Strenght+40
 Slaughtering
 Surrendering
 TheEagle

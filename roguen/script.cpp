@@ -8,6 +8,14 @@ BSMETA(script) = {
 	BSREQ(id),
 	{}};
 
+void script::runv(const void* pv, int bonus) {
+	variant v = pv;
+	if(!v)
+		return;
+	v.counter = bonus;
+	run(v);
+}
+
 void script::run(int bonus) {
 	proc(bonus);
 }
