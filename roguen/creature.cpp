@@ -602,6 +602,24 @@ static void update_room(creature* player) {
 		player->setroom(0);
 }
 
+void creature::update_abilities() {
+	abilities[ManaMaximum] += get(Wits);
+	abilities[Speed] += 25 + get(Dexterity) / 5;
+	if(is(Stun)) {
+		abilities[WeaponSkill] -= 10;
+		abilities[BalisticSkill] -= 10;
+		abilities[DodgeSkill] -= 100;
+		abilities[ShieldUse] -= 10;
+	}
+	if(!is(IgnoreWeb) && ispresent() && area.is(getposition(), Webbed)) {
+		abilities[WeaponSkill] -= 10;
+		abilities[DodgeSkill] -= 20;
+		abilities[ShieldUse] -= 10;
+	}
+	if(is(LightSource))
+		abilities[LineOfSight] += 3;
+}
+
 void creature::place(point m) {
 	m = area.getfree(m, 10, isfreecr);
 	setposition(m);

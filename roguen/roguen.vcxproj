@@ -198,6 +198,7 @@
     <ClCompile Include="magic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
+    <ClCompile Include="ownerable.cpp" />
     <ClCompile Include="quest.cpp" />
     <ClCompile Include="site.cpp" />
     <ClCompile Include="tile.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="framerange.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="ifscript.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="datamap.h" />
@@ -292,6 +294,7 @@
     <ClInclude Include="monster.h" />
     <ClInclude Include="moveable.h" />
     <ClInclude Include="nameable.h" />
+    <ClInclude Include="ownerable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
     <ClInclude Include="price.h" />

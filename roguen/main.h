@@ -4,17 +4,15 @@
 #include "areaf.h"
 #include "areamap.h"
 #include "class.h"
-#include "collection.h"
 #include "color.h"
 #include "crt.h"
 #include "dice.h"
 #include "direction.h"
 #include "duration.h"
 #include "flagable.h"
-#include "geoposition.h"
+#include "game.h"
 #include "global.h"
 #include "hotkey.h"
-#include "item.h"
 #include "list.h"
 #include "listcolumn.h"
 #include "moveable.h"
@@ -28,39 +26,17 @@
 #include "spell.h"
 #include "talk.h"
 #include "trigger.h"
-#include "wear.h"
 #include "wearable.h"
 
 #pragma once
 
 enum condition_s : unsigned char;
 
-enum ability_s : unsigned char {
-	LineOfSight,
-	Strenght, Dexterity, Wits, Charisma,
-	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
-	Damage, DamageMelee, DamageRanged, DamageThrown,
-	Armor,
-	Speed, EnemyAttacks,
-	Pickpockets, Stealth, OpenLocks, DisarmTraps,
-	Survival,
-	Level,
-	HitsMaximum, ManaMaximum,
-	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Satiation, Money,
-};
-extern stringbuilder console;
-class roomi;
 class creature;
 struct itema : collection<item> {
 	void			select(point m);
 	void			select(creature* p);
 	void			selectbackpack(creature* p);
-};
-class ownerable {
-	short unsigned	owner_id;
-public:
-	creature*		getowner() const { return bsdata<creature>::ptr(owner_id); }
-	void			setowner(const creature* v) { bsset(owner_id, v); }
 };
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
@@ -175,79 +151,18 @@ struct creaturea : collection<creature> {
 	void			select(point m, int los, bool visible, const creature* exclude);
 	void			sort(point start);
 };
-class roomi : public geoposition, public ownerable {
-	short unsigned	site_id;
-public:
-	rect			rc;
-	static roomi*	add() { return bsdata<roomi>::add(); }
-	point			center() const { return {(short)(rc.x1 + rc.width() / 2), (short)(rc.y1 + rc.height() / 2)}; }
-	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
-	static roomi*	find(geoposition gp, point pt);
-	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
-	void			getrumor(stringbuilder& sb) const;
-	const char*		getname() const { return geti().getname(); }
-	static const char* getname(const void* p) { return ((roomi*)p)->getname(); }
-	bool			is(feat_s v) const { return geti().feats.is(v); }
-	bool			isexplored() const;
-	bool			islocal() const;
-	bool			ismarkable() const;
-	bool			isnotable() const { return is(Notable); }
-	void			set(const sitei* p) { bsset(site_id, p); }
-};
-typedef collection<roomi> rooma;
-class gamei : public geoposition, public ownerable {
-	unsigned		minutes;
-	unsigned		restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day, restore_several_days;
-	int				globals[128];
-	void			setup_globals();
-	static void		setup_rumors(int count);
-public:
-	static point	start_village;
-	void			clear();
-	static void		endgame();
-	void			enter(point m, int level, const featurei* entry, direction_s appear_side);
-	int				get(const globali& e) const { return globals[bsid(&e)]; }
-	static int		getcount(variant v, int minimal = 1);
-	unsigned		getminutes() const { return minutes; }
-	static int		getpositivecount(variant v);
-	static int		getrange(point m1, point m2);
-	static bool		isvalid(point m) { return m.x > 0 && m.x < 256 && m.y > 0 && m.y < 256; }
-	static void		next(fnevent proc);
-	static void		newgame();
-	static void		mainmenu();
-	void			pass(unsigned minutes);
-	void			passminute();
-	static void		play();
-	void			playminute();
-	void			randomworld();
-	void			read();
-	void			set(const globali& e, int v);
-	const char*		timeleft(unsigned end_stamp) const;
-	void			write();
-	static void		writelog();
-};
+extern creature *player, *opponent, *enemy;
+extern creaturea creatures, enemies, targets;
 namespace draw {
 bool				isnext();
 }
-inline int			d100() { return rand() % 100; }
-extern spella		allowed_spells;
-extern areamap		area;
-extern areaheadi	areahead;
-extern creaturea	creatures, enemies, targets;
-extern itema		items;
-extern gamei		game;
-extern creature*	last_enemy;
-extern int			last_value, last_cap;
-extern ability_s	last_ability;
-extern quest*		last_quest;
-extern rect			last_rect;
-extern const sitei*	last_site;
-extern locationi*	last_location;
-extern const sitegeni* last_method;
-extern creature		*player, *opponent, *enemy;
-extern int			window_width;
-extern int			window_height;
-point				center(const rect& rc);
-void				dialog_message(const char* format);
-int					getfloor();
-int					getwall();
+inline int d100() { return rand() % 100; }
+extern spella allowed_spells;
+extern itema items;
+extern int last_value, last_cap;
+extern ability_s last_ability;
+extern quest* last_quest;
+extern rect last_rect;
+extern int window_width, window_height;
+point center(const rect& rc);
+void dialog_message(const char* format);

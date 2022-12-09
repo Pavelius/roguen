@@ -3,6 +3,8 @@
 
 #pragma once
 
+extern stringbuilder console;
+
 class answers {
 	struct element {
 		const void* value;

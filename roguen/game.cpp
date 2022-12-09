@@ -1,7 +1,10 @@
+#include "areamap.h"
 #include "boost.h"
 #include "greatneed.h"
-#include "main.h"
+#include "game.h"
+#include "site.h"
 #include "triggern.h"
+#include "main.h"
 
 areamap			area;
 areaheadi		areahead;

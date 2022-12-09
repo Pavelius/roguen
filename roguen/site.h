@@ -1,6 +1,8 @@
+#include "collection.h"
 #include "geoposition.h"
 #include "feat.h"
 #include "nameable.h"
+#include "ownerable.h"
 #include "shape.h"
 #include "variant.h"
 
@@ -54,3 +56,32 @@ struct areaheadi : geoposition {
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
 };
+class roomi : public geoposition, public ownerable {
+	short unsigned	site_id;
+public:
+	rect			rc;
+	static roomi*	add() { return bsdata<roomi>::add(); }
+	point			center() const { return {(short)(rc.x1 + rc.width() / 2), (short)(rc.y1 + rc.height() / 2)}; }
+	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
+	static roomi*	find(geoposition gp, point pt);
+	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
+	void			getrumor(stringbuilder& sb) const;
+	const char*		getname() const { return geti().getname(); }
+	static const char* getname(const void* p) { return ((roomi*)p)->getname(); }
+	bool			is(feat_s v) const { return geti().feats.is(v); }
+	bool			isexplored() const;
+	bool			islocal() const;
+	bool			ismarkable() const;
+	bool			isnotable() const { return is(Notable); }
+	void			set(const sitei* p) { bsset(site_id, p); }
+};
+typedef collection<roomi> rooma;
+
+extern areamap area;
+extern areaheadi areahead;
+extern const sitei*	last_site;
+extern const sitegeni* last_method;
+extern locationi* last_location;
+
+int getfloor();
+int getwall();

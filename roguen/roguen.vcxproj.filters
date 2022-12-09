@@ -330,6 +330,9 @@
     <ClCompile Include="feat.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="ownerable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -536,9 +539,6 @@
     <ClInclude Include="race.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="ability.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="moveable.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -576,6 +576,15 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="feat.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="ownerable.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="ability.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

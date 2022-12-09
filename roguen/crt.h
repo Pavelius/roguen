@@ -195,9 +195,9 @@ struct bsdata {
 	static constexpr T*		get(const void* p) { return have(p) ? (T*)p : 0; }
 	static constexpr T*		begin() { return (T*)source.data; }
 	static constexpr T*		end() { return (T*)source.data + source.getcount(); }
-	static constexpr T*		ptr(short unsigned i) { return (i==0xFFFF) ? 0 : elements + i; }
+	static constexpr T*		ptr(short unsigned i) { return (i==0xFFFF) ? 0 : (T*)source.ptr(i); }
 };
-template<typename T> inline void	bsset(short unsigned& v, const T* p) { v = (p == 0) ? 0xFFFF : p - bsdata<T>::elements; }
+template<typename T> inline void	bsset(short unsigned& v, const T* p) { v = (p == 0) ? 0xFFFF : bsdata<T>::source.indexof(p); }
 template<typename T> inline unsigned short bsid(const T* p) { return bsdata<T>::source.indexof(p); }
 template<> struct bsdata<int> { static constexpr array* source_ptr = 0; };
 NOBSDATA(unsigned)
