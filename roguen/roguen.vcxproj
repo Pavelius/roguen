@@ -291,7 +291,7 @@
     <ClInclude Include="log.h" />
     <ClInclude Include="logparse.h" />
     <ClInclude Include="magic.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="creature.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="moveable.h" />
     <ClInclude Include="nameable.h" />

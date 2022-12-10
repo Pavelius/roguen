@@ -1,5 +1,6 @@
-#include "main.h"
+#include "creature.h"
 #include "script.h"
+#include "talk.h"
 
 static fncommand talk_proc;
 

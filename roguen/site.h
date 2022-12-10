@@ -1,4 +1,6 @@
+#include "areamap.h"
 #include "collection.h"
+#include "color.h"
 #include "geoposition.h"
 #include "feat.h"
 #include "nameable.h"

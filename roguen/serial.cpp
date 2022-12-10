@@ -3,7 +3,7 @@
 #include "draw.h"
 #include "draw_object.h"
 #include "greatneed.h"
-#include "main.h"
+#include "creature.h"
 
 static vector<creature> saved_creatures;
 static const char* save_folder = "save";

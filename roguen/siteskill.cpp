@@ -1,13 +1,13 @@
 #include "ability.h"
 #include "areamap.h"
 #include "bsreq.h"
+#include "creature.h"
 #include "duration.h"
 #include "feature.h"
 #include "indexa.h"
 #include "script.h"
 #include "skilluse.h"
 #include "siteskill.h"
-#include "main.h"
 
 BSMETA(siteskilli) = {
 	BSREQ(id),

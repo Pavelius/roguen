@@ -1,5 +1,6 @@
 #include "boost.h"
 #include "condition.h"
+#include "creature.h"
 #include "draw_object.h"
 #include "ifscript.h"
 #include "itema.h"
@@ -10,9 +11,9 @@
 #include "script.h"
 #include "siteskill.h"
 #include "stringact.h"
+#include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"
-#include "main.h"
 
 roomi* add_room(const sitei* ps, const rect& rc);
 void animate_figures();

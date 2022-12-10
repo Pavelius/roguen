@@ -4,8 +4,9 @@
 #include "game.h"
 #include "script.h"
 #include "site.h"
+#include "trigger.h"
 #include "triggern.h"
-#include "main.h"
+#include "creature.h"
 
 areamap			area;
 areaheadi		areahead;

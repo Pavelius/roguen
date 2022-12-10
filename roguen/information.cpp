@@ -1,4 +1,4 @@
-#include "main.h"
+#include "creature.h"
 #include "race.h"
 
 static const char* getnameshort(const char* id) {

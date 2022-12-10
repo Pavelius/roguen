@@ -3,9 +3,10 @@
 #include "condition.h"
 #include "indexa.h"
 #include "itema.h"
-#include "main.h"
+#include "creature.h"
 #include "script.h"
 #include "siteskill.h"
+#include "trigger.h"
 #include "triggern.h"
 
 namespace {
@@ -683,6 +684,46 @@ bool creature::ishuman() const {
 
 bool creature::isenemy(const creature& opponent) const {
 	return opponent.is(is(Enemy) ? Ally : Enemy);
+}
+
+bool creature::is(condition_s v) const {
+	int n, m;
+	switch(v) {
+	case Unaware: return isunaware();
+	case NPC: return ischaracter();
+	case Random: return d100() < 40;
+	case NoInt: return get(Wits) == 10;
+	case AnimalInt: return get(Wits) < 10;
+	case LowInt: return get(Wits) < 20;
+	case AveInt: return get(Wits) < 35;
+	case HighInt: return get(Wits) < 50;
+	case Wounded:
+		n = get(Hits);
+		m = get(HitsMaximum);
+		return n > 0 && n < m;
+	case HeavyWounded:
+		n = get(Hits);
+		m = get(HitsMaximum);
+		return n > 0 && n < m / 2;
+	case NoWounded: return get(Hits) == get(HitsMaximum);
+	case Allies:
+		if(player->is(Ally))
+			return is(Ally);
+		else if(player->is(Enemy))
+			return is(Enemy);
+		return false;
+	case Enemies:
+		if(player->is(Enemy))
+			return is(Ally);
+		else if(player->is(Ally))
+			return is(Enemy);
+		return false;
+	case Neutrals: return !is(Ally) && !is(Enemy);
+	case NoAnyFeature:
+		return area.features[getposition()] == 0;
+	default:
+		return true;
+	}
 }
 
 void creature::movestep(direction_s v) {

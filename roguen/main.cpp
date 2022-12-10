@@ -2,8 +2,9 @@
 #include "charname.h"
 #include "draw.h"
 #include "greatneed.h"
-#include "main.h"
+#include "creature.h"
 #include "hotkey.h"
+#include "talk.h"
 
 static_assert(sizeof(item) == sizeof(int), "Struct item greater tha integer");
 void dialog_message(const char* format);

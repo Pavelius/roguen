@@ -4,7 +4,6 @@
 #include "areaf.h"
 #include "areamap.h"
 #include "class.h"
-#include "color.h"
 #include "crt.h"
 #include "dice.h"
 #include "direction.h"
@@ -12,7 +11,6 @@
 #include "flagable.h"
 #include "game.h"
 #include "global.h"
-#include "hotkey.h"
 #include "list.h"
 #include "listcolumn.h"
 #include "moveable.h"
@@ -23,8 +21,6 @@
 #include "site.h"
 #include "speech.h"
 #include "spell.h"
-#include "talk.h"
-#include "trigger.h"
 #include "wearable.h"
 
 #pragma once

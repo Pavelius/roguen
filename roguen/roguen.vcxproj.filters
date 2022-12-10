@@ -407,7 +407,7 @@
     <ClInclude Include="win.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
+    <ClInclude Include="creature.h">
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">

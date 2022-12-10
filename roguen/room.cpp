@@ -1,4 +1,6 @@
-#include "main.h"
+#include "areaf.h"
+#include "game.h"
+#include "site.h"
 
 point center(const rect& rc) {
 	if(rc.x1 > rc.x2 || rc.y1 > rc.y2)

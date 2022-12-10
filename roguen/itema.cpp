@@ -1,5 +1,5 @@
 #include "itema.h"
-#include "main.h"
+#include "creature.h"
 
 void itema::select(point m) {
 	auto pb = data + count;

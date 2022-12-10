@@ -4,7 +4,7 @@
 #include "randomizer.h"
 #include "script.h"
 #include "site.h"
-#include "main.h"
+#include "creature.h"
 
 BSDATA(sitegeni) = {
 	{"NoGenerate", &sitei::nogenerate},
