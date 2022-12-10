@@ -565,20 +565,12 @@ static const char* random_herbs(point m) {
 	return "GrassHerbs";
 }
 
-static void chance_remove_feature(const char* id, int chance) {
-	if(d100() < chance) {
-		player->act(getnm(id));
-		area.setfeature(last_index, 0);
-	}
-}
-
 static void gather_herbs(int bonus) {
 	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
 	if(pr) {
 		auto chance = player->getdefault(Herbalism);
-		auto chance_remove = imax(30, 90 - (chance / 2));
 		gather_item("YouGatherHerbs", *pr, chance);
-		chance_remove_feature("YouTookAllHerbs", chance_remove);
+		area.setfeature(last_index, 0);
 	}
 }
 

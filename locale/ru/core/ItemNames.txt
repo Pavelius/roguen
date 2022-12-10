@@ -108,6 +108,13 @@ AlrauniaAntidote: Лаймовый антидот
 BurbRoot: Корень свеклы
 CurariaMancox: Целебный желтоцвет
 DemonDaisy: Маргаритка
+DevilsRose : Дьявольская Роза
+MorgiaRoot: Корень мандрагоры
+MossOfMoreilon: Бодрящий мох
+PepperPetal: Лепесток перца
+Spenseweed: Семицветик
+Stomacemptia: Красная ягода
+Stomafillia: Желтая ягода
 
 StrangeAquaSphere: Голубая сфера
 StrangeBlueSphere: Синяя сфера

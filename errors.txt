@@ -1,2 +1,3 @@
 ﻿In file `Names.txt`:
- Define translation for `DemonDaisy`
+ Define translation for `MorgiaRoot`
+ Define translation for `PepperPetal`

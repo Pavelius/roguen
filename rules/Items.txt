@@ -170,15 +170,22 @@ TriangularKey weight(1) avatar(287) count(1)
 RectangularKey weight(1) avatar(285) count(1)
 RoundKey weight(1) avatar(286) count(1)
 
-AlrauniaAntidote weight(1) avatar(96)
-BurbRoot weight(1) avatar(90)
-CurariaMancox weight(1) avatar(91)
-DemonDaisy weight(1) avatar(97)
+AlrauniaAntidote weight(1) avatar(96) count(1)
+BurbRoot weight(1) avatar(90) count(1)
+CurariaMancox weight(1) avatar(91) count(1)
+DemonDaisy weight(1) avatar(97) count(1)
+DevilsRose weight(1) avatar(94) count(1)
+MorgiaRoot weight(1) avatar(108) count(1)
+MossOfMoreilon weight(1) avatar(107) count(1)
+PepperPetal weight(1) avatar(95) count(1)
+Spenseweed weight(1) avatar(106) count(1)
+Stomacemptia weight(1) avatar(93) count(1)
+Stomafillia weight(1) avatar(89) count(1)
 
 #RandomTable
 
 GrassHerbs
- chance AlrauniaAntidote+3 BurbRoot+2 CurariaMancox+2 DemonDaisy
+ chance AlrauniaAntidote+3 BurbRoot+2 CurariaMancox+2 DemonDaisy DevilsRose MorgiaRoot MossOfMoreilon PepperPetal Spenseweed Stomacemptia Stomafillia
 RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins
