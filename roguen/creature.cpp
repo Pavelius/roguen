@@ -1190,9 +1190,10 @@ void creature::makemove() {
 	if(!is(Local))
 		check_hidden_doors(this);
 	ready_actions();
-	if(ishuman())
+	if(ishuman()) {
+		ready_actions();
 		adventure_mode();
-	else if(enemy) {
+	} else if(enemy) {
 		allowed_spells.match(spell_iscombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);

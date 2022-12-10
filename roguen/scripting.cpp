@@ -5,6 +5,7 @@
 #include "game.h"
 #include "itema.h"
 #include "listcolumn.h"
+#include "modifier.h"
 #include "greatneed.h"
 #include "pushvalue.h"
 #include "race.h"
@@ -220,6 +221,8 @@ bool script::isallow(variant v) {
 			return player->get((ability_s)v.value) < -v.counter;
 	} else if(v.iskind<conditioni>())
 		return player->is((condition_s)v.value);
+	else if(v.iskind<listi>())
+		return isallow(bsdata<listi>::elements[v.value].elements);
 	else if(v.iskind<monsteri>()) {
 		if(!v.counter)
 			return player->iskind(v);
@@ -294,6 +297,10 @@ static bool is(const featurei& ei, condition_s v) {
 static bool isallow(const featurei& ei, variant v) {
 	if(v.iskind<conditioni>())
 		return is(ei, (condition_s)v.value);
+	else if(v.iskind<script>()) {
+		if(bsdata<script>::elements[v.value].test)
+			return bsdata<script>::elements[v.value].test(v.counter);
+	}
 	return true;
 }
 
@@ -307,7 +314,9 @@ static bool isallow(const featurei& ei, const variants source) {
 
 static void match_features(const variants& source) {
 	auto ps = indecies.begin();
+	pushvalue push_index(last_index);
 	for(auto m : indecies) {
+		last_index = m;
 		auto& ei = area.getfeature(m);
 		if(!isallow(ei, source))
 			continue;
@@ -473,6 +482,29 @@ void apply_spell(creature* player, const spelli& ei, int level) {
 		player->apply(ei.effect);
 }
 
+static void apply_target_effect(unsigned target, const variants& effect) {
+	if(FGT(target, TargetCreatures)) {
+		//for(auto p : targets)
+		//	apply_spell(p, e, level);
+	} else if(FGT(target, TargetFeatures)) {
+		for(auto p : indecies) {
+			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
+			pushvalue push_index(last_index, p);
+			script::run(effect);
+		}
+	} else if(FGT(target, TargetRooms)) {
+		for(auto p : rooms) {
+			pushvalue push_rect(last_room, p);
+			script::run(effect);
+		}
+	} else if(FGT(target, TargetItems)) {
+		for(auto p : items) {
+			pushvalue push_object(last_item, p);
+			script::run(effect);
+		}
+	}
+}
+
 void creature::cast(const spelli& e, int level, int mana) {
 	if(get(Mana) < mana) {
 		actp(getnm("NotEnoughtMana"));
@@ -521,7 +553,7 @@ static void gather_item(const char* id, randomizeri& source, int chance) {
 				it.set(Blessed);
 		} else
 			it.set(Cursed);
-		player->actp(getnm(id), it.getfullname());
+		player->act(getnm(id), it.getfullname());
 		player->additem(it);
 	}
 }
@@ -535,7 +567,7 @@ static const char* random_herbs(point m) {
 
 static void chance_remove_feature(const char* id, int chance) {
 	if(d100() < chance) {
-		player->act(getnm("id"));
+		player->act(getnm(id));
 		area.setfeature(last_index, 0);
 	}
 }
@@ -544,10 +576,24 @@ static void gather_herbs(int bonus) {
 	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
 	if(pr) {
 		auto chance = player->getdefault(Herbalism);
-		auto chance_remove = imin(10, 60 - (chance / 2));
+		auto chance_remove = imax(30, 90 - (chance / 2));
 		gather_item("YouGatherHerbs", *pr, chance);
 		chance_remove_feature("YouTookAllHerbs", chance_remove);
 	}
+}
+
+static bool iskind(variant v, const char* id) {
+	auto pi = bsdata<listi>::find(id);
+	if(pi)
+		return pi->is(v);
+	auto pr = bsdata<randomizeri>::find(id);
+	if(pr)
+		return pr->is(v);
+	return true;
+}
+
+static bool is_herbs(int bonus) {
+	return iskind(bsdata<featurei>::elements + area.features[last_index], "RandomHerbs");
 }
 
 static const char* item_weight(const void* object, stringbuilder& sb) {
@@ -962,7 +1008,11 @@ static void choose_action(int bonus) {
 		auto pa = last_actions.choose(getnm("ChooseAction"), getnm("Cancel"), false);
 		if(!pa)
 			return;
-		script::run(pa);
+		if(!choose_targets(pa->target, pa->effect))
+			return;
+		if(!bound_targets(pa->id, pa->target, 0, player->ishuman()))
+			return;
+		apply_target_effect(pa->target, pa->effect);
 	}
 	player->wait();
 }
@@ -1058,14 +1108,6 @@ static void actual_need_state(stringbuilder& sb) {
 	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), game.timeleft(last_need->deadline));
 }
 
-static bool if_lesser(int bonus) {
-	return last_value < bonus;
-}
-
-static bool if_greater(int bonus) {
-	return last_value > bonus;
-}
-
 void add_need(int bonus);
 void add_need_answers(int bonus);
 
@@ -1095,7 +1137,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
-	{"GatherHerbs", gather_herbs},
+	{"GatherHerbs", gather_herbs, is_herbs},
 	{"JumpToSite", jump_to_site},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},

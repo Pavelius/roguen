@@ -72,5 +72,7 @@ YouFailToOpenStuckDoor
 
 #RandomTable
 
+RandomHerbs
+ chance Herbs+6 HerbsSemi+4 HerbsFull+2 Plant
 StuckDoorFail
  chance YouFailToOpenStuckDoor+2 YouAngryAboutDoor YouHitByDoor YouTrampedByDoor

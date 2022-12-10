@@ -104,6 +104,11 @@ RoundKey: Круглый ключ
 TriangularKey: Треугольный ключ
 RectangularKey: Квадратный ключ
 
+AlrauniaAntidote: Лаймовый антидот
+BurbRoot: Корень свеклы
+CurariaMancox: Целебный желтоцвет
+DemonDaisy: Маргаритка
+
 StrangeAquaSphere: Голубая сфера
 StrangeBlueSphere: Синяя сфера
 StrangeGreenSphere: Зеленая сфера

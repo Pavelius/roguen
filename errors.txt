@@ -1,2 +1,2 @@
-﻿In file `rules/Skills.txt`:
- Line 3: Not found requisit `ability`
+﻿In file `Names.txt`:
+ Define translation for `DemonDaisy`

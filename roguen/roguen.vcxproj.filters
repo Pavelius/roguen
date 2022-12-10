@@ -330,6 +330,9 @@
     <ClCompile Include="tile.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="modifier.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -584,6 +587,9 @@
     <ClInclude Include="tile.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="modifier.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -675,6 +681,9 @@
     </Text>
     <Text Include="..\rules\Skills.txt">
       <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\locale\ru\core\SkillNames.txt">
+      <Filter>Locale</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

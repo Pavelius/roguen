@@ -88,6 +88,7 @@ YouDontHaveAnyActions: «десь вы не можете выполнить никаких особых действий.
 YouDontValidTargets: ¬ы не видите подход€щих целей.
 YouFailToOpenStuckDoor: %герой не смог%ла открыть заевшую дверь.
 YouFoundSecretDoor: %герой обнаружил%а [%1i] секретную дверь.
+YouGatherHerbs: %герой добыл%а %1.
 YouGiveItemTo: %герой отдал%а %-1 %@2.
 YouNeedAmmunition: ƒл€ стрельбы нужно %-1.
 YouNeedRangeWeapon: ¬ы не можете стрел€ть не име€ подход€щего дистанционного оружи€.
@@ -97,6 +98,7 @@ YouSeeRoom: Ёто %-1.
 YouSundellyAppear: %герой внезапно по€вил%ась из неоткуда.
 YouSundellyDisappear: %герой внезапно исчез%ла из виду.
 YouTakeCoins: %герой получил% %1i монет.
+YouTookAllHerbs: ¬се травы были собраны.
 YouUseItem: %герой использовал%а %-1.
 
 Strenght: —ила

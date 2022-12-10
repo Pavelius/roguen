@@ -170,8 +170,15 @@ TriangularKey weight(1) avatar(287) count(1)
 RectangularKey weight(1) avatar(285) count(1)
 RoundKey weight(1) avatar(286) count(1)
 
+AlrauniaAntidote weight(1) avatar(96)
+BurbRoot weight(1) avatar(90)
+CurariaMancox weight(1) avatar(91)
+DemonDaisy weight(1) avatar(97)
+
 #RandomTable
 
+GrassHerbs
+ chance AlrauniaAntidote+3 BurbRoot+2 CurariaMancox+2 DemonDaisy
 RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins

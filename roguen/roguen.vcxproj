@@ -197,6 +197,7 @@
     <ClCompile Include="magic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
+    <ClCompile Include="modifier.cpp" />
     <ClCompile Include="ownerable.cpp" />
     <ClCompile Include="quest.cpp" />
     <ClCompile Include="site.cpp" />
@@ -290,6 +291,7 @@
     <ClInclude Include="logparse.h" />
     <ClInclude Include="magic.h" />
     <ClInclude Include="creature.h" />
+    <ClInclude Include="modifier.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="moveable.h" />
     <ClInclude Include="nameable.h" />
@@ -343,6 +345,7 @@
     <Text Include="..\locale\ru\core\SiteDescriptions.txt" />
     <Text Include="..\locale\ru\core\SiteNames.txt" />
     <Text Include="..\locale\ru\core\EffectDescriptions.txt" />
+    <Text Include="..\locale\ru\core\SkillNames.txt" />
     <Text Include="..\locale\ru\core\SpellNames.txt" />
     <Text Include="..\locale\ru\core\UnknownNames.txt" />
     <Text Include="..\locale\ru\core\WearNames.txt" />

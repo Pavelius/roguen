@@ -15,23 +15,7 @@ extern areamap area;
 extern indexa indecies;
 extern point last_index;
 
-static bool testing(variant v) {
-	if(v.iskind<featurei>()) {
-		if(v.counter < 0)
-			return area.features[last_index] == v.value;
-		else if(v.counter > 0)
-			return area.features[last_index] != v.value;
-	}
-	return true;
-}
-
-static bool testing(const variants& source) {
-	for(auto v : source) {
-		if(!testing(v))
-			return false;
-	}
-	return true;
-}
+bool choose_targets(unsigned flags, const variants& effects);
 
 static void applying(variant v) {
 	if(v.iskind<featurei>()) {
@@ -64,7 +48,7 @@ bool siteskilli::isvalid(const void* object) {
 				return false;
 		}
 	}
-	return testing(p->effect);
+	return choose_targets(p->target, p->effect);
 }
 
 void siteskilli::apply() const {
