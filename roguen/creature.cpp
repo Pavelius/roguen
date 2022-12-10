@@ -2,7 +2,9 @@
 #include "charname.h"
 #include "condition.h"
 #include "indexa.h"
+#include "itema.h"
 #include "main.h"
+#include "script.h"
 #include "siteskill.h"
 #include "triggern.h"
 

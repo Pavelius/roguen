@@ -1,3 +1,4 @@
+#include "itema.h"
 #include "main.h"
 
 void itema::select(point m) {

@@ -24,3 +24,4 @@ struct spella : collection<spelli> {
 	spelli*			choose(const char* title, const char* cancel, const spellable* context) const;
 	void			select(const spellable* p);
 };
+extern spella allowed_spells;

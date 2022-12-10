@@ -4,6 +4,7 @@
 #include "greatneed.h"
 #include "main.h"
 #include "race.h"
+#include "script.h"
 #include "siteskill.h"
 #include "visualeffect.h"
 #include "widget.h"

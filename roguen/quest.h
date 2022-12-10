@@ -20,3 +20,4 @@ struct quest {
 	void			clear() { zclear(this); }
 	static quest*	find(point v);
 };
+extern quest* last_quest;

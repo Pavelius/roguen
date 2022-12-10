@@ -587,6 +587,9 @@
     <ClInclude Include="ability.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="itema.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

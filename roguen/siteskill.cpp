@@ -4,6 +4,7 @@
 #include "duration.h"
 #include "feature.h"
 #include "indexa.h"
+#include "script.h"
 #include "skilluse.h"
 #include "siteskill.h"
 #include "main.h"

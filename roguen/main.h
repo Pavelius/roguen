@@ -19,7 +19,6 @@
 #include "monster.h"
 #include "pushvalue.h"
 #include "quest.h"
-#include "script.h"
 #include "shape.h"
 #include "site.h"
 #include "speech.h"
@@ -32,12 +31,6 @@
 
 enum condition_s : unsigned char;
 
-class creature;
-struct itema : collection<item> {
-	void			select(point m);
-	void			select(creature* p);
-	void			selectbackpack(creature* p);
-};
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
 	statable		basic;
@@ -157,11 +150,7 @@ namespace draw {
 bool				isnext();
 }
 inline int d100() { return rand() % 100; }
-extern spella allowed_spells;
-extern itema items;
 extern int last_value, last_cap;
-extern ability_s last_ability;
-extern quest* last_quest;
 extern rect last_rect;
 extern int window_width, window_height;
 point center(const rect& rc);

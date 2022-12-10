@@ -18,3 +18,4 @@ enum ability_s : unsigned char {
 struct abilityi : nameable {
 	ability_s	basic;
 };
+extern ability_s last_ability;

@@ -2,6 +2,7 @@
 #include "boost.h"
 #include "greatneed.h"
 #include "game.h"
+#include "script.h"
 #include "site.h"
 #include "triggern.h"
 #include "main.h"

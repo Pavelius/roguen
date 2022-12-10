@@ -1,4 +1,5 @@
 #include "main.h"
+#include "script.h"
 
 static fncommand talk_proc;
 
