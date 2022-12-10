@@ -1,6 +1,7 @@
 #include "ability.h"
 #include "areamap.h"
 #include "bsreq.h"
+#include "condition.h"
 #include "creature.h"
 #include "duration.h"
 #include "feature.h"
@@ -9,15 +10,6 @@
 #include "script.h"
 #include "skilluse.h"
 #include "siteskill.h"
-
-BSMETA(siteskilli) = {
-	BSREQ(id),
-	BSENM(skill, abilityi),
-	BSENM(retry, durationi),
-	BSREQ(bonus),
-	BSREQ(effect), BSREQ(fail),
-	{}};
-BSDATAC(siteskilli, 256);
 
 extern areamap area;
 extern indexa indecies;

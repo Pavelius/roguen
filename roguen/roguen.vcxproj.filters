@@ -276,9 +276,6 @@
     <ClCompile Include="greatneed.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="ifscript.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="creature_need.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -509,9 +506,6 @@
     <ClInclude Include="greatneed.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="ifscript.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="wear.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -678,6 +672,9 @@
     </Text>
     <Text Include="..\modules\ChurchOfOne.txt">
       <Filter>Modules</Filter>
+    </Text>
+    <Text Include="..\rules\Skills.txt">
+      <Filter>Data</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

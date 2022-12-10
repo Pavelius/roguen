@@ -15,7 +15,14 @@ enum ability_s : unsigned char {
 	HitsMaximum, ManaMaximum,
 	Hits, Mana, Poison, Illness, Reputation, ParryCount, Experience, Satiation, Money,
 };
+enum abilityf : unsigned char {
+	HardSkill,
+};
+struct abilityfi : nameable {
+};
 struct abilityi : nameable {
 	ability_s	basic;
+	unsigned	flags;
+	bool		is(abilityf v) const { return (flags & (1 << v)) != 0; }
 };
 extern ability_s last_ability;

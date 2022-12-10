@@ -1,6 +1,11 @@
 #include "ability.h"
 #include "crt.h"
 
+BSDATA(abilityfi) = {
+	{"HardSkill"},
+};
+assert_enum(abilityfi, HardSkill)
+
 BSDATA(abilityi) = {
 	{"LineOfSight"},
 	{"Strenght"},
@@ -9,7 +14,7 @@ BSDATA(abilityi) = {
 	{"Charisma"},
 	{"WeaponSkill", Strenght},
 	{"BalisticSkill", Dexterity},
-	{"DodgeSkill", Dexterity},
+	{"DodgeSkill", Dexterity, FG(HardSkill)},
 	{"ShieldUse", Dexterity},
 	{"Damage"},
 	{"DamageMelee"},
@@ -18,8 +23,8 @@ BSDATA(abilityi) = {
 	{"Armor"},
 	{"Speed"},
 	{"EnemyAttacks"},
-	{"Herbalism", Wits},
-	{"Pickpockets", Dexterity},
+	{"Herbalism", Wits, FG(HardSkill)},
+	{"Pickpockets", Dexterity, FG(HardSkill)},
 	{"Stealth", Dexterity},
 	{"OpenLocks", Dexterity},
 	{"DisarmTraps", Dexterity},

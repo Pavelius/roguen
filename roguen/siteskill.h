@@ -10,6 +10,7 @@ struct sitei;
 
 struct siteskilli : nameable {
 	ability_s		skill;
+	unsigned		target;
 	char			bonus;
 	duration_s		retry;
 	variants		effect, fail;

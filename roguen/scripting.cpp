@@ -3,7 +3,6 @@
 #include "creature.h"
 #include "draw_object.h"
 #include "game.h"
-#include "ifscript.h"
 #include "itema.h"
 #include "listcolumn.h"
 #include "greatneed.h"
@@ -209,25 +208,22 @@ void script::run(variant v) {
 	}
 }
 
-static bool ifscript(variant v) {
-	if(v.iskind<ifscripti>())
-		stop_script = !bsdata<ifscripti>::elements[v.value].proc(v.counter);
-	else if(v.iskind<needni>()) {
+bool script::isallow(variant v) {
+	if(v.iskind<script>()) {
+		if(bsdata<script>::elements[v.value].test)
+			return bsdata<script>::elements[v.value].test(v.counter);
+	} else if(v.iskind<needni>()) {
 		if(v.counter <= 0)
-			stop_script = !last_need || !last_need->is((needn)v.value);
+			return last_need && last_need->is((needn)v.value);
 	} else if(v.iskind<abilityi>()) {
-		if(v.counter > 0)
-			return false;
-		else if(v.counter < 0 && player->get((ability_s)v.value) < -v.counter)
-			stop_script = true;
-		else
-			last_value = player->get((ability_s)v.value);
-	} else if(v.iskind<monsteri>()) {
-		if(v.counter != 0)
-			return false;
-		stop_script = !player->iskind(v);
-	} else
-		return false;
+		if(v.counter < 0)
+			return player->get((ability_s)v.value) < -v.counter;
+	} else if(v.iskind<conditioni>())
+		return player->is((condition_s)v.value);
+	else if(v.iskind<monsteri>()) {
+		if(!v.counter)
+			return player->iskind(v);
+	}
 	return true;
 }
 
@@ -547,7 +543,7 @@ static void chance_remove_feature(const char* id, int chance) {
 static void gather_herbs(int bonus) {
 	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
 	if(pr) {
-		auto chance = player->getdef(Herbalism);
+		auto chance = player->getdefault(Herbalism);
 		auto chance_remove = imin(10, 60 - (chance / 2));
 		gather_item("YouGatherHerbs", *pr, chance);
 		chance_remove_feature("YouTookAllHerbs", chance_remove);
@@ -1004,6 +1000,10 @@ static void random_chance(int bonus) {
 		stop_script = true;
 }
 
+static bool random_chance_test(int bonus) {
+	return d100() < bonus;
+}
+
 static void activate_feature(int bonus) {
 	point m = center(last_rect);
 	visualize_activity(m);
@@ -1030,15 +1030,6 @@ void script::run(const variants& elements) {
 			break;
 		script::run(v);
 	}
-}
-
-bool ifscript(const variants& elements) {
-	pushvalue push_stop(stop_script, false);
-	for(auto v : elements) {
-		if(!ifscript(v) || stop_script)
-			break;
-	}
-	return !stop_script;
 }
 
 static void need_help_info(stringbuilder& sb) {
@@ -1083,11 +1074,6 @@ BSDATA(textscript) = {
 	{"NeedHelpIntro", need_help_info},
 };
 BSDATAF(textscript)
-BSDATA(ifscripti) = {
-	{"Greater", if_greater},
-	{"Lesser", if_lesser},
-};
-BSDATAF(ifscripti)
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -1103,7 +1089,7 @@ BSDATA(script) = {
 	{"Activate", activate_feature},
 	{"CastSpell", cast_spell},
 	{"ChooseAction", choose_action},
-	{"Chance", random_chance},
+	{"Chance", random_chance, random_chance_test},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},

@@ -32,8 +32,6 @@ class creature : public wearable, public statable, public spellable, public owne
 	bool			isfollowmaster() const;
 	void			levelup();
 	const speech*	matchfirst(const speecha& source) const;
-	bool			matchspeech(variant v) const;
-	bool			matchspeech(const variants& source) const;
 	void			matchspeech(speecha& source) const;
 	void			update_abilities();
 	void			update_room_abilities();
@@ -67,7 +65,8 @@ public:
 	void			finish();
 	void			gainexperience(int v);
 	int				get(ability_s v) const { return abilities[v]; }
-	int				getdef(ability_s v) const;
+	int				getdefault(ability_s v) const { return imax(get(v), getminimal(v)); }
+	int				getminimal(ability_s v) const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
 	const classi&	getclass() const { return bsdata<classi>::elements[class_id]; }
 	void			getinfo(stringbuilder& sb) const;

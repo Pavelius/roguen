@@ -2,11 +2,19 @@
 #include "pushvalue.h"
 #include "script.h"
 
-variant	param1, param2;
+variant param1, param2;
 
 BSMETA(script) = {
 	BSREQ(id),
 	{}};
+
+bool script::isallow(const variants& elements) {
+	for(auto v : elements) {
+		if(!isallow(v))
+			return false;
+	}
+	return true;
+}
 
 void script::runv(const void* pv, int bonus) {
 	variant v = pv;

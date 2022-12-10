@@ -729,15 +729,15 @@ bool creature::is(condition_s v) const {
 	}
 }
 
-int	creature::getdef(ability_s v) const {
+int creature::getminimal(ability_s v) const {
 	auto& ei = bsdata<abilityi>::elements[v];
-	auto minimal = 0;
-	if(ei.basic)
-		minimal = get(ei.basic) / 2;
-	auto result = get(v);
-	if(result < minimal)
-		result = minimal;
-	return result;
+	if(ei.basic) {
+		if(ei.is(HardSkill))
+			return get(ei.basic) / 5;
+		else
+			return get(ei.basic) / 2;
+	}
+	return 0;
 }
 
 void creature::movestep(direction_s v) {
@@ -752,26 +752,11 @@ void creature::movestep(direction_s v) {
 	movestep(to(getposition(), v));
 }
 
-bool creature::matchspeech(variant v) const {
-	if(v.iskind<monsteri>())
-		return iskind(v);
-	else if(v.iskind<conditioni>())
-		return is((condition_s)v.value);
-	return true;
-}
-
-bool creature::matchspeech(const variants& source) const {
-	for(auto v : source) {
-		if(!matchspeech(v))
-			return false;
-	}
-	return true;
-}
-
 void creature::matchspeech(speecha& source) const {
+	pushvalue push_player(player, const_cast<creature*>(this));
 	auto ps = source.data;
 	for(auto p : source) {
-		if(!matchspeech(p->condition))
+		if(!script::isallow(p->condition))
 			continue;
 		*ps++ = p;
 	}
@@ -779,11 +764,11 @@ void creature::matchspeech(speecha& source) const {
 }
 
 const speech* creature::matchfirst(const speecha& source) const {
+	pushvalue push_player(player, const_cast<creature*>(this));
 	auto ps = source.data;
 	for(auto p : source) {
-		if(!matchspeech(p->condition))
-			continue;
-		return p;
+		if(script::isallow(p->condition))
+			return p;
 	}
 	return 0;
 }

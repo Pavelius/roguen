@@ -181,7 +181,6 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="greatneed.cpp" />
     <ClCompile Include="hotkey.cpp" />
-    <ClCompile Include="ifscript.cpp" />
     <ClCompile Include="indexa.cpp" />
     <ClCompile Include="information.cpp" />
     <ClCompile Include="interface.cpp" />
@@ -266,7 +265,6 @@
     <ClInclude Include="feature.h" />
     <ClInclude Include="framerange.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="ifscript.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
@@ -359,6 +357,7 @@
     <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />
     <Text Include="..\rules\Sites.txt" />
+    <Text Include="..\rules\Skills.txt" />
     <Text Include="..\rules\Spells.txt" />
     <Text Include="..\rules\Tiles.txt" />
   </ItemGroup>

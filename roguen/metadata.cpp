@@ -1,6 +1,5 @@
 #include "bsreq.h"
 #include "condition.h"
-#include "ifscript.h"
 #include "hotkey.h"
 #include "global.h"
 #include "greatneed.h"
@@ -34,9 +33,13 @@ BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
 BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
+BSDATAC(siteskilli, 256);
 BSDATAC(tilei, 64);
 BSDATAC(trigger, 256);
 
+BSMETA(abilityfi) = {
+	BSREQ(id),
+	{}};
 BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};
@@ -155,6 +158,14 @@ BSMETA(sitei) = {
 BSMETA(sitegeni) = {
 	BSREQ(id),
 	{}};
+BSMETA(siteskilli) = {
+	BSREQ(id),
+	BSENM(skill, abilityi),
+	BSREQ(bonus),
+	BSENM(retry, durationi),
+	BSFLG(target, conditioni),
+	BSREQ(effect), BSREQ(fail),
+	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
 	BSREQ(mana), BSREQ(count),
@@ -180,7 +191,6 @@ BSDATA(varianti) = {
 	{"Feature", VAR(featurei), 1},
 	{"Global", VAR(globali), 1},
 	{"Hotkey", VAR(hotkey), 2},
-	{"IfScript", VAR(ifscripti), 1},
 	{"Item", VAR(itemi), 1},
 	{"ItemUpgrade", VAR(itemstat), 1},
 	{"ItemVariety", VAR(itemvariety), 1},
