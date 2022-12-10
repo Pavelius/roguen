@@ -1,4 +1,5 @@
 #include "creature.h"
+#include "game.h"
 #include "race.h"
 
 static const char* getnameshort(const char* id) {

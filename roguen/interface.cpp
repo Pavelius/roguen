@@ -2,6 +2,7 @@
 #include "bsreq.h"
 #include "draw.h"
 #include "draw_object.h"
+#include "game.h"
 #include "hotkey.h"
 #include "keyname.h"
 #include "listcolumn.h"

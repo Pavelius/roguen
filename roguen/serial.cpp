@@ -2,6 +2,7 @@
 #include "boost.h"
 #include "draw.h"
 #include "draw_object.h"
+#include "game.h"
 #include "greatneed.h"
 #include "creature.h"
 

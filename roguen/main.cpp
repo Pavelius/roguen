@@ -1,6 +1,7 @@
 #include "bsreq.h"
 #include "charname.h"
 #include "draw.h"
+#include "game.h"
 #include "greatneed.h"
 #include "creature.h"
 #include "hotkey.h"

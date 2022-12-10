@@ -1,5 +1,6 @@
-#include "greatneed.h"
 #include "creature.h"
+#include "game.h"
+#include "greatneed.h"
 #include "pushvalue.h"
 #include "script.h"
 

@@ -2,6 +2,7 @@
 #include "condition.h"
 #include "creature.h"
 #include "draw_object.h"
+#include "game.h"
 #include "ifscript.h"
 #include "itema.h"
 #include "listcolumn.h"

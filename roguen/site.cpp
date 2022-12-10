@@ -1,10 +1,11 @@
 #include "areamap.h"
 #include "direction.h"
+#include "creature.h"
+#include "game.h"
 #include "pushvalue.h"
 #include "randomizer.h"
 #include "script.h"
 #include "site.h"
-#include "creature.h"
 
 BSDATA(sitegeni) = {
 	{"NoGenerate", &sitei::nogenerate},

@@ -4,6 +4,7 @@
 #include "creature.h"
 #include "duration.h"
 #include "feature.h"
+#include "game.h"
 #include "indexa.h"
 #include "script.h"
 #include "skilluse.h"
