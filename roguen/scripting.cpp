@@ -548,11 +548,11 @@ static void gather_item(const char* id, randomizeri& source, int chance) {
 	auto v = source.random(source.chance, chance / 10, 10);
 	if(v.iskind<itemi>()) {
 		item it; it.create(bsdata<itemi>::elements + v.value, 1);
-		if(d100() < chance) {
-			if(d100() < ((chance - 20) / 3))
-				it.set(Blessed);
-		} else
-			it.set(Cursed);
+		//if(d100() < chance) {
+		//	if(d100() < ((chance - 20) / 3))
+		//		it.set(Blessed);
+		//} else
+		//	it.set(Cursed);
 		player->act(getnm(id), it.getfullname());
 		player->additem(it);
 	}

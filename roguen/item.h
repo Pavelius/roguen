@@ -1,5 +1,4 @@
 #include "feat.h"
-#include "magic.h"
 #include "point.h"
 #include "list.h"
 #include "wear.h"
@@ -15,8 +14,7 @@ struct itemstat : nameable {
 	short			weight, cost;
 	char			upgrade;
 	featable		feats;
-	variants		dress, dress_bless, dress_artifact, dress_cursed;
-	const variants& getdress(magic_s v) const;
+	variants		dress;
 };
 struct itemvariety : nameable {
 	const itemstat*	elements[15];
@@ -26,7 +24,8 @@ struct itemi : itemstat {
 	short			avatar;
 	wear_s			wear;
 	char			wear_index;
-	variants		use, use_blessed, use_artifact;
+	const itemi*	parent;
+	variants		use;
 	const itemvariety* prefix;
 	const itemvariety* suffix;
 	const itemi*	ammunition;
@@ -39,14 +38,13 @@ struct itemi : itemstat {
 	void			paint() const; // Exported paint function
 };
 class item {
-	unsigned short	type;
+	unsigned short type;
+	unsigned char identified : 1;
+	unsigned char broken : 2;
+	unsigned char charges : 5;
 	union {
-		unsigned short count;
+		unsigned char count;
 		struct {
-			magic_s	magic : 2;
-			unsigned char broken : 2;
-			unsigned char identified : 1;
-			unsigned char charges : 3;
 			unsigned char prefix : 4;
 			unsigned char suffix : 4;
 		};
@@ -58,7 +56,7 @@ public:
 	void			clear() { type = count = 0; }
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
-	void			damage() {}
+	void			damage();
 	void			drop(point m);
 	int				get(unsigned fo) const;
 	short unsigned	getkind() const { return type; }
@@ -68,7 +66,6 @@ public:
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
-	magic_s			getmagic() const { return magic; }
 	const char*		getname() const { return geti().getname(); }
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*		getfullname(int price_percent = 0) const;
@@ -82,11 +79,11 @@ public:
 	bool			is(const item& v) const { return type == v.type; }
 	bool			iscountable() const { return geti().iscountable(); }
 	bool			isidentified() const { return identified != 0; }
-	void			set(magic_s v);
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
 	void			setupgrade(const itemstat* pv);
 	void			upgrade(int chance_suffix, int chance_prefix, int level);
+	void			upgrade(feat_s v);
 	void			use() { setcount(getcount() - 1); }
 	void			usecharge() { if(charges) charges--; else use(); }
 };

@@ -44,12 +44,9 @@ static void initializating() {
 #endif
 }
 
-static void equip_item(const char* id, magic_s m = Mundane) {
+static void equip_item(const char* id) {
 	item it;
 	it.create(id);
-	it.set(m);
-	if(m)
-		it.setidentified(1);
 	player->equip(it);
 	if(it)
 		player->additem(it);

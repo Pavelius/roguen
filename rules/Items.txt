@@ -43,15 +43,9 @@ Lighting
 Mayhem damage(2)
 Might
  dress Strenght+10
- dress_cursed Strenght-10
- dress_bless Strenght+20
- dress_artifact Strenght+30
 Penetration
 Power
  dress ManaMaximum+20
- dress_cursed ManaMaximum-20
- dress_bless ManaMaximum+40
- dress_artifact ManaMaximum+60
 Slaughtering
 Surrendering
 TheEagle
@@ -99,13 +93,21 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 
-BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
- feats CutWoods
 Bite wear(MeleeWeapon) damage(3) parry(-20) enemy_parry(-50) speed(-2)
  feats Natural
-BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) parry(-12) speed(-6)
 Claws wear(MeleeWeapon) damage(2) parry(-10) speed(10)
  feats Natural
+
+BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8)\
+ prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+ feats CutWoods
+BattleAxeCursed cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(-10) damage(3) parry(-60) pierce(2) speed(-8)\
+ prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+ feats CutWoods Cursed
+BattleAxeBlessed cost(100) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(10) damage(4) parry(-40) pierce(3) speed(-8)\
+ prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+ feats CutWoods Blessed
+BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) parry(-12) speed(-6)
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3) parry(-50)
 Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30) speed(5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
 Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1) speed(-10) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)

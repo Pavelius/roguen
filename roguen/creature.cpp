@@ -1225,22 +1225,6 @@ void creature::makemove() {
 	check_stun(this);
 }
 
-static int getmultiplier(magic_s v) {
-	switch(v) {
-	case Cursed: return -1;
-	default: return 1;
-	}
-}
-
-static int getmagicbonus(magic_s v) {
-	switch(v) {
-	case Cursed: return -2;
-	case Blessed: return 1;
-	case Artifact: return 2;
-	default: return 0;
-	}
-}
-
 void creature::dress(variant v) {
 	if(v.iskind<abilityi>())
 		abilities[v.value] += v.counter;
@@ -1260,14 +1244,13 @@ void creature::dress(variants source) {
 }
 
 static void apply_dress(creature* player, const item& e) {
-	auto magic = e.getmagic();
-	player->dress(e.geti().getdress(magic));
+	player->dress(e.geti().dress);
 	auto p = e.getprefix();
 	if(p)
-		player->dress(p->getdress(magic));
+		player->dress(p->dress);
 	p = e.getsuffix();
 	if(p)
-		player->dress(p->getdress(magic));
+		player->dress(p->dress);
 }
 
 static void update_dress(creature* player, const item& e) {

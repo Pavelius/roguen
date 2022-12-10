@@ -67,8 +67,8 @@ void item::add(item& v) {
 		return;
 	if(iscountable()) {
 		unsigned n1 = count + v.count + 1;
-		if(n1 >= 0xFFFF) {
-			count = 0xFFFF;
+		if(n1 >= 0xFF) {
+			count = 0xFF;
 			v.count = n1 - count - 1;
 		} else {
 			count = n1;
@@ -108,6 +108,15 @@ bool item::is(wear_s v) const {
 	}
 }
 
+void item::damage() {
+	if(broken >= 3) {
+		if(is(Blessed))
+			return;
+		clear();
+	} else
+		broken++;
+}
+
 bool item::is(feat_s v) const {
 	if(geti().feats.is(v))
 		return true;
@@ -145,10 +154,7 @@ const char*	item::getfullname(int price_percent) const {
 	auto pn = getname();
 	auto vw = stringbuilder::getgender(pn);
 	if(!iscountable()) {
-		auto magic = getmagic();
 		if(isidentified()) {
-			sb.addsep(' ');
-			sb.adjective(getnm(bsdata<magici>::elements[magic].id), vw);
 			auto p = getprefix();
 			if(p) {
 				sb.addsep(' ');
@@ -172,12 +178,6 @@ const char*	item::getfullname(int price_percent) const {
 		sb.adds("%-Cost %1i %-Coins", cost);
 	}
 	return temp;
-}
-
-void item::set(magic_s v) {
-	if(iscountable())
-		return;
-	magic = v;
 }
 
 const itemstat* item::getprefix() const {
@@ -238,20 +238,17 @@ void item::upgrade(int chance_prefix, int chance_suffix, int level) {
 		suffix = random_upgrade(geti().suffix, level);
 }
 
-const variants& itemstat::getdress(magic_s magic) const {
-	switch(magic) {
-	case Artifact:
-		if(dress_artifact)
-			return dress_artifact;
-		return getdress(Blessed);
-	case Blessed:
-		if(dress_bless)
-			return dress_bless;
-		return getdress(Mundane);
-	case Cursed:
-		if(dress_cursed)
-			return dress_cursed;
-		return getdress(Mundane);
-	default: return dress;
+static const itemi* find_type(const itemi* parent, feat_s v) {
+	for(auto& e : bsdata<itemi>()) {
+		if(e.parent == parent && e.is(v))
+			return &e;
 	}
+	return 0;
+}
+
+void item::upgrade(feat_s v) {
+	auto nt = find_type(&geti(), v);
+	if(!nt)
+		return;
+	type = nt - bsdata<itemi>::elements;
 }
