@@ -495,6 +495,7 @@ void creature::cast(const spelli& e, int level, int mana) {
 	} else if(FGT(e.target, TargetFeatures)) {
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
+			pushvalue push_index(last_index, p);
 			script::run(e.effect);
 		}
 	} else if(FGT(e.target, TargetRooms)) {
@@ -536,10 +537,21 @@ static const char* random_herbs(point m) {
 	return "GrassHerbs";
 }
 
+static void chance_remove_feature(const char* id, int chance) {
+	if(d100() < chance) {
+		player->act(getnm("id"));
+		area.setfeature(last_index, 0);
+	}
+}
+
 static void gather_herbs(int bonus) {
-	auto pr = bsdata<randomizeri>::find(random_herbs(player->getposition()));
-	if(pr)
-		gather_item("YouGatherHerbs", *pr, player->getdef(Herbalism));
+	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
+	if(pr) {
+		auto chance = player->getdef(Herbalism);
+		auto chance_remove = imin(10, 60 - (chance / 2));
+		gather_item("YouGatherHerbs", *pr, chance);
+		chance_remove_feature("YouTookAllHerbs", chance_remove);
+	}
 }
 
 static const char* item_weight(const void* object, stringbuilder& sb) {
