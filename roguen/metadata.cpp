@@ -2,6 +2,7 @@
 #include "condition.h"
 #include "ifscript.h"
 #include "hotkey.h"
+#include "global.h"
 #include "greatneed.h"
 #include "creature.h"
 #include "race.h"

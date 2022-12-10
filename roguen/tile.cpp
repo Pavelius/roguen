@@ -21,6 +21,7 @@ BSDATA(tilefi) = {
 	{"CanSwim"},
 	{"DangerousFeature"},
 	{"BetweenWalls"},
+	{"Undeground"},
 	{"StuckFeature"},
 	{"TrappedFeature"},
 	{"Woods"},

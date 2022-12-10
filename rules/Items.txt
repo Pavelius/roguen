@@ -49,9 +49,9 @@ Might
 Penetration
 Power
  dress ManaMaximum+20
- dress_cursed Strenght-20
- dress_bless Strenght+30
- dress_artifact Strenght+40
+ dress_cursed ManaMaximum-20
+ dress_bless ManaMaximum+40
+ dress_artifact ManaMaximum+60
 Slaughtering
 Surrendering
 TheEagle

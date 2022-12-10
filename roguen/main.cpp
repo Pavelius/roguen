@@ -47,7 +47,6 @@ static void equip_item(const char* id, magic_s m = Mundane) {
 	item it;
 	it.create(id);
 	it.set(m);
-	it.upgrade(100, 100, 3);
 	if(m)
 		it.setidentified(1);
 	player->equip(it);
@@ -69,7 +68,7 @@ static creature* find_monster_id(const char* id) {
 static void main_start() {
 	player = creature::create({5, 5}, "Human", "Fighter", true);
 	player->set(Ally);
-	equip_item("LongBow", Artifact);
+	equip_item("LongBow");
 	equip_item("Arrow");
 	equip_item("Torch");
 	for(auto i =0; i<20; i++)

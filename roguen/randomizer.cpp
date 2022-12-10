@@ -20,10 +20,9 @@ int randomizeri::total(const variants& elements) {
 	return result;
 }
 
-variant randomizeri::random(const variants& elements) {
-	auto summary = total(elements);
+variant randomizeri::random(const variants& elements, int bonus, int summary) {
 	if(summary) {
-		auto result = rand() % summary;
+		auto result = rand() % summary + bonus;
 		for(auto& e : elements) {
 			auto n = getcounter(e);
 			if(result < n) {

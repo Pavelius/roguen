@@ -18,6 +18,7 @@ BSDATA(abilityi) = {
 	{"Armor"},
 	{"Speed"},
 	{"EnemyAttacks"},
+	{"Herbalism", Wits},
 	{"Pickpockets", Dexterity},
 	{"Stealth", Dexterity},
 	{"OpenLocks", Dexterity},

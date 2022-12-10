@@ -729,6 +729,17 @@ bool creature::is(condition_s v) const {
 	}
 }
 
+int	creature::getdef(ability_s v) const {
+	auto& ei = bsdata<abilityi>::elements[v];
+	auto minimal = 0;
+	if(ei.basic)
+		minimal = get(ei.basic) / 2;
+	auto result = get(v);
+	if(result < minimal)
+		result = minimal;
+	return result;
+}
+
 void creature::movestep(direction_s v) {
 	if(area.is(getposition(), Iced)) {
 		if(!roll(Dexterity, 30)) {

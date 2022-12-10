@@ -3,7 +3,7 @@
 
 #pragma once
 
-enum tilef : unsigned char { Impassable, CanSwim, DangerousFeature, BetweenWalls, StuckFeature, TrappedFeature, Woods };
+enum tilef : unsigned char { Impassable, CanSwim, DangerousFeature, BetweenWalls, Undeground, StuckFeature, TrappedFeature, Woods };
 
 struct tilefi {
 	const char*		id;

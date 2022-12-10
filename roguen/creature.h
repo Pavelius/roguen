@@ -5,8 +5,6 @@
 #include "areamap.h"
 #include "class.h"
 #include "dice.h"
-//#include "game.h"
-#include "global.h"
 #include "moveable.h"
 #include "monster.h"
 #include "quest.h"
@@ -69,6 +67,7 @@ public:
 	void			finish();
 	void			gainexperience(int v);
 	int				get(ability_s v) const { return abilities[v]; }
+	int				getdef(ability_s v) const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
 	const classi&	getclass() const { return bsdata<classi>::elements[class_id]; }
 	void			getinfo(stringbuilder& sb) const;

@@ -1,2 +1,72 @@
-﻿In file `Names.txt`:
- Define translation for `IdentifySpell`
+﻿In file `rules/Items.txt`:
+ Line 70: Expected line feed
+In file `rules/Features.txt`:
+ Line 42: Can't find variant `TinyKey`
+In file `rules/Monsters.txt`:
+ Line 5: Can't find variant `Bite`
+ Line 10: Can't find variant `Bite`
+ Line 13: Can't find variant `Spear`
+ Line 13: Can't find variant `ChainArmor`
+ Line 14: Can't find variant `SP`
+ Line 14: Can't find variant `GP`
+ Line 19: Can't find variant `Bite`
+ Line 22: Can't find variant `Bite`
+ Line 29: Can't find variant `Bite`
+ Line 32: Can't find variant `Claws`
+ Line 35: Can't find variant `Dagger`
+ Line 36: Can't find variant `SP`
+ Line 39: Can't find variant `Dagger`
+ Line 40: Can't find variant `SP`
+ Line 43: Can't find variant `BruteSword`
+ Line 43: Can't find variant `LeatherArmor`
+ Line 44: Can't find variant `SP`
+ Line 44: Can't find variant `SP`
+ Line 55: Can't find variant `Spear`
+ Line 58: Can't find variant `Dagger`
+ Line 61: Can't find variant `Bite`
+ Line 76: Can't find variant `Club`
+ Line 79: Can't find variant `Club`
+ Line 79: Can't find variant `LeatherArmor`
+ Line 82: Can't find variant `Staff`
+ Line 85: Can't find variant `Sword`
+ Line 92: Can't find variant `GP`
+In file `rules/Sites.txt`:
+ Line 9: Can't find variant `Bones`
+ Line 37: Can't find variant `Bones`
+ Line 37: Can't find variant `MonsterSkull`
+ Line 40: Can't find variant `Ration`
+ Line 40: Can't find variant `LoafOfBread`
+ Line 40: Can't find variant `Sausage`
+ Line 46: Can't find variant `StolenTreasures`
+ Line 69: Can't find variant `Bones`
+ Line 72: Can't find variant `Bones`
+ Line 72: Can't find variant `RandomTreasure`
+ Line 81: Can't find variant `RandomArtifact`
+ Line 81: Can't find variant `RandomArtifact`
+ Line 93: Can't find variant `Bones`
+ Line 105: Can't find variant `RandomTreasure`
+ Line 105: Can't find variant `RandomLoot`
+ Line 111: Can't find variant `RandomTreasure`
+ Line 114: Can't find variant `Bones`
+ Line 131: Can't find variant `Bones`
+ Line 132: Can't find variant `RandomArtifact`
+ Line 137: Can't find variant `Bones`
+ Line 137: Can't find variant `Stones`
+ Line 198: Can't find variant `StolenTreasures`
+In file `rules/Advancement.txt`:
+ Line 7: Can't find variant `ChainArmor`
+ Line 7: Can't find variant `Sword`
+ Line 10: Can't find variant `LeatherArmor`
+ Line 10: Can't find variant `Dagger`
+In file `modules/ChurchOfOne.txt`:
+ Line 11: Can't find variant `MonsterSkull`
+ Line 12: Can't find variant `Bones`
+ Line 17: Can't find variant `Ration`
+ Line 17: Can't find variant `Torch`
+ Line 22: Can't find variant `BattleAxe`
+ Line 22: Can't find variant `BruteSword`
+ Line 22: Can't find variant `Dagger`
+ Line 22: Can't find variant `HandAxe`
+ Line 22: Can't find variant `Mace`
+ Line 22: Can't find variant `Spear`
+ Line 22: Can't find variant `Sword`

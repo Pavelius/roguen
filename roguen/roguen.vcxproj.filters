@@ -207,9 +207,6 @@
     <ClCompile Include="anymap.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="areamap.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="location.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -270,9 +267,6 @@
     <ClCompile Include="diceprogress.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="areaf.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="actable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -295,9 +289,6 @@
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="feature.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="tile.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="hotkey.cpp">
@@ -331,6 +322,15 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="ownerable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="areaf.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="areamap.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="tile.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -446,9 +446,6 @@
     <ClInclude Include="anymap.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="areamap.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="charname.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -524,16 +521,10 @@
     <ClInclude Include="feature.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="tile.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="hotkey.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="world.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="areaf.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="race.h">
@@ -588,6 +579,15 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="itema.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="areaf.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="areamap.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="tile.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

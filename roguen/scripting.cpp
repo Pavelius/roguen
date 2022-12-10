@@ -515,12 +515,39 @@ void creature::cast(const spelli& e, int level, int mana) {
 	wait();
 }
 
+static void gather_item(const char* id, randomizeri& source, int chance) {
+	auto v = source.random(source.chance, chance / 10, 10);
+	if(v.iskind<itemi>()) {
+		item it; it.create(bsdata<itemi>::elements + v.value, 1);
+		if(d100() < chance) {
+			if(d100() < ((chance - 20) / 3))
+				it.set(Blessed);
+		} else
+			it.set(Cursed);
+		player->actp(getnm(id), it.getfullname());
+		player->additem(it);
+	}
+}
+
+static const char* random_herbs(point m) {
+	auto& ei = bsdata<tilei>::elements[area.tiles[m]];
+	if(ei.is(Undeground))
+		return "UndegroundHerbs";
+	return "GrassHerbs";
+}
+
+static void gather_herbs(int bonus) {
+	auto pr = bsdata<randomizeri>::find(random_herbs(player->getposition()));
+	if(pr)
+		gather_item("YouGatherHerbs", *pr, player->getdef(Herbalism));
+}
+
 static const char* item_weight(const void* object, stringbuilder& sb) {
 	auto p = (item*)object;
 	if(!(*p))
 		return "";
 	auto w = p->getweight();
-	sb.add("%1i.%2i%3i %Kg", w / 100, (w/10) % 10, w % 10);
+	sb.add("%1i.%2i%3i %Kg", w / 100, (w / 10) % 10, w % 10);
 	return sb.begin();
 }
 
@@ -1070,6 +1097,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
+	{"GatherHerbs", gather_herbs},
 	{"JumpToSite", jump_to_site},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},

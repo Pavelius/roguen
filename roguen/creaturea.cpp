@@ -1,4 +1,4 @@
-#include "main.h"
+#include "creature.h"
 
 static point compare_position;
 
