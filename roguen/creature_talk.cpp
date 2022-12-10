@@ -1,4 +1,5 @@
 #include "creature.h"
+#include "pushvalue.h"
 #include "script.h"
 #include "talk.h"
 

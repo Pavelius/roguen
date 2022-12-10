@@ -6,10 +6,6 @@ item* last_item;
 
 static_assert(sizeof(item) == 4, "Invalid size of `item` structure");
 
-static int d100() {
-	return rand() % 100;
-}
-
 static int random_count(const itemvariety* p) {
 	auto pe = p->elements + sizeof(itemvariety::elements) / sizeof(itemvariety::elements[0]);
 	auto count = 0;

@@ -236,6 +236,7 @@ typedef const char*(*fngetname)(const void* object); // Callback function of get
 typedef void(*fncommand)(void* object); // Callback function of object command executing
 typedef void(*fnread)(const char* url);
 
+inline int d100() { return rand() % 100; }
 bool						equal(const char* s1, const char* s2);
 const char*					getdescription(const char* id);
 int							getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.

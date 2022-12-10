@@ -4,20 +4,15 @@
 #include "areaf.h"
 #include "areamap.h"
 #include "class.h"
-#include "crt.h"
 #include "dice.h"
 #include "direction.h"
 #include "duration.h"
 #include "flagable.h"
 #include "game.h"
 #include "global.h"
-#include "list.h"
-#include "listcolumn.h"
 #include "moveable.h"
 #include "monster.h"
-#include "pushvalue.h"
 #include "quest.h"
-#include "shape.h"
 #include "site.h"
 #include "speech.h"
 #include "spell.h"
@@ -145,7 +140,6 @@ extern creaturea creatures, enemies, targets;
 namespace draw {
 bool				isnext();
 }
-inline int d100() { return rand() % 100; }
 extern int last_value, last_cap;
 extern rect last_rect;
 extern int window_width, window_height;

@@ -13,10 +13,6 @@ static slice<point> random_directions() {
 	return source;
 }
 
-static int d100() {
-	return rand() % 100;
-}
-
 static void pushv(worldi& a, point i, unsigned char v) {
 	a[i] = v;
 	stack[push_stack++] = i;

@@ -4,6 +4,7 @@
 #include "indexa.h"
 #include "itema.h"
 #include "creature.h"
+#include "pushvalue.h"
 #include "script.h"
 #include "siteskill.h"
 #include "trigger.h"

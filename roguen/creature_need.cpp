@@ -1,5 +1,6 @@
 #include "greatneed.h"
-#include "main.h"
+#include "creature.h"
+#include "pushvalue.h"
 #include "script.h"
 
 extern greatneed* last_need;

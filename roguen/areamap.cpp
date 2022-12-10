@@ -22,10 +22,6 @@ static const direction_s orientations_7b7[49] = {
 	SouthWest, SouthWest, South, South, South, SouthEast, SouthEast,
 };
 
-static int d100() {
-	return rand() % 100;
-}
-
 static void addwave(point v) {
 	*push_counter++ = v;
 	if(push_counter >= stack + sizeof(stack) / sizeof(stack[0]))
