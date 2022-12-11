@@ -7,12 +7,13 @@
 #define VAR(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 
 struct bsreq;
-enum variant_s : unsigned char;
+//enum variant_s : unsigned char;
 union variant;
 
 typedef sliceu<variant> variants;
-typedef void (*fnscript)(int index, int bonus);
 typedef void (*fngetinfo)(const void* object, variant v, stringbuilder& sb);
+typedef void (*fnscript)(int index, int bonus);
+typedef void (*fnvariant)(variant v);
 
 struct varianti {
 	const char*			id;
@@ -22,7 +23,7 @@ struct varianti {
 	fngetname			pgetname;
 	fnstatus			pgetinfo;
 	fngetinfo			pgetproperty;
-	fnscript			pgscript;
+	fnscript			pscript;
 	static const array* getarray(const void* object, const char* id);
 	static const varianti* getsource(const char* id);
 	static const varianti* getmetadata(const void* object);
@@ -39,13 +40,11 @@ union variant {
 	struct {
 		unsigned short	value;
 		char			counter;
-		variant_s		type;
+		unsigned char	type;
 	};
 	constexpr variant() : u(0) {}
-	//constexpr variant(int u) : u(u) {}
-	constexpr variant(variant_s	type, char counter, unsigned short value) : type(type), counter(counter), value(value) {}
+	constexpr variant(unsigned char type, char counter, unsigned short value) : type(type), counter(counter), value(value) {}
 	template<class T> variant(T* v) : variant((const void*)v) {}
-	//constexpr operator int() const { return u; }
 	constexpr explicit operator bool() const { return u != 0; }
 	constexpr bool operator==(const variant& v) const { return u == v.u; }
 	constexpr bool operator!=(const variant& v) const { return u != v.u; }
@@ -59,8 +58,7 @@ union variant {
 	const char*			getid() const;
 	void*				getpointer() const { return to().source->ptr(value); }
 	const char*			getname() const;
-	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; counter = 0; }
+	void				setvariant(unsigned char t, unsigned short v) { type = t; value = v; counter = 0; }
 };
-typedef void (*fnvariant)(variant v);
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);

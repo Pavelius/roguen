@@ -14,5 +14,4 @@ struct trigger {
 	bool			match(variant v1, variant v2) const { return (!p1 || p1 == v1) && (!p2 || p2 == v2); }
 	static void		fire(triggern t, variant p1 = {}, variant p2 = {});
 };
-extern variant		param1, param2;
 extern trigger*		last_trigger;

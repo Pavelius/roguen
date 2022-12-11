@@ -20,8 +20,6 @@ void trigger::fire(triggern type, variant p1, variant p2) {
 			&& (!e.p1 || e.p1 == p1)
 			&& (!e.p2 || e.p2 == p2)) {
 			pushvalue last_push(last_trigger, &e);
-			pushvalue push_param1(param1, p1);
-			pushvalue push_param2(param2, p2);
 			script::run(e.effect);
 		}
 	}

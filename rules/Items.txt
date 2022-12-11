@@ -223,6 +223,13 @@ BlessedMorgiaRoot weight(1) avatar(108) count(1) parent(MorgiaRoot)
  feats Blessed
  use Permanent Strenght+4
 MossOfMoreilon weight(1) avatar(107) count(1)
+ use Permanent Dexterity+1
+CursedMossOfMoreilon weight(1) avatar(107) count(1) parent(MossOfMoreilon)
+ feats Cursed
+ use Permanent Dexterity-1
+BlessedMossOfMoreilon weight(1) avatar(107) count(1) parent(MossOfMoreilon)
+ feats Blessed
+ use Permanent Dexterity+4
 PepperPetal weight(1) avatar(95) count(1)
  use Hits+4
 CursedPepperPetal weight(1) avatar(95) count(1) parent(PepperPetal)

@@ -16,4 +16,3 @@ struct script {
 	static void		runv(const void* pv, int bonus = 0);
 	static void		run(const variants& elements);
 };
-extern variant		param1, param2;

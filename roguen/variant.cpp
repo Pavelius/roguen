@@ -36,7 +36,7 @@ template<> variant::variant(const void* v) : u(0) {
 		auto i = e.source->indexof(v);
 		if(i != -1) {
 			value = i;
-			type = (variant_s)(&e - bsdata<varianti>::elements);
+			type = &e - bsdata<varianti>::elements;
 			break;
 		}
 	}
@@ -111,7 +111,7 @@ template<> variant::variant(const char* v) : u(0) {
 			int i = e.found(v, size);
 			if(i != -1) {
 				value = i;
-				type = (variant_s)(&e - bsdata<varianti>::elements);
+				type = &e - bsdata<varianti>::elements;
 				counter = 0;
 				break;
 			}
