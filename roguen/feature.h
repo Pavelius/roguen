@@ -16,11 +16,13 @@ struct featurei {
 	char			random_count;
 	char			lead;
 	char			chance_auto_activate;
+	char			power;
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
 	bool			islocked() const { return activate_item.value != 0; }
 	bool			istrap() const { return is(TrappedFeature); }
 	bool			isvisible() const { return features.count != 0; }
 	featurei*		getactivate() const { return activateto; }
+	featurei*		getactivatefrom() const;
 	featurei*		gethidden() const;
 	featurei*		getlead() const { return leadto; }
 	featurei*		getlocked() const;

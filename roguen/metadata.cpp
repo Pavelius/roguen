@@ -4,6 +4,7 @@
 #include "global.h"
 #include "greatneed.h"
 #include "creature.h"
+#include "modifier.h"
 #include "race.h"
 #include "script.h"
 #include "siteskill.h"
@@ -128,6 +129,9 @@ BSMETA(locationi) = {
 	BSENM(doors, featurei),
 	BSREQ(minimap),
 	{}};
+BSMETA(modifieri) = {
+	BSREQ(id),
+	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
@@ -197,6 +201,7 @@ BSDATA(varianti) = {
 	{"ItemVariety", VAR(itemvariety), 1},
 	{"List", VAR(listi), 1},
 	{"Location", VAR(locationi), 1},
+	{"Modifier", VAR(modifieri), 1},
 	{"Monster", VAR(monsteri), 1},
 	{"Need", VAR(greatneedi), 1},
 	{"NeedFlag", VAR(needni), 1},

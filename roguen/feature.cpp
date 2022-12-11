@@ -17,6 +17,7 @@ BSMETA(featurei) = {
 	BSREQ(leadto), BSREQ(activateto), BSREQ(effect),
 	BSREQ(lead),
 	BSREQ(chance_auto_activate),
+	BSREQ(power),
 	{}};
 BSDATAC(featurei, 250);
 
@@ -42,6 +43,14 @@ featurei* featurei::getlocked() const {
 			if(e.activate_item)
 				return &e;
 		}
+	}
+	return 0;
+}
+
+featurei* featurei::getactivatefrom() const {
+	for(auto& e : bsdata<featurei>()) {
+		if(e.activateto == this && e.isvisible())
+			return &e;
 	}
 	return 0;
 }

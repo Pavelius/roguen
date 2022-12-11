@@ -101,10 +101,12 @@ Claws wear(MeleeWeapon) damage(2) parry(-10) speed(10)
 BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8)\
  prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats CutWoods
-BattleAxeCursed cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(-10) damage(3) parry(-60) pierce(2) speed(-8)\
+CursedBattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(-10) damage(3) parry(-60) pierce(2) speed(-8)\
+ parent(BattleAxe)\
  prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats CutWoods Cursed
-BattleAxeBlessed cost(100) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(10) damage(4) parry(-40) pierce(3) speed(-8)\
+BlessedBattleAxe cost(100) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(10) damage(4) parry(-40) pierce(3) speed(-8)\
+ parent(BattleAxe)\
  prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats CutWoods Blessed
 BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) parry(-12) speed(-6)
@@ -173,14 +175,68 @@ RectangularKey weight(1) avatar(285) count(1)
 RoundKey weight(1) avatar(286) count(1)
 
 AlrauniaAntidote weight(1) avatar(96) count(1)
+ use Poison-2
+CursedAlrauniaAntidote weight(1) avatar(96) count(1) parent(AlrauniaAntidote)
+ feats Cursed
+ use Poison+5
+BlessedAlrauniaAntidote weight(1) avatar(96) count(1) parent(AlrauniaAntidote)
+ feats Blessed
+ use Poison-10
 BurbRoot weight(1) avatar(90) count(1)
+ use Hits-10
+CursedBurbRoot weight(1) avatar(90) count(1) parent(BurbRoot)
+ feats Cursed
+ use Hits-20
+BlessedBurbRoot weight(1) avatar(90) count(1) parent(BurbRoot)
+ feats Blessed
+ use Hits-20
 CurariaMancox weight(1) avatar(91) count(1)
+ use Illness-1
+CursedCurariaMancox weight(1) avatar(91) count(1) parent(CurariaMancox)
+ feats Cursed
+ use Illness+1
+BlessedCurariaMancox weight(1) avatar(91) count(1) parent(CurariaMancox)
+ feats Blessed
+ use Illness-10
 DemonDaisy weight(1) avatar(97) count(1)
+ use Poison+10
+CursedDemonDaisy weight(1) avatar(97) count(1) parent(DemonDaisy)
+ feats Cursed
+ use Poison+20
+BlessedDemonDaisy weight(1) avatar(97) count(1) parent(DemonDaisy)
+ feats Blessed
+ use Poison+5
 DevilsRose weight(1) avatar(94) count(1)
+ use Illness+2
+CursedDevilsRose weight(1) avatar(94) count(1) parent(DevilsRose)
+ feats Cursed
+ use Illness+5
+BlessedDevilsRose weight(1) avatar(94) count(1) parent(DevilsRose)
+ feats Blessed
+ use Illness+1
 MorgiaRoot weight(1) avatar(108) count(1)
+ use Permanent Strenght+1
+CursedMorgiaRoot weight(1) avatar(108) count(1) parent(MorgiaRoot)
+ feats Cursed
+ use Permanent Strenght-1
+BlessedMorgiaRoot weight(1) avatar(108) count(1) parent(MorgiaRoot)
+ feats Blessed
+ use Permanent Strenght+4
 MossOfMoreilon weight(1) avatar(107) count(1)
 PepperPetal weight(1) avatar(95) count(1)
+ use Hits+4
+CursedPepperPetal weight(1) avatar(95) count(1) parent(PepperPetal)
+ feats Cursed
+ use Hits-4
+BlessedPepperPetal weight(1) avatar(95) count(1) parent(PepperPetal)
+ feats Blessed
+ use Hits+16
 Spenseweed weight(1) avatar(106) count(1)
+ use Hits+1
+CursedSpenseweed weight(1) avatar(106) count(1) parent(Spenseweed)
+ use Hits-1
+BlessedSpenseweed weight(1) avatar(106) count(1) parent(Spenseweed)
+ use Hits+10
 Stomacemptia weight(1) avatar(93) count(1)
 Stomafillia weight(1) avatar(89) count(1)
 

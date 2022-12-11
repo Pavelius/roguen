@@ -4,7 +4,7 @@
 extern areamap area;
 item* last_item;
 
-static_assert(sizeof(item) == 4, "Invalid size of `item` structure");
+static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");
 
 static int random_count(const itemvariety* p) {
 	auto pe = p->elements + sizeof(itemvariety::elements) / sizeof(itemvariety::elements[0]);
@@ -36,6 +36,15 @@ static int random_upgrade(const itemvariety* p, int level) {
 	return 1 + rand() % count;
 }
 
+const char* item::getname() const {
+	auto pid = geti().id;
+	if(szstart(pid, "Cursed"))
+		pid += 6;
+	else if(szstart(pid, "Blessed"))
+		pid += 7;
+	return getnm(pid);
+}
+
 int item::getcost() const {
 	return geti().cost;
 }
@@ -54,7 +63,7 @@ int item::getcostall() const {
 void item::setcount(int v) {
 	if(v <= 0)
 		clear();
-	else if(iscountable())
+	else
 		count = v - 1;
 }
 
@@ -63,17 +72,15 @@ int item::getcount() const {
 }
 
 void item::add(item& v) {
-	if(type != v.type)
+	if(type != v.type || stats != v.stats || !iscountable())
 		return;
-	if(iscountable()) {
-		unsigned n1 = count + v.count + 1;
-		if(n1 >= 0xFF) {
-			count = 0xFF;
-			v.count = n1 - count - 1;
-		} else {
-			count = n1;
-			v.clear();
-		}
+	unsigned n1 = count + v.count + 1;
+	if(n1 >= 0xFF) {
+		count = 0xFF;
+		v.count = n1 - count - 1;
+	} else {
+		count = n1;
+		v.clear();
 	}
 }
 
@@ -112,7 +119,7 @@ void item::damage() {
 	if(broken >= 3) {
 		if(is(Blessed))
 			return;
-		clear();
+		setcount(getcount() - 1);
 	} else
 		broken++;
 }
@@ -153,13 +160,11 @@ const char*	item::getfullname(int price_percent) const {
 	auto count = getcount();
 	auto pn = getname();
 	auto vw = stringbuilder::getgender(pn);
-	if(!iscountable()) {
-		if(isidentified()) {
-			auto p = getprefix();
-			if(p) {
-				sb.addsep(' ');
-				sb.adjective(getnm(p->id), vw);
-			}
+	if(isidentified()) {
+		auto p = getprefix();
+		if(p) {
+			sb.addsep(' ');
+			sb.adjective(getnm(p->id), vw);
 		}
 	}
 	sb.adds("%1", getname());
@@ -181,13 +186,13 @@ const char*	item::getfullname(int price_percent) const {
 }
 
 const itemstat* item::getprefix() const {
-	if(iscountable() || !prefix)
+	if(!prefix || iscountable())
 		return 0;
 	return geti().prefix->elements[prefix - 1];
 }
 
 const itemstat* item::getsuffix() const {
-	if(iscountable() || !suffix)
+	if(!suffix || iscountable())
 		return 0;
 	return geti().suffix->elements[suffix - 1];
 }

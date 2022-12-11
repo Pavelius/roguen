@@ -108,7 +108,7 @@ AlrauniaAntidote: Лаймовый антидот
 BurbRoot: Корень свеклы
 CurariaMancox: Целебный желтоцвет
 DemonDaisy: Маргаритка
-DevilsRose : Дьявольская Роза
+DevilsRose: Дьявольская Роза
 MorgiaRoot: Корень мандрагоры
 MossOfMoreilon: Бодрящий мох
 PepperPetal: Лепесток перца

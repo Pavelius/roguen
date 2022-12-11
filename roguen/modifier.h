@@ -1,7 +1,7 @@
 #pragma once
 
 enum modifiers : unsigned char {
-	NoModifier, OneOf, 
+	NoModifier, Permanent, 
 };
 struct modifieri {
 	const char*	id;

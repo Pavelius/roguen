@@ -1,3 +1,4 @@
 ﻿In file `rules/Items.txt`:
- Line 103: Not found requisit `blessed`
- Line 103: Not found requisit `cursed`
+ Line 218: Can't find variant `Permanent`
+ Line 221: Can't find variant `Permanent`
+ Line 224: Can't find variant `Permanent`

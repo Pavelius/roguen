@@ -150,6 +150,14 @@ bool szstart(const char* text, const char* name) {
 	return true;
 }
 
+bool szend(const char* text, const char* name) {
+	auto n1 = zlen(text);
+	auto n2 = zlen(name);
+	if(n2 > n1)
+		return false;
+	return memcmp(text - n2, name, n2) == 0;
+}
+
 bool szmatch(const char* text, const char* name) {
 	while(*name) {
 		if(*name++ != *text++)

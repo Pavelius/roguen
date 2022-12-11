@@ -203,7 +203,9 @@ void script::run(variant v) {
 			last_need->set((needn)v.value);
 		else
 			last_need->remove((needn)v.value);
-	} else {
+	} else if(v.iskind<modifieri>())
+		modifier = (modifiers)v.value;
+	else {
 		if(player)
 			player->apply(v);
 	}
@@ -545,14 +547,14 @@ void creature::cast(const spelli& e, int level, int mana) {
 }
 
 static void gather_item(const char* id, randomizeri& source, int chance) {
-	auto v = source.random(source.chance, chance / 10, 10);
+	auto v = source.random(source.chance);
 	if(v.iskind<itemi>()) {
 		item it; it.create(bsdata<itemi>::elements + v.value, 1);
-		//if(d100() < chance) {
-		//	if(d100() < ((chance - 20) / 3))
-		//		it.set(Blessed);
-		//} else
-		//	it.set(Cursed);
+		if(d100() < chance) {
+			if(d100() < ((chance - 20) / 3))
+				it.upgrade(Blessed);
+		} else
+			it.upgrade(Cursed);
 		player->act(getnm(id), it.getfullname());
 		player->additem(it);
 	}
@@ -565,10 +567,21 @@ static const char* random_herbs(point m) {
 	return "GrassHerbs";
 }
 
+static featurei* herbs_base(featurei* p) {
+	while(p->power) {
+		auto p1 = p->getactivatefrom();
+		if(!p1)
+			break;
+		p = p1;
+	}
+	return p;
+}
+
 static void gather_herbs(int bonus) {
+	auto pf = bsdata<featurei>::elements + area.features[last_index];
 	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
 	if(pr) {
-		auto chance = player->getdefault(Herbalism);
+		auto chance = player->getdefault(Herbalism) + (pf->power - 1) * 20;
 		gather_item("YouGatherHerbs", *pr, chance);
 		area.setfeature(last_index, 0);
 	}
@@ -584,8 +597,13 @@ static bool iskind(variant v, const char* id) {
 	return true;
 }
 
-static bool is_herbs(int bonus) {
-	return iskind(bsdata<featurei>::elements + area.features[last_index], "RandomHerbs");
+static bool is_harvest_herbs(int bonus) {
+	auto pf = bsdata<featurei>::elements + area.features[last_index];
+	if(!pf->power)
+		return false;
+	if(!iskind(pf, "RandomHerbs"))
+		return false;
+	return true;
 }
 
 static const char* item_weight(const void* object, stringbuilder& sb) {
@@ -1129,7 +1147,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
-	{"GatherHerbs", gather_herbs, is_herbs},
+	{"GatherHerbs", gather_herbs, is_harvest_herbs},
 	{"JumpToSite", jump_to_site},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},

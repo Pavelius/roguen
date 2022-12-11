@@ -39,9 +39,14 @@ struct itemi : itemstat {
 };
 class item {
 	unsigned short type;
-	unsigned char identified : 1;
-	unsigned char broken : 2;
-	unsigned char charges : 5;
+	union {
+		unsigned char stats;
+		struct {
+			unsigned char identified : 1;
+			unsigned char broken : 2;
+			unsigned char charges : 5;
+		};
+	};
 	union {
 		unsigned char count;
 		struct {
@@ -53,7 +58,7 @@ public:
 	explicit operator bool() const { return type != 0; }
 	void			add(item& v);
 	bool			canequip(wear_s v) const;
-	void			clear() { type = count = 0; }
+	void			clear() { type = count = stats = 0; }
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
 	void			damage();
@@ -66,7 +71,7 @@ public:
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
-	const char*		getname() const { return geti().getname(); }
+	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*		getfullname(int price_percent = 0) const;
 	const itemstat* getprefix() const;

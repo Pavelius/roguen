@@ -3,8 +3,8 @@
 
 BSDATA(modifieri) = {
 	{"NoModifier"},
-	{"OneOf"},
+	{"Permanent"},
 };
-assert_enum(modifieri, OneOf)
+assert_enum(modifieri, Permanent)
 
 modifiers modifier;
