@@ -5,58 +5,73 @@
 
 using namespace log;
 
-static char			temp[512];
-static const char*	p;
-static int			last_bonus;
+static char	temp[512];
+static const char* p;
+static int last_bonus;
+
+static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
+	auto pv = requisit->ptr(p);
+	if(requisit->is(KindText)) {
+		auto v1 = *((const char**)pv);
+		auto v2 = value.text;
+		if(!v1 && !v2)
+			return true;
+		if(v1 && v2)
+			return (strcmp(v1, v2) == 0);
+	} else {
+		auto v1 = requisit->get(pv);
+		return value.number == v1;
+	}
+	return false;
+}
+
+static bool compare(const void* p, const bsreq* type, const valuei* keys, int key_count) {
+	for(int i = 0; i < key_count; i++) {
+		if(!compare(p, type + i, keys[i]))
+			return false;
+	}
+	return true;
+}
 
 static void next() {
-	p = log::skipws(p);
+	p = skipws(p);
 }
 
-static void skipsymcr() {
-	if(!allowparse)
-		return;
-	next();
-	if(*p == 0)
-		return;
-	if(p[0] == 10 || p[0] == 13) {
-		while(*p == 10 || *p == 13)
-			p++;
-		return;
+static bool isequal(const char* pn) {
+	auto i = 0;
+	while(pn[i]) {
+		if(pn[i] != p[i])
+			return false;
+		i++;
 	}
-	log::error(p, "Expected line feed");
-	allowparse = false;
+	p += i;
+	return true;
 }
 
-static const char* example(const char* p, stringbuilder& sb) {
-	while(*p && *p != '\n' && *p != '\r') {
-		if(sb.isfull())
-			break;
-		sb.add(*p++);
+static void skip(const char* command) {
+	if(allowparse && !isequal(command)) {
+		log::error(p, "Expected token `%1`", command);
+		allowparse = false;
 	}
-	return sb.begin();
 }
 
-static void skipsym(char sym) {
-	if(!allowparse)
-		return;
-	do {
-		p = skipspcr(p);
-		next();
-	} while(*p == 10 || *p == 13);
-	if(*p == sym) {
-		p = p + 1;
-		next();
-		return;
+static bool isvalue() {
+	return (p[0] == '-' && isnum(p[1]))
+		|| (p[0] == '\"')
+		|| isnum(p[0])
+		|| ischa(p[0]);
+}
+
+static bool islevel(int level) {
+	auto push_p = p;
+	p = skipsp(p);
+	auto i = p - push_p;
+	if(i == level) {
+		p = skipws(p);
+		return true;
 	}
-	char result[2] = {sym, 0};
-	char string[16]; stringbuilder sb(string); sb.clear();
-	log::error(p, "Expected symbol `%1`, but you have string `%2`", result, example(p, sb));
-	allowparse = false;
-}
-
-static const bsreq* getkey(const bsreq* type) {
-	return type->find("id", bsmeta<const char*>::meta);
+	p = push_p;
+	return false;
 }
 
 static void readid() {
@@ -91,30 +106,72 @@ static void readidbonus() {
 	next();
 }
 
-static bool isvalue() {
-	return (p[0] == '-' && isnum(p[1]))
-		|| (p[0] == '\"')
-		|| isnum(p[0])
-		|| ischa(p[0]);
+static const char* skipallcr(const char* p) {
+	while(*p && (*p == 10 || *p == 13))
+		p++;
+	return p;
 }
 
-static bool isequal(const char* pn) {
-	auto i = 0;
-	while(pn[i]) {
-		if(pn[i] != p[i])
-			return false;
-		i++;
+static void skiplinefeed() {
+	if(*p && *p != 10 && *p != 13) {
+		log::error(p, "Expected line feed");
+		allowparse = false;
 	}
-	p += i;
-	return true;
+	while(*p && (*p == 10 || *p == 13)) {
+		p = skipallcr(p);
+		if(*p == ' ' || *p == 9)
+			break;
+		p = skipws(p);
+	}
 }
 
-static varianti* find_metadata(const array* source) {
+static void skipline() {
+	while(*p && *p != 10 && *p != 13) {
+		auto p1 = p;
+		p = skipws(p);
+		if(p1 != p)
+			continue;
+		p++;
+	}
+}
+
+static varianti* find_type(const char* id) {
 	for(auto& e : bsdata<varianti>()) {
-		if(e.source == source)
+		if(!e.source || !e.id)
+			continue;
+		if(strcmp(e.id, id) == 0)
 			return &e;
 	}
 	return 0;
+}
+
+static const bsreq* find_requisit(const bsreq* type, const char* id) {
+	if(!type)
+		return 0;
+	auto req = type->find(temp);
+	if(!req)
+		log::error(p, "Not found requisit `%1`", id);
+	return req;
+}
+
+static const bsreq* find_key(const bsreq* type) {
+	return type->find("id", bsmeta<const char*>::meta);
+}
+
+static void* find_object(array* source, const bsreq* type, valuei* keys, int key_count) {
+	auto pe = source->end();
+	for(auto p = source->begin(); p < pe; p += source->size) {
+		if(compare(p, type, keys, key_count))
+			return p;
+	}
+	return 0;
+}
+
+static void clear_object(void* object, const bsreq* type) {
+	for(auto req = type; *req; req++) {
+		auto p = req->ptr(object);
+		memset(p, 0, req->lenght);
+	}
 }
 
 static void read_value(valuei& e, const bsreq* req) {
@@ -150,7 +207,7 @@ static void read_value(valuei& e, const bsreq* req) {
 			e.number = v1.u;
 		} else {
 			auto shift = 0;
-			auto pk = getkey(req->type);
+			auto pk = find_key(req->type);
 			if(pk)
 				shift = pk->offset;
 			if(!req->source)
@@ -158,11 +215,7 @@ static void read_value(valuei& e, const bsreq* req) {
 			else {
 				e.number = req->source->find(temp, shift);
 				if(e.number == -1) {
-					auto pm = find_metadata(req->source);
-					if(pm)
-						log::error(p, "Not found object `%1` in type `%2`", temp, pm->id);
-					else
-						log::error(p, "Not found object `%1`", temp);
+					log::error(p, "Not found identifier `%1`", temp);
 					e.number = 0;
 				} else
 					e.data = req->source->ptr(e.number);
@@ -170,30 +223,6 @@ static void read_value(valuei& e, const bsreq* req) {
 		}
 	}
 	next();
-}
-
-static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
-	auto pv = requisit->ptr(p);
-	if(requisit->is(KindText)) {
-		auto v1 = *((const char**)pv);
-		auto v2 = value.text;
-		if(!v1 && !v2)
-			return true;
-		if(v1 && v2)
-			return (strcmp(v1, v2) == 0);
-	} else {
-		auto v1 = requisit->get(pv);
-		return value.number == v1;
-	}
-	return false;
-}
-
-static bool compare(const void* p, const bsreq* type, const valuei* keys, int key_count) {
-	for(int i = 0; i < key_count; i++) {
-		if(!compare(p, type + i, keys[i]))
-			return false;
-	}
-	return true;
 }
 
 static void write_value(void* object, const bsreq* req, int index, const valuei& v) {
@@ -237,25 +266,9 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 		log::error(p, "Unknown type in requisit `%1`", req->id);
 }
 
-static void clear_object(void* object, const bsreq* type) {
-	for(auto req = type; *req; req++) {
-		auto p = req->ptr(object);
-		memset(p, 0, req->lenght);
-	}
-}
-
-static void fill(void* object, const bsreq* type, const valuei* keys, int key_count) {
+static void fill_object(void* object, const bsreq* type, const valuei* keys, int key_count) {
 	for(int i = 0; i < key_count; i++)
 		write_value(object, type + i, 0, keys[i]);
-}
-
-static void* find_object(array* source, const bsreq* type, valuei* keys, int key_count) {
-	auto pe = source->end();
-	for(auto p = source->begin(); p < pe; p += source->size) {
-		if(compare(p, type, keys, key_count))
-			return p;
-	}
-	return 0;
 }
 
 static void read_dset(void* object, const bsreq* req) {
@@ -268,20 +281,12 @@ static void read_dset(void* object, const bsreq* req) {
 			index = 0;
 			log::error(p, "Not found field `%1` in dataset `%2`", temp, req->id);
 		}
-		skipsym('(');
+		skip("(");
 		read_value(v, req);
-		skipsym(')');
+		skip(")");
+		next();
 		write_value(object, req, index++, v);
 	}
-}
-
-static const bsreq* find_requisit(const bsreq* type, const char* id) {
-	if(!type)
-		return 0;
-	auto req = type->find(temp);
-	if(!req)
-		log::error(p, "Not found requisit `%1`", id);
-	return req;
 }
 
 static void read_element(void* object, const bsreq* type, int level) {
@@ -316,59 +321,37 @@ static void read_array(void* object, const bsreq* req) {
 	}
 }
 
-static bool islevel(int level) {
-	auto push_p = p;
-	p = skipsp(p);
-	auto i = p - push_p;
-	if(i == level && ischa(*p))
-		return true;
-	p = push_p;
-	return false;
-}
-
-static bool iscrlevel(int n) {
-	if(p[0] == 10 || p[0] == 13) {
-		auto pn = skipcr(p);
-		auto pe = pn + n;
-		while(pn < pe) {
-			if(*pn != 0x20)
-				return false;
-			pn++;
-		}
-		p = pn;
-		return true;
-	}
-	return false;
-}
-
 static void read_dictionary(void* object, const bsreq* type, int level, bool need_linefeed = true) {
 	while(allowparse && ischa(*p)) {
 		readid();
 		auto req = find_requisit(type, temp);
-		skipsym('(');
+		skip("(");
 		read_array(object, req);
-		skipsym(')');
+		skip(")");
+		next();
 	}
+	skiplinefeed();
 	if(need_linefeed) {
-		skipsymcr();
 		while(allowparse && islevel(level + 1)) {
-			readid();
-			auto req = type->find(temp);
-			if(!req) {
-				log::error(p, "Not found requisit `%1`", temp);
-				allowparse = false;
-			} else if(req->is(KindDSet))
-				read_dset(object, req);
-			else if(req->is(KindSlice)) {
-				if(req->source == bsdata<variant>::source_ptr)
-					read_array(object, req);
+			if(*p != 10 && *p != 13) {
+				readid();
+				auto req = type->find(temp);
+				if(!req) {
+					log::error(p, "Not found requisit `%1`", temp);
+					allowparse = false;
+				} else if(req->is(KindDSet))
+					read_dset(object, req);
+				else if(req->is(KindSlice)) {
+					if(req->source == bsdata<variant>::source_ptr)
+						read_array(object, req);
+					else
+						read_slice(object, req, level + 1);
+				} else if(req->is(KindScalar) && req->count > 0)
+					read_dictionary(req->ptr(object), req->type, level + 1, false);
 				else
-					read_slice(object, req, level + 1);
-			} else if(req->is(KindScalar) && req->count > 0)
-				read_dictionary(req->ptr(object), req->type, level + 1, false);
-			else
-				read_array(object, req);
-			skipsymcr();
+					read_array(object, req);
+			}
+			skiplinefeed();
 		}
 	}
 }
@@ -388,10 +371,9 @@ static void* read_object(const bsreq* type, array* source, int key_count, int le
 	if(!object) {
 		object = source->add();
 		clear_object(object, type);
-		fill(object, type, keys, key_count);
+		fill_object(object, type, keys, key_count);
 		if(common_initialize) {
-			auto push_p = p;
-			p = common_initialize;
+			auto push_p = p; p = common_initialize;
 			read_dictionary(object, type + key_count, level);
 			p = push_p;
 		}
@@ -400,49 +382,9 @@ static void* read_object(const bsreq* type, array* source, int key_count, int le
 	return object;
 }
 
-static varianti* find_type(const char* id) {
-	for(auto& e : bsdata<varianti>()) {
-		if(!e.source || !e.id)
-			continue;
-		if(strcmp(e.id, id) == 0)
-			return &e;
-	}
-	return 0;
-}
-
-void varianti::set(void* object, const char* id, void* value) const {
-	auto req = metadata->find(id);
-	if(!req)
-		return;
-	valuei v; v.clear();
-	v.data = value;
-	if(req->source)
-		v.number = req->source->indexof(v.data);
-	write_value(object, req, 0, v);
-}
-
-void varianti::set(void* object, const char* id, int value) const {
-	auto req = find_requisit(metadata, id);
-	if(!req)
-		return;
-	valuei v; v.clear();
-	v.number = value;
-	write_value(object, req, 0, v);
-}
-
-const array* varianti::getarray(const void* object, const char* id) {
-	auto pm = getmetadata(object);
-	if(!pm)
-		return 0;
-	auto req = pm->metadata->find(id);
-	if(!req)
-		return 0;
-	return req->source;
-}
-
 static void parse() {
 	while(*p && allowparse) {
-		skipsym('#');
+		skip("#");
 		readid();
 		auto pd = find_type(temp);
 		if(!pd) {
@@ -451,9 +393,8 @@ static void parse() {
 			return;
 		}
 		auto common_initialize = p;
-		while(*p && *p != 10 && *p != 13)
-			p++;
-		skipsymcr();
+		skipline();
+		skiplinefeed();
 		while(allowparse && isvalue())
 			read_object(pd->metadata, pd->source, pd->key_count, 0, common_initialize);
 	}
