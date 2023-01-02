@@ -914,6 +914,9 @@ static void show_images(int bonus) {
 	}
 }
 
+static void steal_coins(int bonus) {
+}
+
 static void quest_minion(int bonus) {
 	if(!last_quest)
 		return;
@@ -1177,6 +1180,7 @@ BSDATA(script) = {
 	{"ShowMinimap", show_area},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
+	{"StealCoins", steal_coins},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},
 	{"ThrownAttack", thrown_attack},

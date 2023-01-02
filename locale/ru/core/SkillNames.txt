@@ -1,1 +1,2 @@
 GatherHerbs: —обрать травы
+StealCoins: ”красть монеты

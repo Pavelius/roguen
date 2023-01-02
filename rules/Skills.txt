@@ -3,3 +3,7 @@
 GatherHerbs skill(Herbalism)
  target TargetFeatures
  effect GatherHerbs
+
+StealCoins skill(Pickpockets)
+ target TargetCreatures Neutrals
+ effect StealCoins

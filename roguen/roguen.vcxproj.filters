@@ -279,9 +279,6 @@
     <ClCompile Include="creature_need.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="wear.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="draw_message.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
@@ -332,6 +329,9 @@
     </ClCompile>
     <ClCompile Include="modifier.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="wear.cpp">
+      <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -509,9 +509,6 @@
     <ClInclude Include="greatneed.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="wear.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="framerange.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -589,6 +586,9 @@
     </ClInclude>
     <ClInclude Include="modifier.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="wear.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
