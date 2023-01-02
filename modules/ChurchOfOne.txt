@@ -2,7 +2,6 @@
 
 ChurchOfBlessedOne maximum(10)
  effect WinGame+1
-
 EldersComing maximum(15)
  effect LoseGame+1
 

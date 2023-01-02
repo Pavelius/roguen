@@ -1,4 +1,1 @@
-﻿In file `rules/Items.txt`:
- Line 218: Can't find variant `Permanent`
- Line 221: Can't find variant `Permanent`
- Line 224: Can't find variant `Permanent`
+﻿

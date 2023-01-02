@@ -856,7 +856,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		weapon_damage = 0;
 	check.make(attack_skill + player->get(weapon_ability));
 	auto attack_miss = check.miss();
-	if(!attack_miss && weapon.is(MissHalfTime))
+	if(!attack_miss && weapon.is(MissHalfTime) && (d100() < 50))
 		attack_miss = true;
 	if(attack_miss) {
 		player->logs(getnm("AttackMiss"), check.roll, check.chance);
