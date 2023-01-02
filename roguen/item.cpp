@@ -120,8 +120,11 @@ void item::damage() {
 		if(is(Blessed))
 			return;
 		setcount(getcount() - 1);
-	} else
+	} else {
+		if(is(Blessed) && d100() < 50)
+			return;
 		broken++;
+	}
 }
 
 bool item::is(feat_s v) const {

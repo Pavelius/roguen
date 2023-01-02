@@ -138,21 +138,7 @@ static void illness_attack(creature* player, int value) {
 		player->set(Illness, v);
 }
 
-static void special_attack(creature* player, const item& weapon, creature* enemy, int& pierce, int& damage) {
-	if(attack_effect(player, weapon, BleedingHit))
-		enemy->set(Blooding);
-	if(attack_effect(player, weapon, StunningHit)) {
-		enemy->set(Stun);
-		enemy->fixeffect("SearchVisual");
-	}
-	if(attack_effect(player, weapon, PierceHit))
-		pierce += 4;
-	if(attack_effect(player, weapon, MightyHit))
-		damage += 2;
-}
-
-static void acid_attack(creature* player, int value) {
-	player->damage(value);
+static void damage_equipment(int value) {
 	for(auto& e : player->equipment()) {
 		if(value <= 0)
 			break;
@@ -165,6 +151,29 @@ static void acid_attack(creature* player, int value) {
 			continue;
 		e.damage();
 	}
+}
+
+static void special_attack(creature* player, const item& weapon, creature* enemy, int& pierce, int& damage) {
+	if(attack_effect(player, weapon, BleedingHit))
+		enemy->set(Blooding);
+	if(attack_effect(player, weapon, StunningHit)) {
+		enemy->set(Stun);
+		enemy->fixeffect("SearchVisual");
+	}
+	if(attack_effect(player, weapon, PierceHit))
+		pierce += 4;
+	if(attack_effect(player, weapon, MightyHit))
+		damage += 2;
+	// Damage equipment sometime
+	if(d100() < 20) {
+		pushvalue push_player(player, enemy);
+		damage_equipment(1);
+	}
+}
+
+static void acid_attack(creature* player, int value) {
+	player->damage(value);
+	damage_equipment(value);
 }
 
 static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
@@ -860,6 +869,11 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		attack_miss = true;
 	if(attack_miss) {
 		player->logs(getnm("AttackMiss"), check.roll, check.chance);
+		if(check.roll >= 95) {
+			// Damage weapon if miss
+			if(d100() < 30)
+				weapon.damage();
+		}
 		return;
 	}
 	defence_skills(defence, enemy, player->get(Strenght), weapon);
