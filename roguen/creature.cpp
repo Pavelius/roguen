@@ -51,7 +51,7 @@ static void copy(statable& v1, const statable& v2) {
 }
 
 static void fixdamage(const creature* p, int total, int damage_weapon, int damage_armor, int damage_bonus) {
-	p->logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor, damage_bonus);
+	p->logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor);
 }
 
 static creature* findalive(point m) {
@@ -497,48 +497,6 @@ static void update_basic(char* dest, const char* source) {
 	memcpy(dest, source, Hits * sizeof(statable::abilities[0]));
 }
 
-static int might_penalty(int strenght, int enemy_strenght) {
-	if(strenght < enemy_strenght)
-		return enemy_strenght - strenght;
-	return 0;
-}
-
-static int parry_skill(const item& enemy_weapon, const item& weapon, int value) {
-	if(!weapon)
-		return 0;
-	if(enemy_weapon.is(RangedWeapon))
-		return 0;
-	value += enemy_weapon.get(FO(itemstat, enemy_parry));
-	value += weapon.get(FO(itemstat, parry));
-	return value;
-}
-
-static int block_skill(const item& enemy_weapon, const item& weapon, int value) {
-	if(!weapon)
-		return 0;
-	value += enemy_weapon.get(FO(itemstat, enemy_block));
-	if(enemy_weapon.is(RangedWeapon))
-		value += weapon.get(FO(itemstat, block_ranged));
-	else
-		value += weapon.get(FO(itemstat, block));
-	return value;
-}
-
-static void defence_skills(defenceg& result, const creature* player, int attacker_strenght, const item& attacker_weapon) {
-	auto penalty = might_penalty(player->get(Strenght), attacker_strenght);
-	result.parry = parry_skill(attacker_weapon, player->wears[MeleeWeapon], player->get(WeaponSkill)) - penalty;
-	result.block = block_skill(attacker_weapon, player->wears[MeleeWeaponOffhand], player->get(ShieldUse)) - penalty;
-	result.dodge = player->get(DodgeSkill);
-	if(result.dodge > 80)
-		result.dodge = 80;
-	if(result.parry < 0)
-		result.parry = 0;
-	if(result.block < 0)
-		result.block = 0;
-	if(result.dodge < 0)
-		result.dodge = 0;
-}
-
 static bool spell_allowmana(const void* object) {
 	auto p = (spelli*)object;
 	return player->get(Mana) >= p->mana;
@@ -620,16 +578,15 @@ static void update_room(creature* player) {
 void creature::update_abilities() {
 	abilities[ManaMaximum] += get(Wits);
 	abilities[Speed] += 25 + get(Dexterity) / 5;
+	abilities[Dodge] += get(Dexterity) / 2;
 	if(is(Stun)) {
 		abilities[WeaponSkill] -= 10;
 		abilities[BalisticSkill] -= 10;
-		abilities[DodgeSkill] -= 100;
-		abilities[ShieldUse] -= 10;
+		abilities[Dodge] -= 100;
 	}
 	if(!is(IgnoreWeb) && ispresent() && area.is(getposition(), Webbed)) {
 		abilities[WeaponSkill] -= 10;
-		abilities[DodgeSkill] -= 20;
-		abilities[ShieldUse] -= 10;
+		abilities[Dodge] -= 20;
 	}
 	if(is(LightSource))
 		abilities[LineOfSight] += 3;
@@ -826,16 +783,6 @@ void creature::interaction(creature& opponent) {
 	}
 }
 
-static ability_s best_defence(rollg& check, const defenceg& defences) {
-	auto result = (ability_s)0;
-	zclear(check);
-	check.roll = 1 + rand() % 100;
-	check.make(result, WeaponSkill, defences.parry);
-	check.make(result, ShieldUse, defences.block);
-	check.make(result, DodgeSkill, defences.dodge);
-	return result;
-}
-
 static void apply_damage(creature* player, const item& weapon, int effect) {
 	auto weapon_damage = weapon.get(FO(itemstat, damage));
 	auto damage_reduction = player->get(Armor) - weapon.get(FO(itemstat, pierce));
@@ -855,69 +802,44 @@ static ability_s weapon_skill(const item& weapon) {
 }
 
 static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_multiplier) {
-	rollg check, parry;
-	defenceg defence;
+	auto roll_result = d100();
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto weapon_damage = weapon.get(FO(itemstat, damage)) + player->get(damage_ability(weapon_ability));
 	if(enemy->is(Undead) && weapon.is(NoDamageUndead))
 		weapon_damage = 0;
-	check.make(attack_skill + player->get(weapon_ability));
-	auto attack_miss = check.miss();
-	if(!attack_miss && weapon.is(MissHalfTime) && (d100() < 50))
-		attack_miss = true;
-	if(attack_miss) {
-		player->logs(getnm("AttackMiss"), check.roll, check.chance);
-		if(check.roll >= 95) {
-			// Damage weapon if miss
-			if(d100() < 30)
-				weapon.damage();
-		}
-		return;
-	}
-	defence_skills(defence, enemy, player->get(Strenght), weapon);
-	auto parry_ability = best_defence(parry, defence);
-	auto ability_id = "";
-	if(parry_ability) {
-		ability_id = bsdata<abilityi>::elements[parry_ability].id;
-		if(parry.delta > check.delta) {
-			player->logs(getnm("AttackHitButParryCritical"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
-			if(parry_ability == MeleeWeapon && enemy->wears[MeleeWeapon].is(Retaliate)) {
-				auto range = area.getrange(enemy->getposition(), player->getposition());
-				if(range <= 1)
-					apply_damage(enemy, enemy->wears[MeleeWeapon], (parry.delta - check.delta) / 10);
-			} else {
-				switch(parry_ability) {
-				case DodgeSkill: enemy->fixvalue(getnm("DodgeSuccess"), 2); break;
-				case ShieldUse: enemy->fixvalue(getnm("BlockSuccess"), 2); break;
-				case WeaponSkill: enemy->fixvalue(getnm("ParrySuccess"), 2); break;
-				}
-			}
-			return;
-		}
-	}
-	if(parry_ability)
-		player->logs(getnm("AttackHitButParrySuccess"), check.roll, check.chance, parry.roll, parry.chance, enemy_name, getnm(ability_id));
-	else
-		player->logs(getnm("AttackHitButParryFail"), check.roll, check.chance, parry.roll, enemy->getname(), defence.parry, defence.block, defence.dodge);
-	int pierce = weapon.get(FO(itemstat, pierce));
-	int armor = enemy->get(Armor);
+	attack_skill += player->get(weapon_ability);
+	weapon_damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee())
-		armor += (enemy->get(Strenght) - player->get(Strenght)) / 10;
-	if(check.roll < check.chance / 2)
+		weapon_damage += (player->get(Strenght) - enemy->get(Strenght)) / 10;
+	int armor = enemy->get(Armor);
+	int pierce = weapon.get(FO(itemstat, pierce));
+	if(roll_result < attack_skill / 2)
 		special_attack(player, weapon, enemy, pierce, weapon_damage);
 	if(armor > 0) {
 		if(pierce > armor)
 			armor = 0;
 		else
 			armor -= pierce;
+	} else
+		armor = 0;
+	weapon_damage -= armor;
+	if(weapon_damage < 0)
+		weapon_damage = 0;
+	if(weapon_damage > 0 && weapon.is(MissHalfTime) && (d100() < 50))
+		weapon_damage = 0;
+	if(!weapon_damage) {
+		if(roll_result >= 95) {
+			// Damage weapon if miss
+			if(d100() < 30)
+				weapon.damage();
+		}
+	} else {
+		player->logs(getnm("AttackHit"), weapon_damage, enemy->getname());
+		enemy->damage(weapon_damage);
+		poison_attack(player, enemy, weapon);
 	}
-	int result_damage = weapon_damage - armor + (check.delta - parry.delta) / 10;
-	fixdamage(enemy, result_damage, weapon_damage, -armor, (check.delta - parry.delta) / 10);
-	result_damage = result_damage * damage_multiplier / 100;
-	enemy->damage(result_damage);
-	poison_attack(player, enemy, weapon);
 }
 
 void creature::heal(int v) {
@@ -944,10 +866,8 @@ void creature::kill() {
 }
 
 void creature::damage(int v) {
-	if(v <= 0) {
-		logs(getnm("ArmorNegateDamage"));
+	if(v <= 0)
 		return;
-	}
 	fixvalue(-v);
 	abilities[Hits] -= v;
 	if(abilities[Hits] <= 0) {
@@ -1270,7 +1190,7 @@ static void apply_dress(creature* player, const item& e) {
 static void update_dress(creature* player, const item& e) {
 	player->apply(e.geti().feats);
 	player->abilities[Armor] += e.get(FO(itemstat, armor));
-	player->abilities[DodgeSkill] += e.get(FO(itemstat, dodge));
+	player->abilities[Dodge] += e.get(FO(itemstat, dodge));
 	player->abilities[Speed] += e.get(FO(itemstat, speed));
 }
 
@@ -1284,7 +1204,7 @@ static void update_wears(creature* player) {
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
-		player->abilities[DodgeSkill] += e.get(FO(itemstat, dodge));
+		player->abilities[Dodge] += e.get(FO(itemstat, dodge));
 		apply_dress(player, e);
 	}
 }

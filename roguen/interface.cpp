@@ -944,28 +944,6 @@ static void correct_camera() {
 		camera.y = tsy * area.mps - h - tsy / 2;
 }
 
-/*static void paint_world() {
-	rectpush push;
-	pushvalue push_fore(fore);
-	const int z = 16;
-	point origin;
-	origin.x = (width - world.mps * z) / 2;
-	origin.y = (height - world.mps * z) / 2;
-	height = width = z;
-	for(short y = 0; y < world.mps; y++) {
-		for(short x = 0; x < world.mps; x++) {
-			auto t = world[{x, y}];
-			if(!t)
-				continue;
-			auto p = bsdata<sitei>::elements + t;
-			fore = p->minimap;
-			caret.x = origin.x + x * width;
-			caret.y = origin.y + y * height;
-			rectf();
-		}
-	}
-}*/
-
 static void fillfade(color cv, unsigned char av = 128) {
 	pushvalue push_fore(fore);
 	pushvalue push_alpha(alpha);

@@ -12,7 +12,7 @@ struct wearable : movable {
 	void			equip(item& v);
 	slice<item>		equipment() { return slice<item>(wears + MeleeWeapon, wears + Elbows + 1); }
 	bool			iswear(const void* p) const { return p >= wears && p <= wears + Elbows; }
-	slice<item>		gears() { return slice<item>(wears + Head, wears + Elbows + 1); }
+	slice<item>		gears() { return slice<item>(wears + Torso, wears + Elbows + 1); }
 	int				getmoney() const { return money; }
 	item*			getwear(wear_s id) { return wears + id; }
 	const char*		getwearname(wear_s id) const;

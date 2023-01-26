@@ -5,7 +5,7 @@
 enum ability_s : unsigned char {
 	LineOfSight,
 	Strenght, Dexterity, Wits, Charisma,
-	WeaponSkill, BalisticSkill, DodgeSkill, ShieldUse,
+	WeaponSkill, BalisticSkill, Dodge,
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	Armor,
 	Speed, EnemyAttacks,

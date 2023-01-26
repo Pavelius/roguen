@@ -1,2 +1,2 @@
-﻿In file `rules/Skills.txt`:
- Line 8: Not found identifier `TargetCreature`
+﻿In file `Names.txt`:
+ Define translation for `Dodge`

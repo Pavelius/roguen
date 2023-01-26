@@ -2,10 +2,10 @@
 
 Ashen
  feats NoDamageUndead
-Balanced skill(20) parry(-20)
+Balanced skill(20)
 Barbaric skill(-15) damage(3)
 Barbed damage(1)
-Brutal damage(2) parry(-10)
+Brutal damage(2) dodge(-10)
 ExtraHeavy weight(400)
 Fickle
  feats MissHalfTime
@@ -28,13 +28,13 @@ Weeping
  feats BleedingHit
 White
  feats ColdResistance
-Wicked damage(3) parry(-10)
+Wicked damage(3)
 Yellow
  feats StunResistance
 
 Corruption
 Damnation
-Defence parry(30)
+Defence dodge(10)
 Devastation damage(4)
 Fumbling
  dress Dexterity-10
@@ -93,36 +93,36 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 
-Bite wear(MeleeWeapon) damage(3) parry(-20) enemy_parry(-50) speed(-2)
+Bite wear(MeleeWeapon) damage(5) speed(-2)
  feats Natural
-Claws wear(MeleeWeapon) damage(2) parry(-10) speed(10)
+Claws wear(MeleeWeapon) damage(3) speed(10)
  feats Natural
 
-BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) parry(-50) pierce(2) speed(-8)\
+BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) pierce(2) speed(-8)\
  prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats CutWoods
-CursedBattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(-10) damage(3) parry(-60) pierce(2) speed(-8)\
+CursedBattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(-10) damage(3) pierce(2) speed(-8)\
  parent(BattleAxe)\
  prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats CutWoods Cursed
-BlessedBattleAxe cost(100) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(10) damage(4) parry(-40) pierce(3) speed(-8)\
+BlessedBattleAxe cost(100) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(10) damage(4) pierce(3) speed(-8)\
  parent(BattleAxe)\
  prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats CutWoods Blessed
-BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) parry(-12) speed(-6)
-Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3) parry(-50)
-Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) parry(-30) speed(5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
-Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) parry(-30) pierce(1) speed(-10) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) speed(-6)
+Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3)
+Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) speed(5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) pierce(1) speed(-10) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats TwoHanded CutWoods MightyHit
-HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) parry(-50) pierce(1) speed(-2) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
-Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) damage(3) parry(-50) speed(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) pierce(1) speed(-2) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) damage(3) speed(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats StunningHit
-Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) parry(-10) pierce(1) speed(-4) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) pierce(1) speed(-4) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats Retaliate PierceHit
-Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) parry(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
  feats TwoHanded
-Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) parry(-15) speed(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
-StrangeSword cost(150) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) parry(-10) mistery(3) speed(-4)
+Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) speed(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+StrangeSword cost(150) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) mistery(3) speed(-4)
 
 Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
 Bolt wear(Ammunition) weight(2) count(20) wear_index(3) avatar(211)

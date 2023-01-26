@@ -85,8 +85,8 @@ BSMETA(framerange) = {
 	{}};
 BSMETA(itemi) = {
 	BSREQ(id),
-	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(parry), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
-	BSREQ(enemy_parry), BSREQ(enemy_block),
+	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
+	BSREQ(enemy_dodge),
 	BSREQ(rotting),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
@@ -102,8 +102,8 @@ BSMETA(itemi) = {
 	{}};
 BSMETA(itemstat) = {
 	BSREQ(id),
-	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(parry), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
-	BSREQ(enemy_parry), BSREQ(enemy_block),
+	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
+	BSREQ(enemy_dodge),
 	BSREQ(rotting),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),

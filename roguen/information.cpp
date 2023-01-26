@@ -26,7 +26,7 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 		sb.addn("[~%1]\t%2i/%3i", getnameshort(i), value, value_maximum);
 		break;
 	default:
-		if(i>=WeaponSkill && i<= ShieldUse)
+		if(i>=WeaponSkill && i<= Dodge)
 			sb.addn("[~%1]\t%2i%%", getnameshort(i), value);
 		else
 			sb.addn("[~%1]\t%2i", getnameshort(i), value);
@@ -52,7 +52,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
-	for(auto i = WeaponSkill; i <= ShieldUse; i = (ability_s)(i + 1))
+	for(auto i = WeaponSkill; i <= Dodge; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	addf(sb, Armor, abilities[Armor]);
@@ -91,8 +91,6 @@ void item::getinfo(stringbuilder& sb) const {
 	sb.adds(getfullname());
 	addv(sb, Damage, get(FO(itemstat, damage)));
 	addv(sb, "Pierce", get(FO(itemstat, pierce)));
-	addv(sb, "Parry", get(FO(itemstat, parry)));
-	addv(sb, "EnemyParry", get(FO(itemstat, enemy_parry)));
 	addv(sb, "Speed", get(FO(itemstat, speed)));
 	switch(ei.wear) {
 	case Torso:
