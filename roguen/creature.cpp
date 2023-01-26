@@ -825,16 +825,18 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	} else
 		armor = 0;
 	weapon_damage -= armor;
-	if(weapon_damage < 0)
-		weapon_damage = 0;
 	if(weapon_damage > 0 && weapon.is(MissHalfTime) && (d100() < 50))
 		weapon_damage = 0;
-	if(!weapon_damage) {
+	if(weapon_damage <= 0) {
+		player->logs(getnm("AttackMiss"));
 		if(roll_result >= 95) {
 			// Damage weapon if miss
 			if(d100() < 30)
 				weapon.damage();
 		}
+	} else if(enemy->roll(Dodge)) {
+		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
+		enemy->fixvalue(getnm("Dodge"));
 	} else {
 		player->logs(getnm("AttackHit"), weapon_damage, enemy->getname());
 		enemy->damage(weapon_damage);
@@ -1036,6 +1038,8 @@ void creature::advance(variant v) {
 
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
+	if(value <= 0)
+		return false;
 	auto result = d100();
 	if(bonus == -2000) {
 		value = value / 2;

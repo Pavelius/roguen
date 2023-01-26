@@ -7,6 +7,8 @@ Armor: Броня
 ArmorNegateDamage: Броня поглатила урон.
 Artifact: Могучий
 AttackHit: %герой нанес%ла [%1i] урона по %2.
+AttackHitButEnemyDodge: %герой попал%а, но [%1] увернулся.
+AttackMiss: %герой промазал%а.
 Backpack: Рюкзак
 Blessed: Благословенный
 BlockSuccess: Блок

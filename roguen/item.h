@@ -32,7 +32,6 @@ struct itemi : itemstat {
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
 	bool			is(feat_s v) const { return feats.is(v); }
-	bool			isblock() const { return block || block_ranged; }
 	bool			iscountable() const { return count != 0; }
 	bool			ismelee() const { return wear == MeleeWeapon || wear == MeleeWeaponOffhand; }
 	void			paint() const; // Exported paint function
