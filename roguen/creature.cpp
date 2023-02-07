@@ -633,8 +633,8 @@ creature* creature::create(point m, variant kind, variant character, bool female
 	if(character.value)
 		player->advance(character, 0);
 	player->levelup();
-	player->finish();
 	player->place(m);
+	player->finish();
 	if(pm) {
 		if(pm->friendly <= -10)
 			player->set(Enemy);
@@ -806,17 +806,22 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
-	auto weapon_damage = weapon.get(FO(itemstat, damage)) + player->get(damage_ability(weapon_ability));
+	auto damage = weapon.get(FO(itemstat, damage)) + player->get(damage_ability(weapon_ability));
+	auto armor = enemy->get(Armor);
 	if(enemy->is(Undead) && weapon.is(NoDamageUndead))
-		weapon_damage = 0;
+		damage = 0;
 	attack_skill += player->get(weapon_ability);
-	weapon_damage += (attack_skill - roll_result) / 10;
-	if(weapon.geti().ismelee())
-		weapon_damage += (player->get(Strenght) - enemy->get(Strenght)) / 10;
-	int armor = enemy->get(Armor);
-	int pierce = weapon.get(FO(itemstat, pierce));
+	damage += (attack_skill - roll_result) / 10;
+	if(weapon.geti().ismelee()) {
+		auto strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;
+		if(strenght > 0)
+			damage += strenght;
+		else
+			armor += -strenght;
+	}
+	auto pierce = weapon.get(FO(itemstat, pierce));
 	if(roll_result < attack_skill / 2)
-		special_attack(player, weapon, enemy, pierce, weapon_damage);
+		special_attack(player, weapon, enemy, pierce, damage);
 	if(armor > 0) {
 		if(pierce > armor)
 			armor = 0;
@@ -824,13 +829,13 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 			armor -= pierce;
 	} else
 		armor = 0;
-	weapon_damage -= armor;
-	if(weapon_damage > 0 && weapon.is(MissHalfTime) && (d100() < 50))
-		weapon_damage = 0;
-	if(weapon_damage <= 0) {
+	damage -= armor;
+	if(damage > 0 && weapon.is(MissHalfTime) && (d100() < 50))
+		damage = 0;
+	if(damage <= 0) {
 		player->logs(getnm("AttackMiss"));
 		if(roll_result >= 95) {
-			// Damage weapon if miss
+			// Damage on hight roll weapon 30% time
 			if(d100() < 30)
 				weapon.damage();
 		}
@@ -838,8 +843,8 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
 		enemy->fixvalue(getnm("Dodge"));
 	} else {
-		player->logs(getnm("AttackHit"), weapon_damage, enemy->getname());
-		enemy->damage(weapon_damage);
+		player->logs(getnm("AttackHit"), damage, enemy->getname());
+		enemy->damage(damage);
 		poison_attack(player, enemy, weapon);
 	}
 }
