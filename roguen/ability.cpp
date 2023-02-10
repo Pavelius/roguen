@@ -14,7 +14,7 @@ BSDATA(abilityi) = {
 	{"Charisma"},
 	{"WeaponSkill", Strenght},
 	{"BalisticSkill", Dexterity},
-	{"Dodge"},
+	{"Dodge", Dexterity},
 	{"Damage"},
 	{"DamageMelee"},
 	{"DamageRanged"},

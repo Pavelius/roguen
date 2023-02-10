@@ -41,6 +41,8 @@ class item {
 		unsigned char stats;
 		struct {
 			unsigned char identified : 1;
+			unsigned char personal : 1;
+			unsigned char stolen : 1;
 			unsigned char broken : 2;
 			magic_s magic : 2;
 		};
@@ -72,7 +74,6 @@ public:
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
-	bool			iscountable() const { return geti().iscountable(); }
 	bool			isidentified() const { return identified != 0; }
 	void			set(magic_s v) { magic = v; }
 	void			setcount(int v);

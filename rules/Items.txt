@@ -3,13 +3,6 @@
 NoItem avatar(1) wear(MeleeWeapon)
  feats Natural
 
-Bite wear(MeleeWeapon)
- weapon damage(5) speed(-2)
- feats Natural
-Claws wear(MeleeWeapon)
- weapon damage(3) speed(10)
- feats Natural
-
 SP cost(1) avatar(898) count(1)
  feats Coins
 GP cost(10) avatar(898) count(1)
@@ -76,10 +69,21 @@ LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5)
  weapon damage(4) ammunition(Arrow) speed(18)
  feats TwoHanded
 
+Bite wear(MeleeWeapon)
+ weapon damage(5) speed(-2)
+ feats Natural
+Claws wear(MeleeWeapon)
+ weapon damage(3) speed(10)
+ feats Natural
+
 LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4)
+ dress Armor+1 Dodge-10
 ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26)
+ dress Armor+3 Dodge-20
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37)
+ dress Armor+5 Dodge-40
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81)
+ dress Block+2
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar(430)
 BlackPotion cost(50) weight(10) wear(Potion) avatar(603)
@@ -154,6 +158,9 @@ Spenseweed weight(1) avatar(106) count(1)
  use_blessed Hits+10
 Stomacemptia weight(1) avatar(93) count(1)
 Stomafillia weight(1) avatar(89) count(1)
+
+PotionOfHealing weight(1) avatar(164)
+ use Hits+20
 
 #RandomTable
 

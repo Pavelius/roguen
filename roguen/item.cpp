@@ -38,11 +38,11 @@ void item::setcount(int v) {
 }
 
 int item::getcount() const {
-	return type ? (iscountable() ? count + 1 : 1) : 0;
+	return 1 + count;
 }
 
 void item::add(item& v) {
-	if(type != v.type || stats != v.stats || !iscountable())
+	if(type != v.type || stats != v.stats)
 		return;
 	unsigned n1 = count + v.count + 1;
 	if(n1 >= 0xFF) {

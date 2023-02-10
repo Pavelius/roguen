@@ -1186,25 +1186,17 @@ void creature::dress(variants source) {
 		dress(v);
 }
 
-static void apply_dress(creature* player, const item& e) {
-	player->dress(e.geti().dress);
-}
-
-static void update_dress(creature* player, const item& e) {
-	player->apply(e.geti().feats);
-}
-
 static void update_wears(creature* player) {
 	for(auto& e : player->gears()) {
 		if(!e)
 			continue;
-		update_dress(player, e);
-		apply_dress(player, e);
+		player->apply(e.geti().feats);
+		player->dress(e.geti().dress);
 	}
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
-		apply_dress(player, e);
+		player->dress(e.geti().dress);
 	}
 }
 

@@ -312,7 +312,7 @@ static bool iscondition(const void* object, int v) {
 	auto p = (item*)object;
 	switch(v) {
 	case Identified: return p->isidentified();
-	case Unaware: return !p->isidentified() && !p->iscountable();
+	case Unaware: return !p->isidentified();
 	default: return false;
 	}
 }
