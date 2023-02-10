@@ -117,8 +117,10 @@ static const char* parse_widget_command(const char* p) {
 	auto next_line = true;
 	auto push_caret = caret;
 	auto push_width = width;
+	auto push_height = height;
 	const char* tips = 0;
 	char temp[8192]; stringbuilder sb(temp);
+	height = 0;
 	while(*p) {
 		if(equaln(p, "left")) {
 			auto widget_width = getparam(p);
@@ -167,6 +169,7 @@ static const char* parse_widget_command(const char* p) {
 		if(caret.y > maxcaret.y)
 			maxcaret.y = caret.y;
 	}
+	height = push_height;
 	return p;
 }
 
@@ -229,7 +232,10 @@ static const char* textspc(const char* p, int x1) {
 		case '\t':
 			p++;
 			tb = gettabwidth();
-			caret.x = x1 + ((caret.x - x1 + tb) / tb) * tb;
+			if(tb < 0)
+				caret.x = x1 + width + tb;
+			else
+				caret.x = x1 + ((caret.x - x1 + tb) / tb) * tb;
 			continue;
 		}
 		break;
