@@ -73,7 +73,6 @@ static void main_start() {
 	for(auto i = 0; i < 60; i++)
 		equip_item("Bones");
 	equip_item("OrnamentalStones");
-	player->wears[MeleeWeapon].upgrade(100, 100, 1);
 	player->add(Herbalism, 25);
 	game.setowner(player);
 	if(!test_creatures())

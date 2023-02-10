@@ -330,8 +330,8 @@ static void read_dictionary(void* object, const bsreq* type, int level, bool nee
 		skip(")");
 		next();
 	}
-	skiplinefeed();
 	if(need_linefeed) {
+		skiplinefeed();
 		while(allowparse && islevel(level + 1)) {
 			if(*p != 10 && *p != 13) {
 				readid();

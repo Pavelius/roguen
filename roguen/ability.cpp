@@ -20,6 +20,8 @@ BSDATA(abilityi) = {
 	{"DamageRanged"},
 	{"DamageThrown"},
 	{"Armor"},
+	{"Block"},
+	{"BlockRanged"},
 	{"Speed"},
 	{"EnemyAttacks"},
 	{"Herbalism", Wits, FG(HardSkill)},

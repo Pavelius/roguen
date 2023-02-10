@@ -49,7 +49,6 @@ greatneed*		last_need;
 int				last_value, last_cap;
 extern bool		show_floor_rect;
 static bool		stop_script;
-static itemstat *item_prefix, *item_suffix;
 
 static const sitegeni* get_local_method() {
 	if(last_site && last_site->local)
@@ -66,19 +65,6 @@ static void place_item(point index, const itemi* pe) {
 		return;
 	item it; it.clear();
 	it.create(pe);
-	if(item_prefix || item_suffix) {
-		it.setupgrade(item_prefix);
-		it.setupgrade(item_suffix);
-		item_prefix = item_suffix = 0;
-	} else {
-		auto chance_prefix = (areahead.level - 1) * 15;
-		auto chance_suffix = chance_prefix / 2;
-		if(chance_prefix > 80)
-			chance_prefix = 80;
-		if(chance_suffix > 70)
-			chance_suffix = 70;
-		it.upgrade(chance_prefix, chance_suffix, areahead.level);
-	}
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
@@ -167,11 +153,6 @@ void script::run(variant v) {
 			place_shape(bsdata<shapei>::elements[v.value],
 				area.get(last_rect), getfloor(), getwall());
 		}
-	} else if(v.iskind<itemstat>()) {
-		if(!item_prefix)
-			item_prefix = v;
-		if(!item_suffix)
-			item_suffix = v;
 	} else if(v.iskind<itemi>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
@@ -552,9 +533,9 @@ static void gather_item(const char* id, randomizeri& source, int chance) {
 		item it; it.create(bsdata<itemi>::elements + v.value, 1);
 		if(d100() < chance) {
 			if(d100() < ((chance - 20) / 3))
-				it.upgrade(Blessed);
+				it.set(Blessed);
 		} else
-			it.upgrade(Cursed);
+			it.set(Cursed);
 		player->act(getnm(id), it.getfullname());
 		player->additem(it);
 	}

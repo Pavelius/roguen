@@ -17,6 +17,7 @@ NOBSDATA(dice)
 NOBSDATA(diceprogress)
 NOBSDATA(framerange)
 NOBSDATA(point)
+NOBSDATA(weaponi)
 
 BSDATAD(variant)
 BSMETA(variant) = {{}};
@@ -27,8 +28,6 @@ BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
-BSDATAC(itemstat, 128);
-BSDATAC(itemvariety, 32);
 BSDATAC(itemground, 1024);
 BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
@@ -85,34 +84,17 @@ BSMETA(framerange) = {
 	{}};
 BSMETA(itemi) = {
 	BSREQ(id),
-	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
-	BSREQ(enemy_dodge),
-	BSREQ(rotting),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
 	BSREQ(dress),
 	BSREQ(parent),
 	BSREQ(count),
 	BSREQ(avatar),
+	BSREQ(rotting),
 	BSENM(wear, weari),
 	BSREQ(wear_index),
-	BSREQ(prefix), BSREQ(suffix),
-	BSREQ(ammunition),
-	BSREQ(use),
-	{}};
-BSMETA(itemstat) = {
-	BSREQ(id),
-	BSREQ(damage), BSREQ(armor), BSREQ(pierce), BSREQ(skill), BSREQ(dodge), BSREQ(block), BSREQ(block_ranged), BSREQ(dodge), BSREQ(speed), BSREQ(mistery),
-	BSREQ(enemy_dodge),
-	BSREQ(rotting),
-	BSREQ(weight), BSREQ(cost),
-	BSFLG(feats, feati),
-	BSREQ(dress),
-	BSREQ(upgrade),
-	{}};
-BSMETA(itemvariety) = {
-	BSREQ(id),
-	BSREQ(elements),
+	BSREQ(weapon),
+	BSREQ(use), BSREQ(use_blessed), BSREQ(use_cursed),
 	{}};
 BSMETA(locationi) = {
 	BSREQ(id),
@@ -178,6 +160,9 @@ BSMETA(spelli) = {
 	BSFLG(target, conditioni),
 	BSREQ(effect), BSREQ(summon),
 	{}};
+BSMETA(weaponi) = {
+	BSREQ(damage), BSREQ(skill), BSREQ(pierce), BSREQ(speed), BSREQ(ammunition),
+	{}};
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
@@ -197,8 +182,6 @@ BSDATA(varianti) = {
 	{"Global", VAR(globali), 1},
 	{"Hotkey", VAR(hotkey), 2},
 	{"Item", VAR(itemi), 1},
-	{"ItemUpgrade", VAR(itemstat), 1},
-	{"ItemVariety", VAR(itemvariety), 1},
 	{"List", VAR(listi), 1},
 	{"Location", VAR(locationi), 1},
 	{"Modifier", VAR(modifieri), 1},

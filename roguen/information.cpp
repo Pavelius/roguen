@@ -89,15 +89,9 @@ static void addv(stringbuilder& sb, const featable& feats) {
 void item::getinfo(stringbuilder& sb) const {
 	auto& ei = geti();
 	sb.adds(getfullname());
-	addv(sb, Damage, get(FO(itemstat, damage)));
-	addv(sb, "Pierce", get(FO(itemstat, pierce)));
-	addv(sb, "Speed", get(FO(itemstat, speed)));
-	switch(ei.wear) {
-	case Torso:
-		addv(sb, Armor, get(FO(itemstat, armor)));
-		break;
-	}
-	//addv(sb, ei.feats);
+	addv(sb, Damage, geti().weapon.damage);
+	addv(sb, "Pierce", geti().weapon.pierce);
+	addv(sb, "Speed", geti().weapon.speed);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

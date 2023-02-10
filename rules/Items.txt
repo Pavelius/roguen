@@ -1,71 +1,13 @@
-#ItemUpgrade
-
-Ashen
- feats NoDamageUndead
-Balanced skill(20)
-Barbaric skill(-15) damage(3)
-Barbed damage(1)
-Brutal damage(2) dodge(-10)
-ExtraHeavy weight(400)
-Fickle
- feats MissHalfTime
-Flaming
- feats FireDamage
-Green
- feats AcidResistance
-Heavy weight(200)
-Hefty weight(120) damage(3) skill(-5)
-Light weight(50)
-Masterwork skill(15)
-Mild damage(-2)
-Nasty damage(1)
-Red
- feats FireResistance
-Swift speed(5)
-UltraHeavy weight(800)
-Unwieldy skill(-30)
-Weeping
- feats BleedingHit
-White
- feats ColdResistance
-Wicked damage(3)
-Yellow
- feats StunResistance
-
-Corruption
-Damnation
-Defence dodge(10)
-Devastation damage(4)
-Fumbling
- dress Dexterity-10
-Hunting
-Lighting
-Mayhem damage(2)
-Might
- dress Strenght+10
-Penetration
-Power
- dress ManaMaximum+20
-Slaughtering
-Surrendering
-TheEagle
-TheSun
-TheVoid
-Thunder
-Vampirism
-Weakness
- dress Strenght-10
-
-#ItemVariety
-
-MeleeWeaponPrefix
- elements Ashen Masterwork Balanced Barbaric Barbed Brutal ExtraHeavy Flaming Heavy Light Weeping Red Swift Yellow White
-MeleeWeaponSuffix
- elements Defence Devastation Fumbling Hunting Lighting Mayhem Might Penetration Slaughtering Surrendering TheEagle TheSun TheVoid Vampirism Weakness
-
 #Item
 
 NoItem avatar(1) wear(MeleeWeapon)
+ feats Natural
+
+Bite wear(MeleeWeapon)
+ weapon damage(5) speed(-2)
+ feats Natural
+Claws wear(MeleeWeapon)
+ weapon damage(3) speed(10)
  feats Natural
 
 SP cost(1) avatar(898) count(1)
@@ -93,51 +35,51 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 
-Bite wear(MeleeWeapon) damage(5) speed(-2)
- feats Natural
-Claws wear(MeleeWeapon) damage(3) speed(10)
- feats Natural
-
-BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) damage(4) pierce(2) speed(-8)\
- prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447)
+ weapon damage(4) pierce(2) speed(-8)
  feats CutWoods
-CursedBattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(-10) damage(3) pierce(2) speed(-8)\
- parent(BattleAxe)\
- prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
- feats CutWoods Cursed
-BlessedBattleAxe cost(100) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) skill(10) damage(4) pierce(3) speed(-8)\
- parent(BattleAxe)\
- prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
- feats CutWoods Blessed
-BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) damage(5) skill(-8) speed(-6)
-Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) damage(3)
-Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) damage(2) speed(5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
-Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) damage(6) pierce(1) speed(-10) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65)
+ weapon damage(5) skill(-8) speed(-6)
+Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3)
+ weapon damage(3)
+Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2)
+ weapon damage(2) speed(5)
+Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566)
+ weapon damage(6) pierce(1) speed(-10)
  feats TwoHanded CutWoods MightyHit
-HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) damage(3) pierce(1) speed(-2) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
-Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) damage(3) speed(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517)
+ weapon damage(3) pierce(1) speed(-2)
+Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841)
+ weapon damage(3) speed(-5)
  feats StunningHit
-Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) damage(2) pierce(1) speed(-4) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559)
+ weapon damage(2) pierce(1) speed(-4)
  feats Retaliate PierceHit
-Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) damage(3) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6)
+ weapon damage(3)
  feats TwoHanded
-Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) damage(4) speed(-5) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
-StrangeSword cost(150) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173) damage(4) mistery(3) speed(-4)
+Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23)
+ weapon damage(4) speed(-5)
+StrangeSword cost(150) weight(60) wear(MeleeWeapon) wear_index(23) avatar(173)
+ weapon damage(6) speed(-4)
 
 Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
 Bolt wear(Ammunition) weight(2) count(20) wear_index(3) avatar(211)
 
-Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) damage(5) pierce(2) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636)
+ weapon damage(5) pierce(2)
  feats TwoHanded
-ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448) damage(3) ammunition(Arrow) speed(20) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448)
+ weapon damage(3) ammunition(Arrow) speed(20)
  feats TwoHanded
-LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) damage(4) ammunition(Arrow) speed(18) prefix(MeleeWeaponPrefix) suffix(MeleeWeaponSuffix)
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5)
+ weapon damage(4) ammunition(Arrow) speed(18)
  feats TwoHanded
 
-LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) armor(1) dodge(-5)
-ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) armor(3) dodge(-20)
-PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) armor(4) dodge(-50)
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) dodge(-10) block_ranged(10)
+LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4)
+ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26)
+PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37)
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81)
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar(430)
 BlackPotion cost(50) weight(10) wear(Potion) avatar(603)
@@ -156,12 +98,12 @@ Ration cost(100) weight(50) avatar(126) count(1)
 Torch cost(10) avatar(207) weight(30) count(3)
  use TorchLight+3
 
-StrangeBlueSphere cost(100) weight(50) avatar(229) mistery(2)
-StrangeAquaSphere cost(100) weight(50) avatar(230) mistery(3)
-StrangeRedSphere cost(100) weight(50) avatar(231) mistery(4)
-StrangeGreenSphere cost(100) weight(50) avatar(232) mistery(5)
+StrangeBlueSphere cost(100) weight(50) avatar(229)
+StrangeAquaSphere cost(100) weight(50) avatar(230)
+StrangeRedSphere cost(100) weight(50) avatar(231)
+StrangeGreenSphere cost(100) weight(50) avatar(232)
 
-StrangeRod cost(50) weight(10) avatar(80) mistery(3)
+StrangeRod cost(50) weight(10) avatar(80)
 
 Bones cost(2) weight(3) avatar(899) count(1)
 MonsterSkull cost(50) weight(50) avatar(519) count(1)
@@ -176,74 +118,40 @@ RoundKey weight(1) avatar(286) count(1)
 
 AlrauniaAntidote weight(1) avatar(96) count(1)
  use Poison-2
-CursedAlrauniaAntidote weight(1) avatar(96) count(1) parent(AlrauniaAntidote)
- feats Cursed
- use Poison+5
-BlessedAlrauniaAntidote weight(1) avatar(96) count(1) parent(AlrauniaAntidote)
- feats Blessed
- use Poison-10
+ use_blessed Poison-10
+ use_cursed Poison+5
 BurbRoot weight(1) avatar(90) count(1)
  use Hits-10
-CursedBurbRoot weight(1) avatar(90) count(1) parent(BurbRoot)
- feats Cursed
- use Hits-20
-BlessedBurbRoot weight(1) avatar(90) count(1) parent(BurbRoot)
- feats Blessed
- use Hits-20
+ use_cursed Hits-20
+ use_blessed Hits-5
 CurariaMancox weight(1) avatar(91) count(1)
  use Illness-1
-CursedCurariaMancox weight(1) avatar(91) count(1) parent(CurariaMancox)
- feats Cursed
- use Illness+1
-BlessedCurariaMancox weight(1) avatar(91) count(1) parent(CurariaMancox)
- feats Blessed
- use Illness-10
+ use_cursed Illness+1
+ use_blessed Illness-10
 DemonDaisy weight(1) avatar(97) count(1)
  use Poison+10
-CursedDemonDaisy weight(1) avatar(97) count(1) parent(DemonDaisy)
- feats Cursed
- use Poison+20
-BlessedDemonDaisy weight(1) avatar(97) count(1) parent(DemonDaisy)
- feats Blessed
- use Poison+5
+ use_cursed Poison+20
+ use_blessed Poison+5
 DevilsRose weight(1) avatar(94) count(1)
  use Illness+2
-CursedDevilsRose weight(1) avatar(94) count(1) parent(DevilsRose)
- feats Cursed
- use Illness+5
-BlessedDevilsRose weight(1) avatar(94) count(1) parent(DevilsRose)
- feats Blessed
- use Illness+1
+ use_cursed Illness+5
+ use_blessed Illness+1
 MorgiaRoot weight(1) avatar(108) count(1)
  use Permanent Strenght+1
-CursedMorgiaRoot weight(1) avatar(108) count(1) parent(MorgiaRoot)
- feats Cursed
- use Permanent Strenght-1
-BlessedMorgiaRoot weight(1) avatar(108) count(1) parent(MorgiaRoot)
- feats Blessed
- use Permanent Strenght+4
+ use_cursed Permanent Strenght-1
+ use_blessed Permanent Strenght+4
 MossOfMoreilon weight(1) avatar(107) count(1)
  use Permanent Dexterity+1
-CursedMossOfMoreilon weight(1) avatar(107) count(1) parent(MossOfMoreilon)
- feats Cursed
- use Permanent Dexterity-1
-BlessedMossOfMoreilon weight(1) avatar(107) count(1) parent(MossOfMoreilon)
- feats Blessed
- use Permanent Dexterity+4
+ use_cursed Permanent Dexterity-1
+ use_blessed Permanent Dexterity+4
 PepperPetal weight(1) avatar(95) count(1)
  use Hits+4
-CursedPepperPetal weight(1) avatar(95) count(1) parent(PepperPetal)
- feats Cursed
- use Hits-4
-BlessedPepperPetal weight(1) avatar(95) count(1) parent(PepperPetal)
- feats Blessed
- use Hits+16
+ use_cursed Hits-4
+ use_blessed Hits+16
 Spenseweed weight(1) avatar(106) count(1)
  use Hits+1
-CursedSpenseweed weight(1) avatar(106) count(1) parent(Spenseweed)
- use Hits-1
-BlessedSpenseweed weight(1) avatar(106) count(1) parent(Spenseweed)
- use Hits+10
+ use_cursed Hits-1
+ use_blessed Hits+10
 Stomacemptia weight(1) avatar(93) count(1)
 Stomafillia weight(1) avatar(89) count(1)
 

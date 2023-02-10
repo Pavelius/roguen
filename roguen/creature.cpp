@@ -73,7 +73,7 @@ static void pay_movement(creature* player) {
 }
 
 static void pay_attack(creature* player, const item& weapon) {
-	auto cost = 110 - weapon.get(FO(itemstat, speed)) * 2;
+	auto cost = 110 - weapon.geti().weapon.speed * 2;
 	player->waitseconds(cost);
 }
 
@@ -426,7 +426,7 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 
 static int chance_cut_wood(const item& weapon) {
 	auto& ei = player->wears[MeleeWeapon].geti();
-	auto chance = player->get(Strenght) / 10 + ei.damage;
+	auto chance = player->get(Strenght) / 10 + ei.weapon.damage;
 	if(chance < 1)
 		chance = 1;
 	if(ei.is(TwoHanded))
@@ -784,8 +784,8 @@ void creature::interaction(creature& opponent) {
 }
 
 static void apply_damage(creature* player, const item& weapon, int effect) {
-	auto weapon_damage = weapon.get(FO(itemstat, damage));
-	auto damage_reduction = player->get(Armor) - weapon.get(FO(itemstat, pierce));
+	auto weapon_damage = weapon.geti().weapon.damage;
+	auto damage_reduction = player->get(Armor) - weapon.geti().weapon.pierce;
 	if(damage_reduction < 0)
 		damage_reduction = 0;
 	auto result_damage = weapon_damage - damage_reduction + effect;
@@ -806,7 +806,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
-	auto damage = weapon.get(FO(itemstat, damage)) + player->get(damage_ability(weapon_ability));
+	auto damage = weapon.geti().weapon.damage + player->get(damage_ability(weapon_ability));
 	auto armor = enemy->get(Armor);
 	if(enemy->is(Undead) && weapon.is(NoDamageUndead))
 		damage = 0;
@@ -819,7 +819,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		else
 			armor += -strenght;
 	}
-	auto pierce = weapon.get(FO(itemstat, pierce));
+	int pierce = weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 2)
 		special_attack(player, weapon, enemy, pierce, damage);
 	if(armor > 0) {
@@ -901,7 +901,7 @@ bool creature::canshoot(bool interactive) const {
 			actp(getnm("YouNeedRangeWeapon"));
 		return false;
 	}
-	auto ammo = wears[RangedWeapon].geti().ammunition;
+	auto ammo = wears[RangedWeapon].geti().weapon.ammunition;
 	if(ammo && !wears[Ammunition].is(*ammo)) {
 		if(interactive)
 			actp(getnm("YouNeedAmmunition"), ammo->getname());
@@ -922,7 +922,7 @@ bool creature::canthrown(bool interactive) const {
 void creature::attackrange(creature& enemy) {
 	if(!canshoot(false))
 		return;
-	auto pa = wears[RangedWeapon].geti().ammunition;
+	auto pa = wears[RangedWeapon].geti().weapon.ammunition;
 	if(pa)
 		fixshoot(enemy.getposition(), pa->wear_index);
 	else
@@ -1188,19 +1188,10 @@ void creature::dress(variants source) {
 
 static void apply_dress(creature* player, const item& e) {
 	player->dress(e.geti().dress);
-	auto p = e.getprefix();
-	if(p)
-		player->dress(p->dress);
-	p = e.getsuffix();
-	if(p)
-		player->dress(p->dress);
 }
 
 static void update_dress(creature* player, const item& e) {
 	player->apply(e.geti().feats);
-	player->abilities[Armor] += e.get(FO(itemstat, armor));
-	player->abilities[Dodge] += e.get(FO(itemstat, dodge));
-	player->abilities[Speed] += e.get(FO(itemstat, speed));
 }
 
 static void update_wears(creature* player) {
@@ -1213,7 +1204,6 @@ static void update_wears(creature* player) {
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
-		player->abilities[Dodge] += e.get(FO(itemstat, dodge));
 		apply_dress(player, e);
 	}
 }

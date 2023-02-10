@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `Dodge`
+﻿In file `rules/Advancement.txt`:
+ Line 8: Can't find variant `Brutal`

@@ -6,36 +6,6 @@ item* last_item;
 
 static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");
 
-static int random_count(const itemvariety* p) {
-	auto pe = p->elements + sizeof(itemvariety::elements) / sizeof(itemvariety::elements[0]);
-	auto count = 0;
-	for(auto pb = p->elements; pb < pe && *pb; pb++)
-		count++;
-	return count;
-}
-
-static int find_upgrade(const itemvariety* p, const itemstat* upgrade) {
-	if(!upgrade)
-		return 0;
-	auto pe = p->elements + sizeof(itemvariety::elements) / sizeof(itemvariety::elements[0]);
-	auto count = 0;
-	for(auto pb = p->elements; pb < pe && *pb; pb++) {
-		if(*pb == upgrade)
-			return count + 1;
-		count++;
-	}
-	return 0;
-}
-
-static int random_upgrade(const itemvariety* p, int level) {
-	if(!p)
-		return 0;
-	auto count = random_count(p);
-	if(!count)
-		return 0;
-	return 1 + rand() % count;
-}
-
 const char* item::getname() const {
 	auto pid = geti().id;
 	if(szstart(pid, "Cursed"))
@@ -116,11 +86,9 @@ bool item::is(wear_s v) const {
 }
 
 void item::damage() {
-	if(broken >= 3) {
-		if(is(Blessed))
-			return;
+	if(broken >= 3)
 		setcount(getcount() - 1);
-	} else {
+	else {
 		if(is(Blessed) && d100() < 50)
 			return;
 		broken++;
@@ -128,17 +96,7 @@ void item::damage() {
 }
 
 bool item::is(feat_s v) const {
-	if(geti().feats.is(v))
-		return true;
-	if(!iscountable()) {
-		auto p = getprefix();
-		if(p && p->feats.is(v))
-			return true;
-		p = getsuffix();
-		if(p && p->feats.is(v))
-			return true;
-	}
-	return false;
+	return geti().feats.is(v);
 }
 
 void item::drop(point m) {
@@ -163,21 +121,7 @@ const char*	item::getfullname(int price_percent) const {
 	auto count = getcount();
 	auto pn = getname();
 	auto vw = stringbuilder::getgender(pn);
-	if(isidentified()) {
-		auto p = getprefix();
-		if(p) {
-			sb.addsep(' ');
-			sb.adjective(getnm(p->id), vw);
-		}
-	}
 	sb.adds("%1", getname());
-	if(isidentified()) {
-		auto sf = getsuffix();
-		if(sf) {
-			sb.addsep(' ');
-			sb.addof(getnm(sf->id));
-		}
-	}
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
 	sb.lower();
@@ -188,62 +132,8 @@ const char*	item::getfullname(int price_percent) const {
 	return temp;
 }
 
-const itemstat* item::getprefix() const {
-	if(!prefix || iscountable())
-		return 0;
-	return geti().prefix->elements[prefix - 1];
-}
-
-const itemstat* item::getsuffix() const {
-	if(!suffix || iscountable())
-		return 0;
-	return geti().suffix->elements[suffix - 1];
-}
-
 int	item::getweight() const {
-	auto& ei = geti();
-	auto result = ei.weight;
-	if(!ei.iscountable()) {
-		auto p = getprefix();
-		if(p && p->weight)
-			result = result * p->weight / 100;
-		p = getsuffix();
-		if(p && p->weight)
-			result = result * p->weight / 100;
-	}
-	return result * getcount();
-}
-
-int	item::get(unsigned fo) const {
-	auto& ei = geti();
-	int result = *((char*)&ei + fo);
-	if(!ei.iscountable()) {
-		auto prefix = getprefix();
-		if(prefix)
-			result += *((char*)prefix + fo);
-		auto suffix = getsuffix();
-		if(suffix)
-			result += *((char*)suffix + fo);
-	}
-	return result;
-}
-
-void item::setupgrade(const itemstat* pv) {
-	if(!pv)
-		return;
-	switch(pv->upgrade) {
-	case 1: prefix = find_upgrade(geti().prefix, pv); break;
-	default: suffix = find_upgrade(geti().suffix, pv); break;
-	}
-}
-
-void item::upgrade(int chance_prefix, int chance_suffix, int level) {
-	if(iscountable())
-		return;
-	if(d100() < chance_prefix)
-		prefix = random_upgrade(geti().prefix, level);
-	if(d100() < chance_suffix)
-		suffix = random_upgrade(geti().suffix, level);
+	return geti().weight * getcount();
 }
 
 static const itemi* find_type(const itemi* parent, feat_s v) {
@@ -252,11 +142,4 @@ static const itemi* find_type(const itemi* parent, feat_s v) {
 			return &e;
 	}
 	return 0;
-}
-
-void item::upgrade(feat_s v) {
-	auto nt = find_type(&geti(), v);
-	if(!nt)
-		return;
-	type = nt - bsdata<itemi>::elements;
 }

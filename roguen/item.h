@@ -8,27 +8,25 @@
 
 enum ability_s : unsigned char;
 
-struct itemstat : nameable {
-	char			damage, armor, skill, dodge, block, block_ranged, pierce, speed, mistery;
-	char			enemy_dodge, rotting;
-	short			weight, cost;
-	char			upgrade;
-	featable		feats;
-	variants		dress;
+enum magic_s : unsigned char {
+	Mundane, Cursed, Blessed, Mighty,
 };
-struct itemvariety : nameable {
-	const itemstat*	elements[15];
+
+struct itemi;
+struct weaponi {
+	char			damage, skill, pierce, speed;
+	const itemi*	ammunition;
 };
-struct itemi : itemstat {
-	short			count;
+struct itemi : nameable {
+	short			count, weight, cost;
 	short			avatar;
 	wear_s			wear;
 	char			wear_index;
 	const itemi*	parent;
-	variants		use;
-	const itemvariety* prefix;
-	const itemvariety* suffix;
-	const itemi*	ammunition;
+	weaponi			weapon;
+	featable		feats;
+	variants		dress, use, use_cursed, use_blessed;
+	char			rotting;
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
 	bool			is(feat_s v) const { return feats.is(v); }
@@ -38,19 +36,13 @@ struct itemi : itemstat {
 };
 class item {
 	unsigned short type;
+	unsigned char count;
 	union {
 		unsigned char stats;
 		struct {
 			unsigned char identified : 1;
 			unsigned char broken : 2;
-			unsigned char charges : 5;
-		};
-	};
-	union {
-		unsigned char count;
-		struct {
-			unsigned char prefix : 4;
-			unsigned char suffix : 4;
+			magic_s magic : 2;
 		};
 	};
 public:
@@ -73,23 +65,19 @@ public:
 	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*		getfullname(int price_percent = 0) const;
-	const itemstat* getprefix() const;
-	const itemstat* getsuffix() const;
 	int				getweight() const;
 	bool			is(feat_s v) const;
 	bool			is(wear_s v) const;
+	bool			is(magic_s v) const { return magic == v; }
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
 	bool			iscountable() const { return geti().iscountable(); }
 	bool			isidentified() const { return identified != 0; }
+	void			set(magic_s v) { magic = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
-	void			setupgrade(const itemstat* pv);
-	void			upgrade(int chance_suffix, int chance_prefix, int level);
-	void			upgrade(feat_s v);
 	void			use() { setcount(getcount() - 1); }
-	void			usecharge() { if(charges) charges--; else use(); }
 };
 struct itemground : item {
 	point			position;
