@@ -47,6 +47,11 @@ void wearable::equip(item& v) {
 		additem(v);
 }
 
+void wearable::equipi(short unsigned type, int count) {
+	item it; it.create(bsdata<itemi>::elements + type, count);
+	equip(it);
+}
+
 const item*	wearable::getwear(const void* data) const {
 	if(data >= wears && data < wears + sizeof(wears) / sizeof(wears[0]))
 		return (item*)data;

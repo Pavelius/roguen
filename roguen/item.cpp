@@ -86,13 +86,14 @@ bool item::is(wear_s v) const {
 }
 
 void item::damage() {
-	if(broken >= 3)
+	if(is(Natural))
+		return;
+	else if(is(Blessed) && d100() < 60)
+		return;
+	else if(broken >= 3)
 		setcount(getcount() - 1);
-	else {
-		if(is(Blessed) && d100() < 50)
-			return;
+	else
 		broken++;
-	}
 }
 
 bool item::is(feat_s v) const {
@@ -136,10 +137,12 @@ int	item::getweight() const {
 	return geti().weight * getcount();
 }
 
-static const itemi* find_type(const itemi* parent, feat_s v) {
-	for(auto& e : bsdata<itemi>()) {
-		if(e.parent == parent && e.is(v))
-			return &e;
-	}
-	return 0;
+variants item::getuse() const {
+	auto& ei = geti();
+	auto result = ei.use;
+	if(is(Blessed) && ei.use_blessed)
+		result = ei.use_blessed;
+	if(is(Cursed) && ei.use_cursed)
+		result = ei.use_cursed;
+	return result;
 }

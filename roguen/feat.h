@@ -5,7 +5,7 @@
 
 enum feat_s : unsigned char {
 	Darkvision, TwoHanded, CutWoods, Retaliate, Thrown,
-	BleedingHit, StunningHit, PierceHit, MightyHit, NoDamageUndead, MissHalfTime,
+	BleedingHit, StunningHit, PierceHit, MightyHit, MissHalfTime,
 	FireDamage,
 	IgnoreWeb, Fly, LightSource, Regeneration, ManaRegeneration,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,

@@ -10,6 +10,7 @@ struct wearable : movable {
 	void			additem(item& v);
 	slice<item>		backpack() { return slice<item>(wears + Backpack, wears + BackpackLast + 1); }
 	void			equip(item& v);
+	void			equipi(short unsigned type, int count);
 	slice<item>		equipment() { return slice<item>(wears + MeleeWeapon, wears + Elbows + 1); }
 	bool			iswear(const void* p) const { return p >= wears && p <= wears + Elbows; }
 	slice<item>		gears() { return slice<item>(wears + Torso, wears + Elbows + 1); }

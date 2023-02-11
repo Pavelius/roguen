@@ -67,6 +67,7 @@ public:
 	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*		getfullname(int price_percent = 0) const;
+	variants		getuse() const;
 	int				getweight() const;
 	bool			is(feat_s v) const;
 	bool			is(wear_s v) const;

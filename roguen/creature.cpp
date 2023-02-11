@@ -808,8 +808,12 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	auto weapon_ability = weapon_skill(weapon);
 	auto damage = weapon.geti().weapon.damage + player->get(damage_ability(weapon_ability));
 	auto armor = enemy->get(Armor);
-	if(enemy->is(Undead) && weapon.is(NoDamageUndead))
-		damage = 0;
+	if(enemy->is(Undead)) {
+		if(weapon.is(Cursed))
+			damage = damage / 2;
+		else if(weapon.is(Blessed))
+			damage = damage * 2;
+	}
 	attack_skill += player->get(weapon_ability);
 	damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee()) {
@@ -834,11 +838,6 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		damage = 0;
 	if(damage <= 0) {
 		player->logs(getnm("AttackMiss"));
-		if(roll_result >= 95) {
-			// Damage on hight roll weapon 30% time
-			if(d100() < 30)
-				weapon.damage();
-		}
 	} else if(enemy->roll(Dodge)) {
 		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
 		enemy->fixvalue(getnm("Dodge"));
@@ -847,6 +846,8 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		enemy->damage(damage);
 		poison_attack(player, enemy, weapon);
 	}
+	if(roll_result >= 95 && d100() < 30)
+		weapon.damage();
 }
 
 void creature::heal(int v) {
@@ -1029,9 +1030,8 @@ void creature::advance(variant v) {
 		default: basic.abilities[v.value] += v.counter; break;
 		}
 	} else if(v.iskind<itemi>()) {
-		item it;
-		it.create(bsdata<itemi>::elements + v.value, game.getpositivecount(v));
-		equip(it);
+		if(v.counter >= 0)
+			equipi(v.value, v.counter ? v.counter : 1);
 	} else if(v.iskind<feati>()) {
 		if(v.counter < 0)
 			feats.remove(v.value);
@@ -1337,10 +1337,10 @@ void creature::use(variants source) {
 void creature::use(item& v) {
 	if(!v)
 		return;
-	auto& ei = v.geti();
-	if(!ei.use)
+	auto script = v.getuse();
+	if(!script)
 		return;
-	use(ei.use);
+	use(script);
 	act(getnm("YouUseItem"), v.getname());
 	v.use();
 	update();
