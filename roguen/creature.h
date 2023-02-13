@@ -20,7 +20,6 @@ enum condition_s : unsigned char;
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
 	statable		basic;
-	featable		feats, feats_active;
 	point			moveorder, guardorder;
 	unsigned		experience;
 	int				satiation, wait_seconds;
@@ -36,6 +35,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			update_abilities();
 	void			update_room_abilities();
 public:
+	featable		feats, feats_active;
 	geoposition		worldpos;
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
@@ -52,8 +52,6 @@ public:
 	void			cast(const spelli& e);
 	void			cast(const spelli& e, int level, int mana);
 	void			clear();
-	void			dress(variant v);
-	void			dress(variants v);
 	void			everyminute();
 	void			every10minutes();
 	void			every30minutes();

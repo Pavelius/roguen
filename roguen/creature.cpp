@@ -73,7 +73,9 @@ static void pay_movement(creature* player) {
 }
 
 static void pay_attack(creature* player, const item& weapon) {
-	auto cost = 110 - weapon.geti().weapon.speed * 2;
+	auto cost = 110 - weapon.geti().weapon.speed * 4;
+	if(cost < 20)
+		cost = 20;
 	player->waitseconds(cost);
 }
 
@@ -1194,35 +1196,43 @@ void creature::makemove() {
 	check_stun(this);
 }
 
-void creature::dress(variant v) {
+static void wearing(variants source);
+
+static void wearing(variant v) {
 	if(v.iskind<abilityi>())
-		abilities[v.value] += v.counter;
+		player->abilities[v.value] += v.counter;
 	else if(v.iskind<listi>())
-		dress(bsdata<listi>::elements[v.value].elements);
+		wearing(bsdata<listi>::elements[v.value].elements);
 	else if(v.iskind<feati>()) {
 		if(v.counter > 0)
-			feats.set(v.value);
+			player->feats.set(v.value);
 		else if(v.counter < 0)
-			feats.remove(v.value);
+			player->feats.remove(v.value);
 	}
 }
 
-void creature::dress(variants source) {
+static void wearing(variants source) {
 	for(auto v : source)
-		dress(v);
+		wearing(v);
 }
 
-static void update_wears(creature* player) {
+static void update_wears() {
 	for(auto& e : player->gears()) {
 		if(!e)
 			continue;
 		player->apply(e.geti().feats);
-		player->dress(e.geti().wearing);
+		wearing(e.geti().wearing);
+		auto power = e.getpower();
+		if(power)
+			wearing(power);
 	}
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
-		player->dress(e.geti().wearing);
+		wearing(e.geti().wearing);
+		auto power = e.getpower();
+		if(power)
+			wearing(power);
 	}
 }
 
@@ -1233,7 +1243,7 @@ void creature::update_room_abilities() {
 	trigger::fire(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), &p->geti());
 }
 
-static void update_negative_skills(creature* player) {
+static void update_negative_skills() {
 	for(auto i = (ability_s)0; i < Hits; i = (ability_s)(i + 1)) {
 		if(!bsdata<abilityi>::elements[i].basic)
 			continue;
@@ -1243,12 +1253,15 @@ static void update_negative_skills(creature* player) {
 }
 
 void creature::update() {
+	auto push_player = player;
+	player = this;
 	update_basic(abilities, basic.abilities);
 	update_boost(feats_active, this);
-	update_wears(this);
+	update_wears();
 	update_room_abilities();
 	update_abilities();
-	update_negative_skills(this);
+	update_negative_skills();
+	player = push_player;
 }
 
 static void block_creatures(creature* exclude) {

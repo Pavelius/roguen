@@ -95,6 +95,7 @@ BSMETA(itemi) = {
 	BSREQ(wear_index),
 	BSREQ(weapon),
 	BSREQ(use), BSREQ(use_blessed), BSREQ(use_cursed),
+	BSREQ(powers),
 	{}};
 BSMETA(locationi) = {
 	BSREQ(id),

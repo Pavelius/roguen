@@ -308,18 +308,21 @@ static void match_features(const variants& source) {
 	indecies.count = ps - indecies.begin();
 }
 
-static bool iscondition(const void* object, int v) {
+bool item::iscondition(const void* object, int v) {
 	auto p = (item*)object;
 	switch(v) {
-	case Identified: return p->isidentified();
-	case Unaware: return !p->isidentified();
+	case Identified: return p->identified != 0;
+	case NoWounded: return !p->iscountable() || p->broken == 0;
+	case Wounded: return p->iscountable() && p->broken != 0;
+	case Ranged: return p->geti().wear == RangedWeapon;
+	case Unaware: return p->identified == 0 || p->identified_cub == 0;
 	default: return false;
 	}
 }
 
 static bool isallow(const item& e, variant v) {
 	if(v.iskind<conditioni>())
-		return iscondition(&e, v.value);
+		return e.iscondition(&e, v.value);
 	return true;
 }
 
@@ -384,11 +387,12 @@ bool choose_targets(unsigned flags, const variants& effects) {
 			rooms.match(fntis<roomi, &roomi::ismarkable>, true);
 	}
 	if(FGT(flags, TargetItems)) {
+		static condition_s states[] = {Unaware, Identified, Ranged, Wounded, NoWounded};
 		items.select(player);
-		if(FGT(flags, Unaware))
-			items.match(iscondition, Unaware, true);
-		if(FGT(flags, Identified))
-			items.match(iscondition, Identified, true);
+		for(auto v : states) {
+			if(FGT(flags, v))
+				items.match(item::iscondition, v, true);
+		}
 	}
 	if(FGT(flags, Random)) {
 		targets.shuffle();
@@ -1062,6 +1066,7 @@ static void destroy_feature(int bonus) {
 
 static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
+	last_item->setidentifiedcub(bonus);
 }
 
 void script::run(const variants& elements) {

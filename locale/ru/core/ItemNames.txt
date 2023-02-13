@@ -90,8 +90,7 @@ LongBow: Длинный лук
 Lags: Древесина
 SmallLags: Маленькая ветка
 
-AquaPotion: Водяное зелье
-BluePotion: Синее зелье
+HealingPotion: Зелье лечения
 
 LoafOfBread: Кусок хлеба
 Ration: Сухпаек

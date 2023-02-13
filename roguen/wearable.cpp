@@ -49,6 +49,7 @@ void wearable::equip(item& v) {
 
 void wearable::equipi(short unsigned type, int count) {
 	item it; it.create(bsdata<itemi>::elements + type, count);
+	it.createpower(0);
 	equip(it);
 }
 

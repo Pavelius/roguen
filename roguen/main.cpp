@@ -43,12 +43,18 @@ static void initializating() {
 #endif
 }
 
-static void equip_item(const char* id) {
+static void equip_item(const char* id, int count = 1) {
 	item it;
-	it.create(id);
+	it.create(id, count);
 	player->equip(it);
 	if(it)
 		player->additem(it);
+}
+
+static void add_item(const char* id, int count = 1) {
+	item it;
+	it.create(id, count);
+	player->additem(it);
 }
 
 static creature* find_monster_id(const char* id) {
@@ -67,13 +73,14 @@ static void main_start() {
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");
-	equip_item("Torch");
-	for(auto i =0; i<20; i++)
-		equip_item("Ration");
-	for(auto i = 0; i < 60; i++)
-		equip_item("Bones");
-	equip_item("OrnamentalStones");
+	add_item("Torch");
+	add_item("Ration", 20);
+	add_item("Bones", 60);
+	add_item("OrnamentalStones", 3);
+	add_item("HealingPotion");
 	player->add(Herbalism, 25);
+	player->wears[MeleeWeapon].createpower(100);
+	equip_item("Bones");
 	game.setowner(player);
 	if(!test_creatures())
 		return;

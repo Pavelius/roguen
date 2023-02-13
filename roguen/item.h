@@ -13,6 +13,7 @@ enum magic_s : unsigned char {
 };
 
 struct itemi;
+
 struct weaponi {
 	char			damage, skill, pierce, speed;
 	const itemi*	ammunition;
@@ -27,23 +28,30 @@ struct itemi : nameable {
 	featable		feats;
 	variants		wearing, use, use_cursed, use_blessed;
 	char			rotting;
+	listi*			powers;
+	char			chance_power;
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
 	bool			is(feat_s v) const { return feats.is(v); }
-	bool			iscountable() const { return count != 0; }
 	bool			ismelee() const { return wear == MeleeWeapon || wear == MeleeWeaponOffhand; }
 	void			paint() const; // Exported paint function
 };
 class item {
 	unsigned short type;
-	unsigned char count;
 	union {
 		unsigned char stats;
 		struct {
 			unsigned char identified : 1;
+			unsigned char identified_cub : 1;
 			unsigned char personal : 1;
-			unsigned char broken : 2;
-			magic_s magic : 2;
+			magic_s magic : 2; // Cursed Uncursed Blessed
+		};
+	};
+	union {
+		unsigned char count;
+		struct {
+			unsigned char power : 5; // Item magical power. 0 - if none
+			unsigned char broken : 3; // Charges or Broken status
 		};
 	};
 public:
@@ -53,6 +61,7 @@ public:
 	void			clear() { type = count = stats = 0; }
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
+	void			createpower(int chance_power);
 	void			damage();
 	void			drop(point m);
 	int				get(unsigned fo) const;
@@ -66,6 +75,7 @@ public:
 	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	const char*		getfullname(int price_percent = 0) const;
+	variant			getpower() const;
 	variants		getuse() const;
 	int				getweight() const;
 	bool			is(feat_s v) const;
@@ -74,10 +84,13 @@ public:
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
+	static bool		iscondition(const void* object, int v);
 	bool			isidentified() const { return identified != 0; }
+	bool			iscountable() const { return geti().count != 0; }
 	void			set(magic_s v) { magic = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
+	void			setidentifiedcub(int v) { identified_cub = v; }
 	void			use() { setcount(getcount() - 1); }
 };
 struct itemground : item {
