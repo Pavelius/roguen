@@ -383,9 +383,11 @@ static void drop_item(point m, const char* id) {
 static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 	if(!ei.is(StuckFeature))
 		return false;
-	if(p->roll(Strenght, -10))
+	if(p->roll(Strenght, -10)) {
 		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
-	else {
+		area.setactivate(m);
+		area.setactivate(m);
+	} else {
 		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
 		if(random_table) {
 			auto effect = random_table->random();
@@ -399,8 +401,8 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 			}
 		}
 		movable::fixeffect(m2s(m), "SearchVisual");
+		area.setfeature(m, 0);
 	}
-	area.setactivate(m);
 	return true;
 }
 
