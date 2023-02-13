@@ -75,15 +75,18 @@ Bite wear(MeleeWeapon)
 Claws wear(MeleeWeapon)
  weapon damage(3) speed(10)
  feats Natural
+Tentacle wear(MeleeWeapon)
+ weapon damage(4) speed(4)
+ feats Natural
 
 LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4)
- dress Armor+1 Dodge-10
+ wearing Armor+1 Dodge-10
 ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26)
- dress Armor+3 Dodge-20
+ wearing Armor+3 Dodge-20
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37)
- dress Armor+5 Dodge-40
+ wearing Armor+5 Dodge-40
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81)
- dress Block+2
+ wearing Block+2
 
 AquaPotion cost(10) weight(10) wear(Potion) avatar(430)
 BlackPotion cost(50) weight(10) wear(Potion) avatar(603)

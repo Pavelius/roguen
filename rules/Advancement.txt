@@ -5,7 +5,7 @@ Fighter 0
   WeaponSkill+40 BalisticSkill+30 Herbalism+25 HitsMaximum+30\
   Web+3 SummonUndead+4 Entaglement+2 Teleport+2 KnockDoor+4 IdentifySpell+1
 Fighter 0
- elements ChainArmor Sword
+ elements ChainArmor Sword Shield
 
 DarkElf 0
  elements LeatherArmor Dagger

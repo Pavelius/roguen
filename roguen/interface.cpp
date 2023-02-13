@@ -1040,26 +1040,17 @@ static void paint_logs(const char* format, int& origin, int& format_origin, int&
 	if(!format)
 		return;
 	rectpush push;
-	if(maximum == -1) {
-		rectpush push;
-		origin = 0;
-		format_origin = 0;
+	if(format_origin == -1) {
 		textfs(format);
 		maximum = height;
 		height = push.height;
 		width = push.width;
 		caret = push.caret;
-		if(maximum > height) {
-			auto push_clip = clipping;
-			setclip();
+		if(maximum > height)
 			caret.y -= maximum - height;
-			textfs(format, origin, format_origin);
-			clipping = push_clip;
-		}
 	}
 	auto push_clip = clipping; setclip();
-	caret.y += origin;
-	textf(format + format_origin);
+	textf(format, origin, format_origin);
 	clipping = push_clip;
 }
 
@@ -1212,7 +1203,7 @@ void show_area(int bonus) {
 }
 
 void show_logs(int bonus) {
-	int maximum = -1, format_origin = 0, origin = 0;
+	int maximum = 0, format_origin = -1, origin = 0;
 	game.writelog();
 	while(ismodal()) {
 		paintstart();

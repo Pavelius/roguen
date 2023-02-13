@@ -13,6 +13,7 @@ BSDATA(feati) = {
 	{"MightyHit"},
 	{"MissHalfTime"},
 	{"FireDamage"},
+	{"ColdDamage"},
 	{"IgnoreWeb"},
 	{"Fly"},
 	{"LightSource"},

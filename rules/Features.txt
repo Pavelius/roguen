@@ -67,12 +67,11 @@ YouAngryAboutDoor
 YouHitByDoor
  elements Hits-1
 YouTrampedByDoor
- elements Hits-4 DestroyFeature
-YouFailToOpenStuckDoor
+ elements Hits-4
 
 #RandomTable
 
 RandomHerbs
  chance Herbs+6 HerbsSemi+4 HerbsFull+2 Plant
 StuckDoorFail
- chance YouFailToOpenStuckDoor+2 YouAngryAboutDoor YouHitByDoor YouTrampedByDoor
+ chance YouAngryAboutDoor+3 YouHitByDoor+2 YouTrampedByDoor

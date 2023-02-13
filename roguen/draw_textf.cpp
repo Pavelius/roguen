@@ -447,14 +447,16 @@ void draw::textf(const char* p) {
 	height = push_height;
 }
 
-void draw::textfs(const char* string, int& cashe_string, int& cashe_origin) {
+void draw::textf(const char* string, int& cashe_origin, int& cashe_string) {
 	auto push_caret = caret;
-	auto push_clipping = clipping;
-	clipping.clear(); caret = {};
-	textf(string);
-	cashe_string = text_start_string - string;
-	cashe_origin = text_start_horiz;
-	clipping = push_clipping;
+	if(cashe_string == -1) {
+		textf(string);
+		cashe_string = text_start_string ? text_start_string - string : 0;
+		cashe_origin = text_start_horiz;
+	} else {
+		caret.y += cashe_origin;
+		textf(string + cashe_string);
+	}
 	caret = push_caret;
 }
 

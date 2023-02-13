@@ -93,7 +93,7 @@ void item::getinfo(stringbuilder& sb) const {
 	addv(sb, "Speed", geti().weapon.speed);
 	if(isidentified()) {
 		addv(sb, "Pierce", geti().weapon.pierce);
-		for(auto v : ei.dress)
+		for(auto v : ei.wearing)
 			addv(sb, v.getid(), v.counter);
 	}
 

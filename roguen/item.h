@@ -25,7 +25,7 @@ struct itemi : nameable {
 	const itemi*	parent;
 	weaponi			weapon;
 	featable		feats;
-	variants		dress, use, use_cursed, use_blessed;
+	variants		wearing, use, use_cursed, use_blessed;
 	char			rotting;
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
@@ -42,7 +42,6 @@ class item {
 		struct {
 			unsigned char identified : 1;
 			unsigned char personal : 1;
-			unsigned char stolen : 1;
 			unsigned char broken : 2;
 			magic_s magic : 2;
 		};

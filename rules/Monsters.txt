@@ -43,6 +43,7 @@ OrcWarrior avatar(2) appear(2 4) friendly(-30)
  use BruteSword LeatherArmor Darkvision
  treasure SP SP-50
 Outsider avatar(121) appear(1 3) friendly(-20)
+ use Tentacle
  abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) HitsMaximum(10) Armor(4)
 Rabbit avatar(7) appear(3 6)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) HitsMaximum(2)

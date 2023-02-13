@@ -6,11 +6,12 @@ AppTitle: Приключения в забытых Королевствах
 Armor: Броня
 ArmorNegateDamage: Броня поглатила урон.
 Artifact: Могучий
-AttackHit: %герой нанес%ла [%1i] урона по %2.
+AttackHit: %герой нанес%ла [%1i] урона по %2 (%3i%% %4i%+5i).
 AttackHitButEnemyDodge: %герой попал%а, но [%1] увернулся.
-AttackMiss: %герой промазал%а.
+AttackMiss: %герой промазал%а (%3i%% %4i%+5i).
 Backpack: Рюкзак
 Blessed: Благословенный
+Block: Блокирование
 BlockSuccess: Блок
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.

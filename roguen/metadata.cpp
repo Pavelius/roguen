@@ -86,7 +86,7 @@ BSMETA(itemi) = {
 	BSREQ(id),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
-	BSREQ(dress),
+	BSREQ(wearing),
 	BSREQ(parent),
 	BSREQ(count),
 	BSREQ(avatar),

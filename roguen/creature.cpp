@@ -383,11 +383,9 @@ static void drop_item(point m, const char* id) {
 static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 	if(!ei.is(StuckFeature))
 		return false;
-	if(p->roll(Strenght, -10)) {
-		area.setactivate(m);
-		area.setactivate(m);
+	if(p->roll(Strenght, -10))
 		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
-	} else {
+	else {
 		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
 		if(random_table) {
 			auto effect = random_table->random();
@@ -400,7 +398,9 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 				script::run(p->elements);
 			}
 		}
+		movable::fixeffect(m2s(m), "SearchVisual");
 	}
+	area.setactivate(m);
 	return true;
 }
 
@@ -801,12 +801,25 @@ static ability_s weapon_skill(const item& weapon) {
 	}
 }
 
+static int add_bonus_damage(creature* player, creature* enemy, item& weapon, feat_s feat, int value, feat_s resistance, feat_s immunity) {
+	if(!attack_effect(player, weapon, FireDamage))
+		return 0;
+	auto bonus_damage = value;
+	if(immunity && enemy->is(immunity))
+		bonus_damage = 0;
+	else if(resistance && enemy->is(resistance))
+		bonus_damage /= 2;
+	return bonus_damage;
+}
+
 static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_multiplier) {
 	auto roll_result = d100();
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto damage = weapon.geti().weapon.damage + player->get(damage_ability(weapon_ability));
+	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 4, FireResistance, FireImmunity);
+	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	auto armor = enemy->get(Armor);
 	if(enemy->is(Undead)) {
 		if(weapon.is(Cursed))
@@ -817,12 +830,13 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	attack_skill += player->get(weapon_ability);
 	damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee()) {
-		auto strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;
-		if(strenght > 0)
-			damage += strenght;
+		auto base_strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;
+		if(base_strenght > 0)
+			damage += base_strenght;
 		else
-			armor += -strenght;
+			armor += -base_strenght;
 	}
+	auto base_damage = damage;
 	int pierce = weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 2)
 		special_attack(player, weapon, enemy, pierce, damage);
@@ -837,12 +851,22 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	if(damage > 0 && weapon.is(MissHalfTime) && (d100() < 50))
 		damage = 0;
 	if(damage <= 0) {
-		player->logs(getnm("AttackMiss"));
-	} else if(enemy->roll(Dodge)) {
+		player->logs(getnm("AttackMiss"), damage, enemy->getname(), roll_result, base_damage, -armor);
+		return;
+	}
+	auto block_damage = enemy->get(Block);
+	if(block_damage) {
+		damage -= xrand(0, block_damage);
+		if(damage <= 0) {
+			enemy->fixvalue(getnm("Block"));
+			return;
+		}
+	}
+	if(enemy->roll(Dodge)) {
 		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
 		enemy->fixvalue(getnm("Dodge"));
 	} else {
-		player->logs(getnm("AttackHit"), damage, enemy->getname());
+		player->logs(getnm("AttackHit"), damage, enemy->getname(), roll_result, base_damage, -armor);
 		enemy->damage(damage);
 		poison_attack(player, enemy, weapon);
 	}
@@ -1191,12 +1215,12 @@ static void update_wears(creature* player) {
 		if(!e)
 			continue;
 		player->apply(e.geti().feats);
-		player->dress(e.geti().dress);
+		player->dress(e.geti().wearing);
 	}
 	for(auto& e : player->weapons()) {
 		if(!e)
 			continue;
-		player->dress(e.geti().dress);
+		player->dress(e.geti().wearing);
 	}
 }
 
