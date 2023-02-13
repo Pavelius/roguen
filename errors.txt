@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `NoVariant`
+﻿In file `rules/Items.txt`:
+ Line 215: Can't find variant `ManaPotions`
