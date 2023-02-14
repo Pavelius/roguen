@@ -959,7 +959,7 @@ static int add_ability(ability_s i, int value, int current_value, int minimum, i
 	else if(value > maximum)
 		value = maximum;
 	auto delta = value - current_value;
-	if(delta != 0) {
+	if(interactive && delta != 0) {
 		auto color_positive = bsdata<abilityi>::elements[i].positive;
 		auto color_negative = bsdata<abilityi>::elements[i].negative;
 		if(color_negative != ColorNone)
