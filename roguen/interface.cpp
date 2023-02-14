@@ -507,10 +507,10 @@ static void paint_bars(const creature* player) {
 	caret.y += get_top_position(player->getkind()).y;
 	caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
-	bar(player->get(Hits), player->get(HitsMaximum), colors::red);
-	bar_shade(player->get(Poison), player->get(HitsMaximum), colors::green);
+	bar(player->get(Hits), player->basic.abilities[Hits], colors::red);
+	bar_shade(player->get(Poison), player->basic.abilities[Hits], colors::green);
 	caret.y += dy - 1;
-	bar(player->get(Mana), player->get(ManaMaximum), colors::blue);
+	bar(player->get(Mana), player->basic.abilities[Mana], colors::blue);
 }
 
 void creature::paintbarsall() const {

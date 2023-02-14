@@ -1,7 +1,7 @@
+#include "ability.h"
 #include "dice.h"
 #include "nameable.h"
 #include "randomizer.h"
-#include "statable.h"
 #include "variant.h"
 
 #pragma once

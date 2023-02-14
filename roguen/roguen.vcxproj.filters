@@ -476,9 +476,6 @@
     <ClInclude Include="geoposition.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="statable.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="monster.h">
       <Filter>Support</Filter>
     </ClInclude>

@@ -114,10 +114,12 @@ void movable::fixvalue(int v) const {
 	fixvalue(v, (v > 0) ? 2 : 1);
 }
 
-void movable::fixvalue(int v, int color) const {
+void movable::fixvalue(int v, int color_positive, int color_negative) const {
 	char temp[260]; stringbuilder sb(temp);
 	sb.add("%1i", v);
-	fixvalue(temp, color);
+	if(color_negative == -1)
+		color_negative = color_positive;
+	fixvalue(temp, v > 0 ? color_positive : color_negative);
 }
 
 void movable::fixability(ability_s i, int v) const {

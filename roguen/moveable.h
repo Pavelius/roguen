@@ -31,7 +31,7 @@ public:
 	void			fixthrown(point target, const char* id, int frame) const;
 	void			fixvalue(const char* v, int color = 0) const;
 	void			fixvalue(int v) const;
-	void			fixvalue(int v, int color) const;
+	void			fixvalue(int v, int color_positive, int color_negative = -1) const;
 	bool			in(const rect& rc) const { return position.in(rc); }
 	bool			ismirror() const { return mirror; }
 	point			getposition() const { return position; }

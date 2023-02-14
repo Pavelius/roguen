@@ -315,7 +315,6 @@
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />
-    <ClInclude Include="statable.h" />
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />

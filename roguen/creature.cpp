@@ -112,7 +112,7 @@ static void poison_attack(creature* player, int value) {
 		return;
 	auto v = player->get(Poison) + value;
 	player->fixeffect("PoisonVisual");
-	if(v >= player->get(HitsMaximum))
+	if(v >= player->basic.abilities[Hits])
 		player->kill();
 	else
 		player->set(Poison, v);
@@ -179,9 +179,9 @@ static void acid_attack(creature* player, int value) {
 	damage_equipment(value);
 }
 
-static void restore(creature* player, ability_s a, ability_s am, ability_s test) {
+static void restore(creature* player, ability_s a, ability_s test) {
 	auto v = player->get(a);
-	auto mv = player->get(am);
+	auto mv = player->basic.abilities[a];
 	if(v < mv) {
 		if(player->roll(test))
 			player->add(a, 1);
@@ -581,7 +581,6 @@ static void update_room(creature* player) {
 }
 
 void creature::update_abilities() {
-	abilities[ManaMaximum] += get(Wits);
 	abilities[Speed] += 25 + get(Dexterity) / 5;
 	abilities[Dodge] += get(Dexterity) / 2;
 	if(is(Stun)) {
@@ -673,13 +672,13 @@ bool creature::is(condition_s v) const {
 	case HighInt: return get(Wits) < 50;
 	case Wounded:
 		n = get(Hits);
-		m = get(HitsMaximum);
+		m = basic.abilities[Hits];
 		return n > 0 && n < m;
 	case HeavyWounded:
 		n = get(Hits);
-		m = get(HitsMaximum);
+		m = basic.abilities[Hits];
 		return n > 0 && n < m / 2;
-	case NoWounded: return get(Hits) == get(HitsMaximum);
+	case NoWounded: return get(Hits) == basic.abilities[Hits];;
 	case Allies:
 		if(player->is(Ally))
 			return is(Ally);
@@ -701,14 +700,7 @@ bool creature::is(condition_s v) const {
 }
 
 int creature::getminimal(ability_s v) const {
-	auto& ei = bsdata<abilityi>::elements[v];
-	if(ei.basic) {
-		if(ei.is(HardSkill))
-			return get(ei.basic) / 5;
-		else
-			return get(ei.basic) / 2;
-	}
-	return 0;
+	return abilities[v];
 }
 
 void creature::movestep(direction_s v) {
@@ -879,18 +871,6 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		weapon.damage();
 }
 
-void creature::heal(int v) {
-	if(v <= 0)
-		return;
-	v += abilities[Hits];
-	if(v > abilities[HitsMaximum])
-		v = abilities[HitsMaximum];
-	if(v != abilities[Hits]) {
-		fixvalue(v - abilities[Hits]);
-		abilities[Hits] = v;
-	}
-}
-
 void creature::kill() {
 	auto human_killed = ishuman();
 	fixeffect("HitVisual");
@@ -1019,8 +999,8 @@ void creature::movestep(point ni) {
 
 void creature::finish() {
 	update();
-	abilities[Hits] = get(HitsMaximum);
-	abilities[Mana] = get(ManaMaximum);
+	abilities[Hits] = basic.abilities[Hits];
+	abilities[Mana] = basic.abilities[Mana];
 	fixappear();
 }
 
@@ -1273,8 +1253,6 @@ void creature::update_room_abilities() {
 
 static void update_negative_skills() {
 	for(auto i = (ability_s)0; i < Hits; i = (ability_s)(i + 1)) {
-		if(!bsdata<abilityi>::elements[i].basic)
-			continue;
 		if(player->abilities[i] < 0)
 			player->abilities[i] = 0;
 	}
@@ -1413,21 +1391,21 @@ void creature::use(item& v) {
 
 void creature::everyminute() {
 	if(is(Regeneration))
-		restore(this, Hits, HitsMaximum, Strenght);
+		restore(this, Hits, Strenght);
 	if(is(ManaRegeneration))
-		restore(this, Mana, ManaMaximum, Charisma);
+		restore(this, Mana, Charisma);
 	posion_recovery(this, Poison);
 }
 
 void creature::every10minutes() {
-	restore(this, Mana, ManaMaximum, Charisma);
+	restore(this, Mana, Charisma);
 }
 
 void creature::every30minutes() {
 }
 
 void creature::every4hour() {
-	restore(this, Hits, HitsMaximum, Strenght);
+	restore(this, Hits, Strenght);
 }
 
 bool creature::isallow(const variants& source) const {
@@ -1458,17 +1436,17 @@ bool creature::isallow(variant v) const {
 	return true;
 }
 
-static void apply_ability(creature* player, ability_s i, int value, int minimum, int maximum, int color) {
+static void apply_ability(creature* player, ability_s i, int value, int minimum, int maximum, int color_positive, int color_negative = -1) {
 	auto current_value = player->abilities[i];
 	value += current_value;
 	if(value < minimum)
 		value = minimum;
 	else if(value > maximum)
 		value = maximum;
-	value -= current_value;
-	if(value == 0)
+	auto delta = value - current_value;
+	if(delta == 0)
 		return;
-	player->fixvalue(value, color);
+	player->fixvalue(delta, color_positive, color_negative);
 	player->abilities[i] = value;
 }
 
@@ -1478,7 +1456,7 @@ void apply_ability(ability_s v, int counter) {
 		return;
 	switch(v) {
 	case Mana:
-		apply_ability(player, last_ability, counter, 0, player->abilities[ManaMaximum], 3);
+		apply_ability(player, last_ability, counter, 0, player->abilities[Mana], 3);
 		break;
 	case Hits:
 		if(counter < 0)
@@ -1512,6 +1490,10 @@ void apply_value(variant v) {
 			area.setfeature(player->getposition(), v.value);
 	} else
 		advance_value(v);
+}
+
+void creature::heal(int v) {
+	apply_ability(this, Hits, v, 0, basic.abilities[Hits], 2);
 }
 
 void creature::apply(const variants& source) {
