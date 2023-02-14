@@ -8,5 +8,6 @@ struct hotkey {
 	unsigned		key;
 	const char*		keyid;
 	fnevent			proc;
+	struct dialogi*	dialog;
 	static void		initialize();
 };

@@ -165,7 +165,8 @@ static const char* parse_widget_command(const char* p) {
 	caret = push_caret;
 	width = push_width;
 	if(next_line) {
-		caret.y += height + metrics::padding;
+		if(height)
+			caret.y += height + metrics::padding;
 		if(caret.y > maxcaret.y)
 			maxcaret.y = caret.y;
 	}

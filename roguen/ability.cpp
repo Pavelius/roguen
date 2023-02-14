@@ -3,11 +3,6 @@
 
 ability_s last_ability;
 
-BSDATA(abilityfi) = {
-	{"HardSkill"},
-};
-assert_enum(abilityfi, HardSkill)
-
 BSDATA(abilityi) = {
 	{"LineOfSight"},
 	{"Strenght"},
@@ -26,20 +21,19 @@ BSDATA(abilityi) = {
 	{"BlockRanged"},
 	{"Speed"},
 	{"EnemyAttacks"},
-	{"Herbalism", FG(HardSkill)},
-	{"Pickpockets", FG(HardSkill)},
+	{"Herbalism"},
+	{"Pickpockets"},
 	{"Stealth"},
 	{"OpenLocks"},
 	{"DisarmTraps"},
 	{"Survival"},
 	{"Level"},
-	{"Hits", 0, ColorRed, ColorGreen},
-	{"Mana", 0, ColorBlue},
+	{"Hits", ColorRed, ColorGreen},
+	{"Mana", ColorBlue},
 	{"Poison"},
 	{"Illness"},
 	{"Alignment"},
-	{"ParryCount"},
-	{"Experience", 0, ColorYellow},
+	{"Experience", ColorYellow},
 	{"Satiation"},
 	{"Money"},
 };

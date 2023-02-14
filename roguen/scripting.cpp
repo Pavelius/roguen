@@ -26,9 +26,6 @@ bool check_activate(creature* player, point m, const featurei& ei);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
 void place_shape(const shapei& e, point m, int floor, int walls);
-void show_area(int bonus);
-void show_logs(int bonus);
-void show_charsheet(int bonus);
 void visualize_images(res pid, point size, point offset);
 
 creaturea		creatures, enemies, targets;
@@ -1180,9 +1177,6 @@ BSDATA(script) = {
 	{"RangeAttack", range_attack},
 	{"Roll", roll_value},
 	{"ShowImages", show_images},
-	{"ShowLogs", show_logs},
-	{"ShowCharsheet", show_charsheet},
-	{"ShowMinimap", show_area},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
 	{"StealCoins", steal_coins},

@@ -37,9 +37,6 @@ BSDATAC(siteskilli, 256);
 BSDATAC(tilei, 64);
 BSDATAC(trigger, 256);
 
-BSMETA(abilityfi) = {
-	BSREQ(id),
-	{}};
 BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};

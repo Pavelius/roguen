@@ -1,4 +1,5 @@
 AlmostFinishProgress: Почти уже закончили
+Ally: Союзник
 And: и
 ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i) урона.
 ApplyKill: %герой убит%а.
@@ -29,6 +30,7 @@ Door: Дверь
 DropItem: Избавиться от предмета
 DropdownItem: %герой положил%а %-1.
 Experience: Опыт
+Female: Женщина
 FewTime: Совсем мало времени
 GlobalMapPosition: Позиция на карте мира %1i, %2i
 HalfwayProgress: Находимся на полпути

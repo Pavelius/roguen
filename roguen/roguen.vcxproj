@@ -163,6 +163,7 @@
     <ClCompile Include="crt_file.cpp" />
     <ClCompile Include="crt_locale.cpp" />
     <ClCompile Include="dataset.cpp" />
+    <ClCompile Include="dialog.cpp" />
     <ClCompile Include="dice.cpp" />
     <ClCompile Include="diceprogress.cpp" />
     <ClCompile Include="direction.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
     <ClInclude Include="condition.h" />
+    <ClInclude Include="dialog.h" />
     <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="framerange.h" />

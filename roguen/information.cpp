@@ -59,6 +59,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	addf(sb, Hits, abilities[Hits], basic.abilities[Hits]);
 	addf(sb, Mana, abilities[Mana], basic.abilities[Mana]);
 	addf(sb, Money, getmoney());
+	addf(sb, Experience, experience);
 	sb.addn("---");
 	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());
 }

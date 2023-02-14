@@ -12,25 +12,18 @@ enum ability_s : unsigned char {
 	Herbalism, Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
 	Level,
-	Hits, Mana, Poison, Illness, Reputation, ParryCount,
+	Hits, Mana, Poison, Illness, Reputation,
 	Experience, Satiation, Money,
-};
-enum abilityf : unsigned char {
-	HardSkill, Maximum, AllowNegative,
 };
 enum color_s : unsigned char {
 	ColorNone,
 	ColorRed, ColorBlue, ColorGreen, ColorYellow,
 };
-struct abilityfi : nameable {
-};
 struct abilityi : nameable {
-	unsigned	flags;
 	color_s		negative, positive;
-	bool		is(abilityf v) const { return (flags & (1 << v)) != 0; }
 };
 extern ability_s last_ability;
 struct statable {
-	char		abilities[ParryCount + 1];
+	char		abilities[Reputation + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 };

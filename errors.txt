@@ -1,2 +1,3 @@
 ﻿In file `Names.txt`:
- Define translation for `ListOfFeats`
+ Define translation for `Ally`
+ Define translation for `Female`

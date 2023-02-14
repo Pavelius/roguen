@@ -1,6 +1,7 @@
 #include "bsreq.h"
 #include "crt.h"
 #include "draw.h"
+#include "dialog.h"
 #include "hotkey.h"
 #include "keyname.h"
 #include "log.h"
@@ -9,7 +10,7 @@
 
 BSDATAC(hotkey, 256)
 BSMETA(hotkey) = {
-	BSREQ(keyid), BSREQ(id), BSREQ(key),
+	BSREQ(keyid), BSREQ(id),
 	{}};
 
 static unsigned parse_key(const char* p) {
@@ -51,11 +52,17 @@ void hotkey::initialize() {
 			continue;
 		}
 		auto ps = bsdata<script>::find(e.id);
-		if(!ps) {
-			log::error(0, "Can't find script named '%1' in hotkey mapping", e.id);
+		if(ps) {
+			e.key = parse_key(e.keyid);
+			e.proc = ps->proc;
 			continue;
 		}
-		e.proc = ps->proc;
-		e.key = parse_key(e.keyid);
+		auto pd = bsdata<dialogi>::find(e.id);
+		if(pd) {
+			e.key = parse_key(e.keyid);
+			e.dialog = pd;
+			continue;
+		}
+		log::error(0, "Can't find script or dialog named '%1' in hotkey mapping", e.id);
 	}
 }

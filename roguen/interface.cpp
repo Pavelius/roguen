@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "bsreq.h"
+#include "dialog.h"
 #include "draw.h"
 #include "draw_object.h"
 #include "game.h"
@@ -13,6 +14,7 @@
 #include "resource.h"
 #include "resid.h"
 #include "screenshoot.h"
+#include "stringact.h"
 #include "visualeffect.h"
 
 using namespace draw;
@@ -715,16 +717,18 @@ static void after_paint_all() {
 	reset_message();
 }
 
-static void execute_script() {
-	auto pn = (hotkey::fnevent)hot.object;
-	if(pn)
-		pn(hot.param);
+static void execute_hotkey() {
+	auto pn = (hotkey*)hot.object;
+	if(pn->dialog)
+		pn->dialog->open();
+	else if(pn->proc)
+		pn->proc(hot.param);
 }
 
 static void presskey() {
 	for(auto& e : bsdata<hotkey>()) {
 		if(hot.key == e.key) {
-			execute(execute_script, 0, 0, e.proc);
+			execute(execute_hotkey, 0, 0, &e);
 			return;
 		}
 	}
@@ -1138,8 +1142,7 @@ static void paint_legends_text(point origin) {
 	caret = push_caret;
 }
 
-static void scene_area() {
-	fillwindow();
+static void show_area() {
 	if(game.level)
 		print(text_header, "%1 (%Level %2i)", last_location->getname(), game.level);
 	else
@@ -1155,7 +1158,6 @@ static void scene_area() {
 	paint_legends(origin, z);
 	paint_legends_text({(short)(16 + area.mps * z + 16), origin.y});
 	paint_area_screen(origin, z);
-	pause_keys();
 }
 
 static void paint_minimap() {
@@ -1192,39 +1194,29 @@ static void before_paint() {
 	paint_status();
 }
 
-void show_area(int bonus) {
-	scene(scene_area);
+static int logs_maximum, logs_format_origin, logs_origin;
+
+static void before_show_logs() {
+	logs_maximum = 0;
+	logs_format_origin = -1;
+	logs_origin = 0;
 }
 
-void show_logs(int bonus) {
-	int maximum = 0, format_origin = -1, origin = 0;
-	game.writelog();
-	while(ismodal()) {
-		paintstart();
-		fillwindow();
-		setoffset(metrics::padding, metrics::padding);
-		paint_logs(actable::getlog(), origin, format_origin, maximum);
-		pause_keys();
-		paintfinish();
-		domodal();
-	}
+static void show_logs() {
+	paint_logs(actable::getlog(), logs_origin, logs_format_origin, logs_maximum);
 }
 
 static void show_block(const char* format, ...) {
-	char temp[1024]; stringbuilder sb(temp);
-	player->actv(sb, format, xva_start(format), player->getname(), player->is(Female), 0);
+	char temp[2048]; stringbuilder sba(temp);
+	stringact sb(sba, player->getname(), player->is(Female));
+	sb.addv(format, xva_start(format));
 	textf(temp);
 }
 
-static void show_charsheet_scene() {
-	fillwindow();
+static void show_charsheet() {
 	setoffset(metrics::padding, metrics::padding);
 	show_block("%ListOfFeats");
 	pause_keys();
-}
-
-void show_charsheet(int bonus) {
-	scene(show_charsheet_scene);
 }
 
 static void textcn(const char* format) {
@@ -1301,3 +1293,10 @@ int start_application(fnevent proc, fnevent initializing) {
 	start();
 	return 0;
 }
+
+BSDATA(dialogi) = {
+	{"ShowLogs", show_logs, before_show_logs},
+	{"ShowMinimap", show_area},
+	{"ShowCharsheet", show_charsheet},
+};
+BSDATAF(dialogi)
