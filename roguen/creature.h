@@ -20,9 +20,6 @@ enum condition_s : unsigned char;
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
 	point			moveorder, guardorder;
-	void			advance(variant kind, int level);
-	void			advance(variants elements);
-	void			damage(const item& weapon, int effect);
 	void			fixcantgo() const;
 	bool			isfollowmaster() const;
 	void			levelup();
@@ -31,8 +28,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			update_abilities();
 	void			update_room_abilities();
 public:
-	unsigned		experience;
-	int				satiation, wait_seconds;
+	int				experience, satiation, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
@@ -75,7 +71,6 @@ public:
 	int				getsellingcost() const;
 	const char*		getspeech(const char* id, bool always_speak = true) const;
 	int				getwait() const { return wait_seconds; }
-	void			heal(int v);
 	bool			is(condition_s v) const;
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
 	bool			isallow(variant v) const;

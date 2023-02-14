@@ -602,55 +602,6 @@ void creature::place(point m) {
 	update_room(this);
 }
 
-creature* creature::create(point m, variant kind, variant character, bool female) {
-	if(!kind)
-		return 0;
-	if(!character)
-		character = "Monster";
-	if(!character.iskind<classi>())
-		return 0;
-	pushvalue push_player(player);
-	player = bsdata<creature>::addz();
-	player->clear();
-	player->worldpos = game;
-	player->setkind(kind);
-	player->setnoname();
-	player->class_id = character.value;
-	if(female)
-		player->set(Female);
-	monsteri* pm = kind;
-	if(pm) {
-		copy(player->basic, *pm);
-		player->advance(pm->use);
-		adat<variant> conditions;
-		conditions.add(kind);
-		player->setname(charname::random(conditions));
-	} else {
-		adat<variant> conditions;
-		conditions.add(kind);
-		if(player->is(Female))
-			conditions.add("Female");
-		player->setname(charname::random(conditions));
-	}
-	player->basic.abilities[LineOfSight] += 4;
-	player->advance(kind, 0);
-	if(character.value)
-		player->advance(character, 0);
-	player->levelup();
-	player->place(m);
-	player->finish();
-	if(pm) {
-		if(pm->friendly <= -10)
-			player->set(Enemy);
-	}
-	if(player->is(PlaceOwner)) {
-		auto pr = player->getroom();
-		if(pr)
-			pr->setowner(player);
-	}
-	return player;
-}
-
 bool creature::ishuman() const {
 	return game.getowner() == this;
 }
@@ -855,13 +806,13 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	if(block_damage) {
 		damage -= xrand(0, block_damage);
 		if(damage <= 0) {
-			enemy->fixvalue(getnm("Block"));
+			enemy->fixvalue(getnm("Block"), ColorGreen);
 			return;
 		}
 	}
 	if(enemy->roll(Dodge)) {
 		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
-		enemy->fixvalue(getnm("Dodge"));
+		enemy->fixvalue(getnm("Dodge"), ColorGreen);
 	} else {
 		player->logs(getnm("AttackHit"), damage, enemy->getname(), roll_result, base_damage, -armor);
 		enemy->damage(damage);
@@ -872,6 +823,9 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 }
 
 void creature::kill() {
+	if(d100() < 40)
+		area.setflag(getposition(), Blooded);
+	logs(getnm("ApplyKill"));
 	auto human_killed = ishuman();
 	fixeffect("HitVisual");
 	fixremove();
@@ -887,12 +841,6 @@ void creature::damage(int v) {
 		return;
 	fixvalue(-v);
 	abilities[Hits] -= v;
-	if(abilities[Hits] <= 0) {
-		if(d100() < 40)
-			area.setflag(getposition(), Blooded);
-		logs(getnm("ApplyKill"), v);
-		kill();
-	}
 }
 
 void creature::attackmelee(creature& enemy) {
@@ -1004,39 +952,29 @@ void creature::finish() {
 	fixappear();
 }
 
-void creature::advance(variant kind, int level) {
-	for(auto& e : bsdata<advancement>()) {
-		if(e.type == kind && e.level == level)
-			advance(e.elements);
+static int add_ability(ability_s i, int value, int current_value, int minimum, int maximum, bool interactive) {
+	value += current_value;
+	if(value < minimum)
+		value = minimum;
+	else if(value > maximum)
+		value = maximum;
+	auto delta = value - current_value;
+	if(delta != 0) {
+		auto color_positive = bsdata<abilityi>::elements[i].positive;
+		auto color_negative = bsdata<abilityi>::elements[i].negative;
+		if(color_negative != ColorNone)
+			player->fixvalue(delta, color_positive, color_negative);
 	}
+	return value;
 }
 
-static void advance_ability(statable& source, ability_s v, int counter) {
-	last_ability = v;
-	// Test capped ability
-	if(counter > 0) {
-		if(last_cap && source.abilities[v] >= last_cap) {
-			last_cap = 0;
-			return;
-		}
-		last_cap = 0;
-	} else if(counter < 0) {
-		if(last_cap && source.abilities[v] <= last_cap) {
-			last_cap = 0;
-			return;
-		}
-		last_cap = 0;
-	}
-	// Raise ability
+static void add_ability(ability_s v, int counter, bool interactive, bool basic) {
 	switch(v) {
 	case Experience:
 		counter *= 100;
-		if(counter >= 0)
-			player->experience += counter;
-		else if(player->experience < unsigned(-counter))
+		player->experience += counter;
+		if(player->experience < 0)
 			player->experience = 0;
-		else
-			player->experience -= unsigned(-counter);
 		break;
 	case Satiation:
 		player->satiation += counter;
@@ -1045,15 +983,38 @@ static void advance_ability(statable& source, ability_s v, int counter) {
 		player->money += counter * 10;
 		break;
 	default:
-		if(v < sizeof(source.abilities)/ sizeof(source.abilities[0]))
-			source.abilities[v] += counter;
+		if(v < sizeof(player->basic.abilities) / sizeof(player->basic.abilities[0])) {
+			if(basic)
+				player->basic.abilities[v] = add_ability(v, counter, player->basic.abilities[v], 0, 100, interactive);
+			else if(v == Hits || v == Mana)
+				player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, player->basic.abilities[v], interactive);
+			else
+				player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, 100, interactive);
+		}
 		break;
 	}
 }
 
+static bool test_cap(ability_s i, bool positive) {
+	if(positive) {
+		if(last_cap && player->basic.abilities[i] >= last_cap) {
+			last_cap = 0;
+			return false;
+		}
+		last_cap = 0;
+	} else {
+		if(last_cap && player->basic.abilities[i] <= last_cap) {
+			last_cap = 0;
+			return false;
+		}
+		last_cap = 0;
+	}
+	return true;
+}
+
 static void advance_value(variant v) {
 	if(v.iskind<abilityi>())
-		advance_ability(player->basic, (ability_s)v.value, v.counter);
+		add_ability((ability_s)v.value, v.counter, false, true);
 	else if(v.iskind<itemi>()) {
 		if(v.counter >= 0)
 			player->equipi(v.value, v.counter ? v.counter : 1);
@@ -1070,11 +1031,9 @@ static void advance_value(variant v) {
 		bsdata<script>::elements[v.value].proc(v.counter);
 }
 
-void creature::advance(variants elements) {
-	auto push_player = player; player = this;
+static void advance_value(variants elements) {
 	for(auto v : elements)
 		advance_value(v);
-	player = push_player;
 }
 
 bool creature::roll(ability_s v, int bonus) const {
@@ -1436,41 +1395,18 @@ bool creature::isallow(variant v) const {
 	return true;
 }
 
-static void apply_ability(creature* player, ability_s i, int value, int minimum, int maximum, int color_positive, int color_negative = -1) {
-	auto current_value = player->abilities[i];
-	value += current_value;
-	if(value < minimum)
-		value = minimum;
-	else if(value > maximum)
-		value = maximum;
-	auto delta = value - current_value;
-	if(delta == 0)
-		return;
-	player->fixvalue(delta, color_positive, color_negative);
-	player->abilities[i] = value;
-}
-
 void apply_ability(ability_s v, int counter) {
 	last_ability = v;
 	if(!counter)
 		return;
-	switch(v) {
-	case Mana:
-		apply_ability(player, last_ability, counter, 0, player->abilities[Mana], 3);
-		break;
-	case Hits:
-		if(counter < 0)
-			player->damage(-counter);
-		else
-			player->heal(counter);
-		break;
-	default:
-		switch(modifier) {
-		case Permanent: advance_ability(player->basic, v, counter); break;
-		default: advance_ability(*player, v, counter); break;
-		}
-		break;
+	if(!test_cap(v, counter >= 0))
+		return;
+	switch(modifier) {
+	case Permanent: add_ability(v, counter, true, true); break;
+	default: add_ability(v, counter, true, false); break;
 	}
+	if(player->abilities[Hits] <= 0)
+		player->kill();
 }
 
 void apply_value(variant v) {
@@ -1490,10 +1426,6 @@ void apply_value(variant v) {
 			area.setfeature(player->getposition(), v.value);
 	} else
 		advance_value(v);
-}
-
-void creature::heal(int v) {
-	apply_ability(this, Hits, v, 0, basic.abilities[Hits], 2);
 }
 
 void creature::apply(const variants& source) {
@@ -1555,4 +1487,60 @@ int	creature::getsellingcost() const {
 	if(result < 10)
 		result = 10;
 	return result;
+}
+
+static void advance_value(variant kind, int level) {
+	for(auto& e : bsdata<advancement>()) {
+		if(e.type == kind && e.level == level)
+			advance_value(e.elements);
+	}
+}
+
+creature* creature::create(point m, variant kind, variant character, bool female) {
+	if(!kind)
+		return 0;
+	if(!character)
+		character = "Monster";
+	if(!character.iskind<classi>())
+		return 0;
+	pushvalue push_player(player);
+	player = bsdata<creature>::addz();
+	player->clear();
+	player->worldpos = game;
+	player->setkind(kind);
+	player->setnoname();
+	player->class_id = character.value;
+	if(female)
+		player->set(Female);
+	monsteri* pm = kind;
+	if(pm) {
+		copy(player->basic, *pm);
+		advance_value(pm->use);
+		adat<variant> conditions;
+		conditions.add(kind);
+		player->setname(charname::random(conditions));
+	} else {
+		adat<variant> conditions;
+		conditions.add(kind);
+		if(player->is(Female))
+			conditions.add("Female");
+		player->setname(charname::random(conditions));
+	}
+	player->basic.abilities[LineOfSight] += 4;
+	advance_value(kind, 0);
+	if(character.value)
+		advance_value(character, 0);
+	player->levelup();
+	player->place(m);
+	player->finish();
+	if(pm) {
+		if(pm->friendly <= -10)
+			player->set(Enemy);
+	}
+	if(player->is(PlaceOwner)) {
+		auto pr = player->getroom();
+		if(pr)
+			pr->setowner(player);
+	}
+	return player;
 }

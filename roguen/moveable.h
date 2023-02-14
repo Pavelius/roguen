@@ -3,8 +3,9 @@
 
 #pragma once
 
-enum direction_s : unsigned char;
 enum ability_s : unsigned char;
+enum color_s : unsigned char;
+enum direction_s : unsigned char;
 
 const int tsx = 64;
 const int tsy = 48;
@@ -29,9 +30,9 @@ public:
 	void			fixshoot(point target, int frame) const;
 	void			fixteleport(bool ishuman) const;
 	void			fixthrown(point target, const char* id, int frame) const;
-	void			fixvalue(const char* v, int color = 0) const;
+	void			fixvalue(const char* v, color_s color) const;
 	void			fixvalue(int v) const;
-	void			fixvalue(int v, int color_positive, int color_negative = -1) const;
+	void			fixvalue(int v, color_s color_positive, color_s color_negative) const;
 	bool			in(const rect& rc) const { return position.in(rc); }
 	bool			ismirror() const { return mirror; }
 	point			getposition() const { return position; }

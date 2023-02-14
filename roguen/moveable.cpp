@@ -21,12 +21,12 @@ static object* add_object(point pt, void* data, unsigned char random, unsigned c
 	return po;
 }
 
-static color getcolor(int format_color) {
+static color getcolor(color_s format_color) {
 	switch(format_color) {
-	case 1: return colors::red;
-	case 2: return colors::green;
-	case 3: return colors::blue;
-	case 4: return colors::yellow;
+	case ColorRed: return colors::red;
+	case ColorGreen: return colors::green;
+	case ColorBlue: return colors::blue;
+	case ColorYellow: return colors::yellow;
 	default: return colors::text;
 	}
 }
@@ -79,7 +79,7 @@ void movable::fixremove() const {
 		po->clear();
 }
 
-void movable::fixvalue(const char* format, int format_color) const {
+void movable::fixvalue(const char* format, color_s format_color) const {
 	auto pt = getsposition(); pt.y -= tsy;
 	auto pa = addobject(pt);
 	pa->alpha = 0xFF;
@@ -111,13 +111,13 @@ void movable::fixeffect(const char* id) const {
 }
 
 void movable::fixvalue(int v) const {
-	fixvalue(v, (v > 0) ? 2 : 1);
+	fixvalue(v, ColorGreen, ColorRed);
 }
 
-void movable::fixvalue(int v, int color_positive, int color_negative) const {
+void movable::fixvalue(int v, color_s color_positive, color_s color_negative) const {
 	char temp[260]; stringbuilder sb(temp);
 	sb.add("%1i", v);
-	if(color_negative == -1)
+	if(color_negative == ColorNone)
 		color_negative = color_positive;
 	fixvalue(temp, v > 0 ? color_positive : color_negative);
 }
@@ -127,7 +127,7 @@ void movable::fixability(ability_s i, int v) const {
 		return;
 	char temp[260]; stringbuilder sb(temp);
 	sb.add("%1%+2i", bsdata<abilityi>::elements[i].getname(), v);
-	fixvalue(temp, (v > 0) ? 2 : 1);
+	fixvalue(temp, v > 0 ? ColorGreen : ColorRed);
 }
 
 void movable::fixmovement() const {

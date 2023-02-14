@@ -1,6 +1,8 @@
 #include "ability.h"
 #include "crt.h"
 
+ability_s last_ability;
+
 BSDATA(abilityfi) = {
 	{"HardSkill"},
 };
@@ -31,13 +33,13 @@ BSDATA(abilityi) = {
 	{"DisarmTraps"},
 	{"Survival"},
 	{"Level"},
-	{"Hits"},
-	{"Mana"},
+	{"Hits", 0, ColorRed, ColorGreen},
+	{"Mana", 0, ColorBlue},
 	{"Poison"},
 	{"Illness"},
 	{"Alignment"},
 	{"ParryCount"},
-	{"Experience"},
+	{"Experience", 0, ColorYellow},
 	{"Satiation"},
 	{"Money"},
 };

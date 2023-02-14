@@ -36,7 +36,6 @@ itema			items;
 indexa			indecies;
 spella			allowed_spells;
 creature		*player, *opponent, *enemy;
-ability_s		last_ability;
 siteskilla		last_actions;
 int				last_coins;
 const char*		last_id;
@@ -462,7 +461,7 @@ void apply_spell(const spelli& ei, int level) {
 	if(ei.duration) {
 		auto minutes = bsdata<durationi>::elements[ei.duration].get(level);
 		auto stop_time = game.getminutes() + minutes;
-		player->fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), 2);
+		player->fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), ColorGreen);
 		for(auto v : ei.effect)
 			boosti::add(player, v, stop_time);
 	} else
@@ -967,7 +966,7 @@ static void cast_spell(int bonus) {
 }
 
 static void heal_player(int bonus) {
-	player->heal(bonus);
+	//player->heal(bonus);
 	player->wait();
 }
 

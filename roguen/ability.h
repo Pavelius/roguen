@@ -16,12 +16,17 @@ enum ability_s : unsigned char {
 	Experience, Satiation, Money,
 };
 enum abilityf : unsigned char {
-	HardSkill, Maximum, Positive,
+	HardSkill, Maximum, AllowNegative,
+};
+enum color_s : unsigned char {
+	ColorNone,
+	ColorRed, ColorBlue, ColorGreen, ColorYellow,
 };
 struct abilityfi : nameable {
 };
 struct abilityi : nameable {
 	unsigned	flags;
+	color_s		negative, positive;
 	bool		is(abilityf v) const { return (flags & (1 << v)) != 0; }
 };
 extern ability_s last_ability;
