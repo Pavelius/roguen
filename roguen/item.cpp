@@ -7,12 +7,11 @@ item* last_item;
 static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");
 
 const char* item::getname() const {
-	auto pid = geti().id;
-	if(szstart(pid, "Cursed"))
-		pid += 6;
-	else if(szstart(pid, "Blessed"))
-		pid += 7;
-	return getnm(pid);
+	auto& ei = geti();
+	auto id = identified ? ei.id : ei.no_identifier;
+	if(!id)
+		id = ei.id;
+	return getnm(id);
 }
 
 int item::getcost() const {

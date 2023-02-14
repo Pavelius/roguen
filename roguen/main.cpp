@@ -51,9 +51,11 @@ static void equip_item(const char* id, int count = 1) {
 		player->additem(it);
 }
 
-static void add_item(const char* id, int count = 1) {
+static void add_item(const char* id, int count = 1, bool identified = false) {
 	item it;
 	it.create(id, count);
+	if(identified)
+		it.setidentified(1);
 	player->additem(it);
 }
 
@@ -78,6 +80,7 @@ static void main_start() {
 	add_item("Bones", 60);
 	add_item("OrnamentalStones", 3);
 	add_item("HealingPotion");
+	add_item("PotionOfStrenght", 2, true);
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	equip_item("Bones");

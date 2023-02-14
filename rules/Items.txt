@@ -99,30 +99,34 @@ PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(Hea
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(HeavyArmorPowers)
  wearing Block+2
 
-HealingPotion cost(30) count(1) weight(2) wear(Potion) avatar(164)
- use Hits+10
+HealingPotion cost(30) count(1) weight(2) no_identifier(RedPotion) wear(Potion) avatar(164)
+ use Hits+20
  use_cursed Poison+10
- use_blessed Hits+40
-ManaPotion cost(30) count(1) weight(2) wear(Potion) avatar(436)
- use Mana+10
+ use_blessed Hits+80
+ManaPotion cost(30) count(1) weight(2) no_identifier(BluePotion) wear(Potion) avatar(436)
+ use Mana+20
  use_cursed Poison+10
- use_blessed Mana+40
-PotionOfStrenght cost(1000) count(1) weight(2) wear(Potion) avatar(162)
+ use_blessed Mana+80
+PotionOfStrenght cost(1000) count(1) weight(2) no_identifier(RedPotion) wear(Potion) avatar(162)
  use Permanent Strenght+1
  use_cursed Permanent Strenght-1
  use_blessed Permanent Strenght+4
-PotionOfDexterity cost(1000) count(1) weight(2) wear(Potion) avatar(165)
+PotionOfDexterity cost(1000) count(1) weight(2) no_identifier(BrownPotion) wear(Potion) avatar(165)
  use Permanent Dexterity+1
  use_cursed Permanent Dexterity-1
  use_blessed Permanent Dexterity+4
-PotionOfWits cost(1000) count(1) weight(2) wear(Potion) avatar(433)
+PotionOfWits cost(1000) count(1) weight(2) no_identifier(BluePotion) wear(Potion) avatar(433)
  use Permanent Wits+1
  use_cursed Permanent Wits-1
  use_blessed Permanent Wits+4
-PotionOfCharisma cost(1000) count(1) weight(2) wear(Potion) avatar(435)
+PotionOfCharisma cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(435)
  use Permanent Charisma+1
  use_cursed Permanent Charisma-1
  use_blessed Permanent Charisma+4
+PotionOfAbilityRaise cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(435)
+ use Permanent RandomAbility+1
+ use_cursed Permanent RandomAbility-1
+ use_blessed Permanent Strenght+1 Dexterity+1 Wits+1 Charisma+1
 
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1
@@ -212,7 +216,7 @@ RandomTreasure
 RandomKeys
  chance TinyKey SmallKey HexagonalKey TriangularKey RectangularKey RoundKey
 RandomPotions
- chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma
+ chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma PotionOfAbilityRaise
 RandomLoot
  chance RandomTreasure+4 RandomKeys RandomPotions
 WoodenLagsTable

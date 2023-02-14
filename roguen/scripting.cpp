@@ -19,6 +19,8 @@
 #include "indexa.h"
 
 roomi* add_room(const sitei* ps, const rect& rc);
+void apply_value(variant v);
+void apply_ability(ability_s v, int counter);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
 bool isfreeltsv(point m);
@@ -186,10 +188,8 @@ void script::run(variant v) {
 			last_need->remove((needn)v.value);
 	} else if(v.iskind<modifieri>())
 		modifier = (modifiers)v.value;
-	else {
-		if(player)
-			player->apply(v);
-	}
+	else
+		apply_value(v);
 }
 
 bool script::isallow(variant v) {
@@ -457,7 +457,7 @@ static bool bound_targets(const char* id, unsigned flags, int multi_targets, boo
 	return true;
 }
 
-void apply_spell(creature* player, const spelli& ei, int level) {
+void apply_spell(const spelli& ei, int level) {
 	pushvalue push_value(last_value, ei.getcount(level));
 	if(ei.duration) {
 		auto minutes = bsdata<durationi>::elements[ei.duration].get(level);
@@ -505,8 +505,11 @@ void creature::cast(const spelli& e, int level, int mana) {
 		return;
 	action_text(this, e.id, "Casting");
 	if(FGT(e.target, TargetCreatures)) {
-		for(auto p : targets)
-			apply_spell(p, e, level);
+		pushvalue push_player(player);
+		for(auto p : targets) {
+			player = p;
+			apply_spell(e, level);
+		}
 	} else if(FGT(e.target, TargetFeatures)) {
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
@@ -514,13 +517,15 @@ void creature::cast(const spelli& e, int level, int mana) {
 			script::run(e.effect);
 		}
 	} else if(FGT(e.target, TargetRooms)) {
+		pushvalue push_rect(last_room);
 		for(auto p : rooms) {
-			pushvalue push_rect(last_room, p);
+			last_room = p;
 			script::run(e.effect);
 		}
 	} else if(FGT(e.target, TargetItems)) {
+		pushvalue push_object(last_item);
 		for(auto p : items) {
-			pushvalue push_object(last_item, p);
+			last_item = p;
 			script::run(e.effect);
 		}
 	}
@@ -1069,6 +1074,11 @@ static void identify_item(int bonus) {
 	last_item->setidentifiedcub(bonus);
 }
 
+static void random_ability(int bonus) {
+	static ability_s source[] = {Strenght, Dexterity, Wits, Charisma};
+	apply_ability(maprnd(source), bonus);
+}
+
 void script::run(const variants& elements) {
 	if(stop_script)
 		return;
@@ -1159,8 +1169,9 @@ BSDATA(script) = {
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
 	{"QuestReward", quest_reward},
-	{"Roll", roll_value},
+	{"RandomAbility", random_ability},
 	{"RangeAttack", range_attack},
+	{"Roll", roll_value},
 	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},
 	{"ShowMinimap", show_area},

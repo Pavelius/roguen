@@ -19,6 +19,7 @@ struct weaponi {
 	const itemi*	ammunition;
 };
 struct itemi : nameable {
+	const char*		no_identifier;
 	short			count, weight, cost;
 	short			avatar;
 	wear_s			wear;

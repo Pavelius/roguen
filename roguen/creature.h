@@ -19,13 +19,9 @@ enum condition_s : unsigned char;
 
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
-	statable		basic;
 	point			moveorder, guardorder;
-	unsigned		experience;
-	int				satiation, wait_seconds;
 	void			advance(variant kind, int level);
 	void			advance(variants elements);
-	void			advance(variant element);
 	void			damage(const item& weapon, int effect);
 	void			fixcantgo() const;
 	bool			isfollowmaster() const;
@@ -35,12 +31,14 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			update_abilities();
 	void			update_room_abilities();
 public:
+	unsigned		experience;
+	int				satiation, wait_seconds;
+	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
-	void			apply(variant v);
 	void			apply(const featable& v) { feats.add(v); }
 	void			apply(const variants& source);
 	void			attackmelee(creature& enemy);
@@ -116,7 +114,6 @@ public:
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update();
-	void			use(variants source);
 	void			use(item& v);
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 	void			waitseconds(int value) { wait_seconds += value; }

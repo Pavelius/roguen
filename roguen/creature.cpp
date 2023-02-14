@@ -5,6 +5,7 @@
 #include "direction.h"
 #include "indexa.h"
 #include "itema.h"
+#include "modifier.h"
 #include "game.h"
 #include "pushvalue.h"
 #include "script.h"
@@ -26,7 +27,7 @@ struct defenceg {
 
 extern collection<roomi> rooms;
 extern siteskilla last_actions;
-void apply_spell(creature* player, const spelli& ei, int level);
+void apply_spell(const spelli& ei, int level);
 bool choose_targets(unsigned flags, const variants& effects);
 
 void rollg::make(int v) {
@@ -831,7 +832,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		else if(weapon.is(Blessed))
 			damage = damage * 2;
 	}
-	attack_skill += player->get(weapon_ability);
+	attack_skill += player->get(weapon_ability) + weapon.geti().weapon.skill;
 	damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee()) {
 		auto base_strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;
@@ -1030,43 +1031,64 @@ void creature::advance(variant kind, int level) {
 	}
 }
 
-void creature::advance(variants elements) {
-	for(auto v : elements)
-		advance(v);
+static void advance_ability(statable& source, ability_s v, int counter) {
+	last_ability = v;
+	// Test capped ability
+	if(counter > 0) {
+		if(last_cap && source.abilities[v] >= last_cap) {
+			last_cap = 0;
+			return;
+		}
+		last_cap = 0;
+	} else if(counter < 0) {
+		if(last_cap && source.abilities[v] <= last_cap) {
+			last_cap = 0;
+			return;
+		}
+		last_cap = 0;
+	}
+	// Raise ability
+	switch(v) {
+	case Experience:
+		player->gainexperience(counter);
+		break;
+	case Satiation:
+		player->satiation += counter;
+		break;
+	case Money:
+		player->money += counter * 10;
+		break;
+	default:
+		if(v < sizeof(source.abilities)/ sizeof(source.abilities[0]))
+			source.abilities[v] += counter;
+		break;
+	}
 }
 
-void creature::advance(variant v) {
-	if(v.iskind<abilityi>()) {
-		last_ability = (ability_s)v.value;
-		if(v.counter > 0) {
-			if(last_cap && basic.abilities[v.value] >= last_cap) {
-				last_cap = 0;
-				return;
-			}
-			last_cap = 0;
-		} else if(v.counter < 0) {
-			if(last_cap && basic.abilities[v.value] <= last_cap) {
-				last_cap = 0;
-				return;
-			}
-			last_cap = 0;
-		}
-		switch(v.value) {
-		case Experience: gainexperience(v.counter); break;
-		case Satiation: satiation += v.counter; break;
-		case Money: money += v.counter * 10; break;
-		default: basic.abilities[v.value] += v.counter; break;
-		}
-	} else if(v.iskind<itemi>()) {
+static void advance_value(variant v) {
+	if(v.iskind<abilityi>())
+		advance_ability(player->basic, (ability_s)v.value, v.counter);
+	else if(v.iskind<itemi>()) {
 		if(v.counter >= 0)
-			equipi(v.value, v.counter ? v.counter : 1);
+			player->equipi(v.value, v.counter ? v.counter : 1);
 	} else if(v.iskind<feati>()) {
 		if(v.counter < 0)
-			feats.remove(v.value);
+			player->feats.remove(v.value);
 		else
-			feats.set(v.value);
+			player->feats.set(v.value);
 	} else if(v.iskind<spelli>())
-		spells[v.value] += v.counter;
+		player->spells[v.value] += v.counter;
+	else if(v.iskind<modifieri>())
+		modifier = (modifiers)v.value;
+	else if(v.iskind<script>())
+		bsdata<script>::elements[v.value].proc(v.counter);
+}
+
+void creature::advance(variants elements) {
+	auto push_player = player; player = this;
+	for(auto v : elements)
+		advance_value(v);
+	player = push_player;
 }
 
 bool creature::roll(ability_s v, int bonus) const {
@@ -1368,18 +1390,15 @@ bool creature::speechlocation() const {
 	return true;
 }
 
-void creature::use(variants source) {
-	for(auto v : source)
-		apply(v);
-}
-
 void creature::use(item& v) {
 	if(!v)
 		return;
 	auto script = v.getuse();
-	if(!script)
+	if(!script) {
+		actp(getnm("ItemNotUsable"), v.getname());
 		return;
-	use(script);
+	}
+	apply(script);
 	act(getnm("YouUseItem"), v.getname());
 	v.use();
 	update();
@@ -1454,35 +1473,55 @@ static void apply_ability(creature* player, ability_s i, int value, int minimum,
 	player->abilities[i] = value;
 }
 
-void creature::apply(variant v) {
-	if(v.iskind<abilityi>()) {
-		last_ability = (ability_s)v.value;
-		if(!v.counter)
-			return;
-		switch(v.value) {
-		case Mana: apply_ability(this, last_ability, v.counter, 0, abilities[ManaMaximum], 3); break;
-		case Hits: (v.counter < 0) ? damage(-v.counter) : heal(v.counter); break;
-		default: advance(v); break;
+void apply_ability(ability_s v, int counter) {
+	last_ability = v;
+	if(!counter)
+		return;
+	switch(v) {
+	case Mana:
+		apply_ability(player, last_ability, counter, 0, player->abilities[ManaMaximum], 3);
+		break;
+	case Hits:
+		if(counter < 0)
+			player->damage(-counter);
+		else
+			player->heal(counter);
+		break;
+	default:
+		switch(modifier) {
+		case Permanent: advance_ability(player->basic, v, counter); break;
+		default: advance_ability(*player, v, counter); break;
 		}
-	} else if(v.iskind<spelli>())
-		apply_spell(this, bsdata<spelli>::elements[v.value], v.counter);
+		break;
+	}
+}
+
+void apply_value(variant v) {
+	if(v.iskind<abilityi>())
+		apply_ability((ability_s)v.value, v.counter);
+	else if(v.iskind<spelli>())
+		apply_spell(bsdata<spelli>::elements[v.value], v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)
-			area.remove(getposition(), v.value);
+			area.remove(player->getposition(), v.value);
 		else
-			area.setflag(getposition(), v.value);
+			area.setflag(player->getposition(), v.value);
 	} else if(v.iskind<featurei>()) {
 		if(v.counter < 0)
-			area.setfeature(getposition(), 0);
+			area.setfeature(player->getposition(), 0);
 		else
-			area.setfeature(getposition(), v.value);
+			area.setfeature(player->getposition(), v.value);
 	} else
-		advance(v);
+		advance_value(v);
 }
 
 void creature::apply(const variants& source) {
+	auto push_modifier = modifier;
+	auto push_player = player; player = this;
 	for(auto v : source)
-		apply(v);
+		apply_value(v);
+	player = push_player;
+	modifier = push_modifier;
 }
 
 void creature::cast(const spelli& e) {

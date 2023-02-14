@@ -1,2 +1,3 @@
 ﻿In file `rules/Items.txt`:
- Line 215: Can't find variant `ManaPotions`
+ Line 127: Can't find variant `RandomAbility`
+ Line 128: Can't find variant `RandomAbility`

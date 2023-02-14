@@ -71,7 +71,6 @@ Rounds: Раунды
 Speed: Скорость
 StuckDoor: Заевшая дверь
 ThereIsLying: Здесь лежит
-Torch: Факел
 Tree: Дерево
 TwoHanded: Двуручное
 UseItem: Использовать предмет

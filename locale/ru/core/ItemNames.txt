@@ -89,8 +89,7 @@ LongBow: Длинный лук
 
 Lags: Древесина
 SmallLags: Маленькая ветка
-
-HealingPotion: Зелье лечения
+Torch: Факел
 
 LoafOfBread: Кусок хлеба
 Ration: Сухпаек
@@ -102,6 +101,13 @@ HexagonalKey: Пятиугольный ключ
 RoundKey: Круглый ключ
 TriangularKey: Треугольный ключ
 RectangularKey: Квадратный ключ
+
+BluePotion: Синее зелье
+HealingPotion: Зелье лечения
+ManaPotion: Зелье маны
+RedPotion: Красное зелье
+PotionOfStrenght: Зелье силы
+PotionOfWits: Зелье разума
 
 AlrauniaAntidote: Лаймовый антидот
 BurbRoot: Корень свеклы
