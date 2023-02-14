@@ -1050,7 +1050,13 @@ static void advance_ability(statable& source, ability_s v, int counter) {
 	// Raise ability
 	switch(v) {
 	case Experience:
-		player->gainexperience(counter);
+		counter *= 100;
+		if(counter >= 0)
+			player->experience += counter;
+		else if(player->experience < unsigned(-counter))
+			player->experience = 0;
+		else
+			player->experience -= unsigned(-counter);
 		break;
 	case Satiation:
 		player->satiation += counter;
@@ -1422,13 +1428,6 @@ void creature::every30minutes() {
 
 void creature::every4hour() {
 	restore(this, Hits, HitsMaximum, Strenght);
-}
-
-void creature::gainexperience(int v) {
-	if(v > 0) {
-		fixability(Experience, v);
-		experience += v;
-	}
 }
 
 bool creature::isallow(const variants& source) const {

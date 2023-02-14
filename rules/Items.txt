@@ -64,7 +64,7 @@ Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) powers(Blu
  feats TwoHanded
 Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) powers(SlashingWeapons)
  weapon damage(4) speed(-5)
-StrangeSword cost(500) weight(200) wear(MeleeWeapon) avatar(173) wear_index(23) powers(SlashingWeapons)
+StrangeSword cost(500) weight(200) wear(MeleeWeapon) avatar(173) wear_index(23) chance_power(100) powers(SlashingWeapons)
  weapon damage(6) speed(-4)
 
 Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
@@ -127,6 +127,23 @@ PotionOfAbilityRaise cost(800) count(1) weight(2) no_identifier(YellowPotion) we
  use Permanent RandomAbility+1
  use_cursed Permanent RandomAbility-1
  use_blessed Permanent Strenght+1 Dexterity+1 Wits+1 Charisma+1
+PotionOfWisdow cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+ use Experience+10
+ use_cursed Experience-10
+ use_blessed Experience+50
+PotionOfCurePoison cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+ use Poison-20
+ use_cursed Poison+10
+ use_blessed Poison-40
+PotionOfExhange cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+PotionOfHealth cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+ use Permanent Hits+1
+ use_cursed Permanent Hits-1
+ use_blessed Permanent Hits+5
+PotionOfEnergy cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+ use Permanent Mana+1
+ use_cursed Permanent Mana-1
+ use_blessed Permanent Mana+5
 
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1
@@ -207,6 +224,8 @@ RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins
  chance SP+8 GP+3 PP
+RandomGear
+ chance Torch+8
 RandomGem
  chance OrnamentalStones+25 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
 RandomJewelry
@@ -215,10 +234,10 @@ RandomTreasure
  chance RandomCoins+4 RandomJewelry
 RandomKeys
  chance TinyKey SmallKey HexagonalKey TriangularKey RectangularKey RoundKey
-RandomPotions
- chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma PotionOfAbilityRaise
+RandomPotion
+ chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma PotionOfAbilityRaise PotionOfWisdow
 RandomLoot
- chance RandomTreasure+4 RandomKeys RandomPotions
+ chance RandomTreasure+4 RandomKeys RandomGear RandomPotion
 WoodenLagsTable
  chance Lags SmallLags+2
 

@@ -108,6 +108,7 @@ ManaPotion: Зелье маны
 RedPotion: Красное зелье
 PotionOfStrenght: Зелье силы
 PotionOfWits: Зелье разума
+PotionOfWisdow: Зелье мудрости
 
 AlrauniaAntidote: Лаймовый антидот
 BurbRoot: Корень свеклы

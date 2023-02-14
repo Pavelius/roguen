@@ -1,3 +1,2 @@
 ﻿In file `rules/Items.txt`:
- Line 127: Can't find variant `RandomAbility`
- Line 128: Can't find variant `RandomAbility`
+ Line 135: Can't find variant `Drunken`
