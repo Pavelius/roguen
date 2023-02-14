@@ -841,6 +841,8 @@ void creature::damage(int v) {
 		return;
 	fixvalue(-v);
 	abilities[Hits] -= v;
+	if(abilities[Hits] <= 0)
+		kill();
 }
 
 void creature::attackmelee(creature& enemy) {

@@ -66,6 +66,7 @@ static void place_item(point index, const itemi* pe) {
 		return;
 	item it; it.clear();
 	it.create(pe);
+	it.createpower();
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
@@ -124,9 +125,7 @@ void script::run(variant v) {
 			return;
 		for(auto i = 0; i < count; i++)
 			script::run(bsdata<randomizeri>::elements[v.value].random());
-	} else if(v.iskind<script>())
-		bsdata<script>::elements[v.value].run(v.counter);
-	else if(v.iskind<monsteri>()) {
+	} else if(v.iskind<monsteri>()) {
 		auto count = game.getcount(v, 0);
 		if(count < 0)
 			return;

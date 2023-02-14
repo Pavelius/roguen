@@ -63,13 +63,13 @@ AncientLabRoom
  landscape QuestLandscape UndeadHorde-30
  feats Notable
 BossRoom doors_count(1)
- landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2
+ landscape QuestLandscape QuestGuardian QuestReward QuestMinion+2 RandomLoot+2
  feats Notable
 CaveMonsterLair
- landscape QuestLandscape Bones+2 Blooded+3 RandomCaveMonster
+ landscape QuestLandscape Bones+2 Blooded+3 RandomCaveMonster RandomLoot+2
  feats Notable
 DarkestRoom
- landscape QuestLandscape Darkened-100 Bones+2 Blooded+2 RandomTreasure
+ landscape QuestLandscape Darkened-100 Bones+2 Blooded+2 RandomTreasure RandomLoot
  feats Notable
 EmpthyRoom
  landscape QuestLandscape
@@ -78,7 +78,7 @@ GoblinScouts
  landscape QuestLandscape Goblin
  feats Notable
 InscribedRoom
- landscape QuestLandscape UndeadHorde-30 RandomArtifact-40 RandomArtifact-40 OtherworldCreature-40
+ landscape QuestLandscape UndeadHorde-30 RandomArtifact-40 RandomArtifact-40 OtherworldCreature-40 RandomLoot+1
  feats Notable
 MinionsRoom
  landscape QuestLandscape Blooded+2 QuestMinion QuestMinion-30
@@ -87,10 +87,10 @@ PitRoom
  landscape QuestLandscape Pit+3
  feats Notable
 SarcaphagusRoom
- landscape QuestLandscape RandomAltar-20 UndeadHorde-20 UndeadHorde-30
+ landscape QuestLandscape RandomAltar-20 UndeadHorde-20 UndeadHorde-30 RandomLoot+1
  feats Notable
 SpiderNest
- landscape QuestLandscape Webbed-70 Bones+3 GiantSpider
+ landscape QuestLandscape Webbed-70 Bones+3 GiantSpider RandomLoot+1
  feats Notable
 StrangeFloraRoom
  landscape QuestLandscape Herbs+4 Plant+1
@@ -102,13 +102,13 @@ StairsDownRoom
  landscape QuestLandscape Offset+2 StairsDown QuestMinion-80
  feats Notable
 TreasureRoom chance_locked_doors(100)
- landscape RandomTreasure+3 RandomLoot+2 QuestMinion
+ landscape RandomTreasure+3 RandomLoot+4 QuestMinion
  feats Notable
 PortalRoom
- landscape QuestLandscape Offset+1 GatePortal
+ landscape QuestLandscape Offset+1 GatePortal RandomLoot
  feats Notable
 UnholyAltarRoom
- landscape QuestLandscape Blooded+5 AltarEvil UndeadHorde RandomTreasure+2
+ landscape QuestLandscape Blooded+5 AltarEvil UndeadHorde RandomTreasure+2 RandomLoot+2
  feats Notable
 UnholyPlace
  landscape QuestLandscape Bones Webbed+2 Blooded+1 Skeleton-60 Zombie-30
