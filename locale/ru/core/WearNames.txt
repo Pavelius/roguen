@@ -6,6 +6,7 @@ FingerRight: Кольцо
 Gloves: Перчатки
 Head: Голова
 Legs: Ноги
+Neck: Шея
 MeleeWeapon: Правая рука
 MeleeWeaponOffhand: Левая рука 
 RangedWeapon: Стрельба

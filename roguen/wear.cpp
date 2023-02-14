@@ -24,6 +24,7 @@ BSDATA(weari) = {
 	{"Ammunition"},
 	{"Torso"},
 	{"Head"},
+	{"Neck"},
 	{"Backward"},
 	{"Legs"},
 	{"Gloves"},

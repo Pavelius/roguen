@@ -1,1 +1,5 @@
-﻿
+﻿Ally: 
+Female: 
+FireResistance: 
+Fly: 
+LightSource: 

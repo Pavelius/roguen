@@ -160,15 +160,19 @@ static void special_attack(creature* player, const item& weapon, creature* enemy
 	if(attack_effect(player, weapon, BleedingHit))
 		enemy->set(Blooding);
 	if(attack_effect(player, weapon, StunningHit)) {
-		enemy->set(Stun);
-		enemy->fixeffect("SearchVisual");
+		if(!enemy->is(StunImmunity)) {
+			enemy->set(Stun);
+			enemy->fixeffect("SearchVisual");
+		}
 	}
 	if(attack_effect(player, weapon, PierceHit))
 		pierce += 4;
 	if(attack_effect(player, weapon, MightyHit))
 		damage += 2;
+	if(attack_effect(player, weapon, ColdDamage))
+		area.setflag(enemy->getposition(), Iced);
 	// Damage equipment sometime
-	if(d100() < 20) {
+	if(d100() < 15) {
 		pushvalue push_player(player, enemy);
 		damage_equipment(1);
 	}
@@ -254,6 +258,8 @@ static void check_stun(creature* p) {
 	if(p->is(Stun)) {
 		if(p->roll(Strenght))
 			p->remove(Stun);
+		if(p->is(StunResistance) && p->roll(Strenght))
+			p->remove(Stun);
 	}
 }
 
@@ -297,15 +303,17 @@ static bool check_dangerous_feature(creature* p, point m) {
 	return true;
 }
 
-static bool check_trap(creature* p, point m) {
+static bool check_trap(creature* player, point m) {
+	if(player->is(Fly))
+		return true;
 	auto& ei = area.getfeature(m);
 	if(ei.is(TrappedFeature)) {
 		auto bonus = ei.isvisible() ? 20 : -30;
-		if(!p->roll(Wits, bonus)) {
+		if(!player->roll(Wits, bonus)) {
 			auto pn = getdescription(ei.id);
 			if(pn)
-				p->act(pn, getnm(ei.id));
-			p->apply(ei.effect);
+				player->act(pn, getnm(ei.id));
+			player->apply(ei.effect);
 		}
 	}
 	return true;
@@ -554,9 +562,6 @@ bool isfreecr(point m) {
 bool isfreecrfly(point m) {
 	if(findalive(m))
 		return false;
-	auto tile = area.tiles[m];
-	if(bsdata<tilei>::elements[tile].is(CanSwim))
-		return false;
 	return area.isfree(m);
 }
 
@@ -584,8 +589,8 @@ void creature::update_abilities() {
 	abilities[Speed] += 25 + get(Dexterity) / 5;
 	abilities[Dodge] += get(Dexterity) / 2;
 	if(is(Stun)) {
-		abilities[WeaponSkill] -= 10;
-		abilities[BalisticSkill] -= 10;
+		abilities[WeaponSkill] /= 2;
+		abilities[BalisticSkill] /= 2;
 		abilities[Dodge] -= 100;
 	}
 	if(!is(IgnoreWeb) && ispresent() && area.is(getposition(), Webbed)) {
@@ -918,6 +923,12 @@ void creature::fixcantgo() const {
 	act(getnm("CantGoThisWay"));
 }
 
+static bool isfreeplace(creature* player, point ni) {
+	if(player->is(Fly))
+		return isfreecrfly(ni);
+	return isfreecr(ni);
+}
+
 void creature::movestep(point ni) {
 	if(!check_leave_area(this, ni))
 		return;
@@ -933,7 +944,7 @@ void creature::movestep(point ni) {
 	auto opponent = findalive(ni);
 	if(opponent)
 		interaction(*opponent);
-	else if(isfreecr(ni)) {
+	else if(isfreeplace(this, ni)) {
 		setposition(ni);
 		update_room(this);
 		fixmovement();
@@ -1162,7 +1173,6 @@ void creature::makemove() {
 		} else
 			random_walk(this);
 	}
-	check_stun(this);
 }
 
 static void wearing(variants source);
@@ -1172,12 +1182,8 @@ static void wearing(variant v) {
 		player->abilities[v.value] += v.counter;
 	else if(v.iskind<listi>())
 		wearing(bsdata<listi>::elements[v.value].elements);
-	else if(v.iskind<feati>()) {
-		if(v.counter > 0)
-			player->feats.set(v.value);
-		else if(v.counter < 0)
-			player->feats.remove(v.value);
-	}
+	else if(v.iskind<feati>())
+		player->feats_active.set(v.value);
 }
 
 static void wearing(variants source) {
@@ -1186,16 +1192,7 @@ static void wearing(variants source) {
 }
 
 static void update_wears() {
-	for(auto& e : player->gears()) {
-		if(!e)
-			continue;
-		player->apply(e.geti().feats);
-		wearing(e.geti().wearing);
-		auto power = e.getpower();
-		if(power)
-			wearing(power);
-	}
-	for(auto& e : player->weapons()) {
+	for(auto& e : player->equipment()) {
 		if(!e)
 			continue;
 		wearing(e.geti().wearing);
@@ -1355,6 +1352,7 @@ void creature::everyminute() {
 		restore(this, Hits, Strenght);
 	if(is(ManaRegeneration))
 		restore(this, Mana, Charisma);
+	check_stun(this);
 	posion_recovery(this, Poison);
 }
 

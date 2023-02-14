@@ -1087,12 +1087,6 @@ static void pause_keys() {
 		execute(buttoncancel);
 }
 
-/*static void scene_world() {
-	fillwindow();
-	paint_world();
-	pause_keys();
-}*/
-
 static void paint_legends(point origin, int z) {
 	auto push_caret = caret;
 	auto push_fore = fore;
@@ -1214,6 +1208,23 @@ void show_logs(int bonus) {
 		paintfinish();
 		domodal();
 	}
+}
+
+static void show_block(const char* format, ...) {
+	char temp[1024]; stringbuilder sb(temp);
+	player->actv(sb, format, xva_start(format), player->getname(), player->is(Female), 0);
+	textf(temp);
+}
+
+static void show_charsheet_scene() {
+	fillwindow();
+	setoffset(metrics::padding, metrics::padding);
+	show_block("%ListOfFeats");
+	pause_keys();
+}
+
+void show_charsheet(int bonus) {
+	scene(show_charsheet_scene);
 }
 
 static void textcn(const char* format) {

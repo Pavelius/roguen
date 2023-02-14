@@ -28,6 +28,7 @@ bool isfreecr(point m);
 void place_shape(const shapei& e, point m, int floor, int walls);
 void show_area(int bonus);
 void show_logs(int bonus);
+void show_charsheet(int bonus);
 void visualize_images(res pid, point size, point offset);
 
 creaturea		creatures, enemies, targets;
@@ -1115,11 +1116,19 @@ static void actual_need_state(stringbuilder& sb) {
 	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), game.timeleft(last_need->deadline));
 }
 
+static void list_of_feats(stringbuilder& sb) {
+	for(auto i = (feat_s)0; i <= Blooding; i = (feat_s)(i + 1)) {
+		if(player->is(i))
+			sb.addn(bsdata<feati>::elements[i].getname());
+	}
+}
+
 void add_need(int bonus);
 void add_need_answers(int bonus);
 
 BSDATA(textscript) = {
 	{"ActualNeedState", actual_need_state},
+	{"ListOfFeats", list_of_feats},
 	{"NeedHelpIntro", need_help_info},
 };
 BSDATAF(textscript)
@@ -1172,6 +1181,7 @@ BSDATA(script) = {
 	{"Roll", roll_value},
 	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},
+	{"ShowCharsheet", show_charsheet},
 	{"ShowMinimap", show_area},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},

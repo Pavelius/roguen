@@ -34,6 +34,7 @@ RandomRace
 "T" ThrownAttack
 "S" ChooseAction
 "V" ViewStuff
+"X" ShowCharsheet
 
 "Up" MoveUp
 "Home" MoveUpLeft

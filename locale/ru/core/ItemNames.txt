@@ -1,47 +1,4 @@
-﻿Ashen: Пепельный
-Balanced: Сбалансированный
-Barbaric: Варварский
-Barbed: Колючий
-Brutal: Брутальный
-ExtraHeavy: Тяжеленный
-Fickle: Непредсказуемый
-Flaming: Огненный
-Green: Зеленый
-Heavy: Тяжелый
-Hefty: Здоровенный
-Light: Легкий
-Masterwork: Мастерский
-Mild: Незначительный
-Nasty: Противный
-Red: Красный
-Swift: Быстрый
-UltraHeavy: Ультратяжелый
-Unwieldy: Громоздкий
-Weeping: Слезный
-White: Белый
-Wicked: Безнравственный
-Yellow: Желтый
-
-Corruption: Порча
-Defence: Защита
-Devastation: Взрыв
-Fumbling: Неуклюжесть
-Hunting: Охота
-Lighting: Молния
-Mayhem: Погром
-Might: Сила
-Penetration: Проницание
-Power: Власть
-Slaughtering: Убийство
-Surrendering: Паника
-TheEagle: Орел
-TheSun: Солнце
-TheVoid: Пустота
-Thunder: Гром
-Vampirism: Вампиризм
-Weakness: Слабость
-
-Fist: Кулаки
+﻿Fist: Кулаки
 
 CP: Медная монета
 SP: Серебрянная монета
@@ -83,6 +40,14 @@ LeatherArmor: Кожанная броня
 ChainArmor: Кольчуга
 PlateArmor: Латы
 Shield: Щит
+
+RingOfAcidResistance: Кольцо сопротивления кислоте
+RingOfColdResistance: Кольцо сопротивления холоду
+RingOfFireResistance: Кольцо сопротивления огню
+RingOfLevitation: Кольцо левитации
+RingOfPoisonResistance: Кольцо сопротивления яду
+RingOfProtection: Кольцо защиты
+RingOfWarrior: Кольцо воина
 
 Arrow: Стрела
 LongBow: Длинный лук

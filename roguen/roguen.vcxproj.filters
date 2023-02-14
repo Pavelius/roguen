@@ -297,9 +297,6 @@
     <ClCompile Include="moveable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="wearable.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="magic.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -331,6 +328,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="wear.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="wearable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -524,9 +524,6 @@
     <ClInclude Include="moveable.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="wearable.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="magic.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -585,6 +582,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="wear.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="wearable.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

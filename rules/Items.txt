@@ -145,6 +145,24 @@ PotionOfEnergy cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Po
  use_cursed Permanent Mana-1
  use_blessed Permanent Mana+5
 
+BrassRing weight(1) count(1) wear(FingerRight) avatar(75)
+RingOfAcidResistance weight(1) count(1) wear(FingerRight) avatar(73)
+ wearing AcidResistance+1
+RingOfColdResistance weight(1) count(1) wear(FingerRight) avatar(153)
+ wearing ColdResistance+1
+RingOfFireResistance weight(1) count(1) wear(FingerRight) avatar(75)
+ wearing FireResistance+1
+RingOfPoisonResistance weight(1) count(1) wear(FingerRight) avatar(73)
+ wearing PoisonResistance+1
+RingOfLevitation weight(1) count(1) wear(FingerRight) avatar(655)
+ wearing Fly+1
+RingOfDefence weight(1) count(1) wear(FingerRight) avatar(655)
+ wearing Dodge+10
+RingOfProtection weight(1) count(1) wear(FingerRight) avatar(655)
+ wearing Armor+1
+RingOfWarrior weight(1) count(1) wear(FingerRight) avatar(655)
+ wearing WeaponSkill+10
+
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1
 LoafOfBread weight(40) avatar(160) count(1)
@@ -236,8 +254,10 @@ RandomKeys
  chance TinyKey SmallKey HexagonalKey TriangularKey RectangularKey RoundKey
 RandomPotion
  chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma PotionOfAbilityRaise PotionOfWisdow
+RandomRing
+ chance BrassRing+4 RingOfAcidResistance RingOfColdResistance RingOfFireResistance RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
 RandomLoot
- chance RandomTreasure+4 RandomKeys RandomGear RandomPotion
+ chance RandomTreasure+4 RandomKeys RandomGear RandomPotion RandomRing
 WoodenLagsTable
  chance Lags SmallLags+2
 
