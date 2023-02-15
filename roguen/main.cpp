@@ -85,6 +85,7 @@ static void main_start() {
 	add_item("RingOfProtection");
 	add_item("RingOfFireResistance");
 	add_item("RingOfLevitation");
+	add_item("RingOfRegeneration");
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	equip_item("Bones");

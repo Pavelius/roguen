@@ -47,6 +47,7 @@ RingOfFireResistance: Кольцо сопротивления огню
 RingOfLevitation: Кольцо левитации
 RingOfPoisonResistance: Кольцо сопротивления яду
 RingOfProtection: Кольцо защиты
+RingOfRegeneration: Кольцо регенерации
 RingOfWarrior: Кольцо воина
 
 Arrow: Стрела
@@ -98,3 +99,5 @@ MonsterSkull: Череп монстра
 Stones: Камни
 
 StolenTreasures: Украденные сокровища
+
+BootsOfSneakiness: Ботинки скрытности

@@ -45,24 +45,13 @@ static unsigned parse_key(const char* p) {
 
 void hotkey::initialize() {
 	for(auto& e : bsdata<hotkey>()) {
-		if(e.key)
-			continue;
-		if(!e.keyid) {
-			log::error(0, "Empthy key mapping for script '%1'", e.id);
-			continue;
-		}
-		auto ps = bsdata<script>::find(e.id);
-		if(ps) {
+		if(e.keyid) {
 			e.key = parse_key(e.keyid);
-			e.proc = ps->proc;
-			continue;
+			if(!e.key)
+				continue;
 		}
-		auto pd = bsdata<dialogi>::find(e.id);
-		if(pd) {
-			e.key = parse_key(e.keyid);
-			e.dialog = pd;
-			continue;
-		}
-		log::error(0, "Can't find script or dialog named '%1' in hotkey mapping", e.id);
+		e.data = e.id;
+		if(!e.data)
+			log::error(0, "Can't find script or dialog with name '%1'", e.id);
 	}
 }

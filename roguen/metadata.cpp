@@ -1,5 +1,6 @@
 #include "bsreq.h"
 #include "condition.h"
+#include "dialog.h"
 #include "hotkey.h"
 #include "global.h"
 #include "greatneed.h"
@@ -67,6 +68,9 @@ BSMETA(color) = {
 	BSREQ(r), BSREQ(g), BSREQ(b), BSREQ(a),
 	{}};
 BSMETA(conditioni) = {
+	BSREQ(id),
+	{}};
+BSMETA(dialogi) = {
 	BSREQ(id),
 	{}};
 BSMETA(dice) = {
@@ -175,6 +179,7 @@ BSDATA(varianti) = {
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},
 	{"Creature", VAR(creature), 0},
+	{"Dialog", VAR(dialogi), 1},
 	{"Feat", VAR(feati), 1},
 	{"Feature", VAR(featurei), 1},
 	{"Global", VAR(globali), 1},

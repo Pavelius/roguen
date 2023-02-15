@@ -1,3 +1,4 @@
-﻿In file `Names.txt`:
- Define translation for `Ally`
- Define translation for `Female`
+﻿In file `Descriptions.txt`:
+Can't find script or dialog with name 'ShowMinimap'
+Can't find script or dialog with name 'ShowLogs'
+Can't find script or dialog with name 'ShowCharsheet'

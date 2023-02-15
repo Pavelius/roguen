@@ -1,4 +1,4 @@
-#include "crt.h"
+#include "variant.h"
 
 #pragma once
 
@@ -7,7 +7,6 @@ struct hotkey {
 	const char*		id;
 	unsigned		key;
 	const char*		keyid;
-	fnevent			proc;
-	struct dialogi*	dialog;
+	variant			data;
 	static void		initialize();
 };

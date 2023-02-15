@@ -160,8 +160,13 @@ RingOfDefence weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Dodge+10
 RingOfProtection weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Armor+1
+RingOfRegeneration weight(1) count(1) wear(FingerRight) avatar(655)
+ wearing Regeneration+1
 RingOfWarrior weight(1) count(1) wear(FingerRight) avatar(655)
  wearing WeaponSkill+10
+
+BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226)
+ wearing Dexterity+10
 
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1

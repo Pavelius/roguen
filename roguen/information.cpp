@@ -22,6 +22,11 @@ static void addv(stringbuilder& sb, const dice& value) {
 
 static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 0) {
 	switch(i) {
+	case Armor:
+		sb.addn("[~%1]\t%2i", getnameshort(i), value);
+		if(value_maximum)
+			sb.add("%+1i", value_maximum);
+		break;
 	case Hits: case Mana:
 		sb.addn("[~%1]\t%2i/%3i", getnameshort(i), value, value_maximum);
 		break;
@@ -55,7 +60,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	for(auto i = WeaponSkill; i <= Dodge; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
-	addf(sb, Armor, abilities[Armor]);
+	addf(sb, Armor, abilities[Armor], abilities[Block]);
 	addf(sb, Hits, abilities[Hits], basic.abilities[Hits]);
 	addf(sb, Mana, abilities[Mana], basic.abilities[Mana]);
 	addf(sb, Money, getmoney());

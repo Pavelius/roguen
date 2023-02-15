@@ -13,6 +13,7 @@
 #include "race.h"
 #include "resource.h"
 #include "resid.h"
+#include "script.h"
 #include "screenshoot.h"
 #include "stringact.h"
 #include "visualeffect.h"
@@ -719,15 +720,15 @@ static void after_paint_all() {
 
 static void execute_hotkey() {
 	auto pn = (hotkey*)hot.object;
-	if(pn->dialog)
-		pn->dialog->open();
-	else if(pn->proc)
-		pn->proc(hot.param);
+	if(pn->data.iskind<dialogi>())
+		bsdata<dialogi>::elements[pn->data.value].open();
+	else if(pn->data.iskind<script>())
+		bsdata<script>::elements[pn->data.value].proc(pn->data.counter);
 }
 
 static void presskey() {
 	for(auto& e : bsdata<hotkey>()) {
-		if(hot.key == e.key) {
+		if(e.key && hot.key == e.key) {
 			execute(execute_hotkey, 0, 0, &e);
 			return;
 		}

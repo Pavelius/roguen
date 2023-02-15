@@ -102,6 +102,8 @@ YouTakeCoins: %герой получил% %1i монет.
 YouTookAllHerbs: Все травы были собраны.
 YouUseItem: %герой использовал%а %-1.
 
+Regeneration: Регенерация
+
 Strenght: Сила
 Charisma: Харизма
 Dexterity: Ловкость
