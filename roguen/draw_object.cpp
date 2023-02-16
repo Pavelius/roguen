@@ -1,23 +1,20 @@
-#include "crt.h"
-#include "draw.h"
 #include "draw_object.h"
 #include "screenshoot.h"
 
 using namespace draw;
 
-const size_t max_object_count = 1024;
+BSDATAC(object, 512)
+BSDATAC(draworder, 512)
 
-BSDATAC(object, max_object_count)
-BSDATAC(draworder, max_object_count)
+fnevent	draw::object::correctcamera;
+fnpaint	draw::object::painting;
+fnevent	draw::object::beforepaint;
+fnevent	draw::object::afterpaint;
 
-fnevent				draw::object::afterpaintall;
-fnevent				draw::object::beforepaintall;
-fnevent				draw::object::correctcamera;
-fnpaint				draw::object::afterpaint;
-fnpaint				draw::object::afterpaintallpo;
-static rect			last_screen, last_area;
-static unsigned long timestamp;
-static unsigned long timestamp_last;
+adat<object*, 512> draw::objects;
+rect draw::last_screen, draw::last_area;
+
+static unsigned long timestamp, timestamp_last;
 
 long distance(point from, point to);
 
@@ -148,18 +145,6 @@ static void textcn(const char* string, int dy, unsigned feats) {
 	caret = push_caret;
 }
 
-void object::paintns() const {
-	if(afterpaint)
-		afterpaint(this);
-	if(string) {
-		auto push_font = draw::font;
-		if(font)
-			draw::font = font;
-		textcn(string, 0, 0);
-		draw::font = push_font;
-	}
-}
-
 static void raw_beforemodal() {
 	caret = {0, 0};
 	width = getwidth();
@@ -182,20 +167,28 @@ void object::paint() const {
 	auto push_alpha = draw::alpha;
 	draw::fore = fore;
 	draw::alpha = alpha;
-	paintns();
+	painting(this);
+	if(string) {
+		auto push_font = draw::font;
+		if(font)
+			draw::font = font;
+		textcn(string, 0, 0);
+		draw::font = push_font;
+	}
 	draw::alpha = push_alpha;
 	draw::fore = push_fore;
 }
 
-static size_t getobjects(object** pb, object** pe) {
-	auto ps = pb;
+static void select_objects() {
+	auto ps = objects.data;
+	auto pe = objects.endof();
 	for(auto& e : bsdata<object>()) {
-		if(!e.position.in(last_area))
+		if(e.type==object::Object && !e.position.in(last_area))
 			continue;
 		if(ps < pe)
 			*ps++ = &e;
 	}
-	return ps - pb;
+	objects.count = ps - objects.data;
 }
 
 static int compare(const void* v1, const void* v2) {
@@ -216,42 +209,36 @@ static int compare(const void* v1, const void* v2) {
 	return p1 - p2;
 }
 
-static void sortobjects(object** pb, size_t count) {
-	qsort(pb, count, sizeof(pb[0]), compare);
+static void sort_objects() {
+	qsort(objects.data, objects.count, sizeof(objects.data[0]), compare);
 }
 
-void draw::paintobjects() {
-	rectpush push;
-	auto push_clip = clipping;
-	if(object::beforepaintall)
-		object::beforepaintall();
-	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
-	setclip(last_screen);
-	object* source[max_object_count];
-	last_area = last_screen; last_area.move(camera.x, camera.y);
-	last_area.offset(-128, -128);
-	auto count = getobjects(source, source + sizeof(source) / sizeof(source[0]));
-	sortobjects(source, count);
-	for(size_t i = 0; i < count; i++) {
-		auto p = source[i];
+static void paint_visible_objects() {
+	for(auto p : objects) {
 		if(p->type == object::Object)
 			draw::caret = p->position - draw::camera;
 		else
 			draw::caret = p->position;
 		p->paint();
 	}
-	if(object::afterpaintall)
-		object::afterpaintall();
-	if(object::afterpaintallpo) {
-		for(size_t i = 0; i < count; i++) {
-			auto p = source[i];
-			if(p->type==object::Object)
-				draw::caret = p->position - draw::camera;
-			else
-				draw::caret = p->position;
-			object::afterpaintallpo(p);
-		}
-	}
+}
+
+void draw::paintobjects() {
+	if(!object::painting)
+		return;
+	rectpush push;
+	auto push_clip = clipping;
+	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
+	setclip(last_screen);
+	if(object::beforepaint)
+		object::beforepaint();
+	last_area = last_screen; last_area.move(camera.x, camera.y);
+	last_area.offset(-128, -128);
+	select_objects();
+	sort_objects();
+	paint_visible_objects();
+	if(object::afterpaint)
+		object::afterpaint();
 	shrink();
 	clipping = push_clip;
 }
@@ -259,6 +246,13 @@ void draw::paintobjects() {
 void* draw::chooseobject() {
 	draw::scene(paintobjects);
 	return (void*)getresult();
+}
+
+void draw::removeobjects(const array& source) {
+	for(auto& e : bsdata<object>()) {
+		if(source.have(e.data))
+			e.clear();
+	}
 }
 
 static void paintobjectsshowmode() {
@@ -273,10 +267,10 @@ void draw::showobjects() {
 	draw::scene(paintobjectsshowmode);
 }
 
-object*	draw::addobject(point pt) {
+object*	draw::addobject(point pt, object::type_s type) {
 	auto p = bsdata<object>::addz();
 	p->clear();
-	p->type = object::Object;
+	p->type = type;
 	p->position = pt;
 	return p;
 }
@@ -405,6 +399,7 @@ void draw::waitall() {
 		update_all_orders();
 		paintstart();
 		paintobjects();
+		paintfinish();
 		doredraw();
 		waitcputime(1);
 		remove_trail_orders();
@@ -420,6 +415,7 @@ void draw::draworder::wait() {
 		update_all_orders();
 		paintstart();
 		paintobjects();
+		paintfinish();
 		doredraw();
 		waitcputime(1);
 		remove_trail_orders();

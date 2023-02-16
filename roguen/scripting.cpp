@@ -204,6 +204,9 @@ bool script::isallow(variant v) {
 	else if(v.iskind<monsteri>()) {
 		if(!v.counter)
 			return player->iskind(v);
+	} else if(v.iskind<feati>()) {
+		if(v.counter>=0)
+			return player->is((feat_s)v.value);
 	}
 	return true;
 }
@@ -1007,6 +1010,7 @@ static void apply_action(int bonus) {
 	if(!bound_targets(last_action->id, last_action->target, 0, player->ishuman()))
 		return;
 	apply_target_effect(last_action->target, last_action->effect);
+	player->wait();
 }
 
 static void jump_to_site(int bonus) {

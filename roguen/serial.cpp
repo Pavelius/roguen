@@ -43,7 +43,7 @@ static void restore_monsters() {
 }
 
 static void update_ui() {
-	bsdata<draw::object>::source.clear();
+	draw::removeobjects(bsdata<creature>::source);
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid())
 			e.fixappear();

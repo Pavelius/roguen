@@ -80,13 +80,6 @@ static void strokeup() {
 	fore = push_fore;
 }
 
-static void remove_temp_objects(const array& source) {
-	for(auto& e : bsdata<object>()) {
-		if(source.have(e.data))
-			e.clear();
-	}
-}
-
 static void remove_temp_objects() {
 	for(auto& e : bsdata<object>()) {
 		if(!e.data)
@@ -132,7 +125,7 @@ void gamei::next(fnevent proc) {
 }
 
 static void paint_items() {
-	remove_temp_objects(bsdata<itemi>::source);
+	removeobjects(bsdata<itemi>::source);
 	auto p1 = s2m(camera);
 	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx + 1, p1.y + getheight() / tsy + 1};
 	for(auto& e : bsdata<itemground>()) {
@@ -278,8 +271,8 @@ static void floorrect() {
 
 static void paint_floor() {
 	point i;
-	remove_temp_objects(bsdata<featurei>::source);
-	remove_temp_objects(bsdata<resource>::source);
+	removeobjects(bsdata<featurei>::source);
+	removeobjects(bsdata<resource>::source);
 	auto pi = gres(res::Floor);
 	auto pd = gres(res::Decals);
 	auto pf = gres(res::Features);
@@ -591,12 +584,29 @@ void visualeffect::paint(unsigned char random) const {
 		image(pi, random + frame, feats);
 }
 
-static void object_afterpaintpo(const object* p) {
-	if(bsdata<creature>::have(p->data))
-		((creature*)p->data)->paintbarsall();
+static void paint_health_bar() {
+	for(auto p : objects) {
+		if(p->type == object::Object) {
+			draw::caret = p->position - draw::camera;
+			if(bsdata<creature>::have(p->data))
+				((creature*)p->data)->paintbarsall();
+		}
+	}
 }
 
-static void object_afterpaint(const object* p) {
+static void object_beforepaint() {
+	link_camera();
+	paint_floor();
+	paint_items();
+	paint_los();
+}
+
+static void object_afterpaint() {
+	paint_fow();
+	paint_health_bar();
+}
+
+static void object_painting(const object* p) {
 	if(bsdata<creature>::have(p->data))
 		((creature*)p->data)->paint();
 	else if(bsdata<featurei>::have(p->data))
@@ -673,18 +683,6 @@ static void player_info() {
 	char temp[1024]; stringbuilder sb(temp); sb.clear();
 	player->getinfo(sb);
 	textf(temp);
-}
-
-static void before_paint_all() {
-	auto push_caret = caret;
-	auto push_clip = clipping;
-	setclipall();
-	link_camera();
-	paint_floor();
-	paint_items();
-	paint_los();
-	caret = push_caret;
-	clipping = push_clip;
 }
 
 static unsigned answer_key(int index) {
@@ -785,11 +783,10 @@ static void reset_message() {
 	}
 }
 
-static void after_paint_all() {
-	paint_fow();
+static void afterpaint() {
 	paint_message();
-	paint_actions();
 	reset_message();
+	paint_actions();
 }
 
 static void execute_hotkey() {
@@ -813,7 +810,7 @@ void animate_figures() {
 	start_stamp = getobjectstamp();
 	waitall();
 	remove_temp_objects();
-	remove_temp_objects(bsdata<visualeffect>::source);
+	removeobjects(bsdata<visualeffect>::source);
 }
 
 void adventure_mode() {
@@ -1253,7 +1250,7 @@ static void paint_status() {
 	width = push_width - panel_width;
 }
 
-static void before_paint() {
+static void beforepaint() {
 	message_rect.clear();
 	paint_status();
 }
@@ -1341,11 +1338,11 @@ int start_application(fnevent proc, fnevent initializing) {
 	metrics::border = 4;
 	metrics::padding = 4;
 	pbutton = paint_button;
-	pbackground = before_paint;
-	object::beforepaintall = before_paint_all;
+	pbackground = beforepaint;
+	pfinish = afterpaint;
+	object::beforepaint = object_beforepaint;
 	object::afterpaint = object_afterpaint;
-	object::afterpaintallpo = object_afterpaintpo;
-	object::afterpaintall = after_paint_all;
+	object::painting = object_painting;
 	object::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;
