@@ -174,9 +174,7 @@ static void create_road(const rect& rc) {
 			last_rect.y2 = area.mps - 1;
 	}
 	area.set(last_rect, &areamap::settile, road.value);
-	variant v = "RandomCommoner";
-	v.counter = xrand(3, 6);
-	script::run(v);
+	script::run("RandomCommoner");
 }
 
 static void create_city_level(const rect& rc, int level) {

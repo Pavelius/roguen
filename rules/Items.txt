@@ -30,15 +30,6 @@ GemStones cost(1000) avatar(704) count(1)
 Lags cost(10) avatar(395) count(1)
 SmallLags cost(10) avatar(411) count(1)
 
-IronRing cost(300) weight(1) avatar(74)
-SilverRing cost(500) weight(1) avatar(123)
-GoldenRing cost(800) weight(1) avatar(73)
-
-LeadAmulet cost(400) weight(7) avatar(86)
-CoralAmulet cost(600) weight(8) avatar(87)
-SilverAmulet cost(1000) weight(4) avatar(79)
-GoldAmulet cost(1600) weight(5) avatar(119)
-
 BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) powers(SlashingWeapons)
  weapon damage(4) pierce(2) speed(-8)
  feats CutWoods
@@ -145,6 +136,9 @@ PotionOfEnergy cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Pot
  use_cursed Permanent Mana-1
  use_blessed Permanent Mana+5
 
+IronRing cost(300) weight(1) avatar(74)
+SilverRing cost(500) weight(1) avatar(123)
+GoldenRing cost(800) weight(1) avatar(73)
 BrassRing weight(1) count(1) wear(FingerRight) avatar(75)
 RingOfAcidResistance weight(1) count(1) wear(FingerRight) avatar(73)
  wearing AcidResistance+1
@@ -183,6 +177,15 @@ GirdleOfGiantStrenght weight(50) count(1) wear(Girdle) avatar(41) unidentified(L
  wearing Strenght+25
 GirdleOfCarring weight(50) count(1) wear(Girdle) avatar(88) unidentified(LeatherGirdle)
  wearing CarryCapacity+10
+
+LeadAmulet cost(400) weight(7) avatar(86)
+CoralAmulet cost(600) weight(8) avatar(87)
+SilverAmulet cost(1000) weight(4) avatar(79)
+GoldAmulet cost(1600) weight(5) avatar(119)
+AmuletOfColdHeart cost(1100) weight(4) avatar(79)
+ wearing ColdResistance+1 Charisma-10
+AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
+ wearing DeathResistance+1
 
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1
@@ -267,8 +270,10 @@ RandomGear
  chance Torch+8
 RandomGem
  chance OrnamentalStones+25 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
+RandomAmulet
+ chance LeadAmulet CoralAmulet SilverAmulet AmuletOfColdHeart AmuletOfDeathSaving
 RandomJewelry
- chance RandomGem+15 LeadAmulet CoralAmulet SilverAmulet
+ chance RandomGem+8 RandomAmulet
 RandomTreasure
  chance RandomCoins+4 RandomJewelry
 RandomKeys

@@ -79,10 +79,29 @@ static void place_item(const itemi* pe) {
 	player->additem(it);
 }
 
+int get_deafault_count(const monsteri& e, int area_level) {
+	static dice source[] = {
+		{4, 12},
+		{3, 8},
+		{2, 6},
+		{2, 4},
+		{1, 2}, // 0
+		{1},
+	};
+	if(e.unique)
+		return 1;
+	auto level_creature = e.abilities[Level];
+	if(area_level <= 1)
+		area_level = 1;
+	auto n = 4 + (level_creature - area_level);
+	auto d = maptbl(source, n);
+	return d.roll();
+}
+
 static void place_creature(variant v, int count) {
 	if(count <= 0) {
 		if(v.iskind<monsteri>())
-			count = bsdata<monsteri>::elements[v.value].appear.roll();
+			count = get_deafault_count(bsdata<monsteri>::elements[v.value], game.level);
 		else
 			count = xrand(2, 5);
 		if(!count)
@@ -127,7 +146,7 @@ void script::run(variant v) {
 		if(count < 0)
 			return;
 		if(count == 0)
-			count = bsdata<monsteri>::elements[v.value].appear.roll();
+			count = get_deafault_count(bsdata<monsteri>::elements[v.value], game.level);
 		if(!count)
 			count = 1;
 		place_creature(v, count);

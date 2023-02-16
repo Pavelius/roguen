@@ -5,12 +5,12 @@
 
 enum feat_s : unsigned char {
 	Darkvision, TwoHanded, CutWoods, Retaliate, Thrown,
-	BleedingHit, StunningHit, PierceHit, MightyHit, MissHalfTime,
+	BleedingHit, StunningHit, PierceHit, MightyHit, MissHalfTime, Vorpal,
 	FireDamage, ColdDamage,
 	IgnoreWeb, Fly, LightSource, Regeneration, ManaRegeneration,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
-	AcidResistance, AcidImmunity, ColdResistance, ColdImmunity, DiseaseResist, DiseaseImmunity,
-	FireResistance, FireImmunity, StunResistance, StunImmunity,
+	AcidResistance, AcidImmunity, ColdResistance, ColdImmunity, DeathResistance, DeathImmunity,
+	DiseaseResist, DiseaseImmunity, FireResistance, FireImmunity, StunResistance, StunImmunity,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
 	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
 	Stun, Blooding,

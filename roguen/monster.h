@@ -1,5 +1,4 @@
 #include "ability.h"
-#include "dice.h"
 #include "nameable.h"
 #include "randomizer.h"
 #include "variant.h"
@@ -9,7 +8,7 @@
 struct monsteri : nameable, statable {
 	unsigned short	avatar;
 	char			friendly;
-	dice			appear;
+	bool			unique;
 	variants		use;
 	monsteri*		parent;
 	randomizeri*	minions;

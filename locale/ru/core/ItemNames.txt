@@ -41,10 +41,13 @@ ChainArmor: Кольчуга
 PlateArmor: Латы
 Shield: Щит
 
+LeatherGirdle: Кожанный пояс
+
 LeatheBoots: Кожанные сапоги
 
 RingOfAcidResistance: Кольцо сопротивления кислоте
 RingOfColdResistance: Кольцо сопротивления холоду
+RingOfDefence: Кольцо защиты
 RingOfFireResistance: Кольцо сопротивления огню
 RingOfLevitation: Кольцо левитации
 RingOfPoisonResistance: Кольцо сопротивления яду

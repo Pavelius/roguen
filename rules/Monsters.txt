@@ -1,9 +1,9 @@
 #Monster
 
-Bear avatar(360) appear(1 2) friendly(-10)
+Bear avatar(360) friendly(-10)
  abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) Hits(40) Level(3)
  use Bite
-Boar avatar(376) appear(2 5) friendly(-20)
+Boar avatar(376) friendly(-20)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
  use Bite
 ChaosHydra avatar(339) friendly(-20)
@@ -13,58 +13,58 @@ CityGuard avatar(543)
  abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10) Level(2)
  use Spear ChainArmor
  treasure SP GP-10
-DireBoar avatar(377) appear(2 3) friendly(-20)
+DireBoar avatar(377) friendly(-20)
  abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(40) Hits(40) Armor(1) Level(4)
  use Bite
-DireWolf avatar(52) appear(2 4) friendly(-20)
+DireWolf avatar(52) friendly(-20)
  abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(40) Hits(30) Armor(1) Level(3)
  use Bite
-Dog avatar(292) appear(1 2)
+Dog avatar(292)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) Hits(4)
  use Bite Female
-GiantBat avatar(155) appear(2 5) friendly(-10)
+GiantBat avatar(155) friendly(-10)
  abilities Strenght(10) Dexterity(30) Wits(2) WeaponSkill(20) Hits(4)
  use Bite
-GiantLizard avatar(220) appear(1 3) friendly(-20)
+GiantLizard avatar(220) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4) Level(3)
  use Bite
-GiantSpider avatar(591) appear(1 4) friendly(-20)
+GiantSpider avatar(591) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) Hits(20) Level(5)
  use Bite StrongPoison IgnoreWeb Web+4
-Ghoul avatar(305) appear(1 3) friendly(-20)
+Ghoul avatar(305) friendly(-20)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
  use Claws Undead PoisonImmunity
-Goblin avatar(0) appear(3 8) friendly(-30)
+Goblin avatar(0) friendly(-30)
  abilities Strenght(25) Dexterity(40) Wits(14) WeaponSkill(30) Hits(5)
  use Dagger
  treasure SP-20
-GoblinFemale avatar(1) parent(Goblin) appear(1 3) friendly(-30)
+GoblinFemale avatar(1) parent(Goblin) friendly(-30)
  abilities Strenght(20) Dexterity(40) Wits(15) WeaponSkill(15) Hits(4)
  use Dagger Female
  treasure SP-10
-OrcWarrior avatar(2) appear(2 4) friendly(-30)
+OrcWarrior avatar(2) friendly(-30)
  abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(35) Hits(15) Level(2)
  use BruteSword LeatherArmor Darkvision
  treasure SP SP-50
-Outsider avatar(121) appear(1 3) friendly(-20)
+Outsider avatar(121) friendly(-20)
  use Tentacle
  abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(4) Level(3)
-Rabbit avatar(7) appear(3 6)
+Rabbit avatar(7)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
  use Bite
-RabbitFemale avatar(8) parent(Rabbit) appear(2 4)
+RabbitFemale avatar(8) parent(Rabbit)
  abilities Strenght(5) Dexterity(22) Wits(3) WeaponSkill(8) Hits(2)
  use Bite
 ShamblingMound avatar(9) friendly(-20)
  abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) Hits(30) Level(4)
  use Bite
-Skeleton avatar(574) appear(3 6) friendly(-20)
+Skeleton avatar(574) friendly(-20)
  abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) Hits(8) Armor(1) Level(1)
  use Spear Darkvision Undead PoisonImmunity
-Zombie avatar(101) appear(2 5) friendly(-20)
+Zombie avatar(101) friendly(-20)
  abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(25) Hits(16) Level(1)
  use Dagger Darkvision Undead PoisonImmunity
-Wolf avatar(20) appear(2 5) friendly(-10)
+Wolf avatar(20) friendly(-10)
  abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(35) Hits(10) Level(1)
  use Bite
 
@@ -80,22 +80,22 @@ UndeadHorde
 #Monster
 
 Ettin avatar(516) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(70) Dexterity(25) Wits(15) WeaponSkill(40) Hits(50)
+ abilities Strenght(70) Dexterity(25) Wits(15) WeaponSkill(40) Hits(50) Level(7)
  use Club
-HillGiant avatar(537) appear(1 2) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(70) Dexterity(20) Wits(10) WeaponSkill(50) Hits(50)
+HillGiant avatar(537) friendly(-20) minions(GoblinoidTribe)
+ abilities Strenght(70) Dexterity(20) Wits(10) WeaponSkill(50) Hits(50) Level(7)
  use Club LeatherArmor
 Necromant avatar(43) friendly(-20) minions(UndeadHorde)
- abilities Strenght(25) Dexterity(20) Wits(45) WeaponSkill(30) Hits(20)
+ abilities Strenght(25) Dexterity(20) Wits(45) WeaponSkill(30) Hits(20) Level(5)
  use Staff SummonUndead+6
 Minotaur avatar(580) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(60) Hits(20)
+ abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(60) Hits(20) Level(6)
  use Sword
 
-Bartender avatar(51)
+Bartender avatar(51) unique(1)
  abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(30) Hits(5)
  use PlaceOwner KnowRumor
-Shopkeeper avatar(581)
+Shopkeeper avatar(581) unique(1)
  abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(30) Hits(5)
  use PlaceOwner GP+30
 Theif avatar(313)
@@ -109,7 +109,7 @@ Farmer avatar(273)
 FarmerFemale avatar(276)
  abilities Strenght(26) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
  use Female KnowLocation
-PriestOfTheOne avatar(118) appear(1)
+PriestOfTheOne avatar(118) unique(1)
  abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(30) Hits(8)
  use PlaceOwner
 SmallBoy avatar(274)

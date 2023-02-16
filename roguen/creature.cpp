@@ -161,10 +161,16 @@ static void special_spell_attack(creature* player, item& weapon, creature* enemy
 }
 
 static void special_attack(creature* player, item& weapon, creature* enemy, int& pierce, int& damage) {
+	if(attack_effect(player, weapon, Vorpal)) {
+		if(!resist_test(enemy, DeathResistance, DeathImmunity)) {
+			damage = 100;
+			pierce = 100;
+		}
+	}
 	if(attack_effect(player, weapon, BleedingHit))
 		enemy->set(Blooding);
 	if(attack_effect(player, weapon, StunningHit)) {
-		if(!enemy->is(StunImmunity)) {
+		if(!resist_test(enemy, StunResistance, StunImmunity)) {
 			enemy->set(Stun);
 			enemy->fixeffect("SearchVisual");
 		}

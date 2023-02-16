@@ -119,12 +119,12 @@ BSMETA(modifieri) = {
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
+	BSREQ(unique),
 	BSREQ(use),
 	BSREQ(avatar),
 	BSREQ(friendly),
 	BSREQ(parent),
 	BSREQ(treasure),
-	BSREQ(appear),
 	BSREQ(minions),
 	{}};
 BSMETA(point) = {

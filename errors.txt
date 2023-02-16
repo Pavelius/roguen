@@ -1,2 +1,5 @@
 ﻿In file `rules/Monsters.txt`:
- Line 54: Not found requisit `Level`
+ Line 83: Not found field `level` in dataset `abilities`
+ Line 86: Not found field `level` in dataset `abilities`
+ Line 89: Not found field `level` in dataset `abilities`
+ Line 92: Not found field `level` in dataset `abilities`
