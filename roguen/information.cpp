@@ -97,12 +97,7 @@ void item::getinfo(stringbuilder& sb) const {
 	sb.adds(getfullname());
 	addv(sb, Damage, geti().weapon.damage);
 	addv(sb, "Speed", geti().weapon.speed);
-	if(isidentified()) {
-		addv(sb, "Pierce", geti().weapon.pierce);
-		for(auto v : ei.wearing)
-			addv(sb, v.getid(), v.counter);
-	}
-
+	addv(sb, "Pierce", geti().weapon.pierce);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

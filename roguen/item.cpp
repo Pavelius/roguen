@@ -1,5 +1,6 @@
 #include "areamap.h"
 #include "item.h"
+#include "magic.h"
 
 extern areamap area;
 item* last_item;
@@ -137,7 +138,9 @@ const char*	item::getfullname(int price_percent) const {
 	auto count = getcount();
 	auto pn = getname();
 	auto vw = stringbuilder::getgender(pn);
-	sb.adds("%1", getname());
+	if(identified_cub)
+		sb.adds(getnm(bsdata<magici>::elements[magic].id));
+	sb.adds(getname());
 	if(!iscountable() && identified && power) {
 		auto power = getpower();
 		sb.addsep(' ');
@@ -147,7 +150,7 @@ const char*	item::getfullname(int price_percent) const {
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
 	sb.lower();
-	temp[0] = stringbuilder::upper(temp[0]);
+	//temp[0] = stringbuilder::upper(temp[0]);
 	if(price_percent) {
 		auto cost = getcost() * price_percent / 100;
 		sb.adds("%-Cost %1i %-Coins", cost);

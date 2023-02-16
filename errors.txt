@@ -1,5 +1,3 @@
-﻿In file `rules/Monsters.txt`:
- Line 83: Not found field `level` in dataset `abilities`
- Line 86: Not found field `level` in dataset `abilities`
- Line 89: Not found field `level` in dataset `abilities`
- Line 92: Not found field `level` in dataset `abilities`
+﻿In file `Names.txt`:
+ Define translation for `DamageMelee`
+ Define translation for `FireResistance`

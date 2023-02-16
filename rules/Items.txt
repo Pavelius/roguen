@@ -189,9 +189,9 @@ AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
 
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1
-LoafOfBread weight(40) avatar(160) count(1)
+LoafOfBread weight(40) avatar(160) count(1) rotting(5)
  use Satiation+500
-Sausage weight(20) avatar(157) count(1)
+Sausage weight(20) avatar(157) count(1) rotting(10)
  use Satiation+500 Chance+3 Strenght+1
 Ration cost(100) weight(50) avatar(126) count(1)
  use Satiation+800

@@ -1,16 +1,13 @@
 #include "feat.h"
 #include "point.h"
 #include "list.h"
+#include "magic.h"
 #include "wear.h"
 #include "variant.h"
 
 #pragma once
 
 enum ability_s : unsigned char;
-
-enum magic_s : unsigned char {
-	Mundane, Cursed, Blessed, Mighty,
-};
 
 struct itemi;
 
@@ -66,7 +63,6 @@ public:
 	int				ischarge() const { return !iscountable() && (broken < 7); }
 	void			damage();
 	void			drop(point m);
-	int				get(unsigned fo) const;
 	short unsigned	getkind() const { return type; }
 	int				getavatar() const { return geti().wear_index; }
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }

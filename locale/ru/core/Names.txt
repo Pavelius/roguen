@@ -114,6 +114,7 @@ Dodge: Уклонение
 WeaponSkill: Оружие
 
 Damage: Урон
+DamageMelee: Урон
 DamageReduciton: Броня
 Hits: Хиты
 Mana: Мана
@@ -122,5 +123,6 @@ Money: Деньги
 CutWoods: Рубит деревья
 Retaliate: Ответный удар
 
+FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света

@@ -74,6 +74,7 @@ TriangularKey: Треугольный ключ
 RectangularKey: Квадратный ключ
 
 BluePotion: Синее зелье
+BrownPotion: Коричневое зелье
 HealingPotion: Зелье лечения
 ManaPotion: Зелье маны
 RedPotion: Красное зелье
