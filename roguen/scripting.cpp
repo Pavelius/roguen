@@ -490,6 +490,41 @@ static void apply_target_effect(unsigned target, const variants& effect) {
 	}
 }
 
+bool spelli::apply(int level, int targets_count, bool interactive, bool silent) const {
+	if(!bound_targets(id, target, targets_count, interactive))
+		return false;
+	if(!silent)
+		action_text(player, id, "Casting");
+	if(is(TargetCreatures)) {
+		pushvalue push_player(player);
+		for(auto p : targets) {
+			player = p;
+			apply_spell(*this, level);
+		}
+	} else if(is(TargetFeatures)) {
+		for(auto p : indecies) {
+			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
+			pushvalue push_index(last_index, p);
+			script::run(effect);
+		}
+	} else if(is(TargetRooms)) {
+		pushvalue push_rect(last_room);
+		for(auto p : rooms) {
+			last_room = p;
+			script::run(effect);
+		}
+	} else if(is(TargetItems)) {
+		pushvalue push_object(last_item);
+		for(auto p : items) {
+			last_item = p;
+			script::run(effect);
+		}
+	}
+	if(summon)
+		player->summon(player->getposition(), summon, getcount(level), level);
+	return true;
+}
+
 void creature::cast(const spelli& e, int level, int mana) {
 	if(get(Mana) < mana) {
 		actp(getnm("NotEnoughtMana"));
@@ -499,36 +534,7 @@ void creature::cast(const spelli& e, int level, int mana) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	if(!bound_targets(e.id, e.target, e.is(Multitarget) ? level : 0, ishuman()))
-		return;
-	action_text(this, e.id, "Casting");
-	if(FGT(e.target, TargetCreatures)) {
-		pushvalue push_player(player);
-		for(auto p : targets) {
-			player = p;
-			apply_spell(e, level);
-		}
-	} else if(FGT(e.target, TargetFeatures)) {
-		for(auto p : indecies) {
-			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
-			pushvalue push_index(last_index, p);
-			script::run(e.effect);
-		}
-	} else if(FGT(e.target, TargetRooms)) {
-		pushvalue push_rect(last_room);
-		for(auto p : rooms) {
-			last_room = p;
-			script::run(e.effect);
-		}
-	} else if(FGT(e.target, TargetItems)) {
-		pushvalue push_object(last_item);
-		for(auto p : items) {
-			last_item = p;
-			script::run(e.effect);
-		}
-	}
-	if(e.summon)
-		summon(player->getposition(), e.summon, e.getcount(level), level);
+	e.apply(level, e.is(Multitarget) ? level : 0, ishuman(), false);
 	add(Mana, -mana);
 	update();
 	wait();

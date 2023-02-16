@@ -155,7 +155,12 @@ static void damage_equipment(int value) {
 	}
 }
 
-static void special_attack(creature* player, const item& weapon, creature* enemy, int& pierce, int& damage) {
+static void special_spell_attack(creature* player, item& weapon, creature* enemy, const spelli& ei) {
+	ei.apply(1, 1, false, true);
+	weapon.damage();
+}
+
+static void special_attack(creature* player, item& weapon, creature* enemy, int& pierce, int& damage) {
 	if(attack_effect(player, weapon, BleedingHit))
 		enemy->set(Blooding);
 	if(attack_effect(player, weapon, StunningHit)) {
@@ -170,6 +175,9 @@ static void special_attack(creature* player, const item& weapon, creature* enemy
 		damage += 2;
 	if(attack_effect(player, weapon, ColdDamage))
 		area.setflag(enemy->getposition(), Iced);
+	auto power = weapon.getpower();
+	if(power.iskind<spelli>() && weapon.ischarge())
+		special_spell_attack(player, weapon, enemy, bsdata<spelli>::elements[power.value]);
 	// Damage equipment sometime
 	if(d100() < 15) {
 		pushvalue push_player(player, enemy);
@@ -830,11 +838,11 @@ int	creature::getexpreward() const {
 	static ability_s skills[] = {Strenght, Dexterity, Wits, Charisma, WeaponSkill, BalisticSkill};
 	auto result = 0;
 	for(auto v : skills) {
-		auto n = get(v) / 5;
+		auto n = get(v) / 10;
 		if(result < n)
 			result = n;
 	}
-	return abilities[Hits] + result;
+	return abilities[Level] * 10 + result;
 }
 
 void creature::kill() {
@@ -1540,9 +1548,10 @@ creature* creature::create(point m, variant kind, variant character, bool female
 	}
 	player->basic.abilities[LineOfSight] += 4;
 	advance_value(kind, 0);
-	if(character.value)
+	if(character.value) {
 		advance_value(character, 0);
-	player->levelup();
+		player->levelup();
+	}
 	player->place(m);
 	player->finish();
 	if(pm) {

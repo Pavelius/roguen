@@ -63,6 +63,7 @@ public:
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
 	void			createpower(int chance_power = 0);
+	int				ischarge() const { return !iscountable() && (broken < 7); }
 	void			damage();
 	void			drop(point m);
 	int				get(unsigned fo) const;

@@ -1,2 +1,2 @@
-﻿In file `Descriptions.txt`:
-Can't find script or dialog with name 'ChooseAction'
+﻿In file `rules/Monsters.txt`:
+ Line 54: Not found requisit `Level`

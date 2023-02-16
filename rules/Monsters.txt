@@ -1,34 +1,38 @@
 #Monster
 
 Bear avatar(360) appear(1 2) friendly(-10)
- abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) Hits(40)
+ abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) Hits(40) Level(3)
  use Bite
 Boar avatar(376) appear(2 5) friendly(-20)
- abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20)
+ abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
+ use Bite
 ChaosHydra avatar(339) friendly(-20)
- abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50)
+ abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50) Level(5)
  use Bite Regeneration
 CityGuard avatar(543)
- abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10)
+ abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10) Level(2)
  use Spear ChainArmor
  treasure SP GP-10
 DireBoar avatar(377) appear(2 3) friendly(-20)
- abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(40) Hits(40) Armor(1)
+ abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(40) Hits(40) Armor(1) Level(4)
+ use Bite
 DireWolf avatar(52) appear(2 4) friendly(-20)
- abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(40) Hits(30) Armor(1)
+ abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(40) Hits(30) Armor(1) Level(3)
  use Bite
 Dog avatar(292) appear(1 2)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) Hits(4)
  use Bite Female
 GiantBat avatar(155) appear(2 5) friendly(-10)
  abilities Strenght(10) Dexterity(30) Wits(2) WeaponSkill(20) Hits(4)
+ use Bite
 GiantLizard avatar(220) appear(1 3) friendly(-20)
- abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4)
+ abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4) Level(3)
+ use Bite
 GiantSpider avatar(591) appear(1 4) friendly(-20)
- abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) Hits(20)
+ abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) Hits(20) Level(5)
  use Bite StrongPoison IgnoreWeb Web+4
 Ghoul avatar(305) appear(1 3) friendly(-20)
- abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1)
+ abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
  use Claws Undead PoisonImmunity
 Goblin avatar(0) appear(3 8) friendly(-30)
  abilities Strenght(25) Dexterity(40) Wits(14) WeaponSkill(30) Hits(5)
@@ -39,26 +43,29 @@ GoblinFemale avatar(1) parent(Goblin) appear(1 3) friendly(-30)
  use Dagger Female
  treasure SP-10
 OrcWarrior avatar(2) appear(2 4) friendly(-30)
- abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(35) Hits(15)
+ abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(35) Hits(15) Level(2)
  use BruteSword LeatherArmor Darkvision
  treasure SP SP-50
 Outsider avatar(121) appear(1 3) friendly(-20)
  use Tentacle
- abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(4)
+ abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(4) Level(3)
 Rabbit avatar(7) appear(3 6)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
+ use Bite
 RabbitFemale avatar(8) parent(Rabbit) appear(2 4)
  abilities Strenght(5) Dexterity(22) Wits(3) WeaponSkill(8) Hits(2)
+ use Bite
 ShamblingMound avatar(9) friendly(-20)
- abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) Hits(30)
+ abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) Hits(30) Level(4)
+ use Bite
 Skeleton avatar(574) appear(3 6) friendly(-20)
- abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) Hits(8) Armor(1)
+ abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) Hits(8) Armor(1) Level(1)
  use Spear Darkvision Undead PoisonImmunity
 Zombie avatar(101) appear(2 5) friendly(-20)
- abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(25) Hits(16)
+ abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(25) Hits(16) Level(1)
  use Dagger Darkvision Undead PoisonImmunity
 Wolf avatar(20) appear(2 5) friendly(-10)
- abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(30) Hits(10)
+ abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(35) Hits(10) Level(1)
  use Bite
 
 #RandomTable
