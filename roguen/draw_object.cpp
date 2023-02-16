@@ -38,6 +38,10 @@ unsigned long draw::getobjectstamp() {
 	return timestamp;
 }
 
+void drawable::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
 void draworder::clear() {
 	remove_depends(this);
 	memset(this, 0, sizeof(*this));

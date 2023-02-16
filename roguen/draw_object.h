@@ -8,12 +8,18 @@ namespace draw {
 struct object;
 typedef void(*fnpaint)(const object* pointer);
 struct drawable {
+	enum type_s : unsigned char {
+		None, Background, Object, Overlay
+	};
 	point			position;
-	unsigned char	alpha;
+	unsigned char	alpha, priority, random;
+	type_s			type;
 	color			fore;
+	constexpr explicit operator bool() const { return type != None; }
+	void			clear();
 };
 struct draworder : drawable {
-	object*			parent;
+	drawable*		parent;
 	drawable		start;
 	draworder*		depend;
 	unsigned long	tick_start, tick_stop;
@@ -25,14 +31,8 @@ struct draworder : drawable {
 	void			wait();
 };
 struct object : drawable {
-	enum type_s : unsigned char {
-		NoObject, Background, Object, Overlay
-	};
 	const void*		data;
 	const char*		string;
-	unsigned char	priority, random;
-	type_s			type;
-	constexpr explicit operator bool() const { return data != 0 || string != 0; }
 	static fnevent	correctcamera, beforepaint, afterpaint;
 	static fnpaint	painting;
 	draworder*		add(int milliseconds = 1000, draworder* depend = 0);

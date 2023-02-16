@@ -954,7 +954,15 @@ static void paint_message(const answers& source, int window_width) {
 		answer_paint_cell_small(index++, e.value, e.text, buttonparam);
 }
 
+static void update_scene() {
+	rectpush push;
+	ismodal();
+	paintstart();
+	paintobjects();
+}
+
 void* answers::choose() const {
+	update_scene();
 	rectpush push;
 	screenshoot screen;
 	while(ismodal()) {
