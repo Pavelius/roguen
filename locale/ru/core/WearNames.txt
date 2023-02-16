@@ -5,6 +5,7 @@ FingerLeft: Кольцо
 FingerRight: Кольцо
 Gloves: Перчатки
 Head: Голова
+Girdle: Пояс
 Legs: Ноги
 Neck: Шея
 MeleeWeapon: Правая рука

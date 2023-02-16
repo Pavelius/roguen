@@ -84,7 +84,7 @@ BSMETA(framerange) = {
 	BSREQ(start), BSREQ(count),
 	{}};
 BSMETA(itemi) = {
-	BSREQ(id), BSREQ(no_identifier),
+	BSREQ(id), BSREQ(unidentified),
 	BSREQ(weight), BSREQ(cost),
 	BSFLG(feats, feati),
 	BSREQ(wearing),

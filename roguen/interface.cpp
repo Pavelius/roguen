@@ -803,7 +803,7 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 		auto pc = bsdata<creature>::elements + bsdata<creature>::source.indexof(value);
 		auto pi = pc->getwear(value);
 		auto st = pc->getwearslot(pi);
-		if(pi && st >= MeleeWeapon && st <= Elbows) {
+		if(pi && st >= MeleeWeapon && st <= Legs) {
 			text(bsdata<weari>::elements[st].getname());
 			caret.x += wears_offset; width -= wears_offset;
 		}

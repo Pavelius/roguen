@@ -604,7 +604,7 @@ static const char* item_weight(const void* object, stringbuilder& sb) {
 static item* choose_wear() {
 	static wear_s source[] = {
 		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon,
-		Elbows, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
+		Elbows, Girdle, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
 	};
 	answers an;
 	for(auto& e : player->equipment()) {

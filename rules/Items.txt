@@ -99,48 +99,48 @@ PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(Hea
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(HeavyArmorPowers)
  wearing Block+2
 
-HealingPotion cost(30) count(1) weight(2) no_identifier(RedPotion) wear(Potion) avatar(164)
+HealingPotion cost(30) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
  use Hits+20
  use_cursed Poison+10
  use_blessed Hits+80
-ManaPotion cost(30) count(1) weight(2) no_identifier(BluePotion) wear(Potion) avatar(436)
+ManaPotion cost(30) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
  use Mana+20
  use_cursed Poison+10
  use_blessed Mana+80
-PotionOfStrenght cost(1000) count(1) weight(2) no_identifier(RedPotion) wear(Potion) avatar(162)
+PotionOfStrenght cost(1000) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(162)
  use Permanent Strenght+1
  use_cursed Permanent Strenght-1
  use_blessed Permanent Strenght+4
-PotionOfDexterity cost(1000) count(1) weight(2) no_identifier(BrownPotion) wear(Potion) avatar(165)
+PotionOfDexterity cost(1000) count(1) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165)
  use Permanent Dexterity+1
  use_cursed Permanent Dexterity-1
  use_blessed Permanent Dexterity+4
-PotionOfWits cost(1000) count(1) weight(2) no_identifier(BluePotion) wear(Potion) avatar(433)
+PotionOfWits cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
  use Permanent Wits+1
  use_cursed Permanent Wits-1
  use_blessed Permanent Wits+4
-PotionOfCharisma cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(435)
+PotionOfCharisma cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
  use Permanent Charisma+1
  use_cursed Permanent Charisma-1
  use_blessed Permanent Charisma+4
-PotionOfAbilityRaise cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(435)
+PotionOfAbilityRaise cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
  use Permanent RandomAbility+1
  use_cursed Permanent RandomAbility-1
  use_blessed Permanent Strenght+1 Dexterity+1 Wits+1 Charisma+1
-PotionOfWisdow cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Experience+10
  use_cursed Experience-10
  use_blessed Experience+50
-PotionOfCurePoison cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Poison-20
  use_cursed Poison+10
  use_blessed Poison-40
-PotionOfExhange cost(800) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
-PotionOfHealth cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+PotionOfExhange cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+PotionOfHealth cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Permanent Hits+1
  use_cursed Permanent Hits-1
  use_blessed Permanent Hits+5
-PotionOfEnergy cost(1000) count(1) weight(2) no_identifier(YellowPotion) wear(Potion) avatar(169)
+PotionOfEnergy cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Permanent Mana+1
  use_cursed Permanent Mana-1
  use_blessed Permanent Mana+5
@@ -165,8 +165,23 @@ RingOfRegeneration weight(1) count(1) wear(FingerRight) avatar(655)
 RingOfWarrior weight(1) count(1) wear(FingerRight) avatar(655)
  wearing WeaponSkill+10
 
-BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226)
+LeatherBoots weight(20) count(1) wear(Legs) avatar(192)
+IronBoots weight(20) count(1) wear(Legs) avatar(192)
+ wearing Dodge-5 Block+1
+BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226) unidentified(LeatheBoots)
  wearing Dexterity+10
+BootsOfLevitation weight(15) count(1) wear(Legs) avatar(224) unidentified(LeatheBoots)
+ wearing Fly+1
+
+LeatherGirdle weight(50) count(1) wear(Girdle) avatar(41)
+IronGirdle weight(250) count(1) wear(Girdle) avatar(14)
+ wearing Dodge-5 Block+1
+GirdleOfMight weight(50) count(1) wear(Girdle) avatar(18) unidentified(LeatherGirdle)
+ wearing Strenght+5
+GirdleOfGiantStrenght weight(50) count(1) wear(Girdle) avatar(41) unidentified(LeatherGirdle)
+ wearing Strenght+25
+GirdleOfCarring weight(50) count(1) wear(Girdle) avatar(88) unidentified(LeatherGirdle)
+ wearing CarryCapacity+10
 
 Apple weight(2) avatar(503) count(1) rotting(20)
  use Satiation+20 Chance+1 Strenght+1
@@ -261,8 +276,12 @@ RandomPotion
  chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma PotionOfAbilityRaise PotionOfWisdow
 RandomRing
  chance BrassRing+4 RingOfAcidResistance RingOfColdResistance RingOfFireResistance RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
+RandomBoots
+ chance BootsOfLevitation BootsOfSneakiness
+RandomGirdle
+ chance LeatherGirdle+4 IronGirdle+2 GirdleOfMight GirdleOfGiantStrenght GirdleOfCarring
 RandomLoot
- chance RandomTreasure+4 RandomKeys RandomGear RandomPotion RandomRing
+ chance RandomTreasure+4 RandomKeys RandomGear RandomPotion RandomRing RandomBoots RandomGirdle
 WoodenLagsTable
  chance Lags SmallLags+2
 

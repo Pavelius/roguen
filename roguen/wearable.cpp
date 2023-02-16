@@ -34,7 +34,7 @@ void wearable::additem(item& v) {
 }
 
 void wearable::equip(item& v) {
-	for(auto i = MeleeWeapon; i <= Elbows; i = (wear_s)(i + 1)) {
+	for(auto i = MeleeWeapon; i <= Legs; i = (wear_s)(i + 1)) {
 		if(wears[i])
 			continue;
 		if(!v.canequip(i))

@@ -121,3 +121,6 @@ Money: Деньги
 
 CutWoods: Рубит деревья
 Retaliate: Ответный удар
+
+Fly: Полет
+LightSource: Источник света

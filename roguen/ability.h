@@ -11,7 +11,7 @@ enum ability_s : unsigned char {
 	Speed, EnemyAttacks,
 	Herbalism, Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
-	Level,
+	CarryCapacity, Level,
 	Hits, Mana, Poison, Illness, Reputation,
 	Experience, Satiation, Money,
 };

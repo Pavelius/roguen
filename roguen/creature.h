@@ -57,6 +57,7 @@ public:
 	void			finish();
 	int				get(ability_s v) const { return abilities[v]; }
 	int				getdefault(ability_s v) const { return imax(get(v), getminimal(v)); }
+	int				getexpreward() const;
 	int				getminimal(ability_s v) const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
 	const classi&	getclass() const { return bsdata<classi>::elements[class_id]; }

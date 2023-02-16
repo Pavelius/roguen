@@ -1,4 +1,2 @@
-﻿In file `Descriptions.txt`:
-Can't find script or dialog with name 'ShowMinimap'
-Can't find script or dialog with name 'ShowLogs'
-Can't find script or dialog with name 'ShowCharsheet'
+﻿In file `rules/Items.txt`:
+ Line 176: Not found identifier `Grindle`

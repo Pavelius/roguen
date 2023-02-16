@@ -827,6 +827,17 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		weapon.damage();
 }
 
+int	creature::getexpreward() const {
+	static ability_s skills[] = {Strenght, Dexterity, Wits, Charisma, WeaponSkill, BalisticSkill};
+	auto result = 0;
+	for(auto v : skills) {
+		auto n = get(v) / 5;
+		if(result < n)
+			result = n;
+	}
+	return abilities[Hits] + result;
+}
+
 void creature::kill() {
 	if(d100() < 40)
 		area.setflag(getposition(), Blooded);
@@ -835,6 +846,8 @@ void creature::kill() {
 	fixeffect("HitVisual");
 	fixremove();
 	drop_treasure(this);
+	if(enemy == this && player)
+		player->experience += getexpreward();
 	trigger::fire(WhenCreatureP1Dead, getkind());
 	clear();
 	if(human_killed)

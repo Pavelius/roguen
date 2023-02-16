@@ -8,7 +8,7 @@ static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");
 
 const char* item::getname() const {
 	auto& ei = geti();
-	auto id = identified ? ei.id : ei.no_identifier;
+	auto id = identified ? ei.id : ei.unidentified;
 	if(!id)
 		id = ei.id;
 	return getnm(id);

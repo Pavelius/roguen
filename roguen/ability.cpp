@@ -27,6 +27,7 @@ BSDATA(abilityi) = {
 	{"OpenLocks"},
 	{"DisarmTraps"},
 	{"Survival"},
+	{"CarryCapacity"},
 	{"Level"},
 	{"Hits", ColorRed, ColorGreen},
 	{"Mana", ColorBlue},

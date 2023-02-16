@@ -26,10 +26,11 @@ BSDATA(weari) = {
 	{"Head"},
 	{"Neck"},
 	{"Backward"},
-	{"Legs"},
+	{"Girdle"},
 	{"Gloves"},
 	{"FingerRight"},
 	{"FingerLeft"},
 	{"Elbows"},
+	{"Legs"},
 };
-assert_enum(weari, Elbows)
+assert_enum(weari, Legs)
