@@ -32,7 +32,6 @@ RandomRace
 "M" ShowMinimap
 "L" ShowLogs
 "T" ThrownAttack
-"S" ChooseAction
 "V" ViewStuff
 "X" ShowCharsheet
 

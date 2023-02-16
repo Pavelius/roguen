@@ -14,6 +14,8 @@
 extern areamap area;
 extern indexa indecies;
 extern point last_index;
+siteskilla last_actions;
+siteskilli* last_action;
 
 bool choose_targets(unsigned flags, const variants& effects);
 

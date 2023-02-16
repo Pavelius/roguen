@@ -26,7 +26,6 @@ struct defenceg {
 }
 
 extern collection<roomi> rooms;
-extern siteskilla last_actions;
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(unsigned flags, const variants& effects);
 

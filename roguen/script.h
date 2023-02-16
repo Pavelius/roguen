@@ -11,8 +11,8 @@ struct script {
 	static bool		isallow(variant v);
 	static bool		isallow(const variants& elements);
 	void			run(int bonus);
-	static void		run(const char* id, int bonus = 0);
+	static void		run(const char* id, int bonus);
 	static void		run(variant v);
-	static void		runv(const void* pv, int bonus = 0);
+	static void		runv(const void* pv, int bonus);
 	static void		run(const variants& elements);
 };

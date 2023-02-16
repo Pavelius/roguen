@@ -1,2 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 176: Not found identifier `Grindle`
+﻿In file `Descriptions.txt`:
+Can't find script or dialog with name 'ChooseAction'

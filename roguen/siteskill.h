@@ -18,3 +18,5 @@ struct siteskilli : nameable {
 	static bool		isvalid(const void* object);
 };
 typedef collection<siteskilli> siteskilla;
+extern siteskilla last_actions;
+extern siteskilli* last_action;

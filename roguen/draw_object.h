@@ -25,9 +25,13 @@ struct draworder : drawable {
 	void			wait();
 };
 struct object : drawable {
+	enum type_s : unsigned char {
+		NoObject, Background, Object, Overlay
+	};
 	const void*		data;
 	const char*		string;
 	unsigned char	priority, random;
+	type_s			type;
 	constexpr explicit operator bool() const { return data != 0 || string != 0; }
 	static fnevent	beforepaintall, afterpaintall, correctcamera;
 	static fnpaint	afterpaint, afterpaintallpo;

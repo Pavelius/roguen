@@ -201,6 +201,8 @@ static size_t getobjects(object** pb, object** pe) {
 static int compare(const void* v1, const void* v2) {
 	auto p1 = *((object**)v1);
 	auto p2 = *((object**)v2);
+	if(p1->type != p2->type)
+		return p1->type - p2->type;
 	auto r1 = p1->priority / 5;
 	auto r2 = p2->priority / 5;
 	if(r1 != r2)
@@ -231,15 +233,23 @@ void draw::paintobjects() {
 	auto count = getobjects(source, source + sizeof(source) / sizeof(source[0]));
 	sortobjects(source, count);
 	for(size_t i = 0; i < count; i++) {
-		draw::caret = source[i]->position - draw::camera;
-		source[i]->paint();
+		auto p = source[i];
+		if(p->type == object::Object)
+			draw::caret = p->position - draw::camera;
+		else
+			draw::caret = p->position;
+		p->paint();
 	}
 	if(object::afterpaintall)
 		object::afterpaintall();
 	if(object::afterpaintallpo) {
 		for(size_t i = 0; i < count; i++) {
-			draw::caret = source[i]->position - draw::camera;
-			object::afterpaintallpo(source[i]);
+			auto p = source[i];
+			if(p->type==object::Object)
+				draw::caret = p->position - draw::camera;
+			else
+				draw::caret = p->position;
+			object::afterpaintallpo(p);
 		}
 	}
 	shrink();
@@ -266,6 +276,7 @@ void draw::showobjects() {
 object*	draw::addobject(point pt) {
 	auto p = bsdata<object>::addz();
 	p->clear();
+	p->type = object::Object;
 	p->position = pt;
 	return p;
 }

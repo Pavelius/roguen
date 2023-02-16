@@ -34,7 +34,6 @@ itema			items;
 indexa			indecies;
 spella			allowed_spells;
 creature		*player, *opponent, *enemy;
-siteskilla		last_actions;
 int				last_coins;
 const char*		last_id;
 point			last_index;
@@ -1000,20 +999,14 @@ static void add_dungeon_rumor(int bonus) {
 	quest::add(KillBossQuest, game.position);
 }
 
-static void choose_action(int bonus) {
-	if(!last_actions)
-		player->actp(getnm("YouDontHaveAnyActions"));
-	else {
-		auto pa = last_actions.choose(getnm("ChooseAction"), getnm("Cancel"), false);
-		if(!pa)
-			return;
-		if(!choose_targets(pa->target, pa->effect))
-			return;
-		if(!bound_targets(pa->id, pa->target, 0, player->ishuman()))
-			return;
-		apply_target_effect(pa->target, pa->effect);
-	}
-	player->wait();
+static void apply_action(int bonus) {
+	if(!last_action)
+		return;
+	if(!choose_targets(last_action->target, last_action->effect))
+		return;
+	if(!bound_targets(last_action->id, last_action->target, 0, player->ishuman()))
+		return;
+	apply_target_effect(last_action->target, last_action->effect);
 }
 
 static void jump_to_site(int bonus) {
@@ -1138,12 +1131,12 @@ BSDATA(triggerni) = {
 };
 assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {
+	{"Activate", activate_feature},
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
-	{"Activate", activate_feature},
+	{"ApplyAction", apply_action},
 	{"CastSpell", cast_spell},
-	{"ChooseAction", choose_action},
 	{"Chance", random_chance, random_chance_test},
 	{"ChatSomeone", chat_someone},
 	{"DebugMessage", debug_message},

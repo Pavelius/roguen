@@ -15,6 +15,7 @@
 #include "resid.h"
 #include "script.h"
 #include "screenshoot.h"
+#include "siteskill.h"
 #include "stringact.h"
 #include "visualeffect.h"
 
@@ -686,6 +687,78 @@ static void before_paint_all() {
 	clipping = push_clip;
 }
 
+static unsigned answer_key(int index) {
+	switch(index) {
+	case 0: case 1: case 2:
+	case 3: case 4: case 5:
+	case 6: case 7: case 8:
+		return '1' + index;
+	case 9: return '0';
+	default: return 'A' + (index - 10);
+	}
+}
+
+static void execute_action() {
+	auto push_action = last_action;
+	last_action = (siteskilli*)hot.object;
+	script::run("ApplyAction", 0);
+	last_action = push_action;
+}
+
+static void paint_action(const void* p, int index, fnevent proc) {
+	auto push_caret = caret;
+	auto result = button(answer_key(index), 32);
+	text(getnm(((nameable*)p)->id));
+	caret = push_caret;
+	if(result)
+		execute(proc, index, 0, p);
+}
+
+static int get_maximum_width(const collectiona& source) {
+	auto result = 0;
+	for(auto p : source) {
+		auto pn = getnm(((nameable*)p)->id);
+		auto w = textw(pn);
+		if(result < w)
+			result = w;
+	}
+	return result;
+}
+
+static void set_ld_position() {
+	caret.y = getheight() - height - metrics::padding * 2;
+	caret.x = metrics::padding * 2;
+	if(!player)
+		return;
+	auto po = findobject(player);
+	if(!po)
+		return;
+	auto x = po->position.x - camera.x;
+	auto y = po->position.y - camera.y;
+	if(y >= caret.y && x >= caret.x && x <= caret.x)
+		caret.x = getwidth() - width - metrics::padding * 4 - panel_width;
+}
+
+static void paint_collection(const collectiona& source, fnevent pcommand) {
+	if(!source)
+		return;
+	const int dy = texth() + 1;
+	rectpush push;
+	width = metrics::padding + get_maximum_width(source) + 32;
+	height = last_actions.getcount() * dy + (last_actions.getcount() - 1) * metrics::padding;
+	set_ld_position();
+	strokeout(fillwindow, metrics::padding, metrics::padding);
+	strokeout(strokeborder, metrics::padding, metrics::padding);
+	auto index = 0;
+	for(auto p : source)
+		paint_action(p, index++, pcommand);
+}
+
+static void paint_actions() {
+	if(last_actions)
+		paint_collection(last_actions, execute_action);
+}
+
 static void paint_message() {
 	auto p = console.begin();
 	if(!p || !p[0])
@@ -715,6 +788,7 @@ static void reset_message() {
 static void after_paint_all() {
 	paint_fow();
 	paint_message();
+	paint_actions();
 	reset_message();
 }
 
@@ -781,17 +855,6 @@ static void answer_before_paint() {
 		font = push_font;
 	}
 	fore = push_fore;
-}
-
-static unsigned answer_key(int index) {
-	switch(index) {
-	case 0: case 1: case 2:
-	case 3: case 4: case 5:
-	case 6: case 7: case 8:
-		return '1' + index;
-	case 9: return '0';
-	default: return 'A' + (index - 10);
-	}
 }
 
 static void answer_paint_cell(int index, const void* value, const char* format, fnevent proc) {
