@@ -99,9 +99,6 @@
     <ClCompile Include="variant.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="widget.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="zip.cpp">
       <Filter>Support</Filter>
     </ClCompile>

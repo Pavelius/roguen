@@ -165,12 +165,15 @@ BSMETA(spelli) = {
 BSMETA(weaponi) = {
 	BSREQ(damage), BSREQ(skill), BSREQ(pierce), BSREQ(speed), BSREQ(ammunition),
 	{}};
-BSMETA(weari) = {
-	BSREQ(id),
-	{}};
 BSMETA(visualeffect) = {
 	BSREQ(id),
 	{}};
+BSMETA(weari) = {
+	BSREQ(id),
+	{}};
+//BSMETA(widget) = {
+//	BSREQ(id),
+//	{}};
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Ability", VAR(abilityi), 1},
@@ -206,6 +209,6 @@ BSDATA(varianti) = {
 	{"Trigger", VAR(trigger), 3},
 	{"Variant", VAR(varianti), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
-	{"Widget", VAR(widget), 1},
+//	{"Widget", VAR(widget), 1},
 };
 BSDATAF(varianti)
