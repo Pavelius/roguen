@@ -185,7 +185,7 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 	if(power.iskind<spelli>() && weapon.ischarge())
 		special_spell_attack(player, weapon, enemy, bsdata<spelli>::elements[power.value]);
 	// Damage equipment sometime
-	if(d100() < 15) {
+	if(d100() < 30) {
 		pushvalue push_player(player, enemy);
 		damage_equipment(1);
 	}
@@ -804,7 +804,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	}
 	auto base_damage = damage;
 	int pierce = weapon.geti().weapon.pierce;
-	if(roll_result < attack_skill / 2)
+	if(roll_result < attack_skill / 3)
 		special_attack(player, weapon, enemy, pierce, damage);
 	if(armor > 0) {
 		if(pierce > armor)

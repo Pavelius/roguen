@@ -85,10 +85,12 @@ void item::create(const itemi* pi, int count) {
 		return;
 	clear();
 	type = pi - bsdata<itemi>::elements;
-	if(pi->count)
-		setcount(count * pi->count);
-	else
+	if(count)
 		setcount(count);
+	else if(pi->count > 1)
+		setcount(xrand(1, pi->count));
+	else
+		setcount(1);
 }
 
 bool item::is(wear_s v) const {

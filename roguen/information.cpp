@@ -96,8 +96,12 @@ void item::getinfo(stringbuilder& sb) const {
 	auto& ei = geti();
 	sb.adds(getfullname());
 	addv(sb, Damage, geti().weapon.damage);
-	addv(sb, "Speed", geti().weapon.speed);
+	if(is(RangedWeapon))
+		addv(sb, BalisticSkill, geti().weapon.skill);
+	else if(is(MeleeWeapon) || is(MeleeWeaponOffhand))
+		addv(sb, WeaponSkill, geti().weapon.skill);
 	addv(sb, "Pierce", geti().weapon.pierce);
+	addv(sb, "Speed", geti().weapon.speed);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

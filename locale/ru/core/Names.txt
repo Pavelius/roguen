@@ -38,6 +38,7 @@ Hour: Час
 IcedSlice: %герой подскалзнул%ась на льду.
 IHaveItem: У меня есть [%1]. Могу дать %2i шт.
 Inventory: Одетые предметы
+ItemNotUsable: Неиспользуется предмет
 Kg: кг
 KnowRumor: Узнать сплетни
 Level: Уровень

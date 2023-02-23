@@ -42,7 +42,7 @@ class item {
 			unsigned char identified : 1;
 			unsigned char identified_cub : 1;
 			unsigned char personal : 1;
-			magic_s magic : 2; // Cursed Uncursed Blessed
+			magic_s magic : 2; // Cursed Uncursed Blessed (Artifact?)
 		};
 	};
 	union {
@@ -63,16 +63,16 @@ public:
 	int				ischarge() const { return !iscountable() && (broken < 7); }
 	void			damage();
 	void			drop(point m);
-	short unsigned	getkind() const { return type; }
 	int				getavatar() const { return geti().wear_index; }
-	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
-	void			getinfo(stringbuilder& sb) const;
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
+	const char*		getfullname(int price_percent = 0) const;
+	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
+	void			getinfo(stringbuilder& sb) const;
+	short unsigned	getkind() const { return type; }
 	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
-	const char*		getfullname(int price_percent = 0) const;
 	variant			getpower() const;
 	variants		getuse() const;
 	int				getweight() const;

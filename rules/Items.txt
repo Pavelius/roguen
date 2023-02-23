@@ -1,5 +1,7 @@
 #List
 
+PierceWeapons
+ elements WeaponSkill+10 Dexterity+10 Block+2 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3
 SlashingWeapons
  elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+2 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3
 BludgeonWeapons
@@ -35,10 +37,12 @@ BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) powers
  feats CutWoods
 BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) powers(SlashingWeapons)
  weapon damage(5) skill(-8) speed(-6)
+ feats MightyHit
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) powers(BludgeonWeapons)
  weapon damage(3)
 Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) powers(SlashingWeapons)
  weapon damage(2) speed(5)
+ feats PierceHit
 Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) powers(SlashingWeapons)
  weapon damage(6) pierce(1) speed(-10)
  feats TwoHanded CutWoods MightyHit
@@ -47,7 +51,7 @@ HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) powers(S
 Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) powers(BludgeonWeapons)
  weapon damage(3) speed(-5)
  feats StunningHit
-Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559)
+Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) powers(PierceWeapons)
  weapon damage(2) pierce(1) speed(-4)
  feats Retaliate PierceHit
 Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) powers(BludgeonWeapons)
@@ -55,8 +59,10 @@ Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) powers(Blu
  feats TwoHanded
 Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) powers(SlashingWeapons)
  weapon damage(4) speed(-5)
+ feats MightyHit
 StrangeSword cost(500) weight(200) wear(MeleeWeapon) avatar(173) wear_index(23) chance_power(100) powers(SlashingWeapons)
  weapon damage(6) speed(-4)
+ feats MightyHit
 
 Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
 Bolt wear(Ammunition) weight(2) count(20) wear_index(3) avatar(211)
