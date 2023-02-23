@@ -469,6 +469,8 @@ static bool bound_targets(const char* id, unsigned flags, int multi_targets, boo
 		targets.count = target_count;
 	if(indecies.count > target_count)
 		indecies.count = target_count;
+	if(items.count > target_count)
+		items.count = target_count;
 	if(rooms.count > target_count)
 		rooms.count = target_count;
 	return true;
