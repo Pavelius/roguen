@@ -153,7 +153,7 @@ BSMETA(siteskilli) = {
 	BSREQ(bonus),
 	BSENM(retry, durationi),
 	BSFLG(target, conditioni),
-	BSREQ(effect), BSREQ(fail),
+	BSREQ(conditions), BSREQ(effect), BSREQ(fail),
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
@@ -171,9 +171,6 @@ BSMETA(visualeffect) = {
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
-//BSMETA(widget) = {
-//	BSREQ(id),
-//	{}};
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Ability", VAR(abilityi), 1},
@@ -209,6 +206,5 @@ BSDATA(varianti) = {
 	{"Trigger", VAR(trigger), 3},
 	{"Variant", VAR(varianti), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
-//	{"Widget", VAR(widget), 1},
 };
 BSDATAF(varianti)

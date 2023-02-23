@@ -224,7 +224,7 @@ bool script::isallow(variant v) {
 		if(!v.counter)
 			return player->iskind(v);
 	} else if(v.iskind<feati>()) {
-		if(v.counter>=0)
+		if(v.counter >= 0)
 			return player->is((feat_s)v.value);
 	}
 	return true;
@@ -621,6 +621,13 @@ static bool is_harvest_herbs(int bonus) {
 	return true;
 }
 
+static bool is_locked_door(int bonus) {
+	auto pf = bsdata<featurei>::elements + area.features[last_index];
+	if(!pf->activate_item)
+		return false;
+	return true;
+}
+
 static const char* item_weight(const void* object, stringbuilder& sb) {
 	auto p = (item*)object;
 	if(!(*p))
@@ -697,6 +704,10 @@ static void debug_message(int bonus) {
 	//dialog_message(getdescription("LoseGame1"));
 	console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
 	draw::pause();
+}
+
+static void open_locked_door(int bonus) {
+	area.setactivate(last_index);
 }
 
 static void open_nearest_door(int bonus) {
@@ -1029,6 +1040,13 @@ static void add_dungeon_rumor(int bonus) {
 	quest::add(KillBossQuest, game.position);
 }
 
+static void repair_item(int bonus) {
+	if(bonus > 0)
+		last_item->setborken(0);
+	else if(bonus < 0)
+		last_item->setborken(3);
+}
+
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
@@ -1190,6 +1208,7 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"LoseGame", lose_game},
 	{"Offset", set_offset},
+	{"OpenLockedDoor", open_locked_door, is_locked_door},
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"PickUpAll", pickup_all},
@@ -1199,6 +1218,7 @@ BSDATA(script) = {
 	{"QuestReward", quest_reward},
 	{"RandomAbility", random_ability},
 	{"RangeAttack", range_attack},
+	{"RepairItem", repair_item},
 	{"Roll", roll_value},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},

@@ -19,6 +19,9 @@ TorchLight mana(5) duration(Minute20PL)
  effect LightSource
 ManaRegeneration duration(Hour1PL)
  target TargetCreatures You
+Mending mana(10)
+ target TargetItems Wounded Multitarget
+ effect RepairItem+1
 Regeneration mana(15) duration(Hour1PL)
  target TargetCreatures You
 Sleep mana(5) duration(Minute20)

@@ -13,6 +13,7 @@ struct siteskilli : nameable {
 	unsigned		target;
 	char			bonus;
 	duration_s		retry;
+	variants		conditions;
 	variants		effect, fail;
 	void			apply() const;
 	static bool		isvalid(const void* object);

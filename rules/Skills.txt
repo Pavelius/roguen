@@ -3,6 +3,9 @@
 GatherHerbs skill(Herbalism)
  target TargetFeatures
  effect GatherHerbs
+OpenDoorLock skill(OpenLocks)
+ target TargetFeatures
+ effect OpenLockedDoor
 
 StealCoins skill(Pickpockets)
  target TargetCreatures Neutrals

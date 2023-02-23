@@ -86,6 +86,7 @@ public:
 	bool			isidentified() const { return identified != 0; }
 	bool			iscountable() const { return geti().count != 0; }
 	void			set(magic_s v) { magic = v; }
+	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
 	void			setidentifiedcub(int v) { identified_cub = v; }
