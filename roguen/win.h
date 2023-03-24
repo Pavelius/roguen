@@ -539,8 +539,12 @@ typedef void(CALLBACK *PIMAGE_TLS_CALLBACK)(void* DllHandle, unsigned long Reaso
 #define DEFAULT_CHARSET	1
 #define CLIP_DEFAULT_PRECIS	0
 #define OUT_DEFAULT_PRECIS	0
+
+#define DEFAULT_QUALITY 0
+#define DRAFT_QUALITY 1
+#define PROOF_QUALITY 2
+#define NONANTIALIASED_QUALITY 3
 #define ANTIALIASED_QUALITY 4
-#define CLEARTYPE_QUALITY 4
 
 #define FF_DECORATIVE	80
 #define FF_DONTCARE		0
@@ -550,7 +554,9 @@ typedef void(CALLBACK *PIMAGE_TLS_CALLBACK)(void* DllHandle, unsigned long Reaso
 #define FF_SWISS		32
 
 #define GGO_BITMAP 1
-#define GGO_GRAY8_BITMAP	6
+#define GGO_GRAY2_BITMAP 4
+#define GGO_GRAY4_BITMAP 5
+#define GGO_GRAY8_BITMAP 6
 
 #define INT_MIN     (-2147483647 - 1) // minimum (signed) int value
 
