@@ -20,6 +20,29 @@ static void addv(stringbuilder& sb, const dice& value) {
 		sb.adds("%1i", value.min);
 }
 
+static void addv(stringbuilder& sb, const char* id, int value, const char* format = 0) {
+	if(!value)
+		return;
+	if(!format)
+		format = "[~%-1%+2i]";
+	sb.adds(format, getnameshort(id), value);
+}
+
+static void addv(stringbuilder& sb, const char* id) {
+	sb.adds(getnm(id));
+}
+
+static void addv(stringbuilder& sb, ability_s id, int value) {
+	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1 [%2i]");
+}
+
+static void addv(stringbuilder& sb, const featable& feats) {
+	for(auto v = 0; v < 32; v++) {
+		if(feats.is(v))
+			addv(sb, bsdata<feati>::elements[v].id);
+	}
+}
+
 static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 0) {
 	switch(i) {
 	case Armor:
@@ -37,6 +60,22 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 			sb.addn("[~%1]\t%2i", getnameshort(i), value);
 		break;
 	}
+}
+
+static void wearing(stringbuilder& sb, const variants source);
+
+static void wearing(stringbuilder& sb, variant v) {
+	if(v.iskind<abilityi>())
+		addv(sb, bsdata<abilityi>::elements[v.value].id, v.counter, 0);
+	else if(v.iskind<feati>()) {
+		addv(sb, bsdata<feati>::elements[v.value].id);
+	} else if(v.iskind<listi>())
+		wearing(sb, bsdata<listi>::elements[v.value].elements);
+}
+
+static void wearing(stringbuilder& sb, const variants source) {
+	for(auto v : source)
+		wearing(sb, v);
 }
 
 static const char* getrace(variant v, bool female) {
@@ -69,39 +108,14 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());
 }
 
-static void addv(stringbuilder& sb, const char* id, int value, const char* format = 0) {
-	if(!value)
-		return;
-	if(!format)
-		format = "[~%-1%+2i]";
-	sb.adds(format, getnameshort(id), value);
-}
-
-static void addv(stringbuilder& sb, const char* id) {
-	sb.adds(getnm(id));
-}
-
-static void addv(stringbuilder& sb, ability_s id, int value) {
-	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1 [%2i]");
-}
-
-static void addv(stringbuilder& sb, const featable& feats) {
-	for(auto v = 0; v < 32; v++) {
-		if(feats.is(v))
-			addv(sb, bsdata<feati>::elements[v].id);
-	}
-}
-
 void item::getinfo(stringbuilder& sb) const {
 	auto& ei = geti();
 	sb.adds(getfullname(0, true));
-	addv(sb, "Damage", geti().weapon.damage);
-	if(is(RangedWeapon))
-		addv(sb, "BallisticSkill", geti().weapon.skill);
-	else if(is(MeleeWeapon) || is(MeleeWeaponOffhand))
-		addv(sb, "WeaponSkill", geti().weapon.skill);
-	addv(sb, "Pierce", geti().weapon.pierce);
-	addv(sb, "Speed", geti().weapon.speed);
+	addv(sb, "Damage", ei.weapon.damage);
+	addv(sb, "Pierce", ei.weapon.pierce);
+	addv(sb, "Speed", ei.weapon.speed);
+	if(ei.wearing)
+		wearing(sb, ei.wearing);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

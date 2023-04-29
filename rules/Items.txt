@@ -36,7 +36,8 @@ BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) powers
  weapon damage(4) pierce(2) speed(-8)
  feats CutWoods
 BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) powers(SlashingWeapons)
- weapon damage(5) skill(-8) speed(-6)
+ weapon damage(5) speed(-6)
+ wearing WeaponSkill-7
  feats MightyHit
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) powers(BludgeonWeapons)
  weapon damage(3)

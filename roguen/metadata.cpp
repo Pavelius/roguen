@@ -163,7 +163,7 @@ BSMETA(spelli) = {
 	BSREQ(effect), BSREQ(summon),
 	{}};
 BSMETA(weaponi) = {
-	BSREQ(damage), BSREQ(skill), BSREQ(pierce), BSREQ(speed), BSREQ(ammunition),
+	BSREQ(damage), BSREQ(pierce), BSREQ(speed), BSREQ(ammunition),
 	{}};
 BSMETA(visualeffect) = {
 	BSREQ(id),

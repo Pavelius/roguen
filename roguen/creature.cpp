@@ -825,7 +825,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		else if(weapon.is(Blessed))
 			damage = damage * 2;
 	}
-	attack_skill += player->get(weapon_ability) + weapon.geti().weapon.skill;
+	attack_skill += player->get(weapon_ability);
 	damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee()) {
 		auto base_strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;

@@ -12,7 +12,7 @@ enum ability_s : unsigned char;
 struct itemi;
 
 struct weaponi {
-	char			damage, skill, pierce, speed;
+	char			damage, pierce, speed;
 	const itemi*	ammunition;
 };
 struct itemi : nameable {

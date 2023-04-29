@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `BrassRing`
+﻿In file `rules/Items.txt`:
+ Line 39: Not found requisit `skill`
