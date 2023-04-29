@@ -1229,30 +1229,35 @@ void creature::makemove() {
 	}
 }
 
-static void wearing(variants source);
+static void wearing(variants source, int multiplier);
 
-static void wearing(variant v) {
+static void wearing(variant v, int multiplier) {
 	if(v.iskind<abilityi>())
-		player->abilities[v.value] += v.counter;
-	else if(v.iskind<listi>())
-		wearing(bsdata<listi>::elements[v.value].elements);
-	else if(v.iskind<feati>())
-		player->feats_active.set(v.value);
+		player->abilities[v.value] += v.counter * multiplier;
+	else if(v.iskind<feati>()) {
+		multiplier = v.counter * multiplier;
+		if(multiplier >= 0)
+			player->feats_active.set(v.value);
+		else
+			player->feats_active.remove(v.value);
+	} else if(v.iskind<listi>())
+		wearing(bsdata<listi>::elements[v.value].elements, multiplier);
 }
 
-static void wearing(variants source) {
+static void wearing(variants source, int multiplier) {
 	for(auto v : source)
-		wearing(v);
+		wearing(v, multiplier);
 }
 
 static void update_wears() {
 	for(auto& e : player->equipment()) {
 		if(!e)
 			continue;
-		wearing(e.geti().wearing);
+		auto multiplier = 1;
+		wearing(e.geti().wearing, multiplier);
 		auto power = e.getpower();
 		if(power)
-			wearing(power);
+			wearing(power, multiplier);
 	}
 }
 
