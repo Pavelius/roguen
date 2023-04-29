@@ -2,6 +2,7 @@
 #include "crt.h"
 
 ability_s last_ability;
+ability_s raw_abilities[4];
 
 BSDATA(abilityi) = {
 	{"LineOfSight"},

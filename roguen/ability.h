@@ -24,6 +24,7 @@ struct abilityi : nameable {
 	color_s		negative, positive;
 };
 extern ability_s last_ability;
+extern ability_s raw_abilities[4];
 struct statable {
 	char		abilities[Freezing + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }

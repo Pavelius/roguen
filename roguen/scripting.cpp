@@ -1091,6 +1091,30 @@ static bool random_chance_test(int bonus) {
 	return d100() < bonus;
 }
 
+static void select_raw_abilities() {
+	auto p = raw_abilities;
+	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
+		*p++ = i;
+}
+
+static int compare_player_ability(const void* p1, const void* p2) {
+	auto a1 = *((ability_s*)p1);
+	auto a2 = *((ability_s*)p2);
+	auto v1 = player->get(a1);
+	auto v2 = player->get(a2);
+	return v1 - v2;
+}
+
+static void sort_raw_ability_topmost() {
+	qsort(raw_abilities, sizeof(raw_abilities) / sizeof(raw_abilities[0]), sizeof(raw_abilities[0]), compare_player_ability);
+}
+
+static void ability_exchange(int bonus) {
+	select_raw_abilities();
+	sort_raw_ability_topmost();
+	iswap(player->abilities[raw_abilities[1]], player->abilities[raw_abilities[xrand(2, 3)]]);
+}
+
 static void activate_feature(int bonus) {
 	point m = center(last_rect);
 	visualize_activity(m);
@@ -1176,6 +1200,7 @@ BSDATA(triggerni) = {
 };
 assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {
+	{"AbilityExchange", ability_exchange},
 	{"Activate", activate_feature},
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},

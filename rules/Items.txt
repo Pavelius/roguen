@@ -134,6 +134,7 @@ PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(
  use_cursed Poison+10
  use_blessed Poison-40
 PotionOfExhange cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+ use AbilityExchange
 PotionOfHealth cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Permanent Hits+1
  use_cursed Permanent Hits-1
