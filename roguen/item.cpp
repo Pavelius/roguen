@@ -106,8 +106,6 @@ bool item::is(wear_s v) const {
 void item::damage() {
 	if(is(Natural))
 		return;
-	else if(is(Blessed) && d100() < 60)
-		return;
 	else if(iscountable() || broken >= 7)
 		setcount(getcount() - 1);
 	else
@@ -140,8 +138,6 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 	auto count = getcount();
 	auto pn = getname();
 	auto vw = stringbuilder::getgender(pn);
-	if(identified_cub)
-		sb.adds(getnm(bsdata<magici>::elements[magic].id));
 	sb.adds(getname());
 	if(!iscountable() && identified && power) {
 		auto power = getpower();
@@ -166,13 +162,7 @@ int	item::getweight() const {
 }
 
 variants item::getuse() const {
-	auto& ei = geti();
-	auto result = ei.use;
-	if(is(Blessed) && ei.use_blessed)
-		result = ei.use_blessed;
-	if(is(Cursed) && ei.use_cursed)
-		result = ei.use_cursed;
-	return result;
+	return geti().use;
 }
 
 variant	item::getpower() const {

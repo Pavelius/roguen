@@ -101,50 +101,28 @@ Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) p
 
 HealingPotion cost(30) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
  use Hits+20
- use_cursed Poison+10
- use_blessed Hits+80
 ManaPotion cost(30) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
  use Mana+20
- use_cursed Poison+10
- use_blessed Mana+80
 PotionOfStrenght cost(1000) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(162)
  use Permanent Strenght+1
- use_cursed Permanent Strenght-1
- use_blessed Permanent Strenght+4
 PotionOfDexterity cost(1000) count(1) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165)
  use Permanent Dexterity+1
- use_cursed Permanent Dexterity-1
- use_blessed Permanent Dexterity+4
 PotionOfWits cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
  use Permanent Wits+1
- use_cursed Permanent Wits-1
- use_blessed Permanent Wits+4
 PotionOfCharisma cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
  use Permanent Charisma+1
- use_cursed Permanent Charisma-1
- use_blessed Permanent Charisma+4
-PotionOfAbilityRaise cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
- use Permanent RandomAbility+1
- use_cursed Permanent RandomAbility-1
- use_blessed Permanent Strenght+1 Dexterity+1 Wits+1 Charisma+1
-PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
- use Experience+10
- use_cursed Experience-10
- use_blessed Experience+50
-PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
- use Poison-20
- use_cursed Poison+10
- use_blessed Poison-40
 PotionOfExhange cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use AbilityExchange
+PotionOfAbilityRaise cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
+ use Permanent RandomAbility+1
 PotionOfHealth cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Permanent Hits+1
- use_cursed Permanent Hits-1
- use_blessed Permanent Hits+5
 PotionOfEnergy cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Permanent Mana+1
- use_cursed Permanent Mana-1
- use_blessed Permanent Mana+5
+PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+ use Experience+10
+PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+ use Poison-20
 
 IronRing cost(300) weight(1) avatar(74)
 SilverRing cost(500) weight(1) avatar(123)
@@ -198,13 +176,13 @@ AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
  wearing DeathResistance+1
 
 Apple weight(2) avatar(503) count(1) rotting(20)
- use Satiation+20 Chance+1 Strenght+1
+ use Satiation+2 Chance+1 Strenght+1
 LoafOfBread weight(40) avatar(160) count(1) rotting(5)
- use Satiation+500
+ use Satiation+50
 Sausage weight(20) avatar(157) count(1) rotting(10)
- use Satiation+500 Chance+3 Strenght+1
+ use Satiation+50 Chance+3 Strenght+1
 Ration cost(100) weight(50) avatar(126) count(1)
- use Satiation+800
+ use Satiation+80
 Torch cost(10) avatar(207) weight(30) count(3)
  use TorchLight+3
 
@@ -228,45 +206,24 @@ RoundKey weight(1) avatar(286) count(1)
 
 AlrauniaAntidote weight(1) avatar(96) count(1)
  use Poison-2
- use_blessed Poison-10
- use_cursed Poison+5
 BurbRoot weight(1) avatar(90) count(1)
  use Hits-10
- use_cursed Hits-20
- use_blessed Hits-5
 CurariaMancox weight(1) avatar(91) count(1)
  use Illness-1
- use_cursed Illness+1
- use_blessed Illness-10
 DemonDaisy weight(1) avatar(97) count(1)
  use Poison+10
- use_cursed Poison+20
- use_blessed Poison+5
 DevilsRose weight(1) avatar(94) count(1)
  use Illness+2
- use_cursed Illness+5
- use_blessed Illness+1
 MorgiaRoot weight(1) avatar(108) count(1)
  use Permanent Strenght+1
- use_cursed Permanent Strenght-1
- use_blessed Permanent Strenght+4
 MossOfMoreilon weight(1) avatar(107) count(1)
  use Permanent Dexterity+1
- use_cursed Permanent Dexterity-1
- use_blessed Permanent Dexterity+4
 PepperPetal weight(1) avatar(95) count(1)
  use Hits+4
- use_cursed Hits-4
- use_blessed Hits+16
 Spenseweed weight(1) avatar(106) count(1)
  use Hits+1
- use_cursed Hits-1
- use_blessed Hits+10
 Stomacemptia weight(1) avatar(93) count(1)
 Stomafillia weight(1) avatar(89) count(1)
-
-PotionOfHealing weight(1) avatar(164)
- use Hits+20
 
 #RandomTable
 

@@ -110,7 +110,7 @@ void creature::getinfo(stringbuilder& sb) const {
 
 void item::getinfo(stringbuilder& sb) const {
 	auto& ei = geti();
-	sb.adds(getfullname(0, true));
+	sb.adds(getfullname());
 	addv(sb, "Damage", ei.weapon.damage);
 	addv(sb, "Pierce", ei.weapon.pierce);
 	addv(sb, "Speed", ei.weapon.speed);

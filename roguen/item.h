@@ -1,7 +1,6 @@
 #include "feat.h"
 #include "point.h"
 #include "list.h"
-#include "magic.h"
 #include "wear.h"
 #include "variant.h"
 
@@ -24,7 +23,7 @@ struct itemi : nameable {
 	const itemi*	parent;
 	weaponi			weapon;
 	featable		feats;
-	variants		wearing, use, use_cursed, use_blessed;
+	variants		wearing, use;
 	char			rotting;
 	listi*			powers;
 	char			chance_power;
@@ -40,9 +39,7 @@ class item {
 		unsigned char stats;
 		struct {
 			unsigned char identified : 1;
-			unsigned char identified_cub : 1;
 			unsigned char personal : 1;
-			magic_s magic : 2; // Cursed Uncursed Blessed (Artifact?)
 		};
 	};
 	union {
@@ -78,18 +75,15 @@ public:
 	int				getweight() const;
 	bool			is(feat_s v) const;
 	bool			is(wear_s v) const;
-	bool			is(magic_s v) const { return magic == v; }
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
 	static bool		iscondition(const void* object, int v);
 	bool			isidentified() const { return identified != 0; }
 	bool			iscountable() const { return geti().count != 0; }
-	void			set(magic_s v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
-	void			setidentifiedcub(int v) { identified_cub = v; }
 	void			use() { setcount(getcount() - 1); }
 };
 struct itemground : item {

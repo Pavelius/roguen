@@ -823,12 +823,6 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 4, FireResistance, FireImmunity);
 	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	auto armor = enemy->get(Armor);
-	if(enemy->is(Undead)) {
-		if(weapon.is(Cursed))
-			damage = damage / 2;
-		else if(weapon.is(Blessed))
-			damage = damage * 2;
-	}
 	attack_skill += player->get(weapon_ability);
 	damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee()) {

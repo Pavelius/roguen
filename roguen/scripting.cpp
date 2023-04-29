@@ -332,7 +332,7 @@ bool item::iscondition(const void* object, int v) {
 	case NoWounded: return !p->iscountable() || p->broken == 0;
 	case Wounded: return p->iscountable() && p->broken != 0;
 	case Ranged: return p->geti().wear == RangedWeapon;
-	case Unaware: return p->identified == 0 || p->identified_cub == 0;
+	case Unaware: return p->identified == 0;
 	default: return false;
 	}
 }
@@ -565,11 +565,6 @@ static void gather_item(const char* id, randomizeri& source, int chance) {
 	auto v = source.random(source.chance);
 	if(v.iskind<itemi>()) {
 		item it; it.create(bsdata<itemi>::elements + v.value, 1);
-		if(d100() < chance) {
-			if(d100() < ((chance - 20) / 3))
-				it.set(Blessed);
-		} else
-			it.set(Cursed);
 		player->act(getnm(id), it.getfullname());
 		player->additem(it);
 	}
@@ -641,7 +636,7 @@ static item* choose_wear() {
 	answers an;
 	for(auto& e : player->equipment()) {
 		if(e)
-			an.add(&e, e.getfullname(0, true));
+			an.add(&e, e.getfullname());
 		else
 			an.add(&e, "-");
 	}
@@ -852,6 +847,7 @@ static void dropdown(int bonus) {
 static void use_item(int bonus) {
 	itema items;
 	items.selectbackpack(player);
+	items.matchusable(true);
 	if(!items)
 		return;
 	auto p = items.choose(getnm("UseItem"), getnm("Cancel"), false);
@@ -1129,7 +1125,6 @@ static void destroy_feature(int bonus) {
 
 static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
-	last_item->setidentifiedcub(bonus);
 }
 
 static void random_ability(int bonus) {
