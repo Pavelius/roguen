@@ -12,7 +12,8 @@ enum ability_s : unsigned char {
 	Herbalism, Pickpockets, Stealth, OpenLocks, DisarmTraps,
 	Survival,
 	CarryCapacity, Level,
-	Hits, Mana, Poison, Illness, Reputation,
+	Hits, Mana,
+	Poison, Illness, Burning, Freezing,
 	Experience, Satiation, Money,
 };
 enum color_s : unsigned char {
@@ -24,6 +25,6 @@ struct abilityi : nameable {
 };
 extern ability_s last_ability;
 struct statable {
-	char		abilities[Reputation + 1];
+	char		abilities[Freezing + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 };

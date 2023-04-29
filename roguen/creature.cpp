@@ -258,6 +258,31 @@ static void drop_treasure(creature* pe) {
 	script::run(p->treasure);
 }
 
+static void nullify_elements(creature* player) {
+	if(player->is(Burning) || player->is(Freezing)) {
+		player->set(Burning, 0);
+		player->set(Freezing, 0);
+	}
+}
+
+static void check_burning(creature* player) {
+	if(player->is(Burning)) {
+		if(!resist_test(player, FireResistance, FireImmunity))
+			player->damage(xrand(1, 3));
+		player->add(Burning, -1);
+	}
+}
+
+static void check_freezing(creature* player) {
+	if(player->is(Freezing)) {
+		if(!resist_test(player, ColdResistance, ColdImmunity)) {
+			player->damage(1);
+			player->slowdown(100 / 2);
+		}
+		player->add(Freezing, -1);
+	}
+}
+
 static void check_blooding(creature* p) {
 	if(p->is(Blooding)) {
 		p->damage(1);
@@ -768,7 +793,7 @@ static ability_s weapon_skill(const item& weapon) {
 }
 
 static int add_bonus_damage(creature* player, creature* enemy, item& weapon, feat_s feat, int value, feat_s resistance, feat_s immunity) {
-	if(!attack_effect(player, weapon, FireDamage))
+	if(!attack_effect(player, weapon, feat))
 		return 0;
 	auto bonus_damage = value;
 	if(immunity && enemy->is(immunity))
@@ -1163,9 +1188,12 @@ void creature::makemove() {
 	pushvalue push_site(last_site, get_site(this));
 	set(EnemyAttacks, 0);
 	update();
+	nullify_elements(this);
 	check_blooding(this);
 	if(!is(Local))
 		check_hidden_doors(this);
+	check_burning(this);
+	check_freezing(this);
 	ready_actions();
 	if(ishuman()) {
 		ready_actions();

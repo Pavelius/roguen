@@ -45,6 +45,7 @@ LeatherGirdle: Кожанный пояс
 
 LeatheBoots: Кожанные сапоги
 
+BrassRing: Медное кольцо
 RingOfAcidResistance: Кольцо сопротивления кислоте
 RingOfColdResistance: Кольцо сопротивления холоду
 RingOfDefence: Кольцо защиты

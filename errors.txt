@@ -1,2 +1,2 @@
-﻿In file `rules/Skills.txt`:
- Line 8: Can't find variant `OpenLock`
+﻿In file `Names.txt`:
+ Define translation for `BrassRing`
