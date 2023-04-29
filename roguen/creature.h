@@ -72,6 +72,7 @@ public:
 	int				getsellingcost() const;
 	const char*		getspeech(const char* id, bool always_speak = true) const;
 	int				getwait() const { return wait_seconds; }
+	bool			is(areaf v) const;
 	bool			is(ability_s v) const { return get(v) > 0; }
 	bool			is(condition_s v) const;
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }

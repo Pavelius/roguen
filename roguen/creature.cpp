@@ -367,7 +367,7 @@ static bool check_trap(creature* player, point m) {
 static bool check_webbed_tile(creature* p, point m) {
 	if(p->is(IgnoreWeb))
 		return true;
-	if(area.is(m, Webbed)) {
+	if(p->is(Webbed)) {
 		p->wait(2);
 		if(!p->roll(Strenght)) {
 			p->act(getnm("WebEntagled"));
@@ -638,7 +638,7 @@ void creature::update_abilities() {
 		abilities[BalisticSkill] /= 2;
 		abilities[Dodge] -= 100;
 	}
-	if(!is(IgnoreWeb) && ispresent() && area.is(getposition(), Webbed)) {
+	if(!is(IgnoreWeb) && ispresent() && is(Webbed)) {
 		abilities[WeaponSkill] -= 10;
 		abilities[Dodge] -= 20;
 	}
@@ -658,6 +658,10 @@ bool creature::ishuman() const {
 
 bool creature::isenemy(const creature& opponent) const {
 	return opponent.is(is(Enemy) ? Ally : Enemy);
+}
+
+bool creature::is(areaf v) const {
+	return ispresent() && area.is(getposition(), v);
 }
 
 bool creature::is(condition_s v) const {
@@ -705,7 +709,7 @@ int creature::getminimal(ability_s v) const {
 }
 
 void creature::movestep(direction_s v) {
-	if(area.is(getposition(), Iced)) {
+	if(is(Iced)) {
 		if(!roll(Dexterity, 30)) {
 			act(getnm("IcedSlice"));
 			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
@@ -1337,7 +1341,7 @@ void creature::unlink() {
 }
 
 void creature::act(const char* format, ...) const {
-	if(game.getowner() == this || area.is(getposition(), Visible))
+	if(game.getowner() == this || is(Visible))
 		actv(console, format, xva_start(format), getname(), is(Female), '\n');
 }
 
@@ -1347,7 +1351,7 @@ void creature::actp(const char* format, ...) const {
 }
 
 void creature::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
-	if(ishuman() || area.is(getposition(), Visible))
+	if(ishuman() || is(Visible))
 		actable::sayv(sb, format, format_param, name, female);
 }
 
@@ -1447,7 +1451,7 @@ bool creature::isallow(variant v) const {
 	else if(v.iskind<feati>())
 		return !is((feat_s)v.value);
 	else if(v.iskind<areafi>()) {
-		auto present = area.is(getposition(), (areaf)v.value);
+		auto present = is((areaf)v.value);
 		if(v.counter < 0)
 			return present;
 		return !present;
