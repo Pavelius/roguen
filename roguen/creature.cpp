@@ -160,6 +160,13 @@ static void special_spell_attack(creature* player, item& weapon, creature* enemy
 	weapon.damage();
 }
 
+static void attack_effect_stun(creature* enemy) {
+	if(!resist_test(enemy, StunResistance, StunImmunity)) {
+		enemy->set(Stun);
+		enemy->fixeffect("SearchVisual");
+	}
+}
+
 static void special_attack(creature* player, item& weapon, creature* enemy, int& pierce, int& damage) {
 	if(attack_effect(player, weapon, Vorpal)) {
 		if(!resist_test(enemy, DeathResistance, DeathImmunity)) {
@@ -169,18 +176,18 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 	}
 	if(attack_effect(player, weapon, BleedingHit))
 		enemy->set(Blooding);
-	if(attack_effect(player, weapon, StunningHit)) {
-		if(!resist_test(enemy, StunResistance, StunImmunity)) {
-			enemy->set(Stun);
-			enemy->fixeffect("SearchVisual");
-		}
-	}
+	if(attack_effect(player, weapon, StunningHit))
+		attack_effect_stun(enemy);
 	if(attack_effect(player, weapon, PierceHit))
 		pierce += 4;
 	if(attack_effect(player, weapon, MightyHit))
 		damage += 2;
-	if(attack_effect(player, weapon, ColdDamage))
-		area.setflag(enemy->getposition(), Iced);
+	if(attack_effect(player, weapon, ColdDamage)) {
+		enemy->add(Freezing, 2);
+		area.setflag(player->getposition(), Iced);
+	}
+	if(attack_effect(player, weapon, FireDamage))
+		enemy->add(Burning, 2);
 	auto power = weapon.getpower();
 	if(power.iskind<spelli>() && weapon.ischarge())
 		special_spell_attack(player, weapon, enemy, bsdata<spelli>::elements[power.value]);

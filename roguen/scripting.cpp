@@ -638,16 +638,12 @@ static const char* item_weight(const void* object, stringbuilder& sb) {
 }
 
 static item* choose_wear() {
-	static wear_s source[] = {
-		Head, Backward, Torso, MeleeWeapon, MeleeWeaponOffhand, RangedWeapon,
-		Elbows, Girdle, FingerRight, FingerLeft, Gloves, Legs, Ammunition,
-	};
 	answers an;
 	for(auto& e : player->equipment()) {
-		if(!e)
-			an.add(&e, "-");
+		if(e)
+			an.add(&e, e.getfullname(0, true));
 		else
-			an.add(&e, e.getfullname());
+			an.add(&e, "-");
 	}
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},

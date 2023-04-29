@@ -65,15 +65,6 @@ wear_s wearable::getwearslot(const item* data) const {
 	return (wear_s)(data - wears);
 }
 
-const char* wearable::getwearname(wear_s id) const {
-	auto it = wears[id];
-	if(it)
-		return it.getfullname();
-	if(id == MeleeWeapon)
-		return getnm("Fist");
-	return 0;
-}
-
 bool wearable::useitem(const itemi* pi) {
 	for(auto& v : backpack()) {
 		if(!v.is(pi))

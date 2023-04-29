@@ -94,12 +94,12 @@ static void addv(stringbuilder& sb, const featable& feats) {
 
 void item::getinfo(stringbuilder& sb) const {
 	auto& ei = geti();
-	sb.adds(getfullname());
-	addv(sb, Damage, geti().weapon.damage);
+	sb.adds(getfullname(0, true));
+	addv(sb, "Damage", geti().weapon.damage);
 	if(is(RangedWeapon))
-		addv(sb, BalisticSkill, geti().weapon.skill);
+		addv(sb, "BallisticSkill", geti().weapon.skill);
 	else if(is(MeleeWeapon) || is(MeleeWeaponOffhand))
-		addv(sb, WeaponSkill, geti().weapon.skill);
+		addv(sb, "WeaponSkill", geti().weapon.skill);
 	addv(sb, "Pierce", geti().weapon.pierce);
 	addv(sb, "Speed", geti().weapon.speed);
 }

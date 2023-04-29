@@ -134,7 +134,7 @@ void item::drop(point m) {
 	clear();
 }
 
-const char*	item::getfullname(int price_percent) const {
+const char*	item::getfullname(int price_percent, bool uppercase) const {
 	static char temp[260];
 	stringbuilder sb(temp);
 	auto count = getcount();
@@ -151,12 +151,13 @@ const char*	item::getfullname(int price_percent) const {
 	}
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
-	sb.lower();
-	//temp[0] = stringbuilder::upper(temp[0]);
 	if(price_percent) {
 		auto cost = getcost() * price_percent / 100;
 		sb.adds("%-Cost %1i %-Coins", cost);
 	}
+	sb.lower();
+	if(uppercase)
+		temp[0] = stringbuilder::upper(temp[0]);
 	return temp;
 }
 

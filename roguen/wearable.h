@@ -16,7 +16,6 @@ struct wearable : movable {
 	slice<item>		gears() { return slice<item>(wears + Torso, wears + Legs + 1); }
 	int				getmoney() const { return money; }
 	item*			getwear(wear_s id) { return wears + id; }
-	const char*		getwearname(wear_s id) const;
 	wear_s			getwearslot(const item* data) const;
 	const item*		getwear(const void* data) const;
 	bool			useitem(const itemi* pi);
