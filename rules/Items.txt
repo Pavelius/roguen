@@ -3,13 +3,15 @@
 PierceWeapons
  elements WeaponSkill+10 Dexterity+10 Block+2 Speed+5 Speed+10 DamageMelee+1 DamageMelee+2 ColdDamage FireDamage
 SlashingWeapons
- elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+2 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3 ColdDamage FireDamage
+ elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+1 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3 ColdDamage FireDamage
 BludgeonWeapons
- elements Strenght+10 Strenght+20 Block+2 DamageMelee+2 DamageMelee+3 DamageMelee+4 FireDamage
+ elements Strenght+10 Strenght+20 Block+1 DamageMelee+2 DamageMelee+3 DamageMelee+4 FireDamage
 LightArmorPowers
  elements Dodge+10 Dodge+20 Dexterity+10 Charisma+10
 HeavyArmorPowers
  elements Charisma+10 Block+2 Armor+1 Armor+2 FireResistance ColdResistance
+ShieldPowers
+ elements Block+1 Block+2 Armor+1 Armor+2 AcidResistance FireResistance ColdResistance DeathResistance
 
 #Item
 
@@ -94,7 +96,7 @@ ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) powers(Hea
  wearing Armor+3 Dodge-20
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(HeavyArmorPowers)
  wearing Armor+5 Dodge-40
-Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(HeavyArmorPowers)
+Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2
 
 HealingPotion cost(30) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
@@ -149,15 +151,15 @@ SilverRing cost(500) weight(1) avatar(123)
 GoldenRing cost(800) weight(1) avatar(73)
 BrassRing weight(1) count(1) wear(FingerRight) avatar(75)
 RingOfAcidResistance weight(1) count(1) wear(FingerRight) avatar(73)
- wearing AcidResistance+1
+ wearing AcidResistance
 RingOfColdResistance weight(1) count(1) wear(FingerRight) avatar(153)
- wearing ColdResistance+1
+ wearing ColdResistance
 RingOfFireResistance weight(1) count(1) wear(FingerRight) avatar(75)
- wearing FireResistance+1
+ wearing FireResistance
 RingOfPoisonResistance weight(1) count(1) wear(FingerRight) avatar(73)
- wearing PoisonResistance+1
+ wearing PoisonResistance
 RingOfLevitation weight(1) count(1) wear(FingerRight) avatar(655)
- wearing Fly+1
+ wearing Fly
 RingOfDefence weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Dodge+10
 RingOfProtection weight(1) count(1) wear(FingerRight) avatar(655)
@@ -170,10 +172,10 @@ RingOfWarrior weight(1) count(1) wear(FingerRight) avatar(655)
 LeatherBoots weight(20) count(1) wear(Legs) avatar(192)
 IronBoots weight(20) count(1) wear(Legs) avatar(192)
  wearing Dodge-5 Block+1
-BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226) unidentified(LeatheBoots)
+BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226) unidentified(LeatherBoots)
  wearing Dexterity+10
-BootsOfLevitation weight(15) count(1) wear(Legs) avatar(224) unidentified(LeatheBoots)
- wearing Fly+1
+BootsOfLevitation weight(15) count(1) wear(Legs) avatar(224) unidentified(LeatherBoots)
+ wearing Fly
 
 LeatherGirdle weight(50) count(1) wear(Girdle) avatar(41)
  wearing Dodge+5
