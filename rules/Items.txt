@@ -1,15 +1,15 @@
 #List
 
 PierceWeapons
- elements WeaponSkill+10 Dexterity+10 Block+2 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3
+ elements WeaponSkill+10 Dexterity+10 Block+2 Speed+5 Speed+10 DamageMelee+1 DamageMelee+2
 SlashingWeapons
  elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+2 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3
 BludgeonWeapons
- elements Strenght+10 Block+2 DamageMelee+2 DamageMelee+3 DamageMelee+4
+ elements Strenght+10 Strenght+20 Block+2 DamageMelee+2 DamageMelee+3 DamageMelee+4
 LightArmorPowers
  elements Dodge+10 Dodge+20 Dexterity+10 Charisma+10
 HeavyArmorPowers
- elements Charisma+10 Block+2 Armor+1
+ elements Charisma+10 Block+2 Armor+1 Armor+2 FireResistance ColdResistance
 
 #Item
 
@@ -40,7 +40,7 @@ BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) power
  feats MightyHit
 Club cost(3) weight(50) wear(MeleeWeapon) wear_index(2) avatar(3) powers(BludgeonWeapons)
  weapon damage(3)
-Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) powers(SlashingWeapons)
+Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) powers(PierceWeapons)
  weapon damage(2) speed(5)
  feats PierceHit
 Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) powers(SlashingWeapons)
