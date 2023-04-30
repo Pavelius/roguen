@@ -166,7 +166,7 @@ variants item::getuse() const {
 }
 
 variant	item::getpower() const {
-	if(!power)
+	if(!iscountable() || !power)
 		return variant();
 	auto& ei = geti();
 	if(!ei.powers)
@@ -175,4 +175,17 @@ variant	item::getpower() const {
 	if(power > p->elements.count)
 		return variant();
 	return p->elements.begin()[power - 1];
+}
+
+bool item::iscursed() const {
+	auto v = getpower();
+	if(v && v.value < 0)
+		return true;
+	return false;
+}
+
+bool item::ismagical() const {
+	if(iscountable())
+		return false;
+	return power != 0;
 }

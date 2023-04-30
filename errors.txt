@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `YouCantWearItem`
+﻿In file `rules/Items.txt`:
+ Line 16: Can't find variant `Intellegence`

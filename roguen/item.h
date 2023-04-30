@@ -80,8 +80,10 @@ public:
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
 	static bool		iscondition(const void* object, int v);
-	bool			isidentified() const { return identified != 0; }
 	bool			iscountable() const { return geti().count != 0; }
+	bool			iscursed() const;
+	bool			isidentified() const { return identified != 0; }
+	bool			ismagical() const;
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }

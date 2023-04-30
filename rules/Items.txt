@@ -1,17 +1,17 @@
 #List
 
 PierceWeapons
- elements WeaponSkill+10 Dexterity+10 Block+2 Speed+5 Speed+10 DamageMelee+1 DamageMelee+2 ColdDamage FireDamage
+ elements WeaponSkill+10 Dexterity+10 Block+2 Speed+5 Speed+10 DamageMelee+1 DamageMelee+2 ColdDamage FireDamage Dexterity-5 Wits-20
 SlashingWeapons
- elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+1 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3 ColdDamage FireDamage
+ elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+1 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3 ColdDamage FireDamage Strenght-10 Wits-20
 BludgeonWeapons
- elements Strenght+10 Strenght+20 Block+1 DamageMelee+2 DamageMelee+3 DamageMelee+4 FireDamage
+ elements Strenght+10 Strenght+20 Block+1 DamageMelee+2 DamageMelee+3 DamageMelee+4 FireDamage Strenght-10
 LightArmorPowers
- elements Dodge+10 Dodge+20 Dexterity+10 Charisma+10
+ elements Dodge+10 Dodge+20 Dexterity+10 Charisma+10 Armor-1 Dexterity-5 Dodge-30
 HeavyArmorPowers
- elements Charisma+10 Block+2 Armor+1 Armor+2 FireResistance ColdResistance
+ elements Charisma+10 Block+2 Armor+1 Armor+2 FireResistance ColdResistance Armor-1
 ShieldPowers
- elements Block+1 Block+2 Armor+1 Armor+2 AcidResistance FireResistance ColdResistance DeathResistance
+ elements Block+1 Block+2 Armor+1 Armor+2 AcidResistance FireResistance ColdResistance DeathResistance Armor-1
 
 #Item
 
@@ -106,7 +106,7 @@ ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) powers(Hea
  required Strenght(40)
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(HeavyArmorPowers)
  wearing Armor+5 Dodge-40
- required Strenght(55)
+ required Strenght(60)
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2
 
@@ -170,8 +170,10 @@ LeatherGirdle weight(50) count(1) wear(Girdle) avatar(41)
  wearing Dodge+5
 IronGirdle weight(250) count(1) wear(Girdle) avatar(14)
  wearing Dodge-5 Block+1
+ required Strenght(40)
 GirdleOfMight weight(50) count(1) wear(Girdle) avatar(18) unidentified(LeatherGirdle)
  wearing Strenght+5
+ required Strenght(40)
 GirdleOfGiantStrenght weight(50) count(1) wear(Girdle) avatar(41) unidentified(LeatherGirdle)
  wearing Strenght+25
 GirdleOfCarring weight(50) count(1) wear(Girdle) avatar(88) unidentified(LeatherGirdle)
