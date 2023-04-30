@@ -41,11 +41,13 @@ public:
 	void			attackrange(creature& enemy);
 	void			attackthrown(creature& enemy);
 	bool			canhear(point i) const;
+	bool			canremove(item& it) const;
 	bool			canshoot(bool interactive) const;
 	bool			canthrown(bool interactive) const;
 	void			cast(const spelli& e);
 	void			cast(const spelli& e, int level, int mana);
 	void			clear();
+	void			equipi(short unsigned type, int count);
 	void			everyminute();
 	void			every10minutes();
 	void			every30minutes();

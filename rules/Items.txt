@@ -67,9 +67,8 @@ Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) powers(Blu
  weapon damage(4)
  feats TwoHanded
 Sword cost(10) weight(200) wear(MeleeWeapon) avatar(114) wear_index(23) powers(SlashingWeapons)
- weapon damage(5) speed(-6)
+ weapon damage(4) speed(-6)
  feats MightyHit
- required Strenght(35)
 StrangeSword cost(500) weight(200) wear(MeleeWeapon) avatar(173) wear_index(23) chance_power(100) powers(SlashingWeapons)
  weapon damage(7) speed(-5)
  feats MightyHit

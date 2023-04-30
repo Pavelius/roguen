@@ -66,7 +66,29 @@ bool item::canequip(wear_s v) const {
 	}
 }
 
-void item::createpower(int chance_power) {
+typedef adat<char> powera;
+
+static void add_powers(powera& result, const listi& source, bool noncursed, bool cursed) {
+	result.clear();
+	for(auto& v : source.elements) {
+		if(v.counter < 0) {
+			if(!cursed)
+				continue;
+		} else {
+			if(!noncursed)
+				continue;
+		}
+		result.add(&v - source.elements.begin());
+	}
+}
+
+static int random_power(powera& result) {
+	if(!result.count)
+		return 0;
+	return 1 + result.data[rand() % result.count];
+}
+
+void item::createpower(int chance_power, int chance_cursed) {
 	if(iscountable())
 		return;
 	auto& ei = geti();
@@ -75,8 +97,14 @@ void item::createpower(int chance_power) {
 		if(!chance)
 			chance = 10;
 		chance += chance_power;
-		if(d100() < chance)
-			power = 1 + (rand() % ei.powers->elements.count);
+		if(d100() < chance) {
+			powera result;
+			if(d100() < chance_cursed)
+				add_powers(result, *ei.powers, false, true);
+			else
+				add_powers(result, *ei.powers, true, false);
+			power = random_power(result);
+		}
 	}
 }
 
@@ -142,7 +170,14 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 	if(!iscountable() && identified && power) {
 		auto power = getpower();
 		sb.addsep(' ');
-		sb.addof(power.getname());
+		if(power.counter < 0) {
+			// Cursed version
+			auto tid = getnme(str("Cursed%1", power.getid()));
+			if(!tid)
+				tid = getnme(power.getid());
+			sb.addof(tid);
+		} else
+			sb.addof(power.getname());
 		sb.add("%+1i", power.counter);
 	}
 	if(count > 1)
@@ -166,7 +201,7 @@ variants item::getuse() const {
 }
 
 variant	item::getpower() const {
-	if(!iscountable() || !power)
+	if(iscountable() || !power)
 		return variant();
 	auto& ei = geti();
 	if(!ei.powers)
@@ -179,7 +214,7 @@ variant	item::getpower() const {
 
 bool item::iscursed() const {
 	auto v = getpower();
-	if(v && v.value < 0)
+	if(v && v.counter < 0)
 		return true;
 	return false;
 }

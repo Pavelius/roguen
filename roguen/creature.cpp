@@ -1597,11 +1597,11 @@ creature* creature::create(point m, variant kind, variant character, bool female
 		player->setname(charname::random(conditions));
 	}
 	player->basic.abilities[LineOfSight] += 4;
-	advance_value(kind, 0);
 	if(character.value) {
 		advance_value(character, 0);
 		player->levelup();
 	}
+	advance_value(kind, 0);
 	player->place(m);
 	player->finish();
 	if(pm) {
@@ -1624,6 +1624,24 @@ bool creature::isallow(const item& it) const {
 			continue;
 		if(get(i) < v)
 			return false;
+	}
+	return true;
+}
+
+void creature::equipi(short unsigned type, int count) {
+	item it; it.create(bsdata<itemi>::elements + type, count);
+	it.createpower(0);
+	if(isallow(it))
+		equip(it);
+	else
+		wearable::additem(it);
+}
+
+bool creature::canremove(item& it) const {
+	if(it.iscursed()) {
+		it.setidentified(true);
+		speech("ThisIsMyCursedItem", it.getname());
+		return false;
 	}
 	return true;
 }

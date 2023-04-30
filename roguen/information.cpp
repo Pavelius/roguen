@@ -114,8 +114,6 @@ void item::getinfo(stringbuilder& sb) const {
 	addv(sb, "Damage", ei.weapon.damage);
 	addv(sb, "Pierce", ei.weapon.pierce);
 	addv(sb, "Speed", ei.weapon.speed);
-	if(ei.wearing)
-		wearing(sb, ei.wearing);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

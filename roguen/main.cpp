@@ -87,7 +87,8 @@ static void main_start() {
 	add_item("RingOfLevitation");
 	add_item("RingOfRegeneration");
 	player->add(Herbalism, 25);
-	player->wears[MeleeWeapon].createpower(100);
+	player->wears[MeleeWeapon].createpower(100, 100);
+	player->wears[MeleeWeapon].setidentified(1);
 	equip_item("Bones");
 	game.setowner(player);
 	if(!test_creatures())
