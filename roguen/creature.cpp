@@ -814,16 +814,18 @@ static int add_bonus_damage(creature* player, creature* enemy, item& weapon, fea
 	return bonus_damage;
 }
 
-static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_multiplier) {
+static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
 	auto roll_result = d100();
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto damage = weapon.geti().weapon.damage + player->get(damage_ability(weapon_ability));
-	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 4, FireResistance, FireImmunity);
+	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
 	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	auto armor = enemy->get(Armor);
 	attack_skill += player->get(weapon_ability);
+	if(damage_percent)
+		damage = damage * damage_percent / 100;
 	damage += (attack_skill - roll_result) / 10;
 	if(weapon.geti().ismelee()) {
 		auto base_strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;
@@ -865,6 +867,10 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		player->logs(getnm("AttackHit"), damage, enemy->getname(), roll_result, base_damage, -armor);
 		enemy->damage(damage);
 		poison_attack(player, enemy, weapon);
+		if(attack_effect(enemy, enemy->wears[MeleeWeapon], Retaliate)) {
+			if(!player->roll(Dodge))
+				player->damage(1);
+		}
 	}
 	if(roll_result >= 95 && d100() < 30)
 		weapon.damage();
@@ -1608,4 +1614,16 @@ creature* creature::create(point m, variant kind, variant character, bool female
 			pr->setowner(player);
 	}
 	return player;
+}
+
+bool creature::isallow(const item& it) const {
+	auto& ei = it.geti();
+	for(auto i = Strenght; i <= sizeof(ei.required) / sizeof(ei.required[0]); i = (ability_s)(i+1)) {
+		auto v = ei.required[i];
+		if(!v)
+			continue;
+		if(get(i) < v)
+			return false;
+	}
+	return true;
 }

@@ -84,6 +84,7 @@ WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
 YouCantPickUpAllForCost: Вы не можете поднять все предметы если а каждый из них надо платить.
+YouCantWearItem: Вы не можете носить [%1], так как подходите под минимальные требования для этого.
 YouCutWood: %герой срубил%а %-1.
 YouDontSeeAnyEnemy: Вы не видите ни одного врага.
 YouDontHaveAnyActions: Здесь вы не можете выполнить никаких особых действий.
@@ -114,6 +115,7 @@ BalisticSkill: Меткость
 Dodge: Уклонение
 WeaponSkill: Оружие
 
+CarryCapacity: Грузоподъемность
 Damage: Урон
 DamageMelee: Урон
 DamageReduciton: Броня
@@ -124,6 +126,7 @@ Money: Деньги
 CutWoods: Рубит деревья
 Retaliate: Ответный удар
 
+AcidResistance: Сопротивление кислоте
 FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света

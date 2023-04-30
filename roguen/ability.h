@@ -9,7 +9,7 @@ enum ability_s : unsigned char {
 	Damage, DamageMelee, DamageRanged, DamageThrown,
 	Armor, Block, BlockRanged,
 	Speed, EnemyAttacks,
-	Herbalism, Pickpockets, Stealth, OpenLocks, DisarmTraps,
+	Herbalism, OpenLocks, Pickpockets,
 	Survival,
 	CarryCapacity, Level,
 	Hits, Mana,

@@ -684,8 +684,13 @@ static void inventory(int bonus) {
 			player->update();
 		} else {
 			auto ni = choose_stuff(owner->getwearslot(pi));
-			if(ni)
-				iswap(*ni, *pi);
+			if(ni) {
+				if(!player->isallow(*ni)) {
+					console.addn(getnm("YouCantWearItem"), ni->getname());
+					draw::pause();
+				} else
+					iswap(*ni, *pi);
+			}
 			player->update();
 		}
 	}

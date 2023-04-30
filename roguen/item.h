@@ -27,6 +27,7 @@ struct itemi : nameable {
 	char			rotting;
 	listi*			powers;
 	char			chance_power;
+	char			required[5];
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
 	bool			is(feat_s v) const { return feats.is(v); }

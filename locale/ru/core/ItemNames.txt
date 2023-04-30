@@ -43,7 +43,7 @@ Shield: Щит
 
 LeatherGirdle: Кожанный пояс
 
-LeatheBoots: Кожанные сапоги
+LeatherBoots: Кожанные сапоги
 
 BrassRing: Медное кольцо
 RingOfAcidResistance: Кольцо сопротивления кислоте

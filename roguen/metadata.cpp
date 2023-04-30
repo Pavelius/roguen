@@ -97,6 +97,7 @@ BSMETA(itemi) = {
 	BSREQ(weapon),
 	BSREQ(use),
 	BSREQ(powers), BSREQ(chance_power),
+	BSDST(required, abilityi),
 	{}};
 BSMETA(locationi) = {
 	BSREQ(id),
