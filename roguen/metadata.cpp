@@ -42,8 +42,7 @@ BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};
 BSMETA(advancement) = {
-	BSREQ(type),
-	BSREQ(level),
+	BSREQ(type), BSREQ(level), BSREQ(id),
 	BSREQ(elements),
 	{}};
 BSMETA(globali) = {
@@ -175,7 +174,7 @@ BSMETA(weari) = {
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Ability", VAR(abilityi), 1},
-	{"Advancement", VAR(advancement), 2},
+	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1},
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},

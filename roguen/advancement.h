@@ -3,7 +3,8 @@
 #pragma once
 
 struct advancement {
-	variant		type;
-	char		level;
-	variants	elements;
+	const char*		id;
+	variant			type;
+	char			level;
+	variants		elements;
 };

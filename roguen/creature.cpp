@@ -1092,7 +1092,7 @@ static void advance_value(variant v) {
 		add_ability((ability_s)v.value, v.counter, false, true);
 	else if(v.iskind<itemi>()) {
 		if(v.counter >= 0)
-			player->equipi(v.value, v.counter ? v.counter : 1);
+			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
 	} else if(v.iskind<feati>()) {
 		if(v.counter < 0)
 			player->feats.remove(v.value);
@@ -1561,8 +1561,10 @@ int	creature::getsellingcost() const {
 
 static void advance_value(variant kind, int level) {
 	for(auto& e : bsdata<advancement>()) {
-		if(e.type == kind && e.level == level)
+		if(e.type == kind && e.level == level) {
 			advance_value(e.elements);
+			player->update();
+		}
 	}
 }
 
@@ -1597,11 +1599,9 @@ creature* creature::create(point m, variant kind, variant character, bool female
 		player->setname(charname::random(conditions));
 	}
 	player->basic.abilities[LineOfSight] += 4;
-	if(character.value) {
-		advance_value(character, 0);
-		player->levelup();
-	}
 	advance_value(kind, 0);
+	if(character.value)
+		advance_value(character, 0);
 	player->place(m);
 	player->finish();
 	if(pm) {
