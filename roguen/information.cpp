@@ -14,7 +14,7 @@ static const char* getnameshort(ability_s i) {
 }
 
 static void addv(stringbuilder& sb, const dice& value) {
-	if(value.max!=value.min)
+	if(value.max != value.min)
 		sb.adds("%1i-%2i", value.min, value.max);
 	else
 		sb.adds("%1i", value.min);
@@ -47,14 +47,14 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 	switch(i) {
 	case Armor:
 		sb.addn("[~%1]\t%2i", getnameshort(i), value);
-		if(value_maximum)
-			sb.add("%+1i", value_maximum);
+		if(value_maximum > 0)
+			sb.add("-%1i", value + value_maximum);
 		break;
 	case Hits: case Mana:
 		sb.addn("[~%1]\t%2i/%3i", getnameshort(i), value, value_maximum);
 		break;
 	default:
-		if(i>=WeaponSkill && i<= Dodge)
+		if(i >= WeaponSkill && i <= Dodge)
 			sb.addn("[~%1]\t%2i%%", getnameshort(i), value);
 		else
 			sb.addn("[~%1]\t%2i", getnameshort(i), value);
