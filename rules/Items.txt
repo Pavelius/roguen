@@ -165,6 +165,13 @@ BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226) unidentified(Leathe
 BootsOfLevitation weight(15) count(1) wear(Legs) avatar(224) unidentified(LeatherBoots)
  wearing Fly
 
+LeatherBracers weight(50) count(1) wear(Elbows) avatar(59)
+ wearing Dodge+5
+IronBracers weight(250) count(1) wear(Elbows) avatar(48)
+ wearing Dodge-5 Block+1
+BracersOfStrenght weight(250) count(1) wear(Elbows) avatar(219)
+ wearing Dodge-5 Block+1 Strenght+15
+
 LeatherGirdle weight(50) count(1) wear(Girdle) avatar(41)
  wearing Dodge+5
 IronGirdle weight(250) count(1) wear(Girdle) avatar(14)
@@ -265,10 +272,12 @@ RandomRing
  chance BrassRing+4 RingOfAcidResistance RingOfColdResistance RingOfFireResistance RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
 RandomBoots
  chance BootsOfLevitation BootsOfSneakiness
+RandomBracers
+ chance IronBracers
 RandomGirdle
  chance LeatherGirdle+4 IronGirdle+2 GirdleOfMight GirdleOfGiantStrenght GirdleOfCarring
 RandomLoot
- chance RandomTreasure+4 RandomKeys RandomGear RandomPotion RandomRing RandomBoots RandomGirdle
+ chance RandomTreasure+4 RandomKeys RandomGear RandomPotion RandomRing RandomBoots RandomGirdle RandomBracers
 WoodenLagsTable
  chance Lags SmallLags+2
 
