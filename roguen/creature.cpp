@@ -814,30 +814,7 @@ static int add_bonus_damage(creature* player, creature* enemy, item& weapon, fea
 	return bonus_damage;
 }
 
-static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
-	auto roll_result = d100();
-	auto enemy_name = enemy->getname();
-	auto attacker_name = player->getname();
-	auto weapon_ability = weapon_skill(weapon);
-	auto damage = weapon.geti().weapon.damage + player->get(damage_ability(weapon_ability));
-	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
-	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
-	auto armor = enemy->get(Armor);
-	attack_skill += player->get(weapon_ability);
-	if(damage_percent)
-		damage = damage * damage_percent / 100;
-	damage += (attack_skill - roll_result) / 10;
-	if(weapon.geti().ismelee()) {
-		auto base_strenght = (player->get(Strenght) - enemy->get(Strenght)) / 10;
-		if(base_strenght > 0)
-			damage += base_strenght;
-		else
-			armor += -base_strenght;
-	}
-	auto base_damage = damage;
-	int pierce = weapon.geti().weapon.pierce;
-	if(roll_result < attack_skill / 3)
-		special_attack(player, weapon, enemy, pierce, damage);
+static void apply_pierce(int& armor, int& pierce) {
 	if(armor > 0) {
 		if(pierce > armor)
 			armor = 0;
@@ -845,17 +822,41 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 			armor -= pierce;
 	} else
 		armor = 0;
-	damage -= armor;
-	if(damage > 0 && weapon.is(MissHalfTime) && (d100() < 50))
+}
+
+static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
+	auto roll_result = d100();
+	auto enemy_name = enemy->getname();
+	auto attacker_name = player->getname();
+	auto weapon_ability = weapon_skill(weapon);
+	auto damage = (int)weapon.geti().weapon.damage;
+	damage += player->get(Strenght) / 10;
+	damage += player->get(damage_ability(weapon_ability));
+	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
+	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
+	auto armor = enemy->get(Armor);
+	armor += enemy->get(Strenght) / 10;
+	attack_skill += player->get(weapon_ability);
+	if(damage_percent)
+		damage = damage * damage_percent / 100;
+	damage += (attack_skill - roll_result) / 10;
+	if(damage < 0)
 		damage = 0;
-	if(damage <= 0) {
-		player->logs(getnm("AttackMiss"), damage, enemy->getname(), roll_result, base_damage, -armor);
+	auto pierce = (int)weapon.geti().weapon.pierce;
+	if(roll_result < attack_skill / 4)
+		special_attack(player, weapon, enemy, pierce, damage);
+	apply_pierce(armor, pierce);
+	auto damage_result = damage - armor;
+	if(damage_result > 0 && weapon.is(MissHalfTime) && (d100() < 50))
+		damage_result = 0;
+	if(damage_result <= 0) {
+		player->logs(getnm("AttackMiss"), damage_result, enemy->getname(), roll_result, damage, -armor);
 		return;
 	}
 	auto block_damage = enemy->get(Block);
-	if(block_damage) {
-		damage -= xrand(0, block_damage);
-		if(damage <= 0) {
+	if(block_damage > 0) {
+		damage_result -= xrand(0, block_damage);
+		if(damage_result <= 0) {
 			enemy->fixvalue(getnm("Block"), ColorGreen);
 			return;
 		}
@@ -864,8 +865,8 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
 		enemy->fixvalue(getnm("Dodge"), ColorGreen);
 	} else {
-		player->logs(getnm("AttackHit"), damage, enemy->getname(), roll_result, base_damage, -armor);
-		enemy->damage(damage);
+		player->logs(getnm("AttackHit"), damage_result, enemy->getname(), roll_result, damage, -armor);
+		enemy->damage(damage_result);
 		poison_attack(player, enemy, weapon);
 		if(attack_effect(enemy, enemy->wears[MeleeWeapon], Retaliate)) {
 			if(!player->roll(Dodge))
