@@ -878,7 +878,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 }
 
 int	creature::getexpreward() const {
-	static ability_s skills[] = {Strenght, Dexterity, Wits, Charisma, WeaponSkill, BalisticSkill};
+	static ability_s skills[] = {Strenght, Dexterity, WeaponSkill, BalisticSkill};
 	auto result = 0;
 	for(auto v : skills) {
 		auto n = get(v) / 10;
