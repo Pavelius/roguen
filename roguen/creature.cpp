@@ -120,11 +120,11 @@ static void poison_attack(creature* player, int value) {
 static void poison_attack(const creature* player, creature* enemy, const item& weapon) {
 	auto strenght = 0;
 	if(attack_effect(player, weapon, WeakPoison))
-		strenght += xrand(1, 3);
+		strenght += xrand(1, 2);
 	if(attack_effect(player, weapon, StrongPoison))
-		strenght += xrand(2, 6);
+		strenght += xrand(2, 4);
 	if(attack_effect(player, weapon, DeathPoison))
-		strenght += xrand(3, 9);
+		strenght += xrand(3, 6);
 	poison_attack(enemy, strenght);
 }
 

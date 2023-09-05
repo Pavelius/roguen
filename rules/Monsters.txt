@@ -29,7 +29,7 @@ GiantLizard avatar(220) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4) Level(3)
  use Bite
 GiantSpider avatar(591) friendly(-20)
- abilities Strenght(40) Dexterity(20) Wits(6) WeaponSkill(40) Hits(20) Level(5)
+ abilities Strenght(35) Dexterity(20) Wits(6) WeaponSkill(40) Hits(20) Level(5)
  use Bite StrongPoison IgnoreWeb Web+4
 Ghoul avatar(305) friendly(-20)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
