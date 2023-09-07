@@ -78,10 +78,11 @@ BluePotion: Синее зелье
 BrownPotion: Коричневое зелье
 HealingPotion: Зелье лечения
 ManaPotion: Зелье маны
-RedPotion: Красное зелье
 PotionOfStrenght: Зелье силы
 PotionOfWits: Зелье разума
 PotionOfWisdow: Зелье мудрости
+RedPotion: Красное зелье
+YellowPotion: Желтое зелье
 
 AlrauniaAntidote: Лаймовый антидот
 BurbRoot: Корень свеклы

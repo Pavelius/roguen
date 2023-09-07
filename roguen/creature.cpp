@@ -631,6 +631,9 @@ static void update_room(creature* player) {
 }
 
 void creature::update_abilities() {
+	abilities[DamageMelee] += get(Strenght) / 10;
+	abilities[DamageRanged] += get(Dexterity) / 15;
+	abilities[Armor] += get(Strenght) / 15;
 	abilities[Speed] += 25 + get(Dexterity) / 5;
 	abilities[Dodge] += get(Dexterity) / 2;
 	if(is(Stun)) {
@@ -830,16 +833,16 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto damage = (int)weapon.geti().weapon.damage;
-	damage += player->get(Strenght) / 10;
 	damage += player->get(damage_ability(weapon_ability));
 	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
 	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	auto armor = enemy->get(Armor);
-	armor += enemy->get(Strenght) / 10;
 	attack_skill += player->get(weapon_ability);
 	if(damage_percent)
 		damage = damage * damage_percent / 100;
 	damage += (attack_skill - roll_result) / 10;
+	if(roll_result > attack_skill) // Miss is hurt
+		damage -= 1;
 	if(damage < 0)
 		damage = 0;
 	auto pierce = (int)weapon.geti().weapon.pierce;
