@@ -1011,6 +1011,12 @@ static void heal_all(int bonus) {
 	heal_player(100);
 }
 
+static void damage_all(int bonus) {
+	player->abilities[DamageMelee] += bonus;
+	player->abilities[DamageRanged] += bonus;
+	player->abilities[DamageThrown] += bonus;
+}
+
 static void set_offset(int bonus) {
 	if(bonus > last_rect.width() / 2)
 		bonus = last_rect.width() / 2;
@@ -1212,6 +1218,7 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance, random_chance_test},
 	{"ChatSomeone", chat_someone},
+	{"DamageAll", damage_all},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},

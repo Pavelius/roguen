@@ -3,6 +3,8 @@
 #include "script.h"
 
 variant param1, param2;
+script* script_begin;
+script* script_end;
 
 BSMETA(script) = {
 	BSREQ(id),
