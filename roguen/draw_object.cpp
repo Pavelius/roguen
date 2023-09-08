@@ -77,6 +77,13 @@ static void update_all_orders() {
 	}
 }
 
+void draw::removeobjects(const array& source) {
+	for(auto& e : bsdata<object>()) {
+		if(source.have(e.data))
+			e.clear();
+	}
+}
+
 static int calculate(int v1, int v2, int n, int m) {
 	return v1 + (v2 - v1) * n / m;
 }
@@ -250,13 +257,6 @@ void draw::paintobjects() {
 void* draw::chooseobject() {
 	draw::scene(paintobjects);
 	return (void*)getresult();
-}
-
-void draw::removeobjects(const array& source) {
-	for(auto& e : bsdata<object>()) {
-		if(source.have(e.data))
-			e.clear();
-	}
 }
 
 static void paintobjectsshowmode() {

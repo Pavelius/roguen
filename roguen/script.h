@@ -16,5 +16,7 @@ struct script {
 	static void		runv(const void* pv, int bonus);
 	static void		run(const variants& elements);
 };
-extern script* script_begin;
-extern script* script_end;
+extern variant* script_begin;
+extern variant* script_end;
+
+void script_stop();

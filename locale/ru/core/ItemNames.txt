@@ -13,6 +13,7 @@ OrnamentalStones: Декоративное украшение
 PreciousStones: Драгоценный камень
 SemiPreciousStones: Полудрагоценный камень
 
+AmuletOfDeathSaving: Амулет спасения от смерти
 BlueAmulet: Синий амулет
 BlueRing: Синее кольцо
 CoralAmulet: Кораловое ожерелье
@@ -44,6 +45,8 @@ Shield: Щит
 LeatherGirdle: Кожанный пояс
 
 LeatherBoots: Кожанные сапоги
+
+IronBracers: Железные браслеты
 
 BrassRing: Медное кольцо
 RingOfAcidResistance: Кольцо сопротивления кислоте

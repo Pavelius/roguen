@@ -86,7 +86,7 @@ HillGiant avatar(537) friendly(-20) minions(GoblinoidTribe)
  abilities Strenght(70) Dexterity(20) Wits(10) WeaponSkill(50) Hits(50) Level(7)
  use Club LeatherArmor
 Necromant avatar(43) friendly(-20) minions(UndeadHorde)
- abilities Strenght(25) Dexterity(20) Wits(45) WeaponSkill(30) Hits(20) Level(5)
+ abilities Strenght(25) Dexterity(20) Wits(45) WeaponSkill(30) Hits(20) Mana(50) Level(5)
  use Staff SummonUndead+6
 Minotaur avatar(580) friendly(-20) minions(GoblinoidTribe)
  abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(60) Hits(20) Level(6)

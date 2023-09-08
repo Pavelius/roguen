@@ -46,7 +46,6 @@ const sitei*	last_site;
 greatneed*		last_need;
 int				last_value, last_cap;
 extern bool		show_floor_rect;
-static bool		stop_script;
 
 static const sitegeni* get_local_method() {
 	if(last_site && last_site->local)
@@ -1087,17 +1086,17 @@ static void roll_value(int bonus) {
 		return;
 	if(!player->roll(last_ability, bonus)) {
 		player->logs(getnm("YouMakeRoll"), last_value, player->get(last_ability) + bonus, bonus);
-		stop_script = true;
+		script_stop();
 	} else
 		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
 }
 
 static void random_chance(int bonus) {
 	if(d100() >= bonus)
-		stop_script = true;
+		script_stop();
 }
 
-static bool random_chance_test(int bonus) {
+static bool allow_random_chance(int bonus) {
 	return d100() < bonus;
 }
 
@@ -1147,15 +1146,11 @@ static void random_ability(int bonus) {
 }
 
 void script::run(const variants& elements) {
-	if(stop_script)
-		return;
-	pushvalue push_stop(stop_script);
+	pushvalue push_begin(script_begin, elements.begin());
+	pushvalue push_end(script_end, elements.end());
 	pushvalue push_cap(last_cap, 0);
-	for(auto v : elements) {
-		if(stop_script)
-			break;
-		script::run(v);
-	}
+	while(script_begin < script_end)
+		script::run(*script_begin++);
 }
 
 static void need_help_info(stringbuilder& sb) {
@@ -1216,7 +1211,7 @@ BSDATA(script) = {
 	{"AddNeedAnswers", add_need_answers},
 	{"ApplyAction", apply_action},
 	{"CastSpell", cast_spell},
-	{"Chance", random_chance, random_chance_test},
+	{"Chance", random_chance, allow_random_chance},
 	{"ChatSomeone", chat_someone},
 	{"DamageAll", damage_all},
 	{"DebugMessage", debug_message},

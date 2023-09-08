@@ -4,6 +4,8 @@
 
 #pragma once
 
+typedef void(*fnevent)();
+
 namespace draw {
 struct object;
 typedef void(*fnpaint)(const object* pointer);
@@ -41,8 +43,8 @@ struct object : drawable {
 	void			move(point goal, int speed, int correct = 0);
 	void			paint() const;
 };
-extern adat<object*, 512> objects;
 extern rect last_screen, last_area;
+extern adat<object*, 512> objects;
 object*				addobject(point pt, object::type_s type = object::Object);
 bool				cameravisible(point goal, int border = 48);
 void*				chooseobject();
@@ -51,8 +53,8 @@ void				clearobjects();
 void				focusing(point goal);
 object*				findobject(const void* p);
 void				paintobjects();
-unsigned long		getobjectstamp();
 void				removeobjects(const array& source);
+unsigned long		getobjectstamp();
 void				setcamera(point v);
 void				slidecamera(point v, int step = 16);
 void				splashscreen(unsigned milliseconds);
