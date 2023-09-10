@@ -333,6 +333,9 @@
     <ClCompile Include="monster.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="io_memory.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -589,6 +592,9 @@
     </ClInclude>
     <ClInclude Include="monster.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="io_memory.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -89,7 +89,7 @@ Necromant avatar(43) friendly(-20) minions(UndeadHorde)
  abilities Strenght(25) Dexterity(20) Wits(45) WeaponSkill(30) Hits(20) Mana(50) Level(5)
  use Staff SummonUndead+6
 Minotaur avatar(580) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(60) Hits(20) Level(6)
+ abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(60) Hits(25) Level(6)
  use Sword
 
 Bartender avatar(51) unique(1)

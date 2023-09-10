@@ -6,14 +6,14 @@ extern "C" void* realloc(void *ptr, long unsigned size);
 extern "C" void	free(void* pointer);
 
 unsigned rmoptimal(unsigned need_count) {
-	const unsigned mc = 256 * 256 * 256;
-	unsigned m = 16;
+	const unsigned mc = 4 * 256 * 256;
+	unsigned m = 8;
 	while(m < mc) {
+		m = m << 1;
 		if(need_count < m)
 			return m;
-		m = m << 1;
 	}
-	return m;
+	return need_count + mc;
 }
 
 float sqrt(const float x) {

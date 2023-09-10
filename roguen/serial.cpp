@@ -5,6 +5,7 @@
 #include "game.h"
 #include "greatneed.h"
 #include "creature.h"
+#include "io_memory.h"
 
 static vector<creature> saved_creatures;
 static const char* save_folder = "save";

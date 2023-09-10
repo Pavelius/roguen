@@ -186,6 +186,7 @@
     <ClCompile Include="information.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="io_bsreq.cpp" />
+    <ClCompile Include="io_memory.cpp" />
     <ClCompile Include="io_stream.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="itema.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="greatneed.h" />
     <ClInclude Include="indexa.h" />
+    <ClInclude Include="io_memory.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="itema.h" />
     <ClInclude Include="listcolumn.h" />
