@@ -7,23 +7,13 @@ extern "C" void	free(void* pointer);
 
 extern unsigned rmoptimal(unsigned need_count);
 
-void io::memory::clear() {
+void io::writer::clear() {
 	if(data)
 		delete data;
-	writed = readed = allocated = 0;
+	writed = allocated = 0;
 }
 
-int io::memory::read(void* result, int count) {
-	if(readed >= writed || count <= 0)
-		return 0;
-	if(readed + count > writed)
-		count = writed - readed;
-	memcpy(result, (char*)data + readed, count);
-	readed += count;
-	return count;
-}
-
-int io::memory::write(const void* result, int count) {
+int io::writer::write(const void* result, int count) {
 	if(count <= 0)
 		return 0;
 	auto total = writed + count;
@@ -41,4 +31,34 @@ int io::memory::write(const void* result, int count) {
 	memcpy((char*)data + writed, result, count);
 	writed += count;
 	return count;
+}
+
+int	io::writer::seek(int count, int rel) {
+	switch(rel) {
+	case SeekCur: return writed;
+	case SeekEnd: return writed + count;
+	default: writed = ((unsigned)count > allocated) ? allocated : count; return writed;
+	}
+}
+
+int io::reader::read(void* result, int count) {
+	if(readed >= maximum || count <= 0)
+		return 0;
+	if(readed + count > maximum)
+		count = maximum - readed;
+	memcpy(result, (char*)data + readed, count);
+	readed += count;
+	return count;
+}
+
+int	io::reader::seek(int count, int rel) {
+	switch(rel) {
+	case SeekCur: return readed;
+	case SeekEnd: return maximum + count;
+	default: readed = ((unsigned)count > maximum) ? maximum : count; return readed;
+	}
+}
+
+void io::reader::clear() {
+	readed = 0;
 }
