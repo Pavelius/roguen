@@ -35,6 +35,7 @@ struct draworder : drawable {
 struct object : drawable {
 	const void*		data;
 	const char*		string;
+	fnevent			proc;
 	static fnevent	correctcamera, beforepaint, afterpaint;
 	static fnpaint	painting;
 	draworder*		add(int milliseconds = 1000, draworder* depend = 0);
@@ -43,9 +44,11 @@ struct object : drawable {
 	void			move(point goal, int speed, int correct = 0);
 	void			paint() const;
 };
+extern object* last_object;
 extern rect last_screen, last_area;
 extern adat<object*, 512> objects;
-object*				addobject(point pt, object::type_s type = object::Object);
+template<typename T> void ftpaint() { ((T*)last_object->data)->paint(); }
+object*				addobject(point pt, fnevent proc, void* data, unsigned char random, unsigned char priority = 10, unsigned char alpha = 0xFF, object::type_s type = object::Object);
 bool				cameravisible(point goal, int border = 48);
 void*				chooseobject();
 void				shrink();

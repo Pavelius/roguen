@@ -111,15 +111,6 @@ static unsigned char getfow(point m) {
 	return r;
 }
 
-static object* add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
-	auto po = addobject(pt);
-	po->data = data;
-	po->priority = priority;
-	po->random = random;
-	po->alpha = 0xFF;
-	return po;
-}
-
 void gamei::next(fnevent proc) {
 	setnext(proc);
 }
@@ -135,7 +126,7 @@ static void paint_items() {
 			continue;
 		if(!e.position.in(rc))
 			continue;
-		add_object(m2s(e.position), &const_cast<itemi&>(e.geti()), 0, 6);
+		addobject(m2s(e.position), ftpaint<itemi>, &const_cast<itemi&>(e.geti()), 0, 6);
 	}
 }
 
@@ -199,6 +190,14 @@ static void fillfow() {
 	rectf();
 }
 
+static void paint_resource() {
+	image(((resource*)last_object->data)->get(), last_object->random, 0);
+}
+
+static void paint_feature() {
+	((featurei*)last_object->data)->paint(last_object->random);
+}
+
 static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
 	auto pi = gres(res::Walls);
 	auto bs = ei.walls.start + ei.walls.count;
@@ -231,32 +230,32 @@ static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
 			image(pi, bs + 10, 0);
 		if(!we)
 			image(pi, bs + 9, 0);
-		add_object(down(p0), bsdata<resource>::elements + (int)res::Shadows, bw + 0, 6);
+		addobject(down(p0), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 0, 6);
 		sn = true;
 	}
 	auto pu = up(p0);
 	if(!wn) {
-		add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 0, 12);
+		addobject(pu, paint_resource, bsdata<resource>::elements + (int)res::Walls, bs + 0, 12);
 		if(!we)
-			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 7, 13);
+			addobject(pu, paint_resource, bsdata<resource>::elements + (int)res::Walls, bs + 7, 13);
 		if(!ww)
-			add_object(pu, bsdata<resource>::elements + (int)res::Walls, bs + 8, 13);
-		add_object(pu, bsdata<resource>::elements + (int)res::Shadows, bw + 1, 6);
+			addobject(pu, paint_resource, bsdata<resource>::elements + (int)res::Walls, bs + 8, 13);
+		addobject(pu, paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 1, 6);
 		ss = true;
 	}
 	if(!ww) {
-		add_object(right(p0), bsdata<resource>::elements + (int)res::Shadows, bw + 2, 6);
+		addobject(right(p0), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 2, 6);
 		if(ss)
-			add_object(right(pu), bsdata<resource>::elements + (int)res::Shadows, bw + 6, 6);
+			addobject(right(pu), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 6, 6);
 		if(sn)
-			add_object(right(down(p0)), bsdata<resource>::elements + (int)res::Shadows, bw + 4, 6);
+			addobject(right(down(p0)), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 4, 6);
 	}
 	if(!we) {
-		add_object(left(p0), bsdata<resource>::elements + (int)res::Shadows, bw + 3, 6);
+		addobject(left(p0), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 3, 6);
 		if(ss)
-			add_object(left(pu), bsdata<resource>::elements + (int)res::Shadows, bw + 7, 6);
+			addobject(left(pu), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 7, 6);
 		if(sn)
-			add_object(left(down(p0)), bsdata<resource>::elements + (int)res::Shadows, bw + 5, 6);
+			addobject(left(down(p0)), paint_resource, bsdata<resource>::elements + (int)res::Shadows, bw + 5, 6);
 	}
 }
 
@@ -318,11 +317,11 @@ static void paint_floor() {
 				if(ef.isvisible()) {
 					if(ef.is(BetweenWalls)) {
 						if(area.iswall(i, East) && area.iswall(i, West))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, ef.features.start, ef.priority);
+							addobject(pt, paint_resource, bsdata<resource>::elements + (int)res::Features, ef.features.start, ef.priority);
 						else if(area.iswall(i, North) && area.iswall(i, South))
-							add_object(pt, bsdata<resource>::elements + (int)res::Features, ef.features.start + 1, ef.priority);
+							addobject(pt, paint_resource, bsdata<resource>::elements + (int)res::Features, ef.features.start + 1, ef.priority);
 					} else
-						add_object(pt, const_cast<featurei*>(&ef), r, ef.priority);
+						addobject(pt, paint_feature, const_cast<featurei*>(&ef), r, ef.priority);
 				}
 				if(show_floor_rect)
 					floorrect();

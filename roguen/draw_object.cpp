@@ -6,6 +6,7 @@ using namespace draw;
 BSDATAC(object, 512)
 BSDATAC(draworder, 512)
 
+object* draw::last_object;
 fnevent	draw::object::correctcamera;
 fnpaint	draw::object::painting;
 fnevent	draw::object::beforepaint;
@@ -225,13 +226,16 @@ static void sort_objects() {
 }
 
 static void paint_visible_objects() {
+	auto push_object = last_object;
 	for(auto p : objects) {
+		last_object = p;
 		if(p->type == object::Object)
 			draw::caret = p->position - draw::camera;
 		else
 			draw::caret = p->position;
 		p->paint();
 	}
+	last_object = push_object;
 }
 
 void draw::paintobjects() {
@@ -271,11 +275,16 @@ void draw::showobjects() {
 	draw::scene(paintobjectsshowmode);
 }
 
-object*	draw::addobject(point pt, object::type_s type) {
+object*	draw::addobject(point pt, fnevent proc, void* data, unsigned char random, unsigned char priority, unsigned char alpha, object::type_s type) {
 	auto p = bsdata<object>::addz();
 	p->clear();
-	p->type = type;
 	p->position = pt;
+	p->alpha = alpha;
+	p->random = random;
+	p->priority = priority;
+	p->proc = proc;
+	p->type = type;
+	p->data = data;
 	return p;
 }
 

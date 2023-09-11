@@ -12,15 +12,6 @@ extern areamap area;
 
 using namespace draw;
 
-static object* add_object(point pt, void* data, unsigned char random, unsigned char priority = 10) {
-	auto po = addobject(pt);
-	po->data = data;
-	po->priority = priority;
-	po->random = random;
-	po->alpha = 0xFF;
-	return po;
-}
-
 static color getcolor(color_s format_color) {
 	switch(format_color) {
 	case ColorRed: return colors::red;
@@ -55,10 +46,7 @@ void movable::fixappear() const {
 	auto po = draw::findobject(this);
 	if(po)
 		return;
-	po = addobject(getsposition());
-	po->data = this;
-	po->alpha = 0xFF;
-	po->priority = 11;
+	addobject(getsposition(), 0, const_cast<movable*>(this), 0, 11);
 }
 
 void movable::fixaction() const {
@@ -81,14 +69,16 @@ void movable::fixremove() const {
 
 void movable::fixvalue(const char* format, color_s format_color) const {
 	auto pt = getsposition(); pt.y -= tsy;
-	auto pa = addobject(pt);
-	pa->alpha = 0xFF;
+	auto pa = addobject(pt, 0, 0, 0, 20);
 	pa->string = szdup(format);
-	pa->priority = 20;
 	pa->fore = getcolor(format_color);
 	auto po = pa->add(mst);
 	pt.y -= tsy;
 	po->position = pt;
+}
+
+static void paint_visual_effect() {
+	((visualeffect*)draw::last_object->data)->paint(draw::last_object->random);
 }
 
 void movable::fixeffect(point position, const char* id) {
@@ -96,10 +86,7 @@ void movable::fixeffect(point position, const char* id) {
 	if(!pv)
 		return;
 	position.y += pv->dy;
-	auto po = draw::addobject(position);
-	po->data = pv;
-	po->priority = pv->priority;
-	po->alpha = 0xFF;
+	auto po = draw::addobject(position, paint_visual_effect, pv, 0, pv->priority);
 	po->add(mst);
 }
 
@@ -170,7 +157,7 @@ void movable::fixthrown(point target, const char* id, int frame) const {
 	auto range = area.getrange(getposition(), target);
 	if(range == 0xFFFF)
 		return;
-	auto po = add_object(getsposition(), pe, frame);
+	auto po = addobject(getsposition(), 0, pe, frame);
 	po->position.y += pe->dy;
 	if(!po)
 		return;
