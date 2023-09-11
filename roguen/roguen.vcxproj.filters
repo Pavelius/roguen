@@ -596,6 +596,9 @@
     <ClInclude Include="io_memory.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="areapiece.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

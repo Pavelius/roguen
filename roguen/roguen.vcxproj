@@ -254,6 +254,7 @@
     <ClInclude Include="archive.h" />
     <ClInclude Include="areaf.h" />
     <ClInclude Include="areamap.h" />
+    <ClInclude Include="areapiece.h" />
     <ClInclude Include="boost.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />

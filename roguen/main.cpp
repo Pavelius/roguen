@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "bsreq.h"
 #include "charname.h"
 #include "draw.h"
