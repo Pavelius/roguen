@@ -191,11 +191,11 @@ static void fillfow() {
 }
 
 static void paint_resource() {
-	image(((resource*)last_object->data)->get(), last_object->random, 0);
+	image(((resource*)last_object->data)->get(), last_object->param, 0);
 }
 
 static void paint_feature() {
-	((featurei*)last_object->data)->paint(last_object->random);
+	((featurei*)last_object->data)->paint(last_object->param);
 }
 
 static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
@@ -291,7 +291,7 @@ static void paint_floor() {
 			if(!area.is(i, Explored))
 				continue;
 			setcaret(pt);
-			auto r = area.random[i];
+			auto r = area.param[i];
 			auto t = area.tiles[i];
 			auto& ei = bsdata<tilei>::elements[t];
 			if(ei.iswall())
@@ -516,6 +516,10 @@ void creature::paintbarsall() const {
 		paint_bars(this);
 }
 
+void creature::fixappear() {
+	movable::fixappear(ftpaint<creature>);
+}
+
 void creature::paint() const {
 	auto feats = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
@@ -567,7 +571,7 @@ void itemi::paint() const {
 	image(pi, avatar, 0);
 }
 
-void visualeffect::paint(unsigned char random) const {
+void visualeffect::paint(unsigned char param) const {
 	auto pi = gres(resid);
 	if(!pi)
 		return;
@@ -580,16 +584,14 @@ void visualeffect::paint(unsigned char random) const {
 				image(pi, pc->start + tk, feats);
 		}
 	} else
-		image(pi, random + frame, feats);
+		image(pi, param + frame, feats);
 }
 
 static void paint_health_bar() {
 	for(auto p : objects) {
-		if(p->type == object::Object) {
-			draw::caret = p->position - draw::camera;
-			if(bsdata<creature>::have(p->data))
-				((creature*)p->data)->paintbarsall();
-		}
+		draw::caret = p->position - draw::camera;
+		if(bsdata<creature>::have(p->data))
+			((creature*)p->data)->paintbarsall();
 	}
 }
 
@@ -603,19 +605,6 @@ static void object_beforepaint() {
 static void object_afterpaint() {
 	paint_fow();
 	paint_health_bar();
-}
-
-static void object_painting(const object* p) {
-	if(bsdata<creature>::have(p->data))
-		((creature*)p->data)->paint();
-	else if(bsdata<featurei>::have(p->data))
-		((featurei*)p->data)->paint(p->random);
-	else if(bsdata<itemi>::have(p->data))
-		((itemi*)p->data)->paint();
-	else if(bsdata<visualeffect>::have(p->data))
-		((visualeffect*)p->data)->paint(p->random);
-	else if(bsdata<resource>::have(p->data))
-		image(((resource*)p->data)->get(), p->random, 0);
 }
 
 static void fieldh(const char* format) {
@@ -1349,7 +1338,6 @@ int start_application(fnevent proc, fnevent initializing) {
 	pfinish = afterpaint;
 	object::beforepaint = object_beforepaint;
 	object::afterpaint = object_afterpaint;
-	object::painting = object_painting;
 	object::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;

@@ -252,6 +252,7 @@ int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 
 void					texta(const char* string, unsigned state = 0);
 void					textas(const char* string);
 void					textc(const char* string, int count = -1, unsigned feats = 0);
+void					textcj(const char* string);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned feats, int i1, int i2);
 void					textf(const char* string);

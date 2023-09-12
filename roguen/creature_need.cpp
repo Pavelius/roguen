@@ -14,7 +14,7 @@ static creature* random_target(const greatneedi* p) {
 	source.match(fntis<actable, &actable::isnamed>, true);
 	source.match(creature::isneed, false);
 	source.match(fntis<creature, &creature::ishuman>, false);
-	return source.random();
+	return source.param();
 }
 
 void add_need(int bonus) {

@@ -7,7 +7,6 @@
 #define VAR(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 
 struct bsreq;
-//enum variant_s : unsigned char;
 union variant;
 
 typedef sliceu<variant> variants;

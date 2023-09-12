@@ -499,9 +499,9 @@ static void create_corridor_content(point i) {
 	variant treasure = "RandomLoot";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->loot && d100() < 40)
-		treasure = randomizeri::random(last_location->loot);
+		treasure = randomizeri::param(last_location->loot);
 	else if(quest_modifier && quest_modifier->loot && d100() < 40)
-		treasure = randomizeri::random(quest_modifier->loot);
+		treasure = randomizeri::param(quest_modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	script::run(treasure);
 	areahead.total.loots++;

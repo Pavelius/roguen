@@ -101,7 +101,7 @@ void areamap::change(int t1, int t2) {
 
 void areamap::clear() {
 	memset(this, 0, sizeof(*this));
-	for(auto& e : random)
+	for(auto& e : param)
 		e = (unsigned char)(rand() % 256);
 }
 

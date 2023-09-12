@@ -18,9 +18,10 @@ class movable : public actable {
 	point			position;
 	direction_s		direction;
 	bool			mirror;
+	void			fixvalue(void* data, fnevent proc, color_s color) const;
 public:
 	void			fixaction() const;
-	void			fixappear() const;
+	void			fixappear(fnevent fpaint) const;
 	void			fixability(ability_s i, int v) const;
 	void			fixdisappear() const;
 	void			fixeffect(const char* id) const;
@@ -32,6 +33,7 @@ public:
 	void			fixthrown(point target, const char* id, int frame) const;
 	void			fixvalue(const char* v, color_s color) const;
 	void			fixvalue(int v) const;
+	void			fixvalue(int v, color_s color) const;
 	void			fixvalue(int v, color_s color_positive, color_s color_negative) const;
 	bool			in(const rect& rc) const { return position.in(rc); }
 	bool			ismirror() const { return mirror; }

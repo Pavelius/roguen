@@ -57,6 +57,7 @@ public:
 	static creature* create(point m, variant v, variant character = {}, bool female = false);
 	void			damage(int v);
 	void			finish();
+	void			fixappear();
 	int				get(ability_s v) const { return abilities[v]; }
 	int				getdefault(ability_s v) const { return imax(get(v), getminimal(v)); }
 	int				getexpreward() const;

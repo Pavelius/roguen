@@ -54,7 +54,7 @@ void answers::paintanswers(int columns, const char* cancel_text) const {
 
 void* answers::choose(const char* title, const char* cancel_text, int cancel_mode) const {
 	if(!interactive)
-		return random();
+		return param();
 	if(cancel_mode == 2 && elements.getcount() == 1)
 		return (void*)elements.data[0].value;
 	if(!elements) {

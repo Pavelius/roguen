@@ -34,6 +34,27 @@ static point to(point pt, direction_s d, int sx, int sy) {
 	return pt;
 }
 
+static void paint_color_text(const char* string, color_s new_fore) {
+	auto push_fore = fore;
+	fore = getcolor(new_fore);
+	textcj(string);
+	fore = push_fore;
+}
+
+static void paint_color_text() {
+	paint_color_text((const char*)last_object->data, (color_s)last_object->param);
+}
+
+static void paint_color_number() {
+	char temp[32]; stringbuilder sb(temp);
+	sb.add("%1i", (int)last_object->data);
+	paint_color_text(temp, (color_s)last_object->param);
+}
+
+static void paint_visual_effect() {
+	((visualeffect*)draw::last_object->data)->paint(draw::last_object->param);
+}
+
 void movable::setdirection(direction_s v) {
 	direction = v;
 	switch(v) {
@@ -42,11 +63,11 @@ void movable::setdirection(direction_s v) {
 	}
 }
 
-void movable::fixappear() const {
+void movable::fixappear(fnevent fpaint) const {
 	auto po = draw::findobject(this);
 	if(po)
 		return;
-	addobject(getsposition(), 0, const_cast<movable*>(this), 0, 11);
+	addobject(getsposition(), fpaint, const_cast<movable*>(this), 0, 11);
 }
 
 void movable::fixaction() const {
@@ -67,18 +88,30 @@ void movable::fixremove() const {
 		po->clear();
 }
 
-void movable::fixvalue(const char* format, color_s format_color) const {
+void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
 	auto pt = getsposition(); pt.y -= tsy;
-	auto pa = addobject(pt, 0, 0, 0, 20);
-	pa->string = szdup(format);
-	pa->fore = getcolor(format_color);
-	auto po = pa->add(mst);
+	auto pa = addobject(pt, fproc, data, format_color, 20);
+	auto po = pa->add(mst, 0, true);
 	pt.y -= tsy;
 	po->position = pt;
 }
 
-static void paint_visual_effect() {
-	((visualeffect*)draw::last_object->data)->paint(draw::last_object->random);
+void movable::fixvalue(const char* format, color_s format_color) const {
+	fixvalue((void*)szdup(format), paint_color_text, format_color);
+}
+
+void movable::fixvalue(int v, color_s format_color) const {
+	fixvalue((void*)v, paint_color_number, format_color);
+}
+
+void movable::fixvalue(int v) const {
+	fixvalue(v, ColorGreen, ColorRed);
+}
+
+void movable::fixvalue(int v, color_s color_positive, color_s color_negative) const {
+	if(color_negative == ColorNone)
+		color_negative = color_positive;
+	fixvalue(v, v >= 0 ? color_positive : color_negative);
 }
 
 void movable::fixeffect(point position, const char* id) {
@@ -95,18 +128,6 @@ void movable::fixeffect(const char* id) const {
 		return;
 	auto pt = getsposition(); pt.y -= tsy / 2;
 	fixeffect(pt, id);
-}
-
-void movable::fixvalue(int v) const {
-	fixvalue(v, ColorGreen, ColorRed);
-}
-
-void movable::fixvalue(int v, color_s color_positive, color_s color_negative) const {
-	char temp[260]; stringbuilder sb(temp);
-	sb.add("%1i", v);
-	if(color_negative == ColorNone)
-		color_negative = color_positive;
-	fixvalue(temp, v > 0 ? color_positive : color_negative);
 }
 
 void movable::fixability(ability_s i, int v) const {

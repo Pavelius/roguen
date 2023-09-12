@@ -27,7 +27,7 @@ struct featurei {
 	featurei*		getlead() const { return leadto; }
 	featurei*		getlocked() const;
 	featurei*		getstuck() const;
-	void			paint(int random) const;
+	void			paint(int param) const;
 	bool			autoactivated() const { return activateto && chance_auto_activate; }
 	bool			handactivated() const { return activateto && !chance_auto_activate; }
 };

@@ -11,7 +11,7 @@ struct collectiona : adat<void*, 256> {
 	void	match(fnvisible proc, bool keep);
 	void	match(fnallow proc, int param, bool keep);
 	void	match(const collectiona& source, bool keep);
-	void*	random() const;
+	void*	param() const;
 	void*	pick();
 	void	select(array& source);
 	void	select(array& source, fnvisible proc);
@@ -28,7 +28,7 @@ struct collection : collectiona {
 	bool	chooseu(const char* title, const char* cancel = 0) const { return collectiona::chooseu(T::getname, title, cancel); }
 	T**		end() const { return (T**)data + count; }
 	T*		pick() { return (T*)collectiona::pick(); }
-	T*		random() const { return (T*)collectiona::random(); }
+	T*		param() const { return (T*)collectiona::param(); }
 	void	select() { collectiona::select(bsdata<T>::source); }
 	void	select(fnvisible proc) { collectiona::select(bsdata<T>::source, proc); }
 };

@@ -139,7 +139,7 @@ void script::run(variant v) {
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++)
-			script::run(bsdata<randomizeri>::elements[v.value].random());
+			script::run(bsdata<randomizeri>::elements[v.value].param());
 	} else if(v.iskind<monsteri>()) {
 		auto count = game.getcount(v, 0);
 		if(count < 0)
@@ -561,7 +561,7 @@ void creature::cast(const spelli& e, int level, int mana) {
 }
 
 static void gather_item(const char* id, randomizeri& source, int chance) {
-	auto v = source.random(source.chance);
+	auto v = source.param(source.chance);
 	if(v.iskind<itemi>()) {
 		item it; it.create(bsdata<itemi>::elements + v.value, 1);
 		player->act(getnm(id), it.getfullname());

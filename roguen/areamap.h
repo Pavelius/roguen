@@ -14,7 +14,7 @@ struct areamap {
 	typedef bool (*fntest)(point m);
 	arrayt			tiles;
 	arrayt			features;
-	arrayt			random;
+	arrayt			param;
 	arrayt			feats;
 	void			blockfeatures() const;
 	static void		blockrange(int range);

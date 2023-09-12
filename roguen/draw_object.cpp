@@ -8,7 +8,6 @@ BSDATAC(draworder, 512)
 
 object* draw::last_object;
 fnevent	draw::object::correctcamera;
-fnpaint	draw::object::painting;
 fnevent	draw::object::beforepaint;
 fnevent	draw::object::afterpaint;
 
@@ -103,27 +102,25 @@ void draworder::update() {
 	parent->position.x = (short)calculate(start.position.x, position.x, n, m);
 	parent->position.y = (short)calculate(start.position.y, position.y, n, m);
 	parent->alpha = (unsigned char)calculate(start.alpha, alpha, n, m);
-	parent->fore.r = (unsigned char)calculate(start.fore.r, fore.r, n, m);
-	parent->fore.g = (unsigned char)calculate(start.fore.g, fore.g, n, m);
-	parent->fore.b = (unsigned char)calculate(start.fore.b, fore.b, n, m);
 	if(n == m) {
-		if(!alpha)
+		if(!alpha || cleanup)
 			parent->clear();
 		clear();
 	}
 }
 
-draworder* draworder::add(int milliseconds) {
+draworder* draworder::add(int milliseconds, bool cleanup) {
 	auto p = bsdata<draworder>::addz();
 	copy(*p, *this);
 	copy(p->start, *this);
+	p->cleanup = cleanup;
 	p->tick_start = timestamp;
 	p->parent = parent;
 	p->tick_stop = p->tick_start + milliseconds;
 	return p;
 }
 
-draworder* object::add(int milliseconds, draworder* depend) {
+draworder* object::add(int milliseconds, draworder* depend, bool cleanup) {
 	auto p = bsdata<draworder>::addz();
 	if(depend) {
 		copy(*p, *depend);
@@ -137,6 +134,7 @@ draworder* object::add(int milliseconds, draworder* depend) {
 	}
 	p->parent = this;
 	p->tick_stop = p->tick_start + milliseconds;
+	p->cleanup = cleanup;
 	return p;
 }
 
@@ -175,27 +173,23 @@ void draw::splashscreen(unsigned milliseconds) {
 }
 
 void object::paint() const {
+	auto push_object = last_object;
 	auto push_fore = draw::fore;
 	auto push_alpha = draw::alpha;
+	last_object = const_cast<object*>(this);
 	draw::fore = fore;
 	draw::alpha = alpha;
-	painting(this);
-	if(string) {
-		auto push_font = draw::font;
-		if(font)
-			draw::font = font;
-		textcn(string, 0, 0);
-		draw::font = push_font;
-	}
+	proc();
 	draw::alpha = push_alpha;
 	draw::fore = push_fore;
+	last_object = push_object;
 }
 
 static void select_objects() {
 	auto ps = objects.data;
 	auto pe = objects.endof();
 	for(auto& e : bsdata<object>()) {
-		if(e.type==object::Object && !e.position.in(last_area))
+		if(!e.position.in(last_area))
 			continue;
 		if(ps < pe)
 			*ps++ = &e;
@@ -206,8 +200,6 @@ static void select_objects() {
 static int compare(const void* v1, const void* v2) {
 	auto p1 = *((object**)v1);
 	auto p2 = *((object**)v2);
-	if(p1->type != p2->type)
-		return p1->type - p2->type;
 	auto r1 = p1->priority / 5;
 	auto r2 = p2->priority / 5;
 	if(r1 != r2)
@@ -226,21 +218,13 @@ static void sort_objects() {
 }
 
 static void paint_visible_objects() {
-	auto push_object = last_object;
 	for(auto p : objects) {
-		last_object = p;
-		if(p->type == object::Object)
-			draw::caret = p->position - draw::camera;
-		else
-			draw::caret = p->position;
+		draw::caret = p->position - draw::camera;
 		p->paint();
 	}
-	last_object = push_object;
 }
 
 void draw::paintobjects() {
-	if(!object::painting)
-		return;
 	rectpush push;
 	auto push_clip = clipping;
 	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
@@ -275,15 +259,14 @@ void draw::showobjects() {
 	draw::scene(paintobjectsshowmode);
 }
 
-object*	draw::addobject(point pt, fnevent proc, void* data, unsigned char random, unsigned char priority, unsigned char alpha, object::type_s type) {
+object*	draw::addobject(point pt, fnevent proc, void* data, unsigned char param, unsigned char priority, unsigned char alpha, unsigned char flags) {
 	auto p = bsdata<object>::addz();
-	p->clear();
 	p->position = pt;
 	p->alpha = alpha;
-	p->random = random;
 	p->priority = priority;
+	p->param = param;
+	p->flags = flags;
 	p->proc = proc;
-	p->type = type;
 	p->data = data;
 	return p;
 }

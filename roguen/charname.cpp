@@ -40,7 +40,7 @@ unsigned charname::select(short unsigned* pb, short unsigned* pe, const slice<va
 	return ps - pb;
 }
 
-short unsigned charname::random(const slice<variant>& source) {
+short unsigned charname::param(const slice<variant>& source) {
 	short unsigned temp[512];
 	auto count = select(temp, temp + sizeof(temp) / sizeof(temp[0]), source);
 	if(count)

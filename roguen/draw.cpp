@@ -1578,6 +1578,13 @@ void draw::text(const char* string, int count, unsigned feats) {
 	}
 }*/
 
+void draw::textcj(const char* string) {
+	auto push_caret = caret;
+	caret.x -= textw(string) / 2;
+	text(string);
+	caret = push_caret;
+}
+
 void draw::textc(const char* string, int count, unsigned feats) {
 	auto push_clip = clipping;
 	setclip({caret.x, caret.y, caret.x + width, caret.y + texth()});

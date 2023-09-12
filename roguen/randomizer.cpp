@@ -20,7 +20,7 @@ int randomizeri::total(const variants& elements) {
 	return result;
 }
 
-variant randomizeri::random(const variants& elements, int bonus, int summary) {
+variant randomizeri::param(const variants& elements, int bonus, int summary) {
 	if(summary) {
 		auto result = rand() % summary + bonus;
 		for(auto& e : elements) {
@@ -38,6 +38,6 @@ variant randomizeri::random(const variants& elements, int bonus, int summary) {
 
 variant single(variant v) {
 	while(v.iskind<randomizeri>())
-		v = bsdata<randomizeri>::elements[v.value].random();
+		v = bsdata<randomizeri>::elements[v.value].param();
 	return v;
 }

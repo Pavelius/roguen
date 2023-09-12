@@ -446,7 +446,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 	} else {
 		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
 		if(random_table) {
-			auto effect = random_table->random();
+			auto effect = random_table->param();
 			if(effect.iskind<listi>()) {
 				auto p = bsdata<listi>::elements + effect.value;
 				auto pn = getdescription(p->id);
@@ -469,7 +469,7 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 	auto activate_item = ei.activate_item;
 	if(activate_item) {
 		if(ei.random_count)
-			activate_item.value += area.random[m] % ei.random_count;
+			activate_item.value += area.param[m] % ei.random_count;
 		if(activate_item.iskind<itemi>()) {
 			if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
 				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
@@ -1218,7 +1218,7 @@ void creature::makemove() {
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 40)
-			cast(*((spelli*)allowed_spells.random()));
+			cast(*((spelli*)allowed_spells.param()));
 		if(canshoot(false))
 			attackrange(*enemy);
 		else
@@ -1228,7 +1228,7 @@ void creature::makemove() {
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 20)
-			cast(*((spelli*)allowed_spells.random()));
+			cast(*((spelli*)allowed_spells.param()));
 		else if(isfollowmaster())
 			moveto(getowner()->getposition());
 		else if(area.isvalid(moveorder)) {
@@ -1397,7 +1397,7 @@ bool creature::speechlocation() const {
 	collection<roomi> source;
 	source.select(fntis<roomi, &roomi::isnotable>);
 	source.match(fntis<roomi, &roomi::isexplored>, false);
-	auto p = source.random();
+	auto p = source.param();
 	if(!p)
 		return false;
 	char temp[1024]; stringbuilder sb(temp);
@@ -1519,7 +1519,7 @@ void creature::summon(point m, const variants& elements, int count, int level) {
 	auto isenemy = is(Enemy);
 	auto isally = is(Ally);
 	for(auto i = 0; i < count; i++) {
-		auto v = randomizeri::random(elements);
+		auto v = randomizeri::param(elements);
 		auto p = creature::create(m, v);
 		if(isenemy)
 			p->set(Enemy);
@@ -1594,13 +1594,13 @@ creature* creature::create(point m, variant kind, variant character, bool female
 		advance_value(pm->use);
 		adat<variant> conditions;
 		conditions.add(kind);
-		player->setname(charname::random(conditions));
+		player->setname(charname::param(conditions));
 	} else {
 		adat<variant> conditions;
 		conditions.add(kind);
 		if(player->is(Female))
 			conditions.add("Female");
-		player->setname(charname::random(conditions));
+		player->setname(charname::param(conditions));
 	}
 	player->basic.abilities[LineOfSight] += 4;
 	advance_value(kind, 0);

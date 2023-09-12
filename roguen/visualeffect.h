@@ -9,5 +9,5 @@ struct visualeffect : nameable {
 	short unsigned	frame, feats;
 	unsigned char	priority = 15;
 	int				dy;
-	void			paint(unsigned char random) const;
+	void			paint(unsigned char param) const;
 };

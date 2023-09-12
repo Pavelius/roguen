@@ -45,7 +45,7 @@ public:
 	static void			message(const char* format);
 	void				modal(const char* title, const char* cancel) const;
 	void				paintanswers(int columns, const char* cancel_text) const;
-	void*				random() const;
+	void*				param() const;
 	void				remove(int index) { elements.remove(index, 1); }
 	void				sort();
 };
