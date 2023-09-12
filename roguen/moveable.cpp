@@ -8,7 +8,7 @@
 #include "screenshoot.h"
 #include "visualeffect.h"
 
-extern areamap area;
+extern areamap* area;
 
 using namespace draw;
 
@@ -71,7 +71,7 @@ void movable::fixappear(fnevent fpaint) const {
 }
 
 void movable::fixaction() const {
-	if(!area.is(position, Visible))
+	if(!area->is(position, Visible))
 		return;
 	auto po = draw::findobject(this);
 	if(!po)
@@ -124,14 +124,14 @@ void movable::fixeffect(point position, const char* id) {
 }
 
 void movable::fixeffect(const char* id) const {
-	if(!area.is(position, Visible))
+	if(!area->is(position, Visible))
 		return;
 	auto pt = getsposition(); pt.y -= tsy / 2;
 	fixeffect(pt, id);
 }
 
 void movable::fixability(ability_s i, int v) const {
-	if(!area.is(position, Visible))
+	if(!area->is(position, Visible))
 		return;
 	char temp[260]; stringbuilder sb(temp);
 	sb.add("%1%+2i", bsdata<abilityi>::elements[i].getname(), v);
@@ -170,12 +170,12 @@ void movable::fixshoot(point target, int frame) const {
 }
 
 void movable::fixthrown(point target, const char* id, int frame) const {
-	if(!area.isvalid(target))
+	if(!area->isvalid(target))
 		return;
 	auto pe = bsdata<visualeffect>::find(id);
 	if(!pe)
 		return;
-	auto range = area.getrange(getposition(), target);
+	auto range = area->getrange(getposition(), target);
 	if(range == 0xFFFF)
 		return;
 	auto po = addobject(getsposition(), 0, pe, frame);

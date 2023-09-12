@@ -225,7 +225,7 @@ unsigned char*			ptr(int x, int y);
 int						rawinput();
 void					rectb(); // Draw rectangle border
 void					rectb3d(); // Draw rectangle border
-void					rectf(); // Draw rectangle area. Right and bottom side is one pixel less.
+void					rectf(); // Draw rectangle area-> Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius);
 void					rectx();
 void					rectfocus();

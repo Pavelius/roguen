@@ -65,6 +65,6 @@ direction_s round(direction_s d, direction_s v) {
 	}
 }
 
-point to(point m, direction_s d) {
+point to (point m, direction_s d) {
 	return m + all_directions[d];
 }

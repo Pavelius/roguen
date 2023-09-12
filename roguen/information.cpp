@@ -118,7 +118,7 @@ void item::getinfo(stringbuilder& sb) const {
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
-	auto direction = area.getdirection(game.position, e.position);
+	auto direction = area->getdirection(game.position, e.position);
 	auto range = game.getrange(game.position, e.position);
 	auto site_name = e.level.getname();
 	sba.adjective(e.modifier.getname(), stringbuilder::getgender(site_name));
@@ -145,10 +145,10 @@ void creature::getrumor(quest& e, stringbuilder& sb) const {
 
 void roomi::getrumor(stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
-	auto direction = area.getdirection(player->getposition(), center());
+	auto direction = area->getdirection(player->getposition(), center());
 	auto site_name = getname();
 	sb.add(getnm("RumorLocation"),
 		getnm(bsdata<directioni>::elements[direction].id),
 		site_name);
-	area.set(rc, &areamap::setflag, Explored);
+	area->set(rc, &areamap::setflag, Explored);
 }

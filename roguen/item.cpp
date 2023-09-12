@@ -2,7 +2,7 @@
 #include "item.h"
 #include "magic.h"
 
-extern areamap area;
+extern areamap* area;
 item* last_item;
 
 static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");
@@ -145,7 +145,7 @@ bool item::is(feat_s v) const {
 }
 
 void item::drop(point m) {
-	if(!area.isvalid(m))
+	if(!area->isvalid(m))
 		return;
 	for(auto& e : bsdata<itemground>()) {
 		if(e && e.position == m) {

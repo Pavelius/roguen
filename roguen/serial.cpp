@@ -52,7 +52,7 @@ static void update_ui() {
 }
 
 static void set_allies_position(geoposition ogp, geoposition ngp, point m) {
-	if(!area.isvalid(m))
+	if(!area->isvalid(m))
 		return;
 	for(auto& e : bsdata<creature>()) {
 		if(e.worldpos == ogp && e.is(Ally)) {
@@ -123,9 +123,9 @@ void gamei::enter(point m, int level, const featurei* feature, direction_s appea
 	serial_area(false);
 	point start = {-1000, -1000};
 	if(feature)
-		start = area.findfeature((unsigned char)bsid(feature));
+		start = area->findfeature((unsigned char)bsid(feature));
 	if(!game.isvalid(start))
-		start = area.bordered(round(appear_side, South));
+		start = area->bordered(round(appear_side, South));
 	set_allies_position(old_game, game, start);
 	after_serial_game();
 	draw::setnext(game.play);

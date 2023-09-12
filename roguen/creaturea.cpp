@@ -5,8 +5,8 @@ static point compare_position;
 static int compare_distace(const void* v1, const void* v2) {
 	auto p1 = *((creature**)v1);
 	auto p2 = *((creature**)v2);
-	auto d1 = area.getrange(p1->getposition(), compare_position);
-	auto d2 = area.getrange(p2->getposition(), compare_position);
+	auto d1 = area->getrange(p1->getposition(), compare_position);
+	auto d2 = area->getrange(p2->getposition(), compare_position);
 	return d1 - d2;
 }
 
@@ -24,7 +24,7 @@ void creaturea::select(point pt, int los, bool isplayer, const creature* exclude
 			continue;
 		if(!e.in(rc))
 			continue;
-		if(isplayer && !area.is(e.getposition(), Visible))
+		if(isplayer && !area->is(e.getposition(), Visible))
 			continue;
 		if(exclude && &e == exclude)
 			continue;
@@ -57,7 +57,7 @@ void creaturea::remove(const creature* v) {
 void creaturea::matchrange(point start, int v, bool keep) {
 	auto ps = data;
 	for(auto e : *this) {
-		auto r = area.getrange(e->getposition(), start) <= v;
+		auto r = area->getrange(e->getposition(), start) <= v;
 		if(r != keep)
 			continue;
 		*ps++ = e;

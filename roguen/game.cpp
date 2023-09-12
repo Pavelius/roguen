@@ -9,7 +9,8 @@
 #include "triggern.h"
 #include "creature.h"
 
-areamap			area;
+static areamap	area_part;
+areamap*		area = &area_part;
 areaheadi		areahead;
 gamei			game;
 static char		console_text[4096];
@@ -92,11 +93,11 @@ static void all_features(triggern type) {
 	point m;
 	pushvalue push_point(last_rect);
 	auto& source = get_triggers(type, isfeature);
-	for(m.y = 0; m.y < area.mps; m.y++) {
-		for(m.x = 0; m.x < area.mps; m.x++) {
-			if(area.features[m] == 0)
+	for(m.y = 0; m.y < area->mps; m.y++) {
+		for(m.x = 0; m.x < area->mps; m.x++) {
+			if(area->features[m] == 0)
 				continue;
-			auto v1 = bsdata<featurei>::elements + (int)area.features[m];
+			auto v1 = bsdata<featurei>::elements + (int)area->features[m];
 			for(auto p : source) {
 				if(!p->match(v1, {}))
 					continue;
@@ -108,32 +109,32 @@ static void all_features(triggern type) {
 }
 
 static bool isfreelt(point m) {
-	if(area.is(m, Darkened))
+	if(area->is(m, Darkened))
 		return false;
-	return area.isfree(m);
+	return area->isfree(m);
 }
 
 bool isfreeltsv(point m) {
-	area.setflag(m, Visible);
-	area.setflag(m, Explored);
-	if(area.is(m, Darkened))
+	area->setflag(m, Visible);
+	area->setflag(m, Explored);
+	if(area->is(m, Darkened))
 		return false;
-	return area.isfree(m);
+	return area->isfree(m);
 }
 
 static void update_los() {
 	point m;
-	for(m.y = 0; m.y < area.mps; m.y++)
-		for(m.x = 0; m.x < area.mps; m.x++) {
-			area.remove(m, Visible);
-			if(area.is(m, Darkened))
-				area.remove(m, Explored);
+	for(m.y = 0; m.y < area->mps; m.y++)
+		for(m.x = 0; m.x < area->mps; m.x++) {
+			area->remove(m, Visible);
+			if(area->is(m, Darkened))
+				area->remove(m, Explored);
 		}
 	auto human = game.getowner();
 	if(human) {
 		auto i = human->getposition();
-		if(area.isvalid(i))
-			area.setlos(i, human->getlos(), isfreeltsv);
+		if(area->isvalid(i))
+			area->setlos(i, human->getlos(), isfreeltsv);
 	}
 }
 
@@ -151,16 +152,16 @@ static void decoy_food() {
 
 static void auto_activate_features() {
 	point m;
-	for(m.y = 0; m.y < area.mps; m.y++)
-		for(m.x = 0; m.x < area.mps; m.x++) {
-			auto f = area.features[m];
+	for(m.y = 0; m.y < area->mps; m.y++)
+		for(m.x = 0; m.x < area->mps; m.x++) {
+			auto f = area->features[m];
 			if(f==0)
 				continue;
 			auto p = bsdata<featurei>::elements + (int)f;
 			if(!p->autoactivated())
 				continue;
 			if(d100() < p->chance_auto_activate)
-				area.setfeature(m, bsid(p->getactivate()));
+				area->setfeature(m, bsid(p->getactivate()));
 		}
 }
 
@@ -172,13 +173,13 @@ static bool checkalive() {
 
 static void remove_flags(areaf v, int chance) {
 	point m;
-	for(m.y = 0; m.y < area.mps; m.y++) {
-		for(m.x = 0; m.x < area.mps; m.x++) {
-			if(!area.is(m, v))
+	for(m.y = 0; m.y < area->mps; m.y++) {
+		for(m.x = 0; m.x < area->mps; m.x++) {
+			if(!area->is(m, v))
 				continue;
 			if(d100() >= chance)
 				continue;
-			area.remove(m, v);
+			area->remove(m, v);
 		}
 	}
 }

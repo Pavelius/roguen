@@ -65,7 +65,7 @@ static creature* findalive(point m) {
 static void pay_movement(creature* player) {
 	auto cost = 100;
 	if(!player->is(Fly)) {
-		auto& ei = area.getfeature(player->getposition());
+		auto& ei = area->getfeature(player->getposition());
 		if(ei.movedifficult)
 			cost = cost * ei.movedifficult / 100;
 	}
@@ -184,7 +184,7 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 		damage += 2;
 	if(attack_effect(player, weapon, ColdDamage)) {
 		enemy->add(Freezing, 2);
-		area.setflag(player->getposition(), Iced);
+		area->setflag(player->getposition(), Iced);
 	}
 	if(attack_effect(player, weapon, FireDamage))
 		enemy->add(Burning, 2);
@@ -236,7 +236,7 @@ static direction_s movedirection(point m) {
 		return West;
 	else if(m.y < 0)
 		return North;
-	else if(m.y >= area.mps)
+	else if(m.y >= area->mps)
 		return South;
 	else
 		return East;
@@ -293,7 +293,7 @@ static void check_freezing(creature* player) {
 static void check_blooding(creature* p) {
 	if(p->is(Blooding)) {
 		p->damage(1);
-		area.setflag(p->getposition(), Blooded);
+		area->setflag(p->getposition(), Blooded);
 		if(p->roll(Strenght))
 			p->remove(Blooding);
 	}
@@ -318,7 +318,7 @@ static void random_walk(creature* p) {
 }
 
 static bool check_stairs_movement(creature* p, point m) {
-	auto& ei = area.getfeature(m);
+	auto& ei = area->getfeature(m);
 	auto pf = ei.getlead();
 	if(pf) {
 		if(p->ishuman()) {
@@ -332,7 +332,7 @@ static bool check_stairs_movement(creature* p, point m) {
 }
 
 static bool check_dangerous_feature(creature* p, point m) {
-	auto& ei = area.getfeature(m);
+	auto& ei = area->getfeature(m);
 	if(ei.is(DangerousFeature)) {
 		p->wait(2);
 		if(!p->roll(Strenght)) {
@@ -343,7 +343,7 @@ static bool check_dangerous_feature(creature* p, point m) {
 			return false;
 		}
 		p->act(getnme(str("%1Break", ei.id)));
-		area.setfeature(m, 0);
+		area->setfeature(m, 0);
 	}
 	return true;
 }
@@ -351,7 +351,7 @@ static bool check_dangerous_feature(creature* p, point m) {
 static bool check_trap(creature* player, point m) {
 	if(player->is(Fly))
 		return true;
-	auto& ei = area.getfeature(m);
+	auto& ei = area->getfeature(m);
 	if(ei.is(TrappedFeature)) {
 		auto bonus = ei.isvisible() ? 20 : -30;
 		if(!player->roll(Wits, bonus)) {
@@ -376,13 +376,13 @@ static bool check_webbed_tile(creature* p, point m) {
 			return false;
 		}
 		p->act(getnm("WebBreak"));
-		area.remove(m, Webbed);
+		area->remove(m, Webbed);
 	}
 	return true;
 }
 
 static bool check_leave_area(creature* p, point m) {
-	if(!area.isvalid(m) && game.level == 0) {
+	if(!area->isvalid(m) && game.level == 0) {
 		if(p->ishuman()) {
 			auto direction = movedirection(m);
 			auto np = to(game.position, direction);
@@ -414,20 +414,20 @@ static void check_hidden_doors(creature* p) {
 	source.select(p->getposition(), 1);
 	auto found_doors = 0;
 	for(auto m : source) {
-		auto& ei = area.getfeature(m);
+		auto& ei = area->getfeature(m);
 		if(ei.isvisible())
 			continue;
 		if(!p->roll(Wits, -3000))
 			continue;
 		found_doors++;
-		area.setreveal(m, floor);
+		area->setreveal(m, floor);
 	}
 	if(found_doors)
 		p->actp(getnm("YouFoundSecretDoor"), found_doors);
 }
 
 static void drop_item(point m, const char* id) {
-	if(!area.isvalid(m) || !id)
+	if(!area->isvalid(m) || !id)
 		return;
 	itemi* pi = single(id);
 	if(!pi)
@@ -441,8 +441,8 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 		return false;
 	if(p->roll(Strenght, -10)) {
 		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
-		area.setactivate(m);
-		area.setactivate(m);
+		area->setactivate(m);
+		area->setactivate(m);
 	} else {
 		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
 		if(random_table) {
@@ -457,7 +457,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 			}
 		}
 		movable::fixeffect(m2s(m), "SearchVisual");
-		area.setfeature(m, 0);
+		area->setfeature(m, 0);
 	}
 	return true;
 }
@@ -469,7 +469,7 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 	auto activate_item = ei.activate_item;
 	if(activate_item) {
 		if(ei.random_count)
-			activate_item.value += area.param[m] % ei.random_count;
+			activate_item.value += area->param[m] % ei.random_count;
 		if(activate_item.iskind<itemi>()) {
 			if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
 				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
@@ -478,7 +478,7 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 				player->actp(getnm(str("%1%2", ei.id, "UseActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
 		}
 	}
-	area.setactivate(m);
+	area->setactivate(m);
 	return true;
 }
 
@@ -497,7 +497,7 @@ static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 		auto chance = chance_cut_wood(player->wears[MeleeWeapon]);
 		if(d100() < chance) {
 			player->act(getnm("YouCutWood"), getnm(ei.id));
-			area.setfeature(m, 0);
+			area->setfeature(m, 0);
 			drop_item(m, "WoodenLagsTable");
 			return true;
 		}
@@ -506,7 +506,7 @@ static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 }
 
 static void check_interaction(creature* player, point m) {
-	auto& ei = area.getfeature(m);
+	auto& ei = area->getfeature(m);
 	if(ei.isvisible()) {
 		if(check_stuck_doors(player, m, ei))
 			return;
@@ -598,16 +598,16 @@ void creature::levelup() {
 bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
-	auto tile = area.tiles[m];
+	auto tile = area->tiles[m];
 	if(bsdata<tilei>::elements[tile].is(CanSwim))
 		return false;
-	return area.isfree(m);
+	return area->isfree(m);
 }
 
 bool isfreecrfly(point m) {
 	if(findalive(m))
 		return false;
-	return area.isfree(m);
+	return area->isfree(m);
 }
 
 static void update_room(creature* player) {
@@ -650,7 +650,7 @@ void creature::update_abilities() {
 }
 
 void creature::place(point m) {
-	m = area.getfree(m, 10, isfreecr);
+	m = area->getfree(m, 10, isfreecr);
 	setposition(m);
 	update_room(this);
 }
@@ -664,7 +664,7 @@ bool creature::isenemy(const creature& opponent) const {
 }
 
 bool creature::is(areaf v) const {
-	return ispresent() && area.is(getposition(), v);
+	return ispresent() && area->is(getposition(), v);
 }
 
 bool creature::is(condition_s v) const {
@@ -701,7 +701,7 @@ bool creature::is(condition_s v) const {
 		return false;
 	case Neutrals: return !is(Ally) && !is(Enemy);
 	case NoAnyFeature:
-		return area.features[getposition()] == 0;
+		return area->features[getposition()] == 0;
 	default:
 		return true;
 	}
@@ -893,7 +893,7 @@ int	creature::getexpreward() const {
 
 void creature::kill() {
 	if(d100() < 40)
-		area.setflag(getposition(), Blooded);
+		area->setflag(getposition(), Blooded);
 	logs(getnm("ApplyKill"));
 	auto human_killed = ishuman();
 	fixeffect("HitVisual");
@@ -1169,7 +1169,7 @@ int creature::getloh() const {
 }
 
 bool creature::canhear(point i) const {
-	return area.getrange(getposition(), i) <= getloh();
+	return area->getrange(getposition(), i) <= getloh();
 }
 
 bool creature::isfollowmaster() const {
@@ -1177,7 +1177,7 @@ bool creature::isfollowmaster() const {
 	if(!master)
 		return false;
 	const int bound_range = 2;
-	if(area.getrange(master->getposition(), getposition()) <= bound_range)
+	if(area->getrange(master->getposition(), getposition()) <= bound_range)
 		return false;
 	return true;
 }
@@ -1231,12 +1231,12 @@ void creature::makemove() {
 			cast(*((spelli*)allowed_spells.param()));
 		else if(isfollowmaster())
 			moveto(getowner()->getposition());
-		else if(area.isvalid(moveorder)) {
+		else if(area->isvalid(moveorder)) {
 			if(moveorder == getposition())
 				moveorder = {-1000, -1000};
 			else if(!moveto(moveorder))
 				moveorder = {-1000, -1000};
-		} else if(area.isvalid(guardorder)) {
+		} else if(area->isvalid(guardorder)) {
 			if(guardorder != getposition())
 				moveorder = guardorder;
 		} else
@@ -1308,31 +1308,31 @@ static void block_creatures(creature* exclude) {
 			continue;
 		if(&e == exclude)
 			continue;
-		area.setblock(e.getposition(), 0xFFFF);
+		area->setblock(e.getposition(), 0xFFFF);
 	}
 }
 
 static void block_swimable() {
 	for(auto& e : bsdata<tilei>()) {
 		if(e.is(CanSwim))
-			area.blocktiles(bsid(&e));
+			area->blocktiles(bsid(&e));
 	}
 }
 
 bool creature::moveto(point ni) {
-	area.clearpath();
+	area->clearpath();
 	if(!is(Fly))
 		block_swimable();
-	area.blockwalls();
-	area.blockfeatures();
+	area->blockwalls();
+	area->blockfeatures();
 	block_creatures(this);
-	area.makewave(getposition());
-	area.blockzero();
+	area->makewave(getposition());
+	area->blockzero();
 	auto m0 = getposition();
-	auto m1 = area.getnext(m0, ni);
-	if(!area.isvalid(m1))
+	auto m1 = area->getnext(m0, ni);
+	if(!area->isvalid(m1))
 		return false;
-	movestep(area.getdirection(m0, m1));
+	movestep(area->getdirection(m0, m1));
 	return true;
 }
 
@@ -1461,9 +1461,9 @@ bool creature::isallow(variant v) const {
 		return !present;
 	} else if(v.iskind<featurei>()) {
 		auto m = getposition();
-		if(!area.isvalid(m))
+		if(!area->isvalid(m))
 			return false;
-		auto present = area.features[m];
+		auto present = area->features[m];
 		return (v.counter < 0) ? present == v.value : present != v.value;
 	}
 	return true;
@@ -1490,14 +1490,14 @@ void apply_value(variant v) {
 		apply_spell(bsdata<spelli>::elements[v.value], v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)
-			area.remove(player->getposition(), v.value);
+			area->remove(player->getposition(), v.value);
 		else
-			area.setflag(player->getposition(), v.value);
+			area->setflag(player->getposition(), v.value);
 	} else if(v.iskind<featurei>()) {
 		if(v.counter < 0)
-			area.setfeature(player->getposition(), 0);
+			area->setfeature(player->getposition(), 0);
 		else
-			area.setfeature(player->getposition(), v.value);
+			area->setfeature(player->getposition(), v.value);
 	} else
 		advance_value(v);
 }

@@ -92,7 +92,7 @@ static unsigned char getlos(point m) {
 	unsigned char f = 1;
 	for(auto d : straight_directions) {
 		auto m1 = m + d;
-		if(area.isvalid(m1) && !area.is(m1, Visible))
+		if(area->isvalid(m1) && !area->is(m1, Visible))
 			r |= f;
 		f = f << 1;
 	}
@@ -104,7 +104,7 @@ static unsigned char getfow(point m) {
 	unsigned char f = 1;
 	for(auto d : straight_directions) {
 		auto m1 = m + d;
-		if(area.isvalid(m1) && !area.is(m1, Explored))
+		if(area->isvalid(m1) && !area->is(m1, Explored))
 			r |= f;
 		f = f << 1;
 	}
@@ -122,7 +122,7 @@ static void paint_items() {
 	for(auto& e : bsdata<itemground>()) {
 		if(!e)
 			continue;
-		if(!area.is(e.position, Explored))
+		if(!area->is(e.position, Explored))
 			continue;
 		if(!e.position.in(rc))
 			continue;
@@ -145,7 +145,7 @@ static void paint_overlapped(point i, int tile) {
 		auto t0 = bsid(&ei);
 		if(tile == t0)
 			return;
-		auto f = area.getindex(i, t0);
+		auto f = area->getindex(i, t0);
 		if(!f)
 			continue;
 		auto pi = gres(res::Borders);
@@ -155,11 +155,11 @@ static void paint_overlapped(point i, int tile) {
 
 static bool iswall(point i, direction_s d) {
 	auto i1 = to(i, d);
-	if(!area.isvalid(i1))
+	if(!area->isvalid(i1))
 		return true;
-	if(!area.is(i1, Explored))
+	if(!area->is(i1, Explored))
 		return true;
-	return area.iswall(i1);
+	return area->iswall(i1);
 }
 
 static void fillwalls() {
@@ -280,19 +280,19 @@ static void paint_floor() {
 	for(i.y = y1; i.y <= y2; i.y++) {
 		if(i.y < 0)
 			continue;
-		if(i.y >= area.mps)
+		if(i.y >= area->mps)
 			break;
 		for(i.x = x1; i.x <= x2; i.x++) {
 			if(i.x < 0)
 				continue;
-			if(i.x >= area.mps)
+			if(i.x >= area->mps)
 				break;
 			auto pt = m2s(i);
-			if(!area.is(i, Explored))
+			if(!area->is(i, Explored))
 				continue;
 			setcaret(pt);
-			auto r = area.param[i];
-			auto t = area.tiles[i];
+			auto r = area->param[i];
+			auto t = area->tiles[i];
 			auto& ei = bsdata<tilei>::elements[t];
 			if(ei.iswall())
 				paint_wall(pt, i, r, ei);
@@ -307,18 +307,18 @@ static void paint_floor() {
 					}
 				}
 				for(auto f = Explored; f <= Webbed; f = (areaf)(f + 1)) {
-					if(!area.is(i, f))
+					if(!area->is(i, f))
 						continue;
 					auto& ei = bsdata<areafi>::elements[f];
 					if(ei.features)
 						image(pf, ei.features.get(r), 0);
 				}
-				auto& ef = area.getfeature(i);
+				auto& ef = area->getfeature(i);
 				if(ef.isvisible()) {
 					if(ef.is(BetweenWalls)) {
-						if(area.iswall(i, East) && area.iswall(i, West))
+						if(area->iswall(i, East) && area->iswall(i, West))
 							addobject(pt, paint_resource, bsdata<resource>::elements + (int)res::Features, ef.features.start, ef.priority);
-						else if(area.iswall(i, North) && area.iswall(i, South))
+						else if(area->iswall(i, North) && area->iswall(i, South))
 							addobject(pt, paint_resource, bsdata<resource>::elements + (int)res::Features, ef.features.start + 1, ef.priority);
 					} else
 						addobject(pt, paint_feature, const_cast<featurei*>(&ef), r, ef.priority);
@@ -339,17 +339,17 @@ static void paint_fow() {
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;
-		if(y >= area.mps)
+		if(y >= area->mps)
 			break;
 		for(short x = x1; x <= x2; x++) {
 			if(x < 0)
 				continue;
-			if(x >= area.mps)
+			if(x >= area->mps)
 				break;
 			point i = {x, y};
 			auto pt = m2s({x, y});
 			setcaret(pt);
-			if(!area.is(i, Explored))
+			if(!area->is(i, Explored))
 				fillfow();
 			else {
 				auto f = getfow(i);
@@ -361,13 +361,13 @@ static void paint_fow() {
 					image(pi, 1, 0);
 				if((f & 8) != 0)
 					image(pi, 1, ImageMirrorH);
-				if((f & (2 | 8)) == 0 && !area.isb(to(i, SouthEast), Explored))
+				if((f & (2 | 8)) == 0 && !area->isb(to(i, SouthEast), Explored))
 					image(pi, 2, ImageMirrorH);
-				if((f & (1 | 4)) == 0 && !area.isb(to(i, NorthWest), Explored))
+				if((f & (1 | 4)) == 0 && !area->isb(to(i, NorthWest), Explored))
 					image(pi, 2, ImageMirrorV);
-				if((f & (1 | 8)) == 0 && !area.isb(to(i, NorthEast), Explored))
+				if((f & (1 | 8)) == 0 && !area->isb(to(i, NorthEast), Explored))
 					image(pi, 2, ImageMirrorV | ImageMirrorH);
-				if((f & (2 | 4)) == 0 && !area.isb(to(i, SouthWest), Explored))
+				if((f & (2 | 4)) == 0 && !area->isb(to(i, SouthWest), Explored))
 					image(pi, 2, 0);
 			}
 		}
@@ -383,19 +383,19 @@ static void paint_los() {
 	for(short y = y1; y <= y2; y++) {
 		if(y < 0)
 			continue;
-		if(y >= area.mps)
+		if(y >= area->mps)
 			break;
 		for(short x = x1; x <= x2; x++) {
 			if(x < 0)
 				continue;
-			if(x >= area.mps)
+			if(x >= area->mps)
 				break;
 			point i = {x, y};
-			if(!area.is(i, Explored))
+			if(!area->is(i, Explored))
 				continue;
 			auto pt = m2s({x, y});
 			setcaret(pt);
-			if(!area.is(i, Visible))
+			if(!area->is(i, Visible))
 				filllos();
 			else {
 				auto f = getlos(i);
@@ -422,13 +422,13 @@ static void paint_los() {
 					default: break;
 					}
 				}
-				if((f & (2 | 8)) == 0 && !area.isb(to(i, SouthEast), Visible))
+				if((f & (2 | 8)) == 0 && !area->isb(to(i, SouthEast), Visible))
 					image(pi, 2, ImageMirrorH);
-				if((f & (1 | 4)) == 0 && !area.isb(to(i, NorthWest), Visible))
+				if((f & (1 | 4)) == 0 && !area->isb(to(i, NorthWest), Visible))
 					image(pi, 2, ImageMirrorV);
-				if((f & (1 | 8)) == 0 && !area.isb(to(i, NorthEast), Visible))
+				if((f & (1 | 8)) == 0 && !area->isb(to(i, NorthEast), Visible))
 					image(pi, 2, ImageMirrorV | ImageMirrorH);
-				if((f & (2 | 4)) == 0 && !area.isb(to(i, SouthWest), Visible))
+				if((f & (2 | 4)) == 0 && !area->isb(to(i, SouthWest), Visible))
 					image(pi, 2, 0);
 			}
 		}
@@ -510,7 +510,7 @@ static void paint_bars(const creature* player) {
 }
 
 void creature::paintbarsall() const {
-	if(!area.is(getposition(), Visible))
+	if(!area->is(getposition(), Visible))
 		return;
 	if(game.getowner() == this || is(Enemy))
 		paint_bars(this);
@@ -523,7 +523,7 @@ void creature::fixappear() {
 void creature::paint() const {
 	auto feats = ismirror() ? ImageMirrorH : 0;
 	auto kind = getkind();
-	if(!area.is(getposition(), Visible))
+	if(!area->is(getposition(), Visible))
 		return;
 	if(kind.iskind<monsteri>()) {
 		auto pi = gres(res::Monsters);
@@ -999,10 +999,10 @@ static void correct_camera() {
 		camera.y = -tsy / 2;
 	auto w = getwidth() - panel_width;
 	auto h = getheight();
-	if(camera.x > tsx * area.mps - w - tsx / 2)
-		camera.x = tsx * area.mps - w - tsx / 2;
-	if(camera.y > tsy * area.mps - h - tsy / 2)
-		camera.y = tsy * area.mps - h - tsy / 2;
+	if(camera.x > tsx * area->mps - w - tsx / 2)
+		camera.x = tsx * area->mps - w - tsx / 2;
+	if(camera.y > tsy * area->mps - h - tsy / 2)
+		camera.y = tsy * area->mps - h - tsy / 2;
 }
 
 static void fillfade(color cv, unsigned char av = 128) {
@@ -1027,7 +1027,7 @@ static void paint_minimap_items(point origin, int z) {
 		if(!e)
 			continue;
 		auto i = e.position;
-		if(!area.is(i, Explored))
+		if(!area->is(i, Explored))
 			continue;
 		caret.x = origin.x + i.x * width;
 		caret.y = origin.y + i.y * height;
@@ -1045,7 +1045,7 @@ static void paint_minimap_creatures(point origin, int z, bool use_hearing) {
 		if(use_hearing) {
 			if(player && !player->canhear(e.getposition()))
 				continue;
-		} else if(!area.is(i, Explored))
+		} else if(!area->is(i, Explored))
 			continue;
 		caret.x = origin.x + i.x * width;
 		caret.y = origin.y + i.y * height;
@@ -1063,17 +1063,17 @@ static void paint_area(point origin, int z) {
 	pushvalue push_fore(fore);
 	height = width = z;
 	point i;
-	for(i.y = 0; i.y < area.mps; i.y++) {
-		for(i.x = 0; i.x < area.mps; i.x++) {
-			auto t = area.tiles[i];
-			if(!t || !area.is(i, Explored))
+	for(i.y = 0; i.y < area->mps; i.y++) {
+		for(i.x = 0; i.x < area->mps; i.x++) {
+			auto t = area->tiles[i];
+			if(!t || !area->is(i, Explored))
 				continue;
 			auto p = bsdata<tilei>::elements + t;
 			caret.x = origin.x + i.x * width;
 			caret.y = origin.y + i.y * height;
 			fore = p->minimap;
 			rectf();
-			auto pf = bsdata<featurei>::elements + (int)area.features[i];
+			auto pf = bsdata<featurei>::elements + (int)area->features[i];
 			if(pf->isvisible()) {
 				color v = pf->minimap; v.a = 0;
 				fillfade(v, pf->minimap.a);
@@ -1208,12 +1208,12 @@ static void show_area() {
 	const int z = 4;
 	point origin;
 	origin.x = 16;
-	origin.y = (height - area.mps * z) / 2;
+	origin.y = (height - area->mps * z) / 2;
 	paint_area(origin, z);
 	paint_minimap_creatures(origin, z, true);
 	paint_minimap_items(origin, z);
 	paint_legends(origin, z);
-	paint_legends_text({(short)(16 + area.mps * z + 16), origin.y});
+	paint_legends_text({(short)(16 + area->mps * z + 16), origin.y});
 	paint_area_screen(origin, z);
 }
 

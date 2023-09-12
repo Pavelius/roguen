@@ -19,7 +19,7 @@ roomi* roomi::find(geoposition gp, point pt) {
 }
 
 bool roomi::isexplored() const {
-	return area.is(center(), Explored);
+	return area->is(center(), Explored);
 }
 
 bool roomi::ismarkable() const {

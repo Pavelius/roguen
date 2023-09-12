@@ -79,7 +79,7 @@ public:
 };
 typedef collection<roomi> rooma;
 
-extern areamap area;
+extern areamap* area;
 extern areaheadi areahead;
 extern const sitei*	last_site;
 extern const sitegeni* last_method;

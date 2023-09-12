@@ -19,7 +19,7 @@ BSDATA(sitegeni) = {
 };
 BSDATAF(sitegeni)
 
-extern areamap area;
+extern areamap* area;
 extern areaheadi areahead;
 extern rect last_rect;
 extern locationi* last_location;
@@ -97,19 +97,19 @@ static int get_doors_count() {
 }
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
-	return area.iswall(i, d1)
-		&& area.iswall(i, d2);
+	return area->iswall(i, d1)
+		&& area->iswall(i, d2);
 }
 
 static bool isonewall(point i, direction_s d1, direction_s d2) {
-	return area.iswall(i, d1)
-		|| area.iswall(i, d2);
+	return area->iswall(i, d1)
+		|| area->iswall(i, d2);
 }
 
 static bool isoneofdoor(point i, direction_s d1, direction_s d2) {
-	if(area.getfeature(to(i, d1)).is(BetweenWalls))
+	if(area->getfeature(to(i, d1)).is(BetweenWalls))
 		return true;
-	if(area.getfeature(to(i, d2)).is(BetweenWalls))
+	if(area->getfeature(to(i, d2)).is(BetweenWalls))
 		return true;
 	return false;
 }
@@ -132,12 +132,12 @@ static bool isvaliddoornt(point m) {
 
 static void update_doors() {
 	point i;
-	for(i.y = 0; i.y < area.mps; i.y++) {
-		for(i.x = 0; i.x < area.mps; i.x++) {
-			if(bsdata<featurei>::elements[int(area.features[i])].is(BetweenWalls)) {
+	for(i.y = 0; i.y < area->mps; i.y++) {
+		for(i.x = 0; i.x < area->mps; i.x++) {
+			if(bsdata<featurei>::elements[int(area->features[i])].is(BetweenWalls)) {
 				if(isvaliddoor(i))
 					continue;
-				area.setfeature(i, 0);
+				area->setfeature(i, 0);
 			}
 		}
 	}
@@ -165,15 +165,15 @@ static void create_road(const rect& rc) {
 	if(last_rect.width() > last_rect.height()) {
 		if(last_rect.x1 <= 6)
 			last_rect.x1 = 0;
-		if(last_rect.x2 >= area.mps - 6)
-			last_rect.x2 = area.mps - 1;
+		if(last_rect.x2 >= area->mps - 6)
+			last_rect.x2 = area->mps - 1;
 	} else {
 		if(last_rect.y1 >= 1 && last_rect.y1 <= 6)
 			last_rect.y1 = 0;
-		if(last_rect.y2 >= area.mps - 6)
-			last_rect.y2 = area.mps - 1;
+		if(last_rect.y2 >= area->mps - 6)
+			last_rect.y2 = area->mps - 1;
 	}
-	area.set(last_rect, &areamap::settile, road.value);
+	area->set(last_rect, &areamap::settile, road.value);
 	script::run("RandomCommoner");
 }
 
@@ -215,20 +215,20 @@ static bool isallowconnector(point index, direction_s dir, bool deadend = false)
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
-	if(!area.istile(index, 0))
+	if(!area->istile(index, 0))
 		return false;
-	if(!area.istile(to(index, round(dir, West)), 0))
+	if(!area->istile(to(index, round(dir, West)), 0))
 		return false;
-	if(!area.istile(to(index, round(dir, East)), 0))
+	if(!area->istile(to(index, round(dir, East)), 0))
 		return false;
 	index = to(index, dir);
 	if(deadend) {
-		if(!area.istile(index, 0))
+		if(!area->istile(index, 0))
 			return false;
 	}
-	if(!area.istile(to(index, round(dir, West)), 0))
+	if(!area->istile(to(index, round(dir, West)), 0))
 		return false;
-	if(!area.istile(to(index, round(dir, East)), 0))
+	if(!area->istile(to(index, round(dir, East)), 0))
 		return false;
 	return true;
 }
@@ -237,11 +237,11 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
-	if(!area.istile(index, 0))
+	if(!area->istile(index, 0))
 		return false;
-	if(!area.istile(to(index, round(dir, West)), 0))
+	if(!area->istile(to(index, round(dir, West)), 0))
 		return false;
-	if(!area.istile(to(index, round(dir, East)), 0))
+	if(!area->istile(to(index, round(dir, East)), 0))
 		return false;
 	index = to(index, dir);
 	if(linkable) {
@@ -249,9 +249,9 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 		if(pr)
 			return true;
 	}
-	if(!area.istile(to(index, round(dir, West)), 0))
+	if(!area->istile(to(index, round(dir, West)), 0))
 		return false;
-	if(!area.istile(to(index, round(dir, East)), 0))
+	if(!area->istile(to(index, round(dir, East)), 0))
 		return false;
 	return true;
 }
@@ -261,26 +261,26 @@ static void create_door(point m, int floor, int wall, bool hidden, bool locked, 
 	if(!door.isvisible())
 		return;
 	if(hidden) {
-		area.settile(m, wall);
+		area->settile(m, wall);
 		auto ph = door.gethidden();
 		if(ph)
-			area.setfeature(m, ph - bsdata<featurei>::elements);
+			area->setfeature(m, ph - bsdata<featurei>::elements);
 		areahead.total.doors_hidden++;
 	} else if(locked) {
-		area.settile(m, floor);
+		area->settile(m, floor);
 		auto ph = door.getlocked();
 		if(ph)
-			area.setfeature(m, ph - bsdata<featurei>::elements);
+			area->setfeature(m, ph - bsdata<featurei>::elements);
 		areahead.total.doors_locked++;
 	} else if(stuck) {
-		area.settile(m, floor);
+		area->settile(m, floor);
 		auto ph = door.getstuck();
 		if(ph)
-			area.setfeature(m, ph - bsdata<featurei>::elements);
+			area->setfeature(m, ph - bsdata<featurei>::elements);
 		areahead.total.doors_stuck++;
 	} else {
-		area.settile(m, floor);
-		area.setfeature(m, &door - bsdata<featurei>::elements);
+		area->settile(m, floor);
+		area->setfeature(m, &door - bsdata<featurei>::elements);
 	}
 	areahead.total.doors++;
 }
@@ -292,13 +292,13 @@ static void create_connector(point index, direction_s dir, int wall, int floor, 
 	point start = {-1000, -1000};
 	while(true) {
 		if(!isallowcorridor(index, dir, linkable)) {
-			if(!area.isvalid(start))
+			if(!area->isvalid(start))
 				return;
 			break;
 		}
 		auto i0 = to(index, dir);
-		area.tiles[i0] = floor;
-		if(!area.isvalid(start))
+		area->tiles[i0] = floor;
+		if(!area->isvalid(start))
 			start = i0;
 		index = i0;
 		if(count >= minimum_corridor_lenght && d100() >= chance_line_corridor)
@@ -317,7 +317,7 @@ static void create_connector(point index, direction_s dir, int wall, int floor, 
 
 static void create_corridor(const rect& rc, direction_s dir, int wall, int floor) {
 	points.clear();
-	auto index = area.getpoint(rc, correct_conncetors, dir);
+	auto index = area->getpoint(rc, correct_conncetors, dir);
 	auto count = 0;
 	create_connector(index, dir, wall, floor, count, false);
 }
@@ -371,9 +371,9 @@ static direction_s findvalid(point i, int t) {
 	static direction_s source[] = {North, South, East, West};
 	for(auto d : source) {
 		auto i1 = to(i, d);
-		if(!area.isvalid(i1))
+		if(!area->isvalid(i1))
 			continue;
-		if(area.tiles[i1] == t)
+		if(area->tiles[i1] == t)
 			return d;
 	}
 	return North;
@@ -403,13 +403,13 @@ static void place_shape(const shapei& e, point m, direction_s d, int floor, int 
 			case ' ':
 				break;
 			case '.':
-				area.settile(pm, floor);
+				area->settile(pm, floor);
 				break;
 			case 'X':
-				area.settile(pm, wall);
+				area->settile(pm, wall);
 				break;
 			case '0':
-				area.settile(pm, floor);
+				area->settile(pm, floor);
 				break;
 			default:
 				break;
@@ -521,12 +521,12 @@ static void create_area(geoposition geo, variant tile) {
 	if(!apply_location(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
-	area.clear();
+	area->clear();
 	locations.clear();
 	sites.clear();
 	add_area_events(geo);
 	add_area_sites(tile);
-	rect all = {0, 0, area.mps - 1, area.mps - 1};
+	rect all = {0, 0, area->mps - 1, area->mps - 1};
 	pushvalue push_rect(last_rect, all);
 	if(last_location->global)
 		(last_location->*last_location->global->proc)();
@@ -541,18 +541,18 @@ static void create_area(geoposition geo, variant tile) {
 }
 
 void sitei::fillfloor() const {
-	area.set(last_rect, &areamap::settile, getfloor());
+	area->set(last_rect, &areamap::settile, getfloor());
 }
 
 void sitei::fillwallsall() const {
-	area.set(last_rect, &areamap::settile, getwall());
+	area->set(last_rect, &areamap::settile, getwall());
 }
 
 void sitei::fillwalls() const {
-	area.horz(last_rect.x1, last_rect.y1, last_rect.x2, &areamap::settile, walls);
-	area.vert(last_rect.x1, last_rect.y1, last_rect.y2, &areamap::settile, walls);
-	area.horz(last_rect.x1, last_rect.y2, last_rect.x2, &areamap::settile, walls);
-	area.vert(last_rect.x2, last_rect.y1, last_rect.y2, &areamap::settile, walls);
+	area->horz(last_rect.x1, last_rect.y1, last_rect.x2, &areamap::settile, walls);
+	area->vert(last_rect.x1, last_rect.y1, last_rect.y2, &areamap::settile, walls);
+	area->horz(last_rect.x1, last_rect.y2, last_rect.x2, &areamap::settile, walls);
+	area->vert(last_rect.x2, last_rect.y1, last_rect.y2, &areamap::settile, walls);
 }
 
 void sitei::building() const {
@@ -563,13 +563,13 @@ void sitei::building() const {
 	fillwalls();
 	// Doors
 	last_direction = maprnd(rdir);;
-	last_door = area.getpoint(last_rect, last_direction);
-	area.settile(last_door, floors);
-	area.setfeature(last_door, door);
+	last_door = area->getpoint(last_rect, last_direction);
+	area->settile(last_door, floors);
+	area->setfeature(last_door, door);
 	auto m1 = to(last_door, last_direction);
-	if(area.iswall(m1))
-		area.settile(m1, floors);
-	area.setfeature(m1, 0);
+	if(area->iswall(m1))
+		area->settile(m1, floors);
+	area->setfeature(m1, 0);
 	last_rect.offset(1, 1);
 }
 
@@ -612,7 +612,7 @@ void sitei::dungeon() const {
 		rc.y1 = last_rect.y1 + (i / parts) * size;
 		rc.x2 = rc.x1 + size;
 		rc.y2 = rc.y1 + size;
-		auto r1 = area.get(rc, {2, 2}, {5, 3}, {8, 6});
+		auto r1 = area->get(rc, {2, 2}, {5, 3}, {8, 6});
 		locations.add(r1);
 	}
 	shuffle_locations();
@@ -626,9 +626,9 @@ void sitei::room() const {
 
 void sitei::corridors() const {
 	const auto& rc = locations[0];
-	auto dir = area.getmost(rc);
+	auto dir = area->getmost(rc);
 	create_corridor(rc, dir, walls, floors);
-	area.change(0, walls);
+	area->change(0, walls);
 	create_corridor_contents();
 	create_doors(floors, walls);
 }

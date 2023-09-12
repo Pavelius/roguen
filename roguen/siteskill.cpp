@@ -11,7 +11,7 @@
 #include "skilluse.h"
 #include "siteskill.h"
 
-extern areamap area;
+extern areamap* area;
 extern indexa indecies;
 extern point last_index;
 siteskilla last_actions;
@@ -22,9 +22,9 @@ bool choose_targets(unsigned flags, const variants& effects);
 static void applying(variant v) {
 	if(v.iskind<featurei>()) {
 		if(v.counter < 0)
-			area.features[last_index] = 0;
+			area->features[last_index] = 0;
 		else if(v.counter > 0)
-			area.features[last_index] = (unsigned char)v.value;
+			area->features[last_index] = (unsigned char)v.value;
 	} else if(v.iskind<script>())
 		bsdata<script>::elements[v.value].proc(v.counter);
 }

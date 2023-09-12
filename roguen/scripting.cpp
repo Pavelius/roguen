@@ -58,7 +58,7 @@ static const sitegeni* get_local_method() {
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
 		return;
-	if(area.iswall(index))
+	if(area->iswall(index))
 		return;
 	item it; it.clear();
 	it.create(pe);
@@ -107,7 +107,7 @@ static void place_creature(variant v, int count) {
 			count = 1;
 	}
 	for(auto i = 0; i < count; i++) {
-		auto p = creature::create(area.get(last_rect), v);
+		auto p = creature::create(area->get(last_rect), v);
 		p->set(Local);
 		if(p->is(Enemy))
 			areahead.total.monsters++;
@@ -115,18 +115,18 @@ static void place_creature(variant v, int count) {
 }
 
 static void visualize_activity(point m) {
-	if(!area.is(m, Visible))
+	if(!area->is(m, Visible))
 		return;
 	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
 void script::run(variant v) {
 	if(v.iskind<featurei>())
-		area.set(last_rect, &areamap::setfeature, v.value, v.counter);
+		area->set(last_rect, &areamap::setfeature, v.value, v.counter);
 	else if(v.iskind<tilei>())
-		area.set(last_rect, &areamap::settile, v.value, v.counter);
+		area->set(last_rect, &areamap::settile, v.value, v.counter);
 	else if(v.iskind<areafi>())
-		area.set(last_rect, &areamap::setflag, v.value, v.counter);
+		area->set(last_rect, &areamap::setflag, v.value, v.counter);
 	else if(v.iskind<globali>()) {
 		last_global = bsdata<globali>::elements + v.value;
 		last_value = game.get(*last_global);
@@ -159,21 +159,21 @@ void script::run(variant v) {
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++)
-			creature::create(area.get(last_rect), single("RandomRace"), v, (rand() % 2) != 0);
+			creature::create(area->get(last_rect), single("RandomRace"), v, (rand() % 2) != 0);
 	} else if(v.iskind<shapei>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++) {
 			place_shape(bsdata<shapei>::elements[v.value],
-				area.get(last_rect), getfloor(), getwall());
+				area->get(last_rect), getfloor(), getwall());
 		}
 	} else if(v.iskind<itemi>()) {
 		auto count = game.getcount(v);
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++)
-			place_item(area.get(last_rect), bsdata<itemi>::elements + v.value);
+			place_item(area->get(last_rect), bsdata<itemi>::elements + v.value);
 	} else if(v.iskind<sitei>()) {
 		pushvalue push_rect(last_rect);
 		pushvalue push_site(last_site);
@@ -316,7 +316,7 @@ static void match_features(const variants& source) {
 	pushvalue push_index(last_index);
 	for(auto m : indecies) {
 		last_index = m;
-		auto& ei = area.getfeature(m);
+		auto& ei = area->getfeature(m);
 		if(!isallow(ei, source))
 			continue;
 		*ps++ = m;
@@ -570,7 +570,7 @@ static void gather_item(const char* id, randomizeri& source, int chance) {
 }
 
 static const char* random_herbs(point m) {
-	auto& ei = bsdata<tilei>::elements[area.tiles[m]];
+	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
 	if(ei.is(Undeground))
 		return "UndegroundHerbs";
 	return "GrassHerbs";
@@ -587,12 +587,12 @@ static featurei* herbs_base(featurei* p) {
 }
 
 static void gather_herbs(int bonus) {
-	auto pf = bsdata<featurei>::elements + area.features[last_index];
+	auto pf = bsdata<featurei>::elements + area->features[last_index];
 	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
 	if(pr) {
 		auto chance = player->getdefault(Herbalism) + (pf->power - 1) * 20;
 		gather_item("YouGatherHerbs", *pr, chance);
-		area.setfeature(last_index, 0);
+		area->setfeature(last_index, 0);
 	}
 }
 
@@ -607,7 +607,7 @@ static bool iskind(variant v, const char* id) {
 }
 
 static bool is_harvest_herbs(int bonus) {
-	auto pf = bsdata<featurei>::elements + area.features[last_index];
+	auto pf = bsdata<featurei>::elements + area->features[last_index];
 	if(!pf->power)
 		return false;
 	if(!iskind(pf, "RandomHerbs"))
@@ -616,7 +616,7 @@ static bool is_harvest_herbs(int bonus) {
 }
 
 static bool is_locked_door(int bonus) {
-	auto pf = bsdata<featurei>::elements + area.features[last_index];
+	auto pf = bsdata<featurei>::elements + area->features[last_index];
 	if(!pf->activate_item)
 		return false;
 	return true;
@@ -705,14 +705,14 @@ static void debug_message(int bonus) {
 }
 
 static void open_locked_door(int bonus) {
-	area.setactivate(last_index);
+	area->setactivate(last_index);
 }
 
 static void open_nearest_door(int bonus) {
 	indexa source;
 	source.select(player->getposition(), 1);
 	for(auto i : source) {
-		auto& ei = area.getfeature(i);
+		auto& ei = area->getfeature(i);
 		if(!ei.isvisible())
 			continue;
 		check_activate(player, i, ei);
@@ -867,7 +867,7 @@ static void view_stuff(int bonus) {
 }
 
 static void explore_area(int bonus) {
-	area.set({0, 0, area.mps, area.mps}, &areamap::setflag, Explored);
+	area->set({0, 0, area->mps, area->mps}, &areamap::setflag, Explored);
 }
 
 static void test_arena(int bonus) {
@@ -901,7 +901,7 @@ static void range_attack(int bonud) {
 		return;
 	}
 	if(enemy) {
-		player->setdirection(area.getdirection(player->getposition(), enemy->getposition()));
+		player->setdirection(area->getdirection(player->getposition(), enemy->getposition()));
 		player->attackrange(*enemy);
 		player->wait();
 	}
@@ -915,7 +915,7 @@ static void thrown_attack(int bonud) {
 		return;
 	}
 	if(enemy) {
-		player->setdirection(area.getdirection(player->getposition(), enemy->getposition()));
+		player->setdirection(area->getdirection(player->getposition(), enemy->getposition()));
 		player->attackthrown(*enemy);
 		player->wait();
 	}
@@ -1068,12 +1068,12 @@ static void jump_to_site(int bonus) {
 		return;
 	if(!player->ishuman())
 		player->act(getnm("YouSundellyDisappear"));
-	auto m = area.getfree(center(last_room->rc), 8, isfreecr);
+	auto m = area->getfree(center(last_room->rc), 8, isfreecr);
 	player->place(m);
 	if(!player->ishuman())
 		player->act(getnm("YouSundellyAppear"));
 	else
-		area.setlos(m, player->getlos(), isfreeltsv);
+		area->setlos(m, player->getlos(), isfreeltsv);
 	player->fixteleport(player->ishuman());
 }
 
@@ -1127,13 +1127,13 @@ static void ability_exchange(int bonus) {
 static void activate_feature(int bonus) {
 	point m = center(last_rect);
 	visualize_activity(m);
-	area.setactivate(m);
+	area->setactivate(m);
 }
 
 static void destroy_feature(int bonus) {
 	point m = center(last_rect);
 	visualize_activity(m);
-	area.setfeature(m, 0);
+	area->setfeature(m, 0);
 }
 
 static void identify_item(int bonus) {
