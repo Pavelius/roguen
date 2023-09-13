@@ -84,6 +84,3 @@ extern areaheadi areahead;
 extern const sitei*	last_site;
 extern const sitegeni* last_method;
 extern locationi* last_location;
-
-int getfloor();
-int getwall();

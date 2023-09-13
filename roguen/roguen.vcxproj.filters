@@ -294,9 +294,6 @@
     <ClCompile Include="magic.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="site.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="skilluse.cpp">
       <Filter>Support</Filter>
     </ClCompile>

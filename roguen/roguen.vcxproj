@@ -202,7 +202,6 @@
     <ClCompile Include="modifier.cpp" />
     <ClCompile Include="ownerable.cpp" />
     <ClCompile Include="quest.cpp" />
-    <ClCompile Include="site.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
