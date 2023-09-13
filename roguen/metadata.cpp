@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "bsreq.h"
 #include "condition.h"
 #include "dialog.h"
@@ -25,6 +26,7 @@ BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 
 BSDATAD(advancement);
+BSDATAC(areapiece, 512);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(globali, 128);
@@ -44,6 +46,9 @@ BSMETA(abilityi) = {
 BSMETA(advancement) = {
 	BSREQ(type), BSREQ(level), BSREQ(id),
 	BSREQ(elements),
+	{}};
+BSMETA(areapiece) = {
+	BSREQ(position), BSREQ(level),
 	{}};
 BSMETA(globali) = {
 	BSREQ(id),
@@ -173,6 +178,7 @@ BSDATA(varianti) = {
 	{"Ability", VAR(abilityi), 1},
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1},
+	{"AreaPiece", VAR(areapiece), 1},
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},
 	{"Creature", VAR(creature), 0},

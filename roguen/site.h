@@ -1,4 +1,3 @@
-#include "areamap.h"
 #include "collection.h"
 #include "color.h"
 #include "geoposition.h"
@@ -12,7 +11,6 @@
 
 struct script;
 struct sitei : nameable {
-	typedef void (sitei::*fnproc)() const;
 	variants		landscape, loot;
 	unsigned char	walls, floors;
 	featable		feats;
@@ -21,12 +19,14 @@ struct sitei : nameable {
 	const shapei*	shape;
 	const script*	local;
 };
+extern const sitei*	last_site;
 struct locationi : sitei {
 	variants		sites;
 	const script	*global, *global_finish;
 	char			darkness, chance_finale, offset;
 	color			minimap;
 };
+extern locationi* last_location;
 struct areaheadi : geoposition {
 	struct totali {
 		short		mysteries;
@@ -45,6 +45,7 @@ struct areaheadi : geoposition {
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
 };
+extern areaheadi areahead;
 class roomi : public geoposition, public ownerable {
 	short unsigned	site_id;
 public:
@@ -65,9 +66,3 @@ public:
 	void			set(const sitei* p) { bsset(site_id, p); }
 };
 typedef collection<roomi> rooma;
-
-extern areamap* area;
-extern areaheadi areahead;
-extern const sitei*	last_site;
-extern const script* last_method;
-extern locationi* last_location;

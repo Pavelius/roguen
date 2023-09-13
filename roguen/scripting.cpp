@@ -427,19 +427,11 @@ static void place_shape(const shapei& e, point m, direction_s d, int floor, int 
 			auto pm = e.translate(c, m, d);
 			auto sm = e[m];
 			switch(sm) {
-			case ' ':
-				break;
-			case '.':
-				area->settile(pm, floor);
-				break;
-			case 'X':
-				area->settile(pm, wall);
-				break;
-			case '0':
-				area->settile(pm, floor);
-				break;
-			default:
-				break;
+			case ' ': break;
+			case '.': area->settile(pm, floor); break;
+			case 'X': area->settile(pm, wall); break;
+			case '0': area->settile(pm, floor); break;
+			default: break;
 			}
 		}
 	}
