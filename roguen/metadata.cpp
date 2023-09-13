@@ -144,9 +144,6 @@ BSMETA(sitei) = {
 	BSENM(floors, tilei),
 	BSENM(doors, featurei),
 	{}};
-BSMETA(sitegeni) = {
-	BSREQ(id),
-	{}};
 BSMETA(siteskilli) = {
 	BSREQ(id),
 	BSENM(skill, abilityi),
@@ -197,7 +194,6 @@ BSDATA(varianti) = {
 	{"Script", VAR(script), 1},
 	{"Shape", VAR(shapei), 1},
 	{"Site", VAR(sitei), 1},
-	{"SiteGenerator", VAR(sitegeni), 1},
 	{"SiteSkill", VAR(siteskilli), 1},
 	{"Spell", VAR(spelli), 1},
 	{"Speech", VAR(speech), 1},

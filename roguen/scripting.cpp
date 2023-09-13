@@ -28,6 +28,8 @@ bool isfreecr(point m);
 void place_shape(const shapei& e, point m, int floor, int walls);
 void visualize_images(res pid, point size, point offset);
 
+static void generate_outdoor(int bonus);
+
 creaturea		creatures, enemies, targets;
 rooma			rooms;
 itema			items;
@@ -53,18 +55,6 @@ static adat<point, 512> points;
 static rect		correct_conncetors;
 static direction_s last_direction;
 static adat<variant, 32> sites;
-
-BSDATA(sitegeni) = {
-	{"NoGenerate", &sitei::nogenerate},
-	{"GenerateBuilding", &sitei::building},
-	{"GenerateCorridors", &sitei::corridors},
-	{"GenerateDungeon", &sitei::dungeon},
-	{"GenerateOutdoor", &sitei::outdoor},
-	{"GenerateRoom", &sitei::room},
-	{"GenerateWalls", &sitei::fillwallsall},
-	{"GenerateVillage", &sitei::cityscape},
-};
-BSDATAF(sitegeni)
 
 static void show_debug_minimap() {
 	script::run("ExploreArea");
@@ -508,6 +498,7 @@ static bool apply_location(geoposition geo, variant tile) {
 		return false;
 	areahead.setloc(last_location);
 	areahead.darkness = last_location->darkness;
+	last_site = last_location;
 	return true;
 }
 
@@ -549,7 +540,7 @@ static void create_corridor_contents() {
 }
 
 static void create_area(geoposition geo, variant tile) {
-	pushvalue push_site(last_site, (const sitei*)0);
+	pushvalue push_site(last_site);
 	if(!apply_location(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
@@ -561,59 +552,59 @@ static void create_area(geoposition geo, variant tile) {
 	rect all = {0, 0, area->mps - 1, area->mps - 1};
 	pushvalue push_rect(last_rect, all);
 	if(last_location->global)
-		(last_location->*last_location->global->proc)();
+		last_location->global->proc(0);
 	else
-		last_location->outdoor();
+		generate_outdoor(0);
 	last_rect = push_rect;
 	create_sites();
 	last_rect = push_rect;
 	if(last_location->global_finish)
-		(last_location->*last_location->global_finish->proc)();
+		last_location->global_finish->proc(0);
 	update_doors();
 }
 
-void sitei::fillfloor() const {
+static void fillfloor() {
 	area->set(last_rect, &areamap::settile, getfloor());
 }
 
-void sitei::fillwallsall() const {
+static void fillwallsall() {
 	area->set(last_rect, &areamap::settile, getwall());
 }
 
-void sitei::fillwalls() const {
-	area->horz(last_rect.x1, last_rect.y1, last_rect.x2, &areamap::settile, walls);
-	area->vert(last_rect.x1, last_rect.y1, last_rect.y2, &areamap::settile, walls);
-	area->horz(last_rect.x1, last_rect.y2, last_rect.x2, &areamap::settile, walls);
-	area->vert(last_rect.x2, last_rect.y1, last_rect.y2, &areamap::settile, walls);
+static void fillwalls() {
+	area->horz(last_rect.x1, last_rect.y1, last_rect.x2, &areamap::settile, last_site->walls);
+	area->vert(last_rect.x1, last_rect.y1, last_rect.y2, &areamap::settile, last_site->walls);
+	area->horz(last_rect.x1, last_rect.y2, last_rect.x2, &areamap::settile, last_site->walls);
+	area->vert(last_rect.x2, last_rect.y1, last_rect.y2, &areamap::settile, last_site->walls);
 }
 
-void sitei::building() const {
+static void generate_building(int bonus) {
 	static direction_s rdir[] = {North, South, West, East};
 	auto door = getdoor();
 	fillfloor();
 	fillwalls();
 	pushvalue push_direction(last_direction, maprnd(rdir));
 	last_door = area->getpoint(last_rect, last_direction);
-	area->settile(last_door, floors);
+	area->settile(last_door, last_site->floors);
 	area->setfeature(last_door, door);
 	auto m1 = to(last_door, last_direction);
 	if(area->iswall(m1))
-		area->settile(m1, floors);
+		area->settile(m1, last_site->floors);
 	area->setfeature(m1, 0);
 	last_rect.offset(1, 1);
 }
 
-void sitei::cityscape() const {
+static void generate_cityscape(int bonus) {
 	fillfloor();
-	script::run(this);
+	script::run(last_site);
 	last_rect.offset(last_location->offset, last_location->offset);
 	create_city_level(last_rect, 0);
 	sort_locations();
 }
 
-void sitei::outdoor() const {
+static void generate_outdoor(int bonus) {
 	fillfloor();
-	script::run(this);
+	script::run(last_site);
 	last_rect.offset(last_location->offset, last_location->offset);
 	const auto parts = 4;
 	const auto size = last_rect.width() / parts;
@@ -628,7 +619,7 @@ void sitei::outdoor() const {
 	shuffle_locations();
 }
 
-void sitei::dungeon() const {
+static void generate_dungeon(int bonus) {
 	last_rect.offset(last_location->offset, last_location->offset);
 	auto parts = 4;
 	if(last_rect.width() <= 48)
@@ -649,18 +640,22 @@ void sitei::dungeon() const {
 	correct_conncetors = bounding_locations();
 }
 
-void sitei::room() const {
+static void generate_room(int bonus) {
 	fillfloor();
 	areahead.total.rooms++;
 }
 
-void sitei::corridors() const {
+static void generate_walls(int bonus) {
+	fillwallsall();
+}
+
+static void generate_corridors(int bonus) {
 	const auto& rc = locations[0];
 	auto dir = area->getmost(rc);
-	create_corridor(rc, dir, walls, floors);
-	area->change(0, walls);
+	create_corridor(rc, dir, last_site->walls, last_site->floors);
+	area->change(0, last_site->walls);
 	create_corridor_contents();
-	create_doors(floors, walls);
+	create_doors(last_site->floors, last_site->walls);
 }
 
 void areaheadi::createarea(point start_village) {
@@ -696,7 +691,7 @@ void areaheadi::createarea(point start_village) {
 	create_area(*this, rt);
 }
 
-static const sitegeni* get_local_method() {
+static const script* get_local_method() {
 	if(last_site && last_site->local)
 		return last_site->local;
 	if(last_location && last_location->local)
@@ -829,7 +824,7 @@ void script::run(variant v) {
 		last_site = bsdata<sitei>::elements + v.value;
 		auto last_method = get_local_method();
 		if(last_method)
-			(last_site->*last_method->proc)();
+			last_method->proc(0);
 		add_room(last_site, last_rect);
 		script::run(bsdata<sitei>::elements[v.value].landscape);
 	} else if(v.iskind<locationi>()) {
@@ -1868,6 +1863,13 @@ BSDATA(script) = {
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
 	{"GatherHerbs", gather_herbs, is_harvest_herbs},
+	{"GenerateBuilding", generate_building},
+	{"GenerateCorridors", generate_corridors},
+	{"GenerateDungeon", generate_dungeon},
+	{"GenerateOutdoor", generate_outdoor},
+	{"GenerateRoom", generate_room},
+	{"GenerateWalls", generate_walls},
+	{"GenerateVillage", generate_cityscape},
 	{"JumpToSite", jump_to_site},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
