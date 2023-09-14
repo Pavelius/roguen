@@ -89,8 +89,8 @@ static bool serial_area(const char* url, bool write_mode) {
 	if(!file)
 		return false;
 	archive a(file, write_mode);
-	a.set(areahead);
-	a.set(area);
+	a.set(*static_cast<areaheadi*>(area));
+	a.set(*static_cast<areamap*>(area));
 	a.set(saved_creatures);
 	a.set(bsdata<itemground>::source);
 	return true;
@@ -102,10 +102,10 @@ static void serial_area(bool write_mode) {
 	if(!write_mode) {
 		if(!serial_area(temp, false)) {
 			saved_creatures.clear();
-			areahead.clear();
-			areahead.position = game.position;
-			areahead.level = game.level;
-			areahead.createarea(game.start_village);
+			area->clear();
+			area->position = game.position;
+			area->level = game.level;
+			area->createarea(game.start_village);
 		}
 	} else
 		serial_area(temp, write_mode);

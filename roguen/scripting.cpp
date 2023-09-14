@@ -273,7 +273,7 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 		return false;
 	index = to(index, dir);
 	if(linkable) {
-		auto pr = roomi::find(areahead, index);
+		auto pr = roomi::find(*area, index);
 		if(pr)
 			return true;
 	}
@@ -293,24 +293,24 @@ static void create_door(point m, int floor, int wall, bool hidden, bool locked, 
 		auto ph = door.gethidden();
 		if(ph)
 			area->setfeature(m, ph - bsdata<featurei>::elements);
-		areahead.total.doors_hidden++;
+		area->total.doors_hidden++;
 	} else if(locked) {
 		area->settile(m, floor);
 		auto ph = door.getlocked();
 		if(ph)
 			area->setfeature(m, ph - bsdata<featurei>::elements);
-		areahead.total.doors_locked++;
+		area->total.doors_locked++;
 	} else if(stuck) {
 		area->settile(m, floor);
 		auto ph = door.getstuck();
 		if(ph)
 			area->setfeature(m, ph - bsdata<featurei>::elements);
-		areahead.total.doors_stuck++;
+		area->total.doors_stuck++;
 	} else {
 		area->settile(m, floor);
 		area->setfeature(m, &door - bsdata<featurei>::elements);
 	}
-	areahead.total.doors++;
+	area->total.doors++;
 }
 
 static void create_connector(point index, direction_s dir, int wall, int floor, int& count, bool linkable) {
@@ -372,7 +372,7 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, int floor, int wall) {
-	pushvalue push_room(last_room, roomi::find(areahead, center(rc)));
+	pushvalue push_room(last_room, roomi::find(*area, center(rc)));
 	pushvalue push_site(last_site, last_room ? &last_room->geti() : 0);
 	auto door_count = get_doors_count();
 	auto chance_hidden_doors = get_chance_hidden_doors();
@@ -392,7 +392,7 @@ static void create_doors(const rect& rc, int floor, int wall) {
 		create_door(m, floor, wall, hidden_room, locked_room, stuck_room);
 	}
 	if(last_room && hidden_room)
-		areahead.total.rooms_hidden++;
+		area->total.rooms_hidden++;
 }
 
 static direction_s findvalid(point i, int t) {
@@ -416,7 +416,7 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	auto p = roomi::add();
 	p->clear();
 	p->set(ps);
-	*static_cast<geoposition*>(p) = areahead;
+	*static_cast<geoposition*>(p) = *area;
 	p->rc = rc;
 	return p;
 }
@@ -489,8 +489,8 @@ static bool apply_location(geoposition geo, variant tile) {
 	last_location = tile;
 	if(!last_location)
 		return false;
-	areahead.setloc(last_location);
-	areahead.darkness = last_location->darkness;
+	area->setloc(last_location);
+	area->darkness = last_location->darkness;
 	last_site = last_location;
 	return true;
 }
@@ -520,7 +520,7 @@ static void create_corridor_content(point i) {
 		treasure = randomizeri::param(quest_modifier->loot);
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	script::run(treasure);
-	areahead.total.loots++;
+	area->total.loots++;
 }
 
 static void create_corridor_contents() {
@@ -611,7 +611,7 @@ static void generate_dungeon(int bonus) {
 
 static void generate_room(int bonus) {
 	fillfloor();
-	areahead.total.rooms++;
+	area->total.rooms++;
 }
 
 static void generate_walls(int bonus) {
@@ -653,9 +653,9 @@ static void create_area(geoposition geo, variant tile) {
 
 static void create_random_area() {
 	variant rt;
-	last_quest = quest::find(areahead.position);
-	if(areahead.level == 0) {
-		auto range = getrange(areahead.position, game.start_village);
+	last_quest = quest::find(area->position);
+	if(area->level == 0) {
+		auto range = getrange(area->position, game.start_village);
 		if(range == 0)
 			rt = single("StartVillage");
 		else if(range <= 2)
@@ -668,7 +668,7 @@ static void create_random_area() {
 			rt = single("RandomUnknownOverlandTiles");
 	} else {
 		if(last_quest) {
-			auto chance_finale = areahead.level * 10;
+			auto chance_finale = area->level * 10;
 			auto default_level = last_quest->level;
 			auto final_level = bsdata<locationi>::find(str("%1Final", default_level.getid()));
 			if(final_level && d100() < (final_level->chance_finale + chance_finale))
@@ -681,7 +681,7 @@ static void create_random_area() {
 	}
 	if(!rt)
 		rt = single("LightForest");
-	create_area(areahead, rt);
+	create_area(*area, rt);
 }
 
 void areaheadi::createarea(point start_village) {
@@ -799,7 +799,7 @@ static void place_creature(variant v, int count) {
 		auto p = creature::create(area->get(last_rect), v);
 		p->set(Local);
 		if(p->is(Enemy))
-			areahead.total.monsters++;
+			area->total.monsters++;
 	}
 }
 
@@ -1644,7 +1644,7 @@ static void quest_guardian(int bonus) {
 		return;
 	monsteri* pm = last_quest->problem;
 	if(pm) {
-		areahead.total.boss++;
+		area->total.boss++;
 		script::runv((monsteri*)last_quest->problem, bonus);
 	}
 }

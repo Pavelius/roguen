@@ -10,7 +10,6 @@
 
 static areapiece area_part;
 areapiece*		area = &area_part;
-areaheadi		areahead;
 gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);

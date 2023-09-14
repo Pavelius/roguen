@@ -45,7 +45,6 @@ struct areaheadi : geoposition {
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
 };
-extern areaheadi areahead;
 class roomi : public geoposition, public ownerable {
 	short unsigned	site_id;
 public:
