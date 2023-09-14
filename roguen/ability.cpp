@@ -2,14 +2,13 @@
 #include "crt.h"
 
 ability_s last_ability;
-ability_s raw_abilities[4];
+ability_s raw_abilities[3];
 
 BSDATA(abilityi) = {
 	{"LineOfSight"},
 	{"Strenght"},
 	{"Dexterity"},
 	{"Wits"},
-	{"Charisma"},
 	{"WeaponSkill"},
 	{"BalisticSkill"},
 	{"Dodge"},

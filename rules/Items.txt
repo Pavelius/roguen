@@ -7,9 +7,9 @@ SlashingWeapons
 BludgeonWeapons
  elements Strenght+10 Strenght+20 Block+1 DamageMelee+2 DamageMelee+3 DamageMelee+4 FireDamage Strenght-10
 LightArmorPowers
- elements Dodge+10 Dodge+20 Dexterity+10 Charisma+10 Armor-1 Dexterity-5 Dodge-30
+ elements Dodge+10 Dodge+20 Dexterity+10 Wits+10 Armor-1 Dexterity-5 Dodge-30
 HeavyArmorPowers
- elements Charisma+10 Block+2 Armor+1 Armor+2 FireResistance ColdResistance Armor-1
+ elements Block+2 Armor+1 Armor+2 FireResistance ColdResistance Armor-1
 ShieldPowers
  elements Block+1 Block+2 Armor+1 Armor+2 AcidResistance FireResistance ColdResistance DeathResistance Armor-1
 
@@ -119,8 +119,6 @@ PotionOfDexterity cost(1000) count(1) weight(2) unidentified(BrownPotion) wear(P
  use Permanent Dexterity+1
 PotionOfWits cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
  use Permanent Wits+1
-PotionOfCharisma cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
- use Permanent Charisma+1
 PotionOfExhange cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use AbilityExchange
 PotionOfAbilityRaise cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
@@ -190,7 +188,7 @@ CoralAmulet cost(600) weight(8) avatar(87)
 SilverAmulet cost(1000) weight(4) avatar(79)
 GoldAmulet cost(1600) weight(5) avatar(119)
 AmuletOfColdHeart cost(1100) weight(4) avatar(79)
- wearing ColdResistance+1 Charisma-10
+ wearing ColdResistance+1 Wits-5
 AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
  wearing DeathResistance+1
 
@@ -267,7 +265,7 @@ RandomTreasure
 RandomKeys
  chance TinyKey SmallKey HexagonalKey TriangularKey RectangularKey RoundKey
 RandomPotion
- chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfCharisma PotionOfAbilityRaise PotionOfWisdow
+ chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfAbilityRaise PotionOfWisdow
 RandomRing
  chance BrassRing+4 RingOfAcidResistance RingOfColdResistance RingOfFireResistance RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
 RandomBoots

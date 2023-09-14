@@ -43,6 +43,7 @@ PlateArmor: Латы
 Shield: Щит
 
 LeatherGirdle: Кожанный пояс
+IronGirdle: Железный пояс
 
 LeatherBoots: Кожанные сапоги
 

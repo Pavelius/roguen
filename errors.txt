@@ -1,5 +1,2 @@
-﻿In file `rules/Monsters.txt`:
- Line 73: Not found identifier `GoblinoidTribe`
- Line 76: Not found identifier `GoblinoidTribe`
- Line 79: Not found identifier `UndeadHorde`
- Line 82: Not found identifier `GoblinoidTribe`
+﻿In file `rules/Advancement.txt`:
+ Line 5: Can't find variant `Charisma`

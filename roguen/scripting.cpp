@@ -744,7 +744,7 @@ static void update_ui() {
 	}
 }
 
-static void set_allies_position(geoposition ogp, geoposition ngp, point m) {
+static void set_party_position(geoposition ogp, geoposition ngp, point m) {
 	if(!area->isvalid(m))
 		return;
 	for(auto& e : bsdata<creature>()) {
@@ -777,7 +777,7 @@ void gamei::enter(point m, int level, const featurei* feature, direction_s appea
 		start = area->findfeature((unsigned char)bsid(feature));
 	if(!isvalid(start))
 		start = area->bordered(round(appear_side, South));
-	set_allies_position(old_pos, *this, start);
+	set_party_position(old_pos, *this, start);
 	update_ui();
 	draw::setnext(play);
 }
@@ -1841,7 +1841,7 @@ static bool allow_random_chance(int bonus) {
 
 static void select_raw_abilities() {
 	auto p = raw_abilities;
-	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
+	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
 		*p++ = i;
 }
 
@@ -1880,7 +1880,7 @@ static void identify_item(int bonus) {
 }
 
 static void random_ability(int bonus) {
-	static ability_s source[] = {Strenght, Dexterity, Wits, Charisma};
+	static ability_s source[] = {Strenght, Dexterity, Wits};
 	apply_ability(maprnd(source), bonus);
 }
 

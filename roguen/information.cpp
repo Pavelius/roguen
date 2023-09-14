@@ -94,7 +94,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("%1 %2i [~%-Level]", getnm(getclass().id), get(Level));
 	sb.addn("$tab -40");
 	sb.addn("---");
-	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
+	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	for(auto i = WeaponSkill; i <= Dodge; i = (ability_s)(i + 1))

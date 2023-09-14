@@ -1426,13 +1426,13 @@ void creature::everyminute() {
 	if(is(Regeneration))
 		restore(this, Hits, Strenght);
 	if(is(ManaRegeneration))
-		restore(this, Mana, Charisma);
+		restore(this, Mana, Wits);
 	check_stun(this);
 	posion_recovery(this, Poison);
 }
 
 void creature::every10minutes() {
-	restore(this, Mana, Charisma);
+	restore(this, Mana, Wits);
 }
 
 void creature::every30minutes() {
@@ -1546,7 +1546,7 @@ int	creature::getpaymentcost() const {
 	auto keeper = room->getowner();
 	if(!keeper)
 		return 0;
-	auto skill_delta = keeper->get(Charisma) - get(Charisma);
+	auto skill_delta = keeper->get(Wits) - get(Wits);
 	return 200 + skill_delta;
 }
 
@@ -1557,7 +1557,7 @@ int	creature::getsellingcost() const {
 	auto keeper = room->getowner();
 	if(!keeper)
 		return 0;
-	auto skill_delta = get(Charisma) - keeper->get(Charisma);
+	auto skill_delta = get(Wits) - keeper->get(Wits);
 	auto result = 40 + skill_delta;
 	if(result < 10)
 		result = 10;
