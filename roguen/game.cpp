@@ -335,3 +335,8 @@ const char* gamei::timeleft(unsigned end_stamp) const {
 	value = end_stamp - stamp;
 	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
 }
+
+void gamei::newgame() {
+	game.randomworld();
+	game.enter(start_village, 0, bsdata<featurei>::find("StairsDown"), NorthEast);
+}
