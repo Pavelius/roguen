@@ -41,7 +41,6 @@ struct areaheadi : geoposition {
 	totali			total;
 	char			darkness;
 	void			clear();
-	void			createarea(point start_village);
 	locationi*		getloc() const { return bsdata<locationi>::ptr(site_id); }
 	void			setloc(const locationi* v) { bsset(site_id, v); }
 };

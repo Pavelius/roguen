@@ -120,7 +120,7 @@ static void paint_items() {
 	removeobjects(bsdata<itemi>::source);
 	auto p1 = s2m(camera);
 	rect rc = {p1.x, p1.y, p1.x + getwidth() / tsx + 1, p1.y + getheight() / tsy + 1};
-	for(auto& e : bsdata<itemground>()) {
+	for(auto& e : area->items) {
 		if(!e)
 			continue;
 		if(!area->is(e.position, Explored))
@@ -1024,7 +1024,7 @@ static point m2a(point m, int z) {
 static void paint_minimap_items(point origin, int z) {
 	rectpush push;
 	height = width = z;
-	for(auto& e : bsdata<itemground>()) {
+	for(auto& e : area->items) {
 		if(!e)
 			continue;
 		auto i = e.position;

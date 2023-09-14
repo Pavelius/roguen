@@ -1,10 +1,11 @@
+#include "areapiece.h"
 #include "itema.h"
 #include "creature.h"
 
 void itema::select(point m) {
 	auto pb = data + count;
 	auto pe = endof();
-	for(auto& e : bsdata<itemground>()) {
+	for(auto& e : area->items) {
 		if(!e)
 			continue;
 		if(e.position != m)

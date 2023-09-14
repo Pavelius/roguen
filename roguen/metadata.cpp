@@ -31,7 +31,6 @@ BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
-BSDATAC(itemground, 1024);
 BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
 BSDATAC(sitei, 256);

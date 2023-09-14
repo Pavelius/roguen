@@ -631,7 +631,6 @@ static void create_area(geoposition geo, variant tile) {
 	pushvalue push_site(last_site);
 	if(!apply_location(geo, tile))
 		return;
-	bsdata<itemground>::source.clear();
 	area->areamap::clear();
 	locations.clear();
 	sites.clear();
@@ -684,40 +683,7 @@ static void create_random_area() {
 	create_area(*area, rt);
 }
 
-void areaheadi::createarea(point start_village) {
-	variant rt;
-	last_quest = quest::find(position);
-	if(level == 0) {
-		auto range = getrange(position, start_village);
-		if(range == 0)
-			rt = single("StartVillage");
-		else if(range <= 2)
-			rt = single("RandomNearestOverlandTiles");
-		else if(range <= 5)
-			rt = single("RandomOverlandTiles");
-		else if(range <= 9)
-			rt = single("RandomFarOverlandTiles");
-		else
-			rt = single("RandomUnknownOverlandTiles");
-	} else {
-		if(last_quest) {
-			auto chance_finale = level * 10;
-			auto default_level = last_quest->level;
-			auto final_level = bsdata<locationi>::find(str("%1Final", default_level.getid()));
-			if(final_level && d100() < (final_level->chance_finale + chance_finale))
-				rt = final_level;
-			else if(last_quest->level)
-				rt = last_quest->level;
-		}
-		if(!rt)
-			rt = single("DefaultDungeon");
-	}
-	if(!rt)
-		rt = single("LightForest");
-	create_area(*this, rt);
-}
-
-static areapiece* find_area(geoposition geo) {
+static areapiece* find_areapiece(geoposition geo) {
 	for(auto& e : bsdata<areapiece>()) {
 		if(e == geo)
 			return &e;
@@ -726,7 +692,7 @@ static areapiece* find_area(geoposition geo) {
 }
 
 static void ready_area(geoposition geo) {
-	area = find_area(geo);
+	area = find_areapiece(geo);
 	if(!area) {
 		area = bsdata<areapiece>::add();
 		area->clear();

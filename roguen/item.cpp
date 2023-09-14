@@ -146,16 +146,16 @@ bool item::is(feat_s v) const {
 void item::drop(point m) {
 	if(!area->isvalid(m))
 		return;
-	for(auto& e : bsdata<itemground>()) {
+	for(auto& e : area->items) {
 		if(e && e.position == m) {
 			e.add(*this);
 			if(!(*this))
 				return;
 		}
 	}
-	auto pi = bsdata<itemground>::add();
-	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
+	auto pi = area->items.add();
 	pi->position = m;
+	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
 	clear();
 }
 
