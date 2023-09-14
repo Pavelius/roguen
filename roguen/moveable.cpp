@@ -1,14 +1,12 @@
 #include "ability.h"
 #include "areaf.h"
-#include "areamap.h"
+#include "areapiece.h"
 #include "direction.h"
 #include "draw.h"
 #include "draw_object.h"
 #include "moveable.h"
 #include "screenshoot.h"
 #include "visualeffect.h"
-
-extern areamap* area;
 
 using namespace draw;
 

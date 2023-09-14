@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "boost.h"
 #include "charname.h"
 #include "condition.h"

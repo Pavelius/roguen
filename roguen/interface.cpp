@@ -1,4 +1,5 @@
 #include "answers.h"
+#include "areapiece.h"
 #include "bsreq.h"
 #include "dialog.h"
 #include "draw.h"

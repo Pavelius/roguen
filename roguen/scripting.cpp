@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "boost.h"
 #include "condition.h"
 #include "creature.h"
@@ -531,30 +532,6 @@ static void create_corridor_contents() {
 		create_corridor_content(points.data[i]);
 }
 
-static void create_area(geoposition geo, variant tile) {
-	pushvalue push_site(last_site);
-	if(!apply_location(geo, tile))
-		return;
-	bsdata<itemground>::source.clear();
-	area->clear();
-	locations.clear();
-	sites.clear();
-	add_area_events(geo);
-	add_area_sites(tile);
-	rect all = {0, 0, area->mps - 1, area->mps - 1};
-	pushvalue push_rect(last_rect, all);
-	if(last_location->global)
-		last_location->global->proc(0);
-	else
-		generate_outdoor(0);
-	last_rect = push_rect;
-	create_sites();
-	last_rect = push_rect;
-	if(last_location->global_finish)
-		last_location->global_finish->proc(0);
-	update_doors();
-}
-
 static void fillfloor() {
 	area->set(last_rect, &areamap::settile, getfloor());
 }
@@ -650,6 +627,63 @@ static void generate_corridors(int bonus) {
 	create_doors(last_site->floors, last_site->walls);
 }
 
+static void create_area(geoposition geo, variant tile) {
+	pushvalue push_site(last_site);
+	if(!apply_location(geo, tile))
+		return;
+	bsdata<itemground>::source.clear();
+	area->clear();
+	locations.clear();
+	sites.clear();
+	add_area_events(geo);
+	add_area_sites(tile);
+	rect all = {0, 0, area->mps - 1, area->mps - 1};
+	pushvalue push_rect(last_rect, all);
+	if(last_location->global)
+		last_location->global->proc(0);
+	else
+		generate_outdoor(0);
+	last_rect = push_rect;
+	create_sites();
+	last_rect = push_rect;
+	if(last_location->global_finish)
+		last_location->global_finish->proc(0);
+	update_doors();
+}
+
+static void create_random_area() {
+	variant rt;
+	last_quest = quest::find(areahead.position);
+	if(areahead.level == 0) {
+		auto range = getrange(areahead.position, game.start_village);
+		if(range == 0)
+			rt = single("StartVillage");
+		else if(range <= 2)
+			rt = single("RandomNearestOverlandTiles");
+		else if(range <= 5)
+			rt = single("RandomOverlandTiles");
+		else if(range <= 9)
+			rt = single("RandomFarOverlandTiles");
+		else
+			rt = single("RandomUnknownOverlandTiles");
+	} else {
+		if(last_quest) {
+			auto chance_finale = areahead.level * 10;
+			auto default_level = last_quest->level;
+			auto final_level = bsdata<locationi>::find(str("%1Final", default_level.getid()));
+			if(final_level && d100() < (final_level->chance_finale + chance_finale))
+				rt = final_level;
+			else if(last_quest->level)
+				rt = last_quest->level;
+		}
+		if(!rt)
+			rt = single("DefaultDungeon");
+	}
+	if(!rt)
+		rt = single("LightForest");
+	create_area(areahead, rt);
+}
+
 void areaheadi::createarea(point start_village) {
 	variant rt;
 	last_quest = quest::find(position);
@@ -681,6 +715,25 @@ void areaheadi::createarea(point start_village) {
 	if(!rt)
 		rt = single("LightForest");
 	create_area(*this, rt);
+}
+
+static areapiece* find_area(geoposition geo) {
+	for(auto& e : bsdata<areapiece>()) {
+		if(e == geo)
+			return &e;
+	}
+	return 0;
+}
+
+static void ready_area(geoposition geo) {
+	area = find_area(geo);
+	if(!area) {
+		area = bsdata<areapiece>::add();
+		area->clear();
+		area->position = geo.position;
+		area->level = geo.level;
+		create_random_area();
+	}
 }
 
 static const script* get_local_method() {

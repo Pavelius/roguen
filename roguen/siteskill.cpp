@@ -1,5 +1,5 @@
 #include "ability.h"
-#include "areamap.h"
+#include "areapiece.h"
 #include "bsreq.h"
 #include "condition.h"
 #include "creature.h"
@@ -11,7 +11,6 @@
 #include "skilluse.h"
 #include "siteskill.h"
 
-extern areamap* area;
 extern indexa indecies;
 extern point last_index;
 siteskilla last_actions;

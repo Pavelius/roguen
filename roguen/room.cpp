@@ -1,5 +1,5 @@
 #include "areaf.h"
-#include "areamap.h"
+#include "areapiece.h"
 #include "game.h"
 #include "site.h"
 

@@ -1,8 +1,7 @@
-#include "areamap.h"
+#include "areapiece.h"
 #include "item.h"
 #include "magic.h"
 
-extern areamap* area;
 item* last_item;
 
 static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");

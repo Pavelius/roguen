@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "creature.h"
 
 static point compare_position;

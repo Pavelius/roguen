@@ -1,7 +1,5 @@
-#include "areamap.h"
+#include "areapiece.h"
 #include "indexa.h"
-
-extern areamap* area;
 
 static point compare_position;
 

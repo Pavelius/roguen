@@ -1,16 +1,15 @@
-#include "areamap.h"
+#include "areapiece.h"
 #include "boost.h"
 #include "greatneed.h"
 #include "game.h"
 #include "pushvalue.h"
 #include "script.h"
-#include "site.h"
 #include "trigger.h"
 #include "triggern.h"
 #include "creature.h"
 
-static areamap	area_part;
-areamap*		area = &area_part;
+static areapiece area_part;
+areapiece*		area = &area_part;
 areaheadi		areahead;
 gamei			game;
 static char		console_text[4096];

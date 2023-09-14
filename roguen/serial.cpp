@@ -1,4 +1,5 @@
 #include "archive.h"
+#include "areapiece.h"
 #include "boost.h"
 #include "draw.h"
 #include "draw_object.h"

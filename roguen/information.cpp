@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "creature.h"
 #include "game.h"
 #include "race.h"
