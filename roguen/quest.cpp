@@ -23,7 +23,7 @@ BSDATAC(quest, 256)
 static monsteri* random_boss() {
 	collection<monsteri> source;
 	source.select(monsteri::isboss);
-	return source.param();
+	return source.random();
 }
 
 quest* quest::add(questn type, point position, variant modifier, variant level, variant reward) {

@@ -95,7 +95,7 @@ void collectiona::match(fnallow proc, int param, bool keep) {
 	count = ps - data;
 }
 
-void* collectiona::param() const {
+void* collectiona::random() const {
 	if(!count)
 		return 0;
 	return data[rand() % count];

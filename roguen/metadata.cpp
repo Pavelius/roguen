@@ -26,7 +26,7 @@ BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 
 BSDATAD(advancement);
-BSDATAC(areapiece, 512);
+BSDATAD(areapiece);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(globali, 128);
@@ -34,7 +34,6 @@ BSDATAC(itemi, 512);
 BSDATAC(itemground, 1024);
 BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
-BSDATAC(roomi, 64);
 BSDATAC(sitei, 256);
 BSDATAC(siteskilli, 256);
 BSDATAC(tilei, 64);
@@ -178,7 +177,7 @@ BSDATA(varianti) = {
 	{"Ability", VAR(abilityi), 1},
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1},
-	{"AreaPiece", VAR(areapiece), 1},
+//	{"AreaPiece", VAR(areapiece), 1},
 	{"Class", VAR(classi), 1},
 	{"Condition", VAR(conditioni), 1},
 	{"Creature", VAR(creature), 0},

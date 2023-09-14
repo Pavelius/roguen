@@ -2,6 +2,7 @@
 #include "boost.h"
 #include "condition.h"
 #include "creature.h"
+#include "draw.h"
 #include "draw_object.h"
 #include "game.h"
 #include "itema.h"
@@ -273,7 +274,7 @@ static bool isallowcorridor(point index, direction_s dir, bool linkable = false)
 		return false;
 	index = to(index, dir);
 	if(linkable) {
-		auto pr = roomi::find(*area, index);
+		auto pr = roomi::find(index);
 		if(pr)
 			return true;
 	}
@@ -372,7 +373,7 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, int floor, int wall) {
-	pushvalue push_room(last_room, roomi::find(*area, center(rc)));
+	pushvalue push_room(last_room, roomi::find(center(rc)));
 	pushvalue push_site(last_site, last_room ? &last_room->geti() : 0);
 	auto door_count = get_doors_count();
 	auto chance_hidden_doors = get_chance_hidden_doors();
@@ -416,7 +417,6 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	auto p = roomi::add();
 	p->clear();
 	p->set(ps);
-	*static_cast<geoposition*>(p) = *area;
 	p->rc = rc;
 	return p;
 }
@@ -632,7 +632,7 @@ static void create_area(geoposition geo, variant tile) {
 	if(!apply_location(geo, tile))
 		return;
 	bsdata<itemground>::source.clear();
-	area->clear();
+	area->areamap::clear();
 	locations.clear();
 	sites.clear();
 	add_area_events(geo);
@@ -734,6 +734,52 @@ static void ready_area(geoposition geo) {
 		area->level = geo.level;
 		create_random_area();
 	}
+}
+
+static void update_ui() {
+	draw::removeobjects(bsdata<creature>::source);
+	for(auto& e : bsdata<creature>()) {
+		if(e.isvalid())
+			e.fixappear();
+	}
+}
+
+static void set_allies_position(geoposition ogp, geoposition ngp, point m) {
+	if(!area->isvalid(m))
+		return;
+	for(auto& e : bsdata<creature>()) {
+		if(e.worldpos == ogp && e.is(Ally)) {
+			e.place(m);
+			e.worldpos = ngp;
+		}
+	}
+}
+
+static void remove_summoned(geoposition geo) {
+	for(auto& e : bsdata<creature>()) {
+		if(!e.isvalid() || e.worldpos != geo)
+			continue;
+		if(e.is(Summoned)) {
+			e.unlink();
+			e.clear();
+		}
+	}
+}
+
+void gamei::enter(point m, int level, const featurei* feature, direction_s appear_side) {
+	geoposition old_pos = *this;
+	remove_summoned(old_pos);
+	this->position = m;
+	this->level = level;
+	ready_area(*this);
+	point start = {-1000, -1000};
+	if(feature)
+		start = area->findfeature((unsigned char)bsid(feature));
+	if(!isvalid(start))
+		start = area->bordered(round(appear_side, South));
+	set_allies_position(old_pos, *this, start);
+	update_ui();
+	draw::setnext(play);
 }
 
 static const script* get_local_method() {
@@ -1049,6 +1095,10 @@ static void match_items(const variants& source) {
 	items.count = ps - items.begin();
 }
 
+static void select_rooms() {
+	rooms.collectiona::select(area->rooms);
+}
+
 bool choose_targets(unsigned flags, const variants& effects) {
 	indecies.clear();
 	items.clear();
@@ -1085,7 +1135,7 @@ bool choose_targets(unsigned flags, const variants& effects) {
 		indecies.sort(player->getposition());
 	}
 	if(FGT(flags, TargetRooms)) {
-		rooms.select(fntis<roomi, &roomi::islocal>);
+		select_rooms();
 		if(!FGT(flags, You))
 			rooms.remove(player->getroom());
 		if(!FGT(flags, Ranged))

@@ -329,9 +329,12 @@ void array::reserve(unsigned count) {
 	if(data && count < getmaximum())
 		return;
 	count_maximum = rmoptimal(count);
-	if(data)
-		data = realloc(data, count_maximum * size);
-	else
+	if(data) {
+		auto p = realloc(data, count_maximum * size);
+		if(!p)
+			exit(0);
+		data = p;
+	} else
 		data = malloc(count_maximum * size);
 }
 

@@ -398,7 +398,7 @@ static bool check_leave_area(creature* p, point m) {
 
 static bool check_place_owner(creature* p, point m) {
 	if(p->is(PlaceOwner)) {
-		auto pr = roomi::find(p->worldpos, m);
+		auto pr = roomi::find(m);
 		if(p->getroom() != pr) {
 			p->wait();
 			return false;
@@ -612,7 +612,7 @@ bool isfreecrfly(point m) {
 }
 
 static void update_room(creature* player) {
-	auto pn = roomi::find(player->worldpos, player->getposition());
+	auto pn = roomi::find(player->getposition());
 	if(pn) {
 		auto pb = player->getroom();
 		auto room_changed = false;
@@ -1219,7 +1219,7 @@ void creature::makemove() {
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 40)
-			cast(*((spelli*)allowed_spells.param()));
+			cast(*((spelli*)allowed_spells.random()));
 		if(canshoot(false))
 			attackrange(*enemy);
 		else
@@ -1229,7 +1229,7 @@ void creature::makemove() {
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 20)
-			cast(*((spelli*)allowed_spells.param()));
+			cast(*((spelli*)allowed_spells.random()));
 		else if(isfollowmaster())
 			moveto(getowner()->getposition());
 		else if(area->isvalid(moveorder)) {
@@ -1395,10 +1395,10 @@ bool creature::speechrumor() const {
 }
 
 bool creature::speechlocation() const {
-	collection<roomi> source;
-	source.select(fntis<roomi, &roomi::isnotable>);
+	rooma source;
+	source.collectiona::select(area->rooms, fntis<roomi, &roomi::isnotable>);
 	source.match(fntis<roomi, &roomi::isexplored>, false);
-	auto p = source.param();
+	auto p = source.random();
 	if(!p)
 		return false;
 	char temp[1024]; stringbuilder sb(temp);
@@ -1649,4 +1649,12 @@ bool creature::canremove(item& it) const {
 		return false;
 	}
 	return true;
+}
+
+roomi* creature::getroom() const {
+	return area->rooms.ptrs(room_id);
+}
+
+void creature::setroom(const roomi* v) {
+	room_id = (v == 0) ? 0xFFFF : area->rooms.indexof(v);
 }

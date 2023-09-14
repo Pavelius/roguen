@@ -70,7 +70,7 @@ public:
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
 	int				getpaymentcost() const;
-	roomi*			getroom() const { return bsdata<roomi>::ptr(room_id); }
+	roomi*			getroom() const;
 	void			getrumor(quest& e, stringbuilder& sb) const;
 	int				getsellingcost() const;
 	const char*		getspeech(const char* id, bool always_speak = true) const;
@@ -106,7 +106,7 @@ public:
 	void			sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;
 	void			set(feat_s v) { feats.set(v); }
 	void			set(ability_s i, int v) { abilities[i] = v; }
-	void			setroom(const roomi* v) { bsset(room_id, v); }
+	void			setroom(const roomi* v);
 	void			slowdown(int seconds) { wait_seconds += seconds; }
 	void			speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	bool			speechneed();

@@ -11,9 +11,13 @@ point center(const rect& rc) {
 	return {x, y};
 }
 
-roomi* roomi::find(geoposition gp, point pt) {
-	for(auto& e : bsdata<roomi>()) {
-		if(e == game && pt.in(e.rc))
+roomi* roomi::add() {
+	return area->rooms.add();
+}
+
+roomi* roomi::find(point pt) {
+	for(auto& e : area->rooms) {
+		if(pt.in(e.rc))
 			return &e;
 	}
 	return 0;
@@ -25,8 +29,4 @@ bool roomi::isexplored() const {
 
 bool roomi::ismarkable() const {
 	return is(Notable) && isexplored();
-}
-
-bool roomi::islocal() const {
-	return *this==game;
 }
