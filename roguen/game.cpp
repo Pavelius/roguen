@@ -8,8 +8,7 @@
 #include "triggern.h"
 #include "creature.h"
 
-static areapiece area_part;
-areapiece*		area = &area_part;
+areapiece*		area;
 gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);

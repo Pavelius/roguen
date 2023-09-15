@@ -651,6 +651,8 @@ void creature::update_abilities() {
 }
 
 void creature::place(point m) {
+	if(!area)
+		return;
 	m = area->getfree(m, 10, isfreecr);
 	setposition(m);
 	update_room(this);
@@ -665,6 +667,8 @@ bool creature::isenemy(const creature& opponent) const {
 }
 
 bool creature::is(areaf v) const {
+	if(!area)
+		return false;
 	return ispresent() && area->is(getposition(), v);
 }
 
@@ -1652,6 +1656,8 @@ bool creature::canremove(item& it) const {
 }
 
 roomi* creature::getroom() const {
+	if(!area)
+		return 0;
 	return area->rooms.ptrs(room_id);
 }
 
