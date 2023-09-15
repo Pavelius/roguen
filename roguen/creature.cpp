@@ -832,6 +832,17 @@ static void apply_pierce(int& armor, int& pierce) {
 		armor = 0;
 }
 
+static void assign(statable& v1, const statable& v2) {
+	v1 = v2;
+}
+
+static void apply_weapon_effect(item& weapon) {
+	statable push_ability = *player;
+	featable push_feats = player->feats;
+	player->feats = push_feats;
+	assign(*player, push_ability);
+}
+
 static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
 	auto roll_result = d100();
 	auto enemy_name = enemy->getname();
