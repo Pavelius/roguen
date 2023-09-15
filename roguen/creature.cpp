@@ -822,7 +822,7 @@ static int add_bonus_damage(creature* player, creature* enemy, item& weapon, fea
 	return bonus_damage;
 }
 
-static void apply_pierce(int& armor, int& pierce) {
+static void apply_pierce(int& armor, int pierce) {
 	if(armor > 0) {
 		if(pierce > armor)
 			armor = 0;
@@ -830,17 +830,6 @@ static void apply_pierce(int& armor, int& pierce) {
 			armor -= pierce;
 	} else
 		armor = 0;
-}
-
-static void assign(statable& v1, const statable& v2) {
-	v1 = v2;
-}
-
-static void apply_weapon_effect(item& weapon) {
-	statable push_ability = *player;
-	featable push_feats = player->feats;
-	player->feats = push_feats;
-	assign(*player, push_ability);
 }
 
 static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
@@ -1284,11 +1273,10 @@ static void update_wears() {
 	for(auto& e : player->equipment()) {
 		if(!e)
 			continue;
-		auto multiplier = 1;
-		wearing(e.geti().wearing, multiplier);
+		wearing(e.geti().wearing, 1);
 		auto power = e.getpower();
 		if(power)
-			wearing(power, multiplier);
+			wearing(power, 1);
 	}
 }
 

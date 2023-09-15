@@ -51,7 +51,7 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 		if(value_maximum > 0)
 			sb.add("-%1i", value + value_maximum);
 		break;
-	case Hits: case Mana:
+	case Hits: case Mana: case DamageMelee:
 		sb.addn("[~%1]\t%2i/%3i", getnameshort(i), value, value_maximum);
 		break;
 	default:
@@ -101,6 +101,7 @@ void creature::getinfo(stringbuilder& sb) const {
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	addf(sb, Armor, abilities[Armor], abilities[Block]);
+	addf(sb, DamageMelee, abilities[DamageMelee], abilities[DamageRanged]);
 	addf(sb, Hits, abilities[Hits], basic.abilities[Hits]);
 	addf(sb, Mana, abilities[Mana], basic.abilities[Mana]);
 	addf(sb, Money, getmoney());
