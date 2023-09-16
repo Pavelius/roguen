@@ -74,7 +74,7 @@ static void pay_movement(creature* player) {
 }
 
 static void pay_attack(creature* player, const item& weapon) {
-	auto cost = 110 - weapon.geti().weapon.speed * 4;
+	auto cost = 120 - weapon.geti().weapon.speed * 4 - player->get(Dexterity) / 4;
 	if(cost < 20)
 		cost = 20;
 	player->waitseconds(cost);

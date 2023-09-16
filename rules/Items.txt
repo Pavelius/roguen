@@ -35,7 +35,7 @@ Lags cost(10) avatar(395) count(1)
 SmallLags cost(10) avatar(411) count(1)
 
 BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) powers(SlashingWeapons)
- weapon damage(5) pierce(3) speed(-10)
+ weapon damage(5) pierce(1) speed(-10)
  feats CutWoods
  required Strenght(40)
 BruteSword cost(10) weight(300) wear(MeleeWeapon) wear_index(1) avatar(65) powers(SlashingWeapons)
@@ -50,18 +50,18 @@ Dagger cost(3) weight(50) wear(MeleeWeapon) wear_index(3) avatar(2) powers(Pierc
  weapon damage(3) speed(5)
  feats PierceHit
 Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) powers(SlashingWeapons)
- weapon damage(8) pierce(3) speed(-13)
+ weapon damage(8) pierce(2) speed(-13)
  feats TwoHanded CutWoods MightyHit
  required Strenght(50)
 HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) powers(SlashingWeapons)
- weapon damage(4) pierce(2) speed(-3)
+ weapon damage(4) pierce(1) speed(-3)
  required Strenght(30)
 Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) powers(BludgeonWeapons)
  weapon damage(4) speed(-5)
  feats StunningHit
  required Strenght(30)
 Spear cost(10) weight(250) wear(MeleeWeapon) wear_index(22) avatar(559) powers(PierceWeapons)
- weapon damage(3) pierce(1) speed(-5)
+ weapon damage(3) pierce(4) speed(-5)
  feats Retaliate PierceHit
 Staff cost(5) weight(200) wear(MeleeWeapon) avatar(558) wear_index(6) powers(BludgeonWeapons)
  weapon damage(4)
