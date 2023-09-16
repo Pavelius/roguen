@@ -263,7 +263,7 @@ static void drop_treasure(creature* pe) {
 		return;
 	pushvalue push_player(player, pe);
 	pushvalue push_rect(last_rect, pe->getposition().rectangle());
-	script::run(p->treasure);
+	script_run(p->treasure);
 }
 
 static void nullify_elements(creature* player) {
@@ -454,7 +454,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 				if(pn)
 					player->act(pn, getnm(ei.id));
 				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
-				script::run(p->elements);
+				script_run(p->elements);
 			}
 		}
 		movable::fixeffect(m2s(m), "SearchVisual");
@@ -732,7 +732,7 @@ void creature::matchspeech(speecha& source) const {
 	pushvalue push_player(player, const_cast<creature*>(this));
 	auto ps = source.data;
 	for(auto p : source) {
-		if(!script::isallow(p->condition))
+		if(!script_allow(p->condition))
 			continue;
 		*ps++ = p;
 	}
@@ -743,7 +743,7 @@ const speech* creature::matchfirst(const speecha& source) const {
 	pushvalue push_player(player, const_cast<creature*>(this));
 	auto ps = source.data;
 	for(auto p : source) {
-		if(script::isallow(p->condition))
+		if(script_allow(p->condition))
 			return p;
 	}
 	return 0;
@@ -1102,12 +1102,9 @@ static void advance_value(variant v) {
 	else if(v.iskind<itemi>()) {
 		if(v.counter >= 0)
 			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
-	} else if(v.iskind<feati>()) {
-		if(v.counter < 0)
-			player->feats.remove(v.value);
-		else
-			player->feats.set(v.value);
-	} else if(v.iskind<spelli>())
+	} else if(v.iskind<feati>())
+		ftscript<feati>(v.value, v.counter);
+	else if(v.iskind<spelli>())
 		player->spells[v.value] += v.counter;
 	else if(v.iskind<modifieri>())
 		modifier = (modifiers)v.value;
@@ -1492,7 +1489,7 @@ void apply_value(variant v) {
 	if(v.iskind<abilityi>())
 		apply_ability((ability_s)v.value, v.counter);
 	else if(v.iskind<spelli>())
-		apply_spell(bsdata<spelli>::elements[v.value], v.counter);
+		ftscript<spelli>(v.value, v.counter);
 	else if(v.iskind<areafi>()) {
 		if(v.counter < 0)
 			area->remove(player->getposition(), v.value);

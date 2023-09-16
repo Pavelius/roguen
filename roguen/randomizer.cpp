@@ -1,6 +1,7 @@
 #include "bsreq.h"
 #include "list.h"
 #include "randomizer.h"
+#include "script.h"
 
 BSMETA(randomizeri) = {
 	BSREQ(id),
@@ -48,4 +49,10 @@ variant single(variant v) {
 		}
 		return v;
 	}
+}
+
+template<> void ftscript<randomizeri>(int value, int counter) {
+	auto count = script_count(counter, 1);
+	for(auto i = 0; i < count; i++)
+		script_run(bsdata<randomizeri>::elements[value].random());
 }

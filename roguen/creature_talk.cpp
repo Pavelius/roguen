@@ -43,7 +43,7 @@ static const phrasei* ask_answer(const phrasei* p) {
 		if(pa->text[0] == '@') {
 			auto ps = bsdata<script>::find(pa->text + 1);
 			if(ps)
-				ps->run(0);
+				ps->proc(0);
 		} else
 			an.add(pa, pa->text);
 	}
@@ -56,7 +56,7 @@ static const phrasei* apply_answer(const phrasei* p, const talki* owner) {
 	if(!p)
 		return 0;
 	if(bsdata<phrasei>::have(p)) {
-		script::run(p->elements);
+		script_run(p->elements);
 		return owner->find(p->next);
 	}
 	if(talk_proc) {
@@ -71,7 +71,7 @@ static const phrasei* apply_answer(const phrasei* p, const talki* owner) {
 static void talk_entry(const phrasei* p) {
 	while(p) {
 		console.clear();
-		script::run(p->elements);
+		script_run(p->elements);
 		opponent->say(p->text);
 		auto owner = talki::owner(p);
 		p = ask_answer(p);

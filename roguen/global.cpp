@@ -1,10 +1,21 @@
+#include "archive.h"
+#include "bsreq.h"
 #include "global.h"
 #include "script.h"
 
-BSDATAD(globali);
+BSMETA(globali) = {
+	BSREQ(id),
+	BSREQ(minimum), BSREQ(maximum), BSREQ(current),
+	BSREQ(effect), BSREQ(fail),
+	{}};
+BSDATAC(globali, 128);
 
 globali*	last_global;
 extern int	last_value;
+
+template<> void archive::set<globali>(globali& e) {
+	set(e.current);
+}
 
 template<> void ftscript<globali>(int value, int counter) {
 	last_global = bsdata<globali>::elements + value;
@@ -21,7 +32,7 @@ void globali::set(int v) {
 		return;
 	current = v;
 	if(v == minimum)
-		script::run(fail);
+		script_run(fail);
 	else if(v == maximum)
-		script::run(effect);
+		script_run(effect);
 }

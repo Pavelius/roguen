@@ -29,7 +29,6 @@ BSDATAD(advancement);
 BSDATAD(areapiece);
 BSDATAC(classi, 16);
 BSDATAC(creature, 256);
-BSDATAC(globali, 128);
 BSDATAC(itemi, 512);
 BSDATAC(locationi, 128);
 BSDATAC(monsteri, 512);
@@ -47,11 +46,6 @@ BSMETA(advancement) = {
 	{}};
 BSMETA(areapiece) = {
 	BSREQ(position), BSREQ(level),
-	{}};
-BSMETA(globali) = {
-	BSREQ(id),
-	BSREQ(minimum), BSREQ(maximum), BSREQ(current),
-	BSREQ(effect), BSREQ(fail),
 	{}};
 BSMETA(areafi) = {
 	BSREQ(id),
@@ -173,34 +167,34 @@ BSMETA(weari) = {
 	{}};
 BSDATA(varianti) = {
 	{"NoVariant"},
-	{"Ability", VAR(abilityi), 1},
+	{"Ability", VAR(abilityi), 1, 0, ftscript<abilityi>, fttest<abilityi>},
 	{"Advancement", VAR(advancement), 3},
-	{"AreaFlag", VAR(areafi), 1},
-	{"Class", VAR(classi), 1},
-	{"Condition", VAR(conditioni), 1},
+	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
+	{"Class", VAR(classi), 1, 0, ftscript<classi>},
+	{"Condition", VAR(conditioni), 1, 0, 0, fttest<conditioni>},
 	{"Creature", VAR(creature), 0},
 	{"Dialog", VAR(dialogi), 1},
-	{"Feat", VAR(feati), 1},
-	{"Feature", VAR(featurei), 1},
+	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
+	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
 	{"Global", VAR(globali), 1, 0, ftscript<globali>},
 	{"Hotkey", VAR(hotkey), 2},
-	{"Item", VAR(itemi), 1},
-	{"List", VAR(listi), 1},
-	{"Location", VAR(locationi), 1},
-	{"Modifier", VAR(modifieri), 1},
-	{"Monster", VAR(monsteri), 1},
-	{"Need", VAR(greatneedi), 1},
+	{"Item", VAR(itemi), 1, 0, ftscript<itemi>},
+	{"List", VAR(listi), 1, 0, ftscript<listi>, fttest<listi>},
+	{"Location", VAR(locationi), 1, 0, ftscript<locationi>},
+	{"Modifier", VAR(modifieri), 1, 0, ftscript<modifieri>},
+	{"Monster", VAR(monsteri), 1, 0, ftscript<monsteri>, fttest<monsteri>},
+	{"Need", VAR(greatneedi), 1, 0, ftscript<needni>, fttest<needni>},
 	{"NeedFlag", VAR(needni), 1},
 	{"Quest", VAR(quest), 0},
-	{"Race", VAR(racei), 1},
-	{"RandomTable", VAR(randomizeri), 1},
-	{"Script", VAR(script), 1, 0, ftscript<spelli>},
-	{"Shape", VAR(shapei), 1},
-	{"Site", VAR(sitei), 1},
+	{"Race", VAR(racei), 1, 0, ftscript<racei>},
+	{"RandomTable", VAR(randomizeri), 1, 0, ftscript<randomizeri>},
+	{"Script", VAR(script), 1, 0, ftscript<script>, fttest<script>},
+	{"Shape", VAR(shapei), 1, 0, ftscript<shapei>},
+	{"Site", VAR(sitei), 1, 0, ftscript<sitei>},
 	{"SiteSkill", VAR(siteskilli), 1},
-	{"Spell", VAR(spelli), 1},
-	{"Speech", VAR(speech), 1},
-	{"Tile", VAR(tilei), 1},
+	{"Spell", VAR(spelli), 1, 0, ftscript<spelli>},
+	{"Speech", VAR(speech), 1, 0, ftscript<speech>},
+	{"Tile", VAR(tilei), 1, 0, ftscript<tilei>},
 	{"TileFlag", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},
 	{"Variant", VAR(varianti), 1},

@@ -10,16 +10,18 @@ struct bsreq;
 union variant;
 
 typedef sliceu<variant> variants;
-typedef void (*fnscript)(int index, int bonus);
 typedef void (*fnvariant)(variant v);
 
 struct varianti {
+	typedef void(*fnscript)(int index, int bonus);
+	typedef bool(*fntest)(int index, int bonus);
 	const char*		id;
 	const bsreq*	metadata;
 	array*			source;
 	int             key_count;
 	fnstatus		pgetinfo;
 	fnscript		pscript;
+	fntest			ptest;
 	static const array* getarray(const void* object, const char* id);
 	static const varianti* getsource(const char* id);
 	static const varianti* getmetadata(const void* object);

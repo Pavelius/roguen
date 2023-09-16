@@ -155,7 +155,7 @@ void talki::read() {
 
 phrasei* talki::find(short v) const {
 	for(auto& e : elements) {
-		if(e.index == v && !e.isanswer() && script::isallow(e.elements))
+		if(e.index == v && !e.isanswer() && script_allow(e.elements))
 			return &e;
 	}
 	return 0;
@@ -170,7 +170,7 @@ const phrasei* phrasei::nextanswer() const {
 	while(pb < pe) {
 		if(pb->index != index || !pb->isanswer())
 			break;
-		if(script::isallow(pb->elements))
+		if(script_allow(pb->elements))
 			return pb;
 		pb++;
 	}

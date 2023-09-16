@@ -57,9 +57,11 @@ static rect		correct_conncetors;
 static direction_s last_direction;
 static adat<variant, 32> sites;
 
+void apply_ability(ability_s v, int counter);
+
 static void show_debug_minimap() {
-	script::run("ExploreArea");
-	script::run("ShowMinimap");
+	script_run("ExploreArea");
+	script_run("ShowMinimap");
 }
 
 static int getrange(point m1, point m2) {
@@ -202,7 +204,7 @@ static void create_road(const rect& rc) {
 			last_rect.y2 = area->mps - 1;
 	}
 	area->set(last_rect, &areamap::settile, road.value);
-	script::run("RandomCommoner");
+	script_run("RandomCommoner");
 }
 
 static void create_city_level(const rect& rc, int level) {
@@ -468,7 +470,7 @@ static void create_sites() {
 		sites.count = locations.count;
 	for(size_t i = 0; i < locations.count; i++) {
 		pushvalue push_rect(last_rect, locations.data[i]);
-		script::run(sites.data[i]);
+		script_run(sites.data[i]);
 	}
 }
 
@@ -506,7 +508,7 @@ static void create_corridor_content(point i) {
 	else if(quest_modifier && quest_modifier->loot && d100() < 40)
 		treasure = randomizeri::random(quest_modifier->getloot());
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
-	script::run(treasure);
+	script_run(treasure);
 	area->total.loots++;
 }
 
@@ -552,7 +554,7 @@ static void generate_building(int bonus) {
 
 static void generate_cityscape(int bonus) {
 	fillfloor();
-	script::run(last_site);
+	script_run(last_site);
 	last_rect.offset(last_location->offset, last_location->offset);
 	create_city_level(last_rect, 0);
 	sort_locations();
@@ -560,7 +562,7 @@ static void generate_cityscape(int bonus) {
 
 static void generate_outdoor(int bonus) {
 	fillfloor();
-	script::run(last_site);
+	script_run(last_site);
 	last_rect.offset(last_location->offset, last_location->offset);
 	const auto parts = 4;
 	const auto size = last_rect.width() / parts;
@@ -824,113 +826,108 @@ template<> void ftscript<areafi>(int value, int counter) {
 	area->set(last_rect, &areamap::setflag, value, counter);
 }
 
-void script::run(variant v) {
-	if(v.iskind<featurei>())
-		area->set(last_rect, &areamap::setfeature, v.value, v.counter);
-	else if(v.iskind<tilei>())
-		area->set(last_rect, &areamap::settile, v.value, v.counter);
-	else if(v.iskind<areafi>())
-		area->set(last_rect, &areamap::setflag, v.value, v.counter);
-	else if(v.iskind<globali>()) {
-		last_global = bsdata<globali>::elements + v.value;
-		last_value = game.get(*last_global);
-		game.set(*last_global, last_value + v.counter);
-	} else if(v.iskind<listi>()) {
-		for(auto v : bsdata<listi>::elements[v.value].elements)
-			script::run(v);
-	} else if(v.iskind<randomizeri>()) {
-		auto count = game.getcount(v);
-		if(count <= 0)
-			return;
-		for(auto i = 0; i < count; i++)
-			script::run(bsdata<randomizeri>::elements[v.value].random());
-	} else if(v.iskind<monsteri>()) {
-		auto count = game.getcount(v, 0);
-		if(count < 0)
-			return;
-		if(count == 0)
-			count = get_deafault_count(bsdata<monsteri>::elements[v.value], game.level);
-		if(!count)
-			count = 1;
-		place_creature(v, count);
-	} else if(v.iskind<racei>()) {
-		auto count = game.getcount(v);
-		if(count <= 0)
-			return;
-		place_creature(v, count);
-	} else if(v.iskind<classi>()) {
-		auto count = game.getcount(v);
-		if(count <= 0)
-			return;
-		for(auto i = 0; i < count; i++)
-			creature::create(area->get(last_rect), single("RandomRace"), v, (rand() % 2) != 0);
-	} else if(v.iskind<shapei>()) {
-		auto count = game.getcount(v);
-		if(count <= 0)
-			return;
-		for(auto i = 0; i < count; i++) {
-			place_shape(bsdata<shapei>::elements[v.value],
-				area->get(last_rect), getfloor(), getwall());
-		}
-	} else if(v.iskind<itemi>()) {
-		auto count = game.getcount(v);
-		if(count <= 0)
-			return;
-		for(auto i = 0; i < count; i++)
-			place_item(area->get(last_rect), bsdata<itemi>::elements + v.value);
-	} else if(v.iskind<sitei>()) {
-		pushvalue push_rect(last_rect);
-		pushvalue push_site(last_site);
-		last_site = bsdata<sitei>::elements + v.value;
-		auto last_method = get_local_method();
-		if(last_method)
-			last_method->proc(0);
-		add_room(last_site, last_rect);
-		script::run(bsdata<sitei>::elements[v.value].landscape);
-	} else if(v.iskind<locationi>()) {
-		pushvalue push_rect(last_rect);
-		script::run(bsdata<locationi>::elements[v.value].landscape);
-	} else if(v.iskind<speech>()) {
-		auto count = game.getcount(v);
-		if(count <= 0)
-			return;
-		if(player)
-			player->speech(bsdata<speech>::elements[v.value].id);
-	} else if(v.iskind<needni>()) {
-		if(!last_need)
-			return;
-		if(v.counter >= 0)
-			last_need->set((needn)v.value);
-		else
-			last_need->remove((needn)v.value);
-	} else if(v.iskind<modifieri>())
-		modifier = (modifiers)v.value;
-	else
-		apply_value(v);
+template<> bool fttest<monsteri>(int value, int counter) {
+	if(!counter)
+		return player->iskind(bsdata<monsteri>::elements + value);
+	return true;
+}
+template<> void ftscript<monsteri>(int value, int counter) {
+	auto count = script_count(counter, 0);
+	if(count < 0)
+		return;
+	if(count == 0)
+		count = get_deafault_count(bsdata<monsteri>::elements[value], game.level);
+	if(!count)
+		count = 1;
+	place_creature(bsdata<monsteri>::elements + value, count);
 }
 
-bool script::isallow(variant v) {
-	if(v.iskind<script>()) {
-		if(bsdata<script>::elements[v.value].test)
-			return bsdata<script>::elements[v.value].test(v.counter);
-	} else if(v.iskind<needni>()) {
-		if(v.counter <= 0)
-			return last_need && last_need->is((needn)v.value);
-	} else if(v.iskind<abilityi>()) {
-		if(v.counter < 0)
-			return player->get((ability_s)v.value) < -v.counter;
-	} else if(v.iskind<conditioni>())
-		return player->is((condition_s)v.value);
-	else if(v.iskind<listi>())
-		return isallow(bsdata<listi>::elements[v.value].elements);
-	else if(v.iskind<monsteri>()) {
-		if(!v.counter)
-			return player->iskind(v);
-	} else if(v.iskind<feati>()) {
-		if(v.counter >= 0)
-			return player->is((feat_s)v.value);
-	}
+template<> void ftscript<racei>(int value, int counter) {
+	auto count = script_count(counter, 1);
+	if(count <= 0)
+		return;
+	place_creature(bsdata<racei>::elements + value, count);
+}
+
+template<> void ftscript<classi>(int value, int counter) {
+	auto count = script_count(counter, 1);
+	for(auto i = 0; i < count; i++)
+		creature::create(area->get(last_rect), single("RandomRace"), bsdata<classi>::elements + value, (rand() % 2) != 0);
+}
+
+template<> void ftscript<shapei>(int value, int counter) {
+	auto count = script_count(counter, 1);
+	for(auto i = 0; i < count; i++)
+		place_shape(bsdata<shapei>::elements[value], area->get(last_rect), getfloor(), getwall());
+}
+
+template<> void ftscript<itemi>(int value, int counter) {
+	auto count = script_count(counter, 1);
+	for(auto i = 0; i < count; i++)
+		place_item(area->get(last_rect), bsdata<itemi>::elements + value);
+}
+
+template<> void ftscript<sitei>(int value, int counter) {
+	pushvalue push_rect(last_rect);
+	pushvalue push_site(last_site);
+	last_site = bsdata<sitei>::elements + value;
+	auto last_method = get_local_method();
+	if(last_method)
+		last_method->proc(0);
+	add_room(last_site, last_rect);
+	script_run(bsdata<sitei>::elements[value].landscape);
+}
+
+template<> void ftscript<locationi>(int value, int counter) {
+	pushvalue push_rect(last_rect);
+	script_run(bsdata<locationi>::elements[value].landscape);
+}
+
+template<> void ftscript<speech>(int value, int counter) {
+	auto count = script_count(counter, 1);
+	if(count <= 0)
+		return;
+	if(player)
+		player->speech(bsdata<speech>::elements[value].id);
+}
+
+template<> bool fttest<needni>(int value, int counter) {
+	if(counter <= 0)
+		return last_need && last_need->is((needn)value);
 	return true;
+}
+template<> void ftscript<needni>(int value, int counter) {
+	if(!last_need)
+		return;
+	if(counter >= 0)
+		last_need->set((needn)value);
+	else
+		last_need->remove((needn)value);
+}
+
+template<> bool fttest<abilityi>(int value, int counter) {
+	if(counter < 0)
+		return player->get((ability_s)value) >= -counter;
+	return true;
+}
+template<> void ftscript<abilityi>(int value, int counter) {
+	apply_ability((ability_s)value, counter);
+}
+
+template<> bool fttest<feati>(int value, int counter) {
+	if(counter <= 0)
+		return player->is((feat_s)value);
+	return true;
+}
+template<> void ftscript<feati>(int value, int counter) {
+	if(counter >= 0)
+		player->feats.set(value);
+	else
+		player->feats.remove(value);
+}
+
+template<> bool fttest<conditioni>(int value, int counter) {
+	return player->is((condition_s)value);
 }
 
 static void move_left(int bonus) {
@@ -1195,6 +1192,10 @@ void apply_spell(const spelli& ei, int level) {
 		player->apply(ei.effect);
 }
 
+template<> void ftscript<spelli>(int index, int value) {
+	apply_spell(bsdata<spelli>::elements[index], value);
+}
+
 static void apply_target_effect(unsigned target, const variants& effect) {
 	if(FGT(target, TargetCreatures)) {
 		//for(auto p : targets)
@@ -1203,17 +1204,17 @@ static void apply_target_effect(unsigned target, const variants& effect) {
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
 			pushvalue push_index(last_index, p);
-			script::run(effect);
+			script_run(effect);
 		}
 	} else if(FGT(target, TargetRooms)) {
 		for(auto p : rooms) {
 			pushvalue push_rect(last_room, p);
-			script::run(effect);
+			script_run(effect);
 		}
 	} else if(FGT(target, TargetItems)) {
 		for(auto p : items) {
 			pushvalue push_object(last_item, p);
-			script::run(effect);
+			script_run(effect);
 		}
 	}
 }
@@ -1233,19 +1234,19 @@ bool spelli::apply(int level, int targets_count, bool interactive, bool silent) 
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
 			pushvalue push_index(last_index, p);
-			script::run(effect);
+			script_run(effect);
 		}
 	} else if(is(TargetRooms)) {
 		pushvalue push_rect(last_room);
 		for(auto p : rooms) {
 			last_room = p;
-			script::run(effect);
+			script_run(effect);
 		}
 	} else if(is(TargetItems)) {
 		pushvalue push_object(last_item);
 		for(auto p : items) {
 			last_item = p;
-			script::run(effect);
+			script_run(effect);
 		}
 	}
 	if(summon)
@@ -1666,7 +1667,7 @@ static void quest_minion(int bonus) {
 		return;
 	monsteri* pm = last_quest->problem;
 	if(pm)
-		script::runv(pm->ally(), bonus);
+		script_run(pm->ally(), bonus);
 }
 
 static void quest_guardian(int bonus) {
@@ -1675,7 +1676,7 @@ static void quest_guardian(int bonus) {
 	monsteri* pm = last_quest->problem;
 	if(pm) {
 		area->total.boss++;
-		script::runv((monsteri*)last_quest->problem, bonus);
+		script_run((monsteri*)last_quest->problem, bonus);
 	}
 }
 
@@ -1683,7 +1684,7 @@ static void quest_reward(int bonus) {
 	if(last_quest && last_quest->reward) {
 		variant v = last_quest->reward;
 		v.counter = bonus;
-		script::run(v);
+		script_run(v);
 	}
 }
 
@@ -1692,30 +1693,26 @@ static void quest_landscape(int bonus) {
 		return;
 	locationi* pm = last_quest->modifier;
 	if(pm)
-		script::run(pm->landscape);
+		script_run(pm->landscape);
 }
 
 static void site_floor(int bonus) {
 	if(last_site && last_site->floors)
-		script::runv(bsdata<tilei>::elements + last_site->floors, bonus);
+		script_run(bsdata<tilei>::elements + last_site->floors, bonus);
 	else if(last_location && last_location->floors)
-		script::runv(bsdata<tilei>::elements + last_location->floors, bonus);
+		script_run(bsdata<tilei>::elements + last_location->floors, bonus);
 }
 
 static void site_wall(int bonus) {
 	if(last_site && last_site->walls)
-		script::runv(bsdata<tilei>::elements + last_site->walls, bonus);
+		script_run(bsdata<tilei>::elements + last_site->walls, bonus);
 	else if(last_location && last_location->walls)
-		script::runv(bsdata<tilei>::elements + last_location->walls, bonus);
+		script_run(bsdata<tilei>::elements + last_location->walls, bonus);
 }
 
 static const spelli* choose_spell(int bonus) {
 	pushvalue push_width(window_width, 300);
 	return allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"), player);
-}
-
-template<> void ftscript<spelli>(int index, int value) {
-	apply_spell(bsdata<spelli>::elements[index], value);
 }
 
 static void cast_spell(int bonus) {
@@ -1865,14 +1862,6 @@ static void identify_item(int bonus) {
 static void random_ability(int bonus) {
 	static ability_s source[] = {Strenght, Dexterity, Wits};
 	apply_ability(maprnd(source), bonus);
-}
-
-void script::run(const variants& elements) {
-	pushvalue push_begin(script_begin, elements.begin());
-	pushvalue push_end(script_end, elements.end());
-	pushvalue push_cap(last_cap, 0);
-	while(script_begin < script_end)
-		script::run(*script_begin++);
 }
 
 static void need_help_info(stringbuilder& sb) {

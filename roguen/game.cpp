@@ -99,7 +99,7 @@ static void all_features(triggern type) {
 				if(!p->match(v1, {}))
 					continue;
 				last_rect = m.rectangle();
-				script::run(p->effect);
+				script_run(p->effect);
 			}
 		}
 	}
@@ -305,20 +305,6 @@ void gamei::randomworld() {
 	setup_globals();
 	setup_rumors(xrand(4, 7));
 	prepare_need();
-}
-
-void gamei::set(const globali& e, int v) {
-	if(v < e.minimum)
-		v = e.minimum;
-	if(v > e.maximum)
-		v = e.maximum;
-	if(get(e) == v)
-		return;
-	globals[bsid(&e)] = v;
-	if(v == e.minimum)
-		script::run(e.fail);
-	else if(v == e.maximum)
-		script::run(e.effect);
 }
 
 const char* gamei::timeleft(unsigned end_stamp) const {

@@ -17,7 +17,6 @@ public:
 	void			clear();
 	static void		endgame();
 	void			enter(point m, int level, const featurei* entry, direction_s appear_side);
-	int				get(const globali& e) const { return globals[bsid(&e)]; }
 	static int		getcount(variant v, int minimal = 1);
 	unsigned		getminutes() const { return minutes; }
 	static int		getpositivecount(variant v);
