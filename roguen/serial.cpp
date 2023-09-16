@@ -42,8 +42,15 @@ static const char* save_folder = "save";
 //	save_monsters();
 //}
 
-static void serial_game(bool write_mode) {
-	io::file file("save/game.sav", write_mode ? StreamWrite : StreamRead);
+template<> void archive::set<areapiece>(areapiece& e) {
+	set(*static_cast<areaheadi*>(&e));
+	set(*static_cast<areamap*>(&e));
+	setc<roomi>(e.rooms);
+	setc<itemground>(e.items);
+}
+
+static void serial_game(const char* url, bool write_mode) {
+	io::file file(url, write_mode ? StreamWrite : StreamRead);
 	if(!file)
 		return;
 	archive a(file, write_mode);
@@ -55,19 +62,18 @@ static void serial_game(bool write_mode) {
 	a.set(bsdata<boosti>::source);
 	a.set(bsdata<creature>::source);
 	a.set(bsdata<greatneed>::source);
+	a.setc<areapiece>(bsdata<areapiece>::source);
 }
 
-//static bool serial_area(const char* url, bool write_mode) {
-//	io::file file(url, write_mode ? StreamWrite : StreamRead);
-//	if(!file)
-//		return false;
-//	archive a(file, write_mode);
-//	a.set(*static_cast<areaheadi*>(area));
-//	a.set(*static_cast<areamap*>(area));
-//	a.set(saved_creatures);
-//	a.set(bsdata<itemground>::source);
-//	return true;
-//}
+static void serial_game_name(const char* id, bool write_mode) {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("saves/%1.sav", id);
+	serial_game(temp, write_mode);
+}
+
+void gamei::write(const char* name) {
+	serial_game_name(name, true);
+}
 
 //static void cleanup_saves() {
 //	char temp[260]; stringbuilder sb(temp);

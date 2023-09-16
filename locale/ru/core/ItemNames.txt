@@ -48,6 +48,7 @@ IronGirdle: Железный пояс
 LeatherBoots: Кожанные сапоги
 
 IronBracers: Железные браслеты
+LeatherBracers: Кожанные браслеты
 BracersOfStrenght: Браслеты силы
 
 BrassRing: Медное кольцо

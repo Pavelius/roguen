@@ -733,6 +733,7 @@ static void remove_summoned(geoposition geo) {
 }
 
 void gamei::enter(point m, int level, const featurei* feature, direction_s appear_side) {
+	write("autosave");
 	geoposition old_pos = *this;
 	remove_summoned(old_pos);
 	this->position = m;

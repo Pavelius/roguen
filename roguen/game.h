@@ -34,7 +34,7 @@ public:
 	void			read();
 	void			set(const globali& e, int v);
 	const char*		timeleft(unsigned end_stamp) const;
-	void			write();
+	void			write(const char* name);
 	static void		writelog();
 };
 extern gamei game;
