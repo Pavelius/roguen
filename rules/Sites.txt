@@ -139,8 +139,8 @@ FrozenSite
  landscape Iced-50
 
 DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(Door)\
- global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(2)\
- chance_stuck_doors(20)
+  global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom)\
+  chance_stuck_doors(20) darkness(3) offset(10)
  sites StairsUpRoom StairsDownRoom FalseRoom+2\
   TreasureRoom AltarRoom-50 SarcaphagusRoom-60 ArtifactStatueRoom-30 AncientLabRoom-30 InscribedRoom-80 PortalRoom-10\
   MinionsRoom+3 MinionsRoom-60\
@@ -148,11 +148,15 @@ DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(
 DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
  sites StairsUpRoom BossRoom PortalRoom-30 MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
-DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
+DefaultCave minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door)\
+  global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom)\
+  darkness(3) offset(14)
  sites StairsUpRoom StairsDownRoom DeepLake-10 MinionsRoom MinionsRoom-60 FalseRoom\
   CaveMonsterLair-50 SpiderNest PitRoom-50 StrangeFloraRoom\
   EmpthyRoom+16
-DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) chance_finale(40) offset(10)
+DefaultCaveFinal minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door)\
+  global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom)\
+  darkness(3) chance_finale(40) offset(14)
  sites StairsUpRoom BossRoom MinionsRoom+3 MinionsRoom-60 EmpthyRoom+16
 
 Plains minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global(GenerateOutdoor)
