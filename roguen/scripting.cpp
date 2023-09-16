@@ -432,6 +432,42 @@ static void place_shape(const shapei& e, point m, int floor, int walls) {
 	place_shape(e, m, maprnd(direction), floor, walls);
 }
 
+int get_deafault_count(const monsteri& e, int area_level) {
+	static dice source[] = {
+		{4, 12},
+		{3, 8},
+		{2, 6},
+		{2, 4},
+		{1, 2}, // 0
+		{1},
+	};
+	if(e.unique)
+		return 1;
+	auto level_creature = e.abilities[Level];
+	if(area_level <= 1)
+		area_level = 1;
+	auto n = 4 + (level_creature - area_level);
+	auto d = maptbl(source, n);
+	return d.roll();
+}
+
+static void place_creature(variant v, int count) {
+	if(count <= 0) {
+		if(v.iskind<monsteri>())
+			count = get_deafault_count(bsdata<monsteri>::elements[v.value], game.level);
+		else
+			count = xrand(2, 5);
+		if(!count)
+			count = 1;
+	}
+	for(auto i = 0; i < count; i++) {
+		auto p = creature::create(area->get(last_rect), v);
+		p->set(Local);
+		if(p->is(Enemy))
+			area->total.monsters++;
+	}
+}
+
 static void add_area_sites(variant v) {
 	if(!v)
 		return;
@@ -500,16 +536,26 @@ static rect bounding_locations() {
 	return rc;
 }
 
-static void create_corridor_content(point i) {
+static void create_corridor_loot(point i) {
 	variant treasure = "RandomLoot";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->loot && d100() < 40)
 		treasure = randomizeri::random(last_location->getloot());
-	else if(quest_modifier && quest_modifier->loot && d100() < 40)
+	else if(quest_modifier && quest_modifier->loot && d100() < 30)
 		treasure = randomizeri::random(quest_modifier->getloot());
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	script_run(treasure);
 	area->total.loots++;
+}
+
+static void create_wandered_monster(point i) {
+	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
+	variant monster = "RandomCaveMonster";
+	if(last_quest && last_quest->problem.iskind<monsteri>()) {
+		monsteri* pm = last_quest->problem;
+		monster = pm->ally();
+	}
+	place_creature(single(monster), 1);
 }
 
 static void create_corridor_contents() {
@@ -517,8 +563,12 @@ static void create_corridor_contents() {
 	auto count = xrand(10, 18);
 	if(count > (int)points.count)
 		count = points.count;
-	for(auto i = 0; i < count; i++)
-		create_corridor_content(points.data[i]);
+	for(auto i = 0; i < count; i++) {
+		if(d100() < 30)
+			create_wandered_monster(points.data[i]);
+		else
+			create_corridor_loot(points.data[i]);
+	}
 }
 
 static void fillfloor() {
@@ -770,42 +820,6 @@ static void place_item(const itemi* pe) {
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	player->additem(it);
-}
-
-int get_deafault_count(const monsteri& e, int area_level) {
-	static dice source[] = {
-		{4, 12},
-		{3, 8},
-		{2, 6},
-		{2, 4},
-		{1, 2}, // 0
-		{1},
-	};
-	if(e.unique)
-		return 1;
-	auto level_creature = e.abilities[Level];
-	if(area_level <= 1)
-		area_level = 1;
-	auto n = 4 + (level_creature - area_level);
-	auto d = maptbl(source, n);
-	return d.roll();
-}
-
-static void place_creature(variant v, int count) {
-	if(count <= 0) {
-		if(v.iskind<monsteri>())
-			count = get_deafault_count(bsdata<monsteri>::elements[v.value], game.level);
-		else
-			count = xrand(2, 5);
-		if(!count)
-			count = 1;
-	}
-	for(auto i = 0; i < count; i++) {
-		auto p = creature::create(area->get(last_rect), v);
-		p->set(Local);
-		if(p->is(Enemy))
-			area->total.monsters++;
-	}
 }
 
 static void visualize_activity(point m) {
@@ -1198,8 +1212,11 @@ template<> void ftscript<spelli>(int index, int value) {
 
 static void apply_target_effect(unsigned target, const variants& effect) {
 	if(FGT(target, TargetCreatures)) {
-		//for(auto p : targets)
-		//	apply_spell(p, e, level);
+		pushvalue push_player(player), push_opponent(opponent, player);
+		for(auto p : targets) {
+			player = p;
+			script_run(effect);
+		}
 	} else if(FGT(target, TargetFeatures)) {
 		for(auto p : indecies) {
 			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
@@ -1452,6 +1469,12 @@ static void chat_someone() {
 	opponent->speech("HowYouAre");
 }
 
+static void char_opponent(int bonus) {
+	chat_someone();
+	player->wait();
+	opponent->wait();
+}
+
 static void chat_someone(int bonus) {
 	unsigned target = FG(TargetCreatures) | FG(Allies) | FG(Neutrals);
 	choose_targets(target, {});
@@ -1459,13 +1482,14 @@ static void chat_someone(int bonus) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
 	}
-	if(!choose_target_interactive("Creature", target, true))
-		return;
+	if(targets.getcount() > 1) {
+		if(!choose_target_interactive("ChatSomeone", target, true))
+			return;
+	}
 	for(auto p : targets) {
 		pushvalue push(opponent, p);
-		chat_someone();
-		player->wait();
-		opponent->wait();
+		char_opponent(bonus);
+		break;
 	}
 }
 
@@ -1923,6 +1947,7 @@ BSDATA(script) = {
 	{"ApplyAction", apply_action},
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance, allow_random_chance},
+	{"ChatOpponent", char_opponent},
 	{"ChatSomeone", chat_someone},
 	{"Damage", damage_all},
 	{"DebugMessage", debug_message},

@@ -1,2 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 270: Can't find variant `SiverRing`
+﻿In file `Names.txt`:
+ Define translation for `ChatSomeone`
