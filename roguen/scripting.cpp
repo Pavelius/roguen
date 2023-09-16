@@ -1718,7 +1718,6 @@ static void heal_all(int bonus) {
 static void damage_all(int bonus) {
 	player->abilities[DamageMelee] += bonus;
 	player->abilities[DamageRanged] += bonus;
-	player->abilities[DamageThrown] += bonus;
 }
 
 static void set_offset(int bonus) {
@@ -1918,7 +1917,7 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance, allow_random_chance},
 	{"ChatSomeone", chat_someone},
-	{"DamageAll", damage_all},
+	{"Damage", damage_all},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},

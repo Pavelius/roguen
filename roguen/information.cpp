@@ -68,10 +68,10 @@ static void wearing(stringbuilder& sb, const variants source);
 static void wearing(stringbuilder& sb, variant v) {
 	if(v.iskind<abilityi>())
 		addv(sb, bsdata<abilityi>::elements[v.value].id, v.counter, 0);
-	else if(v.iskind<feati>()) {
-		addv(sb, bsdata<feati>::elements[v.value].id);
-	} else if(v.iskind<listi>())
+	if(v.iskind<listi>())
 		wearing(sb, bsdata<listi>::elements[v.value].elements);
+	//else if(v.iskind<feati>()) {
+	//	addv(sb, bsdata<feati>::elements[v.value].id);
 }
 
 static void wearing(stringbuilder& sb, const variants source) {
@@ -101,7 +101,7 @@ void creature::getinfo(stringbuilder& sb) const {
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	addf(sb, Armor, abilities[Armor], abilities[Block]);
-	addf(sb, DamageMelee, abilities[DamageMelee], abilities[DamageRanged]);
+	addf(sb, DamageMelee, abilities[DamageMelee] + player->wears[MeleeWeapon].geti().weapon.damage, abilities[DamageRanged] + player->wears[RangedWeapon].geti().weapon.damage);
 	addf(sb, Hits, abilities[Hits], basic.abilities[Hits]);
 	addf(sb, Mana, abilities[Mana], basic.abilities[Mana]);
 	addf(sb, Money, getmoney());
@@ -116,6 +116,7 @@ void item::getinfo(stringbuilder& sb) const {
 	addv(sb, "Damage", ei.weapon.damage);
 	addv(sb, "Pierce", ei.weapon.pierce);
 	addv(sb, "Speed", ei.weapon.speed);
+	wearing(sb, ei.wearing);
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {

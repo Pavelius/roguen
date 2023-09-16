@@ -6,7 +6,7 @@ enum ability_s : unsigned char {
 	LineOfSight,
 	Strenght, Dexterity, Wits,
 	WeaponSkill, BalisticSkill, Dodge,
-	Damage, DamageMelee, DamageRanged, DamageThrown,
+	DamageMelee, DamageRanged, DamageThrown,
 	Armor, Block, BlockRanged,
 	Speed, EnemyAttacks,
 	Herbalism, OpenLocks, Pickpockets, Survival,

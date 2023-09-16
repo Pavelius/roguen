@@ -1,2 +1,2 @@
-﻿In file `rules/Advancement.txt`:
- Line 5: Can't find variant `Charisma`
+﻿In file `Names.txt`:
+ Define translation for `BracersOfStrenght`
