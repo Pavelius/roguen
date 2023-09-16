@@ -1,4 +1,3 @@
-#include "areapiece.h"
 #include "site.h"
 
 void areaheadi::clear() {
@@ -6,7 +5,7 @@ void areaheadi::clear() {
 }
 
 variants sitei::getloot() const {
-	if(area && area->level)
-		return loot.left(4 + (iabs(area->level) - 1));
+	//if(area && area->level)
+	//	return loot.left(4 + (iabs(area->level) - 1));
 	return loot;
 }

@@ -98,13 +98,13 @@ Tentacle wear(MeleeWeapon)
  feats Natural
 
 LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) powers(LightArmorPowers)
- wearing Armor+1 Dodge-10
+ wearing Armor+1
  required Dexterity(20) Strenght(20)
 ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) powers(HeavyArmorPowers)
- wearing Armor+3 Dodge-20
+ wearing Armor+2 Dodge-20
  required Strenght(40)
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(HeavyArmorPowers)
- wearing Armor+5 Dodge-40
+ wearing Armor+3 Dodge-40
  required Strenght(60)
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2
@@ -132,30 +132,31 @@ PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Poti
 PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Poison-20
 
+BrassRing cost(100) weight(1) count(1) wear(FingerRight) avatar(75)
 IronRing cost(300) weight(1) avatar(74)
 SilverRing cost(500) weight(1) avatar(123)
 GoldenRing cost(800) weight(1) avatar(73)
-BrassRing weight(1) count(1) wear(FingerRight) avatar(75)
-RingOfAcidResistance weight(1) count(1) wear(FingerRight) avatar(73)
+RingOfAcidResistance cost(1200) weight(1) count(1) wear(FingerRight) avatar(73)
  wearing AcidResistance
-RingOfColdResistance weight(1) count(1) wear(FingerRight) avatar(153)
+RingOfColdResistance cost(1400) weight(1) count(1) wear(FingerRight) avatar(153)
  wearing ColdResistance
-RingOfFireResistance weight(1) count(1) wear(FingerRight) avatar(75)
+RingOfFireResistance cost(1400) weight(1) count(1) wear(FingerRight) avatar(75)
  wearing FireResistance
-RingOfPoisonResistance weight(1) count(1) wear(FingerRight) avatar(73)
+RingOfPoisonResistance cost(1800) weight(1) count(1) wear(FingerRight) avatar(73)
  wearing PoisonResistance
-RingOfLevitation weight(1) count(1) wear(FingerRight) avatar(655)
+RingOfLevitation cost(3000) weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Fly
-RingOfDefence weight(1) count(1) wear(FingerRight) avatar(655)
+RingOfDefence cost(2000) weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Dodge+10
-RingOfProtection weight(1) count(1) wear(FingerRight) avatar(655)
- wearing Armor+1
-RingOfRegeneration weight(1) count(1) wear(FingerRight) avatar(655)
+RingOfProtection cost(3000) weight(1) count(1) wear(FingerRight) avatar(655)
+ wearing Block+1
+RingOfRegeneration cost(10000) weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Regeneration+1
-RingOfWarrior weight(1) count(1) wear(FingerRight) avatar(655)
+RingOfWarrior cost(2000) weight(1) count(1) wear(FingerRight) avatar(655)
  wearing WeaponSkill+10
 
 LeatherBoots weight(20) count(1) wear(Legs) avatar(192)
+ wearing Dodge+5
 IronBoots weight(20) count(1) wear(Legs) avatar(192)
  wearing Dodge-5 Block+1
 BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226) unidentified(LeatherBoots)
@@ -176,12 +177,12 @@ IronGirdle weight(250) count(1) wear(Girdle) avatar(14)
  wearing Dodge-5 Block+1
  required Strenght(40)
 GirdleOfMight weight(50) count(1) wear(Girdle) avatar(18) unidentified(LeatherGirdle)
- wearing Strenght+5
+ wearing Block+1 Strenght+5
  required Strenght(40)
 GirdleOfGiantStrenght weight(50) count(1) wear(Girdle) avatar(41) unidentified(LeatherGirdle)
- wearing Strenght+25
+ wearing Block+1 Strenght+25
 GirdleOfCarring weight(50) count(1) wear(Girdle) avatar(88) unidentified(LeatherGirdle)
- wearing CarryCapacity+10
+ wearing Dodge+5 CarryCapacity+10
 
 LeadAmulet cost(400) weight(7) avatar(86)
 CoralAmulet cost(600) weight(8) avatar(87)
@@ -207,7 +208,6 @@ StrangeBlueSphere cost(100) weight(50) avatar(229)
 StrangeAquaSphere cost(100) weight(50) avatar(230)
 StrangeRedSphere cost(100) weight(50) avatar(231)
 StrangeGreenSphere cost(100) weight(50) avatar(232)
-
 StrangeRod cost(50) weight(10) avatar(80)
 
 Bones cost(2) weight(3) avatar(899) count(1)
@@ -259,23 +259,25 @@ RandomGem
 RandomAmulet
  chance LeadAmulet CoralAmulet SilverAmulet AmuletOfColdHeart AmuletOfDeathSaving
 RandomJewelry
- chance RandomGem+8 RandomAmulet
+ chance RandomGem+4 RandomAmulet
 RandomTreasure
- chance RandomCoins+4 RandomJewelry
+ chance RandomCoins+10 RandomJewelry
 RandomKeys
  chance TinyKey SmallKey HexagonalKey TriangularKey RectangularKey RoundKey
 RandomPotion
  chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfAbilityRaise PotionOfWisdow
 RandomRing
- chance BrassRing+4 RingOfAcidResistance RingOfColdResistance RingOfFireResistance RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
+ chance BrassRing+5 IronRing+4 RingOfAcidResistance RingOfColdResistance SilverRing+4 RingOfFireResistance GoldenRing RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
 RandomBoots
- chance BootsOfLevitation BootsOfSneakiness
+ chance LeatherBoots+4 BootsOfLevitation BootsOfSneakiness
 RandomBracers
- chance LeatherBracers IronBracers BracersOfStrenght
+ chance LeatherBracers+4 IronBracers BracersOfStrenght
 RandomGirdle
  chance LeatherGirdle+4 IronGirdle+2 GirdleOfMight GirdleOfGiantStrenght GirdleOfCarring
+RandomUncommonLoot
+ chance RandomPotion+4 RandomRing RandomBoots RandomGirdle RandomBracers
 RandomLoot
- chance RandomTreasure+4 RandomKeys RandomGear RandomPotion RandomRing RandomBoots RandomGirdle RandomBracers
+ chance RandomTreasure+12 RandomKeys+2 RandomGear+4 RandomUncommonLoot
 WoodenLagsTable
  chance Lags SmallLags+2
 

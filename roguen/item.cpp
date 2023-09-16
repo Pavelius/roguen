@@ -182,7 +182,8 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 			sb.addof(tid);
 		} else
 			sb.addof(power.getname());
-		sb.add("%+1i", power.counter);
+		if(power.counter)
+			sb.add("%+1i", power.counter);
 	}
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
