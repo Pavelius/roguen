@@ -16,7 +16,7 @@ struct siteskilli : nameable {
 	variants		conditions;
 	variants		effect, fail;
 	void			apply() const;
-	static bool		isvalid(const void* object);
+	bool			isusable() const;
 };
 typedef collection<siteskilli> siteskilla;
 extern siteskilla last_actions;

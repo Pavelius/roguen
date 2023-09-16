@@ -1176,11 +1176,25 @@ static void action_text(const creature* player, const char* id, const char* acti
 		player->act(pn);
 }
 
-static bool bound_targets(const char* id, unsigned flags, int multi_targets, bool interactive) {
+static int get_target_count(unsigned flags) {
+	if(FGT(flags, TargetCreatures))
+		return targets.getcount() == 1;
+	else if(FGT(flags, TargetRooms))
+		return rooms.getcount() == 1;
+	else if(FGT(flags, TargetItems))
+		return items.getcount() == 1;
+	else if(FGT(flags, TargetFeatures))
+		return indecies.getcount() == 1;
+	return false;
+}
+
+static bool bound_targets(const char* id, unsigned flags, int multi_targets, bool interactive, bool force_choose = true) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
 	if(!multi_targets) {
-		if(!choose_target_interactive(id, flags, false))
+		if(!force_choose && get_target_count(flags) == target_count) {
+			// Do nothing, target selected
+		} else if(!choose_target_interactive(id, flags, false))
 			return false;
 	}
 	if(targets.count > target_count)
@@ -1211,6 +1225,7 @@ template<> void ftscript<spelli>(int index, int value) {
 }
 
 static void apply_target_effect(unsigned target, const variants& effect) {
+	pushvalue push_modifier(modifier);
 	if(FGT(target, TargetCreatures)) {
 		pushvalue push_player(player), push_opponent(opponent, player);
 		for(auto p : targets) {
@@ -1242,30 +1257,13 @@ bool spelli::apply(int level, int targets_count, bool interactive, bool silent) 
 	if(!silent)
 		action_text(player, id, "Casting");
 	if(is(TargetCreatures)) {
-		pushvalue push_player(player);
+		pushvalue push_player(player), push_opponent(opponent, player);
 		for(auto p : targets) {
 			player = p;
 			apply_spell(*this, level);
 		}
-	} else if(is(TargetFeatures)) {
-		for(auto p : indecies) {
-			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
-			pushvalue push_index(last_index, p);
-			script_run(effect);
-		}
-	} else if(is(TargetRooms)) {
-		pushvalue push_rect(last_room);
-		for(auto p : rooms) {
-			last_room = p;
-			script_run(effect);
-		}
-	} else if(is(TargetItems)) {
-		pushvalue push_object(last_item);
-		for(auto p : items) {
-			last_item = p;
-			script_run(effect);
-		}
-	}
+	} else
+		apply_target_effect(target, effect);
 	if(summon)
 		player->summon(player->getposition(), summon, getcount(level), level);
 	return true;
@@ -1475,21 +1473,27 @@ static void char_opponent(int bonus) {
 	opponent->wait();
 }
 
+static void apply_action(const char* id, unsigned target, const variants& effect) {
+	if(!choose_targets(target, {})) {
+		player->actp(getdescription(str("%1Fail", id)));
+		return;
+	}
+	if(!bound_targets(id, target, 0, player->ishuman(), false))
+		return;
+	apply_target_effect(target, effect);
+}
+
 static void chat_someone(int bonus) {
 	unsigned target = FG(TargetCreatures) | FG(Allies) | FG(Neutrals);
-	choose_targets(target, {});
-	if(!targets) {
+	if(!choose_targets(target, {})) {
 		player->actp(getnm("NoCreaturesNearby"));
 		return;
 	}
-	if(targets.getcount() > 1) {
-		if(!choose_target_interactive("ChatSomeone", target, true))
-			return;
-	}
+	if(!bound_targets("ChatSomeone", target, 0, player->ishuman(), false))
+		return;
 	for(auto p : targets) {
 		pushvalue push(opponent, p);
 		char_opponent(bonus);
-		break;
 	}
 }
 

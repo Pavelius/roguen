@@ -1163,7 +1163,7 @@ static void ready_actions() {
 	look_creatures();
 	ready_enemy();
 	allowed_spells.select(player);
-	last_actions.select(siteskilli::isvalid);
+	last_actions.select(fntis<siteskilli, &siteskilli::isusable>);
 }
 
 int creature::getloh() const {

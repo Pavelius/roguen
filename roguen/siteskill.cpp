@@ -33,23 +33,23 @@ static void applying(const variants& source) {
 		applying(v);
 }
 
-bool siteskilli::isvalid(const void* object) {
-	auto p = (siteskilli*)object;
-	if(!player->get(p->skill))
+bool siteskilli::isusable() const {
+	if(!player->get(skill))
 		return false;
 	auto rm = player->getroom();
 	if(rm) {
-		auto su = skilluse::find(p, player->getposition(), bsid(player));
-		if(!p->retry) {
-			if(su)
+		auto su = skilluse::find(this, player->getposition(), bsid(player));
+		if(su) {
+			if(!retry)
 				return false;
-		} else {
-			auto next_time = su->stamp + bsdata<durationi>::get(p->retry).get(1);
-			if(su && game.getminutes() < next_time)
-				return false;
+			else {
+				auto next_time = su->stamp + bsdata<durationi>::elements[retry].get(1);
+				if(game.getminutes() < next_time)
+					return false;
+			}
 		}
 	}
-	return choose_targets(p->target, p->effect);
+	return choose_targets(target, effect);
 }
 
 void siteskilli::apply() const {

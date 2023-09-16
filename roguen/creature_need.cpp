@@ -10,7 +10,7 @@ extern int last_coins;
 
 static creature* random_target(const greatneedi* p) {
 	collection<creature> source;
-	source.select(creature::ispresent);
+	source.select(fntis<creature, &creature::ispresent>);
 	source.match(fntis<actable, &actable::isnamed>, true);
 	source.match(creature::isneed, false);
 	source.match(fntis<creature, &creature::ishuman>, false);
