@@ -240,7 +240,7 @@ static void create_city_level(const rect& rc, int level) {
 	}
 }
 
-static bool isallowconnector(point index, direction_s dir, bool deadend = false) {
+static bool allow_connector(point index, direction_s dir, bool deadend = false) {
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
@@ -262,7 +262,7 @@ static bool isallowconnector(point index, direction_s dir, bool deadend = false)
 	return true;
 }
 
-static bool isallowcorridor(point index, direction_s dir, bool linkable = false) {
+static bool allow_corridor(point index, direction_s dir, bool linkable = false) {
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
@@ -320,7 +320,7 @@ static void create_connector(point index, direction_s dir, int wall, int floor, 
 	count = 0;
 	point start = {-1000, -1000};
 	while(true) {
-		if(!isallowcorridor(index, dir, linkable)) {
+		if(!allow_corridor(index, dir, linkable)) {
 			if(!area->isvalid(start))
 				return;
 			break;
@@ -394,18 +394,6 @@ static void create_doors(const rect& rc, int floor, int wall) {
 	}
 	if(last_room && hidden_room)
 		area->total.rooms_hidden++;
-}
-
-static direction_s findvalid(point i, int t) {
-	static direction_s source[] = {North, South, East, West};
-	for(auto d : source) {
-		auto i1 = to(i, d);
-		if(!area->isvalid(i1))
-			continue;
-		if(area->tiles[i1] == t)
-			return d;
-	}
-	return North;
 }
 
 static void create_doors(int floor, int wall) {
@@ -515,9 +503,9 @@ static void create_corridor_content(point i) {
 	variant treasure = "RandomLoot";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->loot && d100() < 40)
-		treasure = randomizeri::param(last_location->loot);
+		treasure = randomizeri::random(last_location->getloot());
 	else if(quest_modifier && quest_modifier->loot && d100() < 40)
-		treasure = randomizeri::param(quest_modifier->loot);
+		treasure = randomizeri::random(quest_modifier->getloot());
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	script::run(treasure);
 	area->total.loots++;
@@ -841,7 +829,7 @@ void script::run(variant v) {
 		if(count <= 0)
 			return;
 		for(auto i = 0; i < count; i++)
-			script::run(bsdata<randomizeri>::elements[v.value].param());
+			script::run(bsdata<randomizeri>::elements[v.value].random());
 	} else if(v.iskind<monsteri>()) {
 		auto count = game.getcount(v, 0);
 		if(count < 0)
@@ -1267,7 +1255,7 @@ void creature::cast(const spelli& e, int level, int mana) {
 }
 
 static void gather_item(const char* id, randomizeri& source, int chance) {
-	auto v = source.param(source.chance);
+	auto v = source.random(source.chance);
 	if(v.iskind<itemi>()) {
 		item it; it.create(bsdata<itemi>::elements + v.value, 1);
 		player->act(getnm(id), it.getfullname());

@@ -2,6 +2,6 @@
 
 monsteri* monsteri::ally() const {
 	if(minions)
-		return minions->param();
+		return minions->random();
 	return 0;
 }

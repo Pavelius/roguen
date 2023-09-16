@@ -6,3 +6,9 @@ BSMETA(listi) = {
 	BSREQ(elements),
 	{}};
 BSDATAC(listi, 256)
+
+variant	listi::random() const {
+	if(!elements.count)
+		return variant();
+	return elements.begin()[rand() % elements.count];
+}

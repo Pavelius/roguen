@@ -1,4 +1,5 @@
 #include "bsreq.h"
+#include "list.h"
 #include "randomizer.h"
 
 BSMETA(randomizeri) = {
@@ -20,7 +21,7 @@ int randomizeri::total(const variants& elements) {
 	return result;
 }
 
-variant randomizeri::param(const variants& elements, int bonus, int summary) {
+variant randomizeri::random(const variants& elements, int bonus, int summary) {
 	if(summary) {
 		auto result = rand() % summary + bonus;
 		for(auto& e : elements) {
@@ -37,7 +38,14 @@ variant randomizeri::param(const variants& elements, int bonus, int summary) {
 }
 
 variant single(variant v) {
-	while(v.iskind<randomizeri>())
-		v = bsdata<randomizeri>::elements[v.value].param();
-	return v;
+	while(true) {
+		if(v.iskind<randomizeri>()) {
+			v = bsdata<randomizeri>::elements[v.value].random();
+			continue;
+		} else if(v.iskind<listi>()) {
+			v = bsdata<listi>::elements[v.value].random();
+			continue;
+		}
+		return v;
+	}
 }

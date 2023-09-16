@@ -194,7 +194,7 @@
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="listcolumn.cpp" />
-    <ClCompile Include="location.cpp" />
+    <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
     <ClCompile Include="magic.cpp" />

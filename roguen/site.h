@@ -18,6 +18,7 @@ struct sitei : nameable {
 	char			chance_hidden_doors, chance_stuck_doors, chance_locked_doors, doors_count;
 	const shapei*	shape;
 	const script*	local;
+	variants		getloot() const;
 };
 extern const sitei*	last_site;
 struct locationi : sitei {

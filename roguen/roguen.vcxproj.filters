@@ -204,7 +204,7 @@
     <ClCompile Include="anymap.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="location.cpp">
+    <ClCompile Include="site.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="condition.cpp">

@@ -67,7 +67,7 @@ bool item::canequip(wear_s v) const {
 
 typedef adat<char> powera;
 
-static void add_powers(powera& result, const listi& source, bool noncursed, bool cursed) {
+static void add_powers(powera& result, const listi& source, bool noncursed, bool cursed, size_t maximum_count = 0) {
 	result.clear();
 	for(auto& v : source.elements) {
 		if(v.counter < 0) {
@@ -78,6 +78,8 @@ static void add_powers(powera& result, const listi& source, bool noncursed, bool
 				continue;
 		}
 		result.add(&v - source.elements.begin());
+		if(maximum_count && result.count >= maximum_count)
+			break;
 	}
 }
 
@@ -98,10 +100,13 @@ void item::createpower(int chance_power, int chance_cursed) {
 		chance += chance_power;
 		if(d100() < chance) {
 			powera result;
+			auto level_cap = 0;
+			if(area && area->level)
+				level_cap = 4 + (iabs(area->level) - 1);
 			if(d100() < chance_cursed)
-				add_powers(result, *ei.powers, false, true);
+				add_powers(result, *ei.powers, false, true, level_cap);
 			else
-				add_powers(result, *ei.powers, true, false);
+				add_powers(result, *ei.powers, true, false, level_cap);
 			power = random_power(result);
 		}
 	}

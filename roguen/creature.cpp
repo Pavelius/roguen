@@ -447,7 +447,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 	} else {
 		auto random_table = bsdata<randomizeri>::find(str("%1%2", ei.id, "Fail"));
 		if(random_table) {
-			auto effect = random_table->param();
+			auto effect = random_table->random();
 			if(effect.iskind<listi>()) {
 				auto p = bsdata<listi>::elements + effect.value;
 				auto pn = getdescription(p->id);
@@ -1523,7 +1523,7 @@ void creature::summon(point m, const variants& elements, int count, int level) {
 	auto isenemy = is(Enemy);
 	auto isally = is(Ally);
 	for(auto i = 0; i < count; i++) {
-		auto v = randomizeri::param(elements);
+		auto v = randomizeri::random(elements);
 		auto p = creature::create(m, v);
 		if(isenemy)
 			p->set(Enemy);
