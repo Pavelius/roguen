@@ -24,8 +24,12 @@ static void addv(stringbuilder& sb, const dice& value) {
 static void addv(stringbuilder& sb, const char* id, int value, const char* format = 0) {
 	if(!value)
 		return;
-	if(!format)
-		format = "[~%-1%+2i]";
+	if(!format) {
+		if(value!=0)
+			format = "[~%-1%+2i]";
+		else
+			format = "[~%-1]";
+	}
 	sb.adds(format, getnameshort(id), value);
 }
 

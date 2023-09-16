@@ -176,7 +176,7 @@ void movable::fixthrown(point target, const char* id, int frame) const {
 	auto range = area->getrange(getposition(), target);
 	if(range == 0xFFFF)
 		return;
-	auto po = addobject(getsposition(), 0, pe, frame);
+	auto po = addobject(getsposition(), paint_visual_effect, pe, frame);
 	po->position.y += pe->dy;
 	if(!po)
 		return;
