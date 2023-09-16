@@ -189,7 +189,7 @@ static void select_objects() {
 	auto ps = objects.data;
 	auto pe = objects.endof();
 	for(auto& e : bsdata<object>()) {
-		if(!e.position.in(last_area))
+		if(!e || !e.position.in(last_area))
 			continue;
 		if(ps < pe)
 			*ps++ = &e;
