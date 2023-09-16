@@ -24,7 +24,7 @@ struct itemi : nameable {
 	weaponi			weapon;
 	featable		feats;
 	variants		wearing, use;
-	char			rotting;
+	char			charges, rotting;
 	listi*			powers;
 	char			chance_power;
 	char			required[5];
@@ -46,7 +46,7 @@ class item {
 	union {
 		unsigned char count;
 		struct {
-			unsigned char power : 5; // Item magical power. 0 - if none
+			unsigned char power : 5; // Item magical power index (1-31) or 0 - if no magical power
 			unsigned char broken : 3; // Charges or Broken status
 		};
 	};
@@ -62,6 +62,7 @@ public:
 	void			damage();
 	void			drop(point m);
 	int				getavatar() const { return geti().wear_index; }
+	int				getcharges() const { return ischargeable() ? broken : 0; }
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
@@ -79,11 +80,14 @@ public:
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
+	bool			ischarges() const { return getcharges() > 0; }
+	bool			ischargeable() const;
 	static bool		iscondition(const void* object, int v);
 	bool			iscountable() const { return geti().count != 0; }
 	bool			iscursed() const;
 	bool			isidentified() const { return identified != 0; }
 	bool			ismagical() const;
+	bool			isusable() const { return geti().use.size() != 0; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }

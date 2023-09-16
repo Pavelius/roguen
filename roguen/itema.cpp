@@ -44,15 +44,3 @@ void itema::selectbackpack(creature* p) {
 	}
 	count = pb - data;
 }
-
-void itema::matchusable(bool keep) {
-	auto pb = begin();
-	auto ps = pb;
-	for(auto pe = end(); pb < pe; pb++) {
-		auto usable = (*pb)->geti().use.size() != 0;
-		if(usable != keep)
-			continue;
-		*ps++ = *pb;
-	}
-	count = ps - begin();
-}

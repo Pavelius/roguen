@@ -62,8 +62,6 @@ const varianti* varianti::getsource(const char* id) {
 }
 
 const char* varianti::getname(const void* object) const {
-	if(pgetname)
-		return pgetname(object);
 	if(isnamed()) {
 		auto id = *((const char**)object);
 		if(id)

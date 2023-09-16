@@ -229,3 +229,7 @@ bool item::ismagical() const {
 		return false;
 	return power != 0;
 }
+
+bool item::ischargeable() const {
+	return geti().charges > 0;
+}

@@ -1414,6 +1414,7 @@ void creature::use(item& v) {
 	if(!v)
 		return;
 	auto script = v.getuse();
+	auto power = v.getpower();
 	if(!script) {
 		actp(getnm("ItemNotUsable"), v.getname());
 		return;

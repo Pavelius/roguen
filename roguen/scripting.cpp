@@ -42,7 +42,6 @@ int				last_coins;
 const char*		last_id;
 point			last_index;
 static point	last_door;
-globali*		last_global;
 locationi*		last_location;
 quest*			last_quest;
 rect			last_rect;
@@ -513,7 +512,7 @@ static void create_corridor_content(point i) {
 
 static void create_corridor_contents() {
 	zshuffle(points.data, points.count);
-	auto count = xrand(10, 30);
+	auto count = xrand(10, 18);
 	if(count > (int)points.count)
 		count = points.count;
 	for(auto i = 0; i < count; i++)
@@ -752,7 +751,10 @@ static void place_item(point index, const itemi* pe) {
 		return;
 	item it; it.clear();
 	it.create(pe);
-	it.createpower();
+	auto chance_power = 0;
+	if(area->level)
+		chance_power += iabs(area->level) * 5;
+	it.createpower(chance_power);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
@@ -808,6 +810,18 @@ static void visualize_activity(point m) {
 	if(!area->is(m, Visible))
 		return;
 	movable::fixeffect(m2s(m), "SearchVisual");
+}
+
+template<> void ftscript<featurei>(int value, int counter) {
+	area->set(last_rect, &areamap::setfeature, value, counter);
+}
+
+template<> void ftscript<tilei>(int value, int counter) {
+	area->set(last_rect, &areamap::settile, value, counter);
+}
+
+template<> void ftscript<areafi>(int value, int counter) {
+	area->set(last_rect, &areamap::setflag, value, counter);
 }
 
 void script::run(variant v) {
@@ -1548,10 +1562,21 @@ static void dropdown(int bonus) {
 static void use_item(int bonus) {
 	itema items;
 	items.selectbackpack(player);
-	items.matchusable(true);
+	items.match(fntis<item, &item::isusable>, true);
 	if(!items)
 		return;
 	auto p = items.choose(getnm("UseItem"), getnm("Cancel"), false);
+	if(p)
+		player->use(*p);
+}
+
+static void use_magic_item_power(int bonus) {
+	itema items;
+	items.selectbackpack(player);
+	items.match(fntis<item, &item::ischarges>, true);
+	if(!items)
+		return;
+	auto p = items.choose(getnm("UseZapItem"), getnm("Cancel"), false);
 	if(p)
 		player->use(*p);
 }
@@ -1687,6 +1712,10 @@ static void site_wall(int bonus) {
 static const spelli* choose_spell(int bonus) {
 	pushvalue push_width(window_width, 300);
 	return allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"), player);
+}
+
+template<> void ftscript<spelli>(int index, int value) {
+	apply_spell(bsdata<spelli>::elements[index], value);
 }
 
 static void cast_spell(int bonus) {

@@ -336,6 +336,9 @@
     <ClCompile Include="areapiece.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="global.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">

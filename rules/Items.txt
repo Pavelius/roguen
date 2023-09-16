@@ -133,9 +133,9 @@ PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(
  use Poison-20
 
 BrassRing cost(100) weight(1) count(1) wear(FingerRight) avatar(75)
-IronRing cost(300) weight(1) avatar(74)
-SilverRing cost(500) weight(1) avatar(123)
-GoldenRing cost(800) weight(1) avatar(73)
+IronRing cost(300) weight(1) wear(FingerRight) avatar(74)
+SilverRing cost(500) weight(1) wear(FingerRight) avatar(123)
+GoldenRing cost(800) weight(1) wear(FingerRight) avatar(73)
 RingOfAcidResistance cost(1200) weight(1) count(1) wear(FingerRight) avatar(73)
  wearing AcidResistance
 RingOfColdResistance cost(1400) weight(1) count(1) wear(FingerRight) avatar(153)

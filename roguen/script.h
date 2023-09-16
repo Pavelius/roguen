@@ -20,3 +20,5 @@ extern variant* script_begin;
 extern variant* script_end;
 
 void script_stop();
+
+template<typename T> void ftscript(int index, int value);
