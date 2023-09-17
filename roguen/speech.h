@@ -4,12 +4,12 @@
 
 struct speech {
 	const char*		id;
-	variants		condition;
 	const char*		name;
+	variants		condition;
 	void			clear() { memset(this, 0, sizeof(*this)); }
 	static void		read(const char* url);
 };
 struct speecha : adat<speech*> {
-	const char*		getrandom() const;
+	const char*		random() const;
 	void			select(const char* id);
 };

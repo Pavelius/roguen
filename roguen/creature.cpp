@@ -764,7 +764,7 @@ const char* creature::getspeech(const char* id, bool always_speak) const {
 			return getnm("NothingToSay");
 		return p->name;
 	} else
-		return source.getrandom();
+		return source.random();
 }
 
 void creature::interaction(creature& opponent) {

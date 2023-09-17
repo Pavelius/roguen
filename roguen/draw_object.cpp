@@ -283,6 +283,16 @@ void draw::clearobjects() {
 	bsdata<object>::source.clear();
 }
 
+static void normalize_objects() {
+	auto pe = bsdata<object>::begin();
+	for(auto& e : bsdata<object>()) {
+		if(!e)
+			continue;
+		*pe++ = e;
+	}
+	bsdata<object>::source.count = pe - bsdata<object>::elements;
+}
+
 void draw::shrink() {
 	auto pb = bsdata<object>::begin();
 	auto pe = bsdata<object>::end();
@@ -400,6 +410,8 @@ void draw::waitall() {
 		waitcputime(1);
 		remove_trail_orders();
 	}
+	if(bsdata<draworder>::source.count == 0)
+		normalize_objects();
 }
 
 void draw::draworder::wait() {

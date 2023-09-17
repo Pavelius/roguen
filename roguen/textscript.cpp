@@ -1,5 +1,6 @@
 #include "crt.h"
 #include "textscript.h"
+#include "speech.h"
 
 const char* last_name;
 bool		last_female;
@@ -59,12 +60,25 @@ static bool parse_script(stringbuilder& sb, const char* id) {
 	return false;
 }
 
+static bool parse_speech(stringbuilder& sb, const char* id) {
+	// Select all collection of speech.
+	// It's optimized, because we need all possible variant's later and do this in one pass.
+	speecha words;
+	words.select(id);
+	if(!words)
+		return false;
+	sb.add(words.random());
+	return true;
+}
+
 static void custom_string(stringbuilder& sb, const char* id) {
 	if(parse_name(sb, id))
 		return;
 	if(parse_gender(sb, id))
 		return;
 	if(parse_script(sb, id))
+		return;
+	if(parse_speech(sb, id))
 		return;
 	sb.defidentifier(sb, id);
 }

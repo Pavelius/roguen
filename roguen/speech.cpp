@@ -19,7 +19,7 @@ void speecha::select(const char* id) {
 	count = ps - data;
 }
 
-const char* speecha::getrandom() const {
+const char* speecha::random() const {
 	if(!count)
 		return getnm("NothingToSay");
 	return data[rand() % count]->name;

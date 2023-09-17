@@ -1422,9 +1422,20 @@ static void inventory(int bonus) {
 	}
 }
 
+static int free_objects_count() {
+	auto result = 0;
+	for(auto& e : bsdata<draw::object>()) {
+		if(!e)
+			continue;
+		result++;
+	}
+	return result;
+}
+
 static void debug_message(int bonus) {
 	//dialog_message(getdescription("LoseGame1"));
-	console.addn("Object count [%1i].", bsdata<draw::object>::source.getcount());
+	player->speech(ids("PickPockets", "Speech"));
+	console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
 	draw::pause();
 }
 
