@@ -15,6 +15,7 @@ struct siteskilli : nameable {
 	duration_s		retry;
 	variants		conditions;
 	variants		effect, fail;
+	int				getvalue() const;
 	bool			isusable() const;
 };
 typedef collection<siteskilli> siteskilla;
