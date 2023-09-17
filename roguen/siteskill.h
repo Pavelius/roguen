@@ -9,13 +9,12 @@ enum duration_s : unsigned char;
 struct sitei;
 
 struct siteskilli : nameable {
-	ability_s		skill;
+	ability_s		skill, base;
 	unsigned		target;
 	char			bonus;
 	duration_s		retry;
 	variants		conditions;
 	variants		effect, fail;
-	void			apply() const;
 	bool			isusable() const;
 };
 typedef collection<siteskilli> siteskilla;

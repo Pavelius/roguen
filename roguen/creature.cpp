@@ -1163,6 +1163,10 @@ static void ready_actions() {
 	look_creatures();
 	ready_enemy();
 	allowed_spells.select(player);
+	last_actions.clear();
+}
+
+static void ready_skills() {
 	last_actions.select(fntis<siteskilli, &siteskilli::isusable>);
 }
 
@@ -1194,6 +1198,15 @@ void creature::makemovelong() {
 	wait_seconds -= 100 * 6;
 }
 
+static void use_skills() {
+	ready_skills();
+	if(last_actions) {
+		last_action = last_actions.random();
+		script_execute("ApplyAction");
+	} else
+		player->wait();
+}
+
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {
@@ -1203,6 +1216,7 @@ void creature::makemove() {
 	pushvalue push_player(player, this);
 	pushvalue push_rect(last_rect, getposition().rectangle());
 	pushvalue push_site(last_site, get_site(this));
+	pushvalue push_action(last_action);
 	set(EnemyAttacks, 0);
 	update();
 	nullify_elements(this);
@@ -1213,7 +1227,7 @@ void creature::makemove() {
 	check_freezing(this);
 	ready_actions();
 	if(ishuman()) {
-		ready_actions();
+		ready_skills();
 		adventure_mode();
 	} else if(enemy) {
 		allowed_spells.match(spell_iscombat, true);
@@ -1221,7 +1235,7 @@ void creature::makemove() {
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 40)
 			cast(*((spelli*)allowed_spells.random()));
-		if(canshoot(false))
+		else if(canshoot(false))
 			attackrange(*enemy);
 		else
 			moveto(enemy->getposition());
@@ -1229,10 +1243,12 @@ void creature::makemove() {
 		allowed_spells.match(spell_isnotcombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
-		if(allowed_spells && d100() < 20)
-			cast(*((spelli*)allowed_spells.random()));
-		else if(isfollowmaster())
+		if(isfollowmaster())
 			moveto(getowner()->getposition());
+		else if(d100() < 20)
+			use_skills();
+		else if(allowed_spells && d100() < 20)
+			cast(*((spelli*)allowed_spells.random()));
 		else if(area->isvalid(moveorder)) {
 			if(moveorder == getposition())
 				moveorder = {-1000, -1000};

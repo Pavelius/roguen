@@ -17,9 +17,16 @@
 Хитрую ведьму
 Несметные сокровища
 
-#PickPocketsSpeech
+#PossibleMysticCreature
+Дракон
+Единорог
+Леприкон
+Троль
+
+#StealCoinsSpeech
 Не подскажете как пройти в %-PlaceToGo? А ... похоже я вспомнил%а дорогу, спасибо.
-Слышали эту историю про %RaceAbout и %PossibleQuestSubject? Нет? Я тоже нет...
+Слышали эту историю про %-RaceAbout и %-PossibleQuestSubject? Нет? Я тоже нет...
+О нет! Там %-PossibleMysticCreature! Хотя ... наверное показалось.
 
 #ILoveThisPlace
 Похоже именно это место я искал%а.

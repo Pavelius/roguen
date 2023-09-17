@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `ChatSomeone`
+﻿In file `rules/Monsters.txt`:
+ Line 102: Not found field `Theivery` in dataset `abilities`

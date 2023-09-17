@@ -1,11 +1,13 @@
 #include "wearable.h"
 
-void wearable::addcoins(unsigned v) {
+void wearable::addcoins(int v) {
 	if(!v)
 		return;
 	//if(answers::console)
 	//	answers::console->addn(getnm("YouTakeCoins"), v);
 	money += v;
+	if(money < 0)
+		money = 0;
 }
 
 void wearable::additem(item& v) {

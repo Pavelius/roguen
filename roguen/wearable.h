@@ -6,7 +6,7 @@
 struct wearable : movable {
 	item			wears[Legs + 1];
 	int				money;
-	void			addcoins(unsigned v);
+	void			addcoins(int v);
 	void			additem(item& v);
 	slice<item>		backpack() { return slice<item>(wears + Backpack, wears + BackpackLast + 1); }
 	void			equip(item& v);

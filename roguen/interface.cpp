@@ -688,7 +688,7 @@ static unsigned answer_key(int index) {
 static void execute_action() {
 	auto push_action = last_action;
 	last_action = (siteskilli*)hot.object;
-	script_run("ApplyAction", 0);
+	script_execute("ApplyAction", 0);
 	last_action = push_action;
 }
 

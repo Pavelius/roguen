@@ -99,7 +99,7 @@ Shopkeeper avatar(581) unique(1)
  abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(30) Hits(5)
  use PlaceOwner GP+30
 Theif avatar(313)
- abilities Strenght(30) Dexterity(40) Wits(30) WeaponSkill(30) Hits(12)
+ abilities Strenght(30) Dexterity(40) Wits(30) WeaponSkill(30) Hits(12) Thievery(15)
 TheifFemale avatar(314)
  abilities Strenght(26) Dexterity(40) Wits(32) WeaponSkill(30) Hits(10)
  use Female

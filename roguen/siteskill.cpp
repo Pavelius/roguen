@@ -51,7 +51,3 @@ bool siteskilli::isusable() const {
 	}
 	return choose_targets(target, effect);
 }
-
-void siteskilli::apply() const {
-	applying(effect);
-}

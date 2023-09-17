@@ -67,3 +67,9 @@ void script_run(const variants& elements) {
 	while(script_begin < script_end)
 		script_run(*script_begin++);
 }
+
+void script_execute(const char* id, int bonus) {
+	auto p = bsdata<script>::find(id);
+	if(p)
+		p->proc(bonus);
+}

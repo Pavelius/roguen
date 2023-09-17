@@ -144,6 +144,7 @@ BSMETA(sitei) = {
 BSMETA(siteskilli) = {
 	BSREQ(id),
 	BSENM(skill, abilityi),
+	BSENM(base, abilityi),
 	BSREQ(bonus),
 	BSENM(retry, durationi),
 	BSFLG(target, conditioni),

@@ -1225,6 +1225,8 @@ template<> void ftscript<spelli>(int index, int value) {
 }
 
 static void apply_target_effect(unsigned target, const variants& effect) {
+	if(!effect)
+		return;
 	pushvalue push_modifier(modifier);
 	if(FGT(target, TargetCreatures)) {
 		pushvalue push_player(player), push_opponent(opponent, player);
@@ -1435,8 +1437,8 @@ static int free_objects_count() {
 static void debug_message(int bonus) {
 	//dialog_message(getdescription("LoseGame1"));
 	player->speech(ids("PickPockets", "Speech"));
-	console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
-	draw::pause();
+	//console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
+	//draw::pause();
 }
 
 static void open_locked_door(int bonus) {
@@ -1698,7 +1700,16 @@ static void show_images(int bonus) {
 	}
 }
 
-static void steal_coins(int bonus) {
+static void transfer_coins(int bonus) {
+	if(bonus > 0) {
+		if(bonus > player->money)
+			bonus = player->money;
+	} else {
+		if(-bonus > opponent->money)
+			bonus = -opponent->money;
+	}
+	player->addcoins(-bonus);
+	opponent->addcoins(bonus);
 }
 
 static void quest_minion(int bonus) {
@@ -1810,6 +1821,16 @@ static void repair_item(int bonus) {
 		last_item->setborken(3);
 }
 
+static bool roll_skill() {
+	auto bonus = last_action->bonus;
+	auto skill = player->get(last_action->skill);
+	auto base = last_action->base ? player->get(last_action->base) / 2 : 0;
+	auto result = d100();
+	if(game.getowner() == player || player->is(Visible))
+		player->logs(getnm("YouRollSkill"), getnm(last_action->id), skill, base, bonus, skill + base + bonus, result);
+	return result < bonus;
+}
+
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
@@ -1817,7 +1838,12 @@ static void apply_action(int bonus) {
 		return;
 	if(!bound_targets(last_action->id, last_action->target, 0, player->ishuman()))
 		return;
-	apply_target_effect(last_action->target, last_action->effect);
+	if(bsdata<speech>::find(ids(last_action->id, "Speech")))
+		player->speech(ids(last_action->id, "Speech"));
+	if(roll_skill())
+		apply_target_effect(last_action->target, last_action->effect);
+	else
+		apply_target_effect(last_action->target, last_action->fail);
 	player->wait();
 }
 
@@ -2007,7 +2033,7 @@ BSDATA(script) = {
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
-	{"StealCoins", steal_coins},
+	{"TransferCoins", transfer_coins},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},
 	{"ThrownAttack", thrown_attack},
