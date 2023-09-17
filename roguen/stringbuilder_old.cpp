@@ -4,8 +4,6 @@
 static char current_locale[4] = {"ru"};
 static const char spaces[] = " \n\t\r.,!?;:";
 
-stringbuilder::fncustom stringbuilder::custom = stringbuilder::defidentifier;
-
 struct stringbuilder::grammar {
 	const char*		name;
 	const char*		change;
@@ -152,6 +150,14 @@ bool szstart(const char* text, const char* name) {
 	return true;
 }
 
+bool szend(const char* text, const char* name) {
+	auto n1 = zlen(text);
+	auto n2 = zlen(name);
+	if(n2 > n1)
+		return false;
+	return memcmp(text - n2, name, n2) == 0;
+}
+
 bool szmatch(const char* text, const char* name) {
 	while(*name) {
 		if(*name++ != *text++)
@@ -160,37 +166,6 @@ bool szmatch(const char* text, const char* name) {
 	if(ischa(*text))
 		return false;
 	return true;
-}
-
-static const char* skipspecial(const char* p) {
-	while(*p && *p != '*' && *p != '?' && *p != ',')
-		p++;
-	return p;
-}
-
-static const char* find_part(const char* ps, const char* p, unsigned s) {
-	while(*ps) {
-		if(memcmp(ps, p, s) == 0)
-			return ps;
-		ps++;
-	}
-	return 0;
-}
-
-static bool pszmatch(const char* ps, const char* p) {
-	while(*p == '*') {
-		p++;
-		auto b = p;
-		while(*p && *p != ',' && *p != '*')
-			p++;
-		auto s = p - b;
-		if(!s)
-			return true;
-		ps = find_part(ps, b, s);
-		if(!ps)
-			return false;
-		ps += s;
-	}
 }
 
 static bool szpmatch(const char* text, const char* s, const char* s2) {
@@ -256,18 +231,16 @@ void stringbuilder::addlocalefile(const char* folder, const char* name, const ch
 }
 
 const char* stringbuilder::getbycount(const char* id, int count) {
+	static char temp[260];
+	stringbuilder sb(temp);
 	switch(count) {
 	case 0: case 1: return getnm(id);
-		//case 2: case 3: case 4: return getnmof(id);
-	default: return getnm(id);
-	}
-}
-
-static void add_by_count(stringbuilder& sb, const char* name, int count) {
-	switch(count) {
-	case 0: case 1: sb.add(name); break;
-	case 2: case 3: case 4: sb.addof(name); break;
-	default: sb.add(name); break;
+	case 2: case 3: case 4:
+		sb.addof(getnm(id));
+		return temp;
+	default:
+		sb.addnpl(getnm(id));
+		return temp;
 	}
 }
 
@@ -303,22 +276,21 @@ void stringbuilder::upper() {
 		*p = upper(*p);
 }
 
-void stringbuilder::defidentifier(stringbuilder& sb, const char* id) {
-	auto p = getnme(id);
+void stringbuilder::addidentifier(const char* identifier) {
+	auto p = getnm(identifier);
 	if(p)
-		sb.addv(p, 0);
+		addv(p, 0);
 	else {
-		sb.addv("[-", 0);
-		sb.addv(id, 0);
-		sb.addv("]", 0);
+		addv("[-", 0);
+		addv(identifier, 0);
+		addv("]", 0);
 	}
 }
 
 const char* stringbuilder::readvariable(const char* p) {
 	char temp[260]; stringbuilder s1(temp);
 	p = s1.psidf(p);
-	if(custom)
-		custom(*this, temp);
+	addidentifier(temp);
 	return p;
 }
 
@@ -375,7 +347,7 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 	char padeg = 0;
 	if(*src == '+' || *src == '-')
 		prefix = *src++;
-	if(*src == '$' || *src == '@' || *src == '~' || *src == '*')
+	if(*src == '$' || *src == '@')
 		padeg = *src++;
 	auto p0 = p;
 	if(*src >= '0' && *src <= '9') {
@@ -401,8 +373,6 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 				switch(padeg) {
 				case '$': addof(p1); break;
 				case '@': addto(p1); break;
-				case '~': addby(p1); break;
-				case '*': add_by_count(*this, p1, ((int*)vl)[pn - 2]); break;
 				default:
 					while(*p1 && p < pe)
 						*p++ = *p1++;
@@ -412,16 +382,8 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 				}
 			}
 		}
-	} else {
-		char temp[260]; stringbuilder sb(temp);
+	} else
 		src = readvariable(src);
-		switch(padeg) {
-		case '$': sb.copy(p0); p = p0; addof(temp); break;
-		case '@': sb.copy(p0); p = p0; addto(temp); break;
-		case '~': sb.copy(p0); p = p0; addby(temp); break;
-		default: break;
-		}
-	}
 	if(p0 && p0 != p) {
 		switch(prefix) {
 		case '-': *p0 = lower(*p0); break;
@@ -459,13 +421,15 @@ void stringbuilder::addv(const char* src, const char* vl) {
 }
 
 void stringbuilder::addsep(char separator) {
+	if(!separator)
+		return;
 	if(p <= pb || p >= pe)
 		return;
 	if(p[-1] == separator)
 		return;
 	switch(separator) {
 	case ' ':
-		if(p[-1] == '\n' || p[-1] == '\t' || p[-1] == '[' || p[-1] == '(')
+		if(p[-1] == '\n' || p[-1] == '\t' || p[-1]=='[' || p[-1]=='(')
 			return;
 		break;
 	case '.':
@@ -583,7 +547,7 @@ void stringbuilder::add(const char* s, const grammar* source, const char* def) {
 	}
 	p[0] = 0;
 	if(def)
-		addv(def, 0);
+		add(def);
 }
 
 void stringbuilder::addsym(int sym) {
@@ -745,23 +709,34 @@ void stringbuilder::addof(const char* s) {
 		{"ая", "ой"},
 		{"би", "би"},
 		{"ел", "ла"},
-		{"ие", "ия"},
 		{"ий", "ого"},
+		{"ие", "ия"},
 		{"ка", "ки"},
-		{"ль", "ля"},
 		{"ны", "н"},
 		{"ое", "ого"},
 		{"рь", "ря"},
 		{"сы", "сов"},
+		{"ты", "т"},
 		{"ый", "ого"},
 		{"а", "ы"},
+		{"е", "а"},
 		{"и", "ей"},
 		{"о", "а"},
-		{"ы", ""},
 		{"ь", "и"},
 		{"я", "и"},
 		{}};
 	add(s, map, "а");
+}
+
+void stringbuilder::addnpl(const char* s) {
+	static grammar map[] = {
+		{"би", "би"},
+		{"си", "сей"},
+		{"ья", "ьи"},
+		{"а", ""},
+		{"ь", "ей"},
+		{}};
+	add(s, map, "ов");
 }
 
 void stringbuilder::addnounf(const char* s) {
@@ -813,8 +788,7 @@ void stringbuilder::addby(const char* s) {
 }
 
 void stringbuilder::addto(const char* s) {
-	static grammar map[] = {
-		{"а", "е"},
+	static grammar map[] = {{"а", "е"},
 		{"о", "у"},
 		{"ы", "ам"},
 		{}
@@ -856,13 +830,6 @@ const char* str(const char* format, ...) {
 	static char temp[512]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));
 	return temp;
-}
-
-void stringbuilder::trimr() {
-	while(p > pb && (p[-1] == ' ' || p[-1] == '\t' || p[-1] == '\n')) {
-		p[-1] = 0;
-		p--;
-	}
 }
 
 const char* ids(const char* p1, const char* p2) {

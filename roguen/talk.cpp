@@ -141,7 +141,7 @@ void talki::read(const char* url) {
 
 void talki::read() {
 	char temp[260]; stringbuilder sb(temp);
-	sb.addlocaleurl("talk");
+	sb.addlocaleurl(); sb.add("talk/");
 	for(io::file::find file(temp); file; file.next()) {
 		auto p = file.name();
 		if(p[0] == '.')

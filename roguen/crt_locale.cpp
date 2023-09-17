@@ -148,7 +148,7 @@ static void savel(const char* url, array& source, bool only_empthy) {
 
 static void setlist(array& source, const char* id, const char* locale, const char* folder) {
 	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.addlocaleurl(folder);
+	sb.clear(); sb.addlocaleurl(); sb.add("core/");
 	char filter[260]; stringbuilder sf(filter);
 	sf.add("*%1.txt", id);
 	for(io::file::find find(temp); find; find.next()) {

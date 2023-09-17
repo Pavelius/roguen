@@ -16,7 +16,7 @@
 #include "script.h"
 #include "site.h"
 #include "siteskill.h"
-#include "stringact.h"
+#include "textscript.h"
 #include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"

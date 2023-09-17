@@ -17,7 +17,7 @@
 #include "script.h"
 #include "screenshoot.h"
 #include "siteskill.h"
-#include "stringact.h"
+#include "textscript.h"
 #include "visualeffect.h"
 
 using namespace draw;
@@ -1265,8 +1265,9 @@ static void show_logs() {
 }
 
 static void show_block(const char* format, ...) {
-	char temp[2048]; stringbuilder sba(temp);
-	stringact sb(sba, player->getname(), player->is(Female));
+	pushvalue push_name(last_name, player->getname());
+	pushvalue push_female(last_female, player->is(Female));
+	char temp[2048]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));
 	textf(temp);
 }

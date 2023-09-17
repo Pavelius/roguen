@@ -2,7 +2,8 @@
 #include "answers.h"
 #include "charname.h"
 #include "monster.h"
-#include "stringact.h"
+#include "pushvalue.h"
+#include "textscript.h"
 
 static array gamelog(1);
 
@@ -57,9 +58,10 @@ static void complex_say(stringbuilder& sb, const char* format, const char* name)
 }
 
 static void say_format(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool isfemale) {
-	char temp[4096]; stringbuilder sbx(temp);
-	stringact sa(sbx, name, isfemale);
-	sa.addv(format, format_param);
+	pushvalue push_name(last_name, name);
+	pushvalue push_female(last_female, isfemale);
+	char temp[4096]; stringbuilder sba(temp);
+	sba.addv(format, format_param);
 	complex_say(sb, temp, name);
 }
 
@@ -76,29 +78,30 @@ void actable::logv(const char* format) {
 }
 
 void actable::logv(const char* format, const char* format_param, const char* name, bool female) {
+	pushvalue push_name(last_name, name);
+	pushvalue push_female(last_female, female);
 	char temp[1024]; stringbuilder sb(temp); sb.clear();
-	stringact sa(sb, name, female);
-	sa.addv(format, format_param);
+	sb.addv(format, format_param);
 	logv(temp);
 }
 
 void actable::actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female, char separator) {
 	if(!format)
 		return;
-	stringact sa(sb, name, female);
-	sa.addsep(separator);
-	auto pb = sa.get();
-	sa.addv(format, format_param);
-	sb = sa;
+	pushvalue push_name(last_name, name);
+	pushvalue push_female(last_female, female);
+	sb.addsep(separator);
+	auto pb = sb.get();
+	sb.addv(format, format_param);
 	logv(pb);
 }
 
 void actable::actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...) {
-	stringact sa(sb, name, female);
-	sa.addsep(separator);
-	auto pb = sa.get();
-	sa.addv(format, xva_start(format));
-	sb = sa;
+	pushvalue push_name(last_name, name);
+	pushvalue push_female(last_female, female);
+	sb.addsep(separator);
+	auto pb = sb.get();
+	sb.addv(format, xva_start(format));
 }
 
 void actable::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {

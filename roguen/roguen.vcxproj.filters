@@ -84,7 +84,7 @@
     <ClCompile Include="script.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="stringact.cpp">
+    <ClCompile Include="textscript.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="stringbuilder.cpp">
@@ -392,7 +392,7 @@
     <ClInclude Include="script.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="stringact.h">
+    <ClInclude Include="textscript.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="stringbuilder.h">

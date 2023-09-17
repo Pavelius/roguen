@@ -229,7 +229,7 @@
     <ClCompile Include="speech.cpp" />
     <ClCompile Include="spell.cpp" />
     <ClCompile Include="sprite_util.cpp" />
-    <ClCompile Include="stringact.cpp" />
+    <ClCompile Include="textscript.cpp" />
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />
@@ -320,7 +320,7 @@
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />
-    <ClInclude Include="stringact.h" />
+    <ClInclude Include="textscript.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />
     <ClInclude Include="tile.h" />
