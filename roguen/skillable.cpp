@@ -4,7 +4,7 @@
 bool skillable::canuse(ability_s v) const {
 	if(!abilities[v])
 		return false;
-	if(v >= Herbalism && v <= FirstAid)
+	if(v >= Herbalism && v <= Religion)
 		return skill_recall[v - Herbalism] < game.getminutes();
 	return false;
 }

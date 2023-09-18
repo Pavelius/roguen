@@ -9,7 +9,7 @@ enum ability_s : unsigned char {
 	DamageMelee, DamageRanged, DamageThrown,
 	Armor, Block, BlockRanged,
 	Speed, EnemyAttacks,
-	Herbalism, Thievery, Stealth, Survival, History, Religion, FirstAid,
+	Herbalism, Thievery, Stealth, Survival, History, Religion,
 	CarryCapacity, Level,
 	Hits, Mana, Faith,
 	Poison, Illness, Burning, Freezing,

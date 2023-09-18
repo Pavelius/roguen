@@ -723,10 +723,6 @@ bool creature::is(condition_s v) const {
 	}
 }
 
-int creature::getminimal(ability_s v) const {
-	return abilities[v];
-}
-
 void creature::movestep(direction_s v) {
 	if(is(Iced)) {
 		if(!roll(Dexterity, 30)) {

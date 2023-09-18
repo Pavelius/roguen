@@ -828,6 +828,13 @@ static void visualize_activity(point m) {
 	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
+//template<> bool fttest<featurei>(int value, int counter) {
+//	if(last_rect.width() > 1 || last_rect.height() > 1)
+//		return true;
+//	if(counter < 0)
+//		return area->features[last_index] == value;
+//	return true;
+//}
 template<> void ftscript<featurei>(int value, int counter) {
 	area->set(last_rect, &areamap::setfeature, value, counter);
 }
@@ -877,8 +884,16 @@ template<> void ftscript<shapei>(int value, int counter) {
 
 template<> void ftscript<itemi>(int value, int counter) {
 	auto count = script_count(counter, 1);
-	for(auto i = 0; i < count; i++)
-		place_item(area->get(last_rect), bsdata<itemi>::elements + value);
+	switch(modifier) {
+	case InPlayerBackpack:
+		for(auto i = 0; i < count; i++)
+			place_item(bsdata<itemi>::elements + value);
+		break;
+	default:
+		for(auto i = 0; i < count; i++)
+			place_item(area->get(last_rect), bsdata<itemi>::elements + value);
+		break;
+	}
 }
 
 template<> void ftscript<sitei>(int value, int counter) {
@@ -1011,7 +1026,10 @@ static bool is(const featurei& ei, condition_s v) {
 static bool isallow(const featurei& ei, variant v) {
 	if(v.iskind<conditioni>())
 		return is(ei, (condition_s)v.value);
-	else if(v.iskind<script>()) {
+	else if(v.iskind<featurei>()) {
+		if(v.counter < 0)
+			return &ei == &bsdata<featurei>::elements[v.value];
+	} else if(v.iskind<script>()) {
 		if(bsdata<script>::elements[v.value].test)
 			return bsdata<script>::elements[v.value].test(v.counter);
 	}
@@ -1286,15 +1304,6 @@ void creature::cast(const spelli& e, int level, int mana) {
 	wait();
 }
 
-static void gather_item(const char* id, randomizeri& source, int chance) {
-	auto v = source.random(source.chance);
-	if(v.iskind<itemi>()) {
-		item it; it.create(bsdata<itemi>::elements + v.value, 1);
-		player->act(getnm(id), it.getfullname());
-		player->additem(it);
-	}
-}
-
 static void remove_feature(int bonus) {
 	area->setfeature(last_index, 0);
 }
@@ -1316,14 +1325,17 @@ static featurei* herbs_base(featurei* p) {
 	return p;
 }
 
-static void gather_herbs(int bonus) {
-	auto pf = bsdata<featurei>::elements + area->features[last_index];
-	auto pr = bsdata<randomizeri>::find(random_herbs(last_index));
-	if(pr) {
-		auto chance = player->getdefault(Herbalism) + (pf->power - 1) * 20;
-		gather_item("YouGatherHerbs", *pr, chance);
-		area->setfeature(last_index, 0);
+static void gather_item(variant v, int bonus) {
+	if(v.iskind<itemi>()) {
+		item it; it.create(bsdata<itemi>::elements + v.value, v.counter);
+		player->act(getnm("YouGatherItems"), it.getfullname());
+		player->additem(it);
 	}
+}
+
+static void gather_next_item(int bonus) {
+	auto v = single(*script_begin++);
+	gather_item(v, bonus);
 }
 
 static bool iskind(variant v, const char* id) {
@@ -1333,15 +1345,6 @@ static bool iskind(variant v, const char* id) {
 	auto pr = bsdata<randomizeri>::find(id);
 	if(pr)
 		return pr->is(v);
-	return true;
-}
-
-static bool is_harvest_herbs(int bonus) {
-	auto pf = bsdata<featurei>::elements + area->features[last_index];
-	if(!pf->power)
-		return false;
-	if(!iskind(pf, "RandomHerbs"))
-		return false;
 	return true;
 }
 
@@ -1819,6 +1822,8 @@ static void add_dungeon_rumor(int bonus) {
 }
 
 static void repair_item(int bonus) {
+	if(!last_item)
+		return;
 	if(bonus > 0)
 		last_item->setborken(0);
 	else if(bonus < 0)
@@ -1833,6 +1838,21 @@ static bool roll_skill() {
 	return result < skill;
 }
 
+static void fix_action(const char* suffix) {
+	auto id = ids(last_action->id, suffix, "Action");
+	auto p = getdescription(id);
+	if(p)
+		player->act(p);
+}
+
+static void speech_action() {
+	if(player->is(AnimalInt))
+		return;
+	auto id = ids(last_action->id, "Speech");
+	if(bsdata<speech>::find(id))
+		player->speech(id);
+}
+
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
@@ -1840,12 +1860,14 @@ static void apply_action(int bonus) {
 		return;
 	if(!bound_targets(last_action->id, last_action->target, 0, player->ishuman()))
 		return;
-	if(bsdata<speech>::find(ids(last_action->id, "Speech")))
-		player->speech(ids(last_action->id, "Speech"));
-	if(roll_skill())
+	speech_action();
+	if(roll_skill()) {
+		fix_action("Success");
 		apply_target_effect(last_action->target, last_action->effect);
-	else
+	} else {
+		fix_action("Fail");
 		apply_target_effect(last_action->target, last_action->fail);
+	}
 	player->wait();
 }
 
@@ -1880,10 +1902,6 @@ static void roll_value(int bonus) {
 static void random_chance(int bonus) {
 	if(d100() >= bonus)
 		script_stop();
-}
-
-static bool allow_random_chance(int bonus) {
-	return d100() < bonus;
 }
 
 static void select_raw_abilities() {
@@ -1989,7 +2007,7 @@ BSDATA(script) = {
 	{"AddNeedAnswers", add_need_answers},
 	{"ApplyAction", apply_action},
 	{"CastSpell", cast_spell},
-	{"Chance", random_chance, allow_random_chance},
+	{"Chance", random_chance},
 	{"ChatOpponent", char_opponent},
 	{"ChatSomeone", chat_someone},
 	{"Damage", damage_all},
@@ -1997,7 +2015,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
-	{"GatherHerbs", gather_herbs, is_harvest_herbs},
+	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCorridors", generate_corridors},
 	{"GenerateDungeon", generate_dungeon},

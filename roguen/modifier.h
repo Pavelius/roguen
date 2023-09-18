@@ -1,7 +1,7 @@
 #pragma once
 
 enum modifiers : unsigned char {
-	NoModifier, Permanent, 
+	NoModifier, Permanent, InPlayerBackpack
 };
 struct modifieri {
 	const char*	id;

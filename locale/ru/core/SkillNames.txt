@@ -1,2 +1,3 @@
-GatherHerbs: Собрать травы
+GatherMellowHerbs: Собрать спелые травы
+GatherSemiMellowHerbs: Собрать травы
 StealCoins: Украсть монеты

@@ -1,4 +1,5 @@
 ﻿In file `rules/Skills.txt`:
- Line 3: Not found requisit `base`
- Line 6: Not found requisit `base`
- Line 9: Not found requisit `base`
+ Line 5: Can't find variant `GainNextItem`
+ Line 6: Can't find variant `GainNextItem`
+ Line 9: Can't find variant `GainNextItem`
+ Line 10: Can't find variant `GainNextItem`

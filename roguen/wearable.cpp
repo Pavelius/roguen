@@ -28,6 +28,7 @@ void wearable::additem(item& v) {
 		for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i + 1)) {
 			if(!wears[i]) {
 				wears[i] = v;
+				last_item = wears + i;
 				v.clear();
 				break;
 			}

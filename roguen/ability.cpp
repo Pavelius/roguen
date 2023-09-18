@@ -26,7 +26,6 @@ BSDATA(abilityi) = {
 	{"Survival", ColorNone, ColorNone, Wits},
 	{"History", ColorNone, ColorNone, Wits},
 	{"Religion", ColorNone, ColorNone, Wits},
-	{"FirstAid", ColorRed, ColorRed, Wits},	
 	{"CarryCapacity"},
 	{"Level"},
 	{"Hits", ColorRed, ColorGreen},

@@ -53,6 +53,7 @@ void item::add(item& v) {
 		count = n1;
 		v.clear();
 	}
+	last_item = this;
 }
 
 bool item::canequip(wear_s v) const {
@@ -161,6 +162,7 @@ void item::drop(point m) {
 	auto pi = area->items.add();
 	pi->position = m;
 	memcpy(static_cast<item*>(pi), static_cast<item*>(this), sizeof(item));
+	last_item = static_cast<item*>(pi);
 	clear();
 }
 

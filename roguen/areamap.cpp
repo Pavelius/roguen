@@ -178,7 +178,10 @@ void areamap::set(rect rc, fnset proc, int v) {
 }
 
 void areamap::set(rect rc, fnset proc, int v, int random_count) {
-	if(random_count <= -100) {
+	if(random_count == -101) {
+		set(rc, proc, 0);
+		return;
+	} else if(random_count <= -100) {
 		set(rc, proc, v);
 		return;
 	}

@@ -96,4 +96,4 @@ public:
 struct itemground : item {
 	point			position;
 };
-extern item *last_item;
+extern item* last_item;

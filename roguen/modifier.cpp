@@ -5,8 +5,9 @@
 BSDATA(modifieri) = {
 	{"NoModifier"},
 	{"Permanent"},
+	{"InPlayerBackpack"},
 };
-assert_enum(modifieri, Permanent)
+assert_enum(modifieri, InPlayerBackpack)
 
 modifiers modifier;
 

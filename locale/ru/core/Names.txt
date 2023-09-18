@@ -92,7 +92,7 @@ YouDontHaveAnyActions: Здесь вы не можете выполнить никаких особых действий.
 YouDontValidTargets: Вы не видите подходящих целей.
 YouFailToOpenStuckDoor: %герой не смог%ла открыть заевшую дверь.
 YouFoundSecretDoor: %герой обнаружил%а [%1i] секретную дверь.
-YouGatherHerbs: %герой добыл%а %1.
+YouGatherItems: %герой добыл%а %1.
 YouGiveItemTo: %герой отдал%а %-1 %@2.
 YouNeedAmmunition: Для стрельбы нужно %-1.
 YouNeedRangeWeapon: Вы не можете стрелять не имея подходящего дистанционного оружия.
