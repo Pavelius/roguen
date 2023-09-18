@@ -1295,6 +1295,10 @@ static void gather_item(const char* id, randomizeri& source, int chance) {
 	}
 }
 
+static void remove_feature(int bonus) {
+	area->setfeature(last_index, 0);
+}
+
 static const char* random_herbs(point m) {
 	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
 	if(ei.is(Undeground))
@@ -2027,6 +2031,7 @@ BSDATA(script) = {
 	{"RandomAbility", random_ability},
 	{"RangeAttack", range_attack},
 	{"RepairItem", repair_item},
+	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},

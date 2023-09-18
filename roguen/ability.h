@@ -23,6 +23,7 @@ struct abilityi : nameable {
 	color_s		negative, positive;
 	ability_s	base;
 	ability_s	getindex() const;
+	bool		isskill() const { return base != 0; }
 };
 extern ability_s last_ability;
 extern ability_s raw_abilities[3];
