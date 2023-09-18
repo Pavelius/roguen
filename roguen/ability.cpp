@@ -20,16 +20,18 @@ BSDATA(abilityi) = {
 	{"BlockRanged"},
 	{"Speed"},
 	{"EnemyAttacks"},
-	{"Herbalism"},
-	{"Thievery"},
-	{"Stealth"},
-	{"Survival"},
-	{"History"},
-	{"Religion"},
+	{"Herbalism", ColorNone, ColorNone, Wits},
+	{"Thievery", ColorNone, ColorNone, Dexterity},
+	{"Stealth", ColorNone, ColorNone, Dexterity},
+	{"Survival", ColorNone, ColorNone, Wits},
+	{"History", ColorNone, ColorNone, Wits},
+	{"Religion", ColorNone, ColorNone, Wits},
+	{"FirstAid", ColorRed, ColorRed, Wits},	
 	{"CarryCapacity"},
 	{"Level"},
 	{"Hits", ColorRed, ColorGreen},
 	{"Mana", ColorBlue},
+	{"Faith", ColorYellow},
 	{"Poison"},
 	{"Illness"},
 	{"Burning"},
@@ -39,3 +41,7 @@ BSDATA(abilityi) = {
 	{"Money"},
 };
 assert_enum(abilityi, Money)
+
+ability_s abilityi::getindex() const {
+	return (ability_s)(this - bsdata<abilityi>::elements);
+}

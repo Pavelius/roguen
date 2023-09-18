@@ -33,15 +33,10 @@ static void applying(const variants& source) {
 		applying(v);
 }
 
-int	siteskilli::getvalue() const {
-	auto base = this->base ? player->get(this->base) : 0;
-	return player->get(skill) + base / 2 + bonus;
-}
-
 bool siteskilli::isusable() const {
-	if(!player->get(skill))
+	if(!player->canuse(skill))
 		return false;
-	if(getvalue() <= 0)
+	if((player->get(skill) + bonus) < 0)
 		return false;
 	auto rm = player->getroom();
 	if(rm) {

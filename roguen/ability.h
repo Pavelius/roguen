@@ -9,9 +9,9 @@ enum ability_s : unsigned char {
 	DamageMelee, DamageRanged, DamageThrown,
 	Armor, Block, BlockRanged,
 	Speed, EnemyAttacks,
-	Herbalism, Thievery, Stealth, Survival, History, Religion,
+	Herbalism, Thievery, Stealth, Survival, History, Religion, FirstAid,
 	CarryCapacity, Level,
-	Hits, Mana,
+	Hits, Mana, Faith,
 	Poison, Illness, Burning, Freezing,
 	Experience, Satiation, Money,
 };
@@ -21,6 +21,8 @@ enum color_s : unsigned char {
 };
 struct abilityi : nameable {
 	color_s		negative, positive;
+	ability_s	base;
+	ability_s	getindex() const;
 };
 extern ability_s last_ability;
 extern ability_s raw_abilities[3];

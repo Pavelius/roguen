@@ -204,6 +204,7 @@
     <ClCompile Include="modifier.cpp" />
     <ClCompile Include="ownerable.cpp" />
     <ClCompile Include="quest.cpp" />
+    <ClCompile Include="skillable.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
@@ -320,6 +321,7 @@
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />
+    <ClInclude Include="skillable.h" />
     <ClInclude Include="textscript.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />

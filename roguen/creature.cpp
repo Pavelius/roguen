@@ -631,6 +631,17 @@ static void update_room(creature* player) {
 		player->setroom(0);
 }
 
+static void update_skills() {
+	for(auto& e : bsdata<abilityi>()) {
+		if(!e.base)
+			continue;
+		auto i = e.getindex();
+		if(!player->basic.abilities[i])
+			continue;
+		player->abilities[i] += player->get(e.base) / 3;
+	}
+}
+
 void creature::update_abilities() {
 	abilities[DamageMelee] += get(Strenght) / 10;
 	abilities[DamageRanged] += get(Dexterity) / 15;
@@ -1314,6 +1325,7 @@ void creature::update() {
 	update_boost(feats_active, this);
 	update_wears();
 	update_room_abilities();
+	update_skills();
 	update_abilities();
 	update_negative_skills();
 	player = push_player;

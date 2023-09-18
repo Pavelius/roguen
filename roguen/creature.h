@@ -9,6 +9,7 @@
 #include "monster.h"
 #include "quest.h"
 #include "site.h"
+#include "skillable.h"
 #include "speech.h"
 #include "spell.h"
 #include "wearable.h"
@@ -17,7 +18,7 @@
 
 enum condition_s : unsigned char;
 
-class creature : public wearable, public statable, public spellable, public ownerable {
+class creature : public wearable, public skillable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
 	point			moveorder, guardorder;
 	void			fixcantgo() const;

@@ -1822,13 +1822,11 @@ static void repair_item(int bonus) {
 }
 
 static bool roll_skill() {
-	auto bonus = last_action->bonus;
-	auto skill = player->get(last_action->skill);
-	auto base = last_action->base ? player->get(last_action->base) / 2 : 0;
+	auto skill = player->get(last_action->skill) + last_action->bonus;
 	auto result = d100();
 	if(game.getowner() == player || player->is(Visible))
-		player->logs(getnm("YouRollSkill"), getnm(last_action->id), skill, base, bonus, skill + base + bonus, result);
-	return result < bonus;
+		player->logs(getnm("YouRollSkill"), getnm(last_action->id), skill, result);
+	return result < skill;
 }
 
 static void apply_action(int bonus) {

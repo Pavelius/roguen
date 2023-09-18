@@ -1,2 +1,4 @@
-﻿In file `rules/Monsters.txt`:
- Line 102: Not found field `Theivery` in dataset `abilities`
+﻿In file `rules/Skills.txt`:
+ Line 3: Not found requisit `base`
+ Line 6: Not found requisit `base`
+ Line 9: Not found requisit `base`

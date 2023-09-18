@@ -1,11 +1,11 @@
 #SiteSkill
 
-GatherHerbs skill(Herbalism) base(Wits)
+GatherHerbs skill(Herbalism)
  target TargetFeatures
  effect GatherHerbs
-OpenDoorLock skill(Thievery) base(Dexterity)
+OpenDoorLock skill(Thievery)
  target TargetFeatures
  effect OpenLockedDoor
-StealCoins skill(Thievery) base(Wits)
+StealCoins skill(Thievery)
  target TargetCreatures Neutrals
  effect StealCoins
