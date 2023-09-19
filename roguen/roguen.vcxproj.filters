@@ -548,9 +548,6 @@
     <ClInclude Include="resid.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="class.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="condition.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -606,6 +603,9 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="skillable.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="class.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
@@ -704,7 +704,10 @@
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\modules\AncientRace.txt">
-      <Filter>Locale</Filter>
+      <Filter>Modules</Filter>
+    </Text>
+    <Text Include="..\locale\ru\talk\AncientRaceProgress.txt">
+      <Filter>Talk</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

@@ -11,8 +11,8 @@ BSDATA(pricei) = {
 	{"LowCost", 90},
 	{"NormalCost", 100},
 	{"HighCost", 130},
-	{"VeryHighCost", 170},
-	{"ExpenciveCost", 200},
-	{"SuperExpenciveCost", 300},
+	{"VeryHighCost", 200},
+	{"ExpenciveCost", 300},
+	{"SuperExpenciveCost", 400},
 };
 BSDATAF(pricei)

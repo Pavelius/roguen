@@ -11,6 +11,9 @@ GatherMellowHerbs skill(Herbalism)
 OpenDoorLock skill(Thievery)
  target TargetFeatures
  effect OpenLockedDoor
+SacrificeEvilAltar skill(Religion)
+ target TargetFeatures
+ effect FeatureMatchNext AltarEvil
 StealCoins skill(Thievery)
  target TargetCreatures Neutrals
  effect StealCoins
