@@ -1,0 +1,13 @@
+#Global
+
+AncientRaceComing maximum(100)
+ effect WinGame+1
+
+#SiteSkill
+
+ExamineAltar skill(History)
+ target TargetFeatures
+ effect FeatureMatchNext RandomAltars Experience+1 AncientRaceComing+1
+ExamineStatue skill(History)
+ target TargetFeatures
+ effect FeatureMatchNext Statue Experience+2 AncientRaceComing+2

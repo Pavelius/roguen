@@ -73,5 +73,7 @@ YouTrampedByDoor
 
 RandomHerbs
  chance Herbs+6 HerbsSemi+4 HerbsFull+2 Plant
+RandomAltars
+ chance AltarGood AltarNeutral AltarEvil
 StuckDoorFail
  chance YouAngryAboutDoor+3 YouHitByDoor+2 YouTrampedByDoor

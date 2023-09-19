@@ -703,6 +703,9 @@
     <Text Include="..\locale\ru\core\SkillNames.txt">
       <Filter>Locale</Filter>
     </Text>
+    <Text Include="..\modules\AncientRace.txt">
+      <Filter>Locale</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">

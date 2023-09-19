@@ -1,5 +1,2 @@
 ﻿In file `rules/Skills.txt`:
- Line 5: Can't find variant `GainNextItem`
- Line 6: Can't find variant `GainNextItem`
- Line 9: Can't find variant `GainNextItem`
- Line 10: Can't find variant `GainNextItem`
+ Line 5: Can't find variant `Altar`

@@ -13,7 +13,7 @@
 
 extern indexa indecies;
 extern point last_index;
-siteskilla last_actions;
+siteskilla	last_actions;
 siteskilli* last_action;
 
 bool choose_targets(unsigned flags, const variants& effects);
@@ -40,12 +40,12 @@ bool siteskilli::isusable() const {
 		return false;
 	auto rm = player->getroom();
 	if(rm) {
-		auto su = skilluse::find(this, player->getposition(), bsid(player));
+		auto su = skilluse::find(this, rm->center(), bsid(player));
 		if(su) {
 			if(!retry)
 				return false;
 			else {
-				auto next_time = su->stamp + bsdata<durationi>::elements[retry].get(1);
+				auto next_time = su->stamp + bsdata<durationi>::elements[retry].get(0);
 				if(game.getminutes() < next_time)
 					return false;
 			}

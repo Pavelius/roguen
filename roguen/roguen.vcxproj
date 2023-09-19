@@ -358,6 +358,7 @@
     <Text Include="..\locale\ru\talk\NeedTalk.txt" />
     <Text Include="..\locale\ru\talk\NPCHouses.txt" />
     <Text Include="..\logs.txt" />
+    <Text Include="..\modules\AncientRace.txt" />
     <Text Include="..\modules\ChurchOfOne.txt" />
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />

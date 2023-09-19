@@ -1945,6 +1945,22 @@ static void destroy_feature(int bonus) {
 	area->setfeature(m, 0);
 }
 
+static bool feature_match_next_allow(int bonus) {
+	auto v = *script_begin++;
+	variant f = bsdata<featurei>::elements + area->features[last_index];
+	if(v.iskind<listi>())
+		return bsdata<listi>::elements[v.value].is(f);
+	else if(v.iskind<randomizeri>())
+		return bsdata<randomizeri>::elements[v.value].is(f);
+	else if(v.iskind<featurei>())
+		return v.value==f.value;
+	return false;
+}
+static void feature_match_next(int bonus) {
+	if(!feature_match_next_allow(bonus))
+		script_stop();
+}
+
 static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
 }
@@ -2020,6 +2036,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
+	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCorridors", generate_corridors},
