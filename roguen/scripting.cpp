@@ -27,6 +27,7 @@ void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
+void make_game_map_screenshoot();
 void place_shape(const shapei& e, point m, int floor, int walls);
 void visualize_images(res pid, point size, point offset);
 
@@ -1431,6 +1432,10 @@ static void inventory(int bonus) {
 	}
 }
 
+static void make_screenshoot(int bonus) {
+	make_game_map_screenshoot();
+}
+
 static int free_objects_count() {
 	auto result = 0;
 	for(auto& e : bsdata<draw::object>()) {
@@ -2037,6 +2042,7 @@ BSDATA(script) = {
 	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
 	{"LoseGame", lose_game},
+	{"MakeScreenshoot", make_screenshoot},
 	{"Offset", set_offset},
 	{"OpenLockedDoor", open_locked_door, is_locked_door},
 	{"OpenNearestDoor", open_nearest_door},

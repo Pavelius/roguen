@@ -48,6 +48,8 @@ RandomRace
 "Ctrl+U" UseItem
 "Ctrl+S" CastSpell
 
+"Ctrl+I" MakeScreenshoot
+
 "Ctrl+D" DebugMessage
 "Ctrl+E" ExploreArea
 "Ctrl+H" HealAll

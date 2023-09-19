@@ -59,6 +59,7 @@ public:
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
+	void			fixact(const char* id) const;
 	int				get(ability_s v) const { return abilities[v]; }
 	int				getexpreward() const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }

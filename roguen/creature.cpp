@@ -11,6 +11,7 @@
 #include "pushvalue.h"
 #include "script.h"
 #include "siteskill.h"
+#include "speech.h"
 #include "trigger.h"
 #include "triggern.h"
 
@@ -45,6 +46,20 @@ void rollg::make(ability_s& result, ability_s v, int difficult) {
 	result = v;
 	chance = difficult;
 	delta = d;
+}
+
+void creature::fixact(const char* id) const {
+	if(!is(AnimalInt)) {
+		auto idn = ids(id, "Speech");
+		if(bsdata<::speech>::find(idn)) {
+			speech(idn);
+			return;
+		}
+	}
+	auto idn = ids(id, "Action");
+	auto pstr = getdescription(idn);
+	if(pstr)
+		act(pstr);
 }
 
 static void copy(statable& v1, const statable& v2) {
