@@ -2,12 +2,10 @@
 
 GatherSemiMellowHerbs skill(Herbalism)
  target TargetFeatures
- effect HerbsSemi-101 GatherNextItem GrassHerbs
- fail HerbsSemi-101 GatherNextItem-100 GrassHerbs RepairItem-1
+ effect FeatureMatchNext HerbsSemi GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
 GatherMellowHerbs skill(Herbalism)
  target TargetFeatures
- effect GatherNextItem GrassHerbs Chance+40 HerbsFull-101
- fail HerbsSemi-101 GatherNextItem-100 GrassHerbs RepairItem-1
+ effect FeatureMatchNext HerbsFull GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
 OpenDoorLock skill(Thievery)
  target TargetFeatures
  effect OpenLockedDoor

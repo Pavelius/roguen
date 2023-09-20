@@ -1,3 +1,5 @@
+YouFailRoll: Вы не прошли бросок
+
 GatherMellowHerbs: Собрать спелые травы
 GatherSemiMellowHerbs: Собрать травы
 StealCoins: Украсть монеты

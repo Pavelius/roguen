@@ -1,2 +1,2 @@
-﻿In file `rules/Skills.txt`:
- Line 5: Can't find variant `Altar`
+﻿In file `Names.txt`:
+ Define translation for `YouFailRoll`

@@ -13,7 +13,7 @@ struct siteskilli : nameable {
 	unsigned		target;
 	char			bonus;
 	duration_s		retry;
-	variants		effect, fail;
+	variants		effect;
 	bool			isusable() const;
 };
 typedef collection<siteskilli> siteskilla;

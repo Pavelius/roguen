@@ -1027,10 +1027,7 @@ static bool is(const featurei& ei, condition_s v) {
 static bool isallow(const featurei& ei, variant v) {
 	if(v.iskind<conditioni>())
 		return is(ei, (condition_s)v.value);
-	else if(v.iskind<featurei>()) {
-		if(v.counter < 0)
-			return &ei == &bsdata<featurei>::elements[v.value];
-	} else if(v.iskind<script>()) {
+	else if(v.iskind<script>()) {
 		if(bsdata<script>::elements[v.value].test)
 			return bsdata<script>::elements[v.value].test(v.counter);
 	}
@@ -1038,8 +1035,10 @@ static bool isallow(const featurei& ei, variant v) {
 }
 
 static bool isallow(const featurei& ei, const variants source) {
-	for(auto v : source) {
-		if(!isallow(ei, v))
+	pushvalue push_begin(script_begin, source.begin());
+	pushvalue push_end(script_end, source.end());
+	while(script_begin < script_end) {
+		if(!isallow(ei, *script_begin++))
 			return false;
 	}
 	return true;
@@ -1306,6 +1305,10 @@ void creature::cast(const spelli& e, int level, int mana) {
 }
 
 static void remove_feature(int bonus) {
+	if(bonus > 0) {
+		if(d100() >= bonus)
+			return;
+	}
 	area->setfeature(last_index, 0);
 }
 
@@ -1866,13 +1869,7 @@ static void apply_action(int bonus) {
 	if(!bound_targets(last_action->id, last_action->target, 0, player->ishuman()))
 		return;
 	speech_action();
-	if(roll_skill()) {
-		fix_action("Success");
-		apply_target_effect(last_action->target, last_action->effect);
-	} else {
-		fix_action("Fail");
-		apply_target_effect(last_action->target, last_action->fail);
-	}
+	apply_target_effect(last_action->target, last_action->effect);
 	player->wait();
 }
 
@@ -1904,6 +1901,31 @@ static void roll_value(int bonus) {
 		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
 }
 
+static void roll_action(int bonus) {
+	if(!last_action)
+		return;
+	last_ability = last_action->skill;
+	roll_value(last_action->bonus + bonus);
+}
+
+static void fail_roll_value(int bonus) {
+	if(!player)
+		return;
+	if(!player->roll(last_ability, bonus))
+		player->logs(getnm("YouMakeRoll"), last_value, player->get(last_ability) + bonus, bonus);
+	else {
+		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
+		script_stop();
+	}
+}
+
+static void fail_roll_action(int bonus) {
+	if(!last_action)
+		return;
+	last_ability = last_action->skill;
+	roll_value(last_action->bonus + bonus);
+}
+
 static void random_chance(int bonus) {
 	if(d100() >= bonus)
 		script_stop();
@@ -1930,7 +1952,7 @@ static void sort_raw_ability_topmost() {
 static void ability_exchange(int bonus) {
 	select_raw_abilities();
 	sort_raw_ability_topmost();
-	iswap(player->abilities[raw_abilities[1]], player->abilities[raw_abilities[xrand(2, 3)]]);
+	iswap(player->abilities[raw_abilities[1]], player->abilities[raw_abilities[2]]);
 }
 
 static void activate_feature(int bonus) {
@@ -1945,16 +1967,41 @@ static void destroy_feature(int bonus) {
 	area->setfeature(m, 0);
 }
 
-static bool feature_match_next_allow(int bonus) {
-	auto v = *script_begin++;
-	variant f = bsdata<featurei>::elements + area->features[last_index];
-	if(v.iskind<listi>())
-		return bsdata<listi>::elements[v.value].is(f);
-	else if(v.iskind<randomizeri>())
-		return bsdata<randomizeri>::elements[v.value].is(f);
-	else if(v.iskind<featurei>())
-		return v.value==f.value;
+static bool feature_match(variant f, variant v);
+
+static bool feature_match_one_of(variant f, const variants& source) {
+	pushvalue push_begin(script_begin, source.begin());
+	pushvalue push_end(script_end, source.end());
+	while(script_begin < script_end) {
+		if(feature_match(f, *script_begin++))
+			return true;
+	}
 	return false;
+}
+
+static bool feature_match(variant f, variant v) {
+	if(v.iskind<listi>())
+		return feature_match_one_of(f, bsdata<listi>::elements[v.value].elements);
+	else if(v.iskind<randomizeri>())
+		return feature_match_one_of(f, bsdata<randomizeri>::elements[v.value].chance);
+	else if(v.iskind<featurei>())
+		return v.value == f.value;
+	return false;
+}
+
+static bool feature_match(variant f, const variants& source) {
+	pushvalue push_begin(script_begin, source.begin());
+	pushvalue push_end(script_end, source.end());
+	while(script_begin < script_end) {
+		if(!feature_match(f, *script_begin++))
+			return false;
+	}
+	return true;
+}
+
+static bool feature_match_next_allow(int bonus) {
+	variant f = bsdata<featurei>::elements + area->features[last_index];
+	return feature_match(f, *script_begin++);
 }
 static void feature_match_next(int bonus) {
 	if(!feature_match_next_allow(bonus))
@@ -2036,6 +2083,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
+	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
@@ -2045,9 +2093,13 @@ BSDATA(script) = {
 	{"GenerateRoom", generate_room},
 	{"GenerateWalls", generate_walls},
 	{"GenerateVillage", generate_cityscape},
-	{"JumpToSite", jump_to_site},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
+	{"IdentifyItem", identify_item},
+	{"Inventory", inventory},
+	{"JumpToSite", jump_to_site},
+	{"LoseGame", lose_game},
+	{"MakeScreenshoot", make_screenshoot},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},
@@ -2056,10 +2108,6 @@ BSDATA(script) = {
 	{"MoveUp", move_up},
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
-	{"IdentifyItem", identify_item},
-	{"Inventory", inventory},
-	{"LoseGame", lose_game},
-	{"MakeScreenshoot", make_screenshoot},
 	{"Offset", set_offset},
 	{"OpenLockedDoor", open_locked_door, is_locked_door},
 	{"OpenNearestDoor", open_nearest_door},
@@ -2074,6 +2122,7 @@ BSDATA(script) = {
 	{"RepairItem", repair_item},
 	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
+	{"RollAction", roll_action},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
