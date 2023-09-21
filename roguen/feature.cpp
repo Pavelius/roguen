@@ -1,5 +1,6 @@
 #include "bsreq.h"
 #include "crt.h"
+#include "condition.h"
 #include "feature.h"
 
 NOBSDATA(color)
@@ -53,4 +54,11 @@ featurei* featurei::getactivatefrom() const {
 			return &e;
 	}
 	return 0;
+}
+
+bool featurei::is(condition_s v) const {
+	switch(v) {
+	case Locked: return islocked();
+	default: return false;
+	}
 }

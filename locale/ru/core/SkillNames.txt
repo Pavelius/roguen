@@ -1,5 +1,7 @@
-YouFailRoll: Вы не прошли бросок
+YouFailRoll: %герой сделал%а бросок.
+YouMakeRoll: %герой не сделал%а бросок. 
 
 GatherMellowHerbs: Собрать спелые травы
 GatherSemiMellowHerbs: Собрать травы
+SearchRoom: Обыскать комнату
 StealCoins: Украсть монеты

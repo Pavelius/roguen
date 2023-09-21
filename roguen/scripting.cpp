@@ -1017,16 +1017,9 @@ static void match_creatures(const variants& source) {
 	targets.count = ps - targets.begin();
 }
 
-static bool is(const featurei& ei, condition_s v) {
-	switch(v) {
-	case Locked: return ei.islocked();
-	default: return false;
-	}
-}
-
 static bool isallow(const featurei& ei, variant v) {
 	if(v.iskind<conditioni>())
-		return is(ei, (condition_s)v.value);
+		return ei.is((condition_s)v.value);
 	else if(v.iskind<script>()) {
 		if(bsdata<script>::elements[v.value].test)
 			return bsdata<script>::elements[v.value].test(v.counter);
@@ -1133,11 +1126,20 @@ bool choose_targets(unsigned flags, const variants& effects) {
 		indecies.sort(player->getposition());
 	}
 	if(FGT(flags, TargetRooms)) {
-		select_rooms();
-		if(!FGT(flags, You))
-			rooms.remove(player->getroom());
-		if(!FGT(flags, Ranged))
-			rooms.match(fntis<roomi, &roomi::ismarkable>, true);
+		rooms.clear();
+		if(FGT(flags, Allies)) {
+			auto rm = player->getroom();
+			if(rm)
+				rooms.add(player->getroom());
+		} else {
+			select_rooms();
+			if(!FGT(flags, You))
+				rooms.remove(player->getroom());
+			if(FGT(flags, Identified))
+				rooms.match(fntis<roomi, &roomi::isexplored>, true);
+			if(!FGT(flags, Ranged))
+				rooms.match(fntis<roomi, &roomi::ismarkable>, true);
+		}
 	}
 	if(FGT(flags, TargetItems)) {
 		static condition_s states[] = {Unaware, Identified, Ranged, Wounded, NoWounded};
@@ -1259,8 +1261,13 @@ static void apply_target_effect(unsigned target, const variants& effect) {
 			script_run(effect);
 		}
 	} else if(FGT(target, TargetRooms)) {
+		pushvalue push_value(last_room);
+		pushvalue push_rect(last_rect);
+		pushvalue push_index(last_index);
 		for(auto p : rooms) {
-			pushvalue push_rect(last_room, p);
+			last_room = p;
+			last_rect = p->rc;
+			last_index = center(last_rect);
 			script_run(effect);
 		}
 	} else if(FGT(target, TargetItems)) {

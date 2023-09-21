@@ -3,6 +3,8 @@
 
 #pragma once
 
+enum condition_s : unsigned char;
+
 struct featurei {
 	const char*		id;
 	framerange		features, overlay;
@@ -17,6 +19,7 @@ struct featurei {
 	char			lead;
 	char			chance_auto_activate;
 	char			power;
+	bool			is(condition_s v) const;
 	bool			is(tilef v) const { return (flags & (1 << v)) != 0; }
 	bool			islocked() const { return activate_item.value != 0; }
 	bool			istrap() const { return is(TrappedFeature); }
