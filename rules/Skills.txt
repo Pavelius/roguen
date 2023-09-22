@@ -12,9 +12,6 @@ OpenDoorLock skill(Thievery)
 SacrificeEvilAltar skill(Religion)
  target TargetFeatures
  effect FeatureMatchNext AltarEvil
-SearchRoom skill(Wits)
- target TargetRooms Allies
- effect RollAction RandomLoot
 StealCoins skill(Thievery)
  target TargetCreatures Neutrals
  effect StealCoins

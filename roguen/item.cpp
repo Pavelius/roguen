@@ -219,13 +219,6 @@ variant	item::getpower() const {
 	return p->elements.begin()[power - 1];
 }
 
-bool item::iscursed() const {
-	auto v = getpower();
-	if(v && v.counter < 0)
-		return true;
-	return false;
-}
-
 bool item::ismagical() const {
 	if(iscountable())
 		return false;

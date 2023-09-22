@@ -1,17 +1,17 @@
 #List
 
 PierceWeapons
- elements Dexterity-5 WeaponSkill+10 Dexterity+10 Block+2 Speed+5 Speed+10 DamageMelee+1 DamageMelee+2 ColdDamage FireDamage
+ elements WeaponSkill+10 Dexterity+10 Block+1 Block+2 Speed+5 Speed+10 DamageMelee+1 ColdDamage FireDamage
 SlashingWeapons
- elements Wits-20 WeaponSkill+10 Strenght+10 Dexterity+10 Block+1 Speed+5 DamageMelee+1 DamageMelee+2 DamageMelee+3 ColdDamage FireDamage
+ elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+1 Speed+5 DamageMelee+1 DamageMelee+2 ColdDamage FireDamage
 BludgeonWeapons
- elements Strenght-10 Strenght+10 Block+1 DamageMelee+2 FireDamage Strenght+20 DamageMelee+3 DamageMelee+4
+ elements Strenght+5 Strenght+10 Block+1 DamageMelee+1 FireDamage Strenght+20 DamageMelee+2 DamageMelee+3
 LightArmorPowers
- elements Dodge+10 Dodge+20 Dexterity+10 Wits+10 Armor-1 Dexterity-5 Dodge-30
+ elements Block+1 Block+2 Dodge+5 Dodge+10 Dexterity+5 Dexterity+10 Wits+10
 HeavyArmorPowers
- elements Armor-1 Block+2 Armor+1 Armor+2 FireResistance ColdResistance
+ elements Block+1 Armor+1 Armor+2 FireResistance ColdResistance
 ShieldPowers
- elements Armor-1 Block+1 Armor+1 AcidResistance FireResistance ColdResistance DeathResistance Block+2 Armor+2
+ elements Block+1 Armor+1 AcidResistance FireResistance ColdResistance DeathResistance Block+2 Armor+2
 
 #Item
 

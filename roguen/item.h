@@ -1,6 +1,7 @@
 #include "feat.h"
 #include "point.h"
 #include "list.h"
+#include "magic.h"
 #include "wear.h"
 #include "variant.h"
 
@@ -39,6 +40,7 @@ class item {
 	union {
 		unsigned char stats;
 		struct {
+			magic_s magic : 2;
 			unsigned char identified : 1;
 			unsigned char personal : 1;
 		};
@@ -70,6 +72,7 @@ public:
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
 	void			getinfo(stringbuilder& sb) const;
 	short unsigned	getkind() const { return type; }
+	magic_s			getmagic() const { return magic; }
 	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	variant			getpower() const;
@@ -84,10 +87,11 @@ public:
 	bool			ischargeable() const;
 	static bool		iscondition(const void* object, int v);
 	bool			iscountable() const { return geti().count != 0; }
-	bool			iscursed() const;
+	bool			iscursed() const { return magic==Cursed;}
 	bool			isidentified() const { return identified != 0; }
 	bool			ismagical() const;
 	bool			isusable() const { return geti().use.size() != 0; }
+	void			set(magic_s v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }

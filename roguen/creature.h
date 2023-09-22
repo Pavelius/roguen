@@ -101,6 +101,7 @@ public:
 	void			paintbarsall() const;
 	void			place(point m);
 	void			remove(feat_s v) { feats.remove(v); }
+	bool			resist(feat_s resist, feat_s immunity) const;
 	bool			roll(ability_s v, int bonus = 0) const;
 	void			say(const char* format, ...) const { sayv(console, format, xva_start(format), getname(), is(Female)); }
 	void			sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const;

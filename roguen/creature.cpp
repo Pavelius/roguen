@@ -108,10 +108,10 @@ static bool attack_effect(const creature* p, const item& w, feat_s v) {
 	return p->is(v);
 }
 
-static bool resist_test(creature* player, feat_s resist, feat_s immunity) {
-	if(player->is(immunity))
+bool creature::resist(feat_s resist, feat_s immunity) const {
+	if(is(immunity))
 		return true;
-	if(player->is(resist)) {
+	if(is(resist)) {
 		if(d100() < 50)
 			return true;
 	}
@@ -121,7 +121,7 @@ static bool resist_test(creature* player, feat_s resist, feat_s immunity) {
 static void poison_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
-	if(resist_test(player, PoisonResistance, PoisonImmunity))
+	if(player->resist(PoisonResistance, PoisonImmunity))
 		return;
 	if(player->roll(Strenght, -value))
 		return;
@@ -147,7 +147,7 @@ static void poison_attack(const creature* player, creature* enemy, const item& w
 static void illness_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
-	if(resist_test(player, DiseaseResist, DiseaseImmunity))
+	if(player->resist(DiseaseResist, DiseaseImmunity))
 		return;
 	auto v = player->get(Illness) + value;
 	if(v >= player->get(Strenght))
@@ -165,7 +165,7 @@ static void damage_equipment(int value) {
 		if(d100() < (60 - value * 4))
 			continue;
 		value--;
-		if(resist_test(player, AcidResistance, AcidImmunity))
+		if(player->resist(AcidResistance, AcidImmunity))
 			continue;
 		e.damage();
 	}
@@ -177,7 +177,7 @@ static void special_spell_attack(creature* player, item& weapon, creature* enemy
 }
 
 static void attack_effect_stun(creature* enemy) {
-	if(!resist_test(enemy, StunResistance, StunImmunity)) {
+	if(!enemy->resist(StunResistance, StunImmunity)) {
 		enemy->set(Stun);
 		enemy->fixeffect("SearchVisual");
 	}
@@ -185,7 +185,7 @@ static void attack_effect_stun(creature* enemy) {
 
 static void special_attack(creature* player, item& weapon, creature* enemy, int& pierce, int& damage) {
 	if(attack_effect(player, weapon, Vorpal)) {
-		if(!resist_test(enemy, DeathResistance, DeathImmunity)) {
+		if(!enemy->resist(DeathResistance, DeathImmunity)) {
 			damage = 100;
 			pierce = 100;
 		}
@@ -290,7 +290,7 @@ static void nullify_elements(creature* player) {
 
 static void check_burning(creature* player) {
 	if(player->is(Burning)) {
-		if(!resist_test(player, FireResistance, FireImmunity))
+		if(!player->resist(FireResistance, FireImmunity))
 			player->damage(xrand(1, 3));
 		player->add(Burning, -1);
 	}
@@ -298,7 +298,7 @@ static void check_burning(creature* player) {
 
 static void check_freezing(creature* player) {
 	if(player->is(Freezing)) {
-		if(!resist_test(player, ColdResistance, ColdImmunity)) {
+		if(!player->resist(ColdResistance, ColdImmunity)) {
 			player->damage(1);
 			player->slowdown(100 / 2);
 		}
@@ -1311,7 +1311,7 @@ static void update_wears() {
 		wearing(e.geti().wearing, 1);
 		auto power = e.getpower();
 		if(power)
-			wearing(power, 1);
+			wearing(power, bsdata<magici>::elements[e.getmagic()].multiplier);
 	}
 }
 
@@ -1497,9 +1497,7 @@ bool creature::isallow(variant v) const {
 		return !is((feat_s)v.value);
 	else if(v.iskind<areafi>()) {
 		auto present = is((areaf)v.value);
-		if(v.counter < 0)
-			return present;
-		return !present;
+		return (v.counter < 0) ? present : !present;
 	} else if(v.iskind<featurei>()) {
 		auto m = getposition();
 		if(!area->isvalid(m))
@@ -1524,9 +1522,9 @@ void apply_ability(ability_s v, int counter) {
 		player->kill();
 }
 
-void apply_value(variant v) {
+void apply_value(variant v, int modifier) {
 	if(v.iskind<abilityi>())
-		apply_ability((ability_s)v.value, v.counter);
+		apply_ability((ability_s)v.value, v.counter * modifier);
 	else if(v.iskind<spelli>())
 		ftscript<spelli>(v.value, v.counter);
 	else if(v.iskind<areafi>()) {
@@ -1547,7 +1545,7 @@ void creature::apply(const variants& source) {
 	auto push_modifier = modifier;
 	auto push_player = player; player = this;
 	for(auto v : source)
-		apply_value(v);
+		apply_value(v, 1);
 	player = push_player;
 	modifier = push_modifier;
 }
@@ -1663,7 +1661,7 @@ creature* creature::create(point m, variant kind, variant character, bool female
 
 bool creature::isallow(const item& it) const {
 	auto& ei = it.geti();
-	for(auto i = Strenght; i <= sizeof(ei.required) / sizeof(ei.required[0]); i = (ability_s)(i+1)) {
+	for(auto i = Strenght; i <= sizeof(ei.required) / sizeof(ei.required[0]); i = (ability_s)(i + 1)) {
 		auto v = ei.required[i];
 		if(!v)
 			continue;

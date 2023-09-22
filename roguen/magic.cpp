@@ -2,8 +2,8 @@
 #include "magic.h"
 
 BSDATA(magici) = {
-	{"Mundane"},
+	{"Mundane", 1},
 	{"Blessed", 2},
-	{"Cursed", -2},
-	{"Artifact", 4},
+	{"Cursed", -1},
+	{"Artifact", 3},
 };

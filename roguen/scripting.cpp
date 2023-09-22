@@ -16,6 +16,7 @@
 #include "script.h"
 #include "site.h"
 #include "siteskill.h"
+#include "skilluse.h"
 #include "textscript.h"
 #include "trigger.h"
 #include "triggern.h"
@@ -51,6 +52,8 @@ const sitei*	last_site;
 greatneed*		last_need;
 int				last_value, last_cap;
 extern bool		show_floor_rect;
+static bool		prepare_targets;
+static variant	last_filter;
 
 static adat<rect, 32> locations;
 static adat<point, 512> points;
@@ -1017,24 +1020,39 @@ static void match_creatures(const variants& source) {
 	targets.count = ps - targets.begin();
 }
 
+static bool isallow(const featurei& ei, const variants source, bool all_of);
+
 static bool isallow(const featurei& ei, variant v) {
 	if(v.iskind<conditioni>())
 		return ei.is((condition_s)v.value);
+	else if(v.iskind<featurei>())
+		return &ei == bsdata<featurei>::elements + v.value;
 	else if(v.iskind<script>()) {
 		if(bsdata<script>::elements[v.value].test)
 			return bsdata<script>::elements[v.value].test(v.counter);
-	}
+	} else if(v.iskind<listi>())
+		return isallow(ei, bsdata<listi>::elements[v.value].elements, false);
+	else if(v.iskind<randomizeri>())
+		return isallow(ei, bsdata<randomizeri>::elements[v.value].chance, false);
 	return true;
 }
 
-static bool isallow(const featurei& ei, const variants source) {
+static bool isallow(const featurei& ei, const variants source, bool all_of) {
 	pushvalue push_begin(script_begin, source.begin());
 	pushvalue push_end(script_end, source.end());
-	while(script_begin < script_end) {
-		if(!isallow(ei, *script_begin++))
-			return false;
+	if(all_of) {
+		while(script_begin < script_end) {
+			if(!isallow(ei, *script_begin++))
+				return false;
+		}
+		return true;
+	} else {
+		while(script_begin < script_end) {
+			if(isallow(ei, *script_begin++))
+				return true;
+		}
+		return false;
 	}
-	return true;
 }
 
 static void match_features(const variants& source) {
@@ -1043,7 +1061,7 @@ static void match_features(const variants& source) {
 	for(auto m : indecies) {
 		last_index = m;
 		auto& ei = area->getfeature(m);
-		if(!isallow(ei, source))
+		if(!isallow(ei, source, true))
 			continue;
 		*ps++ = m;
 	}
@@ -1086,11 +1104,7 @@ static void match_items(const variants& source) {
 	items.count = ps - items.begin();
 }
 
-static void select_rooms() {
-	rooms.collectiona::select(area->rooms);
-}
-
-bool choose_targets(unsigned flags, const variants& effects) {
+bool choose_targets(unsigned flags, const variants& conditions) {
 	indecies.clear();
 	items.clear();
 	rooms.clear();
@@ -1115,24 +1129,22 @@ bool choose_targets(unsigned flags, const variants& effects) {
 		if(!FGT(flags, Ranged))
 			targets.matchrange(player->getposition(), 1, true);
 		targets.distinct();
-		match_creatures(effects);
+		match_creatures(conditions);
 		targets.sort(player->getposition());
-	}
-	if(FGT(flags, TargetFeatures)) {
+	} else if(FGT(flags, TargetFeatures)) {
 		indecies.clear();
 		indecies.select(player->getposition(), FGT(flags, Ranged) ? 3 : 1);
 		indecies.match(fntis<featurei, &featurei::isvisible>, true);
-		match_features(effects);
+		match_features(conditions);
 		indecies.sort(player->getposition());
-	}
-	if(FGT(flags, TargetRooms)) {
+	} else if(FGT(flags, TargetRooms)) {
 		rooms.clear();
 		if(FGT(flags, Allies)) {
 			auto rm = player->getroom();
 			if(rm)
 				rooms.add(player->getroom());
 		} else {
-			select_rooms();
+			rooms.collectiona::select(area->rooms);
 			if(!FGT(flags, You))
 				rooms.remove(player->getroom());
 			if(FGT(flags, Identified))
@@ -1140,8 +1152,7 @@ bool choose_targets(unsigned flags, const variants& effects) {
 			if(!FGT(flags, Ranged))
 				rooms.match(fntis<roomi, &roomi::ismarkable>, true);
 		}
-	}
-	if(FGT(flags, TargetItems)) {
+	} else  if(FGT(flags, TargetItems)) {
 		static condition_s states[] = {Unaware, Identified, Ranged, Wounded, NoWounded};
 		items.select(player);
 		for(auto v : states) {
@@ -1913,6 +1924,9 @@ static void roll_action(int bonus) {
 		return;
 	last_ability = last_action->skill;
 	roll_value(last_action->bonus + bonus);
+	auto rm = player->getroom();
+	if(rm)
+		skilluse::add(last_action, rm->center(), bsid(player), game.getminutes());
 }
 
 static void fail_roll_value(int bonus) {
@@ -2024,6 +2038,71 @@ static void random_ability(int bonus) {
 	apply_ability(maprnd(source), bonus);
 }
 
+static void select_enemies(int bonus) {
+	targets = enemies;
+}
+
+static void select_creatures(int bonus) {
+	targets = creatures;
+}
+
+static void filter_allies(int bonus) {
+	if(player->is(Ally))
+		targets.match(Ally, true);
+	else if(player->is(Enemy))
+		targets.match(Enemy, true);
+	else {
+		targets.match(Enemy, false);
+		targets.match(Ally, false);
+	}
+}
+
+static void apply_filter(collectiona& source, variant v, void** filter_object) {
+	auto pb = source.begin();
+	auto push = *filter_object;
+	if(v.counter >= 0) {
+		for(auto p : source) {
+			*filter_object = p;
+			if(script_allow(v))
+				*pb++ = p;
+		}
+	} else {
+		for(auto p : source) {
+			*filter_object = p;
+			if(!script_allow(v))
+				*pb++ = p;
+		}
+	}
+	*filter_object = push;
+	source.count = pb - source.begin();
+}
+
+static void filter_next(int bonus) {
+	auto v = *script_begin++;
+	if(targets)
+		apply_filter(targets, v, (void**)&player);
+	if(items)
+		apply_filter(items, v, (void**)&last_item);
+	if(rooms)
+		apply_filter(rooms, v, (void**)&last_room);
+}
+
+static bool is_wounded(int bonus) {
+	auto n = player->get(Hits);
+	auto m = player->basic.abilities[Hits];
+	return n > 0 && n < m;
+}
+
+static void standart_filter(int bonus) {
+}
+
+static void acid_harm(int bonus) {
+	if(player->resist(AcidResistance, AcidImmunity))
+		return;
+	player->fixeffect("AcidSplash");
+	player->damage(xrand(bonus/2, bonus));
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
@@ -2076,6 +2155,7 @@ BSDATA(triggerni) = {
 assert_enum(triggerni, EverySeveralDaysForP1)
 BSDATA(script) = {
 	{"AbilityExchange", ability_exchange},
+	{"AcidHarm", acid_harm},
 	{"Activate", activate_feature},
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
@@ -2092,6 +2172,7 @@ BSDATA(script) = {
 	{"ExploreArea", explore_area},
 	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
+	{"Filter", filter_next},
 	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCorridors", generate_corridors},
@@ -2130,6 +2211,8 @@ BSDATA(script) = {
 	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
+	{"SelectCreatures", select_creatures},
+	{"SelectEnemies", select_enemies},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
@@ -2140,8 +2223,9 @@ BSDATA(script) = {
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"TriggerText", trigger_text},
 	{"ViewStuff", view_stuff},
-	{"WinGame", win_game},
 	{"WaitHour", wait_hour},
+	{"WinGame", win_game},
+	{"Wounded", standart_filter, is_wounded},
 	{"UseItem", use_item},
 };
 BSDATAF(script)

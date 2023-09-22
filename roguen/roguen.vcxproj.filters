@@ -288,9 +288,6 @@
     <ClCompile Include="moveable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="magic.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="skilluse.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -340,6 +337,9 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="feature.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="magic.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -527,9 +527,6 @@
     <ClInclude Include="moveable.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="magic.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="visualeffect.h">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -606,6 +603,9 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="feature.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="magic.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
