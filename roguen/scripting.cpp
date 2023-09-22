@@ -562,13 +562,24 @@ static void create_wandered_monster(point i) {
 	place_creature(single(monster), 1);
 }
 
+static void create_trap(point i) {
+	auto pm = bsdata<randomizeri>::find("RandomTraps");
+	if(!pm)
+		return;
+	auto v = pm->random();
+	area->setfeature(i, v.value);
+	area->setflag(i, Hidden);
+}
+
 static void create_corridor_contents() {
 	zshuffle(points.data, points.count);
 	auto count = xrand(10, 18);
 	if(count > (int)points.count)
 		count = points.count;
 	for(auto i = 0; i < count; i++) {
-		if(d100() < 30)
+		if(d100() < 10)
+			create_trap(points.data[i]);
+		else if(d100() < 30)
 			create_wandered_monster(points.data[i]);
 		else
 			create_corridor_loot(points.data[i]);

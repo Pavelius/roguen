@@ -78,3 +78,5 @@ RandomAltars
  chance AltarGood AltarNeutral AltarEvil
 StuckDoorFail
  chance YouAngryAboutDoor+3 YouHitByDoor+2 YouTrampedByDoor
+RandomTraps
+ chance AcidTrap
