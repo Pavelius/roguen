@@ -15,39 +15,11 @@
 #include "trigger.h"
 #include "triggern.h"
 
-namespace {
-struct rollg {
-	int	roll, chance, delta;
-	bool miss() const { return roll >= 5 && roll > chance; }
-	void make(int chance);
-	void make(ability_s& result, ability_s v, int chance);
-};
-struct defenceg {
-	int dodge, parry, block;
-};
-}
-
 extern indexa indecies;
 extern collection<roomi> rooms;
+
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(unsigned flags, const variants& effects);
-
-void rollg::make(int v) {
-	roll = 1 + rand() % 100;
-	chance = v;
-	delta = v - roll;
-}
-
-void rollg::make(ability_s& result, ability_s v, int difficult) {
-	if(!difficult)
-		return;
-	auto d = difficult - roll;
-	if(d <= delta)
-		return;
-	result = v;
-	chance = difficult;
-	delta = d;
-}
 
 void creature::fixact(const char* id) const {
 	if(!is(AnimalInt)) {
@@ -157,16 +129,18 @@ static void illness_attack(creature* player, int value) {
 		player->set(Illness, v);
 }
 
-static void damage_equipment(int value, bool acid_nature) {
-	for(auto& e : player->equipment()) {
-		if(value <= 0)
+void damage_equipment(int bonus, bool allow_save) {
+	static wear_s equipment_order[] = {Torso, Backward, Head, Elbows, Neck, Girdle, Gloves, Legs, FingerRight, FingerLeft};
+	for(auto w : equipment_order) {
+		auto& e = player->wears[w];
+		if(bonus <= 0)
 			break;
 		if(!e)
 			continue;
-		if(d100() < (60 - value * 4))
+		if(d100() < 40)
 			continue;
-		value--;
-		if(acid_nature && player->resist(AcidResistance, AcidImmunity))
+		bonus--;
+		if(allow_save && player->resist(AcidResistance, AcidImmunity))
 			continue;
 		e.damage();
 	}
@@ -304,8 +278,10 @@ static void check_freezing(creature* player) {
 
 static void check_corrosion(creature* p) {
 	if(p->is(Corrosion)) {
-		if(!player->resist(AcidResistance, AcidImmunity))
+		if(!player->resist(AcidResistance, AcidImmunity)) {
 			player->damage(xrand(1, 3));
+			damage_equipment(1, true);
+		}
 		player->add(Corrosion, -1);
 	}
 }

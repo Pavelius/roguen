@@ -26,6 +26,7 @@ void apply_value(variant v);
 void apply_ability(ability_s v, int counter);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
+void damage_equipment(int bonus, bool allow_save);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
@@ -2117,28 +2118,13 @@ static bool is_wounded(int bonus) {
 static void standart_filter(int bonus) {
 }
 
-static void acid_damage_equipment(int bonus) {
-	for(auto& e : player->equipment()) {
-		if(bonus <= 0)
-			break;
-		if(!e)
-			continue;
-		if(d100() < (60 - bonus * 4))
-			continue;
-		bonus--;
-		if(player->resist(AcidResistance, AcidImmunity))
-			continue;
-		e.damage();
-	}
-}
-
 static void acid_harm(int bonus) {
 	if(player->resist(AcidResistance, AcidImmunity))
 		return;
 	player->fixeffect("AcidSplash");
 	player->damage(xrand(bonus / 2, bonus));
 	player->add(Corrosion, 1);
-	acid_damage_equipment(bonus);
+	damage_equipment(bonus, true);
 }
 
 static void need_help_info(stringbuilder& sb) {
