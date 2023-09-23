@@ -1,3 +1,4 @@
+#include "areaf.h"
 #include "areapiece.h"
 #include "indexa.h"
 
@@ -42,6 +43,16 @@ void indexa::match(fnvisible proc, bool keep) {
 	for(auto p : *this) {
 		auto& ei = area->getfeature(p);
 		if(proc(&ei) != keep)
+			continue;
+		*ps++ = p;
+	}
+	count = ps - data;
+}
+
+void indexa::match(areaf v, bool keep) {
+	auto ps = data;
+	for(auto p : *this) {
+		if(area->is(p, v) != keep)
 			continue;
 		*ps++ = p;
 	}

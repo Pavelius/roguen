@@ -33,6 +33,7 @@ BSDATA(abilityi) = {
 	{"Faith", ColorYellow},
 	{"Poison"},
 	{"Illness"},
+	{"Corrosion"},
 	{"Burning"},
 	{"Freezing"},
 	{"Experience", ColorYellow},

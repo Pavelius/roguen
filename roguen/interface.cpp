@@ -315,7 +315,7 @@ static void paint_floor() {
 						image(pf, ei.features.get(r), 0);
 				}
 				auto& ef = area->getfeature(i);
-				if(ef.isvisible()) {
+				if(ef.isvisible() && !area->is(i, Hidden)) {
 					if(ef.is(BetweenWalls)) {
 						if(area->iswall(i, East) && area->iswall(i, West))
 							addobject(pt, paint_resource, bsdata<resource>::elements + (int)res::Features, ef.features.start, ef.priority);

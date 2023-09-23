@@ -353,6 +353,8 @@
     <Text Include="..\locale\ru\core\EffectDescriptions.txt" />
     <Text Include="..\locale\ru\core\SkillNames.txt" />
     <Text Include="..\locale\ru\core\SpellNames.txt" />
+    <Text Include="..\locale\ru\core\TrapDescriptions.txt" />
+    <Text Include="..\locale\ru\core\TrapNames.txt" />
     <Text Include="..\locale\ru\core\UnknownNames.txt" />
     <Text Include="..\locale\ru\core\WearNames.txt" />
     <Text Include="..\locale\ru\talk\AncientRaceProgress.txt" />

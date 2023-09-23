@@ -1,3 +1,4 @@
+#include "nameable.h"
 #include "tile.h"
 #include "variant.h"
 
@@ -5,8 +6,7 @@
 
 enum condition_s : unsigned char;
 
-struct featurei {
-	const char*		id;
+struct featurei : nameable {
 	framerange		features, overlay;
 	unsigned char	priority;
 	unsigned		flags;

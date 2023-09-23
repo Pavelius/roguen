@@ -59,6 +59,7 @@ featurei* featurei::getactivatefrom() const {
 bool featurei::is(condition_s v) const {
 	switch(v) {
 	case Locked: return islocked();
+	case Enemies: return istrap();
 	default: return false;
 	}
 }

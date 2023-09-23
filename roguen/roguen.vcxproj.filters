@@ -709,6 +709,12 @@
     <Text Include="..\locale\ru\talk\AncientRaceProgress.txt">
       <Filter>Talk</Filter>
     </Text>
+    <Text Include="..\locale\ru\core\TrapDescriptions.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\core\TrapNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">

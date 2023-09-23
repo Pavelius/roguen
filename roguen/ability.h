@@ -12,7 +12,7 @@ enum ability_s : unsigned char {
 	Herbalism, Thievery, Stealth, Survival, History, Religion,
 	CarryCapacity, Level,
 	Hits, Mana, Faith,
-	Poison, Illness, Burning, Freezing,
+	Poison, Illness, Corrosion, Burning, Freezing,
 	Experience, Satiation, Money,
 };
 enum color_s : unsigned char {

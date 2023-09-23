@@ -27,6 +27,7 @@ struct defenceg {
 };
 }
 
+extern indexa indecies;
 extern collection<roomi> rooms;
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(unsigned flags, const variants& effects);
@@ -156,7 +157,7 @@ static void illness_attack(creature* player, int value) {
 		player->set(Illness, v);
 }
 
-static void damage_equipment(int value) {
+static void damage_equipment(int value, bool acid_nature) {
 	for(auto& e : player->equipment()) {
 		if(value <= 0)
 			break;
@@ -165,7 +166,7 @@ static void damage_equipment(int value) {
 		if(d100() < (60 - value * 4))
 			continue;
 		value--;
-		if(player->resist(AcidResistance, AcidImmunity))
+		if(acid_nature && player->resist(AcidResistance, AcidImmunity))
 			continue;
 		e.damage();
 	}
@@ -210,13 +211,8 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 	// Damage equipment sometime
 	if(d100() < 30) {
 		pushvalue push_player(player, enemy);
-		damage_equipment(1);
+		damage_equipment(1, false);
 	}
-}
-
-static void acid_attack(creature* player, int value) {
-	player->damage(value);
-	damage_equipment(value);
 }
 
 static void restore(creature* player, ability_s a, ability_s test) {
@@ -306,6 +302,14 @@ static void check_freezing(creature* player) {
 	}
 }
 
+static void check_corrosion(creature* p) {
+	if(p->is(Corrosion)) {
+		if(!player->resist(AcidResistance, AcidImmunity))
+			player->damage(xrand(1, 3));
+		player->add(Corrosion, -1);
+	}
+}
+
 static void check_blooding(creature* p) {
 	if(p->is(Blooding)) {
 		p->damage(1);
@@ -364,20 +368,21 @@ static bool check_dangerous_feature(creature* p, point m) {
 	return true;
 }
 
-static bool check_trap(creature* player, point m) {
+static void check_trap(creature* player, point m) {
 	if(player->is(Fly))
-		return true;
+		return;
 	auto& ei = area->getfeature(m);
 	if(ei.is(TrappedFeature)) {
-		auto bonus = ei.isvisible() ? 20 : -30;
+		auto bonus = area->is(m, Hidden) ? -30 : 20;
 		if(!player->roll(Wits, bonus)) {
 			auto pn = getdescription(ei.id);
 			if(pn)
 				player->act(pn, getnm(ei.id));
 			player->apply(ei.effect);
 		}
+		if(!player->is(Local))
+			area->remove(m, Hidden);
 	}
-	return true;
 }
 
 static bool check_webbed_tile(creature* p, point m) {
@@ -422,24 +427,37 @@ static bool check_place_owner(creature* p, point m) {
 	return true;
 }
 
-static void check_hidden_doors(creature* p) {
+static void detect_hidden_objects(creature* player) {
 	if(!last_location)
 		return;
 	auto floor = last_location->floors;
 	indexa source;
-	source.select(p->getposition(), 1);
+	source.select(player->getposition(), imin(player->getlos(), 2));
 	auto found_doors = 0;
+	// Secrect doors
 	for(auto m : source) {
 		auto& ei = area->getfeature(m);
 		if(ei.isvisible())
 			continue;
-		if(!p->roll(Wits, -3000))
+		if(!player->roll(Wits, -3000))
 			continue;
 		found_doors++;
 		area->setreveal(m, floor);
 	}
 	if(found_doors)
-		p->actp(getnm("YouFoundSecretDoor"), found_doors);
+		player->actp(getnm("YouFoundSecretDoor"), found_doors);
+	// Traps
+	for(auto m : source) {
+		if(!area->is(m, Hidden))
+			continue;
+		auto& ei = area->getfeature(m);
+		if(!ei.is(TrappedFeature))
+			continue;
+		if(!player->roll(Wits, -3000))
+			continue;
+		area->remove(m, Hidden);
+		player->actp(getdescription("YouDetectTrap"), area->getfeature(m).getname());
+	}
 }
 
 static void drop_item(point m, const char* id) {
@@ -536,7 +554,9 @@ static void check_interaction(creature* player, point m) {
 static void look_items(creature* player, point m) {
 	items.clear();
 	items.select(m);
-	if(player->ishuman() && items) {
+	if(!items)
+		return;
+	if(player->ishuman()) {
 		auto index = 0;
 		char temp[4096]; stringbuilder sb(temp);
 		auto count = items.getcount();
@@ -1244,7 +1264,7 @@ void creature::makemove() {
 	nullify_elements(this);
 	check_blooding(this);
 	if(!is(Local))
-		check_hidden_doors(this);
+		detect_hidden_objects(this);
 	check_burning(this);
 	check_freezing(this);
 	ready_actions();

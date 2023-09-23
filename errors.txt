@@ -1,2 +1,2 @@
-﻿In file `rules/Features.txt`:
- Line 35: Can't find variant `AcidHarm`
+﻿In file `Names.txt`:
+ Define translation for `AcidTrap`

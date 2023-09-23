@@ -569,6 +569,7 @@ static void create_trap(point i) {
 	auto v = pm->random();
 	area->setfeature(i, v.value);
 	area->setflag(i, Hidden);
+	area->total.traps++;
 }
 
 static void create_corridor_contents() {
@@ -577,7 +578,7 @@ static void create_corridor_contents() {
 	if(count > (int)points.count)
 		count = points.count;
 	for(auto i = 0; i < count; i++) {
-		if(d100() < 10)
+		if(d100() < 40)
 			create_trap(points.data[i]);
 		else if(d100() < 30)
 			create_wandered_monster(points.data[i]);
@@ -1067,6 +1068,8 @@ static bool isallow(const featurei& ei, const variants source, bool all_of) {
 }
 
 static void match_features(const variants& source) {
+	if(!source)
+		return;
 	auto ps = indecies.begin();
 	pushvalue push_index(last_index);
 	for(auto m : indecies) {
@@ -1146,6 +1149,13 @@ bool choose_targets(unsigned flags, const variants& conditions) {
 		indecies.clear();
 		indecies.select(player->getposition(), FGT(flags, Ranged) ? 3 : 1);
 		indecies.match(fntis<featurei, &featurei::isvisible>, true);
+		if(player->ishuman()) {
+			if(FGT(flags, Identified))
+				indecies.match(Visible, true);
+		}
+		indecies.match(Hidden, FGT(flags, Unaware));
+		if(FGT(flags, Enemies))
+			indecies.match(fntis<featurei, &featurei::istrap>, true);
 		match_features(conditions);
 		indecies.sort(player->getposition());
 	} else if(FGT(flags, TargetRooms)) {
@@ -2107,11 +2117,28 @@ static bool is_wounded(int bonus) {
 static void standart_filter(int bonus) {
 }
 
+static void acid_damage_equipment(int bonus) {
+	for(auto& e : player->equipment()) {
+		if(bonus <= 0)
+			break;
+		if(!e)
+			continue;
+		if(d100() < (60 - bonus * 4))
+			continue;
+		bonus--;
+		if(player->resist(AcidResistance, AcidImmunity))
+			continue;
+		e.damage();
+	}
+}
+
 static void acid_harm(int bonus) {
 	if(player->resist(AcidResistance, AcidImmunity))
 		return;
 	player->fixeffect("AcidSplash");
-	player->damage(xrand(bonus/2, bonus));
+	player->damage(xrand(bonus / 2, bonus));
+	player->add(Corrosion, 1);
+	acid_damage_equipment(bonus);
 }
 
 static void need_help_info(stringbuilder& sb) {
