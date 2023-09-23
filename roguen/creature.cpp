@@ -436,6 +436,8 @@ static void detect_hidden_objects(creature* player) {
 	auto found_doors = 0;
 	// Secrect doors
 	for(auto m : source) {
+		if(!area->is(m, Visible))
+			continue;
 		auto& ei = area->getfeature(m);
 		if(ei.isvisible())
 			continue;
@@ -448,7 +450,7 @@ static void detect_hidden_objects(creature* player) {
 		player->actp(getnm("YouFoundSecretDoor"), found_doors);
 	// Traps
 	for(auto m : source) {
-		if(!area->is(m, Hidden))
+		if(!area->is(m, Hidden) || !area->is(m, Visible))
 			continue;
 		auto& ei = area->getfeature(m);
 		if(!ei.is(TrappedFeature))
@@ -1267,6 +1269,7 @@ void creature::makemove() {
 		detect_hidden_objects(this);
 	check_burning(this);
 	check_freezing(this);
+	check_corrosion(this);
 	ready_actions();
 	if(ishuman()) {
 		ready_skills();
