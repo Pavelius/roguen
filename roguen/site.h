@@ -38,7 +38,7 @@ struct areaheadi : geoposition {
 		short		rooms, rooms_hidden;
 		short		monsters;
 		short		boss;
-		short		loots;
+		short		loots, artifacts, cursed, blessed;
 	};
 	short unsigned	site_id;
 	totali			total;

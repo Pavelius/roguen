@@ -66,18 +66,11 @@ bool item::canequip(wear_s v) const {
 	}
 }
 
-typedef adat<char> powera;
+typedef adat<char, 32> powera;
 
-static void add_powers(powera& result, const listi& source, bool noncursed, bool cursed, size_t maximum_count = 0) {
+static void add_powers(powera& result, const listi& source, size_t maximum_count = 0) {
 	result.clear();
 	for(auto& v : source.elements) {
-		if(v.counter < 0) {
-			if(!cursed)
-				continue;
-		} else {
-			if(!noncursed)
-				continue;
-		}
 		result.add(&v - source.elements.begin());
 		if(maximum_count && result.count >= maximum_count)
 			break;
@@ -90,7 +83,7 @@ static int random_power(powera& result) {
 	return 1 + result.data[rand() % result.count];
 }
 
-void item::createpower(int chance_power, int chance_cursed) {
+void item::createpower(int chance_power) {
 	if(iscountable())
 		return;
 	auto& ei = geti();
@@ -104,10 +97,7 @@ void item::createpower(int chance_power, int chance_cursed) {
 			auto level_cap = 0;
 			if(area && area->level)
 				level_cap = 4 + (iabs(area->level) - 1);
-			if(d100() < chance_cursed)
-				add_powers(result, *ei.powers, false, true, level_cap);
-			else
-				add_powers(result, *ei.powers, true, false, level_cap);
+			add_powers(result, *ei.powers, level_cap);
 			power = random_power(result);
 		}
 	}
@@ -176,7 +166,7 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 	if(!iscountable() && identified && power) {
 		auto power = getpower();
 		sb.addsep(' ');
-		if(power.counter < 0) {
+		if(iscursed()) {
 			// Cursed version
 			auto tid = getnme(str("Cursed%1", power.getid()));
 			if(!tid)

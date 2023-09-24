@@ -813,6 +813,24 @@ static const script* get_local_method() {
 	return 0;
 }
 
+static void apply_magical_class(item& it) {
+	if(!it.getpower())
+		return;
+	static magic_s chance_special[20] = {
+		Mundane, Mundane, Mundane, Mundane, Mundane,
+		Mundane, Mundane, Mundane, Mundane, Mundane,
+		Mundane, Mundane, Mundane, Blessed, Blessed,
+		Blessed, Cursed, Cursed, Cursed, Artifact
+	};
+	it.set(maprnd(chance_special));
+	switch(it.getmagic()) {
+	case Artifact: area->total.artifacts++; break;
+	case Blessed: area->total.blessed++; break;
+	case Cursed: area->total.cursed++; break;
+	default: break;
+	}
+}
+
 static void place_item(point index, const itemi* pe) {
 	if(!pe || pe == bsdata<itemi>::elements)
 		return;
@@ -824,6 +842,7 @@ static void place_item(point index, const itemi* pe) {
 	if(area->level)
 		chance_power += iabs(area->level) * 5;
 	it.createpower(chance_power);
+	apply_magical_class(it);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
