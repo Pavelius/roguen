@@ -11,6 +11,7 @@ union variant;
 
 typedef sliceu<variant> variants;
 typedef void (*fnvariant)(variant v);
+typedef bool (*fntestvariant)(variant v);
 
 struct varianti {
 	typedef void(*fnscript)(int index, int bonus);

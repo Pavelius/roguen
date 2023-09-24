@@ -1481,32 +1481,6 @@ void creature::every4hour() {
 	restore(this, Hits, Strenght);
 }
 
-bool creature::isallow(const variants& source) const {
-	for(auto v : source) {
-		if(!isallow(v))
-			return false;
-	}
-	return true;
-}
-
-bool creature::isallow(variant v) const {
-	if(v.iskind<conditioni>())
-		return is((condition_s)v.value);
-	else if(v.iskind<feati>())
-		return !is((feat_s)v.value);
-	else if(v.iskind<areafi>()) {
-		auto present = is((areaf)v.value);
-		return (v.counter < 0) ? present : !present;
-	} else if(v.iskind<featurei>()) {
-		auto m = getposition();
-		if(!area->isvalid(m))
-			return false;
-		auto present = area->features[m];
-		return (v.counter < 0) ? present == v.value : present != v.value;
-	}
-	return true;
-}
-
 void apply_ability(ability_s v, int counter) {
 	last_ability = v;
 	if(!counter)

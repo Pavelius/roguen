@@ -22,6 +22,8 @@ BSMETA(featurei) = {
 	{}};
 BSDATAC(featurei, 250);
 
+featurei* last_feature;
+
 featurei* featurei::gethidden() const {
 	for(auto& e : bsdata<featurei>()) {
 		if(!e.isvisible() && e.activateto == this)

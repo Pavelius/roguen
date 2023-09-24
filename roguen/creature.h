@@ -79,8 +79,6 @@ public:
 	bool			is(ability_s v) const { return get(v) > 0; }
 	bool			is(condition_s v) const;
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
-	bool			isallow(variant v) const;
-	bool			isallow(const variants& source) const;
 	bool			isallow(const item& it) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;

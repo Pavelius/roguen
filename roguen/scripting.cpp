@@ -55,6 +55,7 @@ int				last_value, last_cap;
 extern bool		show_floor_rect;
 static bool		prepare_targets;
 static variant	last_filter;
+static fntestvariant last_allow_proc;
 
 static adat<rect, 32> locations;
 static adat<point, 512> points;
@@ -813,7 +814,7 @@ static const script* get_local_method() {
 	return 0;
 }
 
-static void apply_magical_class(item& it) {
+static void apply_magical(item& it) {
 	if(!it.getpower())
 		return;
 	static magic_s chance_special[20] = {
@@ -842,7 +843,7 @@ static void place_item(point index, const itemi* pe) {
 	if(area->level)
 		chance_power += iabs(area->level) * 5;
 	it.createpower(chance_power);
-	apply_magical_class(it);
+	apply_magical(it);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
@@ -864,13 +865,6 @@ static void visualize_activity(point m) {
 	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
-//template<> bool fttest<featurei>(int value, int counter) {
-//	if(last_rect.width() > 1 || last_rect.height() > 1)
-//		return true;
-//	if(counter < 0)
-//		return area->features[last_index] == value;
-//	return true;
-//}
 template<> void ftscript<featurei>(int value, int counter) {
 	area->set(last_rect, &areamap::setfeature, value, counter);
 }
@@ -1042,49 +1036,84 @@ static void add_neutrals() {
 	}
 }
 
-static void match_creatures(const variants& source) {
-	auto ps = targets.begin();
-	for(auto p : targets) {
-		if(!p->isallow(source))
-			continue;
-		*ps++ = p;
+static bool allow_all(const variants& source) {
+	pushvalue push_begin(script_begin, source.begin());
+	pushvalue push_end(script_end, source.end());
+	while(script_begin < script_end) {
+		if(!last_allow_proc(*script_begin++))
+			return false;
 	}
-	targets.count = ps - targets.begin();
-}
-
-static bool isallow(const featurei& ei, const variants source, bool all_of);
-
-static bool isallow(const featurei& ei, variant v) {
-	if(v.iskind<conditioni>())
-		return ei.is((condition_s)v.value);
-	else if(v.iskind<featurei>())
-		return &ei == bsdata<featurei>::elements + v.value;
-	else if(v.iskind<script>()) {
-		if(bsdata<script>::elements[v.value].test)
-			return bsdata<script>::elements[v.value].test(v.counter);
-	} else if(v.iskind<listi>())
-		return isallow(ei, bsdata<listi>::elements[v.value].elements, false);
-	else if(v.iskind<randomizeri>())
-		return isallow(ei, bsdata<randomizeri>::elements[v.value].chance, false);
 	return true;
 }
 
-static bool isallow(const featurei& ei, const variants source, bool all_of) {
+static bool allow_oneof(const variants& source) {
 	pushvalue push_begin(script_begin, source.begin());
 	pushvalue push_end(script_end, source.end());
-	if(all_of) {
-		while(script_begin < script_end) {
-			if(!isallow(ei, *script_begin++))
-				return false;
-		}
-		return true;
-	} else {
-		while(script_begin < script_end) {
-			if(isallow(ei, *script_begin++))
-				return true;
-		}
-		return false;
+	while(script_begin < script_end) {
+		if(last_allow_proc(*script_begin++))
+			return true;
 	}
+	return false;
+}
+
+static bool default_allow(variant v) {
+	if(v.iskind<script>()) {
+		if(bsdata<script>::elements[v.value].test)
+			return bsdata<script>::elements[v.value].test(v.counter);
+	} else if(v.iskind<listi>())
+		return allow_oneof(bsdata<listi>::elements[v.value].elements);
+	else if(v.iskind<randomizeri>())
+		return allow_oneof(bsdata<randomizeri>::elements[v.value].chance);
+	return true;
+}
+
+static bool allow_item(variant v) {
+	if(v.iskind<conditioni>())
+		return last_item->is((condition_s)v.value);
+	else
+		return default_allow(v);
+}
+
+static bool allow_feature(variant v) {
+	if(v.iskind<conditioni>())
+		return last_feature->is((condition_s)v.value);
+	else if(v.iskind<featurei>())
+		return last_feature == bsdata<featurei>::elements + v.value;
+	else
+		return default_allow(v);
+}
+
+static bool allow_creature(variant v) {
+	if(v.iskind<conditioni>())
+		return player->is((condition_s)v.value);
+	else if(v.iskind<feati>())
+		return !player->is((feat_s)v.value);
+	else if(v.iskind<areafi>()) {
+		auto present = player->is((areaf)v.value);
+		return (v.counter < 0) ? present : !present;
+	} else if(v.iskind<featurei>()) {
+		auto m = player->getposition();
+		if(!area->isvalid(m))
+			return false;
+		auto present = area->features[m];
+		return (v.counter < 0) ? present == v.value : present != v.value;
+	} else
+		return default_allow(v);
+}
+
+static void match_items(const variants& source) {
+	if(!source)
+		return;
+	pushvalue push(last_item);
+	pushvalue push_allow(last_allow_proc, allow_item);
+	auto ps = items.begin();
+	for(auto p : items) {
+		last_item = p;
+		if(!allow_all(source))
+			continue;
+		*ps++ = p;
+	}
+	items.count = ps - items.begin();
 }
 
 static void match_features(const variants& source) {
@@ -1092,50 +1121,31 @@ static void match_features(const variants& source) {
 		return;
 	auto ps = indecies.begin();
 	pushvalue push_index(last_index);
+	pushvalue push_feature(last_feature);
+	pushvalue push_allow(last_allow_proc, allow_feature);
 	for(auto m : indecies) {
 		last_index = m;
-		auto& ei = area->getfeature(m);
-		if(!isallow(ei, source, true))
+		last_feature = bsdata<featurei>::elements + area->features[m];
+		if(!allow_all(source))
 			continue;
 		*ps++ = m;
 	}
 	indecies.count = ps - indecies.begin();
 }
 
-bool item::iscondition(const void* object, int v) {
-	auto p = (item*)object;
-	switch(v) {
-	case Identified: return p->identified != 0;
-	case NoWounded: return !p->iscountable() || p->broken == 0;
-	case Wounded: return p->iscountable() && p->broken != 0;
-	case Ranged: return p->geti().wear == RangedWeapon;
-	case Unaware: return p->identified == 0;
-	default: return false;
-	}
-}
-
-static bool isallow(const item& e, variant v) {
-	if(v.iskind<conditioni>())
-		return e.iscondition(&e, v.value);
-	return true;
-}
-
-static bool isallow(const item& e, const variants& source) {
-	for(auto v : source) {
-		if(!isallow(e, v))
-			return false;
-	}
-	return true;
-}
-
-static void match_items(const variants& source) {
-	auto ps = items.begin();
-	for(auto p : items) {
-		if(!isallow(*p, source))
+static void match_creatures(const variants& source) {
+	if(!source)
+		return;
+	pushvalue push_player(player);
+	pushvalue push_allow(last_allow_proc, allow_creature);
+	auto ps = targets.begin();
+	for(auto p : targets) {
+		player = p;
+		if(!allow_all(source))
 			continue;
 		*ps++ = p;
 	}
-	items.count = ps - items.begin();
+	targets.count = ps - targets.begin();
 }
 
 bool choose_targets(unsigned flags, const variants& conditions) {
@@ -1194,12 +1204,17 @@ bool choose_targets(unsigned flags, const variants& conditions) {
 				rooms.match(fntis<roomi, &roomi::ismarkable>, true);
 		}
 	} else  if(FGT(flags, TargetItems)) {
-		static condition_s states[] = {Unaware, Identified, Ranged, Wounded, NoWounded};
 		items.select(player);
-		for(auto v : states) {
-			if(FGT(flags, v))
-				items.match(item::iscondition, v, true);
-		}
+		if(FGT(flags, Identified))
+			items.match(fntis<item, &item::isidentified>, true);
+		else if(FGT(flags, Unaware))
+			items.match(fntis<item, &item::isidentified>, false);
+		if(FGT(flags, Ranged))
+			items.match(fntis<item, &item::isranged>, true);
+		if(FGT(flags, Wounded))
+			items.match(fntis<item, &item::iswounded>, true);
+		else if(FGT(flags, NoWounded))
+			items.match(fntis<item, &item::iswounded>, false);
 	}
 	if(FGT(flags, Random)) {
 		targets.shuffle();

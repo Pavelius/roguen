@@ -34,3 +34,4 @@ struct featurei : nameable {
 	bool			autoactivated() const { return activateto && chance_auto_activate; }
 	bool			handactivated() const { return activateto && !chance_auto_activate; }
 };
+extern featurei* last_feature;

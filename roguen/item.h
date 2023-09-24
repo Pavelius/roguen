@@ -8,6 +8,7 @@
 #pragma once
 
 enum ability_s : unsigned char;
+enum condition_s : unsigned char;
 
 struct itemi;
 
@@ -78,6 +79,7 @@ public:
 	variant			getpower() const;
 	variants		getuse() const;
 	int				getweight() const;
+	bool			is(condition_s v) const;
 	bool			is(feat_s v) const;
 	bool			is(wear_s v) const;
 	bool			is(const itemi& v) const { return v == geti(); }
@@ -85,12 +87,13 @@ public:
 	bool			is(const item& v) const { return type == v.type; }
 	bool			ischarges() const { return getcharges() > 0; }
 	bool			ischargeable() const;
-	static bool		iscondition(const void* object, int v);
 	bool			iscountable() const { return geti().count != 0; }
 	bool			iscursed() const { return magic==Cursed;}
 	bool			isidentified() const { return identified != 0; }
 	bool			ismagical() const;
+	bool			isranged() const { return geti().wear == RangedWeapon; }
 	bool			isusable() const { return geti().use.size() != 0; }
+	bool			iswounded() const { return iscountable() && broken > 0; }
 	void			set(magic_s v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
