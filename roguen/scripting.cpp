@@ -75,6 +75,15 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
+void damage_item(item& it) {
+	auto name = it.getname();
+	it.damage();
+	if(it)
+		player->act(getnm("YouDamageItem"), name);
+	else
+		player->act(getnm("YouBrokeItem"), name);
+}
+
 static int getrange(point m1, point m2) {
 	auto dx = iabs(m1.x - m2.x);
 	auto dy = iabs(m1.y - m2.y);

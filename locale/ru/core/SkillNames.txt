@@ -1,8 +1,12 @@
 Alertness: Бдительность
+Gemcutting: Ювелирное дело
 Herbalism: Травознавство
 Mining: Шахтерское дело
 
+YouBrokeItem: %герой сломал%а %-$1.
+YouCantMineHere: Вы не можете копать здесь.
 YouCrashWall: %герой разрушил%а стену %1.
+YouDamageItem: %герой повредил%а %-$1.
 YouFailRoll: %герой сделал%а бросок.
 YouMakeRoll: %герой не сделал%а бросок. 
 

@@ -1,2 +1,2 @@
 ﻿In file `Names.txt`:
- Define translation for `SearchRoomForGems`
+ Define translation for `YouCantMineHere`

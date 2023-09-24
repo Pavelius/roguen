@@ -20,6 +20,7 @@ extern collection<roomi> rooms;
 
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(unsigned flags, const variants& effects);
+void damage_item(item& it);
 int getfloor();
 
 void creature::fixact(const char* id) const {
@@ -557,7 +558,7 @@ static bool check_mining(creature* player, point m) {
 		}
 		return true;
 	} else if(d100() < 10)
-		player->wears[MeleeWeapon].damage();
+		damage_item(player->wears[MeleeWeapon]);
 	return false;
 }
 
@@ -1527,8 +1528,6 @@ void apply_ability(ability_s v, int counter) {
 }
 
 void apply_value(variant v, int modifier) {
-	//if(v.iskind<abilityi>())
-	//	apply_ability((ability_s)v.value, v.counter * modifier);
 	if(v.iskind<abilityi>())
 		player->abilities[v.value] += v.counter * modifier;
 	else if(v.iskind<spelli>())
