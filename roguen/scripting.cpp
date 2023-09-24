@@ -580,8 +580,9 @@ static void create_trap(point i) {
 }
 
 static bool ispassage(point m) {
-	return (area->iswall(m, North) && area->iswall(m, South) && !area->iswall(m, East) && !area->iswall(m, West))
-		|| (area->iswall(m, East) && area->iswall(m, West) && !area->iswall(m, North) && !area->iswall(m, South));
+	return !area->iswall(m) && !area->features[m]
+		&& ((area->iswall(m, North) && area->iswall(m, South) && !area->iswall(m, East) && !area->iswall(m, West))
+		|| (area->iswall(m, East) && area->iswall(m, West) && !area->iswall(m, North) && !area->iswall(m, South)));
 }
 
 static void create_corridor_traps(size_t maximum_count) {
