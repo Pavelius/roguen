@@ -9,11 +9,12 @@ enum ability_s : unsigned char {
 	DamageMelee, DamageRanged, DamageThrown,
 	Armor, Block, BlockRanged,
 	Speed, EnemyAttacks,
-	Herbalism, Alertness, Thievery, Stealth, Survival, History, Religion,
+	Herbalism, Alertness, Thievery, Mining, Stealth, Survival, History, Religion, Woodcutting,
 	CarryCapacity, Level,
 	Hits, Mana, Faith,
 	Poison, Illness, Corrosion, Burning, Freezing,
 	Experience, Satiation, Money,
+	FirstSkill = Herbalism, LastSkill = Woodcutting,
 };
 enum color_s : unsigned char {
 	ColorNone,

@@ -2243,7 +2243,7 @@ static void list_of_feats(stringbuilder& sb) {
 }
 
 static void list_of_skills(stringbuilder& sb) {
-	for(auto i = Herbalism; i <= Religion; i = (ability_s)(i + 1)) {
+	for(auto i = FirstSkill; i <= LastSkill; i = (ability_s)(i + 1)) {
 		auto v = player->get(i);
 		if(v)
 			sb.addn("%1\t%2i%%", bsdata<abilityi>::elements[i].getname(), v);
