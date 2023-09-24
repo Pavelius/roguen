@@ -515,19 +515,49 @@ static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 	return false;
 }
 
+static bool issame(point m, tilef f) {
+	if(!area->isvalid(m))
+		return false;
+	return bsdata<tilei>::elements[area->tiles[m]].is(f);
+}
+
+static bool issame(point m, direction_s d, tilef f) {
+	if(!issame(m, f))
+		return false;
+	auto m1 = to(m, round(d, East));
+	auto m2 = to(m, round(d, West));
+	if(!area->isvalid(m1) || !area->isvalid(m2))
+		return false;
+	if(bsdata<featurei>::elements[area->features[m1]].is(BetweenWalls))
+		return false;
+	if(bsdata<featurei>::elements[area->features[m2]].is(BetweenWalls))
+		return false;
+	return true;
+}
+
 static bool check_mining(creature* player, point m) {
-	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
-	if(ei.is(Mines) && player->wears[MeleeWeapon].geti().is(CutMines)) {
-		if(player->roll(Mining)) {
-			player->act(getnm("YouCrashWall"), getnm(ei.id));
-			area->setfeature(m, 0);
-			area->settile(m, getfloor());
-			if(player->roll(Mining, -2000))
-				drop_item(m, "MiningOre");
-			return true;
-		} else if(d100() < 10)
-			player->wears[MeleeWeapon].damage();
+	if(!player->wears[MeleeWeapon].geti().is(CutMines))
+		return false;
+	if(!issame(m, Mines))
+		return false;
+	auto direction = area->getdirection(player->getposition(), m);
+	if(!issame(m, direction, Mines) || !m.in({2, 2, areamap::mps - 2, areamap::mps - 2})) {
+		player->actp(getnm("YouCantMineHere"));
+		return false;
 	}
+	if(player->roll(Mining)) {
+		player->act(getnm("YouCrashWall"), getnm(bsdata<tilei>::elements[area->tiles[m]].id));
+		area->setfeature(m, 0);
+		area->settile(m, getfloor());
+		if(player->roll(Mining)) {
+			if(d100() < 40)
+				drop_item(m, "MiningOre");
+			if(player->roll(Gemcutting, -2000))
+				drop_item(m, "MiningGem");
+		}
+		return true;
+	} else if(d100() < 10)
+		player->wears[MeleeWeapon].damage();
 	return false;
 }
 

@@ -254,7 +254,9 @@ Stomafillia weight(1) avatar(89) count(1)
 GrassHerbs
  chance AlrauniaAntidote+3 BurbRoot+2 CurariaMancox+2 DemonDaisy DevilsRose MorgiaRoot MossOfMoreilon PepperPetal Spenseweed Stomacemptia Stomafillia
 MiningOre
- chance Stones+4
+ chance Stones+4 GP+1
+MiningGem
+ chance OrnamentalStones+16 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
 RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins
