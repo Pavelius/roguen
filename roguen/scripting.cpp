@@ -81,7 +81,7 @@ static int getrange(point m1, point m2) {
 	return (dx > dy) ? dx : dy;
 }
 
-static int getfloor() {
+int getfloor() {
 	if(last_site && last_site->floors)
 		return last_site->floors;
 	if(last_location && last_location->floors)

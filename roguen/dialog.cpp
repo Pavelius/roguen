@@ -13,7 +13,7 @@ int dialogi::open() const {
 		beforeopen();
 	while(ismodal()) {
 		paintstart();
-		fillwindow();
+		fillform();
 		setoffset(metrics::padding, metrics::padding);
 		mainscene();
 		pause_keys();

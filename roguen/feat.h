@@ -4,7 +4,7 @@
 #pragma once
 
 enum feat_s : unsigned char {
-	Darkvision, TwoHanded, CutWoods, Retaliate, Thrown,
+	Darkvision, TwoHanded, CutWoods, CutMines, Retaliate, Thrown,
 	BleedingHit, StunningHit, PierceHit, MightyHit, MissHalfTime, Vorpal,
 	FireDamage, ColdDamage,
 	IgnoreWeb, Fly, LightSource, Regeneration, ManaRegeneration,

@@ -23,6 +23,7 @@ DeepWater minimap(29 80 120) floor(53 8) borders(-1)
  flags CanSwim
 
 WallCave borders(-1) tile(Cave) walls(0 2)
+ flags Mines
 WallBuilding borders(-1) tile(WoodenFloor) walls(13 1)
 WallDungeon borders(-1) tile(DungeonFloor) walls(25 3)
 WallFire borders(-1) tile(Lava) walls(39 5)

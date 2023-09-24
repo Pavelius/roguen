@@ -43,3 +43,5 @@ AncientSite: Древний
 DarkSite: Темный
 EvilSite: Злой
 FrozenSite: Ледяной
+
+WallCave: Пещера

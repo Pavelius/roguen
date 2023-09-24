@@ -88,6 +88,7 @@ static void main_start() {
 	add_item("RingOfFireResistance");
 	add_item("RingOfLevitation");
 	add_item("RingOfRegeneration");
+	add_item("HandPick");
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);

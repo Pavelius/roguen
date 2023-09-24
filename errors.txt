@@ -1,2 +1,3 @@
 ﻿In file `Names.txt`:
- Define translation for `Herbalism`
+ Define translation for `WallCave`
+ Define translation for `YouCrashWall`

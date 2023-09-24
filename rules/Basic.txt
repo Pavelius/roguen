@@ -48,7 +48,7 @@ RandomRace
 "Ctrl+U" UseItem
 "Ctrl+S" CastSpell
 
-"Ctrl+I" MakeScreenshoot
+"Ctrl+O" MakeScreenshoot
 
 "Ctrl+D" DebugMessage
 "Ctrl+E" ExploreArea

@@ -20,6 +20,7 @@ extern collection<roomi> rooms;
 
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(unsigned flags, const variants& effects);
+int getfloor();
 
 void creature::fixact(const char* id) const {
 	if(!is(AnimalInt)) {
@@ -504,13 +505,28 @@ static int chance_cut_wood(const item& weapon) {
 
 static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
-		auto chance = chance_cut_wood(player->wears[MeleeWeapon]);
-		if(d100() < chance) {
+		if(player->roll(Woodcutting)) {
 			player->act(getnm("YouCutWood"), getnm(ei.id));
 			area->setfeature(m, 0);
 			drop_item(m, "WoodenLagsTable");
 			return true;
 		}
+	}
+	return false;
+}
+
+static bool check_mining(creature* player, point m) {
+	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
+	if(ei.is(Mines) && player->wears[MeleeWeapon].geti().is(CutMines)) {
+		if(player->roll(Mining)) {
+			player->act(getnm("YouCrashWall"), getnm(ei.id));
+			area->setfeature(m, 0);
+			area->settile(m, getfloor());
+			if(player->roll(Mining, -2000))
+				drop_item(m, "MiningOre");
+			return true;
+		} else if(d100() < 10)
+			player->wears[MeleeWeapon].damage();
 	}
 	return false;
 }
@@ -1039,6 +1055,7 @@ void creature::movestep(point ni) {
 		look_items(this, getposition());
 		pay_movement(this);
 	} else {
+		check_mining(this, ni);
 		check_interaction(this, ni);
 		fixaction();
 		pay_movement(this);

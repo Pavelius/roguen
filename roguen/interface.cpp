@@ -1264,10 +1264,25 @@ static void show_logs() {
 	paint_logs(actable::getlog(), logs_origin, logs_format_origin, logs_maximum);
 }
 
+static void window_back() {
+	rectpush push;
+	pushvalue push_fore(draw::fore, colors::form);
+	setoffset(-metrics::padding + 1, -metrics::padding + 1);
+	rectf();
+}
+
+static void right_border() {
+	rectpush push;
+	pushvalue push_fore(draw::fore, colors::border);
+	caret.x += width - 1;
+	//caret.y -= metrics::padding;
+	line(caret.x, caret.y + height + metrics::padding);
+}
+
 static void show_block(const char* format, ...) {
 	pushvalue push_name(last_name, player->getname());
 	pushvalue push_female(last_female, player->is(Female));
-	pushvalue push_tab(draw::tab_pixels, width - 48);
+	pushvalue push_tab(draw::tab_pixels, width - 26);
 	char temp[2048]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));
 	textf(temp);
@@ -1277,9 +1292,11 @@ static void show_charsheet() {
 	setoffset(metrics::padding, metrics::padding);
 	rectpush push;
 	width = 150;
+	right_border();
 	show_block("%ListOfFeats");
 	caret.y = push.caret.y;
-	caret.x += width + metrics::padding;
+	caret.x += width + metrics::padding * 2;
+	right_border();
 	show_block("%ListOfSkills");
 	pause_keys();
 }

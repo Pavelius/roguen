@@ -5,6 +5,7 @@ BSDATA(feati) = {
 	{"Darkvision"},
 	{"TwoHanded"},
 	{"CutWoods"},
+	{"CutMines"},
 	{"Retaliate"},
 	{"Thrown"},
 	{"BleedingHit"},

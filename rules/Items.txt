@@ -55,6 +55,11 @@ Halberd cost(7) weight(1500) wear(MeleeWeapon) wear_index(2) avatar(566) powers(
  required Strenght(50)
 HandAxe cost(4) weight(300) wear(MeleeWeapon) wear_index(0) avatar(517) powers(SlashingWeapons)
  weapon damage(4) pierce(1) speed(-2)
+ feats CutWoods
+ required Strenght(30)
+HandPick cost(5) weight(300) wear(MeleeWeapon) wear_index(10) avatar(56) powers(PierceWeapons)
+ weapon damage(4) pierce(3) speed(-3)
+ feats CutMines
  required Strenght(30)
 Mace cost(5) weight(350) wear(MeleeWeapon) avatar(841) powers(BludgeonWeapons)
  weapon damage(4) speed(-2)
@@ -248,6 +253,8 @@ Stomafillia weight(1) avatar(89) count(1)
 
 GrassHerbs
  chance AlrauniaAntidote+3 BurbRoot+2 CurariaMancox+2 DemonDaisy DevilsRose MorgiaRoot MossOfMoreilon PepperPetal Spenseweed Stomacemptia Stomafillia
+MiningOre
+ chance Stones+4
 RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins

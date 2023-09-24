@@ -1,6 +1,8 @@
 Alertness: Ѕдительность
 Herbalism: “равознавство
+Mining: Ўахтерское дело
 
+YouCrashWall: %герой разрушил%а стену %1.
 YouFailRoll: %герой сделал%а бросок.
 YouMakeRoll: %герой не сделал%а бросок. 
 
