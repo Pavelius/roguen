@@ -18,19 +18,10 @@ siteskilli* last_action;
 
 bool choose_targets(unsigned flags, const variants& effects);
 
-static void applying(variant v) {
-	if(v.iskind<featurei>()) {
-		if(v.counter < 0)
-			area->features[last_index] = 0;
-		else if(v.counter > 0)
-			area->features[last_index] = (unsigned char)v.value;
-	} else if(v.iskind<script>())
-		bsdata<script>::elements[v.value].proc(v.counter);
-}
-
-static void applying(const variants& source) {
-	for(auto v : source)
-		applying(v);
+void siteskilli::fixuse() const {
+	auto rm = player->getroom();
+	if(rm)
+		skilluse::add(this, rm->center(), bsid(player), game.getminutes());
 }
 
 bool siteskilli::isusable() const {
@@ -51,5 +42,5 @@ bool siteskilli::isusable() const {
 			}
 		}
 	}
-	return choose_targets(target, effect);
+	return choose_targets(target, conditions);
 }

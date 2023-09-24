@@ -2028,9 +2028,7 @@ static void roll_action(int bonus) {
 		return;
 	last_ability = last_action->skill;
 	roll_value(last_action->bonus + bonus);
-	auto rm = player->getroom();
-	if(rm)
-		skilluse::add(last_action, rm->center(), bsid(player), game.getminutes());
+	last_action->fixuse();
 }
 
 static void fail_roll_value(int bonus) {

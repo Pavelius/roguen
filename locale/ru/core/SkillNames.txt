@@ -9,4 +9,5 @@ YouMakeRoll: %герой не сделал%а бросок.
 GatherMellowHerbs: Собрать спелые травы
 GatherSemiMellowHerbs: Собрать травы
 SearchRoom: Обыскать комнату
+SearchRoomForGems: Искать драгоценности
 StealCoins: Украсть монеты

@@ -13,8 +13,9 @@ struct siteskilli : nameable {
 	unsigned		target;
 	char			bonus;
 	duration_s		retry;
-	variants		effect;
+	variants		effect, conditions;
 	bool			isusable() const;
+	void			fixuse() const;
 };
 typedef collection<siteskilli> siteskilla;
 extern siteskilla last_actions;

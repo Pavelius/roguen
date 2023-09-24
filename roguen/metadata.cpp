@@ -147,7 +147,7 @@ BSMETA(siteskilli) = {
 	BSREQ(bonus),
 	BSENM(retry, durationi),
 	BSFLG(target, conditioni),
-	BSREQ(effect),
+	BSREQ(effect), BSREQ(conditions),
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),

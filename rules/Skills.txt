@@ -2,16 +2,22 @@
 
 GatherSemiMellowHerbs skill(Herbalism)
  target TargetFeatures
- effect FeatureMatchNext HerbsSemi GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
+ conditions HerbsSemi 
+ effect GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
 GatherMellowHerbs skill(Herbalism)
+ conditions HerbsFull
  target TargetFeatures
- effect FeatureMatchNext HerbsFull GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
+ effect GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
 OpenDoorLock skill(Thievery)
  target TargetFeatures
  effect OpenLockedDoor
 SacrificeEvilAltar skill(Religion)
  target TargetFeatures
- effect FeatureMatchNext AltarEvil
+ conditions AltarEvil
 StealCoins skill(Thievery)
  target TargetCreatures Neutrals
  effect StealCoins
+SearchRoomForGems skill(Gemcutting)
+ conditions RoomsWhereGemsAreFound
+ target TargetRooms You Allies
+ effect RollAction RandomGem

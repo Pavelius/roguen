@@ -1,3 +1,2 @@
 ﻿In file `Names.txt`:
- Define translation for `WallCave`
- Define translation for `YouCrashWall`
+ Define translation for `SearchRoomForGems`
