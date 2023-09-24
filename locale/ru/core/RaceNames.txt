@@ -10,7 +10,7 @@ Gnome: Гном
 GnomeFemale: Гномиха
 HightElf: Высший эльф
 HightElfFemale: Высшая эльфийка
-Human: Человек
+Human: Мужчина
 HumanFemale: Женщина
 Hurtling: Хоббит
 HurtlingFemale: Хоббитка

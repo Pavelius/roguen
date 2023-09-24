@@ -409,32 +409,30 @@ static void detect_hidden_objects(creature* player) {
 	auto floor = last_location->floors;
 	indexa source;
 	source.select(player->getposition(), imin(player->getlos(), 2));
-	auto found_doors = 0;
+	source.match(Visible, true);
 	// Secrect doors
 	for(auto m : source) {
-		if(!area->is(m, Visible))
-			continue;
 		auto& ei = area->getfeature(m);
 		if(ei.isvisible())
 			continue;
-		if(!player->roll(Wits, -3000))
+		if(!player->roll(Alertness, -2000))
 			continue;
-		found_doors++;
+		player->actp(getnm("YouFoundSecretDoor"));
 		area->setreveal(m, floor);
+		break;
 	}
-	if(found_doors)
-		player->actp(getnm("YouFoundSecretDoor"), found_doors);
 	// Traps
 	for(auto m : source) {
-		if(!area->is(m, Hidden) || !area->is(m, Visible))
+		if(!area->is(m, Hidden))
 			continue;
 		auto& ei = area->getfeature(m);
 		if(!ei.is(TrappedFeature))
 			continue;
-		if(!player->roll(Wits, -3000))
+		if(!player->roll(Alertness, -2000))
 			continue;
 		area->remove(m, Hidden);
 		player->actp(getdescription("YouDetectTrap"), area->getfeature(m).getname());
+		break;
 	}
 }
 
@@ -651,7 +649,7 @@ static void update_skills() {
 		auto i = e.getindex();
 		if(!player->basic.abilities[i])
 			continue;
-		player->abilities[i] += player->get(e.base) / 3;
+		player->abilities[i] += player->get(e.base) / 2;
 	}
 }
 
@@ -660,11 +658,10 @@ void creature::update_abilities() {
 	abilities[DamageRanged] += get(Dexterity) / 15;
 	abilities[Armor] += get(Strenght) / 15;
 	abilities[Speed] += 25 + get(Dexterity) / 5;
-	abilities[Dodge] += get(Dexterity) / 2;
 	if(is(Stun)) {
 		abilities[WeaponSkill] /= 2;
 		abilities[BalisticSkill] /= 2;
-		abilities[Dodge] -= 100;
+		abilities[Dodge] -= 80;
 	}
 	if(!is(IgnoreWeb) && ispresent() && is(Webbed)) {
 		abilities[WeaponSkill] -= 10;
@@ -1099,26 +1096,15 @@ static void add_ability(ability_s v, int counter, bool interactive, bool basic) 
 	}
 }
 
-static bool test_cap(ability_s i, bool positive) {
-	if(positive) {
-		if(last_cap && player->basic.abilities[i] >= last_cap) {
-			last_cap = 0;
-			return false;
-		}
-		last_cap = 0;
-	} else {
-		if(last_cap && player->basic.abilities[i] <= last_cap) {
-			last_cap = 0;
-			return false;
-		}
-		last_cap = 0;
-	}
-	return true;
+static int get_counter(int counter) {
+	if(counter > 100)
+		return xrand(1, counter - 100);
+	return counter;
 }
 
 static void advance_value(variant v) {
 	if(v.iskind<abilityi>())
-		add_ability((ability_s)v.value, v.counter, false, true);
+		player->basic.abilities[v.value] += get_counter(v.counter);
 	else if(v.iskind<itemi>()) {
 		if(v.counter >= 0)
 			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
@@ -1485,8 +1471,6 @@ void apply_ability(ability_s v, int counter) {
 	last_ability = v;
 	if(!counter)
 		return;
-	if(!test_cap(v, counter >= 0))
-		return;
 	switch(modifier) {
 	case Permanent: add_ability(v, counter, true, true); break;
 	default: add_ability(v, counter, true, false); break;
@@ -1496,8 +1480,10 @@ void apply_ability(ability_s v, int counter) {
 }
 
 void apply_value(variant v, int modifier) {
+	//if(v.iskind<abilityi>())
+	//	apply_ability((ability_s)v.value, v.counter * modifier);
 	if(v.iskind<abilityi>())
-		apply_ability((ability_s)v.value, v.counter * modifier);
+		player->abilities[v.value] += v.counter * modifier;
 	else if(v.iskind<spelli>())
 		ftscript<spelli>(v.value, v.counter);
 	else if(v.iskind<areafi>()) {

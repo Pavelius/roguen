@@ -2,7 +2,8 @@
 
 Fighter 0 Abilities
  elements Strenght+35 Dexterity+30 Wits+25\
-  WeaponSkill+30 BalisticSkill+30 Herbalism+25 Hits+30 Mana+20\
+  WeaponSkill+30 BalisticSkill+30 Hits+30 Mana+20\
+  Herbalism+108 Alertness+106\
   Web+3 SummonUndead+4 Entaglement+2 Teleport+2 KnockDoor+4 IdentifySpell+1
 Fighter 0 Equipment
  elements LeatherArmor Sword Shield

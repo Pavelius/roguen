@@ -1,3 +1,6 @@
+Alertness: Ѕдительность
+Herbalism: “равознавство
+
 YouFailRoll: %герой сделал%а бросок.
 YouMakeRoll: %герой не сделал%а бросок. 
 

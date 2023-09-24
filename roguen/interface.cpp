@@ -1267,6 +1267,7 @@ static void show_logs() {
 static void show_block(const char* format, ...) {
 	pushvalue push_name(last_name, player->getname());
 	pushvalue push_female(last_female, player->is(Female));
+	pushvalue push_tab(draw::tab_pixels, width - 48);
 	char temp[2048]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));
 	textf(temp);
@@ -1274,7 +1275,12 @@ static void show_block(const char* format, ...) {
 
 static void show_charsheet() {
 	setoffset(metrics::padding, metrics::padding);
+	rectpush push;
+	width = 150;
 	show_block("%ListOfFeats");
+	caret.y = push.caret.y;
+	caret.x += width + metrics::padding;
+	show_block("%ListOfSkills");
 	pause_keys();
 }
 

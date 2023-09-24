@@ -2242,12 +2242,21 @@ static void list_of_feats(stringbuilder& sb) {
 	}
 }
 
+static void list_of_skills(stringbuilder& sb) {
+	for(auto i = Herbalism; i <= Religion; i = (ability_s)(i + 1)) {
+		auto v = player->get(i);
+		if(v)
+			sb.addn("%1\t%2i%%", bsdata<abilityi>::elements[i].getname(), v);
+	}
+}
+
 void add_need(int bonus);
 void add_need_answers(int bonus);
 
 BSDATA(textscript) = {
 	{"ActualNeedState", actual_need_state},
 	{"ListOfFeats", list_of_feats},
+	{"ListOfSkills", list_of_skills},
 	{"NeedHelpIntro", need_help_info},
 };
 BSDATAF(textscript)

@@ -91,7 +91,7 @@ YouDontSeeAnyEnemy: ¬ы не видите ни одного врага.
 YouDontHaveAnyActions: «десь вы не можете выполнить никаких особых действий.
 YouDontValidTargets: ¬ы не видите подход€щих целей.
 YouFailToOpenStuckDoor: %герой не смог%ла открыть заевшую дверь.
-YouFoundSecretDoor: %герой обнаружил%а [%1i] секретную дверь.
+YouFoundSecretDoor: %герой обнаружил%а секретную дверь.
 YouGatherItems: %герой добыл%а %1.
 YouGiveItemTo: %герой отдал%а %-1 %@2.
 YouNeedAmmunition: ƒл€ стрельбы нужно %-1.
