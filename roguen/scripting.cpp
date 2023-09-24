@@ -659,7 +659,7 @@ static void generate_dungeon(int bonus) {
 		rc.y1 = last_rect.y1 + (i / parts) * size;
 		rc.x2 = rc.x1 + size;
 		rc.y2 = rc.y1 + size;
-		auto r1 = area->get(rc, {2, 2}, {5, 3}, {8, 6});
+		auto r1 = area->get(rc, {2, 2}, {4, 3}, {7, 5});
 		locations.add(r1);
 	}
 	shuffle_locations();

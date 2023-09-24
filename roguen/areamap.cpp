@@ -427,11 +427,15 @@ rect areamap::get(const rect& rca, point offset, point minimum, point maximum) {
 	if(rca.x1 > rca.x2 || rca.y1 > rca.y2)
 		return {-1000, -1000};
 	auto w = rca.width() - offset.x * 2;
+	if(w < maximum.x)
+		maximum.x = w;
 	auto h = rca.height() - offset.y * 2;
+	if(h < maximum.y)
+		maximum.y = h;
 	rect rc;
-	rc.x1 = rca.x1 + offset.x + xrand(0, w - maximum.x);
+	rc.x1 = rca.x1 + offset.x + xrand(0, w);
 	rc.x2 = rc.x1 + xrand(minimum.x, maximum.x);
-	rc.y1 = rca.y1 + offset.y + xrand(0, h - maximum.y);
+	rc.y1 = rca.y1 + offset.y + xrand(0, h);
 	rc.y2 = rc.y1 + xrand(minimum.y, maximum.y);
 	return rc;
 }
