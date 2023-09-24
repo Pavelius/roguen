@@ -61,3 +61,4 @@ struct areamap {
 	void			setreveal(point m, int floor);
 	void			vert(int x1, int y1, int y2, fnset proc, int v);
 };
+extern point last_index;

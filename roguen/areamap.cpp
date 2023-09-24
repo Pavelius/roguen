@@ -5,6 +5,8 @@
 const short unsigned Blocked = 0xFFFF;
 const short unsigned NotCalculatedMovement = 0xFFF0;
 
+point last_index;
+
 static point stack[256 * 256];
 static point* push_counter;
 static point* pop_counter;

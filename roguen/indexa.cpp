@@ -34,6 +34,21 @@ void indexa::select(point pt, int range) {
 	count = pb - data;
 }
 
+void indexa::select(fnallow proc, bool keep, int offset) {
+	auto pb = data;
+	auto pe = endof();
+	point m;
+	for(m.y = offset; m.y < area->mps - offset; m.y++) {
+		for(m.x = offset; m.x < area->mps - offset; m.x++) {
+			if(proc(m) != keep)
+				continue;
+			if(pb < pe)
+				*pb++ = m;
+		}
+	}
+	count = pb - data;
+}
+
 void indexa::shuffle() {
 	zshuffle(data, count);
 }

@@ -43,7 +43,6 @@ spella			allowed_spells;
 creature		*player, *opponent, *enemy;
 int				last_coins;
 const char*		last_id;
-point			last_index;
 static point	last_door;
 locationi*		last_location;
 quest*			last_quest;
@@ -64,6 +63,12 @@ static direction_s last_direction;
 static adat<variant, 32> sites;
 
 void apply_ability(ability_s v, int counter);
+
+static int random_value(int value) {
+	if(!value)
+		return 0;
+	return xrand(value / 2, value);
+}
 
 static void show_debug_minimap() {
 	script_run("ExploreArea");
@@ -574,15 +579,30 @@ static void create_trap(point i) {
 	area->total.traps++;
 }
 
+static bool ispassage(point m) {
+	return (area->iswall(m, North) && area->iswall(m, South) && !area->iswall(m, East) && !area->iswall(m, West))
+		|| (area->iswall(m, East) && area->iswall(m, West) && !area->iswall(m, North) && !area->iswall(m, South));
+}
+
+static void create_corridor_traps(size_t maximum_count) {
+	if(!maximum_count)
+		return;
+	indexa points;
+	points.select(ispassage, true, 16);
+	points.shuffle();
+	if(points.count > maximum_count)
+		points.count = maximum_count;
+	for(auto m : points)
+		create_trap(m);
+}
+
 static void create_corridor_contents() {
 	zshuffle(points.data, points.count);
 	auto count = xrand(10, 18);
 	if(count > (int)points.count)
 		count = points.count;
 	for(auto i = 0; i < count; i++) {
-		if(d100() < 40)
-			create_trap(points.data[i]);
-		else if(d100() < 30)
+		if(d100() < 30)
 			create_wandered_monster(points.data[i]);
 		else
 			create_corridor_loot(points.data[i]);
@@ -682,6 +702,7 @@ static void generate_corridors(int bonus) {
 	area->change(0, last_site->walls);
 	create_corridor_contents();
 	create_doors(last_site->floors, last_site->walls);
+	create_corridor_traps(random_value(last_location->traps_count));
 }
 
 static void create_area(geoposition geo, variant tile) {

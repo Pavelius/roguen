@@ -104,7 +104,7 @@ BSMETA(locationi) = {
 	BSREQ(chance_hidden_doors), BSREQ(chance_locked_doors), BSREQ(chance_stuck_doors),
 	BSREQ(doors_count),
 	BSFLG(feats, feati),
-	BSREQ(chance_finale),
+	BSREQ(chance_finale), BSREQ(traps_count),
 	BSENM(walls, tilei),
 	BSENM(floors, tilei),
 	BSENM(doors, featurei),

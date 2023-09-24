@@ -26,7 +26,7 @@ extern const sitei*	last_site;
 struct locationi : sitei {
 	variants		sites;
 	const script	*global, *global_finish;
-	char			darkness, chance_finale, offset;
+	char			darkness, chance_finale, offset, traps_count;
 	color			minimap;
 };
 extern locationi* last_location;
