@@ -1068,8 +1068,8 @@ static bool default_allow(variant v) {
 }
 
 static bool allow_item(variant v) {
-	if(v.iskind<conditioni>())
-		return last_item->is((condition_s)v.value);
+	if(v.iskind<itemi>())
+		return &last_item->geti() == &bsdata<itemi>::elements[v.value];
 	else
 		return default_allow(v);
 }
@@ -1088,6 +1088,8 @@ static bool allow_creature(variant v) {
 		return player->is((condition_s)v.value);
 	else if(v.iskind<feati>())
 		return !player->is((feat_s)v.value);
+	else if(v.iskind<racei>() || v.iskind<monsteri>())
+		return player->getkind().issame(v);
 	else if(v.iskind<areafi>()) {
 		auto present = player->is((areaf)v.value);
 		return (v.counter < 0) ? present : !present;
@@ -1098,6 +1100,13 @@ static bool allow_creature(variant v) {
 		auto present = area->features[m];
 		return (v.counter < 0) ? present == v.value : present != v.value;
 	} else
+		return default_allow(v);
+}
+
+static bool allow_room(variant v) {
+	if(v.iskind<sitei>())
+		return &last_room->geti() == (bsdata<sitei>::elements + v.value);
+	else
 		return default_allow(v);
 }
 
@@ -1146,6 +1155,21 @@ static void match_creatures(const variants& source) {
 		*ps++ = p;
 	}
 	targets.count = ps - targets.begin();
+}
+
+static void match_room(const variants& source) {
+	if(!source)
+		return;
+	pushvalue push_player(last_room);
+	pushvalue push_allow(last_allow_proc, allow_room);
+	auto ps = rooms.begin();
+	for(auto p : rooms) {
+		last_room = p;
+		if(!allow_all(source))
+			continue;
+		*ps++ = p;
+	}
+	rooms.count = ps - rooms.begin();
 }
 
 bool choose_targets(unsigned flags, const variants& conditions) {
@@ -1203,6 +1227,7 @@ bool choose_targets(unsigned flags, const variants& conditions) {
 			if(!FGT(flags, Ranged))
 				rooms.match(fntis<roomi, &roomi::ismarkable>, true);
 		}
+		match_room(conditions);
 	} else  if(FGT(flags, TargetItems)) {
 		items.select(player);
 		if(FGT(flags, Identified))
@@ -1215,6 +1240,7 @@ bool choose_targets(unsigned flags, const variants& conditions) {
 			items.match(fntis<item, &item::iswounded>, true);
 		else if(FGT(flags, NoWounded))
 			items.match(fntis<item, &item::iswounded>, false);
+		match_items(conditions);
 	}
 	if(FGT(flags, Random)) {
 		targets.shuffle();
