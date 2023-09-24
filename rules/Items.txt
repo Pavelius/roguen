@@ -151,7 +151,7 @@ RingOfDefence cost(2000) weight(1) count(1) wear(FingerRight) avatar(655)
 RingOfProtection cost(3000) weight(1) count(1) wear(FingerRight) avatar(655)
  wearing Block+1
 RingOfRegeneration cost(10000) weight(1) count(1) wear(FingerRight) avatar(655)
- wearing Regeneration+1
+ wearing Regeneration
 RingOfWarrior cost(2000) weight(1) count(1) wear(FingerRight) avatar(655)
  wearing WeaponSkill+10
 
