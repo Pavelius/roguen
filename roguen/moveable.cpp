@@ -87,6 +87,8 @@ void movable::fixremove() const {
 }
 
 void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
+	if(!area->is(position, Visible))
+		return;
 	auto pt = getsposition(); pt.y -= tsy;
 	auto pa = addobject(pt, fproc, data, format_color, 20);
 	auto po = pa->add(mst, 0, true);
@@ -95,6 +97,8 @@ void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
 }
 
 void movable::fixvalue(const char* format, color_s format_color) const {
+	if(!area->is(position, Visible))
+		return;
 	fixvalue((void*)szdup(format), paint_color_text, format_color);
 }
 

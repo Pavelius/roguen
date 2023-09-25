@@ -18,6 +18,6 @@ StealCoins skill(Thievery)
  target TargetCreatures Neutrals
  effect StealCoins
 SearchRoomForGems skill(Gemcutting)
- conditions RoomsWhereGemsAreFound
  target TargetRooms You Allies
+ conditions RoomsWhereGemsAreFound
  effect RollAction RandomGem

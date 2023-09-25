@@ -67,6 +67,10 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 	}
 }
 
+static void addf(stringbuilder& sb, const char* id, int value, int value_maximum = 0) {
+	sb.addn("[~%1]\t%2i", getnm(id), value);
+}
+
 static void wearing(stringbuilder& sb, const variants source);
 
 static void wearing(stringbuilder& sb, variant v) {
@@ -109,7 +113,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	addf(sb, Hits, abilities[Hits], basic.abilities[Hits]);
 	addf(sb, Mana, abilities[Mana], basic.abilities[Mana]);
 	addf(sb, Money, getmoney());
-	addf(sb, Experience, experience);
+	addf(sb, "Experience", experience);
 	sb.addn("---");
 	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());
 }

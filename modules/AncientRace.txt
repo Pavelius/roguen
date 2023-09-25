@@ -7,7 +7,7 @@ AncientRaceComing maximum(100)
 
 ExamineAltar skill(History)
  target TargetFeatures
- effect FeatureMatchNext RandomAltars Experience+1 AncientRaceComing+1
+ effect FeatureMatchNext RandomAltars GainExperience+1 AncientRaceComing+1
 ExamineStatue skill(History)
  target TargetFeatures
- effect FeatureMatchNext Statue Experience+2 AncientRaceComing+2
+ effect FeatureMatchNext Statue GainExperience+2 AncientRaceComing+2

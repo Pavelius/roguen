@@ -591,7 +591,7 @@ static void create_trap(point i) {
 static bool ispassage(point m) {
 	return !area->iswall(m) && !area->features[m]
 		&& ((area->iswall(m, North) && area->iswall(m, South) && !area->iswall(m, East) && !area->iswall(m, West))
-		|| (area->iswall(m, East) && area->iswall(m, West) && !area->iswall(m, North) && !area->iswall(m, South)));
+			|| (area->iswall(m, East) && area->iswall(m, West) && !area->iswall(m, North) && !area->iswall(m, South)));
 }
 
 static void create_corridor_traps(size_t maximum_count) {
@@ -2216,6 +2216,14 @@ static void acid_harm(int bonus) {
 	damage_equipment(bonus, true);
 }
 
+static void gain_experience(int bonus) {
+	if(bonus > 0) {
+		auto value = bonus * 100;
+		player->fixvalue(str("%Experience%+1i", value), ColorYellow);
+		player->experience += value;
+	}
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
@@ -2295,6 +2303,7 @@ BSDATA(script) = {
 	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"Filter", filter_next},
+	{"GainExperience", gain_experience},
 	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCorridors", generate_corridors},

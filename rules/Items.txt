@@ -119,21 +119,21 @@ HealingPotion cost(30) count(1) weight(2) unidentified(RedPotion) wear(Potion) a
 ManaPotion cost(30) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
  use Mana+20
 PotionOfStrenght cost(1000) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(162)
- use Permanent Strenght+1
+ use Strenght+1
 PotionOfDexterity cost(1000) count(1) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165)
- use Permanent Dexterity+1
+ use Dexterity+1
 PotionOfWits cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
- use Permanent Wits+1
+ use Wits+1
 PotionOfExhange cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use AbilityExchange
 PotionOfAbilityRaise cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(435)
- use Permanent RandomAbility+1
+ use RandomAbility+1
 PotionOfHealth cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
- use Permanent Hits+1
+ use Hits+1
 PotionOfEnergy cost(1000) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
- use Permanent Mana+1
+ use Mana+1
 PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
- use Experience+10
+ use GainExperience+10
 PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Poison-20
 
@@ -237,9 +237,9 @@ DemonDaisy weight(1) avatar(97) count(1)
 DevilsRose weight(1) avatar(94) count(1)
  use Illness+2
 MorgiaRoot weight(1) avatar(108) count(1)
- use Permanent Strenght+1
+ use Strenght+1
 MossOfMoreilon weight(1) avatar(107) count(1)
- use Permanent Dexterity+1
+ use Dexterity+1
 PepperPetal weight(1) avatar(95) count(1)
  use Hits+4
 Spenseweed weight(1) avatar(106) count(1)

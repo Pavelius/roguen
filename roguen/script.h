@@ -11,6 +11,7 @@ struct script {
 };
 extern variant* script_begin;
 extern variant* script_end;
+extern fnvariant last_script_apply;
 
 int script_count(int count, int minimal = 1);
 
@@ -22,6 +23,7 @@ void script_stop();
 void script_run(variant v);
 void script_run(variant v, int counter);
 void script_run(const variants& elements);
+void script_run_ex(const variants& source);
 
-template<typename T> void ftscript(int index, int value);
 template<typename T> bool fttest(int index, int value);
+template<typename T> void ftscript(int index, int value);

@@ -9,6 +9,7 @@ BSMETA(script) = {
 variant param1, param2;
 variant* script_begin;
 variant* script_end;
+fnvariant last_script_apply;
 
 template<> bool fttest<script>(int value, int counter) {
 	if(bsdata<script>::elements[value].test)
@@ -72,4 +73,13 @@ void script_execute(const char* id, int bonus) {
 	auto p = bsdata<script>::find(id);
 	if(p)
 		p->proc(bonus);
+}
+
+void script_run_ex(const variants& source) {
+	auto push_begin = script_begin; script_begin = source.begin();
+	auto push_end = script_end; script_end = source.end();
+	while(script_begin < script_end)
+		last_script_apply(*script_begin++);
+	script_end = push_end;
+	script_begin = push_begin;
 }

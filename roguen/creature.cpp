@@ -1119,12 +1119,6 @@ static int add_ability(ability_s i, int value, int current_value, int minimum, i
 
 static void add_ability(ability_s v, int counter, bool interactive, bool basic) {
 	switch(v) {
-	case Experience:
-		counter *= 100;
-		player->experience += counter;
-		if(player->experience < 0)
-			player->experience = 0;
-		break;
 	case Satiation:
 		player->satiation += counter;
 		break;
@@ -1479,16 +1473,41 @@ bool creature::speechlocation() const {
 	return true;
 }
 
+static void apply_value(variant v) {
+	if(v.iskind<spelli>())
+		ftscript<spelli>(v.value, v.counter);
+	else if(v.iskind<areafi>()) {
+		if(v.counter < 0)
+			area->remove(player->getposition(), v.value);
+		else
+			area->setflag(player->getposition(), v.value);
+	} else if(v.iskind<featurei>()) {
+		if(v.counter < 0)
+			area->setfeature(player->getposition(), 0);
+		else
+			area->setfeature(player->getposition(), v.value);
+	} else
+		advance_value(v);
+}
+
+static void apply_value(variant v, creature* target) {
+	pushvalue push_modifier(modifier);
+	pushvalue push_player(player, target);
+	apply_value(v);
+}
+
 void creature::use(item& v) {
 	if(!v)
 		return;
 	auto script = v.getuse();
-	auto power = v.getpower();
 	if(!script) {
 		actp(getnm("ItemNotUsable"), v.getname());
 		return;
 	}
 	apply(script);
+	auto power = v.getpower();
+	if(power)
+		apply_value(power, this);
 	act(getnm("YouUseItem"), v.getname());
 	v.use();
 	update();
@@ -1519,40 +1538,16 @@ void apply_ability(ability_s v, int counter) {
 	last_ability = v;
 	if(!counter)
 		return;
-	switch(modifier) {
-	case Permanent: add_ability(v, counter, true, true); break;
-	default: add_ability(v, counter, true, false); break;
-	}
+	add_ability(v, counter, true, false);
 	if(player->abilities[Hits] <= 0)
 		player->kill();
 }
 
-void apply_value(variant v, int modifier) {
-	if(v.iskind<abilityi>())
-		player->abilities[v.value] += v.counter * modifier;
-	else if(v.iskind<spelli>())
-		ftscript<spelli>(v.value, v.counter);
-	else if(v.iskind<areafi>()) {
-		if(v.counter < 0)
-			area->remove(player->getposition(), v.value);
-		else
-			area->setflag(player->getposition(), v.value);
-	} else if(v.iskind<featurei>()) {
-		if(v.counter < 0)
-			area->setfeature(player->getposition(), 0);
-		else
-			area->setfeature(player->getposition(), v.value);
-	} else
-		advance_value(v);
-}
-
 void creature::apply(const variants& source) {
-	auto push_modifier = modifier;
-	auto push_player = player; player = this;
+	pushvalue push_modifier(modifier);
+	pushvalue push_player(player, this);
 	for(auto v : source)
-		apply_value(v, 1);
-	player = push_player;
-	modifier = push_modifier;
+		apply_value(v);
 }
 
 void creature::cast(const spelli& e) {
