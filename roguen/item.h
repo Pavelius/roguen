@@ -81,6 +81,7 @@ public:
 	int				getweight() const;
 	bool			is(condition_s v) const;
 	bool			is(feat_s v) const;
+	bool			is(magic_s v) const { return magic == v; }
 	bool			is(wear_s v) const;
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
@@ -88,7 +89,7 @@ public:
 	bool			ischarges() const { return getcharges() > 0; }
 	bool			ischargeable() const;
 	bool			iscountable() const { return geti().count != 0; }
-	bool			iscursed() const { return magic==Cursed;}
+	bool			iscursed() const { return is(Cursed);}
 	bool			isidentified() const { return identified != 0; }
 	bool			ismagical() const;
 	bool			isranged() const { return geti().wear == RangedWeapon; }

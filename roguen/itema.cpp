@@ -35,8 +35,7 @@ void itema::selectbackpack(creature* p) {
 	auto pe = endof();
 	if(!p)
 		return;
-	for(auto i = Backpack; i <= BackpackLast; i = (wear_s)(i + 1)) {
-		auto& e = p->wears[i];
+	for(auto& e : p->backpack()) {
 		if(!e)
 			continue;
 		if(pb < pe)

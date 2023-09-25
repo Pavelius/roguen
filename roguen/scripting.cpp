@@ -4,6 +4,7 @@
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
+#include "filter.h"
 #include "game.h"
 #include "itema.h"
 #include "listcolumn.h"
@@ -22,6 +23,8 @@
 #include "triggern.h"
 #include "indexa.h"
 
+void add_need(int bonus);
+void add_need_answers(int bonus);
 void apply_value(variant v);
 void apply_ability(ability_s v, int counter);
 void animate_figures();
@@ -894,6 +897,13 @@ static void visualize_activity(point m) {
 	if(!area->is(m, Visible))
 		return;
 	movable::fixeffect(m2s(m), "SearchVisual");
+}
+
+template<> void ftscript<filteri>(int value, int counter) {
+	auto proc = bsdata<filteri>::elements[value].proc;
+	auto source = bsdata<filteri>::elements[value].source;
+	if(source)
+		source->match(proc, counter >= 0);
 }
 
 template<> void ftscript<featurei>(int value, int counter) {
@@ -2224,6 +2234,11 @@ static void gain_experience(int bonus) {
 	}
 }
 
+static void select_your_items(int bonus) {
+	items.clear();
+	items.select(player);
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
@@ -2265,9 +2280,34 @@ static void list_of_skills(stringbuilder& sb) {
 	}
 }
 
-void add_need(int bonus);
-void add_need_answers(int bonus);
+static bool filter_wounded(const void* object) {
+	auto p = (creature*)object;
+	auto n = p->abilities[Hits];
+	return n > 0 && n < p->basic.abilities[Hits];
+}
 
+static bool filter_unaware(const void* object) {
+	auto p = (creature*)object;
+	return p->isunaware();
+}
+
+static bool filter_cursed(const void* object) {
+	auto p = (item*)object;
+	return p->iscursed();
+}
+
+static bool filter_blessed(const void* object) {
+	auto p = (item*)object;
+	return p->is(Blessed);
+}
+
+BSDATA(filteri) = {
+	{"FilterBlessed", filter_blessed, &items},
+	{"FilterCursed", filter_cursed, &items},
+	{"FilterUnaware", filter_unaware, &targets},
+	{"FilterWounded", filter_wounded, &targets},
+};
+BSDATAF(filteri)
 BSDATA(textscript) = {
 	{"ActualNeedState", actual_need_state},
 	{"ListOfFeats", list_of_feats},
@@ -2344,6 +2384,7 @@ BSDATA(script) = {
 	{"RollAction", roll_action},
 	{"SelectCreatures", select_creatures},
 	{"SelectEnemies", select_enemies},
+	{"SelectYourItems", select_your_items},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},

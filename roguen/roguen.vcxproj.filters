@@ -608,6 +608,9 @@
     <ClInclude Include="magic.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="filter.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
