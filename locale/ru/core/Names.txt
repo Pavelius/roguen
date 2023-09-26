@@ -34,6 +34,7 @@ Female: Женщина
 FewTime: Совсем мало времени
 GlobalMapPosition: Позиция на карте мира %1i, %2i
 HalfwayProgress: Находимся на полпути
+Heal: Лечение
 Hour: Час
 IcedSlice: %герой подскалзнул%ась на льду.
 IHaveItem: У меня есть [%1]. Могу дать %2i шт.

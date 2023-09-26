@@ -85,7 +85,23 @@ static void fix_yellow(const char* format, int value) {
 }
 
 static void fix_green(const char* format, int value) {
+	if(!value)
+		return;
+	player->fixvalue(str(format, value), value >= 0 ? ColorGreen : ColorRed);
+}
+
+static void fix_green(int value) {
 	player->fixvalue(value, ColorGreen, ColorRed);
+}
+
+static int add_green(int current, int bonus, const char* format, int minimum = 0, int maximum = 120) {
+	auto i = current + bonus;
+	if(i < minimum)
+		i = minimum;
+	if(i > maximum)
+		i = maximum;
+	fix_green(format, i - current);
+	return i;
 }
 
 void damage_item(item& it) {
@@ -1938,12 +1954,13 @@ static void cast_spell(int bonus) {
 }
 
 static void heal_player(int bonus) {
-	//player->heal(bonus);
-	player->wait();
+	player->abilities[Hits] = add_green(player->get(Hits), bonus, "%Heal%+1i", 0, player->getmaximum(Hits));
+	if(!(*player))
+		player->kill();
 }
 
 static void heal_all(int bonus) {
-	heal_player(100);
+	heal_player(1000);
 }
 
 static void damage_all(int bonus) {

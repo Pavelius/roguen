@@ -80,7 +80,7 @@ static void custom_string(stringbuilder& sb, const char* id) {
 		return;
 	if(parse_speech(sb, id))
 		return;
-	sb.defidentifier(sb, id);
+	sb.add(getnm(id));
 }
 
 void textscript::initialize() {
