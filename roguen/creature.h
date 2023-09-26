@@ -67,6 +67,7 @@ public:
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
+	int				getmaximum(ability_s v) const;
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
 	int				getpaymentcost() const;

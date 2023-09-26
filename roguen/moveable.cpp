@@ -97,12 +97,16 @@ void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
 }
 
 void movable::fixvalue(const char* format, color_s format_color) const {
+	if(!format || !format[0])
+		return;
 	if(!area->is(position, Visible))
 		return;
 	fixvalue((void*)szdup(format), paint_color_text, format_color);
 }
 
 void movable::fixvalue(int v, color_s format_color) const {
+	if(!v)
+		return;
 	fixvalue((void*)v, paint_color_number, format_color);
 }
 

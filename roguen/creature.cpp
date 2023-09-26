@@ -306,6 +306,10 @@ static void check_stun(creature* p) {
 	}
 }
 
+static void check_satiation(creature* p) {
+	p->satiation--;
+}
+
 static void random_walk(creature* p) {
 	if(d100() < 60)
 		p->wait();
@@ -753,13 +757,13 @@ bool creature::is(condition_s v) const {
 	case HighInt: return get(Wits) < 50;
 	case Wounded:
 		n = get(Hits);
-		m = basic.abilities[Hits];
+		m = getmaximum(Hits);
 		return n > 0 && n < m;
 	case HeavyWounded:
 		n = get(Hits);
-		m = basic.abilities[Hits];
+		m = getmaximum(Hits);
 		return n > 0 && n < m / 2;
-	case NoWounded: return get(Hits) == basic.abilities[Hits];;
+	case NoWounded: return get(Hits) == getmaximum(Hits);
 	case Allies:
 		if(player->is(Ally))
 			return is(Ally);
@@ -1095,9 +1099,10 @@ void creature::movestep(point ni) {
 }
 
 void creature::finish() {
+	satiation += 2000;
 	update();
-	abilities[Hits] = basic.abilities[Hits];
-	abilities[Mana] = basic.abilities[Mana];
+	abilities[Hits] = getmaximum(Hits);
+	abilities[Mana] = getmaximum(Mana);
 	fixappear();
 }
 
@@ -1118,23 +1123,13 @@ static int add_ability(ability_s i, int value, int current_value, int minimum, i
 }
 
 static void add_ability(ability_s v, int counter, bool interactive, bool basic) {
-	switch(v) {
-	case Satiation:
-		player->satiation += counter;
-		break;
-	case Money:
-		player->money += counter * 10;
-		break;
-	default:
-		if(v < sizeof(player->basic.abilities) / sizeof(player->basic.abilities[0])) {
-			if(basic)
-				player->basic.abilities[v] = add_ability(v, counter, player->basic.abilities[v], 0, 100, interactive);
-			else if(v == Hits || v == Mana)
-				player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, player->basic.abilities[v], interactive);
-			else
-				player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, 100, interactive);
-		}
-		break;
+	if(v < sizeof(player->basic.abilities) / sizeof(player->basic.abilities[0])) {
+		if(basic)
+			player->basic.abilities[v] = add_ability(v, counter, player->basic.abilities[v], 0, 100, interactive);
+		else if(v == Hits || v == Mana)
+			player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, player->basic.abilities[v], interactive);
+		else
+			player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, 100, interactive);
 	}
 }
 
@@ -1266,6 +1261,7 @@ void creature::makemove() {
 	pushvalue push_site(last_site, get_site(this));
 	pushvalue push_action(last_action);
 	set(EnemyAttacks, 0);
+	check_satiation(this);
 	update();
 	nullify_elements(this);
 	check_blooding(this);
@@ -1697,4 +1693,13 @@ roomi* creature::getroom() const {
 
 void creature::setroom(const roomi* v) {
 	room_id = (v == 0) ? 0xFFFF : area->rooms.indexof(v);
+}
+
+int	creature::getmaximum(ability_s v) const {
+	switch(v) {
+	case Hits: case Mana:
+		return basic.abilities[v];
+	default:
+		return 0;
+	}
 }

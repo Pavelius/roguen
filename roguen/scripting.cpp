@@ -78,6 +78,16 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
+static void fix_yellow(const char* format, int value) {
+	if(!value)
+		return;
+	player->fixvalue(str(format, value), value >= 0 ? ColorYellow : ColorRed);
+}
+
+static void fix_green(const char* format, int value) {
+	player->fixvalue(value, ColorGreen, ColorRed);
+}
+
 void damage_item(item& it) {
 	auto name = it.getname();
 	it.damage();
@@ -2227,11 +2237,19 @@ static void acid_harm(int bonus) {
 }
 
 static void gain_experience(int bonus) {
-	if(bonus > 0) {
-		auto value = bonus * 100;
-		player->fixvalue(str("%Experience%+1i", value), ColorYellow);
-		player->experience += value;
-	}
+	auto value = bonus * 100;
+	fix_yellow("%Experience%+1i", value);
+	player->experience += value;
+}
+
+static void gain_coins(int bonus) {
+	auto value = bonus * 10;
+	fix_yellow("%1i %Coins", value);
+	player->money += value;
+}
+
+static void gain_satiation(int bonus) {
+	player->satiation += bonus * 10;
 }
 
 static void select_your_items(int bonus) {
@@ -2343,7 +2361,9 @@ BSDATA(script) = {
 	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"Filter", filter_next},
+	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
+	{"GainSatiation", gain_satiation},
 	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCorridors", generate_corridors},

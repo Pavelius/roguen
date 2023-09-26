@@ -112,7 +112,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	addf(sb, DamageMelee, abilities[DamageMelee] + player->wears[MeleeWeapon].geti().weapon.damage, abilities[DamageRanged] + player->wears[RangedWeapon].geti().weapon.damage);
 	addf(sb, Hits, abilities[Hits], basic.abilities[Hits]);
 	addf(sb, Mana, abilities[Mana], basic.abilities[Mana]);
-	addf(sb, Money, getmoney());
+	addf(sb, "Coins", getmoney());
 	addf(sb, "Experience", experience);
 	sb.addn("---");
 	sb.addn("[~%1]\t%2i", getnm("Rounds"), game.getminutes());

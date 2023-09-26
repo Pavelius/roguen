@@ -14,7 +14,6 @@ enum ability_s : unsigned char {
 	CarryCapacity, Level,
 	Hits, Mana, Faith, Learning,
 	Poison, Illness, Corrosion, Burning, Freezing,
-	Satiation, Money,
 	FirstSkill = Alertness, LastSkill = Woodcutting,
 };
 enum color_s : unsigned char {
