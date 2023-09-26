@@ -33,7 +33,6 @@ void damage_equipment(int bonus, bool allow_save);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
-void place_shape(const shapei& e, point m, int floor, int walls);
 void visualize_images(res pid, point size, point offset);
 
 static void generate_outdoor(int bonus);
@@ -460,6 +459,8 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 }
 
 static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
+	if(!area->isvalid(m))
+		return;
 	auto c = e.center(m);
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
@@ -479,6 +480,13 @@ static void place_shape(const shapei& e, point m, direction_s d, int floor, int 
 static void place_shape(const shapei& e, point m, int floor, int walls) {
 	static direction_s direction[] = {North, South, West, East};
 	place_shape(e, m, maprnd(direction), floor, walls);
+}
+
+static void place_shape(const shapei& e, rect rc, int floor, int walls) {
+	static direction_s direction[] = {North, South, West, East};
+	auto d = maprnd(direction);
+	auto r1 = e.bounding(rc, d);
+	place_shape(e, area->get(r1), maprnd(direction), floor, walls);
 }
 
 int get_deafault_count(const monsteri& e, int area_level) {
@@ -976,7 +984,7 @@ template<> void ftscript<classi>(int value, int counter) {
 template<> void ftscript<shapei>(int value, int counter) {
 	auto count = script_count(counter, 1);
 	for(auto i = 0; i < count; i++)
-		place_shape(bsdata<shapei>::elements[value], area->get(last_rect), getfloor(), getwall());
+		place_shape(bsdata<shapei>::elements[value], last_rect, getfloor(), getwall());
 }
 
 template<> void ftscript<itemi>(int value, int counter) {

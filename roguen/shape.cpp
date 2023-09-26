@@ -40,6 +40,15 @@ rect shapei::bounding(point c, direction_s d) const {
 	return {x1, y1, x2, y2};
 }
 
+rect shapei::bounding(rect rc, direction_s d) const {
+	auto r1 = bounding(point(0, 0), d);
+	rc.x1 -= r1.x1;
+	rc.y1 -= r1.y1;
+	rc.x2 -= r1.x2;
+	rc.y2 -= r1.y2;
+	return rc;
+}
+
 static bool isallowed(char sym) {
 	return zchr(shape_symbols, sym) != 0;
 }

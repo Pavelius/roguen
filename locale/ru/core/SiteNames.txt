@@ -16,6 +16,7 @@ DefaultDungeonFinal: Подземелье
 FamousHeroMonument: Монумент герою
 ForestSwamps: Заболоченный лес
 GeneralStore: Магазин
+GoblinScouts: Гоблинские разведчики
 Hills: Холмы
 InscribedRoom: Надписи на стенах
 LightForest: Лес

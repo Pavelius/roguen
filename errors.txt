@@ -1,3 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 248: Can't find variant `Satiation`
- Line 250: Can't find variant `Satiation`
+﻿In file `Names.txt`:
+ Define translation for `GoblinScouts`
