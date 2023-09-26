@@ -45,6 +45,7 @@ void				shrink();
 void				clearobjects();
 void				focusing(point goal);
 object*				findobject(const void* p);
+object*				findobject(point pt, fnevent proc);
 void				paintobjects();
 void				removeobjects(const array& source);
 unsigned long		getobjectstamp();

@@ -2189,9 +2189,17 @@ static void random_ability(int bonus) {
 static void select_enemies(int bonus) {
 	targets = enemies;
 }
+static bool select_enemies_allow(int bonus) {
+	select_enemies(bonus);
+	return true;
+}
 
 static void select_creatures(int bonus) {
 	targets = creatures;
+}
+static bool select_creatures_allow(int bonus) {
+	select_creatures(bonus);
+	return true;
 }
 
 static void filter_allies(int bonus) {
@@ -2273,6 +2281,10 @@ static void select_your_items(int bonus) {
 	items.clear();
 	items.select(player);
 }
+static bool select_your_items_allow(int bonus) {
+	select_your_items(bonus);
+	return true;
+}
 
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
@@ -2315,34 +2327,6 @@ static void list_of_skills(stringbuilder& sb) {
 	}
 }
 
-static bool filter_wounded(const void* object) {
-	auto p = (creature*)object;
-	auto n = p->abilities[Hits];
-	return n > 0 && n < p->basic.abilities[Hits];
-}
-
-static bool filter_unaware(const void* object) {
-	auto p = (creature*)object;
-	return p->isunaware();
-}
-
-static bool filter_cursed(const void* object) {
-	auto p = (item*)object;
-	return p->iscursed();
-}
-
-static bool filter_blessed(const void* object) {
-	auto p = (item*)object;
-	return p->is(Blessed);
-}
-
-BSDATA(filteri) = {
-	{"FilterBlessed", filter_blessed, &items},
-	{"FilterCursed", filter_cursed, &items},
-	{"FilterUnaware", filter_unaware, &targets},
-	{"FilterWounded", filter_wounded, &targets},
-};
-BSDATAF(filteri)
 BSDATA(textscript) = {
 	{"ActualNeedState", actual_need_state},
 	{"ListOfFeats", list_of_feats},
@@ -2419,9 +2403,9 @@ BSDATA(script) = {
 	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
-	{"SelectCreatures", select_creatures},
-	{"SelectEnemies", select_enemies},
-	{"SelectYourItems", select_your_items},
+	{"SelectCreatures", select_creatures, select_creatures_allow},
+	{"SelectEnemies", select_enemies, select_enemies_allow},
+	{"SelectYourItems", select_your_items, select_your_items_allow},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},

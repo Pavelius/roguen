@@ -86,10 +86,16 @@ void movable::fixremove() const {
 		po->clear();
 }
 
+static point apply_same_position(point pt, fnevent proc) {
+	while(findobject(pt, proc))
+		pt.y -= tsy;
+	return pt;
+}
+
 void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
 	if(!area->is(position, Visible))
 		return;
-	auto pt = getsposition(); pt.y -= tsy;
+	auto pt = getsposition(); pt.y -= tsy; pt = apply_same_position(pt, fproc);
 	auto pa = addobject(pt, fproc, data, format_color, 20);
 	auto po = pa->add(mst, 0, true);
 	pt.y -= tsy;

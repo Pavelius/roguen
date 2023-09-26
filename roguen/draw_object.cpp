@@ -279,6 +279,14 @@ object* draw::findobject(const void* p) {
 	return 0;
 }
 
+object* draw::findobject(point pt, fnevent proc) {
+	for(auto& e : bsdata<object>()) {
+		if(e.position==pt && e.proc == proc)
+			return &e;
+	}
+	return 0;
+}
+
 void draw::clearobjects() {
 	bsdata<object>::source.clear();
 }

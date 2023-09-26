@@ -179,6 +179,7 @@
     <ClCompile Include="duration.cpp" />
     <ClCompile Include="feat.cpp" />
     <ClCompile Include="feature.cpp" />
+    <ClCompile Include="filter.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="global.cpp" />
