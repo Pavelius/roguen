@@ -88,7 +88,7 @@ void movable::fixremove() const {
 
 static point apply_same_position(point pt, fnevent proc) {
 	while(findobject(pt, proc))
-		pt.y -= tsy;
+		pt.y -= texth();
 	return pt;
 }
 
