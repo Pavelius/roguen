@@ -1,12 +1,15 @@
 #Spell
 
 CureWounds mana(10) count(1 4)
+ targets SelectAllies FilterWounded FilterClose
  target TargetCreatures You Allies
  effect Wounded
 Entaglement mana(6)
+ targets SelectEnemies FilterFeature-1
  target TargetCreatures Enemies Ranged
  effect NoAnyFeature ThornBush
 IdentifySpell mana(10)
+ targets SelectYourItems FilterIdentified-1
  target TargetItems Unaware
  effect IdentifyItem+1
 Gate mana(40)
@@ -18,11 +21,13 @@ TorchLight mana(5) duration(Minute20PL)
  target TargetCreatures You
  effect LightSource
 ManaRegeneration duration(Hour1PL)
+ targets SelectYou
  target TargetCreatures You
 Mending mana(10)
  target TargetItems Wounded Multitarget
  effect RepairItem+1
 Regeneration mana(15) duration(Hour1PL)
+ targets SelectYou
  target TargetCreatures You
 Sleep mana(5) duration(Minute20)
  target TargetCreatures Enemies Neutrals Multitarget Ranged

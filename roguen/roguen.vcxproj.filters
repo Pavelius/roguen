@@ -255,9 +255,6 @@
     <ClCompile Include="boost.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="spell.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="diceprogress.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -343,6 +340,9 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="filter.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="spell.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -497,9 +497,6 @@
     <ClInclude Include="boost.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="spell.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="global.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -612,6 +609,9 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="filter.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="spell.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

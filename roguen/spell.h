@@ -10,7 +10,7 @@ struct spelli : nameable {
 	unsigned		target;
 	duration_s		duration;
 	diceprogress	count;
-	variants		effect, summon;
+	variants		targets, effect, summon;
 	bool			apply(int level, int targets_count, bool interactive, bool silent) const;
 	int				getcount(int level) const { return count.roll(level); }
 	bool			is(int v) const { return (target & FG(v)) != 0; }
