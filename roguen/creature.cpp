@@ -15,7 +15,6 @@
 #include "trigger.h"
 #include "triggern.h"
 
-extern indexa indecies;
 extern collection<roomi> rooms;
 
 void apply_spell(const spelli& ei, int level);

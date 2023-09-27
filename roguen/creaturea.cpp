@@ -3,6 +3,8 @@
 
 static point compare_position;
 
+creaturea creatures, enemies, targets;
+
 static int compare_distace(const void* v1, const void* v2) {
 	auto p1 = *((creature**)v1);
 	auto p2 = *((creature**)v2);

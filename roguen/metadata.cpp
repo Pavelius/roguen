@@ -2,6 +2,7 @@
 #include "bsreq.h"
 #include "condition.h"
 #include "dialog.h"
+#include "filter.h"
 #include "hotkey.h"
 #include "global.h"
 #include "greatneed.h"
@@ -76,6 +77,9 @@ BSMETA(dice) = {
 BSMETA(feati) = {
 	BSREQ(id),
 	{}};
+BSMETA(filteri) = {
+	BSREQ(id),
+	{}};
 BSMETA(framerange) = {
 	BSREQ(start), BSREQ(count),
 	{}};
@@ -147,7 +151,7 @@ BSMETA(siteskilli) = {
 	BSREQ(bonus),
 	BSENM(retry, durationi),
 	BSFLG(target, conditioni),
-	BSREQ(effect), BSREQ(conditions),
+	BSREQ(effect), BSREQ(conditions), BSREQ(targets),
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
@@ -176,6 +180,7 @@ BSDATA(varianti) = {
 	{"Dialog", VAR(dialogi), 1},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
 	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
+	{"Filter", VAR(filteri), 1, 0, ftscript<filteri>},
 	{"Global", VAR(globali), 1, 0, ftscript<globali>},
 	{"Hotkey", VAR(hotkey), 2},
 	{"Item", VAR(itemi), 1, 0, ftscript<itemi>},

@@ -66,3 +66,4 @@ public:
 	void			set(const sitei* p) { bsset(site_id, p); }
 };
 typedef collection<roomi> rooma;
+extern rooma rooms;

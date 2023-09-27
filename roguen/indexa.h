@@ -13,3 +13,4 @@ struct indexa : adat<point, 1024> {
 	void	shuffle();
 	void	sort(point m);
 };
+extern indexa indecies;

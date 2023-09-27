@@ -37,8 +37,6 @@ void visualize_images(res pid, point size, point offset);
 
 static void generate_outdoor(int bonus);
 
-creaturea		creatures, enemies, targets;
-rooma			rooms;
 itema			items;
 indexa			indecies;
 spella			allowed_spells;
