@@ -4,6 +4,7 @@
 #pragma once
 
 struct filteri : nameable {
-	fnvisible		proc;
-	collectiona*	source;
+	typedef void(*fnaction)(fnvisible proc, int counter);
+	fnvisible	proc;
+	fnaction	action;
 };

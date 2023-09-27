@@ -933,13 +933,6 @@ static void visualize_activity(point m) {
 	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
-template<> void ftscript<filteri>(int value, int counter) {
-	auto proc = bsdata<filteri>::elements[value].proc;
-	auto source = bsdata<filteri>::elements[value].source;
-	if(source)
-		source->match(proc, counter >= 0);
-}
-
 template<> void ftscript<featurei>(int value, int counter) {
 	area->set(last_rect, &areamap::setfeature, value, counter);
 }
@@ -2194,22 +2187,6 @@ static void random_ability(int bonus) {
 	apply_ability(maprnd(source), bonus);
 }
 
-static void select_enemies(int bonus) {
-	targets = enemies;
-}
-static bool select_enemies_allow(int bonus) {
-	select_enemies(bonus);
-	return true;
-}
-
-static void select_creatures(int bonus) {
-	targets = creatures;
-}
-static bool select_creatures_allow(int bonus) {
-	select_creatures(bonus);
-	return true;
-}
-
 static void filter_allies(int bonus) {
 	if(player->is(Ally))
 		targets.match(Ally, true);
@@ -2283,15 +2260,6 @@ static void gain_coins(int bonus) {
 
 static void gain_satiation(int bonus) {
 	player->satiation += bonus * 10;
-}
-
-static void select_your_items(int bonus) {
-	items.clear();
-	items.select(player);
-}
-static bool select_your_items_allow(int bonus) {
-	select_your_items(bonus);
-	return true;
 }
 
 static void need_help_info(stringbuilder& sb) {
@@ -2411,9 +2379,6 @@ BSDATA(script) = {
 	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
-	{"SelectCreatures", select_creatures, select_creatures_allow},
-	{"SelectEnemies", select_enemies, select_enemies_allow},
-	{"SelectYourItems", select_your_items, select_your_items_allow},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},

@@ -612,7 +612,7 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="filter.h">
-      <Filter>Support</Filter>
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
