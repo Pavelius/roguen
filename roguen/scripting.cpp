@@ -473,23 +473,24 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	return p;
 }
 
-static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
+static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol, int wall) {
 	if(!area->isvalid(m))
 		return;
 	auto c = e.center(m);
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
+			if(e[m] != symbol)
+				continue;
 			auto pm = e.translate(c, m, d);
-			auto sm = e[m];
-			switch(sm) {
-			case ' ': break;
-			case '.': area->settile(pm, floor); break;
-			case 'X': area->settile(pm, wall); break;
-			case '0': area->settile(pm, floor); break;
-			default: break;
-			}
+			area->settile(pm, wall);
 		}
 	}
+}
+
+static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
+	place_shape_ex(e, m, d, '.', floor);
+	place_shape_ex(e, m, d, 'X', wall);
+	place_shape_ex(e, m, d, '0', floor);
 }
 
 static void place_shape(const shapei& e, point m, int floor, int walls) {
@@ -761,10 +762,17 @@ static void generate_room(int bonus) {
 }
 
 static void generate_cave(int bonus) {
-	static variant s2 = "SmallCircleRoom";
-	auto floors = getfloor();
-	for(auto i = 0; i < 3; i++)
-		place_shape(bsdata<shapei>::elements[s2.value], last_rect, floors, floors);
+	auto p = bsdata<listi>::find("DefaultMineRooms");
+	if(!p)
+		return;
+	auto floor = getfloor();
+	for(auto v : p->elements) {
+		if(v.iskind<shapei>()) {
+			auto counter = game.getcount(v);
+			for(auto i = 0; i < counter; i++)
+				place_shape(bsdata<shapei>::elements[v.value], last_rect, floor, floor);
+		}
+	}
 	generate_room_record(bonus);
 }
 

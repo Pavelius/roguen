@@ -205,6 +205,8 @@ StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global
 
 RoomsWhereGemsAreFound
  elements SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
+DefaultMineRooms
+ elements CircleRoom SmallCircleRoom+2
 
 #RandomTable
 
