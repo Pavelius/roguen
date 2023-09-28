@@ -15,3 +15,4 @@ struct point {
 	constexpr rect	rectangle() const { return {x, y, x, y}; }
 	constexpr point to(short dx, short dy) const { return {(short)(x + dx), (short)(y + dy)}; }
 };
+point center(const rect& rc);

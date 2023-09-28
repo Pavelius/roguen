@@ -135,5 +135,4 @@ bool				isnext();
 extern int last_value, last_cap;
 extern rect last_rect;
 extern int window_width, window_height;
-point center(const rect& rc);
 void dialog_message(const char* format);

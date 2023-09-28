@@ -35,8 +35,6 @@ bool isfreecr(point m);
 void make_game_map_screenshoot();
 void visualize_images(res pid, point size, point offset);
 
-static void generate_outdoor(int bonus);
-
 itema			items;
 indexa			indecies;
 spella			allowed_spells;
@@ -116,6 +114,21 @@ static int getrange(point m1, point m2) {
 	return (dx > dy) ? dx : dy;
 }
 
+static bool isfreeft(point m) {
+	if(!area->isvalid(m))
+		return false;
+	if(area->features[m])
+		return false;
+	if(area->iswall(m))
+		return false;
+	return area->features[m] == 0;
+}
+
+static void apply_script(const script* p, int bonus) {
+	if(p)
+		p->proc(bonus);
+}
+
 int getfloor() {
 	if(last_site && last_site->floors)
 		return last_site->floors;
@@ -170,6 +183,10 @@ static int get_doors_count() {
 	if(last_location && last_location->doors_count)
 		return last_location->doors_count;
 	return xrand(1, 4);
+}
+
+static point randomft(const rect& rc) {
+	return area->getfree(randomr(rc), 10, isfreeft);
 }
 
 static bool iswall(point i, direction_s d1, direction_s d2) {
@@ -484,7 +501,10 @@ static void place_shape(const shapei& e, rect rc, int floor, int walls) {
 	static direction_s direction[] = {North, South, West, East};
 	auto d = maprnd(direction);
 	auto r1 = e.bounding(rc, d);
-	place_shape(e, area->get(r1), maprnd(direction), floor, walls);
+	auto m = area->get(r1);
+	if(!area->isvalid(m))
+		m = center(rc);
+	place_shape(e, m, d, floor, walls);
 }
 
 int get_deafault_count(const monsteri& e, int area_level) {
@@ -731,20 +751,36 @@ static void generate_dungeon(int bonus) {
 	correct_conncetors = bounding_locations();
 }
 
+static void generate_room_record(int bonus) {
+	area->total.rooms++;
+}
+
 static void generate_room(int bonus) {
 	fillfloor();
-	area->total.rooms++;
+	generate_room_record(bonus);
+}
+
+static void generate_cave(int bonus) {
+	static variant s2 = "SmallCircleRoom";
+	auto floors = getfloor();
+	for(auto i = 0; i < 3; i++)
+		place_shape(bsdata<shapei>::elements[s2.value], last_rect, floors, floors);
+	generate_room_record(bonus);
 }
 
 static void generate_walls(int bonus) {
 	fillwallsall();
 }
 
+static void generate_empthy_space(int bonus) {
+	area->change(0, last_site->walls);
+}
+
 static void generate_corridors(int bonus) {
 	const auto& rc = locations[0];
 	auto dir = area->getmost(rc);
 	create_corridor(rc, dir, last_site->walls, last_site->floors);
-	area->change(0, last_site->walls);
+	generate_empthy_space(bonus);
 	create_corridor_contents();
 	create_doors(last_site->floors, last_site->walls);
 	create_corridor_traps(random_value(last_location->traps_count));
@@ -761,15 +797,11 @@ static void create_area(geoposition geo, variant tile) {
 	add_area_sites(tile);
 	rect all = {0, 0, area->mps - 1, area->mps - 1};
 	pushvalue push_rect(last_rect, all);
-	if(last_location->global)
-		last_location->global->proc(0);
-	else
-		generate_outdoor(0);
+	apply_script(last_location->global, 0);
 	last_rect = push_rect;
 	create_sites();
 	last_rect = push_rect;
-	if(last_location->global_finish)
-		last_location->global_finish->proc(0);
+	apply_script(last_location->global_finish, 0);
 	update_doors();
 }
 
@@ -931,8 +963,31 @@ static void visualize_activity(point m) {
 	movable::fixeffect(m2s(m), "SearchVisual");
 }
 
+static int random(const rect& rc, int v) {
+	if(v <= -100)
+		return 0;
+	if(v < 0)
+		v = (rc.width() + 1) * (rc.height() + 1) * (-v) / 100;
+	if(v <= 0)
+		v = 1;
+	return v;
+}
+
+static void placement(rect rc, areamap::fnset proc, int v, int random_count) {
+	if(random_count <= -100)
+		area->set(rc, proc, v);
+	else {
+		random_count = random(rc, random_count);
+		while(random_count > 0) {
+			auto m = randomft(rc);
+			(area->*proc)(m, v);
+			random_count--;
+		}
+	}
+}
+
 template<> void ftscript<featurei>(int value, int counter) {
-	area->set(last_rect, &areamap::setfeature, value, counter);
+	placement(last_rect, &areamap::setfeature, value, counter);
 }
 
 template<> void ftscript<tilei>(int value, int counter) {
@@ -987,7 +1042,7 @@ template<> void ftscript<itemi>(int value, int counter) {
 		break;
 	default:
 		for(auto i = 0; i < count; i++)
-			place_item(area->get(last_rect), bsdata<itemi>::elements + value);
+			place_item(randomft(last_rect), bsdata<itemi>::elements + value);
 		break;
 	}
 }
@@ -996,9 +1051,7 @@ template<> void ftscript<sitei>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	pushvalue push_site(last_site);
 	last_site = bsdata<sitei>::elements + value;
-	auto last_method = get_local_method();
-	if(last_method)
-		last_method->proc(0);
+	apply_script(get_local_method(), 0);
 	add_room(last_site, last_rect);
 	script_run(bsdata<sitei>::elements[value].landscape);
 }
@@ -1320,22 +1373,22 @@ bool choose_targets(unsigned flags, const variants& conditions) {
 		|| indecies.getcount() != 0;
 }
 
-static bool choose_target_interactive(const char* id, unsigned flags, bool autochooseone) {
+static bool choose_target_interactive(const char* id, bool autochooseone) {
 	if(!id)
 		return true;
 	auto pn = getdescription(str("%1Choose", id));
 	if(!pn)
 		return true;
 	pushvalue push_width(window_width, 300);
-	if(FGT(flags, TargetCreatures)) {
+	if(targets) {
 		if(!targets.chooseu(pn, getnm("Cancel")))
 			return false;
 	}
-	if(FGT(flags, TargetRooms)) {
+	if(rooms) {
 		if(!rooms.chooseu(pn, getnm("Cancel")))
 			return false;
 	}
-	if(FGT(flags, TargetItems)) {
+	if(items) {
 		if(!items.chooseu(pn, getnm("Cancel")))
 			return false;
 	}
@@ -1373,7 +1426,7 @@ static bool bound_targets(const char* id, unsigned flags, int multi_targets, boo
 	if(!multi_targets) {
 		if(!force_choose && get_target_count(flags) == target_count) {
 			// Do nothing, target selected
-		} else if(!choose_target_interactive(id, flags, false))
+		} else if(!choose_target_interactive(id, false))
 			return false;
 	}
 	if(targets.count > target_count)
@@ -1617,8 +1670,13 @@ static int free_objects_count() {
 
 static void debug_message(int bonus) {
 	//dialog_message(getdescription("LoseGame1"));
-	player->speech(ids("PickPockets", "Speech"));
-	//console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
+	//player->speech(ids("PickPockets", "Speech"));
+	console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
+	auto m = player->getposition();
+	console.addn("Position %1i, %2i.", m.x, m.y);
+	auto f = area->features[m];
+	if(f)
+		console.adds("Feature %1 (%2i).", bsdata<featurei>::elements[f].getname(), f);
 	//draw::pause();
 }
 
@@ -2341,10 +2399,13 @@ BSDATA(script) = {
 	{"GainSatiation", gain_satiation},
 	{"GatherNextItem", gather_next_item},
 	{"GenerateBuilding", generate_building},
+	{"GenerateCave", generate_cave},
 	{"GenerateCorridors", generate_corridors},
 	{"GenerateDungeon", generate_dungeon},
+	{"GenerateEmphtySpace", generate_empthy_space},
 	{"GenerateOutdoor", generate_outdoor},
 	{"GenerateRoom", generate_room},
+	{"GenerateRoomNoFloor", generate_room_record},
 	{"GenerateWalls", generate_walls},
 	{"GenerateVillage", generate_cityscape},
 	{"Heal", heal_player},

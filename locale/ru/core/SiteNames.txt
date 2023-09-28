@@ -4,6 +4,7 @@ ArtifactStatueRoom: Статуя
 AshenLand: Земли пепла
 BossRoom: Логово
 CaveMonsterLair: Зверинное логово
+CaveStairsUpRoom: Проход наверх
 ChurchOneBuilding: Церковь единого
 DarkestRoom: Истинная тьма
 DeepForest: Дремучий лес
@@ -13,6 +14,8 @@ DefaultCaveFinal: Пещера
 DefaultDungeon: Подземелье
 DefaultDungeonEntrance: Вход в подземелье
 DefaultDungeonFinal: Подземелье
+DefaultMine: Шахта
+DefaultMineEntrance: Вход в шахту
 FamousHeroMonument: Монумент герою
 ForestSwamps: Заболоченный лес
 GeneralStore: Магазин
@@ -28,7 +31,9 @@ Plains: Равнины
 PortalRoom: Портал
 SarcaphagusRoom: Саркофаг
 SpiderNest: Логово пауков
+StairsUp: Лестница вверх
 StairsUpRoom: Лестница вверх
+StairsDown: Лестница вниз
 StairsDownHouses: Дом с лестницей вниз
 StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"

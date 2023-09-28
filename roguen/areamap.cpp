@@ -37,7 +37,7 @@ static point getwave() {
 	return index;
 }
 
-static point randomr(const rect& rc) {
+point randomr(const rect& rc) {
 	short x = rc.x1 + rand() % (rc.width() + 1);
 	short y = rc.y1 + rand() % (rc.height() + 1);
 	return {x, y};
@@ -180,10 +180,7 @@ void areamap::set(rect rc, fnset proc, int v) {
 }
 
 void areamap::set(rect rc, fnset proc, int v, int random_count) {
-	if(random_count == -101) {
-		set(rc, proc, 0);
-		return;
-	} else if(random_count <= -100) {
+	if(random_count <= -100) {
 		set(rc, proc, v);
 		return;
 	}
@@ -407,12 +404,6 @@ point areamap::findfeature(unsigned char v) const {
 				return m;
 		}
 	return {-1000, -1000};
-}
-
-static point center(const rect& rc) {
-	short x = rc.x1 + rc.width() / 2;
-	short y = rc.y1 + rc.height() / 2;
-	return {x, y};
 }
 
 direction_s areamap::getmost(const rect& rc) const {

@@ -1,2 +1,2 @@
-﻿In file `rules/Spells.txt`:
- Line 12: Can't find variant `SelectItems`
+﻿In file `rules/Sites.txt`:
+ Line 151: Can't find variant `CaveStairsUpRoom`
