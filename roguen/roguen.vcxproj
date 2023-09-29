@@ -368,6 +368,7 @@
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Features.txt" />
+    <Text Include="..\rules\Form.txt" />
     <Text Include="..\rules\Items.txt" />
     <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />

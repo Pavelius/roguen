@@ -1,2 +1,2 @@
-﻿In file `rules/Sites.txt`:
- Line 151: Can't find variant `CaveStairsUpRoom`
+﻿In file `Descriptions.txt`:
+Can't find script or dialog with name 'ShowLogs'

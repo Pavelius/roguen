@@ -15,6 +15,7 @@
 #include "visualeffect.h"
 #include "widget.h"
 
+NOBSDATA(buttoni)
 NOBSDATA(color)
 NOBSDATA(dice)
 NOBSDATA(diceprogress)
@@ -51,15 +52,16 @@ BSMETA(areapiece) = {
 BSMETA(areafi) = {
 	BSREQ(id),
 	{}};
+BSMETA(buttoni) = {
+	BSREQ(id),
+	BSREQ(key),
+	{}};
 BSMETA(classi) = {
 	BSREQ(id),
 	BSREQ(player),
 	{}};
 BSMETA(creature) = {
 	BSREQ(abilities),
-	{}};
-BSMETA(speech) = {
-	BSREQ(id),
 	{}};
 BSMETA(color) = {
 	BSREQ(r), BSREQ(g), BSREQ(b), BSREQ(a),
@@ -69,6 +71,7 @@ BSMETA(conditioni) = {
 	{}};
 BSMETA(dialogi) = {
 	BSREQ(id),
+	BSREQ(buttons),
 	{}};
 BSMETA(dice) = {
 	BSREQ(min),
@@ -152,6 +155,9 @@ BSMETA(siteskilli) = {
 	BSENM(retry, durationi),
 	BSFLG(target, conditioni),
 	BSREQ(effect), BSREQ(conditions), BSREQ(targets),
+	{}};
+BSMETA(speech) = {
+	BSREQ(id),
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),

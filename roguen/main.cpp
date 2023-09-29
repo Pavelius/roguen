@@ -25,6 +25,8 @@ static bool test_creatures() {
 }
 
 static void initializating() {
+	//bsreq::read("rules/Form.txt");
+	bsreq::read("rules/Basic.txt");
 	bsreq::read("rules/Items.txt");
 	bsreq::read("rules/Tiles.txt");
 	bsreq::read("rules/Features.txt");

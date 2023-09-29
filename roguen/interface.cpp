@@ -1350,7 +1350,6 @@ int start_application(fnevent proc, fnevent initializing) {
 	if(!proc)
 		return -1;
 	set_dark_theme();
-	bsreq::read("rules/Basic.txt");
 	initialize_translation("ru");
 	if(initializing)
 		initializing();
