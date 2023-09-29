@@ -4,6 +4,7 @@
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
+#include "dialog.h"
 #include "filter.h"
 #include "game.h"
 #include "itema.h"
@@ -69,6 +70,8 @@ static int random_value(int value) {
 }
 
 static void show_debug_minimap() {
+	auto pt = center(last_rect);
+	draw::setcamera(m2s(pt));
 	script_run("ExploreArea");
 	script_run("ShowMinimap");
 }
@@ -398,7 +401,6 @@ static void create_connector(point index, direction_s dir, int wall, int floor, 
 			break;
 		count++;
 	}
-	//show_debug_minimap();
 	direction_s rnd[] = {West, East, North};
 	zshuffle(rnd, 3);
 	auto next_count = 0;
@@ -474,9 +476,7 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 }
 
 static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol, int wall) {
-	if(!area->isvalid(m))
-		return;
-	auto c = e.center(m);
+	auto c = m;
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
 			if(e[m] != symbol)
@@ -488,9 +488,10 @@ static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol,
 }
 
 static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
-	place_shape_ex(e, m, d, '.', floor);
 	place_shape_ex(e, m, d, 'X', wall);
+	place_shape_ex(e, m, d, '.', floor);
 	place_shape_ex(e, m, d, '0', floor);
+	place_shape_ex(e, m, d, '1', floor);
 }
 
 static void place_shape(const shapei& e, point m, int floor, int walls) {
@@ -499,13 +500,11 @@ static void place_shape(const shapei& e, point m, int floor, int walls) {
 }
 
 static void place_shape(const shapei& e, rect rc, int floor, int walls) {
-	static direction_s direction[] = {North, South, West, East};
-	auto d = maprnd(direction);
-	auto r1 = e.bounding(rc, d);
-	auto m = area->get(r1);
-	if(!area->isvalid(m))
-		m = center(rc);
-	place_shape(e, m, d, floor, walls);
+	if(rc.width()>=3 && rc.height()>=3)
+		rc.offset(1);
+	else if(rc.width()>=6 && rc.height() >= 6)
+		rc.offset(2);
+	place_shape(e, area->get(rc), floor, walls);
 }
 
 int get_deafault_count(const monsteri& e, int area_level) {
@@ -762,17 +761,17 @@ static void generate_room(int bonus) {
 }
 
 static void generate_cave(int bonus) {
-	auto p = bsdata<listi>::find("DefaultMineRooms");
-	if(!p)
+	auto s1 = bsdata<shapei>::find("CircleRoom");
+	auto s2 = bsdata<shapei>::find("SmallCircleRoom");
+	if(!s1 || !s2)
 		return;
 	auto floor = getfloor();
-	for(auto v : p->elements) {
-		if(v.iskind<shapei>()) {
-			auto counter = game.getcount(v);
-			for(auto i = 0; i < counter; i++)
-				place_shape(bsdata<shapei>::elements[v.value], last_rect, floor, floor);
-		}
-	}
+	auto pt = center(last_rect);
+	place_shape(*s1, pt, floor, floor);
+	//show_debug_minimap();
+	auto maximum = xrand(2, 4);
+	for(auto i = 0; i < maximum; i++)
+		place_shape(*s2, last_rect, floor, floor);
 	generate_room_record(bonus);
 }
 
@@ -992,6 +991,10 @@ static void placement(rect rc, areamap::fnset proc, int v, int random_count) {
 			random_count--;
 		}
 	}
+}
+
+template<> void ftscript<dialogi>(int value, int counter) {
+	bsdata<dialogi>::elements[value].open();
 }
 
 template<> void ftscript<featurei>(int value, int counter) {

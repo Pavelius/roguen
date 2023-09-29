@@ -22,10 +22,10 @@ point shapei::find(char sym) const {
 
 point shapei::translate(point c, point v, direction_s d) const {
 	switch(d) {
-	case North: return c.to(v.x, v.y);
-	case South: return c.to(v.x, -v.y);
-	case West: return c.to(-v.y, v.x);
-	case East: return c.to(v.y, -v.x);
+	case North: return c.to(origin.x + v.x, origin.y + v.y);
+	case South: return c.to(origin.x + v.x, -origin.y - v.y);
+	case West: return c.to(-origin.y - v.y, v.x);
+	case East: return c.to(v.y, -origin.x - v.x);
 	default: return c;
 	}
 }
@@ -60,7 +60,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 	auto ps = sb.get();
 	auto pb = p;
 	e.size.x = 0;
-	e.size.y = 1;
+	e.size.y = 0;
 	e.origin.x = 0;
 	e.origin.y = 0;
 	if(!isallowed(*p))
@@ -98,7 +98,7 @@ void shapei::read(const char* url) {
 	auto p = log::read(url);
 	if(!p)
 		return;
-	char temp[4096]; stringbuilder sb(temp);
+	char temp[8192]; stringbuilder sb(temp);
 	allowparse = true;
 	while(allowparse && *p) {
 		if(!checksym(p, '#'))

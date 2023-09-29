@@ -1,3 +1,12 @@
+#CircleRoom
+
+  XXXXXXX  
+XXX.....XXX
+X.........X
+X....0....X
+XXX.....XXX
+  XXX1XXX  
+
 #SmallRoom
 
 XXXXX
@@ -5,15 +14,6 @@ X...X
 X...X
 X...X
 XX0XX
-
-#CircleRoom
-
-  XXXXXXX  
-XXX.....XXX
-X.........X
-X.........X
-XXX.....XXX
-  XXX0XXX  
 
 #SmallCircleRoom
 

@@ -177,7 +177,7 @@ BSDATA(varianti) = {
 	{"Class", VAR(classi), 1, 0, ftscript<classi>},
 	{"Condition", VAR(conditioni), 1, 0, 0, fttest<conditioni>},
 	{"Creature", VAR(creature), 0},
-	{"Dialog", VAR(dialogi), 1},
+	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
 	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
 	{"Filter", VAR(filteri), 1, 0, ftscript<filteri>},

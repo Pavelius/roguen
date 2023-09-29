@@ -149,8 +149,10 @@ DefaultMine minimap(60 176 67) floors(Cave) walls(WallCave) doors(Door)\
   global(GenerateDungeon) local(GenerateCave) global_finish(GenerateEmphtySpace)\
   darkness(3) offset(10)
  sites StairsUpRoom CaveMonsterLair+2 CaveMonsterLair-50 CaveMonsterLair-50
-DefaultMineFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
- sites StairsUpRoom StairsDownRoom FalseRoom+16
+DefaultMineFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(Door)\
+  global(GenerateDungeon) local(GenerateCave) global_finish(GenerateEmphtySpace)\
+  darkness(3) offset(10)
+ sites StairsUpRoom FalseRoom+16
 
 DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(Door)\
   global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom)\
@@ -205,8 +207,6 @@ StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global
 
 RoomsWhereGemsAreFound
  elements SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
-DefaultMineRooms
- elements CircleRoom SmallCircleRoom+2
 
 #RandomTable
 

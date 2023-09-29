@@ -11,8 +11,8 @@ const int tsx = 64;
 const int tsy = 48;
 const int mst = 260;
 
-inline point		m2s(point v) { return point{(short)(v.x * tsx), (short)(v.y * tsy)}; }
-inline point		s2m(point v) { return point{(short)(v.x / tsx), (short)(v.y / tsy)}; }
+inline point m2s(point v) { return point{(short)(v.x * tsx), (short)(v.y * tsy)}; }
+inline point s2m(point v) { return point{(short)(v.x / tsx), (short)(v.y / tsy)}; }
 
 class movable : public actable {
 	point			position;
