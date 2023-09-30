@@ -203,11 +203,6 @@ StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global
  landscape Tree+50 FootMud+20 FootHill+90
  sites TestArea GeneralStore Tavern FamousHeroMonument-20 MysteryHouse-20 ChurchOneBuilding Building+22
 
-#List
-
-RoomsWhereGemsAreFound
- elements SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
-
 #RandomTable
 
 RandomNearestOverlandTiles

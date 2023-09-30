@@ -51,8 +51,8 @@ const sitei*	last_site;
 greatneed*		last_need;
 int				last_value, last_cap;
 extern bool		show_floor_rect;
-static bool		prepare_targets;
-static variant	last_filter;
+static variants	last_list;
+static int		last_list_value;
 static fntestvariant last_allow_proc;
 
 static adat<rect, 32> locations;
@@ -1300,6 +1300,51 @@ static void match_room(const variants& source) {
 		*ps++ = p;
 	}
 	rooms.count = ps - rooms.begin();
+}
+
+static bool match_list_feature(point m) {
+	auto i = area->features[m];
+	for(auto v : last_list) {
+		if(v.value == i)
+			return true;
+	}
+	return false;
+}
+
+static void read_same_list() {
+	last_list.clear();
+	if(!script_begin)
+		return;
+	auto start = bsdata<variant>::source.indexof(script_begin - 1);
+	if(start == -1)
+		return;
+	auto type = script_begin[-1].type;
+	while(script_begin < script_end && script_begin->type == type)
+		script_begin++;
+	auto end = bsdata<variant>::source.indexof(script_begin);
+	last_list.start = start;
+	last_list.count = end - start;
+}
+
+static void match_target(variant v) {
+	if(v.iskind<featurei>()) {
+		read_same_list();
+		indecies.match(match_list_feature, true);
+	} else
+		script_run(v);
+}
+
+bool choose_targets(const variants& conditions) {
+	pushvalue push(last_script_apply, match_target);
+	indecies.clear();
+	items.clear();
+	rooms.clear();
+	targets.clear();
+	script_run_ex(conditions);
+	return targets.getcount() != 0
+		|| rooms.getcount() != 0
+		|| items.getcount() != 0
+		|| indecies.getcount() != 0;
 }
 
 bool choose_targets(unsigned flags, const variants& conditions) {

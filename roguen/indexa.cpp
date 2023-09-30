@@ -34,7 +34,7 @@ void indexa::select(point pt, int range) {
 	count = pb - data;
 }
 
-void indexa::select(fnallow proc, bool keep, int offset) {
+void indexa::select(fnallowposition proc, bool keep, int offset) {
 	auto pb = data;
 	auto pe = endof();
 	point m;
@@ -47,6 +47,16 @@ void indexa::select(fnallow proc, bool keep, int offset) {
 		}
 	}
 	count = pb - data;
+}
+
+void indexa::match(fnallowposition proc, bool keep) {
+	auto ps = data;
+	for(auto m : *this) {
+		if(proc(m) != keep)
+			continue;
+		*ps++ = m;
+	}
+	count = ps - data;
 }
 
 void indexa::shuffle() {

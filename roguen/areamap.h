@@ -61,5 +61,6 @@ struct areamap {
 	void			setreveal(point m, int floor);
 	void			vert(int x1, int y1, int y2, fnset proc, int v);
 };
-extern point last_index;
-point randomr(const rect& rc);
+extern point		last_index;
+extern unsigned char last_map_object;
+point				randomr(const rect& rc);

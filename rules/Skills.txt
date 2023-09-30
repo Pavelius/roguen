@@ -25,6 +25,5 @@ StealCoins skill(Thievery)
  effect StealCoins
 SearchRoomForGems skill(Gemcutting)
  target TargetRooms You Allies
- targets SelectRooms RoomsWhereGemsAreFound
- conditions RoomsWhereGemsAreFound
+ targets SelectRooms SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
  effect RollAction RandomGem
