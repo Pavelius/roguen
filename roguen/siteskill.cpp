@@ -16,7 +16,7 @@ extern point last_index;
 siteskilla	last_actions;
 siteskilli* last_action;
 
-bool choose_targets(unsigned flags, const variants& effects);
+bool choose_targets(const variants& conditions);
 
 void siteskilli::fixuse() const {
 	auto rm = player->getroom();
@@ -42,5 +42,5 @@ bool siteskilli::isusable() const {
 			}
 		}
 	}
-	return choose_targets(target, conditions);
+	return choose_targets(targets);
 }

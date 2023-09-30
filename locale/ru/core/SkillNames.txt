@@ -10,6 +10,7 @@ YouDamageItem: %герой повредил%а %-$1.
 YouFailRoll: %герой сделал%а бросок.
 YouMakeRoll: %герой не сделал%а бросок. 
 
+GatherInformation: Узнать слухи
 GatherMellowHerbs: Собрать спелые травы
 GatherSemiMellowHerbs: Собрать травы
 SearchRoom: Обыскать комнату

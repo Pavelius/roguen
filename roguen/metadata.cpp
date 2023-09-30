@@ -153,8 +153,7 @@ BSMETA(siteskilli) = {
 	BSENM(skill, abilityi),
 	BSREQ(bonus),
 	BSENM(retry, durationi),
-	BSFLG(target, conditioni),
-	BSREQ(effect), BSREQ(conditions), BSREQ(targets),
+	BSREQ(effect), BSREQ(targets),
 	{}};
 BSMETA(speech) = {
 	BSREQ(id),
@@ -163,7 +162,6 @@ BSMETA(spelli) = {
 	BSREQ(id),
 	BSREQ(mana), BSREQ(count),
 	BSENM(duration, durationi),
-	BSFLG(target, conditioni),
 	BSREQ(targets), BSREQ(effect), BSREQ(summon),
 	{}};
 BSMETA(weaponi) = {

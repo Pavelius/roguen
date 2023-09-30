@@ -1,29 +1,23 @@
 #SiteSkill
 
+GatherInformation skill(Wits)
+ targets SelectNeutralCreatures FilterClose+1
+ effect ChatOpponent
 GatherSemiMellowHerbs skill(Herbalism)
- target TargetFeatures
- targets SelectFeatures HerbsSemi
- conditions HerbsSemi 
+ targets SelectFeatures FilterNextFeatures HerbsSemi
  effect GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
 GatherMellowHerbs skill(Herbalism)
- conditions HerbsFull
- target TargetFeatures
- targets SelectFeatures HerbsFull
+ targets SelectFeatures FilterNextFeatures HerbsFull
  effect GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
 OpenDoorLock skill(Thievery)
- target TargetFeatures
- targets SelectFeatures LockedDoor
+ targets SelectFeatures FilterNextFeatures LockedDoor
  effect RollAction Door GainExperience+1
 SacrificeEvilAltar skill(Religion)
- target TargetFeatures
- targets SelectFeatures AltarEvil
- conditions AltarEvil
+ targets SelectFeatures FilterNextFeatures AltarEvil
  effect RollAction GainExperience+1
 StealCoins skill(Thievery)
- target TargetCreatures Neutrals
  targets SelectNeutralCreatures
  effect StealCoins
 SearchRoomForGems skill(Gemcutting)
- target TargetRooms You Allies
- targets SelectRooms SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
+ targets SelectRooms FilterNextRooms SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
  effect RollAction RandomGem

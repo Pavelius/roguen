@@ -51,8 +51,6 @@ const sitei*	last_site;
 greatneed*		last_need;
 int				last_value, last_cap;
 extern bool		show_floor_rect;
-static variants	last_list;
-static int		last_list_value;
 static fntestvariant last_allow_proc;
 
 static adat<rect, 32> locations;
@@ -1302,131 +1300,48 @@ static void match_room(const variants& source) {
 	rooms.count = ps - rooms.begin();
 }
 
-static bool match_list_feature(point m) {
-	auto i = area->features[m];
-	for(auto v : last_list) {
-		if(v.value == i)
-			return true;
-	}
-	return false;
-}
-
-static void read_same_list() {
-	last_list.clear();
-	if(!script_begin)
-		return;
-	auto start = bsdata<variant>::source.indexof(script_begin - 1);
-	if(start == -1)
-		return;
-	auto type = script_begin[-1].type;
-	while(script_begin < script_end && script_begin->type == type)
-		script_begin++;
-	auto end = bsdata<variant>::source.indexof(script_begin);
-	last_list.start = start;
-	last_list.count = end - start;
-}
-
-static void match_target(variant v) {
-	if(v.iskind<featurei>()) {
-		read_same_list();
-		indecies.match(match_list_feature, true);
-	} else
-		script_run(v);
-}
-
 bool choose_targets(const variants& conditions) {
-	pushvalue push(last_script_apply, match_target);
+	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	items.clear();
 	rooms.clear();
 	targets.clear();
-	script_run_ex(conditions);
+	script_run(conditions);
 	return targets.getcount() != 0
 		|| rooms.getcount() != 0
 		|| items.getcount() != 0
 		|| indecies.getcount() != 0;
 }
 
-bool choose_targets(unsigned flags, const variants& conditions) {
-	indecies.clear();
-	items.clear();
-	rooms.clear();
-	targets.clear();
-	if(FGT(flags, TargetCreatures)) {
-		if(FGT(flags, Allies)) {
-			if(player->is(Ally))
-				add_creatures(Ally);
-			if(player->is(Enemy))
-				add_creatures(Enemy);
-		}
-		if(FGT(flags, Enemies)) {
-			if(player->is(Ally))
-				add_creatures(Enemy);
-			if(player->is(Enemy))
-				add_creatures(Ally);
-		}
-		if(FGT(flags, Neutrals))
-			add_neutrals();
-		if(FGT(flags, You))
-			targets.add(player);
-		if(!FGT(flags, Ranged))
-			targets.matchrange(player->getposition(), 1, true);
-		targets.distinct();
-		match_creatures(conditions);
-		targets.sort(player->getposition());
-	} else if(FGT(flags, TargetFeatures)) {
-		indecies.clear();
-		indecies.select(player->getposition(), FGT(flags, Ranged) ? 3 : 1);
-		indecies.match(fntis<featurei, &featurei::isvisible>, true);
-		if(player->ishuman()) {
-			if(FGT(flags, Identified))
-				indecies.match(Visible, true);
-		}
-		indecies.match(Hidden, FGT(flags, Unaware));
-		if(FGT(flags, Enemies))
-			indecies.match(fntis<featurei, &featurei::istrap>, true);
-		match_features(conditions);
-		indecies.sort(player->getposition());
-	} else if(FGT(flags, TargetRooms)) {
-		rooms.clear();
-		if(FGT(flags, Allies)) {
-			auto rm = player->getroom();
-			if(rm)
-				rooms.add(player->getroom());
-		} else {
-			rooms.collectiona::select(area->rooms);
-			if(!FGT(flags, You))
-				rooms.remove(player->getroom());
-			if(FGT(flags, Identified))
-				rooms.match(fntis<roomi, &roomi::isexplored>, true);
-			if(!FGT(flags, Ranged))
-				rooms.match(fntis<roomi, &roomi::ismarkable>, true);
-		}
-		match_room(conditions);
-	} else  if(FGT(flags, TargetItems)) {
-		items.select(player);
-		if(FGT(flags, Identified))
-			items.match(fntis<item, &item::isidentified>, true);
-		else if(FGT(flags, Unaware))
-			items.match(fntis<item, &item::isidentified>, false);
-		if(FGT(flags, Ranged))
-			items.match(fntis<item, &item::isranged>, true);
-		if(FGT(flags, Wounded))
-			items.match(fntis<item, &item::iswounded>, true);
-		else if(FGT(flags, NoWounded))
-			items.match(fntis<item, &item::iswounded>, false);
-		match_items(conditions);
+static void apply_target_effect(const variants& effect) {
+	if(!effect)
+		return;
+	pushvalue push_opponent(opponent, player);
+	pushvalue push_player(player);
+	pushvalue push_modifier(modifier);
+	pushvalue push_item(last_item);
+	pushvalue push_value(last_room);
+	pushvalue push_rect(last_rect);
+	pushvalue push_index(last_index, player->getposition());
+	for(auto p : targets) {
+		player = p;
+		script_run(effect);
 	}
-	if(FGT(flags, Random)) {
-		targets.shuffle();
-		items.shuffle();
-		rooms.shuffle();
-		indecies.shuffle();
+	for(auto p : indecies) {
+		last_rect = {p.x, p.y, p.x, p.y};
+		last_index = p;
+		script_run(effect);
 	}
-	return targets.getcount() != 0
-		|| rooms.getcount() != 0
-		|| items.getcount() != 0
-		|| indecies.getcount() != 0;
+	for(auto p : rooms) {
+		last_room = p;
+		last_rect = p->rc;
+		last_index = center(last_rect);
+		script_run(effect);
+	}
+	for(auto p : items) {
+		last_item = p;
+		script_run(effect);
+	}
 }
 
 static bool choose_target_interactive(const char* id, bool autochooseone) {
@@ -1476,13 +1391,11 @@ static int get_target_count(unsigned flags) {
 	return false;
 }
 
-static bool bound_targets(const char* id, unsigned flags, int multi_targets, bool interactive, bool force_choose = true) {
+static bool bound_targets(const char* id, int multi_targets, bool interactive, bool force_choose = true) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
 	if(!multi_targets) {
-		if(!force_choose && get_target_count(flags) == target_count) {
-			// Do nothing, target selected
-		} else if(!choose_target_interactive(id, false))
+		if(!choose_target_interactive(id, false))
 			return false;
 	}
 	if(targets.count > target_count)
@@ -1512,53 +1425,19 @@ template<> void ftscript<spelli>(int index, int value) {
 	apply_spell(bsdata<spelli>::elements[index], value);
 }
 
-static void apply_target_effect(unsigned target, const variants& effect) {
-	if(!effect)
-		return;
-	pushvalue push_modifier(modifier);
-	if(FGT(target, TargetCreatures)) {
-		pushvalue push_player(player), push_opponent(opponent, player);
-		for(auto p : targets) {
-			player = p;
-			script_run(effect);
-		}
-	} else if(FGT(target, TargetFeatures)) {
-		for(auto p : indecies) {
-			pushvalue push_rect(last_rect, {p.x, p.y, p.x, p.y});
-			pushvalue push_index(last_index, p);
-			script_run(effect);
-		}
-	} else if(FGT(target, TargetRooms)) {
-		pushvalue push_value(last_room);
-		pushvalue push_rect(last_rect);
-		pushvalue push_index(last_index);
-		for(auto p : rooms) {
-			last_room = p;
-			last_rect = p->rc;
-			last_index = center(last_rect);
-			script_run(effect);
-		}
-	} else if(FGT(target, TargetItems)) {
-		for(auto p : items) {
-			pushvalue push_object(last_item, p);
-			script_run(effect);
-		}
-	}
-}
-
 bool spelli::apply(int level, int targets_count, bool interactive, bool silent) const {
-	if(!bound_targets(id, target, targets_count, interactive))
+	if(!bound_targets(id, targets_count, interactive))
 		return false;
 	if(!silent)
 		action_text(player, id, "Casting");
-	if(is(TargetCreatures)) {
+	if(::targets.getcount()) {
 		pushvalue push_player(player), push_opponent(opponent, player);
-		for(auto p : targets) {
+		for(auto p : (::targets)) {
 			player = p;
 			apply_spell(*this, level);
 		}
 	} else
-		apply_target_effect(target, effect);
+		apply_target_effect(effect);
 	if(summon)
 		player->summon(player->getposition(), summon, getcount(level), level);
 	return true;
@@ -1569,11 +1448,11 @@ void creature::cast(const spelli& e, int level, int mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!choose_targets(e.target, e.effect) && !e.summon) {
+	if(!choose_targets(e.targets) && !e.summon) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
-	e.apply(level, e.is(Multitarget) ? level : 0, ishuman(), false);
+	e.apply(level, 0, ishuman(), false);
 	add(Mana, -mana);
 	update();
 	wait();
@@ -1752,27 +1631,27 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chat_someone() {
-	auto monster = opponent->getmonster();
+	auto monster = player->getmonster();
 	if(monster) {
-		if(player->talk(monster->id))
+		if(opponent->talk(monster->id))
 			return;
 	}
-	auto room = opponent->getroom();
+	auto room = player->getroom();
 	if(room) {
-		if(player->talk(room->geti().id))
+		if(opponent->talk(room->geti().id))
 			return;
 	}
-	if(opponent->speechneed())
+	if(player->speechneed())
 		return;
-	if(opponent->is(KnowRumor) && d100() < 70) {
-		if(opponent->speechrumor())
+	if(player->is(KnowRumor) && d100() < 70) {
+		if(player->speechrumor())
 			return;
 	}
-	if(opponent->is(KnowLocation) && d100() < 30) {
-		if(opponent->speechlocation())
+	if(player->is(KnowLocation) && d100() < 30) {
+		if(player->speechlocation())
 			return;
 	}
-	opponent->speech("HowYouAre");
+	player->speech("HowYouAre");
 }
 
 static void char_opponent(int bonus) {
@@ -1781,28 +1660,14 @@ static void char_opponent(int bonus) {
 	opponent->wait();
 }
 
-static void apply_action(const char* id, unsigned target, const variants& effect) {
-	if(!choose_targets(target, {})) {
+static void apply_action(const char* id, const variants& targets, const variants& effects) {
+	if(!choose_targets(targets)) {
 		player->actp(getdescription(str("%1Fail", id)));
 		return;
 	}
-	if(!bound_targets(id, target, 0, player->ishuman(), false))
+	if(!bound_targets(id, 0, player->ishuman(), false))
 		return;
-	apply_target_effect(target, effect);
-}
-
-static void chat_someone(int bonus) {
-	unsigned target = FG(TargetCreatures) | FG(Allies) | FG(Neutrals);
-	if(!choose_targets(target, {})) {
-		player->actp(getnm("NoCreaturesNearby"));
-		return;
-	}
-	if(!bound_targets("ChatSomeone", target, 0, player->ishuman(), false))
-		return;
-	for(auto p : targets) {
-		pushvalue push(opponent, p);
-		char_opponent(bonus);
-	}
+	apply_target_effect(effects);
 }
 
 static void test_rumor(int bonus) {
@@ -2145,12 +2010,12 @@ static void speech_action() {
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
-	if(!choose_targets(last_action->target, last_action->effect))
+	if(!choose_targets(last_action->targets))
 		return;
-	if(!bound_targets(last_action->id, last_action->target, 0, player->ishuman()))
+	if(!bound_targets(last_action->id, 0, player->ishuman()))
 		return;
 	speech_action();
-	apply_target_effect(last_action->target, last_action->effect);
+	apply_target_effect(last_action->effect);
 	player->wait();
 }
 
@@ -2441,7 +2306,6 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"ChatOpponent", char_opponent},
-	{"ChatSomeone", chat_someone},
 	{"Damage", damage_all},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},

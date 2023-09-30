@@ -6,8 +6,8 @@ AncientRaceComing maximum(100)
 #SiteSkill
 
 ExamineAltar skill(History)
- target TargetFeatures
- effect FeatureMatchNext RandomAltars GainExperience+1 AncientRaceComing+1
+ targets SelectFeatures FilterNextFeatures RandomAltar
+ effect GainExperience+1 AncientRaceComing+1
 ExamineStatue skill(History)
- target TargetFeatures
- effect FeatureMatchNext Statue GainExperience+2 AncientRaceComing+2
+ targets SelectFeatures FilterNextFeatures Statue
+ effect GainExperience+2 AncientRaceComing+2

@@ -19,6 +19,10 @@ static const char* object_mana(const void* object, stringbuilder& sb) {
 	return sb.begin();
 }
 
+bool spelli::ishostile() const {
+	return false;
+}
+
 spelli*	spella::choose(const char* title, const char* cancel, const spellable* context) const {
 	static listcolumn columns[] = {
 		{"Level", 60, object_level},

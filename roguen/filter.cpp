@@ -3,8 +3,50 @@
 #include "filter.h"
 #include "indexa.h"
 #include "itema.h"
+#include "pushvalue.h"
 #include "site.h"
 #include "script.h"
+
+static variants	last_list;
+
+static void read_same_list() {
+	last_list.clear();
+	if(!script_begin)
+		return;
+	auto type = script_begin->type;
+	auto start = bsdata<variant>::source.indexof(script_begin);
+	if(start == -1)
+		return;
+	while(script_begin < script_end && script_begin->type == type)
+		script_begin++;
+	auto end = bsdata<variant>::source.indexof(script_begin);
+	last_list.start = start;
+	last_list.count = end - start;
+}
+
+static bool match_list_value(int value) {
+	for(auto v : last_list) {
+		if(v.iskind<listi>()) {
+			pushvalue push(last_list, bsdata<listi>::elements[v.value].elements);
+			if(match_list_value(value))
+				return true;
+		} else if(v.iskind<randomizeri>()) {
+			pushvalue push(last_list, bsdata<randomizeri>::elements[v.value].chance);
+			if(match_list_value(value))
+				return true;
+		} else if(v.value == value)
+			return true;
+	}
+	return false;
+}
+
+static bool match_list_feature(point m) {
+	return match_list_value(area->features[m]);
+}
+
+static bool match_list_room(const void* object) {
+	return match_list_value(&((roomi*)object)->geti() - bsdata<sitei>::elements);
+}
 
 template<> void ftscript<filteri>(int value, int counter) {
 	auto& ei = bsdata<filteri>::elements[value];
@@ -54,6 +96,18 @@ static bool filter_identified(const void* object) {
 
 static void filter_targets(fnvisible proc, int counter) {
 	targets.collection<creature>::match(proc, counter >= 0);
+}
+
+static void filter_next_indecies(fnvisible proc, int counter) {
+	read_same_list();
+	if(last_list)
+		indecies.match(match_list_feature, true);
+}
+
+static void filter_next_rooms(fnvisible proc, int counter) {
+	read_same_list();
+	if(last_list)
+		rooms.match(match_list_room, true);
 }
 
 static void filter_items(fnvisible proc, int counter) {
@@ -111,7 +165,8 @@ BSDATA(filteri) = {
 	{"FilterClose", filter_close, filter_targets},
 	{"FilterCursed", filter_cursed, filter_items},
 	{"FilterIdentified", filter_identified, filter_items},
-	{"FilterFeature", filter_blessed, filter_targets},
+	{"FilterNextFeatures", 0, filter_next_indecies},
+	{"FilterNextRooms", 0, filter_next_rooms},
 	{"FilterUnaware", filter_unaware, filter_targets},
 	{"FilterWounded", filter_wounded, filter_targets},
 	{"SelectAllies", 0, select_allies},

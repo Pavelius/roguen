@@ -18,7 +18,7 @@
 extern collection<roomi> rooms;
 
 void apply_spell(const spelli& ei, int level);
-bool choose_targets(unsigned flags, const variants& effects);
+bool choose_targets(const variants& effects);
 void damage_item(item& it);
 int getfloor();
 
@@ -626,14 +626,14 @@ static bool spell_allowuse(const void* object) {
 	auto p = (spelli*)object;
 	if(p->summon.size() != 0)
 		return true;
-	return choose_targets(p->target, p->effect);
+	return choose_targets(p->targets);
 }
 
 static bool spell_iscombat(const void* object) {
 	auto p = (spelli*)object;
-	if(p->is(Enemies))
-		return true;
 	if(p->summon)
+		return true;
+	if(p->ishostile())
 		return true;
 	return false;
 }

@@ -1,2 +1,2 @@
-﻿In file `Descriptions.txt`:
-Can't find script or dialog with name 'ShowLogs'
+﻿In file `rules/Skills.txt`:
+ Line 22: Can't find variant `FilterNextRooms`
