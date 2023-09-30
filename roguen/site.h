@@ -9,8 +9,6 @@
 
 #pragma once
 
-enum condition_s : unsigned char;
-
 struct script;
 struct sitei : nameable {
 	variants		landscape, loot;

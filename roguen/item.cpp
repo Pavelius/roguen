@@ -1,5 +1,4 @@
 #include "areapiece.h"
-#include "condition.h"
 #include "item.h"
 #include "magic.h"
 
@@ -220,15 +219,4 @@ bool item::ismagical() const {
 
 bool item::ischargeable() const {
 	return geti().charges > 0;
-}
-
-bool item::is(condition_s v) const {
-	switch(v) {
-	case Identified: return identified != 0;
-	case NoWounded: return !iscountable() || broken == 0;
-	case Wounded: return iscountable() && broken != 0;
-	case Ranged: return geti().wear == RangedWeapon;
-	case Unaware: return identified == 0;
-	default: return false;
-	}
 }

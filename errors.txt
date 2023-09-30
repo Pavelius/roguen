@@ -1,2 +1,4 @@
-﻿In file `rules/Skills.txt`:
- Line 22: Can't find variant `FilterNextRooms`
+﻿In file `locale/ru/core/Chats.txt`:
+ Line 77: Unknown variant identifier `AnimalInt`
+ Line 78: Unknown variant identifier `AnimalInt`
+ Line 79: Unknown variant identifier `AnimalInt`

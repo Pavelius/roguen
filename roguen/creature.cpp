@@ -1,7 +1,6 @@
 #include "areapiece.h"
 #include "boost.h"
 #include "charname.h"
-#include "condition.h"
 #include "creature.h"
 #include "direction.h"
 #include "indexa.h"
@@ -23,7 +22,7 @@ void damage_item(item& it);
 int getfloor();
 
 void creature::fixact(const char* id) const {
-	if(!is(AnimalInt)) {
+	if(canspeak()) {
 		auto idn = ids(id, "Speech");
 		if(bsdata<::speech>::find(idn)) {
 			speech(idn);
@@ -743,45 +742,45 @@ bool creature::is(areaf v) const {
 	return ispresent() && area->is(getposition(), v);
 }
 
-bool creature::is(condition_s v) const {
-	int n, m;
-	switch(v) {
-	case Unaware: return isunaware();
-	case NPC: return ischaracter();
-	case Random: return d100() < 40;
-	case NoInt: return get(Wits) == 10;
-	case AnimalInt: return get(Wits) < 10;
-	case LowInt: return get(Wits) < 20;
-	case AveInt: return get(Wits) < 35;
-	case HighInt: return get(Wits) < 50;
-	case Wounded:
-		n = get(Hits);
-		m = getmaximum(Hits);
-		return n > 0 && n < m;
-	case HeavyWounded:
-		n = get(Hits);
-		m = getmaximum(Hits);
-		return n > 0 && n < m / 2;
-	case NoWounded: return get(Hits) == getmaximum(Hits);
-	case Allies:
-		if(player->is(Ally))
-			return is(Ally);
-		else if(player->is(Enemy))
-			return is(Enemy);
-		return false;
-	case Enemies:
-		if(player->is(Enemy))
-			return is(Ally);
-		else if(player->is(Ally))
-			return is(Enemy);
-		return false;
-	case Neutrals: return !is(Ally) && !is(Enemy);
-	case NoAnyFeature:
-		return area->features[getposition()] == 0;
-	default:
-		return true;
-	}
-}
+//bool creature::is(condition_s v) const {
+//	int n, m;
+//	switch(v) {
+//	case Unaware: return isunaware();
+//	case NPC: return ischaracter();
+//	case Random: return d100() < 40;
+//	case NoInt: return get(Wits) == 10;
+//	case AnimalInt: return get(Wits) < 10;
+//	case LowInt: return get(Wits) < 20;
+//	case AveInt: return get(Wits) < 35;
+//	case HighInt: return get(Wits) < 50;
+//	case Wounded:
+//		n = get(Hits);
+//		m = getmaximum(Hits);
+//		return n > 0 && n < m;
+//	case HeavyWounded:
+//		n = get(Hits);
+//		m = getmaximum(Hits);
+//		return n > 0 && n < m / 2;
+//	case NoWounded: return get(Hits) == getmaximum(Hits);
+//	case Allies:
+//		if(player->is(Ally))
+//			return is(Ally);
+//		else if(player->is(Enemy))
+//			return is(Enemy);
+//		return false;
+//	case Enemies:
+//		if(player->is(Enemy))
+//			return is(Ally);
+//		else if(player->is(Ally))
+//			return is(Enemy);
+//		return false;
+//	case Neutrals: return !is(Ally) && !is(Enemy);
+//	case NoAnyFeature:
+//		return area->features[getposition()] == 0;
+//	default:
+//		return true;
+//	}
+//}
 
 void creature::movestep(direction_s v) {
 	if(is(Iced)) {
@@ -842,7 +841,7 @@ void creature::interaction(creature& opponent) {
 	else if(opponent.is(PlaceOwner)) {
 		fixaction();
 		opponent.wait();
-		if(d100() < 40 && !opponent.is(AnimalInt))
+		if(d100() < 40 && opponent.canspeak())
 			opponent.speech("DontPushMePlaceOwner");
 		pay_movement(this);
 	} else {
@@ -854,7 +853,7 @@ void creature::interaction(creature& opponent) {
 		setposition(pt);
 		update_room(this);
 		fixmovement();
-		if(d100() < 40 && !opponent.is(AnimalInt))
+		if(d100() < 40 && opponent.canspeak())
 			opponent.speech("DontPushMe");
 		pay_movement(this);
 	}

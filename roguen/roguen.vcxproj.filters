@@ -207,9 +207,6 @@
     <ClCompile Include="site.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="condition.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="room.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -597,9 +594,6 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="class.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="condition.h">
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="feature.h">

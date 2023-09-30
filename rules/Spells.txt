@@ -4,14 +4,14 @@ CureWounds mana(10) count(1 4)
  targets SelectAllies FilterWounded FilterClose
  effect Wounded
 Entaglement mana(6)
- targets SelectEnemies
- effect NoAnyFeature ThornBush
+ targets SelectEnemies FilterFeature-1
+ effect ThornBush
 IdentifySpell mana(10)
  targets SelectYourItems FilterIdentified-1
  effect IdentifyItem+1
 Gate mana(40)
 KnockDoor mana(10)
- targets SelectFeatures LockedDoor
+ targets SelectFeatures FilterNextFeatures LockedDoor
  effect OpenedDoor
 TorchLight mana(5) duration(Minute20PL)
  targets SelectYou
@@ -26,3 +26,4 @@ SummonUndead mana(20) count(0 0 1)
  summon Skeleton+4 Zombie+2 Ghoul+1
 Teleport mana(5)
 Web mana(4)
+ targets SelectEnemies FilterFeature-1

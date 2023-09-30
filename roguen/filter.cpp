@@ -165,6 +165,7 @@ BSDATA(filteri) = {
 	{"FilterClose", filter_close, filter_targets},
 	{"FilterCursed", filter_cursed, filter_items},
 	{"FilterIdentified", filter_identified, filter_items},
+	{"FilterFeature", filter_feature, filter_targets},
 	{"FilterNextFeatures", 0, filter_next_indecies},
 	{"FilterNextRooms", 0, filter_next_rooms},
 	{"FilterUnaware", filter_unaware, filter_targets},

@@ -16,8 +16,6 @@
 
 #pragma once
 
-enum condition_s : unsigned char;
-
 class creature : public wearable, public skillable, public spellable, public ownerable {
 	unsigned short	class_id, room_id;
 	point			moveorder, guardorder;
@@ -44,6 +42,7 @@ public:
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
 	bool			canshoot(bool interactive) const;
+	bool			canspeak() const { return abilities[Wits] >= 5; }
 	bool			canthrown(bool interactive) const;
 	void			cast(const spelli& e);
 	void			cast(const spelli& e, int level, int mana);
@@ -78,7 +77,6 @@ public:
 	int				getwait() const { return wait_seconds; }
 	bool			is(areaf v) const;
 	bool			is(ability_s v) const { return get(v) > 0; }
-	bool			is(condition_s v) const;
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
 	bool			isallow(const item& it) const;
 	bool			isenemy(const creature& opponent) const;

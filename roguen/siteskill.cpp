@@ -1,7 +1,6 @@
 #include "ability.h"
 #include "areapiece.h"
 #include "bsreq.h"
-#include "condition.h"
 #include "creature.h"
 #include "duration.h"
 #include "feature.h"

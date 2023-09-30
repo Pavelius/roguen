@@ -8,7 +8,6 @@
 #pragma once
 
 enum ability_s : unsigned char;
-enum condition_s : unsigned char;
 
 struct itemi;
 
@@ -79,7 +78,6 @@ public:
 	variant			getpower() const;
 	variants		getuse() const;
 	int				getweight() const;
-	bool			is(condition_s v) const;
 	bool			is(feat_s v) const;
 	bool			is(magic_s v) const { return magic == v; }
 	bool			is(wear_s v) const;

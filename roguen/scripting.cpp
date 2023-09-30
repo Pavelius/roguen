@@ -1,6 +1,5 @@
 #include "areapiece.h"
 #include "boost.h"
-#include "condition.h"
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
@@ -498,9 +497,9 @@ static void place_shape(const shapei& e, point m, int floor, int walls) {
 }
 
 static void place_shape(const shapei& e, rect rc, int floor, int walls) {
-	if(rc.width()>=3 && rc.height()>=3)
+	if(rc.width() >= 3 && rc.height() >= 3)
 		rc.offset(1);
-	else if(rc.width()>=6 && rc.height() >= 6)
+	else if(rc.width() >= 6 && rc.height() >= 6)
 		rc.offset(2);
 	place_shape(e, area->get(rc), floor, walls);
 }
@@ -1113,9 +1112,9 @@ template<> void ftscript<feati>(int value, int counter) {
 		player->feats.remove(value);
 }
 
-template<> bool fttest<conditioni>(int value, int counter) {
-	return player->is((condition_s)value);
-}
+//template<> bool fttest<conditioni>(int value, int counter) {
+//	return player->is((condition_s)value);
+//}
 
 static void move_left(int bonus) {
 	player->movestep(West);
@@ -1216,7 +1215,7 @@ static bool choose_target_interactive(const char* id, bool autochooseone) {
 }
 
 static void action_text(const creature* player, const char* id, const char* action) {
-	if(!player->is(AnimalInt)) {
+	if(player->canspeak()) {
 		auto pn = player->getspeech(str("%1%2Speech", id, action), false);
 		if(pn) {
 			player->say(pn);
@@ -1846,7 +1845,7 @@ static void fix_action(const char* suffix) {
 }
 
 static void speech_action() {
-	if(player->is(AnimalInt))
+	if(!player->canspeak())
 		return;
 	auto id = ids(last_action->id, "Speech");
 	if(bsdata<speech>::find(id))
@@ -2085,6 +2084,21 @@ static void gain_satiation(int bonus) {
 	player->satiation += bonus * 10;
 }
 
+static bool is_random(int bonus) {
+	return d100() < 30;
+}
+
+static void empthy_script(int bonus) {
+}
+
+static bool is_npc(int bonus) {
+	return player->is(Local) != 0;
+}
+
+static bool is_animal(int bonus) {
+	return player->canspeak();
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
@@ -2149,6 +2163,7 @@ BSDATA(script) = {
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
 	{"ApplyAction", apply_action},
+	{"AnimalInt", empthy_script, is_animal},
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"ChatOpponent", char_opponent},
@@ -2189,6 +2204,7 @@ BSDATA(script) = {
 	{"MoveUp", move_up},
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
+	{"NPC", empthy_script, is_npc},
 	{"Offset", set_offset},
 	{"OpenLockedDoor", open_locked_door, is_locked_door},
 	{"OpenNearestDoor", open_nearest_door},
@@ -2198,6 +2214,7 @@ BSDATA(script) = {
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
 	{"QuestReward", quest_reward},
+	{"Random", empthy_script, is_random},
 	{"RandomAbility", random_ability},
 	{"RangeAttack", range_attack},
 	{"RepairItem", repair_item},

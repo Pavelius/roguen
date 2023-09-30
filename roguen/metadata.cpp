@@ -1,6 +1,5 @@
 #include "areapiece.h"
 #include "bsreq.h"
-#include "condition.h"
 #include "dialog.h"
 #include "filter.h"
 #include "hotkey.h"
@@ -65,9 +64,6 @@ BSMETA(creature) = {
 	{}};
 BSMETA(color) = {
 	BSREQ(r), BSREQ(g), BSREQ(b), BSREQ(a),
-	{}};
-BSMETA(conditioni) = {
-	BSREQ(id),
 	{}};
 BSMETA(dialogi) = {
 	BSREQ(id),
@@ -179,7 +175,6 @@ BSDATA(varianti) = {
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
 	{"Class", VAR(classi), 1, 0, ftscript<classi>},
-	{"Condition", VAR(conditioni), 1, 0, 0, fttest<conditioni>},
 	{"Creature", VAR(creature), 0},
 	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
