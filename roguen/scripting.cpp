@@ -1149,157 +1149,6 @@ static void move_down_right(int bonus) {
 	player->movestep(SouthEast);
 }
 
-static void add_creatures(feat_s v) {
-	for(auto p : creatures) {
-		if(p->is(v))
-			targets.add(p);
-	}
-}
-
-static void add_neutrals() {
-	for(auto p : creatures) {
-		if(p->is(Ally) || p->is(Enemy))
-			continue;
-		targets.add(p);
-	}
-}
-
-static bool allow_all(const variants& source) {
-	pushvalue push_begin(script_begin, source.begin());
-	pushvalue push_end(script_end, source.end());
-	while(script_begin < script_end) {
-		if(!last_allow_proc(*script_begin++))
-			return false;
-	}
-	return true;
-}
-
-static bool allow_oneof(const variants& source) {
-	pushvalue push_begin(script_begin, source.begin());
-	pushvalue push_end(script_end, source.end());
-	while(script_begin < script_end) {
-		if(last_allow_proc(*script_begin++))
-			return true;
-	}
-	return false;
-}
-
-static bool default_allow(variant v) {
-	if(v.iskind<script>()) {
-		if(bsdata<script>::elements[v.value].test)
-			return bsdata<script>::elements[v.value].test(v.counter);
-	} else if(v.iskind<listi>())
-		return allow_oneof(bsdata<listi>::elements[v.value].elements);
-	else if(v.iskind<randomizeri>())
-		return allow_oneof(bsdata<randomizeri>::elements[v.value].chance);
-	return true;
-}
-
-static bool allow_item(variant v) {
-	if(v.iskind<itemi>())
-		return &last_item->geti() == &bsdata<itemi>::elements[v.value];
-	else
-		return default_allow(v);
-}
-
-static bool allow_feature(variant v) {
-	if(v.iskind<conditioni>())
-		return last_feature->is((condition_s)v.value);
-	else if(v.iskind<featurei>())
-		return last_feature == bsdata<featurei>::elements + v.value;
-	else
-		return default_allow(v);
-}
-
-static bool allow_creature(variant v) {
-	if(v.iskind<conditioni>())
-		return player->is((condition_s)v.value);
-	else if(v.iskind<feati>())
-		return !player->is((feat_s)v.value);
-	else if(v.iskind<racei>() || v.iskind<monsteri>())
-		return player->getkind().issame(v);
-	else if(v.iskind<areafi>()) {
-		auto present = player->is((areaf)v.value);
-		return (v.counter < 0) ? present : !present;
-	} else if(v.iskind<featurei>()) {
-		auto m = player->getposition();
-		if(!area->isvalid(m))
-			return false;
-		auto present = area->features[m];
-		return (v.counter < 0) ? present == v.value : present != v.value;
-	} else
-		return default_allow(v);
-}
-
-static bool allow_room(variant v) {
-	if(v.iskind<sitei>())
-		return &last_room->geti() == (bsdata<sitei>::elements + v.value);
-	else
-		return default_allow(v);
-}
-
-static void match_items(const variants& source) {
-	if(!source)
-		return;
-	pushvalue push(last_item);
-	pushvalue push_allow(last_allow_proc, allow_item);
-	auto ps = items.begin();
-	for(auto p : items) {
-		last_item = p;
-		if(!allow_all(source))
-			continue;
-		*ps++ = p;
-	}
-	items.count = ps - items.begin();
-}
-
-static void match_features(const variants& source) {
-	if(!source)
-		return;
-	auto ps = indecies.begin();
-	pushvalue push_index(last_index);
-	pushvalue push_feature(last_feature);
-	pushvalue push_allow(last_allow_proc, allow_feature);
-	for(auto m : indecies) {
-		last_index = m;
-		last_feature = bsdata<featurei>::elements + area->features[m];
-		if(!allow_all(source))
-			continue;
-		*ps++ = m;
-	}
-	indecies.count = ps - indecies.begin();
-}
-
-static void match_creatures(const variants& source) {
-	if(!source)
-		return;
-	pushvalue push_player(player);
-	pushvalue push_allow(last_allow_proc, allow_creature);
-	auto ps = targets.begin();
-	for(auto p : targets) {
-		player = p;
-		if(!allow_all(source))
-			continue;
-		*ps++ = p;
-	}
-	targets.count = ps - targets.begin();
-}
-
-static void match_room(const variants& source) {
-	if(!source)
-		return;
-	pushvalue push_player(last_room);
-	pushvalue push_allow(last_allow_proc, allow_room);
-	auto ps = rooms.begin();
-	for(auto p : rooms) {
-		last_room = p;
-		if(!allow_all(source))
-			continue;
-		*ps++ = p;
-	}
-	rooms.count = ps - rooms.begin();
-}
-
 bool choose_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
@@ -1379,23 +1228,20 @@ static void action_text(const creature* player, const char* id, const char* acti
 		player->act(pn);
 }
 
-static int get_target_count(unsigned flags) {
-	if(FGT(flags, TargetCreatures))
-		return targets.getcount() == 1;
-	else if(FGT(flags, TargetRooms))
-		return rooms.getcount() == 1;
-	else if(FGT(flags, TargetItems))
-		return items.getcount() == 1;
-	else if(FGT(flags, TargetFeatures))
-		return indecies.getcount() == 1;
-	return false;
+static int get_target_count() {
+	return targets.getcount()
+		+ rooms.getcount()
+		+ items.getcount()
+		+ indecies.getcount();
 }
 
 static bool bound_targets(const char* id, int multi_targets, bool interactive, bool force_choose = true) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
 	if(!multi_targets) {
-		if(!choose_target_interactive(id, false))
+		if(!force_choose)
+			force_choose = get_target_count() > 1;
+		if(force_choose && !choose_target_interactive(id, false))
 			return false;
 	}
 	if(targets.count > target_count)

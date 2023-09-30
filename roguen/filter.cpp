@@ -142,7 +142,7 @@ static void select_your_items(fnvisible proc, int counter) {
 
 static void select_features(fnvisible proc, int counter) {
 	indecies.clear();
-	indecies.select(player->getposition(), 5);
+	indecies.select(player->getposition(), counter ? counter : 1);
 }
 
 static void select_custom_creatures(fnvisible proc, int counter) {
