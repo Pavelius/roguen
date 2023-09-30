@@ -1,4 +1,2 @@
-﻿In file `locale/ru/core/Chats.txt`:
- Line 77: Unknown variant identifier `AnimalInt`
- Line 78: Unknown variant identifier `AnimalInt`
- Line 79: Unknown variant identifier `AnimalInt`
+﻿In file `rules/Spells.txt`:
+ Line 25: Can't find variant `FilterExplored`

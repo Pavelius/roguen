@@ -1,8 +1,8 @@
 #Spell
 
 CureWounds mana(10) count(1 4)
- targets SelectAllies FilterWounded FilterClose
- effect Wounded
+ targets SelectAllies FilterClose FilterWounded
+ effect Heal+5
 Entaglement mana(6)
  targets SelectEnemies FilterFeature-1
  effect ThornBush
@@ -16,14 +16,13 @@ KnockDoor mana(10)
 TorchLight mana(5) duration(Minute20PL)
  targets SelectYou
  effect LightSource
-ManaRegeneration duration(Hour1PL)
- targets SelectYou
 Mending mana(10)
-Regeneration mana(15) duration(Hour1PL)
- targets SelectYou
 Sleep mana(5) duration(Minute20)
+ targets SelectEnemies AnimalInt-1
 SummonUndead mana(20) count(0 0 1)
  summon Skeleton+4 Zombie+2 Ghoul+1
 Teleport mana(5)
+ targets SelectRooms FilterNotable FilterExplored FilterThisRoom-1
+ effect JumpToSite
 Web mana(4)
  targets SelectEnemies FilterFeature-1

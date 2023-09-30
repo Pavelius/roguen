@@ -25,6 +25,7 @@
 
 void add_need(int bonus);
 void add_need_answers(int bonus);
+void afterpaint_no_actions();
 void apply_value(variant v);
 void apply_ability(ability_s v, int counter);
 void animate_figures();
@@ -35,27 +36,27 @@ bool isfreecr(point m);
 void make_game_map_screenshoot();
 void visualize_images(res pid, point size, point offset);
 
-itema			items;
-indexa			indecies;
-spella			allowed_spells;
-creature		*player, *opponent, *enemy;
-int				last_coins;
-const char*		last_id;
-static point	last_door;
-locationi*		last_location;
-quest*			last_quest;
-rect			last_rect;
-roomi*			last_room;
-const sitei*	last_site;
-greatneed*		last_need;
-int				last_value, last_cap;
-extern bool		show_floor_rect;
+itema				items;
+indexa				indecies;
+spella				allowed_spells;
+creature			*player, *opponent, *enemy;
+int					last_coins;
+const char*			last_id;
+static point		last_door;
+locationi*			last_location;
+quest*				last_quest;
+rect				last_rect;
+roomi*				last_room;
+const sitei*		last_site;
+greatneed*			last_need;
+int					last_value, last_cap;
+extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 
 static adat<rect, 32> locations;
 static adat<point, 512> points;
-static rect		correct_conncetors;
-static direction_s last_direction;
+static rect			correct_conncetors;
+static direction_s	last_direction;
 static adat<variant, 32> sites;
 
 void apply_ability(ability_s v, int counter);
@@ -1192,12 +1193,13 @@ static void apply_target_effect(const variants& effect) {
 	}
 }
 
-static bool choose_target_interactive(const char* id, bool autochooseone) {
+static bool choose_target_interactive(const char* id) {
 	if(!id)
 		return true;
 	auto pn = getdescription(str("%1Choose", id));
 	if(!pn)
 		return true;
+	pushvalue push_finish(draw::pfinish, afterpaint_no_actions);
 	pushvalue push_width(window_width, 300);
 	if(targets) {
 		if(!targets.chooseu(pn, getnm("Cancel")))
@@ -1234,13 +1236,13 @@ static int get_target_count() {
 		+ indecies.getcount();
 }
 
-static bool bound_targets(const char* id, int multi_targets, bool interactive, bool force_choose = true) {
+static bool bound_targets(const char* id, int multi_targets, bool interactive, bool force_choose = false) {
 	pushvalue push_interactive(answers::interactive, interactive);
 	unsigned target_count = 1 + multi_targets;
 	if(!multi_targets) {
 		if(!force_choose)
 			force_choose = get_target_count() > 1;
-		if(force_choose && !choose_target_interactive(id, false))
+		if(force_choose && !choose_target_interactive(id))
 			return false;
 	}
 	if(targets.count > target_count)
@@ -1293,7 +1295,7 @@ void creature::cast(const spelli& e, int level, int mana) {
 		actp(getnm("NotEnoughtMana"));
 		return;
 	}
-	if(!choose_targets(e.targets) && !e.summon) {
+	if(!e.summon && !choose_targets(e.targets)) {
 		actp(getnm("YouDontValidTargets"));
 		return;
 	}
@@ -2096,7 +2098,7 @@ static bool is_npc(int bonus) {
 }
 
 static bool is_animal(int bonus) {
-	return player->canspeak();
+	return !player->canspeak();
 }
 
 static void need_help_info(stringbuilder& sb) {

@@ -780,6 +780,11 @@ static void afterpaint() {
 	paint_actions();
 }
 
+void afterpaint_no_actions() {
+	paint_message();
+	reset_message();
+}
+
 static void execute_hotkey() {
 	auto pn = (hotkey*)hot.object;
 	if(pn->data.iskind<dialogi>())
@@ -956,6 +961,7 @@ void* answers::choose() const {
 	update_scene();
 	rectpush push;
 	screenshoot screen;
+	pushvalue push_finish(pfinish, afterpaint_no_actions);
 	while(ismodal()) {
 		screen.restore();
 		get_total_height(*this);

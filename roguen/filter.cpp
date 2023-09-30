@@ -79,6 +79,20 @@ static bool filter_feature(const void* object) {
 	return area->features[p->getposition()] != 0;
 }
 
+static bool filter_notable(const void* object) {
+	auto p = (roomi*)object;
+	return p->is(Notable);
+}
+
+static bool filter_explored_room(const void* object) {
+	auto p = (roomi*)object;
+	return area->is(p->center(), Explored);
+}
+
+static bool filter_this_room(const void* object) {
+	return player->getroom()==(roomi*)object;
+}
+
 static bool filter_cursed(const void* object) {
 	auto p = (item*)object;
 	return p->iscursed();
@@ -94,8 +108,12 @@ static bool filter_identified(const void* object) {
 	return p->isidentified();
 }
 
-static void filter_targets(fnvisible proc, int counter) {
+static void match_targets(fnvisible proc, int counter) {
 	targets.collection<creature>::match(proc, counter >= 0);
+}
+
+static void match_rooms(fnvisible proc, int counter) {
+	rooms.match(proc, counter >= 0);
 }
 
 static void filter_next_indecies(fnvisible proc, int counter) {
@@ -160,16 +178,44 @@ static void select_rooms(fnvisible proc, int counter) {
 	rooms.collectiona::select(area->rooms);
 }
 
+static void choose_limit(fnvisible proc, int counter) {
+	if(targets.getcount() > counter)
+		targets.count = counter;
+	if(items.getcount() > counter)
+		items.count = counter;
+	if(rooms.getcount() > counter)
+		rooms.count = counter;
+	if(indecies.getcount() > counter)
+		indecies.count = counter;
+}
+
+static void choose_random(fnvisible proc, int counter) {
+	targets.shuffle();
+	items.shuffle();
+	rooms.shuffle();
+	indecies.shuffle();
+	choose_limit(proc, counter);
+}
+
+static void choose_nearest(fnvisible proc, int counter) {
+	choose_limit(proc, counter);
+}
+
 BSDATA(filteri) = {
+	{"ChooseNearest", 0, choose_nearest},
+	{"ChooseRandom", 0, choose_random},
 	{"FilterBlessed", filter_blessed, filter_items},
-	{"FilterClose", filter_close, filter_targets},
+	{"FilterClose", filter_close, match_targets},
 	{"FilterCursed", filter_cursed, filter_items},
+	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterIdentified", filter_identified, filter_items},
-	{"FilterFeature", filter_feature, filter_targets},
+	{"FilterFeature", filter_feature, match_targets},
 	{"FilterNextFeatures", 0, filter_next_indecies},
 	{"FilterNextRooms", 0, filter_next_rooms},
-	{"FilterUnaware", filter_unaware, filter_targets},
-	{"FilterWounded", filter_wounded, filter_targets},
+	{"FilterNotable", filter_notable, match_rooms},
+	{"FilterThisRoom", filter_this_room, match_rooms},
+	{"FilterUnaware", filter_unaware, match_targets},
+	{"FilterWounded", filter_wounded, match_targets},
 	{"SelectAllies", 0, select_allies},
 	{"SelectCreatures", 0, select_creatures},
 	{"SelectEnemies", 0, select_enemies},
