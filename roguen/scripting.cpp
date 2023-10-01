@@ -30,6 +30,7 @@ void apply_value(variant v);
 void apply_ability(ability_s v, int counter);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
+void choose_limit(int counter);
 void damage_equipment(int bonus, bool allow_save);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
@@ -1245,14 +1246,7 @@ static bool bound_targets(const char* id, int multi_targets, bool interactive, b
 		if(force_choose && !choose_target_interactive(id))
 			return false;
 	}
-	if(targets.count > target_count)
-		targets.count = target_count;
-	if(indecies.count > target_count)
-		indecies.count = target_count;
-	if(items.count > target_count)
-		items.count = target_count;
-	if(rooms.count > target_count)
-		rooms.count = target_count;
+	choose_limit(target_count);
 	return true;
 }
 
@@ -1494,7 +1488,7 @@ static void chat_someone() {
 		if(player->speechrumor())
 			return;
 	}
-	if(player->is(KnowLocation) && d100() < 30) {
+	if(player->is(KnowLocation) && !opponent->is(Local) && d100() < 30) {
 		if(player->speechlocation())
 			return;
 	}

@@ -178,7 +178,7 @@ static void select_rooms(fnvisible proc, int counter) {
 	rooms.collectiona::select(area->rooms);
 }
 
-static void choose_limit(fnvisible proc, int counter) {
+void choose_limit(int counter) {
 	if(targets.getcount() > counter)
 		targets.count = counter;
 	if(items.getcount() > counter)
@@ -194,11 +194,11 @@ static void choose_random(fnvisible proc, int counter) {
 	items.shuffle();
 	rooms.shuffle();
 	indecies.shuffle();
-	choose_limit(proc, counter);
+	choose_limit(counter);
 }
 
 static void choose_nearest(fnvisible proc, int counter) {
-	choose_limit(proc, counter);
+	choose_limit(counter);
 }
 
 BSDATA(filteri) = {
