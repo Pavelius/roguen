@@ -1,5 +1,6 @@
 #include "collection.h"
 #include "diceprogress.h"
+#include "feat.h"
 #include "duration.h"
 #include "variant.h"
 
@@ -9,6 +10,7 @@ struct spelli : nameable {
 	int				mana;
 	duration_s		duration;
 	diceprogress	count;
+	featable		feats;
 	variants		targets, effect, summon;
 	bool			apply(int level, int targets_count, bool interactive, bool silent) const;
 	int				getcount(int level) const { return count.roll(level); }

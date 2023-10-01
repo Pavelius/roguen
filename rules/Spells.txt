@@ -1,9 +1,11 @@
 #Spell
 
 CureWounds mana(10) count(1 4)
+ feats Enemy
  targets SelectAllies FilterClose FilterWounded
  effect Heal+5
 Entaglement mana(6)
+ feats Enemy
  targets SelectEnemies FilterFeature-1
  effect ThornBush
 IdentifySpell mana(10)
@@ -25,4 +27,5 @@ Teleport mana(5)
  targets SelectRooms FilterNotable FilterExplored FilterThisRoom-1
  effect JumpToSite
 Web mana(4)
+ feats Enemy
  targets SelectEnemies FilterFeature-1

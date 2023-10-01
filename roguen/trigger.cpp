@@ -14,7 +14,7 @@ BSMETA(trigger) = {
 	{}};
 trigger* last_trigger;
 
-void trigger::fire(triggern type, variant p1, variant p2) {
+void fire_trigger(triggern type, variant p1, variant p2) {
 	for(auto& e : bsdata<trigger>()) {
 		if(e.type == type
 			&& (!e.p1 || e.p1 == p1)

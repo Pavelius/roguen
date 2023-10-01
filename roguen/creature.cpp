@@ -686,7 +686,7 @@ static void update_room(creature* player) {
 		}
 		player->setroom(pn);
 		if(room_changed)
-			trigger::fire(WhenCreatureP1EnterSiteP2, player->getkind(), &pn->geti());
+			fire_trigger(WhenCreatureP1EnterSiteP2, player->getkind(), &pn->geti());
 	} else
 		player->setroom(0);
 }
@@ -972,7 +972,7 @@ void creature::kill() {
 	drop_treasure(this);
 	if(enemy == this && player)
 		player->experience += getexpreward();
-	trigger::fire(WhenCreatureP1Dead, getkind());
+	fire_trigger(WhenCreatureP1Dead, getkind());
 	clear();
 	if(human_killed)
 		game.endgame();
@@ -1340,7 +1340,7 @@ void creature::update_room_abilities() {
 	auto p = getroom();
 	if(!p)
 		return;
-	trigger::fire(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), &p->geti());
+	fire_trigger(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), &p->geti());
 }
 
 static void update_negative_skills() {

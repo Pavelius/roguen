@@ -8,20 +8,12 @@
 #include "triggern.h"
 #include "creature.h"
 
-areapiece*		area;
 gamei			game;
 static char		console_text[4096];
 stringbuilder	console(console_text);
 point			gamei::start_village = {128, 128};
 
 void update_need();
-
-static int getbase(const char* id) {
-	auto p = varianti::getsource(id);
-	if(!p)
-		return -1;
-	return p - bsdata<varianti>::elements;
-}
 
 static void all(funct<creature>::command proc) {
 	for(auto& e : bsdata<creature>()) {
@@ -216,7 +208,7 @@ void gamei::passminute() {
 	while(restore_several_days < minutes) {
 		all_creatures(EverySeveralDaysForP1);
 		all_features(EverySeveralDaysForP1);
-		trigger::fire(EverySeveralDays);
+		fire_trigger(EverySeveralDays);
 		restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
 	}
 }

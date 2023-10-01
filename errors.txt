@@ -1,2 +1,6 @@
 ﻿In file `rules/Spells.txt`:
- Line 25: Can't find variant `FilterExplored`
+ Line 4: Not found requisit `feats`
+ Line 4: Expected line feed
+In file `rules/Advancement.txt`:
+ Line 7: Can't find variant `Teleport`
+ Line 7: Can't find variant `KnockDoor`

@@ -20,7 +20,7 @@ static const char* object_mana(const void* object, stringbuilder& sb) {
 }
 
 bool spelli::ishostile() const {
-	return false;
+	return feats.is(Enemy);
 }
 
 spelli*	spella::choose(const char* title, const char* cancel, const spellable* context) const {
