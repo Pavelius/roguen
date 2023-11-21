@@ -90,6 +90,7 @@ BSMETA(itemi) = {
 	BSREQ(parent),
 	BSREQ(count),
 	BSREQ(avatar),
+	BSREQ(charges),
 	BSREQ(rotting),
 	BSENM(wear, weari),
 	BSREQ(wear_index),

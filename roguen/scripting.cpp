@@ -25,6 +25,7 @@
 
 void add_need(int bonus);
 void add_need_answers(int bonus);
+void advance_value(variant v);
 void afterpaint_no_actions();
 void apply_value(variant v);
 void apply_ability(ability_s v, int counter);
@@ -1914,6 +1915,24 @@ static void fail_roll_action(int bonus) {
 	roll_value(last_action->bonus + bonus);
 }
 
+static void roll_for_effect(int bonus) {
+	roll_value(0);
+	if(script_stopped()) {
+		player->speech("CantLearnTome");
+	} else {
+		auto number_effects = script_end - script_begin;
+		if(number_effects)
+			advance_value(script_begin[rand() % number_effects]);
+	}
+}
+
+static void roll_learning(int bonus) {
+	auto push_ability = last_ability;
+	last_ability = Wits;
+	roll_for_effect(bonus);
+	last_ability = push_ability;
+}
+
 static void random_chance(int bonus) {
 	if(d100() >= bonus)
 		script_stop();
@@ -2217,6 +2236,7 @@ BSDATA(script) = {
 	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
+	{"RollLearning", roll_learning},
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},

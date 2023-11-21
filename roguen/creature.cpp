@@ -1137,7 +1137,7 @@ static int get_counter(int counter) {
 	return counter;
 }
 
-static void advance_value(variant v) {
+void advance_value(variant v) {
 	if(v.iskind<abilityi>())
 		player->basic.abilities[v.value] += get_counter(v.counter);
 	else if(v.iskind<itemi>()) {
@@ -1498,12 +1498,15 @@ void creature::use(item& v) {
 		actp(getnm("ItemNotUsable"), v.getname());
 		return;
 	}
+	auto push_item = last_item;
+	last_item = &v;
+	act(getnm("YouUseItem"), v.getname());
 	apply(script);
 	auto power = v.getpower();
 	if(power)
 		apply_value(power, this);
-	act(getnm("YouUseItem"), v.getname());
 	v.use();
+	last_item = push_item;
 	update();
 	wait();
 }

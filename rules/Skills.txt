@@ -19,5 +19,5 @@ StealCoins skill(Thievery)
  targets SelectNeutralCreatures FilterClose
  effect StealCoins
 SearchRoomForGems skill(Gemcutting)
- targets SelectRooms FilterNextRooms SpiderNest TreasureRoom PitRoom UnholyAltarRoom PortalRoom UnholyPlace SarcaphagusRoom
+ targets SelectRooms FilterNextRooms SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
  effect RollAction RandomGem

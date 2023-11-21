@@ -40,7 +40,7 @@ class item {
 	union {
 		unsigned char stats;
 		struct {
-			magic_s magic : 2;
+			magic_s	magic : 2;
 			unsigned char identified : 1;
 			unsigned char personal : 1;
 		};
@@ -97,7 +97,7 @@ public:
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }
-	void			use() { setcount(getcount() - 1); }
+	void			use();
 };
 struct itemground : item {
 	point			position;

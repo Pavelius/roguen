@@ -20,6 +20,7 @@ bool script_allow(const variants& elements);
 
 void script_execute(const char* id, int bonus = 0);
 void script_stop();
+bool script_stopped();
 void script_run(variant v);
 void script_run(variant v, int counter);
 void script_run(const variants& elements);

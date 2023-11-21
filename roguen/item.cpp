@@ -220,3 +220,13 @@ bool item::ismagical() const {
 bool item::ischargeable() const {
 	return geti().charges > 0;
 }
+
+void item::use() {
+	if(ischargeable()) {
+		if(getcharges() >= geti().charges)
+			setcount(getcount() - 1);
+		else
+			broken++;
+	} else
+		setcount(getcount() - 1);
+}

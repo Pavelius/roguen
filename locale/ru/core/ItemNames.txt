@@ -116,3 +116,5 @@ Stones: Камни
 StolenTreasures: Украденные сокровища
 
 BootsOfSneakiness: Ботинки скрытности
+
+OldTome: Старый фолиант

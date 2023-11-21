@@ -249,6 +249,9 @@ Stomacemptia weight(1) avatar(93) count(1)
 Stomafillia weight(1) avatar(89) count(1)
  use GainSatiation-10
 
+TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)
+ use RollLearning
+
 #RandomTable
 
 GrassHerbs

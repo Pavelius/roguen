@@ -32,6 +32,10 @@ void script_stop() {
 	script_begin = script_end;
 }
 
+bool script_stopped() {
+	return script_begin == script_end;
+}
+
 bool script_allow(variant v) {
 	auto proc = bsdata<varianti>::elements[v.type].ptest;
 	if(proc)
