@@ -342,6 +342,9 @@
     <ClCompile Include="spell.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="speech_v2.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -607,6 +610,9 @@
     </ClInclude>
     <ClInclude Include="spell.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="speech_v2.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

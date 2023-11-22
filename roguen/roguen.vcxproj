@@ -205,6 +205,7 @@
     <ClCompile Include="ownerable.cpp" />
     <ClCompile Include="quest.cpp" />
     <ClCompile Include="skillable.cpp" />
+    <ClCompile Include="speech_v2.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="actable.cpp" />
@@ -319,6 +320,7 @@
     <ClInclude Include="siteskill.h" />
     <ClInclude Include="skilluse.h" />
     <ClInclude Include="speech.h" />
+    <ClInclude Include="speech_v2.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />
     <ClInclude Include="skillable.h" />

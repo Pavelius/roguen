@@ -6,6 +6,7 @@
 #include "greatneed.h"
 #include "creature.h"
 #include "hotkey.h"
+#include "speech_v2.h"
 #include "talk.h"
 #include "textscript.h"
 
@@ -38,6 +39,7 @@ static void initializating() {
 	bsreq::read("rules/Skills.txt");
 	readl("Chats", speech::read);
 	readl("NameCharacters", charname::read);
+	speech_initialize();
 	talki::read();
 	readurl("modules", "*.txt", bsreq::read);
 	check_need_loading();
