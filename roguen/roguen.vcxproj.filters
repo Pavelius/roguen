@@ -718,6 +718,9 @@
     <Text Include="..\locale\ru\speech\General.txt">
       <Filter>Locale</Filter>
     </Text>
+    <Text Include="..\locale\ru\speech\Chatting.txt">
+      <Filter>Locale</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">

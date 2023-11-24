@@ -24,10 +24,16 @@ int getfloor();
 bool creature::fixaction(const char* id, const char* action, ...) const {
 	const char* result = 0;
 	if(canspeak()) {
-		speech_get(result, id, action, getkind().getid(), 0);
+		auto pm = getmonster();
+		if(pm) {
+			speech_get(result, id, action, pm->getid(), 0);
+			if(pm->parent)
+				speech_get(result, id, action, pm->parent->getid(), 0);
+		} else
+			speech_get(result, id, action, getkind().getid(), 0);
 		speech_get(result, id, action, 0, 0);
 		if(result) {
-			sayv(console, result, xva_start(action), getname(), is(Female));
+			sayv(console, result, xva_start(action));
 			return true;
 		}
 	}
@@ -141,7 +147,7 @@ void damage_equipment(int bonus, bool allow_save) {
 			break;
 		if(!e)
 			continue;
-		if(d100() < 40)
+		if(d100() < 30)
 			continue;
 		bonus--;
 		if(allow_save && player->resist(AcidResistance, AcidImmunity))
@@ -283,7 +289,7 @@ static void check_freezing(creature* player) {
 static void check_corrosion(creature* p) {
 	if(p->is(Corrosion)) {
 		if(!player->resist(AcidResistance, AcidImmunity)) {
-			player->damage(xrand(1, 3));
+			player->damage(player->get(Corrosion));
 			damage_equipment(1, true);
 		}
 		player->add(Corrosion, -1);
@@ -309,7 +315,8 @@ static void check_stun(creature* p) {
 }
 
 static void check_satiation(creature* p) {
-	p->satiation--;
+	if(p->satiation > 0)
+		p->satiation--;
 }
 
 static void random_walk(creature* p) {
@@ -1331,7 +1338,7 @@ void creature::unlink() {
 }
 
 void creature::act(const char* format, ...) const {
-	if(game.getowner() == this || is(Visible))
+	if(ishuman() || is(Visible))
 		actv(console, format, xva_start(format), getname(), is(Female), '\n');
 }
 
@@ -1340,9 +1347,9 @@ void creature::actp(const char* format, ...) const {
 		actv(console, format, xva_start(format), getname(), is(Female), '\n');
 }
 
-void creature::sayv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female) const {
+void creature::sayv(stringbuilder& sb, const char* format, const char* format_param) const {
 	if(ishuman() || is(Visible))
-		actable::sayv(sb, format, format_param, name, female);
+		actable::sayv(sb, format, format_param, getname(), is(Female));
 }
 
 int	creature::getlos() const {

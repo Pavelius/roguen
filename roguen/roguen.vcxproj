@@ -356,6 +356,7 @@
     <Text Include="..\locale\ru\core\TrapNames.txt" />
     <Text Include="..\locale\ru\core\UnknownNames.txt" />
     <Text Include="..\locale\ru\core\WearNames.txt" />
+    <Text Include="..\locale\ru\speech\Chatting.txt" />
     <Text Include="..\locale\ru\speech\General.txt" />
     <Text Include="..\locale\ru\talk\AncientRaceProgress.txt" />
     <Text Include="..\locale\ru\talk\NeedTalk.txt" />
