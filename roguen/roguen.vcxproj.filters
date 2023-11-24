@@ -634,9 +634,6 @@
     <Text Include="..\logs.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\Chats.txt">
-      <Filter>Locale</Filter>
-    </Text>
     <Text Include="..\locale\ru\core\DirectionNames.txt">
       <Filter>Locale</Filter>
     </Text>
