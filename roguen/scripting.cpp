@@ -18,6 +18,7 @@
 #include "site.h"
 #include "siteskill.h"
 #include "skilluse.h"
+#include "speech.h"
 #include "textscript.h"
 #include "trigger.h"
 #include "triggern.h"

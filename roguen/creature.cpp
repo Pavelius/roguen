@@ -11,7 +11,6 @@
 #include "script.h"
 #include "siteskill.h"
 #include "speech.h"
-#include "speech_v2.h"
 #include "trigger.h"
 #include "triggern.h"
 
@@ -1606,7 +1605,7 @@ void creature::equipi(short unsigned type, int count) {
 bool creature::canremove(item& it) const {
 	if(it.iscursed()) {
 		it.setidentified(true);
-		speech("ThisIsMyCursedItem", it.getname());
+		fixaction("ThisIsMyCursedItem", 0, it.getname());
 		return false;
 	}
 	return true;

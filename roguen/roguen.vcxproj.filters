@@ -339,7 +339,7 @@
     <ClCompile Include="spell.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="speech_v2.cpp">
+    <ClCompile Include="speech.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
@@ -605,7 +605,7 @@
     <ClInclude Include="spell.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="speech_v2.h">
+    <ClInclude Include="speech.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
@@ -717,6 +717,9 @@
     </Text>
     <Text Include="..\rules\Form.txt">
       <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\locale\ru\speech\General.txt">
+      <Filter>Locale</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

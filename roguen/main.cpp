@@ -6,7 +6,7 @@
 #include "greatneed.h"
 #include "creature.h"
 #include "hotkey.h"
-#include "speech_v2.h"
+#include "speech.h"
 #include "talk.h"
 #include "textscript.h"
 
@@ -108,7 +108,7 @@ int start_application(fnevent proc, fnevent initializing);
 int main(int argc, char *argv[]) {
 	auto seed = getcputime();
 	//auto seed = 1298968250; // Error dungeon room
-	textscript::initialize();
+	string_initialize();
 	answers::console = &console;
 	actable::logv(str("Seed is %1i", seed), 0, 0, false);
 	srand(seed);

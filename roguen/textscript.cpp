@@ -23,6 +23,8 @@ static change_string player_gender[] = {
 };
 }
 
+bool parse_speech(stringbuilder& sb, const char* id);
+
 static bool parse_name(stringbuilder& sb, const char* id) {
 	if(!last_name)
 		return false;
@@ -60,17 +62,6 @@ static bool parse_script(stringbuilder& sb, const char* id) {
 	return false;
 }
 
-static bool parse_speech(stringbuilder& sb, const char* id) {
-	// Select all collection of speech.
-	// It's optimized, because we need all possible variant's later and do this in one pass.
-	speecha words;
-	words.select(id);
-	if(!words)
-		return false;
-	sb.add(words.random());
-	return true;
-}
-
 static void custom_string(stringbuilder& sb, const char* id) {
 	if(parse_name(sb, id))
 		return;
@@ -83,6 +74,6 @@ static void custom_string(stringbuilder& sb, const char* id) {
 	sb.add(getnm(id));
 }
 
-void textscript::initialize() {
+void string_initialize() {
 	stringbuilder::custom = custom_string;
 }

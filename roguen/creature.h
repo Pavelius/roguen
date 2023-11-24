@@ -10,7 +10,6 @@
 #include "quest.h"
 #include "site.h"
 #include "skillable.h"
-#include "speech_v2.h"
 #include "spell.h"
 #include "wearable.h"
 

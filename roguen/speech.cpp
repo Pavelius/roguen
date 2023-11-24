@@ -2,7 +2,7 @@
 #include "crt.h"
 #include "logparse.h"
 #include "nameable.h"
-#include "speech_v2.h"
+#include "speech.h"
 
 using namespace log;
 
@@ -39,6 +39,7 @@ void speech_read(const char* url) {
 		p = skipwscr(p);
 		auto psb = bsdata<speechv2::element>::source.count;
 		while(allowparse && *p && *p != '#') {
+			sb.clear();
 			p = sb.psstrlf(skipwscr(p));
 			p = skipwscr(p);
 			speechv2::element e = {szdup(temp)};
@@ -73,6 +74,14 @@ void speech_get(const char*& result, const char* id, const char* action, const c
 	auto p = speech_get(temp);
 	if(p)
 		result = p;
+}
+
+bool parse_speech(stringbuilder& sb, const char* id) {
+	auto p = speech_get(id);
+	if(!p)
+		return false;
+	sb.add(p);
+	return true;
 }
 
 void speech_initialize() {

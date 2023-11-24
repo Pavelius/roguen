@@ -5,7 +5,8 @@
 struct textscript {
 	const char*		id;
 	fnprint			proc;
-	static void		initialize();
 };
 extern const char* last_name;
 extern bool	last_female;
+
+void string_initialize();

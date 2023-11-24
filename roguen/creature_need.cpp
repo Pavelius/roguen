@@ -3,6 +3,7 @@
 #include "greatneed.h"
 #include "pushvalue.h"
 #include "script.h"
+#include "speech.h"
 
 extern greatneed* last_need;
 static collection<greatneedi> needs;
