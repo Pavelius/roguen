@@ -1072,12 +1072,14 @@ template<> void ftscript<locationi>(int value, int counter) {
 	script_run(bsdata<locationi>::elements[value].landscape);
 }
 
-template<> void ftscript<speech>(int value, int counter) {
+struct speechv2;
+
+template<> void ftscript<speechv2>(int value, int counter) {
 	auto count = script_count(counter, 1);
 	if(count <= 0)
 		return;
 	if(player)
-		player->speech(bsdata<speech>::elements[value].id);
+		player->say(speech_getid(value));
 }
 
 template<> bool fttest<needni>(int value, int counter) {
@@ -1218,19 +1220,6 @@ static bool choose_target_interactive(const char* id) {
 	return true;
 }
 
-static void action_text(const creature* player, const char* id, const char* action) {
-	if(player->canspeak()) {
-		auto pn = player->getspeech(str("%1%2Speech", id, action), false);
-		if(pn) {
-			player->say(pn);
-			return;
-		}
-	}
-	auto pn = getdescription(str("%1%2", id, action));
-	if(pn)
-		player->act(pn);
-}
-
 static int get_target_count() {
 	return targets.getcount()
 		+ rooms.getcount()
@@ -1270,8 +1259,10 @@ template<> void ftscript<spelli>(int index, int value) {
 bool spelli::apply(int level, int targets_count, bool interactive, bool silent) const {
 	if(!bound_targets(id, targets_count, interactive))
 		return false;
-	if(!silent)
-		action_text(player, id, "Casting");
+	if(!silent) {
+		if(!player->fixaction(id, "Casting"))
+			player->fixaction("Spells", "Casting");
+	}
 	if(::targets.getcount()) {
 		pushvalue push_player(player), push_opponent(opponent, player);
 		for(auto p : (::targets)) {
@@ -1493,7 +1484,7 @@ static void chat_someone() {
 		if(player->speechlocation())
 			return;
 	}
-	player->speech("HowYouAre");
+	player->fixaction("HowYouAre", 0);
 }
 
 static void char_opponent(int bonus) {
@@ -1526,7 +1517,7 @@ static bool payment(creature* player, creature* keeper, const char* object, int 
 	}
 	auto allow_coins = player->getmoney();
 	if(player->getmoney() < coins) {
-		keeper->speech("NotEnoughCoins", allow_coins, coins, coins - allow_coins);
+		keeper->fixaction("NotEnoughCoins", 0, allow_coins, coins, coins - allow_coins);
 		return false;
 	}
 	keeper->addcoins(coins);
@@ -1544,7 +1535,7 @@ static bool selling(creature* player, creature* opponent, const char* object, in
 	}
 	auto allow_coins = opponent->getmoney();
 	if(opponent->getmoney() < coins) {
-		opponent->speech("KeeperNotEnoughCoins", allow_coins, coins, coins - allow_coins);
+		opponent->fixaction("KeeperNotEnoughCoins", 0, allow_coins, coins, coins - allow_coins);
 		return false;
 	}
 	player->addcoins(coins);
@@ -1841,14 +1832,6 @@ static void fix_action(const char* suffix) {
 		player->act(p);
 }
 
-static void speech_action() {
-	if(!player->canspeak())
-		return;
-	auto id = ids(last_action->id, "Speech");
-	if(bsdata<speech>::find(id))
-		player->speech(id);
-}
-
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
@@ -1856,7 +1839,7 @@ static void apply_action(int bonus) {
 		return;
 	if(!bound_targets(last_action->id, 0, player->ishuman()))
 		return;
-	speech_action();
+	player->fixaction(last_action->id, 0);
 	apply_target_effect(last_action->effect);
 	player->wait();
 }
@@ -1918,7 +1901,7 @@ static void fail_roll_action(int bonus) {
 static void roll_for_effect(int bonus) {
 	roll_value(0);
 	if(script_stopped()) {
-		player->speech("CantLearnTome");
+		player->fixaction("CantLearnTome", 0);
 	} else {
 		auto number_effects = script_end - script_begin;
 		if(number_effects)

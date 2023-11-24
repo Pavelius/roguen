@@ -20,7 +20,7 @@ class movable : public actable {
 	bool			mirror;
 	void			fixvalue(void* data, fnevent proc, color_s color) const;
 public:
-	void			fixaction() const;
+	void			fixactivity() const;
 	void			fixappear(fnevent fpaint) const;
 	void			fixability(ability_s i, int v) const;
 	void			fixdisappear() const;

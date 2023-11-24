@@ -183,9 +183,6 @@
     <ClCompile Include="information.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="speech.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="itema.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -438,9 +435,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="pushvalue.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="speech.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="keyname.h">

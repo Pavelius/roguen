@@ -251,6 +251,7 @@ void*						loadb(const char* url, int* size = 0, int additional_bytes_alloated =
 char*						loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
 bool						matchuc(const char* name, const char* filter);
 void						readl(const char* id, void(*proc)(const char* url));
+void						readfl(const char* folder, void(*proc)(const char* url));
 void						readurl(const char* folder, const char* mask, fnread proc);
 float						sqrt(const float x); // Return aquare root of 'x'
 inline const char*			skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }

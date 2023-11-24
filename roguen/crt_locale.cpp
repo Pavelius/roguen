@@ -260,6 +260,15 @@ void readl(const char* id, void(*proc)(const char* url)) {
 	proc(temp);
 }
 
+void readfl(const char* url, void(*proc)(const char* url)) {
+	if(!proc)
+		return;
+	char temp[260]; stringbuilder sb(temp);
+	sb.addlocaleurl();
+	sb.add(url);
+	readurl(temp, "*.txt", proc);
+}
+
 void check_description(const char* id, const char** psuffix) {
 	if(!getdescription(id))
 		log::error(0, " Define description for `%1`", id);

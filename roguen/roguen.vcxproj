@@ -228,7 +228,6 @@
     <ClCompile Include="shape.cpp" />
     <ClCompile Include="siteskill.cpp" />
     <ClCompile Include="skilluse.cpp" />
-    <ClCompile Include="speech.cpp" />
     <ClCompile Include="spell.cpp" />
     <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="textscript.cpp" />
@@ -319,7 +318,6 @@
     <ClInclude Include="site.h" />
     <ClInclude Include="siteskill.h" />
     <ClInclude Include="skilluse.h" />
-    <ClInclude Include="speech.h" />
     <ClInclude Include="speech_v2.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />

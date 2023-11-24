@@ -1,2 +1,1 @@
-﻿In file `rules/Items.txt`:
- Line 252: Not found requisit `charges`
+﻿Can't find file 'locale/ru/core/General.txt'

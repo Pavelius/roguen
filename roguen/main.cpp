@@ -37,7 +37,7 @@ static void initializating() {
 	bsreq::read("rules/Sites.txt");
 	bsreq::read("rules/Advancement.txt");
 	bsreq::read("rules/Skills.txt");
-	readl("Chats", speech::read);
+	//readl("Chats", speech::read);
 	readl("NameCharacters", charname::read);
 	speech_initialize();
 	talki::read();

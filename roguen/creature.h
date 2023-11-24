@@ -10,7 +10,7 @@
 #include "quest.h"
 #include "site.h"
 #include "skillable.h"
-#include "speech.h"
+#include "speech_v2.h"
 #include "spell.h"
 #include "wearable.h"
 
@@ -22,8 +22,6 @@ class creature : public wearable, public skillable, public spellable, public own
 	void			fixcantgo() const;
 	bool			isfollowmaster() const;
 	void			levelup();
-	const speech*	matchfirst(const speecha& source) const;
-	void			matchspeech(speecha& source) const;
 	void			update_abilities();
 	void			update_room_abilities();
 public:
@@ -58,7 +56,7 @@ public:
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
-	void			fixact(const char* id) const;
+	bool			fixaction(const char* id, const char* action, ...) const;
 	int				get(ability_s v) const { return abilities[v]; }
 	int				getexpreward() const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
@@ -73,7 +71,6 @@ public:
 	roomi*			getroom() const;
 	void			getrumor(quest& e, stringbuilder& sb) const;
 	int				getsellingcost() const;
-	const char*		getspeech(const char* id, bool always_speak = true) const;
 	int				getwait() const { return wait_seconds; }
 	bool			is(areaf v) const;
 	bool			is(ability_s v) const { return get(v) > 0; }
@@ -106,7 +103,6 @@ public:
 	void			set(ability_s i, int v) { abilities[i] = v; }
 	void			setroom(const roomi* v);
 	void			slowdown(int seconds) { wait_seconds += seconds; }
-	void			speech(const char* id, ...) const { sayv(console, getspeech(id), xva_start(id), getname(), is(Female)); }
 	bool			speechneed();
 	bool			speechrumor() const;
 	bool			speechlocation() const;

@@ -154,9 +154,6 @@ BSMETA(siteskilli) = {
 	BSENM(retry, durationi),
 	BSREQ(effect), BSREQ(targets),
 	{}};
-BSMETA(speech) = {
-	BSREQ(id),
-	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
 	BSREQ(mana), BSREQ(count),
@@ -201,8 +198,7 @@ BSDATA(varianti) = {
 	{"Site", VAR(sitei), 1, 0, ftscript<sitei>},
 	{"SiteSkill", VAR(siteskilli), 1},
 	{"Spell", VAR(spelli), 1, 0, ftscript<spelli>},
-	{"Speech", VAR(speech), 1, 0, ftscript<speech>},
-	{"SpeechV2", VAR(speechv2), 1},
+	{"Speech", VAR(speechv2), 1},
 	{"Tile", VAR(tilei), 1, 0, ftscript<tilei>},
 	{"TileFlag", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},

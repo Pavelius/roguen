@@ -68,7 +68,7 @@ void movable::fixappear(fnevent fpaint) const {
 	addobject(getsposition(), fpaint, const_cast<movable*>(this), 0, 11);
 }
 
-void movable::fixaction() const {
+void movable::fixactivity() const {
 	if(!area->is(position, Visible))
 		return;
 	auto po = draw::findobject(this);

@@ -76,12 +76,12 @@ static int getprogress(int count, int maximum) {
 
 static void say_thank_you(const char* item_name, int count, int coins) {
 	char temp[512]; stringbuilder sb(temp);
-	auto t1 = opponent->getspeech("ThankYouForService");
+	auto t1 = speech_get("ThankYouForService");
 	auto name = opponent->getname();
 	auto female = opponent->is(Female);
 	opponent->actvf(sb, name, female, 0, t1, item_name, count);
 	if(coins) {
-		auto t2 = opponent->getspeech("HereYourMoney");
+		auto t2 = speech_get("HereYourMoney");
 		opponent->actvf(sb, name, female, ' ', t2, coins);
 	}
 	opponent->say(temp);
@@ -168,7 +168,7 @@ bool creature::speechneed() {
 	if(last_need) {
 		if(d100() < 30)
 			return false;
-		speech("VisitMeLater");
+		fixaction("VisitMeLater", 0);
 		return true;
 	}
 	last_need = greatneed::find(this);

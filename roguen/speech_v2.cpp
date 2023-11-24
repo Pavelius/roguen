@@ -2,6 +2,7 @@
 #include "crt.h"
 #include "logparse.h"
 #include "nameable.h"
+#include "speech_v2.h"
 
 using namespace log;
 
@@ -49,6 +50,10 @@ void speech_read(const char* url) {
 	log::close();
 }
 
+const char* speech_getid(int index) {
+	return bsdata<speechv2>::elements[index].id;
+}
+
 const char* speech_get(const char* id) {
 	auto p = bsdata<speechv2>::find(id);
 	if(!p || !p->source)
@@ -57,6 +62,19 @@ const char* speech_get(const char* id) {
 	return p->source.begin()[n].name;
 }
 
+void speech_get(const char*& result, const char* id, const char* action, const char* middle, const char* postfix) {
+	if(result)
+		return;
+	char temp[64]; stringbuilder sb(temp);
+	sb.add(id);
+	sb.add(action);
+	sb.add(middle);
+	sb.add(postfix);
+	auto p = speech_get(temp);
+	if(p)
+		result = p;
+}
+
 void speech_initialize() {
-	readl("Chats", speech_read);
+	readfl("speech", speech_read);
 }

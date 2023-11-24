@@ -11,6 +11,7 @@
 #include "script.h"
 #include "siteskill.h"
 #include "speech.h"
+#include "speech_v2.h"
 #include "trigger.h"
 #include "triggern.h"
 
@@ -21,18 +22,22 @@ bool choose_targets(const variants& effects);
 void damage_item(item& it);
 int getfloor();
 
-void creature::fixact(const char* id) const {
+bool creature::fixaction(const char* id, const char* action, ...) const {
+	const char* result = 0;
 	if(canspeak()) {
-		auto idn = ids(id, "Speech");
-		if(bsdata<::speech>::find(idn)) {
-			speech(idn);
-			return;
+		speech_get(result, id, action, getkind().getid(), 0);
+		speech_get(result, id, action, 0, 0);
+		if(result) {
+			sayv(console, result, xva_start(action), getname(), is(Female));
+			return true;
 		}
 	}
-	auto idn = ids(id, "Action");
-	auto pstr = getdescription(idn);
-	if(pstr)
-		act(pstr);
+	auto pn = getdescription(str("%1%2", id, action));
+	if(pn) {
+		actv(console, pn, xva_start(action), getname(), is(Female), ' ');
+		return true;
+	}
+	return false;
 }
 
 static void copy(statable& v1, const statable& v2) {
@@ -339,7 +344,7 @@ static bool check_dangerous_feature(creature* p, point m) {
 			p->act(getnme(str("%1Entagled", ei.id)));
 			p->damage(1);
 			p->wait();
-			p->fixaction();
+			p->fixactivity();
 			return false;
 		}
 		p->act(getnme(str("%1Break", ei.id)));
@@ -373,7 +378,7 @@ static bool check_webbed_tile(creature* p, point m) {
 		if(!p->roll(Strenght)) {
 			p->act(getnm("WebEntagled"));
 			p->wait();
-			p->fixaction();
+			p->fixactivity();
 			return false;
 		}
 		p->act(getnm("WebBreak"));
@@ -742,46 +747,6 @@ bool creature::is(areaf v) const {
 	return ispresent() && area->is(getposition(), v);
 }
 
-//bool creature::is(condition_s v) const {
-//	int n, m;
-//	switch(v) {
-//	case Unaware: return isunaware();
-//	case NPC: return ischaracter();
-//	case Random: return d100() < 40;
-//	case NoInt: return get(Wits) == 10;
-//	case AnimalInt: return get(Wits) < 10;
-//	case LowInt: return get(Wits) < 20;
-//	case AveInt: return get(Wits) < 35;
-//	case HighInt: return get(Wits) < 50;
-//	case Wounded:
-//		n = get(Hits);
-//		m = getmaximum(Hits);
-//		return n > 0 && n < m;
-//	case HeavyWounded:
-//		n = get(Hits);
-//		m = getmaximum(Hits);
-//		return n > 0 && n < m / 2;
-//	case NoWounded: return get(Hits) == getmaximum(Hits);
-//	case Allies:
-//		if(player->is(Ally))
-//			return is(Ally);
-//		else if(player->is(Enemy))
-//			return is(Enemy);
-//		return false;
-//	case Enemies:
-//		if(player->is(Enemy))
-//			return is(Ally);
-//		else if(player->is(Ally))
-//			return is(Enemy);
-//		return false;
-//	case Neutrals: return !is(Ally) && !is(Enemy);
-//	case NoAnyFeature:
-//		return area->features[getposition()] == 0;
-//	default:
-//		return true;
-//	}
-//}
-
 void creature::movestep(direction_s v) {
 	if(is(Iced)) {
 		if(!roll(Dexterity, 30)) {
@@ -794,55 +759,16 @@ void creature::movestep(direction_s v) {
 	movestep(to(getposition(), v));
 }
 
-void creature::matchspeech(speecha& source) const {
-	pushvalue push_player(player, const_cast<creature*>(this));
-	auto ps = source.data;
-	for(auto p : source) {
-		if(!script_allow(p->condition))
-			continue;
-		*ps++ = p;
-	}
-	source.count = ps - source.data;
-}
-
-const speech* creature::matchfirst(const speecha& source) const {
-	pushvalue push_player(player, const_cast<creature*>(this));
-	auto ps = source.data;
-	for(auto p : source) {
-		if(script_allow(p->condition))
-			return p;
-	}
-	return 0;
-}
-
-const char* creature::getspeech(const char* id, bool always_speak) const {
-	speecha source;
-	source.select(id);
-	if(!source) {
-		if(!always_speak)
-			return 0;
-		return getnm("NothingToSay");
-	}
-	auto conditional = source[0]->condition.count > 0;
-	if(conditional) {
-		auto p = matchfirst(source);
-		if(!p)
-			return getnm("NothingToSay");
-		return p->name;
-	} else
-		return source.random();
-}
-
 void creature::interaction(creature& opponent) {
 	if(opponent.isenemy(*this))
 		attackmelee(opponent);
 	else if(!ishuman())
 		pay_movement(this);
 	else if(opponent.is(PlaceOwner)) {
-		fixaction();
+		fixactivity();
 		opponent.wait();
 		if(d100() < 40 && opponent.canspeak())
-			opponent.speech("DontPushMePlaceOwner");
+			opponent.fixaction("DontPushMePlaceOwner", 0);
 		pay_movement(this);
 	} else {
 		auto pt = opponent.getposition();
@@ -854,7 +780,7 @@ void creature::interaction(creature& opponent) {
 		update_room(this);
 		fixmovement();
 		if(d100() < 40 && opponent.canspeak())
-			opponent.speech("DontPushMe");
+			opponent.fixaction("DontPushMe", 0);
 		pay_movement(this);
 	}
 }
@@ -988,7 +914,7 @@ void creature::damage(int v) {
 }
 
 void creature::attackmelee(creature& enemy) {
-	fixaction();
+	fixactivity();
 	auto number_attackers = enemy.get(EnemyAttacks);
 	if(number_attackers > 3)
 		number_attackers = 3;
@@ -1028,7 +954,7 @@ void creature::attackrange(creature& enemy) {
 	if(pa)
 		fixshoot(enemy.getposition(), pa->wear_index);
 	else
-		fixaction();
+		fixactivity();
 	make_attack(this, &enemy, wears[RangedWeapon], 0, 100);
 	pay_attack(this, wears[RangedWeapon]);
 	if(pa) {
@@ -1056,7 +982,7 @@ void creature::attackthrown(creature& enemy) {
 }
 
 void creature::fixcantgo() const {
-	fixaction();
+	fixactivity();
 	act(getnm("CantGoThisWay"));
 }
 
@@ -1090,7 +1016,7 @@ void creature::movestep(point ni) {
 	} else {
 		check_mining(this, ni);
 		check_interaction(this, ni);
-		fixaction();
+		fixactivity();
 		pay_movement(this);
 	}
 	check_trap(this, getposition());
