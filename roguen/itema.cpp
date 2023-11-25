@@ -43,3 +43,13 @@ void itema::selectbackpack(creature* p) {
 	}
 	count = pb - data;
 }
+
+void itema::matchf(wear_s type, bool keep) {
+	auto ps = data;
+	for(auto p : *this) {
+		if((p->geti().wear==type) != keep)
+			continue;
+		*ps++ = p;
+	}
+	count = ps - data;
+}

@@ -16,5 +16,7 @@ enum feat_s : unsigned char {
 	Stun, Blooding,
 };
 struct featable : flagable<8> {};
-struct feati : nameable {};
+struct feati : nameable {
+	feat_s		immunity;
+};
 
