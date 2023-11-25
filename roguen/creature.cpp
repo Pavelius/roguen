@@ -146,18 +146,15 @@ static void illness_attack(creature* player, int value) {
 		player->set(Illness, v);
 }
 
-static void damage_backpack_item(wear_s type, int chance, feat_s resist = Darkvision) {
+static void damage_backpack_item(wear_s type, int chance) {
 	if(d100() >= chance)
 		return;
 	itema source;
 	source.selectbackpack(player);
 	source.matchf(Potion, true);
 	auto pi = source.random();
-	if(!pi)
-		return;
-	if(resist && player->resist(resist))
-		return;
-	pi->damage();
+	if(pi)
+		pi->damage();
 }
 
 void damage_equipment(int bonus, bool allow_save) {
