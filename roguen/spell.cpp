@@ -6,6 +6,7 @@
 BSDATAC(spelli, spellable::maximum)
 
 static const spellable* current_spellable;
+static int mana_cost[] = {100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40};
 
 static const char* object_level(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);
@@ -15,8 +16,12 @@ static const char* object_level(const void* object, stringbuilder& sb) {
 
 static const char* object_mana(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);
-	sb.add("[%1i] %-Mana", ((spelli*)object)->mana);
+	sb.add("[%1i] %-Mana", ((spelli*)object)->getmana(current_spellable->spells[i]));
 	return sb.begin();
+}
+
+int	spelli::getmana(int level) const {
+	return mana * maptbl(mana_cost, level) / 100;
 }
 
 bool spelli::ishostile() const {

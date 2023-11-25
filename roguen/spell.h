@@ -14,6 +14,7 @@ struct spelli : nameable {
 	variants		targets, effect, summon;
 	bool			apply(int level, int targets_count, bool interactive, bool silent) const;
 	int				getcount(int level) const { return count.roll(level); }
+	int				getmana(int level) const;
 	bool			ishostile() const;
 };
 struct spellable {

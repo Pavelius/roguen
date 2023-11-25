@@ -189,6 +189,8 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 	}
 	if(attack_effect(player, weapon, FireDamage))
 		enemy->add(Burning, 2);
+	if(attack_effect(player, weapon, AcidDamage))
+		enemy->add(Corrosion, 2);
 	auto power = weapon.getpower();
 	if(power.iskind<spelli>() && weapon.ischarge())
 		special_spell_attack(player, weapon, enemy, bsdata<spelli>::elements[power.value]);
@@ -849,7 +851,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	if(damage < 0)
 		damage = 0;
 	auto pierce = (int)weapon.geti().weapon.pierce;
-	if(roll_result < attack_skill / 4)
+	if(roll_result < attack_skill / 3)
 		special_attack(player, weapon, enemy, pierce, damage);
 	apply_pierce(armor, pierce);
 	auto damage_result = damage - armor;
