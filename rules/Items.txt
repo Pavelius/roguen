@@ -1,3 +1,11 @@
+#Feature
+
+NoFeature
+Door
+HiddenDoor
+LockedDoor
+OpenedDoor
+
 #List
 
 PierceWeapons
@@ -252,12 +260,14 @@ Stomafillia weight(1) avatar(89) count(1)
 TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)
  use RollLearning
 
-ScrollOfIdentify weight(2) unidentified(Scroll)
+ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll)
  use SelectYourItems FilterIdentified-1 ChooseByMagic IdentifyItem
-ScrollOfRemoveCurse weight(2) unidentified(Scroll)
+ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll)
  use SelectYourItems FilterIdentified FilterCursed ChooseByMagic CurseItem-1
-ScrollOfRepair weight(2) unidentified(Scroll)
+ScrollOfRepair avatar(440) weight(2) unidentified(Scroll)
  use SelectYourItems FilterDamaged ChooseByMagic DamageItem-10
+ScrollOfOpening avatar(441) weight(2) unidentified(Scroll)
+ use SelectFeatures FilterNextFeatures LockedDoor ChooseByMagic OpenedDoor
 
 #RandomTable
 

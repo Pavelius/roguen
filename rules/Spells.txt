@@ -8,13 +8,7 @@ Entaglement mana(6)
  feats Enemy
  targets SelectEnemies FilterFeature-1
  effect ThornBush
-IdentifySpell mana(10)
- targets SelectYourItems FilterIdentified-1
- effect IdentifyItem+1
 Gate mana(40)
-KnockDoor mana(10)
- targets SelectFeatures FilterNextFeatures LockedDoor
- effect OpenedDoor
 TorchLight mana(5) duration(Minute20PL)
  targets SelectYou
  effect LightSource

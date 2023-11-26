@@ -1,2 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 260: Can't find variant `DamageItem`
+﻿In file `rules/Features.txt`:
+ Line 43: Can't find variant `TinyKey`
