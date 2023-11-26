@@ -55,6 +55,7 @@ greatneed*			last_need;
 int					last_value, last_cap;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
+static int			effect_level;
 
 static adat<rect, 32> locations;
 static adat<point, 512> points;
@@ -2003,6 +2004,17 @@ static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
 }
 
+static void curse_item(int bonus) {
+	if(bonus >= 0)
+		last_item->set(Cursed);
+	else if(last_item->getmagic() == Cursed)
+		last_item->set(Mundane);
+}
+
+static void damage_item(int bonus) {
+	last_item->damage(bonus);
+}
+
 static void random_ability(int bonus) {
 	static ability_s source[] = {Strenght, Dexterity, Wits};
 	apply_ability(maprnd(source), bonus);
@@ -2098,6 +2110,52 @@ static bool is_animal(int bonus) {
 	return !player->canspeak();
 }
 
+static const char* get_header_id() {
+	return last_item->geti().id;
+}
+
+static void choose_querry(int bonus) {
+	choose_target_interactive(get_header_id());
+	if(!bonus)
+		bonus = 1;
+	choose_limit(bonus);
+}
+
+static void set_magic_effect(magic_s v) {
+	switch(v) {
+	case Artifact:
+		effect_level = 10;
+		break;
+	case Blessed:
+		effect_level = 4;
+		break;
+	default:
+		effect_level = 1;
+		break;
+	}
+}
+
+static void choose_by_magic(int bonus) {
+	pushvalue push(effect_level);
+	set_magic_effect(last_item->getmagic());
+	if(effect_level <= 2) {
+		choose_target_interactive(get_header_id());
+		choose_limit(1);
+	}
+}
+
+static void choose_random(int bonus) {
+	if(items)
+		items.shuffle();
+	if(rooms)
+		rooms.shuffle();
+	if(targets)
+		targets.shuffle();
+	if(indecies)
+		indecies.shuffle();
+	choose_limit(bonus);
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
@@ -2166,7 +2224,12 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"ChatOpponent", char_opponent},
+	{"Choose", choose_querry},
+	{"ChooseByMagic", choose_by_magic},
+	{"ChooseRandom", choose_random},
+	{"CurseItem", curse_item},
 	{"Damage", damage_all},
+	{"DamageItem", damage_item},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},

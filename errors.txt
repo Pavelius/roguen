@@ -1,1 +1,2 @@
-﻿Can't find file 'locale/ru/core/General.txt'
+﻿In file `rules/Items.txt`:
+ Line 260: Can't find variant `DamageItem`

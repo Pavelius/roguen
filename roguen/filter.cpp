@@ -59,6 +59,11 @@ static bool filter_wounded(const void* object) {
 	return n > 0 && n < p->basic.abilities[Hits];
 }
 
+static bool filter_damaged(const void* object) {
+	auto p = (item*)object;
+	return p->iswounded();
+}
+
 static bool filter_unaware(const void* object) {
 	auto p = (creature*)object;
 	return p->isunaware();
@@ -206,6 +211,7 @@ BSDATA(filteri) = {
 	{"ChooseRandom", 0, choose_random},
 	{"FilterBlessed", filter_blessed, filter_items},
 	{"FilterClose", filter_close, match_targets},
+	{"FilterDamaged", filter_damaged, filter_items},
 	{"FilterCursed", filter_cursed, filter_items},
 	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterIdentified", filter_identified, filter_items},

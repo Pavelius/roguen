@@ -126,15 +126,27 @@ bool item::is(wear_s v) const {
 	}
 }
 
-void item::damage() {
+void item::damage(int bonus) {
 	if(is(Natural))
 		return;
 	if(getmagic() == Artifact)
 		return;
-	if(iscountable() || broken >= 7)
-		setcount(getcount() - 1);
-	else
-		broken++;
+	if(bonus >= 0) {
+		if(!bonus)
+			bonus = 1;
+		// Damage item state
+		bool need_break = (bonus + broken >= 7);
+		if(need_break)
+			setcount(getcount() - 1);
+		else
+			broken += bonus;
+	} else {
+		// Repair items
+		if(broken < -bonus)
+			broken = 0;
+		else
+			broken -= -bonus;
+	}
 }
 
 bool item::is(feat_s v) const {

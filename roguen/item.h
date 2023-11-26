@@ -61,7 +61,7 @@ public:
 	void			create(const itemi* pi, int count = 1);
 	void			createpower(int chance_power = 0);
 	int				ischarge() const { return !iscountable() && (broken < 7); }
-	void			damage();
+	void			damage(int value = 1);
 	void			drop(point m);
 	int				getavatar() const { return geti().wear_index; }
 	int				getcharges() const { return ischargeable() ? broken : 0; }
