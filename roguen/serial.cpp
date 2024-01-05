@@ -116,6 +116,11 @@ void gamei::write(const char* name) {
 	serial_game_name(name, true, false, dc);
 }
 
+void gamei::read(const char* name) {
+	draw::surface dc; capture_game_screen_small(dc, 3, 3);
+	serial_game_name(name, false, false, dc);
+}
+
 //static void cleanup_saves() {
 //	char temp[260]; stringbuilder sb(temp);
 //	for(io::file::find file(save_folder); file; file.next()) {

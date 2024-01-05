@@ -30,7 +30,7 @@ public:
 	static void		play();
 	void			playminute();
 	void			randomworld();
-	void			read();
+	void			read(const char* name);
 	void			set(const globali& e, int v);
 	const char*		timeleft(unsigned end_stamp) const;
 	void			write(const char* name);

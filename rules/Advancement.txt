@@ -6,7 +6,7 @@ Fighter 0 Abilities
   Herbalism+108 Alertness+106 Gemcutting+108 Mining+110\
   Web+3 SummonUndead+4 Entaglement+2 Teleport+2
 Fighter 0 Equipment
- elements LeatherArmor Sword Shield TomeOfLight
+ elements LeatherArmor Sword Shield TomeOfLight ScrollOfIdentify
 
 DarkElf 0
  elements LeatherArmor Dagger

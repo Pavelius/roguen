@@ -64,6 +64,7 @@ static direction_s	last_direction;
 static adat<variant, 32> sites;
 
 void apply_ability(ability_s v, int counter);
+void* choose_answers(answers& an, const char* header, const char* cancel);
 
 static int random_value(int value) {
 	if(!value)
@@ -1155,6 +1156,13 @@ static void move_down_right(int bonus) {
 	player->movestep(SouthEast);
 }
 
+static bool have_targets() {
+	return targets.getcount() != 0
+		|| rooms.getcount() != 0
+		|| items.getcount() != 0
+		|| indecies.getcount() != 0;
+}
+
 bool choose_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
@@ -1162,10 +1170,7 @@ bool choose_targets(const variants& conditions) {
 	rooms.clear();
 	targets.clear();
 	script_run(conditions);
-	return targets.getcount() != 0
-		|| rooms.getcount() != 0
-		|| items.getcount() != 0
-		|| indecies.getcount() != 0;
+	return have_targets();
 }
 
 static void apply_target_effect(const variants& effect) {
@@ -1369,7 +1374,7 @@ static item* choose_wear() {
 		{"Weight", 60, item_weight, true},
 		{}};
 	pushvalue push_columns(current_columns, columns);
-	return (item*)an.choose(getnm("Inventory"), getnm("Cancel"));
+	return (item*)choose_answers(an, getnm("Inventory"), getnm("Cancel"));
 }
 
 static item* choose_stuff(wear_s wear) {
@@ -1386,7 +1391,7 @@ static item* choose_stuff(wear_s wear) {
 	}
 	sb.clear();
 	sb.add("%Choose %-1", bsdata<weari>::elements[wear].getname());
-	return (item*)an.choose(temp, getnm("Cancel"));
+	return (item*)choose_answers(an, temp, getnm("Cancel"));
 }
 
 static creature* getowner(const item* pi) {
@@ -1635,7 +1640,7 @@ static void test_arena(int bonus) {
 	}
 	pushvalue push_column(answers::column_count);
 	answers::column_count = 3;
-	auto pm = (monsteri*)an.choose(getnm("ChooseMonsterToFight"), getnm("Cancel"));
+	auto pm = (monsteri*)choose_answers(an, getnm("ChooseMonsterToFight"), getnm("Cancel"));
 	if(!pm)
 		return;
 	auto m = player->getposition();
@@ -2114,6 +2119,11 @@ static const char* get_header_id() {
 	return last_item->geti().id;
 }
 
+static bool allow_choose_querry(int bonus) {
+	script_stop();
+	return get_target_count() > 0;
+}
+
 static void choose_querry(int bonus) {
 	choose_target_interactive(get_header_id());
 	if(!bonus)
@@ -2141,6 +2151,11 @@ static void choose_by_magic(int bonus) {
 	if(effect_level <= 2) {
 		choose_target_interactive(get_header_id());
 		choose_limit(1);
+	}
+	if(!have_targets()) {
+		script_stop();
+		player->actp(getnm("YouDontValidTargets"));
+		return;
 	}
 }
 
@@ -2224,7 +2239,7 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"ChatOpponent", char_opponent},
-	{"Choose", choose_querry},
+	{"Choose", choose_querry, allow_choose_querry},
 	{"ChooseByMagic", choose_by_magic},
 	{"ChooseRandom", choose_random},
 	{"CurseItem", curse_item},

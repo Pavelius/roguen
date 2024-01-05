@@ -978,6 +978,11 @@ void* answers::choose() const {
 	return (void*)getresult();
 }
 
+void* choose_answers(answers& an, const char* header, const char* cancel) {
+	pushvalue push_finish(pfinish, afterpaint_no_actions);
+	return an.choose(header, cancel);
+}
+
 static bool backward_button(const char* format, void* value) {
 	auto format_width = textw(format);
 	auto push_width = width;

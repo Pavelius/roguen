@@ -160,7 +160,7 @@ RingOfPoisonResistance cost(1800) weight(1) count(1) wear(FingerRight) avatar(73
 RingOfLevitation cost(3000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Fly
 RingOfDefence cost(2000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
- wearing Dodge+10
+ wearing Dodge+15
 RingOfProtection cost(3000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Block+1
 RingOfRegeneration cost(10000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
@@ -268,6 +268,8 @@ ScrollOfRepair avatar(440) weight(2) unidentified(Scroll)
  use SelectYourItems FilterDamaged ChooseByMagic DamageItem-10
 ScrollOfOpening avatar(441) weight(2) unidentified(Scroll)
  use SelectFeatures FilterNextFeatures LockedDoor ChooseByMagic OpenedDoor
+ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll)
+ use ExploreArea
 
 #RandomTable
 
@@ -297,6 +299,8 @@ RandomPotion
  chance HealingPotion+4 ManaPotion+4 PotionOfStrenght PotionOfDexterity PotionOfWits PotionOfAbilityRaise PotionOfWisdow
 RandomRing
  chance BrassRing+5 IronRing+4 RingOfAcidResistance RingOfColdResistance SilverRing+4 RingOfFireResistance GoldenRing RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
+RandomScroll
+ chance ScrollOfIdentify ScrollOfRemoveCurse ScrollOfRepair ScrollOfOpening ScrollOfMagicMap
 RandomBoots
  chance LeatherBoots+4 BootsOfLevitation BootsOfSneakiness
 RandomBracers
