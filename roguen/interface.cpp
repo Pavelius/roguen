@@ -1274,7 +1274,7 @@ static void before_show_logs() {
 }
 
 static void show_logs() {
-	paint_logs(actable::getlog(), logs_origin, logs_format_origin, logs_maximum);
+	paint_logs(getlog(), logs_origin, logs_format_origin, logs_maximum);
 }
 
 static void window_back() {

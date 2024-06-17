@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 	//auto seed = 1298968250; // Error dungeon room
 	string_initialize();
 	answers::console = &console;
-	actable::logv(str("Seed is %1i", seed), 0, 0, false);
+	logv(str("Seed is %1i", seed), 0, 0, false);
 	srand(seed);
 	return start_application(main_start, initializating);
 }

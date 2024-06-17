@@ -77,9 +77,7 @@ public:
 	bool			isallow(const item& it) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;
-	static bool		isneed(const void* p);
 	bool			ispresent() const;
-	static bool		ispresent(const void* p) { return ((creature*)p)->ispresent(); }
 	bool			isunaware() const { return wait_seconds >= 100 * 6; }
 	bool			isvalid() const;
 	void			interaction(creature& opponent);
@@ -129,4 +127,7 @@ bool				isnext();
 extern int last_value, last_cap;
 extern rect last_rect;
 extern int window_width, window_height;
+
 void dialog_message(const char* format);
+bool isneed(const void* p);
+bool ispresent(const void* p);

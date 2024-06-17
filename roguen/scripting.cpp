@@ -23,6 +23,7 @@
 #include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"
+#include "variant.h"
 
 void add_need(int bonus);
 void add_need_answers(int bonus);
@@ -136,6 +137,7 @@ static void apply_script(const script* p, int bonus) {
 }
 
 int getfloor() {
+	// TODO: If site is rocky mountain, then floor is rock. When you digging, you may dig passable floor.
 	if(last_site && last_site->floors)
 		return last_site->floors;
 	if(last_location && last_location->floors)
@@ -2084,6 +2086,21 @@ static void acid_harm(int bonus) {
 	damage_equipment(bonus, true);
 }
 
+static bool allow_creatures(int bonus) {
+	return creatures.getcount() > 0;
+}
+
+static void for_each_creature(int bonus) {
+	creaturea push_creature(creatures);
+	pushvalue push(player);
+	variants commands; commands.set(script_begin, script_end - script_begin);
+	for(auto p : creatures) {
+		player = p;
+		script_run(commands);
+	}
+	script_stop();
+}
+
 static void gain_experience(int bonus) {
 	auto value = bonus * 100;
 	fix_yellow("%Experience%+1i", value);
@@ -2249,6 +2266,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
+	{"ForEachCreature", for_each_creature, allow_creatures},
 	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"Filter", filter_next},

@@ -88,12 +88,16 @@ static void wearing(stringbuilder& sb, const variants source) {
 }
 
 static const char* getrace(variant v, bool female) {
-	if(female) {
-		char temp[260]; stringbuilder sb(temp);
-		sb.add("%1Female", bsdata<racei>::elements[v.value].id);
-		return getnm(temp);
-	} else
-		return getnm(bsdata<racei>::elements[v.value].id);
+	if(v.iskind<racei>()) {
+		if(female) {
+			char temp[260]; stringbuilder sb(temp);
+			sb.add("%1Female", bsdata<racei>::elements[v.value].id);
+			return getnm(temp);
+		} if(v.iskind<racei>())
+			return getnm(bsdata<racei>::elements[v.value].id);
+	} else if(v.iskind<monsteri>())
+		return getnm(bsdata<monsteri>::elements[v.value].id);
+	return "None";
 }
 
 void creature::getinfo(stringbuilder& sb) const {

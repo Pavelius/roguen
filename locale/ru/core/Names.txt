@@ -48,6 +48,7 @@ LittleProgress: Немного двинулись вперед
 LockedDoor: Дверь с замком
 LockedDoorNoActivateItem: Дверь закрыта на [%-1].
 LockedDoorUseActivateItem: Использовав [%-1] %герой открыл%а закрытую дверь.
+Monster: Монстр
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
 Minute: Минута
@@ -137,6 +138,7 @@ Retaliate: Ответный удар
 ColdDamage: Замораживания
 FireDamage: Воспламенения
 AcidResistance: Сопротивление кислоте
+ColdResistance: Сопротивление холоду
 FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света

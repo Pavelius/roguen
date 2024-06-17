@@ -16,7 +16,7 @@ Graveyard
  landscape Grave+4
 SwampyArea
  landscape FootMud-40 Herbs+3
-RockyMountains walls(WallCave) floors(WallCave)
+RockyMountains walls(WallCave) floors(Cave)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
 LightBush
  landscape Tree-15

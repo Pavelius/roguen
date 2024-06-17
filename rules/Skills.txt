@@ -1,8 +1,7 @@
 #SiteSkill
 
 GatherInformation skill(Wits)
- targets SelectNeutralCreatures FilterClose
- effect ChatOpponent
+ effect SelectNeutralCreatures FilterClose ForEachCreature ChatOpponent
 GatherSemiMellowHerbs skill(Herbalism)
  targets SelectFeatures FilterNextFeatures HerbsSemi
  effect GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
@@ -16,8 +15,7 @@ SacrificeEvilAltar skill(Religion)
  targets SelectFeatures FilterNextFeatures AltarEvil
  effect RollAction GainExperience+1
 StealCoins skill(Thievery)
- targets SelectNeutralCreatures FilterClose
- effect StealCoins
+ effect SelectNeutralCreatures FilterClose ForEachCreature StealCoins
 SearchRoomForGems skill(Gemcutting)
  targets SelectRooms FilterNextRooms SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
  effect RollAction RandomGem

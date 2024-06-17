@@ -13,7 +13,7 @@ static creature* random_target(const greatneedi* p) {
 	collection<creature> source;
 	source.select(fntis<creature, &creature::ispresent>);
 	source.match(fntis<actable, &actable::isnamed>, true);
-	source.match(creature::isneed, false);
+	source.match(isneed, false);
 	source.match(fntis<creature, &creature::ishuman>, false);
 	return source.random();
 }
@@ -80,10 +80,10 @@ static void say_thank_you(const char* item_name, int count, int coins) {
 	auto t1 = speech_get("ThankYouForService");
 	auto name = opponent->getname();
 	auto female = opponent->is(Female);
-	opponent->actvf(sb, name, female, 0, t1, item_name, count);
+	actvf(sb, name, female, 0, t1, item_name, count);
 	if(coins) {
 		auto t2 = speech_get("HereYourMoney");
-		opponent->actvf(sb, name, female, ' ', t2, coins);
+		actvf(sb, name, female, ' ', t2, coins);
 	}
 	opponent->say(temp);
 	draw::pause();
@@ -144,7 +144,7 @@ void prepare_need() {
 	needs.shuffle();
 }
 
-bool creature::isneed(const void* object) {
+bool isneed(const void* object) {
 	auto p = (creature*)object;
 	return greatneed::find(p) != 0;
 }

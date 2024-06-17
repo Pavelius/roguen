@@ -137,7 +137,7 @@ void gamei::writelog() {
 	io::file file("logs.txt", StreamWrite | StreamText);
 	if(!file)
 		return;
-	auto p = actable::getlog();
+	auto p = getlog();
 	if(p)
 		file << p;
 }

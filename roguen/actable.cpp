@@ -26,7 +26,7 @@ static void named_say(stringbuilder& sb, const char* format, const char* name) {
 	sb.add("[%1] \"", name);
 	sb.addv(format, 0);
 	sb.add("\"");
-	actable::logv(pb);
+	logv(pb);
 }
 
 static const char* skipncr(const char* p) {
@@ -65,11 +65,11 @@ static void say_format(stringbuilder& sb, const char* format, const char* format
 	complex_say(sb, temp, name);
 }
 
-const char* actable::getlog() {
+const char* getlog() {
 	return gamelog.begin();
 }
 
-void actable::logv(const char* format) {
+void logv(const char* format) {
 	if(!format || format[0] == 0)
 		return;
 	if(gamelog.getcount() > 0)
@@ -77,7 +77,7 @@ void actable::logv(const char* format) {
 	add_log(format);
 }
 
-void actable::logv(const char* format, const char* format_param, const char* name, bool female) {
+void logv(const char* format, const char* format_param, const char* name, bool female) {
 	pushvalue push_name(last_name, name);
 	pushvalue push_female(last_female, female);
 	char temp[1024]; stringbuilder sb(temp); sb.clear();
@@ -85,7 +85,7 @@ void actable::logv(const char* format, const char* format_param, const char* nam
 	logv(temp);
 }
 
-void actable::actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female, char separator) {
+void actv(stringbuilder& sb, const char* format, const char* format_param, const char* name, bool female, char separator) {
 	if(!format)
 		return;
 	pushvalue push_name(last_name, name);
@@ -96,7 +96,7 @@ void actable::actv(stringbuilder& sb, const char* format, const char* format_par
 	logv(pb);
 }
 
-void actable::actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...) {
+void actvf(stringbuilder& sb, const char* name, bool female, char separator, const char* format, ...) {
 	pushvalue push_name(last_name, name);
 	pushvalue push_female(last_female, female);
 	sb.addsep(separator);

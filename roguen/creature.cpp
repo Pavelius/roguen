@@ -584,9 +584,8 @@ static bool check_mining(creature* player, point m) {
 		player->act(getnm("YouCrashWall"), getnm(bsdata<tilei>::elements[area->tiles[m]].id));
 		area->setfeature(m, 0);
 		area->settile(m, getfloor());
-		if(player->roll(Mining)) {
-			if(d100() < 40)
-				drop_item(m, "MiningOre");
+		if(d100() < 25) {
+			drop_item(m, "MiningOre");
 			if(player->roll(Gemcutting, -2000))
 				drop_item(m, "MiningGem");
 		}
@@ -730,12 +729,12 @@ static void update_skills() {
 		auto i = e.getindex();
 		if(!player->basic.abilities[i])
 			continue;
-		player->abilities[i] += player->get(e.base) / 2;
+		player->abilities[i] += player->get(e.base) / 3;
 	}
 }
 
 void creature::update_abilities() {
-	abilities[DamageMelee] += get(Strenght) / 10;
+	abilities[DamageMelee] += get(Strenght) / 15;
 	abilities[DamageRanged] += get(Dexterity) / 15;
 	abilities[Armor] += get(Strenght) / 15;
 	abilities[Speed] += 25 + get(Dexterity) / 5;
@@ -744,12 +743,14 @@ void creature::update_abilities() {
 		abilities[BalisticSkill] /= 2;
 		abilities[Dodge] -= 80;
 	}
-	if(!is(IgnoreWeb) && ispresent() && is(Webbed)) {
-		abilities[WeaponSkill] -= 10;
-		abilities[Dodge] -= 20;
-	}
 	if(is(LightSource))
 		abilities[LineOfSight] += 3;
+	if(ispresent()) {
+		if(!is(IgnoreWeb) && is(Webbed)) {
+			abilities[WeaponSkill] -= 10;
+			abilities[Dodge] -= 20;
+		}
+	}
 }
 
 void creature::place(point m) {
@@ -1675,4 +1676,8 @@ int	creature::getmaximum(ability_s v) const {
 	default:
 		return 0;
 	}
+}
+
+bool ispresent(const void* p) {
+	return ((creature*)p)->ispresent();
 }
