@@ -1175,6 +1175,15 @@ bool choose_targets(const variants& conditions) {
 	return have_targets();
 }
 
+bool allow_targets(const variants& conditions) {
+	pushvalue push_index(last_index, player->getposition());
+	indecies.clear();
+	items.clear();
+	rooms.clear();
+	targets.clear();
+	return script_allow(conditions);
+}
+
 static void apply_target_effect(const variants& effect) {
 	if(!effect)
 		return;
@@ -1206,7 +1215,7 @@ static void apply_target_effect(const variants& effect) {
 	}
 }
 
-static bool choose_target_interactive(const char* id) {
+static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!id)
 		return true;
 	auto pn = getdescription(str("%1Choose", id));
@@ -1215,15 +1224,15 @@ static bool choose_target_interactive(const char* id) {
 	pushvalue push_finish(draw::pfinish, afterpaint_no_actions);
 	pushvalue push_width(window_width, 300);
 	if(targets) {
-		if(!targets.chooseu(pn, getnm("Cancel")))
+		if(!targets.chooseu(pn, getnm("Cancel"), offset))
 			return false;
 	}
 	if(rooms) {
-		if(!rooms.chooseu(pn, getnm("Cancel")))
+		if(!rooms.chooseu(pn, getnm("Cancel"), offset))
 			return false;
 	}
 	if(items) {
-		if(!items.chooseu(pn, getnm("Cancel")))
+		if(!items.chooseu(pn, getnm("Cancel"), offset))
 			return false;
 	}
 	return true;
@@ -1472,32 +1481,32 @@ static void open_nearest_door(int bonus) {
 	}
 }
 
-static void chat_someone() {
-	auto monster = player->getmonster();
+static void chat_opponent() {
+	auto monster = opponent->getmonster();
 	if(monster) {
-		if(opponent->talk(monster->id))
+		if(player->talk(monster->id))
 			return;
 	}
-	auto room = player->getroom();
+	auto room = opponent->getroom();
 	if(room) {
-		if(opponent->talk(room->geti().id))
+		if(player->talk(room->geti().id))
 			return;
 	}
-	if(player->speechneed())
+	if(opponent->speechneed())
 		return;
-	if(player->is(KnowRumor) && d100() < 70) {
-		if(player->speechrumor())
+	if(opponent->is(KnowRumor) && d100() < 70) {
+		if(opponent->speechrumor())
 			return;
 	}
-	if(player->is(KnowLocation) && !opponent->is(Local) && d100() < 30) {
-		if(player->speechlocation())
+	if(opponent->is(KnowLocation) && !player->is(Local) && d100() < 30) {
+		if(opponent->speechlocation())
 			return;
 	}
-	player->fixaction("HowYouAre", 0);
+	opponent->fixaction("HowYouAre", 0);
 }
 
-static void char_opponent(int bonus) {
-	chat_someone();
+static void chat_opponent(int bonus) {
+	chat_opponent();
 	player->wait();
 	opponent->wait();
 }
@@ -1826,13 +1835,13 @@ static void repair_item(int bonus) {
 		last_item->setborken(3);
 }
 
-static bool roll_skill() {
-	auto skill = player->get(last_action->skill) + last_action->bonus;
-	auto result = d100();
-	if(game.getowner() == player || player->is(Visible))
-		player->logs(getnm("YouRollSkill"), getnm(last_action->id), skill, result);
-	return result < skill;
-}
+//static bool roll_skill() {
+//	auto skill = player->get(last_action->skill) + last_action->bonus;
+//	auto result = d100();
+//	if(game.getowner() == player || player->is(Visible))
+//		player->logs(getnm("YouRollSkill"), getnm(last_action->id), skill, result);
+//	return result < skill;
+//}
 
 static void fix_action(const char* suffix) {
 	auto id = ids(last_action->id, suffix, "Action");
@@ -1844,12 +1853,13 @@ static void fix_action(const char* suffix) {
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
-	if(!choose_targets(last_action->targets))
-		return;
-	if(!bound_targets(last_action->id, 0, player->ishuman()))
-		return;
+	//if(!choose_targets(last_action->effect))
+	//	return;
+	//if(!bound_targets(last_action->id, 0, player->ishuman()))
+	//	return;
 	player->fixaction(last_action->id, 0);
-	apply_target_effect(last_action->effect);
+	//apply_target_effect(last_action->effect);
+	choose_targets(last_action->effect);
 	player->wait();
 }
 
@@ -2058,16 +2068,6 @@ static void apply_filter(collectiona& source, variant v, void** filter_object) {
 	source.count = pb - source.begin();
 }
 
-static void filter_next(int bonus) {
-	auto v = *script_begin++;
-	if(targets)
-		apply_filter(targets, v, (void**)&player);
-	if(items)
-		apply_filter(items, v, (void**)&last_item);
-	if(rooms)
-		apply_filter(rooms, v, (void**)&last_room);
-}
-
 static bool is_wounded(int bonus) {
 	auto n = player->get(Hits);
 	auto m = player->basic.abilities[Hits];
@@ -2086,19 +2086,78 @@ static void acid_harm(int bonus) {
 	damage_equipment(bonus, true);
 }
 
-static bool allow_creatures(int bonus) {
-	return creatures.getcount() > 0;
+static bool is_full(int bonus) {
+	script_stop();
+	return have_targets();
+}
+
+static bool is_targets(int bonus) {
+	script_stop();
+	return targets.getcount() > 0;
 }
 
 static void for_each_creature(int bonus) {
-	creaturea push_creature(creatures);
 	pushvalue push(player);
 	variants commands; commands.set(script_begin, script_end - script_begin);
-	for(auto p : creatures) {
+	creaturea source(targets);
+	for(auto p : source) {
 		player = p;
 		script_run(commands);
 	}
 	script_stop();
+}
+
+static void for_each_opponent(int bonus) {
+	pushvalue push(opponent);
+	variants commands; commands.set(script_begin, script_end - script_begin);
+	creaturea source(targets);
+	for(auto p : source) {
+		opponent = p;
+		script_run(commands);
+	}
+	script_stop();
+}
+
+static bool is_features(int bonus) {
+	script_stop();
+	return indecies.getcount() > 0;
+}
+
+static void for_each_feature(int bonus) {
+	auto push_source(indecies);
+	auto push_rect = last_rect;
+	auto push_index = last_index;
+	variants commands; commands.set(script_begin, script_end - script_begin);
+	for(auto p : indecies) {
+		last_rect = {p.x, p.y, p.x, p.y};
+		last_index = p;
+		script_run(commands);
+	}
+	script_stop();
+	last_index = push_index;
+	last_rect = push_rect;
+	indecies = push_source;
+}
+
+static bool is_room(int bonus) {
+	script_stop();
+	return rooms.getcount() > 0;
+}
+
+static void for_each_room(int bonus) {
+	rooma push_source(rooms);
+	pushvalue push(last_room);
+	pushvalue push_rect(last_rect);
+	pushvalue push_index(last_index);
+	variants commands; commands.set(script_begin, script_end - script_begin);
+	for(auto p : rooms) {
+		last_room = p;
+		last_rect = p->rc;
+		last_index = center(last_rect);
+		script_run(commands);
+	}
+	script_stop();
+	rooms = push_source;
 }
 
 static void gain_experience(int bonus) {
@@ -2133,19 +2192,11 @@ static bool is_animal(int bonus) {
 }
 
 static const char* get_header_id() {
-	return last_item->geti().id;
-}
-
-static bool allow_choose_querry(int bonus) {
-	script_stop();
-	return get_target_count() > 0;
-}
-
-static void choose_querry(int bonus) {
-	choose_target_interactive(get_header_id());
-	if(!bonus)
-		bonus = 1;
-	choose_limit(bonus);
+	if(last_action)
+		return last_action->getid();
+	if(last_item)
+		return last_item->geti().id;
+	return "Common";
 }
 
 static void set_magic_effect(magic_s v) {
@@ -2162,18 +2213,33 @@ static void set_magic_effect(magic_s v) {
 	}
 }
 
+static void check_script_targets() {
+	if(!have_targets()) {
+		script_stop();
+		player->actp(getnm("YouDontValidTargets"));
+	}
+}
+
 static void choose_by_magic(int bonus) {
 	pushvalue push(effect_level);
-	set_magic_effect(last_item->getmagic());
+	if(last_item)
+		set_magic_effect(last_item->getmagic());
 	if(effect_level <= 2) {
 		choose_target_interactive(get_header_id());
 		choose_limit(1);
 	}
-	if(!have_targets()) {
-		script_stop();
-		player->actp(getnm("YouDontValidTargets"));
-		return;
-	}
+	check_script_targets();
+}
+
+static void choose_limit(int counter) {
+	if(targets.getcount() > counter)
+		targets.count = counter;
+	if(items.getcount() > counter)
+		items.count = counter;
+	if(rooms.getcount() > counter)
+		rooms.count = counter;
+	if(indecies.getcount() > counter)
+		indecies.count = counter;
 }
 
 static void choose_random(int bonus) {
@@ -2186,6 +2252,15 @@ static void choose_random(int bonus) {
 	if(indecies)
 		indecies.shuffle();
 	choose_limit(bonus);
+}
+
+static void choose_opponent(int bonus) {
+	if(targets.getcount() >= 2) {
+		if(player->ishuman())
+			choose_target_interactive(get_header_id());
+	}
+	check_script_targets();
+	opponent = targets[0];
 }
 
 static void need_help_info(stringbuilder& sb) {
@@ -2255,10 +2330,10 @@ BSDATA(script) = {
 	{"AnimalInt", empthy_script, is_animal},
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
-	{"ChatOpponent", char_opponent},
-	{"Choose", choose_querry, allow_choose_querry},
-	{"ChooseByMagic", choose_by_magic},
-	{"ChooseRandom", choose_random},
+	{"ChatOpponent", chat_opponent},
+	{"ChooseByMagic", choose_by_magic, is_full},
+	{"ChooseOpponent", choose_opponent, is_full},
+	{"ChooseRandom", choose_random, is_full},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},
 	{"DamageItem", damage_item},
@@ -2266,10 +2341,12 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"ExploreArea", explore_area},
-	{"ForEachCreature", for_each_creature, allow_creatures},
+	{"ForEachCreature", for_each_creature, is_targets},
+	{"ForEachFeature", for_each_feature, is_features},
+	{"ForEachOpponent", for_each_opponent, is_targets},
+	{"ForEachRoom", for_each_room, is_room},
 	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
-	{"Filter", filter_next},
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
 	{"GainSatiation", gain_satiation},

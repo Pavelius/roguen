@@ -7,36 +7,38 @@
 #include "site.h"
 #include "script.h"
 
-static variants	last_list;
+static variant last_variant;
 
-static void read_same_list() {
-	last_list.clear();
-	if(!script_begin)
-		return;
-	auto type = script_begin->type;
-	auto start = bsdata<variant>::source.indexof(script_begin);
-	if(start == -1)
-		return;
-	while(script_begin < script_end && script_begin->type == type)
-		script_begin++;
-	auto end = bsdata<variant>::source.indexof(script_begin);
-	last_list.start = start;
-	last_list.count = end - start;
+static void clear_all_collections() {
+	rooms.clear();
+	targets.clear();
+	indecies.clear();
+	items.clear();
+}
+
+static void read_next_variant() {
+	last_variant = *script_begin++;
 }
 
 static bool match_list_value(int value) {
-	for(auto v : last_list) {
-		if(v.iskind<listi>()) {
-			pushvalue push(last_list, bsdata<listi>::elements[v.value].elements);
+	if(last_variant.iskind<listi>()) {
+		pushvalue push(last_variant);
+		auto& source = bsdata<listi>::elements[last_variant.value].elements;
+		for(auto v : source) {
+			last_variant = v;
 			if(match_list_value(value))
 				return true;
-		} else if(v.iskind<randomizeri>()) {
-			pushvalue push(last_list, bsdata<randomizeri>::elements[v.value].chance);
+		}
+	} else if(last_variant.iskind<randomizeri>()) {
+		pushvalue push(last_variant);
+		auto& source = bsdata<listi>::elements[last_variant.value].elements;
+		for(auto v : source) {
+			last_variant = v;
 			if(match_list_value(value))
 				return true;
-		} else if(v.value == value)
-			return true;
-	}
+		}
+	} else if(last_variant.value == value)
+		return true;
 	return false;
 }
 
@@ -51,6 +53,10 @@ static bool match_list_room(const void* object) {
 template<> void ftscript<filteri>(int value, int counter) {
 	auto& ei = bsdata<filteri>::elements[value];
 	ei.action(ei.proc, counter);
+}
+template<> bool fttest<filteri>(int value, int counter) {
+	ftscript<filteri>(value, counter);
+	return true;
 }
 
 static bool filter_wounded(const void* object) {
@@ -95,7 +101,7 @@ static bool filter_explored_room(const void* object) {
 }
 
 static bool filter_this_room(const void* object) {
-	return player->getroom()==(roomi*)object;
+	return player->getroom() == (roomi*)object;
 }
 
 static bool filter_cursed(const void* object) {
@@ -121,16 +127,14 @@ static void match_rooms(fnvisible proc, int counter) {
 	rooms.match(proc, counter >= 0);
 }
 
-static void filter_next_indecies(fnvisible proc, int counter) {
-	read_same_list();
-	if(last_list)
-		indecies.match(match_list_feature, true);
-}
-
-static void filter_next_rooms(fnvisible proc, int counter) {
-	read_same_list();
-	if(last_list)
-		rooms.match(match_list_room, true);
+static void filter_next(fnvisible proc, int counter) {
+	auto push = last_variant;
+	last_variant = *script_begin++;
+	if(indecies)
+		indecies.match(match_list_feature, counter >= 0);
+	else if(rooms)
+		rooms.match(match_list_room, counter >= 0);
+	last_variant = push;
 }
 
 static void filter_items(fnvisible proc, int counter) {
@@ -146,30 +150,32 @@ static void select_allies(fnvisible proc, int counter) {
 }
 
 static void select_creatures(fnvisible proc, int counter) {
+	clear_all_collections();
 	targets = creatures;
 }
 
 static void select_enemies(fnvisible proc, int counter) {
+	clear_all_collections();
 	targets = enemies;
 }
 
 static void select_you(fnvisible proc, int counter) {
-	targets.clear();
+	clear_all_collections();
 	targets.add(player);
 }
 
 static void select_your_items(fnvisible proc, int counter) {
-	items.clear();
+	clear_all_collections();
 	items.select(player);
 }
 
 static void select_features(fnvisible proc, int counter) {
-	indecies.clear();
+	clear_all_collections();
 	indecies.select(player->getposition(), counter ? counter : 1);
 }
 
 static void select_custom_creatures(fnvisible proc, int counter) {
-	targets.clear();
+	clear_all_collections();
 	auto keep = counter >= 0;
 	for(auto p : creatures) {
 		if(proc(p) != keep)
@@ -183,32 +189,8 @@ static void select_rooms(fnvisible proc, int counter) {
 	rooms.collectiona::select(area->rooms);
 }
 
-void choose_limit(int counter) {
-	if(targets.getcount() > counter)
-		targets.count = counter;
-	if(items.getcount() > counter)
-		items.count = counter;
-	if(rooms.getcount() > counter)
-		rooms.count = counter;
-	if(indecies.getcount() > counter)
-		indecies.count = counter;
-}
-
-static void choose_random(fnvisible proc, int counter) {
-	targets.shuffle();
-	items.shuffle();
-	rooms.shuffle();
-	indecies.shuffle();
-	choose_limit(counter);
-}
-
-static void choose_nearest(fnvisible proc, int counter) {
-	choose_limit(counter);
-}
-
 BSDATA(filteri) = {
-	{"ChooseNearest", 0, choose_nearest},
-	{"ChooseRandom", 0, choose_random},
+	{"Filter", 0, filter_next},
 	{"FilterBlessed", filter_blessed, filter_items},
 	{"FilterClose", filter_close, match_targets},
 	{"FilterDamaged", filter_damaged, filter_items},
@@ -216,8 +198,6 @@ BSDATA(filteri) = {
 	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterIdentified", filter_identified, filter_items},
 	{"FilterFeature", filter_feature, match_targets},
-	{"FilterNextFeatures", 0, filter_next_indecies},
-	{"FilterNextRooms", 0, filter_next_rooms},
 	{"FilterNotable", filter_notable, match_rooms},
 	{"FilterThisRoom", filter_this_room, match_rooms},
 	{"FilterUnaware", filter_unaware, match_targets},

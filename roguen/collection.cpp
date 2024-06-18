@@ -78,7 +78,7 @@ void collectiona::match(fnvisible proc, bool keep) {
 void collectiona::match(const collectiona& source, bool keep) {
 	auto ps = data;
 	for(auto p : *this) {
-		if((source.find(p)!=-1) != keep)
+		if((source.find(p) != -1) != keep)
 			continue;
 		*ps++ = p;
 	}
@@ -110,19 +110,25 @@ void* collectiona::choose(fngetname proc, const char* title, const char* cancel,
 	return an.choose(title, cancel);
 }
 
-bool collectiona::chooseu(fngetname proc, const char* title, const char* cancel) const {
+bool collectiona::chooseu(fngetname proc, const char* title, const char* cancel, int offset) {
 	answers an;
-	for(auto& e : *this)
+	for(auto& e : middle(offset, count - offset))
 		an.add(&e, proc(e));
 	auto p = (void**)an.choose(title, cancel);
 	if(!p)
 		return false;
-	iswap(const_cast<void**>(data)[0], *p);
+	iswap(const_cast<void**>(data + offset)[0], *p);
 	return true;
 }
 
 void collectiona::sort(fngetname proc) {
 	qsort(data, count, sizeof(data), compare_proc);
+}
+
+void collectiona::sort(fngetname proc, int offset) {
+	if(offset >= (int)count - 1)
+		return;
+	qsort(data + offset, count - offset, sizeof(data), compare_proc);
 }
 
 void collectiona::shuffle() {

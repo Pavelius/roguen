@@ -15,7 +15,7 @@ extern point last_index;
 siteskilla	last_actions;
 siteskilli* last_action;
 
-bool choose_targets(const variants& conditions);
+bool allow_targets(const variants& conditions);
 
 void siteskilli::fixuse() const {
 	auto rm = player->getroom();
@@ -24,9 +24,9 @@ void siteskilli::fixuse() const {
 }
 
 bool siteskilli::isusable() const {
-	if(!player->canuse(skill))
-		return false;
 	if((player->get(skill) + bonus) < 0)
+		return false;
+	if(!player->canuse(skill))
 		return false;
 	auto rm = player->getroom();
 	if(rm) {
@@ -41,5 +41,5 @@ bool siteskilli::isusable() const {
 			}
 		}
 	}
-	return choose_targets(targets);
+	return allow_targets(effect);
 }

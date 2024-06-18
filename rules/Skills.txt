@@ -1,21 +1,21 @@
+#List
+
+RoomsWhereGemsCanBe
+ elements SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
+
 #SiteSkill
 
 GatherInformation skill(Wits)
- effect SelectNeutralCreatures FilterClose ForEachCreature ChatOpponent
+ effect SelectNeutralCreatures FilterClose ChooseOpponent ChatOpponent
 GatherSemiMellowHerbs skill(Herbalism)
- targets SelectFeatures FilterNextFeatures HerbsSemi
- effect GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
+ effect SelectFeatures Filter HerbsSemi ForEachFeature GatherNextItem GrassHerbs RemoveFeature FailRollAction RepairItem-1
 GatherMellowHerbs skill(Herbalism)
- targets SelectFeatures FilterNextFeatures HerbsFull
- effect GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
+ effect SelectFeatures Filter HerbsFull ForEachFeature GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
 OpenDoorLock skill(Thievery)
- targets SelectFeatures FilterNextFeatures LockedDoor
- effect RollAction Door GainExperience+1
+ effect SelectFeatures Filter LockedDoor ForEachFeature RollAction Door GainExperience+1
 SacrificeEvilAltar skill(Religion)
- targets SelectFeatures FilterNextFeatures AltarEvil
- effect RollAction GainExperience+1
+ effect SelectFeatures Filter AltarEvil ForEachFeature RollAction GainExperience+1
 StealCoins skill(Thievery)
  effect SelectNeutralCreatures FilterClose ForEachCreature StealCoins
 SearchRoomForGems skill(Gemcutting)
- targets SelectRooms FilterNextRooms SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
- effect RollAction RandomGem
+ effect SelectRooms Filter RoomsWhereGemsCanBe ForEachRoom RollAction RandomGem

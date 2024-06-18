@@ -8,39 +8,7 @@
 #include "creature.h"
 #include "io_memory.h"
 
-//static vector<creature> saved_creatures;
 static const char* save_folder = "save";
-
-//static void save_monsters() {
-//	saved_creatures.clear();
-//	for(auto& e : bsdata<creature>()) {
-//		if(!e.isvalid())
-//			continue;
-//		if(e.is(Local)) {
-//			e.unlink();
-//			saved_creatures.add(e);
-//			e.clear();
-//		}
-//	}
-//}
-//
-//static void restore_monsters() {
-//	for(auto& e : saved_creatures) {
-//		auto p = bsdata<creature>::addz();
-//		if(p)
-//			*p = e;
-//	}
-//	saved_creatures.clear();
-//}
-//
-//static void after_serial_game() {
-//	restore_monsters();
-//	update_ui();
-//}
-//
-//static void before_serial_game() {
-//	save_monsters();
-//}
 
 static void capture_game_screen(draw::surface& dc) {
 	dc.resize(640 - 130, 360, 32, true);
@@ -120,18 +88,6 @@ void gamei::read(const char* name) {
 	draw::surface dc; capture_game_screen_small(dc, 3, 3);
 	serial_game_name(name, false, false, dc);
 }
-
-//static void cleanup_saves() {
-//	char temp[260]; stringbuilder sb(temp);
-//	for(io::file::find file(save_folder); file; file.next()) {
-//		auto pn = file.name();
-//		if(pn[0] == '.')
-//			continue;
-//		sb.clear();
-//		sb.add("%1/%2", save_folder, pn);
-//		io::file::remove(temp);
-//	}
-//}
 
 void gamei::writelog() {
 	io::file file("logs.txt", StreamWrite | StreamText);

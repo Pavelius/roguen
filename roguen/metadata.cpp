@@ -180,7 +180,7 @@ BSDATA(varianti) = {
 	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
 	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
-	{"Filter", VAR(filteri), 1, 0, ftscript<filteri>},
+	{"Filter", VAR(filteri), 1, 0, ftscript<filteri>, fttest<filteri>},
 	{"Global", VAR(globali), 1, 0, ftscript<globali>},
 	{"Hotkey", VAR(hotkey), 2},
 	{"Item", VAR(itemi), 1, 0, ftscript<itemi>},
