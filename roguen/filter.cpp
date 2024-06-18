@@ -185,8 +185,17 @@ static void select_custom_creatures(fnvisible proc, int counter) {
 }
 
 static void select_rooms(fnvisible proc, int counter) {
-	rooms.clear();
+	clear_all_collections();
 	rooms.collectiona::select(area->rooms);
+}
+
+static void select_your_room(fnvisible proc, int counter) {
+	clear_all_collections();
+	if(player) {
+		auto p = player->getroom();
+		if(p)
+			rooms.add(p);
+	}
 }
 
 BSDATA(filteri) = {
@@ -210,5 +219,6 @@ BSDATA(filteri) = {
 	{"SelectRooms", 0, select_rooms},
 	{"SelectYou", 0, select_you},
 	{"SelectYourItems", 0, select_your_items},
+	{"SelectYourRoom", 0, select_your_room},
 };
 BSDATAF(filteri)

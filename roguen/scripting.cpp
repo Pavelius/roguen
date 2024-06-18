@@ -73,6 +73,11 @@ static int random_value(int value) {
 	return xrand(value / 2, value);
 }
 
+static void normalize_bonus(int& bonus) {
+	if(!bonus)
+		bonus = 1;
+}
+
 static void show_debug_minimap() {
 	auto pt = center(last_rect);
 	draw::setcamera(m2s(pt));
@@ -1481,7 +1486,7 @@ static void open_nearest_door(int bonus) {
 	}
 }
 
-static void chat_opponent() {
+static void chatting() {
 	auto monster = opponent->getmonster();
 	if(monster) {
 		if(player->talk(monster->id))
@@ -1505,8 +1510,8 @@ static void chat_opponent() {
 	opponent->fixaction("HowYouAre", 0);
 }
 
-static void chat_opponent(int bonus) {
-	chat_opponent();
+static void chatting(int bonus) {
+	chatting();
 	player->wait();
 	opponent->wait();
 }
@@ -2254,13 +2259,14 @@ static void choose_random(int bonus) {
 	choose_limit(bonus);
 }
 
-static void choose_opponent(int bonus) {
+static void choose_creature(int bonus) {
+	normalize_bonus(bonus);
 	if(targets.getcount() >= 2) {
 		if(player->ishuman())
 			choose_target_interactive(get_header_id());
 	}
 	check_script_targets();
-	opponent = targets[0];
+	choose_limit(bonus);
 }
 
 static void need_help_info(stringbuilder& sb) {
@@ -2330,9 +2336,9 @@ BSDATA(script) = {
 	{"AnimalInt", empthy_script, is_animal},
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
-	{"ChatOpponent", chat_opponent},
+	{"Chatting", chatting},
 	{"ChooseByMagic", choose_by_magic, is_full},
-	{"ChooseOpponent", choose_opponent, is_full},
+	{"ChooseCreature", choose_creature, is_full},
 	{"ChooseRandom", choose_random, is_full},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},
