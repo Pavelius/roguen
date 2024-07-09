@@ -103,7 +103,7 @@ static const char* getrace(variant v, bool female) {
 void creature::getinfo(stringbuilder& sb) const {
 	sb.addn(getname());
 	sb.addn(getrace(getkind(), is(Female)));
-	sb.addn("%1 %2i [~%-Level]", getnm(getclass().id), get(Level));
+	sb.addn("%1i %-Level", get(Level));
 	sb.addn("$tab -40");
 	sb.addn("---");
 	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))

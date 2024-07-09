@@ -57,10 +57,6 @@ BSMETA(buttoni) = {
 	BSREQ(id),
 	BSREQ(key),
 	{}};
-BSMETA(classi) = {
-	BSREQ(id),
-	BSREQ(player),
-	{}};
 BSMETA(creature) = {
 	BSREQ(abilities),
 	{}};
@@ -152,7 +148,7 @@ BSMETA(siteskilli) = {
 	BSENM(skill, abilityi),
 	BSREQ(bonus),
 	BSENM(retry, durationi),
-	BSREQ(effect), BSREQ(targets),
+	BSREQ(effect),
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
@@ -175,7 +171,6 @@ BSDATA(varianti) = {
 	{"Ability", VAR(abilityi), 1, 0, ftscript<abilityi>, fttest<abilityi>},
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
-	{"Class", VAR(classi), 1, 0, ftscript<classi>},
 	{"Creature", VAR(creature), 0},
 	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},

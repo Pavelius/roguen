@@ -683,10 +683,6 @@ void creature::clear() {
 		game.setowner(0);
 }
 
-void creature::levelup() {
-	basic.abilities[Level] += 1;
-}
-
 bool isfreecr(point m) {
 	if(findalive(m))
 		return false;
@@ -741,7 +737,7 @@ void creature::update_abilities() {
 	if(is(Stun)) {
 		abilities[WeaponSkill] /= 2;
 		abilities[BalisticSkill] /= 2;
-		abilities[Dodge] -= 80;
+		abilities[Dodge] -= 40;
 	}
 	if(is(LightSource))
 		abilities[LineOfSight] += 3;
@@ -1110,27 +1106,6 @@ static int get_counter(int counter) {
 	return counter;
 }
 
-void advance_value(variant v) {
-	if(v.iskind<abilityi>())
-		player->basic.abilities[v.value] += get_counter(v.counter);
-	else if(v.iskind<itemi>()) {
-		if(v.counter >= 0)
-			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
-	} else if(v.iskind<feati>())
-		ftscript<feati>(v.value, v.counter);
-	else if(v.iskind<spelli>())
-		player->spells[v.value] += v.counter;
-	else if(v.iskind<modifieri>())
-		modifier = (modifiers)v.value;
-	else if(v.iskind<script>())
-		bsdata<script>::elements[v.value].proc(v.counter);
-}
-
-static void advance_value(variants elements) {
-	for(auto v : elements)
-		advance_value(v);
-}
-
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	if(value <= 0)
@@ -1440,6 +1415,36 @@ bool creature::speechlocation() const {
 	return true;
 }
 
+void advance_value(variant v) {
+	if(v.iskind<abilityi>())
+		player->basic.abilities[v.value] += get_counter(v.counter);
+	else if(v.iskind<itemi>()) {
+		if(v.counter >= 0)
+			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
+	} else if(v.iskind<feati>())
+		ftscript<feati>(v.value, v.counter);
+	else if(v.iskind<spelli>())
+		player->spells[v.value] += v.counter;
+	else if(v.iskind<modifieri>())
+		modifier = (modifiers)v.value;
+	else if(v.iskind<script>())
+		bsdata<script>::elements[v.value].proc(v.counter);
+}
+
+static void advance_value(variants elements) {
+	for(auto v : elements)
+		advance_value(v);
+}
+
+static void advance_value(variant kind, int level) {
+	for(auto& e : bsdata<advancement>()) {
+		if(e.type == kind && e.level == level) {
+			advance_value(e.elements);
+			player->update();
+		}
+	}
+}
+
 static void apply_value(variant v) {
 	if(v.iskind<spelli>())
 		ftscript<spelli>(v.value, v.counter);
@@ -1529,7 +1534,7 @@ void creature::summon(point m, const variants& elements, int count, int level) {
 	auto isally = is(Ally);
 	for(auto i = 0; i < count; i++) {
 		auto v = randomizeri::random(elements);
-		auto p = creature::create(m, v);
+		auto p = player_create(m, v, false);
 		if(isenemy)
 			p->set(Enemy);
 		else
@@ -1572,21 +1577,13 @@ int	creature::getsellingcost() const {
 	return result;
 }
 
-static void advance_value(variant kind, int level) {
-	for(auto& e : bsdata<advancement>()) {
-		if(e.type == kind && e.level == level) {
-			advance_value(e.elements);
-			player->update();
-		}
-	}
+void player_levelup() {
+	player->basic.abilities[Level] += 1;
+	advance_value(player->getkind(), player->basic.abilities[Level]);
 }
 
-creature* creature::create(point m, variant kind, variant character, bool female) {
+creature* player_create(point m, variant kind, bool female) {
 	if(!kind)
-		return 0;
-	if(!character)
-		character = "Monster";
-	if(!character.iskind<classi>())
 		return 0;
 	pushvalue push_player(player);
 	player = bsdata<creature>::addz();
@@ -1594,7 +1591,6 @@ creature* creature::create(point m, variant kind, variant character, bool female
 	player->worldpos = game;
 	player->setkind(kind);
 	player->setnoname();
-	player->class_id = character.value;
 	if(female)
 		player->set(Female);
 	monsteri* pm = kind;
@@ -1604,17 +1600,17 @@ creature* creature::create(point m, variant kind, variant character, bool female
 		adat<variant> conditions;
 		conditions.add(kind);
 		player->setname(charname::param(conditions));
+		player->basic.abilities[LineOfSight] += 4;
 	} else {
 		adat<variant> conditions;
 		conditions.add(kind);
 		if(player->is(Female))
 			conditions.add("Female");
 		player->setname(charname::param(conditions));
+		player->basic.abilities[LineOfSight] += 4;
+		advance_value(kind, 0);
+		player_levelup();
 	}
-	player->basic.abilities[LineOfSight] += 4;
-	advance_value(kind, 0);
-	if(character.value)
-		advance_value(character, 0);
 	player->place(m);
 	player->finish();
 	if(pm) {

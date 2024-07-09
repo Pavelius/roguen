@@ -77,7 +77,7 @@ static creature* find_monster_id(const char* id) {
 }
 
 static void main_start() {
-	player = creature::create({5, 5}, "Human", "Fighter", true);
+	player = player_create({5, 5}, "Human", true);
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");

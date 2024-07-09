@@ -25,6 +25,8 @@
 #include "indexa.h"
 #include "variant.h"
 
+struct speechv2;
+
 void add_need(int bonus);
 void add_need_answers(int bonus);
 void advance_value(variant v);
@@ -76,6 +78,10 @@ static int random_value(int value) {
 static void normalize_bonus(int& bonus) {
 	if(!bonus)
 		bonus = 1;
+	if(bonus == 100)
+		bonus = last_value;
+	else if(bonus == -100)
+		bonus = -last_value;
 }
 
 static void show_debug_minimap() {
@@ -546,7 +552,7 @@ static void place_creature(variant v, int count) {
 			count = 1;
 	}
 	for(auto i = 0; i < count; i++) {
-		auto p = creature::create(area->get(last_rect), v);
+		auto p = player_create(area->get(last_rect), v, false);
 		p->set(Local);
 		if(p->is(Enemy))
 			area->total.monsters++;
@@ -1042,12 +1048,6 @@ template<> void ftscript<racei>(int value, int counter) {
 	place_creature(bsdata<racei>::elements + value, count);
 }
 
-template<> void ftscript<classi>(int value, int counter) {
-	auto count = script_count(counter, 1);
-	for(auto i = 0; i < count; i++)
-		creature::create(area->get(last_rect), single("RandomRace"), bsdata<classi>::elements + value, (rand() % 2) != 0);
-}
-
 template<> void ftscript<shapei>(int value, int counter) {
 	auto count = script_count(counter, 1);
 	for(auto i = 0; i < count; i++)
@@ -1081,8 +1081,6 @@ template<> void ftscript<locationi>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	script_run(bsdata<locationi>::elements[value].landscape);
 }
-
-struct speechv2;
 
 template<> void ftscript<speechv2>(int value, int counter) {
 	auto count = script_count(counter, 1);
@@ -1189,36 +1187,36 @@ bool allow_targets(const variants& conditions) {
 	return script_allow(conditions);
 }
 
-static void apply_target_effect(const variants& effect) {
-	if(!effect)
-		return;
-	pushvalue push_opponent(opponent, player);
-	pushvalue push_player(player);
-	pushvalue push_modifier(modifier);
-	pushvalue push_item(last_item);
-	pushvalue push_value(last_room);
-	pushvalue push_rect(last_rect);
-	pushvalue push_index(last_index, player->getposition());
-	for(auto p : targets) {
-		player = p;
-		script_run(effect);
-	}
-	for(auto p : indecies) {
-		last_rect = {p.x, p.y, p.x, p.y};
-		last_index = p;
-		script_run(effect);
-	}
-	for(auto p : rooms) {
-		last_room = p;
-		last_rect = p->rc;
-		last_index = center(last_rect);
-		script_run(effect);
-	}
-	for(auto p : items) {
-		last_item = p;
-		script_run(effect);
-	}
-}
+//static void apply_target_effect(const variants& effect) {
+//	if(!effect)
+//		return;
+//	pushvalue push_opponent(opponent, player);
+//	pushvalue push_player(player);
+//	pushvalue push_modifier(modifier);
+//	pushvalue push_item(last_item);
+//	pushvalue push_value(last_room);
+//	pushvalue push_rect(last_rect);
+//	pushvalue push_index(last_index, player->getposition());
+//	for(auto p : targets) {
+//		player = p;
+//		script_run(effect);
+//	}
+//	for(auto p : indecies) {
+//		last_rect = {p.x, p.y, p.x, p.y};
+//		last_index = p;
+//		script_run(effect);
+//	}
+//	for(auto p : rooms) {
+//		last_room = p;
+//		last_rect = p->rc;
+//		last_index = center(last_rect);
+//		script_run(effect);
+//	}
+//	for(auto p : items) {
+//		last_item = p;
+//		script_run(effect);
+//	}
+//}
 
 static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!id)
@@ -1280,20 +1278,20 @@ template<> void ftscript<spelli>(int index, int value) {
 }
 
 bool spelli::apply(int level, int targets_count, bool interactive, bool silent) const {
-	if(!bound_targets(id, targets_count, interactive))
-		return false;
+	//if(!bound_targets(id, targets_count, interactive))
+	//	return false;
 	if(!silent) {
 		if(!player->fixaction(id, "Casting"))
 			player->fixaction("Spells", "Casting");
 	}
-	if(::targets.getcount()) {
-		pushvalue push_player(player), push_opponent(opponent, player);
-		for(auto p : (::targets)) {
-			player = p;
-			apply_spell(*this, level);
-		}
-	} else
-		apply_target_effect(effect);
+	//if(::targets.getcount()) {
+	//	pushvalue push_player(player), push_opponent(opponent, player);
+	//	for(auto p : (::targets)) {
+	//		player = p;
+	//		apply_spell(*this, level);
+	//	}
+	//} else
+	//	apply_target_effect(effect);
 	if(summon)
 		player->summon(player->getposition(), summon, getcount(level), level);
 	return true;
@@ -1516,15 +1514,15 @@ static void chatting(int bonus) {
 	opponent->wait();
 }
 
-static void apply_action(const char* id, const variants& targets, const variants& effects) {
-	if(!choose_targets(targets)) {
-		player->actp(getdescription(str("%1Fail", id)));
-		return;
-	}
-	if(!bound_targets(id, 0, player->ishuman(), false))
-		return;
-	apply_target_effect(effects);
-}
+//static void apply_action(const char* id, const variants& targets, const variants& effects) {
+//	if(!choose_targets(targets)) {
+//		player->actp(getdescription(str("%1Fail", id)));
+//		return;
+//	}
+//	if(!bound_targets(id, 0, player->ishuman(), false))
+//		return;
+//	apply_target_effect(effects);
+//}
 
 static void test_rumor(int bonus) {
 	player->speechrumor();
@@ -1660,7 +1658,7 @@ static void test_arena(int bonus) {
 	if(!pm)
 		return;
 	auto m = player->getposition();
-	auto p = creature::create(m.to(3, 0), pm);
+	auto p = player_create(m.to(3, 0), pm, false);
 	p->set(Enemy);
 	p->wait();
 	player->wait();
@@ -1858,12 +1856,7 @@ static void fix_action(const char* suffix) {
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
-	//if(!choose_targets(last_action->effect))
-	//	return;
-	//if(!bound_targets(last_action->id, 0, player->ishuman()))
-	//	return;
 	player->fixaction(last_action->id, 0);
-	//apply_target_effect(last_action->effect);
 	choose_targets(last_action->effect);
 	player->wait();
 }
@@ -1883,7 +1876,10 @@ static void jump_to_site(int bonus) {
 }
 
 static void wait_hour(int bonus) {
-	player->wait(6 * 60 * 24);
+	if(bonus < 0)
+		return;
+	normalize_bonus(bonus);
+	player->wait(bonus * 6 * 60 * 24);
 }
 
 static void roll_value(int bonus) {
@@ -2236,6 +2232,10 @@ static void choose_by_magic(int bonus) {
 	check_script_targets();
 }
 
+static void power_by_magic(int bonus) {
+	last_value = bonus + effect_level / 2;
+}
+
 static void choose_limit(int counter) {
 	if(targets.getcount() > counter)
 		targets.count = counter;
@@ -2388,6 +2388,7 @@ BSDATA(script) = {
 	{"OpenNearestDoor", open_nearest_door},
 	{"PickUp", pickup},
 	{"PickUpAll", pickup_all},
+	{"PowerByMagic", power_by_magic},
 	{"QuestGuardian", quest_guardian},
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},

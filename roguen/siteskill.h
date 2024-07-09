@@ -12,7 +12,7 @@ struct siteskilli : nameable {
 	ability_s		skill;
 	char			bonus;
 	duration_s		retry;
-	variants		targets, effect;
+	variants		effect;
 	bool			isusable() const;
 	void			fixuse() const;
 };

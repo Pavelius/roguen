@@ -1,2 +1,2 @@
-﻿In file `rules/Skills.txt`:
- Line 9: Can't find variant `ChooseOpponent`
+﻿In file `rules/Advancement.txt`:
+ Line 7: Can't find variant `BallisticSkill`

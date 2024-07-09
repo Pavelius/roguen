@@ -16,11 +16,10 @@
 #pragma once
 
 class creature : public wearable, public skillable, public spellable, public ownerable {
-	unsigned short	class_id, room_id;
+	unsigned short	room_id;
 	point			moveorder, guardorder;
 	void			fixcantgo() const;
 	bool			isfollowmaster() const;
-	void			levelup();
 	void			update_abilities();
 	void			update_room_abilities();
 public:
@@ -51,7 +50,6 @@ public:
 	void			every5minutes() {}
 	void			every1hour() {}
 	void			every4hour();
-	static creature* create(point m, variant v, variant character = {}, bool female = false);
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
@@ -59,7 +57,6 @@ public:
 	int				get(ability_s v) const { return abilities[v]; }
 	int				getexpreward() const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
-	const classi&	getclass() const { return bsdata<classi>::elements[class_id]; }
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
@@ -131,3 +128,6 @@ extern int window_width, window_height;
 void dialog_message(const char* format);
 bool isneed(const void* p);
 bool ispresent(const void* p);
+void player_levelup();
+
+creature* player_create(point m, variant kind, bool female);

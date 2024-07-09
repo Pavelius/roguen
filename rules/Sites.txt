@@ -51,7 +51,6 @@ TheifGuild walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  feats Notable
 Building walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape Fighter
  feats Notable
 StairsDownHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape StairsDown
