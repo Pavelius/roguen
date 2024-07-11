@@ -11,31 +11,32 @@ BSDATA(abilityi) = {
 	{"Wits"},
 	{"WeaponSkill"},
 	{"BalisticSkill"},
-	{"Dodge", ColorNone, ColorNone, Dexterity},
-	{"DamageMelee", ColorNone, ColorNone, Strenght},
-	{"DamageRanged", ColorNone, ColorNone, Dexterity},
-	{"DamageThrown", ColorNone, ColorNone, Strenght},
+	{"Dodge", Dexterity},
+	{"DamageMelee"},
+	{"DamageRanged"},
+	{"DamageThrown"},
 	{"Armor"},
 	{"Block"},
 	{"BlockRanged"},
 	{"Speed"},
 	{"EnemyAttacks"},
-	{"Alertness", ColorNone, ColorNone, Wits},
-	{"Gemcutting", ColorNone, ColorNone, Dexterity},
-	{"Herbalism", ColorNone, ColorNone, Wits},
-	{"Thievery", ColorNone, ColorNone, Dexterity},
-	{"Literacy", ColorNone, ColorNone, Wits},
-	{"Mining", ColorNone, ColorNone, Dexterity},
-	{"Stealth", ColorNone, ColorNone, Dexterity},
-	{"Survival", ColorNone, ColorNone, Wits},
-	{"History", ColorNone, ColorNone, Wits},
-	{"Religion", ColorNone, ColorNone, Wits},
-	{"Woodcutting", ColorNone, ColorNone, Dexterity},
+	{"Alertness", Wits},
+	{"Gemcutting", Dexterity},
+	{"Herbalism", Wits},
+	{"Thievery", Dexterity},
+	{"Literacy", Wits},
+	{"Mining", Dexterity},
+	{"Stealth", Dexterity},
+	{"Survival", Wits},
+	{"Haggling", Wits},
+	{"History", Wits},
+	{"Religion", Wits},
+	{"Woodcutting", Dexterity},
 	{"CarryCapacity"},
 	{"Level"},
-	{"Hits", ColorRed, ColorGreen},
-	{"Mana", ColorBlue},
-	{"Faith", ColorYellow},
+	{"Hits"},
+	{"Mana"},
+	{"Faith"},
 	{"Poison"},
 	{"Illness"},
 	{"Corrosion"},
@@ -46,4 +47,20 @@ assert_enum(abilityi, Freezing)
 
 ability_s abilityi::getindex() const {
 	return (ability_s)(this - bsdata<abilityi>::elements);
+}
+
+color_s get_negative_color(ability_s v) {
+	switch(v) {
+	case Hits: return ColorRed;
+	default: return ColorNone;
+	}
+}
+
+color_s get_positive_color(ability_s v) {
+	switch(v) {
+	case Hits: return ColorGreen;
+	case Mana: return ColorBlue;
+	case Faith: return ColorYellow;
+	default: return ColorNone;
+	}
 }

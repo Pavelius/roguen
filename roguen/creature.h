@@ -131,3 +131,5 @@ bool ispresent(const void* p);
 void player_levelup();
 
 creature* player_create(point m, variant kind, bool female);
+
+int get_maximum_faith(creature* p);

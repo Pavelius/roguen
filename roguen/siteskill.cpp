@@ -12,7 +12,7 @@
 
 extern indexa indecies;
 extern point last_index;
-siteskilla	last_actions;
+siteskilla last_actions;
 siteskilli* last_action;
 
 bool allow_targets(const variants& conditions);

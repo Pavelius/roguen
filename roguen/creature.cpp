@@ -720,6 +720,7 @@ static void update_room(creature* player) {
 
 static void update_skills() {
 	for(auto& e : bsdata<abilityi>()) {
+		// Pure skill get bonus if you learn it
 		if(!e.base)
 			continue;
 		auto i = e.getindex();
@@ -921,14 +922,13 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 }
 
 int	creature::getexpreward() const {
-	static ability_s skills[] = {Strenght, Dexterity, WeaponSkill, BalisticSkill};
-	auto result = 0;
-	for(auto v : skills) {
-		auto n = get(v) / 10;
-		if(result < n)
-			result = n;
-	}
-	return abilities[Level] * 10 + result;
+	static ability_s skills[] = {Strenght, Dexterity, Wits, WeaponSkill, BalisticSkill};
+	auto result = get(Strenght) / 10;
+	result += get(Dexterity) / 15;
+	result += get(WeaponSkill) / 10;
+	result += get(BalisticSkill) / 10;
+	result += getmaximum(Hits) / 2;
+	return result;
 }
 
 void creature::kill() {
@@ -1081,8 +1081,8 @@ static int add_ability(ability_s i, int value, int current_value, int minimum, i
 		value = maximum;
 	auto delta = value - current_value;
 	if(interactive && delta != 0) {
-		auto color_positive = bsdata<abilityi>::elements[i].positive;
-		auto color_negative = bsdata<abilityi>::elements[i].negative;
+		auto color_positive = get_positive_color(i);
+		auto color_negative = get_negative_color(i);
 		if(color_negative != ColorNone)
 			player->fixvalue(delta, color_positive, color_negative);
 	}
@@ -1676,4 +1676,8 @@ int	creature::getmaximum(ability_s v) const {
 
 bool ispresent(const void* p) {
 	return ((creature*)p)->ispresent();
+}
+
+int get_maximum_faith(creature* p) {
+	return p->get(Religion) / 4;
 }
