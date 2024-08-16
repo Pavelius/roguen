@@ -18,15 +18,7 @@ using namespace draw;
 void main_util();
 #endif
 
-static bool test_creatures() {
-	collection<creature> source;
-	source.select();
-	source.match(fntis<creature, &creature::ishuman>, true);
-	return source.getcount() == 1;
-}
-
 static void initializating() {
-	//bsreq::read("rules/Form.txt");
 	bsreq::read("rules/Basic.txt");
 	bsreq::read("rules/Tiles.txt");
 	bsreq::read("rules/Items.txt");
@@ -37,7 +29,6 @@ static void initializating() {
 	bsreq::read("rules/Sites.txt");
 	bsreq::read("rules/Advancement.txt");
 	bsreq::read("rules/Skills.txt");
-	//readl("Chats", speech::read);
 	readl("NameCharacters", charname::read);
 	speech_initialize();
 	talki::read();
@@ -98,8 +89,6 @@ static void main_start() {
 	player->wears[MeleeWeapon].setidentified(1);
 	equip_item("Bones");
 	game.setowner(player);
-	if(!test_creatures())
-		return;
 	game.newgame();
 }
 

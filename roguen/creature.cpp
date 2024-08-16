@@ -62,7 +62,7 @@ static creature* findalive(point m) {
 }
 
 static void pay_movement(creature* player) {
-	auto cost = 100;
+	auto cost = 100 - player->get(Dexterity) / 4;
 	if(!player->is(Fly)) {
 		auto& ei = area->getfeature(player->getposition());
 		if(ei.movedifficult)
@@ -72,10 +72,7 @@ static void pay_movement(creature* player) {
 }
 
 static void pay_attack(creature* player, const item& weapon) {
-	auto cost = 120 - weapon.geti().weapon.speed * 4 - player->get(Dexterity) / 4;
-	if(cost < 20)
-		cost = 20;
-	player->waitseconds(cost);
+	player->waitseconds(100);
 }
 
 static ability_s damage_ability(ability_s v) {
@@ -734,7 +731,6 @@ void creature::update_abilities() {
 	abilities[DamageMelee] += get(Strenght) / 15;
 	abilities[DamageRanged] += get(Dexterity) / 15;
 	abilities[Armor] += get(Strenght) / 15;
-	abilities[Speed] += 25 + get(Dexterity) / 5;
 	if(is(Stun)) {
 		abilities[WeaponSkill] /= 2;
 		abilities[BalisticSkill] /= 2;
@@ -869,7 +865,6 @@ static void apply_damage(creature* player, int damage, int pierce, bool use_bloc
 }
 
 static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
-	auto roll_result = d100();
 	auto enemy_name = enemy->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
@@ -878,13 +873,18 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
 	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	attack_skill += player->get(weapon_ability);
+	auto roll_result = d100();
+	//if(roll_result > attack_skill) {
+	//	if(damage_percent > 20)
+	//		damage_percent = 20;
+	//}
 	if(damage_percent)
 		damage = damage * damage_percent / 100;
 	damage += (attack_skill - roll_result) / 10;
-	if(roll_result > attack_skill) // Miss is hurt
-		damage -= 1;
-	if(damage < 0)
-		damage = 0;
+	if(roll_result > attack_skill)
+		damage -= 2; // If we miss 
+	if(damage <= 0)
+		damage = 1;
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
 		special_attack(player, weapon, enemy, pierce, damage);
@@ -1199,7 +1199,7 @@ static void use_skills() {
 void creature::makemove() {
 	// Recoil form action
 	if(wait_seconds > 0) {
-		wait_seconds -= get(Speed);
+		wait_seconds -= 25;
 		return;
 	}
 	pushvalue push_player(player, this);

@@ -1,6 +1,11 @@
 #Advancement
 
+DarkElf 1 Ability
+ elements Strenght+20 Dexterity+30 Hits+15 Wits+15 WeaponSkill+20 BalisticSkill+25
 DarkElf 1 Equipment
- elements Dagger Strenght+20 Dexterity+30 Hits+15 Wits+15 WeaponSkill+15 BalisticSkill+20
+ elements Sword LeatherArmor
+
+Human 1 Ability
+ elements Strenght+20 Dexterity+20 Hits+20 Wits+10 WeaponSkill+20 BalisticSkill+20 Religion+20
 Human 1 Equipment
- elements Dagger Strenght+20 Dexterity+20 Hits+20 Wits+10 WeaponSkill+20 BalisticSkill+20 Religion+20
+ elements Dagger

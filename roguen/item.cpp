@@ -108,6 +108,8 @@ void item::create(const itemi* pi, int count) {
 		return;
 	clear();
 	type = pi - bsdata<itemi>::elements;
+	if(pi->count)
+		count = count * pi->count;
 	if(count)
 		setcount(count);
 	else if(pi->count > 1)

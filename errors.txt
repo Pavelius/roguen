@@ -1,2 +1,18 @@
-﻿In file `Names.txt`:
- Define translation for `Religion`
+﻿In file `rules/Items.txt`:
+ Line 46: Not found requisit `speed`
+ Line 50: Not found requisit `speed`
+ Line 55: Not found requisit `speed`
+ Line 61: Not found requisit `speed`
+ Line 65: Not found requisit `speed`
+ Line 69: Not found requisit `speed`
+ Line 73: Not found requisit `speed`
+ Line 77: Not found requisit `speed`
+ Line 80: Not found requisit `speed`
+ Line 83: Not found requisit `speed`
+ Line 86: Not found requisit `speed`
+ Line 94: Not found requisit `speed`
+ Line 97: Not found requisit `speed`
+ Line 100: Not found requisit `speed`
+ Line 104: Not found requisit `speed`
+ Line 107: Not found requisit `speed`
+ Line 110: Not found requisit `speed`

@@ -127,7 +127,6 @@ void item::getinfo(stringbuilder& sb) const {
 	sb.adds(getfullname());
 	addv(sb, "Damage", ei.weapon.damage);
 	addv(sb, "Pierce", ei.weapon.pierce);
-	addv(sb, "Speed", ei.weapon.speed);
 	wearing(sb, ei.wearing);
 }
 
