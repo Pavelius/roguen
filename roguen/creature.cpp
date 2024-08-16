@@ -225,6 +225,17 @@ static void restore(creature* player, ability_s a, ability_s test) {
 	}
 }
 
+static void magic_restore(creature* player, ability_s a, int max) {
+	auto v = player->get(a);
+	auto mv = player->basic.abilities[a];
+	if(v < mv && max) {
+		auto n = mv - v;
+		if(n > max)
+			n = max;
+		player->add(a, rand() % n);
+	}
+}
+
 static void add(creature* player, ability_s id, int value, int minimal = 0) {
 	auto i = player->get(id) + value;
 	if(i < minimal)
@@ -394,18 +405,18 @@ static void check_trap(creature* player, point m) {
 	}
 }
 
-static bool check_webbed_tile(creature* p, point m) {
-	if(p->is(IgnoreWeb))
+static bool check_webbed_tile(creature* player, point m) {
+	if(player->is(IgnoreWeb))
 		return true;
-	if(p->is(Webbed)) {
-		p->wait(2);
-		if(!p->roll(Strenght)) {
-			p->act(getnm("WebEntagled"));
-			p->wait();
-			p->fixactivity();
+	if(player->is(Webbed)) {
+		player->wait(2);
+		if(!player->roll(Strenght)) {
+			player->act(getnm("WebEntagled"));
+			player->wait();
+			player->fixactivity();
 			return false;
 		}
-		p->act(getnm("WebBreak"));
+		player->act(getnm("WebBreak"));
 		area->remove(m, Webbed);
 	}
 	return true;
@@ -872,26 +883,26 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 	damage += player->get(damage_ability(weapon_ability));
 	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
 	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
+	if(weapon.isidentified()) { // Blessed or artifact weapon effective only if identified
+		if(weapon.is(Blessed))
+			damage += 1; // Blessed weapon do more damage
+		else if(weapon.is(Artifact))
+			damage += 2; // Artifact weapon do more damage
+	}
 	attack_skill += player->get(weapon_ability);
 	auto roll_result = d100();
-	//if(roll_result > attack_skill) {
-	//	if(damage_percent > 20)
-	//		damage_percent = 20;
-	//}
 	if(damage_percent)
 		damage = damage * damage_percent / 100;
 	damage += (attack_skill - roll_result) / 10;
 	if(roll_result > attack_skill)
 		damage -= 2; // If we miss 
-	if(damage <= 0)
-		damage = 1;
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
 		special_attack(player, weapon, enemy, pierce, damage);
 	auto armor = enemy->get(Armor);
 	apply_pierce(armor, pierce);
 	auto damage_result = damage - armor;
-	if(damage_result > 0 && weapon.is(MissHalfTime) && (d100() < 50))
+	if(damage_result > 0 && weapon.is(Cursed) && (d100() < 50)) // Cursed weapon miss half time
 		damage_result = 0;
 	if(damage_result <= 0) {
 		player->logs(getnm("AttackMiss"), damage_result, enemy->getname(), roll_result, damage, -armor);
@@ -924,7 +935,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 int	creature::getexpreward() const {
 	static ability_s skills[] = {Strenght, Dexterity, Wits, WeaponSkill, BalisticSkill};
 	auto result = get(Strenght) / 10;
-	result += get(Dexterity) / 15;
+	result += get(Dexterity) / 20;
 	result += get(WeaponSkill) / 10;
 	result += get(BalisticSkill) / 10;
 	result += getmaximum(Hits) / 2;
@@ -1493,20 +1504,20 @@ void creature::everyminute() {
 	if(is(Regeneration))
 		restore(this, Hits, Strenght);
 	if(is(ManaRegeneration))
-		restore(this, Mana, Wits);
+		magic_restore(this, Mana, 3);
+	restore(this, Mana, Wits);
 	check_stun(this);
 	posion_recovery(this, Poison);
 }
 
 void creature::every10minutes() {
-	restore(this, Mana, Wits);
+	restore(this, Hits, Strenght);
 }
 
 void creature::every30minutes() {
 }
 
 void creature::every4hour() {
-	restore(this, Hits, Strenght);
 }
 
 void apply_ability(ability_s v, int counter) {

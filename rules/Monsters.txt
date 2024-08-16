@@ -55,6 +55,9 @@ Rabbit avatar(7)
 RabbitFemale avatar(8) parent(Rabbit)
  abilities Strenght(5) Dexterity(22) Wits(3) WeaponSkill(8) Hits(2)
  use Bite
+Rat avatar(293) friendly(-10)
+ abilities Strenght(5) Dexterity(30) Wits(3) WeaponSkill(15) Hits(2)
+ use Bite
 ShamblingMound avatar(9) friendly(-20)
  abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) Hits(30) Level(4)
  use Bite

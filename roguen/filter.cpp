@@ -67,7 +67,7 @@ static bool filter_wounded(const void* object) {
 
 static bool filter_damaged(const void* object) {
 	auto p = (item*)object;
-	return p->iswounded();
+	return p->isdamaged();
 }
 
 static bool filter_unaware(const void* object) {

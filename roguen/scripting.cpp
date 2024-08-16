@@ -60,7 +60,7 @@ extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
 
-static adat<rect, 32> locations;
+static adat<rect, 64> locations;
 static adat<point, 512> points;
 static rect			correct_conncetors;
 static direction_s	last_direction;
@@ -290,32 +290,51 @@ static void create_road(const rect& rc) {
 }
 
 static void create_city_level(const rect& rc, int level) {
-	const int min_building_size = 7;
-	const int max_building_size = 12;
+	const int min_building_size = 5;
+	const int max_building_size = 8;
 	auto w = rc.width();
 	auto h = rc.height();
-	if(w <= max_building_size && h <= max_building_size) {
-		if(w >= min_building_size && h >= min_building_size)
-			locations.add({rc.x1 + 1, rc.y1 + 1, rc.x2 - 1, rc.y2 - 1});
+	if(w <= max_building_size + 1 || h <= max_building_size + 1) {
+		auto x1 = rc.x1;
+		auto y1 = rc.y1;
+		if(w > h)
+			w = h;
+		if(h > w)
+			h = w;
+		if(h > max_building_size)
+			h = max_building_size;
+		if(h != rc.height())
+			y1 += rand() % (rc.height() - h);
+		if(w > max_building_size)
+			w = max_building_size;
+		if(w != rc.width())
+			x1 += rand() % (rc.width() - w);
+		locations.add({x1 + 1, y1 + 1, x1 + w - 1, y1 + h - 1});
 		return;
 	}
-	auto m = xrand(40, 70);
+	auto m = xrand(40, 60);
 	auto r = (d100() < 50) ? 0 : 1;
-	if(w / 3 >= h / 2)
+	if(w > h)
 		r = 0;
-	else if(h / 3 >= w / 2)
+	else if(h > w)
 		r = 1;
 	auto rd = 2;
-	if(level > 2)
+	if(level == 2)
+		rd = 1;
+	else if(level > 2)
 		rd = 0;
 	if(r == 0) {
 		auto w1 = (w * m) / 100; // horizontal
+		if(w1 < min_building_size)
+			w1 = min_building_size;
 		create_city_level({rc.x1, rc.y1, rc.x1 + w1 - rd - 1, rc.y2}, level + 1);
 		create_city_level({rc.x1 + w1, rc.y1, rc.x2, rc.y2}, level + 1);
 		if(rd)
 			create_road({rc.x1 + w1 - rd, rc.y1, rc.x1 + w1 - 1, rc.y2});
 	} else {
 		auto h1 = (h * m) / 100; // vertial
+		if(h1 < min_building_size)
+			h1 = min_building_size;
 		create_city_level({rc.x1, rc.y1, rc.x2, rc.y1 + h1 - rd - 1}, level + 1);
 		create_city_level({rc.x1, rc.y1 + h1, rc.x2, rc.y2}, level + 1);
 		if(rd)
@@ -1431,10 +1450,9 @@ static void inventory(int bonus) {
 		} else {
 			auto ni = choose_stuff(owner->getwearslot(pi));
 			if(ni) {
-				if(!player->isallow(*ni)) {
+				if(!player->isallow(*ni))
 					console.addn(getnm("YouCantWearItem"), ni->getname());
-					draw::pause();
-				} else {
+				else {
 					iswap(*ni, *pi);
 					player->update();
 				}

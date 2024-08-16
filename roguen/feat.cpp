@@ -12,7 +12,6 @@ BSDATA(feati) = {
 	{"StunningHit"},
 	{"PierceHit"},
 	{"MightyHit"},
-	{"MissHalfTime"},
 	{"Vorpal"},
 	{"AcidDamage"},
 	{"FireDamage"},

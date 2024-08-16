@@ -35,6 +35,7 @@ Dagger: Кинжал
 HandPick: Кирка
 Halberd: Алебарда
 Spear: Копье
+Staff: Посох
 StrangeSword: Меч
 Sword: Меч
 

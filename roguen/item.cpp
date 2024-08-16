@@ -133,21 +133,19 @@ void item::damage(int bonus) {
 		return;
 	if(getmagic() == Artifact)
 		return;
-	if(bonus >= 0) {
-		if(!bonus)
-			bonus = 1;
+	if(iscountable())
+		setcount(getcount() - 1); // Countable items break always
+	else if(bonus >= 0) {
 		// Damage item state
-		bool need_break = (bonus + broken >= 7);
+		bool need_break = (broken >= 7);
 		if(need_break)
 			setcount(getcount() - 1);
 		else
-			broken += bonus;
+			broken++;
 	} else {
 		// Repair items
-		if(broken < -bonus)
-			broken = 0;
-		else
-			broken -= -bonus;
+		if(broken > 0)
+			broken--;
 	}
 }
 

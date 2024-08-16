@@ -27,6 +27,7 @@ Outsider: Древний
 PriestOfTheOne: Священник Единого
 Rabbit: Кролик
 RabbitFemale: Крольчиха
+Rat: Крыса
 ShamblingMound: Ползущая насыпь
 Shopkeeper: Владелец магазина
 Skeleton: Скелет
