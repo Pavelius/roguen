@@ -387,6 +387,25 @@ static bool allow_corridor(point index, direction_s dir, bool linkable = false) 
 	return true;
 }
 
+static void lock_door(point m) {
+	auto ph = area->getfeature(m).getlocked();
+	if(ph) {
+		area->setfeature(m, ph - bsdata<featurei>::elements);
+		area->total.doors_locked++;
+	}
+}
+
+static void lock_all_doors(int bonus) {
+	for(point m(last_rect.x1, last_rect.y1 - 1); m.x < last_rect.x2; m.x++)
+		lock_door(m);
+	for(point m(last_rect.x1, last_rect.y2 + 1); m.x < last_rect.x2; m.x++)
+		lock_door(m);
+	for(point m(last_rect.x1 - 1, last_rect.y1); m.y < last_rect.y2; m.y++)
+		lock_door(m);
+	for(point m(last_rect.x2 + 1, last_rect.y1); m.y < last_rect.y2; m.y++)
+		lock_door(m);
+}
+
 static void create_door(point m, int floor, int wall, bool hidden, bool locked, bool stuck) {
 	const auto& door = bsdata<featurei>::elements[getdoor()];
 	if(!door.isvisible())
@@ -400,9 +419,10 @@ static void create_door(point m, int floor, int wall, bool hidden, bool locked, 
 	} else if(locked) {
 		area->settile(m, floor);
 		auto ph = door.getlocked();
-		if(ph)
+		if(ph) {
 			area->setfeature(m, ph - bsdata<featurei>::elements);
-		area->total.doors_locked++;
+			area->total.doors_locked++;
+		}
 	} else if(stuck) {
 		area->settile(m, floor);
 		auto ph = door.getstuck();
@@ -1476,15 +1496,12 @@ static int free_objects_count() {
 }
 
 static void debug_message(int bonus) {
-	//dialog_message(getdescription("LoseGame1"));
-	//player->speech(ids("PickPockets", "Speech"));
 	console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
 	auto m = player->getposition();
 	console.addn("Position %1i, %2i.", m.x, m.y);
 	auto f = area->features[m];
 	if(f)
 		console.adds("Feature %1 (%2i).", bsdata<featurei>::elements[f].getname(), f);
-	//draw::pause();
 }
 
 static void open_locked_door(int bonus) {
@@ -2391,6 +2408,7 @@ BSDATA(script) = {
 	{"Inventory", inventory},
 	{"JumpToSite", jump_to_site},
 	{"LoseGame", lose_game},
+	{"LockAllDoors", lock_all_doors},
 	{"MakeScreenshoot", make_screenshoot},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
