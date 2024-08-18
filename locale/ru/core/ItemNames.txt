@@ -67,6 +67,8 @@ RingOfWarrior: Кольцо воина
 Arrow: Стрела
 LongBow: Длинный лук
 
+Bandage: Бандаж
+LockPick: Отмычка
 Lags: Древесина
 SmallLags: Маленькая ветка
 Torch: Факел

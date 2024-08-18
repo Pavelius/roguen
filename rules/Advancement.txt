@@ -3,7 +3,7 @@
 DarkElf 1 Ability
  elements Strenght+25 Dexterity+30 Hits+15 Wits+15 WeaponSkill+20 BalisticSkill+25 Thievery+15 Darkvision
 DarkElf 1 Equipment
- elements Sword LeatherArmor
+ elements Sword LeatherArmor LockPick+10
 
 Human 1 Ability
  elements Strenght+30 Dexterity+20 Hits+20 Wits+10 WeaponSkill+20 BalisticSkill+20 Religion+20

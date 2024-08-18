@@ -79,6 +79,7 @@ ThereIsLying: Здесь лежит
 Tree: Дерево
 TwoHanded: Двуручное
 UseItem: Использовать предмет
+UseNextItem: %герой израсходовал%а %1. 
 VisualizeProgress: Мы %-1 и осталось примерно %-2.
 WantBuyItem: Вы действительно хотите купить %1 за [%2i] монет?
 WantSellItem: Хотите продать %1 за [%2i] монет?

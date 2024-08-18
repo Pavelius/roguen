@@ -55,7 +55,6 @@ public:
 	void			fixappear();
 	bool			fixaction(const char* id, const char* action, ...) const;
 	int				get(ability_s v) const { return abilities[v]; }
-	int				getexpreward() const;
 	int				get(const spelli& e) const { return spells[bsid(&e)]; }
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;

@@ -55,7 +55,7 @@ rect				last_rect;
 roomi*				last_room;
 const sitei*		last_site;
 greatneed*			last_need;
-int					last_value, last_cap;
+int					last_value, last_roll_result, last_cap;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
@@ -1094,7 +1094,7 @@ template<> void ftscript<shapei>(int value, int counter) {
 }
 
 template<> void ftscript<itemi>(int value, int counter) {
-	auto count = script_count(counter, 1);
+	int count = script_count(counter, 1);
 	switch(modifier) {
 	case InPlayerBackpack:
 		for(auto i = 0; i < count; i++)
@@ -1163,10 +1163,6 @@ template<> void ftscript<feati>(int value, int counter) {
 	else
 		player->feats.remove(value);
 }
-
-//template<> bool fttest<conditioni>(int value, int counter) {
-//	return player->is((condition_s)value);
-//}
 
 static void move_left(int bonus) {
 	player->movestep(West);
@@ -1382,6 +1378,11 @@ static void gather_item(variant v, int bonus) {
 		player->act(getnm("YouGatherItems"), it.getfullname());
 		player->additem(it);
 	}
+}
+
+static bool empthy_next_condition(int bonus) {
+	script_begin++;
+	return true;
 }
 
 static void gather_next_item(int bonus) {
@@ -1717,6 +1718,31 @@ static void use_item(int bonus) {
 		player->use(*p);
 }
 
+static void use_next_item(int bonus) {
+	auto v = *script_begin++;
+	const char* title = getnm("UseNextItem");
+	bonus = script_count(bonus, 1);
+	if(!player->ishuman())
+		title = 0;
+	if(v.iskind<itemi>()) {
+		auto p = bsdata<itemi>::elements + v.value;
+		for(auto& e : player->wears) {
+			if(!bonus)
+				break;
+			if(!e.is(p))
+				continue;
+			while(e && bonus > 0) {
+				bonus--;
+				if(title) {
+					title = 0;
+					player->act(title, e.getname());
+				}
+				e.use();
+			}
+		}
+	}
+}
+
 static void use_magic_item_power(int bonus) {
 	itema items;
 	items.selectbackpack(player);
@@ -1976,11 +2002,12 @@ static void wait_hour(int bonus) {
 static void roll_value(int bonus) {
 	if(!player)
 		return;
+	auto p = bsdata<abilityi>::elements + last_ability;
 	if(!player->roll(last_ability, bonus)) {
-		player->logs(getnm("YouMakeRoll"), last_value, player->get(last_ability) + bonus, bonus);
+		player->logs(getnm("YouFailRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
 		script_stop();
 	} else
-		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
+		player->logs(getnm("YouMakeRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
 }
 
 static void roll_action(int bonus) {
@@ -2279,6 +2306,36 @@ static bool is_npc(int bonus) {
 	return player->is(Local) != 0;
 }
 
+static bool have_next_object(variant v) {
+	if(v.iskind<itemi>())
+		return player->haveitem(bsdata<itemi>::begin() + v.value);
+	else if(v.iskind<abilityi>())
+		return player->abilities[v.value] >= v.counter;
+	else if(v.iskind<feati>())
+		return player->is((feat_s)v.value);
+	else if(v.iskind<listi>()) {
+		for(auto v : bsdata<listi>::elements[v.value].elements) {
+			if(have_next_object(v))
+				return true;
+		}
+	} else if(v.iskind<randomizeri>()) {
+		for(auto v : bsdata<randomizeri>::elements[v.value].chance) {
+			if(have_next_object(v))
+				return true;
+		}
+	}
+	return false;
+}
+
+static bool is_have_next(int bonus) {
+	return have_next_object(*script_begin++) == (bonus >= 0);
+}
+
+static void have_next(int bonus) {
+	if(!is_have_next(bonus))
+		script_stop();
+}
+
 static bool is_animal(int bonus) {
 	return !player->canspeak();
 }
@@ -2450,7 +2507,7 @@ BSDATA(script) = {
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
 	{"GainSatiation", gain_satiation},
-	{"GatherNextItem", gather_next_item},
+	{"GatherNextItem", gather_next_item, empthy_next_condition},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCave", generate_cave},
 	{"GenerateCorridors", generate_corridors},
@@ -2463,6 +2520,7 @@ BSDATA(script) = {
 	{"GenerateVillage", generate_cityscape},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
+	{"HaveNext", have_next, is_have_next},
 	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
 	{"JumpToSite", jump_to_site},
@@ -2512,5 +2570,6 @@ BSDATA(script) = {
 	{"WinGame", win_game},
 	{"Wounded", standart_filter, is_wounded},
 	{"UseItem", use_item},
+	{"UseNextItem", use_next_item, empthy_next_condition},
 };
 BSDATAF(script)

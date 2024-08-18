@@ -5,6 +5,8 @@ RoomsWhereGemsCanBe
 
 #SiteSkill
 
+BindWounds skill(Wits) keyid("B")
+ effect HaveNext Bandage HaveNext Blooding+1 UseNextItem Bandage Blooding-100 Heal+1
 GatherInformation skill(Wits) keyid("C")
  effect SelectNeutralCreatures FilterClose ChooseCreature ForEachOpponent Chatting
 GatherSemiMellowHerbs skill(Herbalism)
@@ -12,7 +14,7 @@ GatherSemiMellowHerbs skill(Herbalism)
 GatherMellowHerbs skill(Herbalism)
  effect SelectFeatures Filter HerbsFull ForEachFeature GatherNextItem GrassHerbs RemoveFeature+50 FailRollAction RepairItem-1
 OpenDoorLock skill(Thievery)
- effect SelectFeatures Filter LockedDoor ForEachFeature RollAction Door GainExperience+1
+ effect HaveNext LockPick SelectFeatures Filter LockedDoor ForEachFeature UseNextItem LockPick RollAction DestroyFeature Door GainExperience+1
 SacrificeEvilAltar skill(Religion)
  effect SelectFeatures Filter AltarEvil ForEachFeature RollAction GainExperience+1
 SearchRoomForGems skill(Gemcutting)

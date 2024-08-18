@@ -13,9 +13,10 @@ YouBrokeItem: %герой сломал%а %-$1.
 YouCantMineHere: ¬ы не можете копать здесь.
 YouCrashWall: %герой разрушил%а стену %1.
 YouDamageItem: %герой повредил%а %-$1.
-YouFailRoll: %герой сделал%а бросок.
-YouMakeRoll: %герой не сделал%а бросок. 
+YouMakeRoll: %герой сделал%а бросок %1 (%2i<=%3i).
+YouFailRoll: %герой [-не сделал%а] бросок %1 (%2i>%3i). 
 
+BindWounds: ѕерев€зать раны
 GatherInformation: ”знать слухи
 GatherMellowHerbs: —обрать спелые травы
 GatherSemiMellowHerbs: —обрать травы

@@ -78,3 +78,11 @@ bool wearable::useitem(const itemi* pi) {
 	}
 	return false;
 }
+
+bool wearable::haveitem(const itemi* p) const {
+	for(auto& v : wears) {
+		if(v.is(p))
+			return true;
+	}
+	return false;
+}

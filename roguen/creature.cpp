@@ -16,6 +16,7 @@
 #include "triggern.h"
 
 extern collection<roomi> rooms;
+extern int last_roll_result;
 
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(const variants& effects);
@@ -310,7 +311,7 @@ static void drop_treasure(creature* pe) {
 }
 
 static void nullify_elements(creature* player) {
-	if(player->is(Burning) || player->is(Freezing)) {
+	if(player->is(Burning) && player->is(Freezing)) {
 		player->set(Burning, 0);
 		player->set(Freezing, 0);
 	}
@@ -1131,7 +1132,7 @@ bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	if(value <= 0)
 		return false;
-	auto result = d100();
+	last_roll_result = d100();
 	if(bonus == -2000) {
 		value = value / 2;
 		bonus = 0;
@@ -1139,12 +1140,12 @@ bool creature::roll(ability_s v, int bonus) const {
 		value = value / 3;
 		bonus = 0;
 	}
-	last_value = (value - result) / 10;
-	if(result <= 5)
+	last_value = (value - last_roll_result) / 10;
+	if(last_roll_result <= 5)
 		return true;
-	else if(result >= 95)
+	else if(last_roll_result >= 95)
 		return false;
-	return result <= (value + bonus);
+	return last_roll_result <= (value + bonus);
 }
 
 void adventure_mode();

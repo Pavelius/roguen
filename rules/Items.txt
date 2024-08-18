@@ -39,6 +39,7 @@ FancyStones cost(100) avatar(708)
 PreciousStones cost(500) avatar(710) 
 GemStones cost(1000) avatar(704) 
 
+Bandage cost(10) avatar(516)
 LockPick cost(5) avatar(294) 
 Lags cost(10) avatar(395) 
 SmallLags cost(10) avatar(411) 
