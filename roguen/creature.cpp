@@ -1,4 +1,5 @@
 #include "areapiece.h"
+#include "answers.h"
 #include "boost.h"
 #include "charname.h"
 #include "creature.h"
@@ -20,6 +21,25 @@ void apply_spell(const spelli& ei, int level);
 bool choose_targets(const variants& effects);
 void damage_item(item& it);
 int getfloor();
+
+static int get_experience_reward(creature* p) {
+	static int levels[] = {7, 15, 35, 65, 120, 175, 270, 420, 650, 975, 1400, 2000, 3000};
+	auto r = p->get(Level);
+	return maptbl(levels, r);
+}
+
+static int get_next_level_experience(int level) {
+	static int levels[] = {1000, 2000, 3500, 5000, 7000, 9000, 12000, 15000, 18000};
+	const auto m = sizeof(levels) / sizeof(levels[0]);
+	auto n = maptbl(levels, level);
+	if(level >= m)
+		n += (level - m + 1) * 10000;
+	return n;
+}
+
+static bool need_levelup(int experience, int level) {
+	return experience >= get_next_level_experience(level);
+}
 
 bool creature::fixaction(const char* id, const char* action, ...) const {
 	const char* result = 0;
@@ -62,7 +82,7 @@ static creature* findalive(point m) {
 }
 
 static void pay_movement(creature* player) {
-	auto cost = 100 - player->get(Dexterity) / 4;
+	auto cost = 100 + (30 - player->get(Dexterity)) / 4;
 	if(!player->is(Fly)) {
 		auto& ei = area->getfeature(player->getposition());
 		if(ei.movedifficult)
@@ -200,7 +220,7 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 		damage += 2;
 	if(attack_effect(player, weapon, ColdDamage)) {
 		enemy->add(Freezing, 2);
-		area->setflag(player->getposition(), Iced);
+		area->setflag(enemy->getposition(), Iced);
 	}
 	if(attack_effect(player, weapon, FireDamage))
 		enemy->add(Burning, 2);
@@ -362,7 +382,7 @@ static bool check_stairs_movement(creature* p, point m) {
 	auto pf = ei.getlead();
 	if(pf) {
 		if(p->ishuman()) {
-			if(draw::yesno(getnm(str("Move%1", ei.id)))) {
+			if(yesno(getnm(str("Move%1", ei.id)))) {
 				game.enter(game.position, game.level + ei.lead, pf, Center);
 				return false;
 			}
@@ -427,7 +447,7 @@ static bool check_leave_area(creature* p, point m) {
 		if(p->ishuman()) {
 			auto direction = movedirection(m);
 			auto np = to(game.position, direction);
-			if(draw::yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
+			if(yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
 				game.enter(np, 0, 0, direction);
 		}
 		p->wait();
@@ -740,7 +760,7 @@ static void update_skills() {
 
 void creature::update_abilities() {
 	abilities[DamageMelee] += get(Strenght) / 15;
-	abilities[DamageRanged] += get(Dexterity) / 15;
+	abilities[DamageRanged] += get(Dexterity) / 10;
 	abilities[Armor] += get(Strenght) / 15;
 	if(is(Stun)) {
 		abilities[WeaponSkill] /= 2;
@@ -898,7 +918,7 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		damage -= 2; // If we miss 
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
-		special_attack(player, weapon, enemy, pierce, damage);
+		special_attack(player, weapon, enemy, pierce, damage); // If hit critical
 	auto armor = enemy->get(Armor);
 	apply_pierce(armor, pierce);
 	auto damage_result = damage - armor;
@@ -932,30 +952,6 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		weapon.damage();
 }
 
-static int get_reward(int v, int p1, int p2 = -1, int p3 = -1, int p4 = -1) {
-	auto r = 0;
-	if(p1 != -1 && v >= p1)
-		r += 1;
-	if(p2 != -1 && v >= p2)
-		r += 2;
-	if(p3 != -1 && v >= p3)
-		r += 4;
-	if(p4 != -1 && v >= p4)
-		r += 8;
-	return r;
-}
-
-int	creature::getexpreward() const {
-	auto result = get_reward(get(Strenght), 30, 50, 80);
-	result += get_reward(get(Dexterity), 40, 60);
-	result += get_reward(get(WeaponSkill), 20, 40, 60);
-	result += get_reward(get(BalisticSkill), 50, 70);
-	result += get_reward(getmaximum(Hits), 10, 30, 50, 80);
-	if(!result)
-		result = 1;
-	return result;
-}
-
 void creature::kill() {
 	if(d100() < 40)
 		area->setflag(getposition(), Blooded);
@@ -965,7 +961,7 @@ void creature::kill() {
 	fixremove();
 	drop_treasure(this);
 	if(enemy == this && player)
-		player->experience += getexpreward();
+		player->experience += get_experience_reward(enemy);
 	fire_trigger(WhenCreatureP1Dead, getkind());
 	clear();
 	if(human_killed)

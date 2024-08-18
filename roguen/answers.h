@@ -15,7 +15,6 @@ class answers {
 	adat<element, 32>	elements;
 public:
 	typedef void(*fnpaint)(int index, const void* value, const char* text, fnevent press_event);
-	static answers*		last;
 	static fnevent		afterpaint;
 	static fnevent		beforepaint;
 	static fnpaint		paintcell;
@@ -28,6 +27,7 @@ public:
 	static const char*	resid;
 	static const char*	cancel_text;
 	static bool			show_tips;
+	static bool			choosing;
 	answers() : sc(buffer) {}
 	constexpr operator bool() const { return elements.count != 0; }
 	void				add(const void* value, const char* name, ...) { addv(value, name, xva_start(name)); }
@@ -49,7 +49,8 @@ public:
 	void				remove(int index) { elements.remove(index, 1); }
 	void				sort();
 };
-namespace draw {
+extern answers an;
+
 void information(const char* format, ...);
 void output(const char* format, ...);
 void pause();
@@ -57,4 +58,3 @@ void pause(const char* title, ...);
 void pausenc(const char* title, ...);
 bool yesno(const char* title, ...);
 void warning(const char* format, ...);
-}

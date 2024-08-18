@@ -35,8 +35,7 @@ static void remove_item(creature* p, const itemi& ei, int count) {
 }
 
 static const phrasei* ask_answer(const phrasei* p) {
-	answers an;
-	pushvalue push_an(answers::last, &an);
+	an.clear();
 	for(auto pa = p->nextanswer(); pa; pa = pa->nextanswer()) {
 		if(!pa->text)
 			continue;

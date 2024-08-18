@@ -86,7 +86,7 @@ static void say_thank_you(const char* item_name, int count, int coins) {
 		actvf(sb, name, female, ' ', t2, coins);
 	}
 	opponent->say(temp);
-	draw::pause();
+	pause();
 }
 
 static void say_need(const char* suffix, ...) {
@@ -94,7 +94,7 @@ static void say_need(const char* suffix, ...) {
 	if(!pn)
 		return;
 	opponent->sayv(console, pn, xva_start(suffix));
-	draw::pause();
+	pause();
 }
 
 static void apply_answer(void* pv) {
@@ -135,7 +135,7 @@ void add_need_answers(int bonus) {
 		auto rest_count = getrestcount(last_need->score, need_count);
 		if(count > rest_count)
 			count = rest_count;
-		answers::last->add(&e, getnm("IHaveItem"), e.getname(), count);
+		an.add(&e, getnm("IHaveItem"), e.getname(), count);
 	}
 }
 

@@ -39,6 +39,7 @@ StairsDownRoom: Лестница вниз
 StartVillage: Деревня "Клюв грифона"
 StrangeFloraRoom: Дивная растительность
 TheifGuild: Гильдия воров
+TheifGuildTreasure: Сокровищница гильдии воров
 Tavern: Таверна
 TestArea: Тестовая область
 TreasureRoom: Сокровища

@@ -51,7 +51,7 @@ static void complex_say(stringbuilder& sb, const char* format, const char* name)
 			while(len > 0 && (dialog_text[len - 1] == 10 || dialog_text[len - 1] == 13))
 				dialog_text[--len] = 0;
 			named_say(sb, dialog_text, name);
-			draw::pause();
+			pause();
 			format = skipspcr(format + len);
 		}
 	}

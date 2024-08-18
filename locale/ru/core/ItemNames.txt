@@ -89,6 +89,7 @@ ManaPotion: Зелье маны
 PotionOfStrenght: Зелье силы
 PotionOfWits: Зелье разума
 PotionOfWisdow: Зелье мудрости
+PotionOfLearning: Зелье обучения
 RedPotion: Красное зелье
 YellowPotion: Желтое зелье
 

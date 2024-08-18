@@ -6,13 +6,14 @@ const char* answers::prompa;
 const char* answers::resid;
 const char* answers::cancel_text;
 bool answers::show_tips = true;
+bool answers::choosing = false;
 bool answers::interactive = true;
 int answers::column_count = 1;
 stringbuilder* answers::console;
 fnevent answers::beforepaint;
 fnevent answers::afterpaint;
 answers::fnpaint answers::paintcell;
-answers* answers::last;
+answers an;
 
 int answers::compare(const void* v1, const void* v2) {
 	return strcmp(((answers::element*)v1)->text, ((answers::element*)v2)->text);
@@ -55,11 +56,11 @@ void answers::clear() {
 	sc.clear();
 }
 
-void draw::pause() {
+void pause() {
 	pause(getnm("Continue"));
 }
 
-void draw::pause(const char* title, ...) {
+void pause(const char* title, ...) {
 	if(answers::console) {
 		if(!(*answers::console))
 			return;
@@ -71,13 +72,13 @@ void draw::pause(const char* title, ...) {
 		answers::console->clear();
 }
 
-void draw::pausenc(const char* title, ...) {
+void pausenc(const char* title, ...) {
 	char temp[260]; stringbuilder sb(temp);
 	answers an; sb.addv(title, xva_start(title));
 	an.choose(0, temp, true);
 }
 
-bool draw::yesno(const char* title, ...) {
+bool yesno(const char* title, ...) {
 	if(!answers::console)
 		return false;
 	if(title)
@@ -88,7 +89,7 @@ bool draw::yesno(const char* title, ...) {
 	return an.choose();
 }
 
-void draw::information(const char* format, ...) {
+void information(const char* format, ...) {
 	if(!answers::console)
 		return;
 	answers::console->addn("[+");
@@ -96,7 +97,7 @@ void draw::information(const char* format, ...) {
 	answers::console->add("]");
 }
 
-void draw::warning(const char* format, ...) {
+void warning(const char* format, ...) {
 	if(!answers::console)
 		return;
 	answers::console->addn("[-");
@@ -104,7 +105,7 @@ void draw::warning(const char* format, ...) {
 	answers::console->add("]");
 }
 
-void draw::output(const char* format, ...) {
+void output(const char* format, ...) {
 	if(!answers::console)
 		return;
 	answers::console->addx("\n", format, xva_start(format));

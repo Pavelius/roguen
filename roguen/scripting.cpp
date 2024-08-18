@@ -1495,13 +1495,69 @@ static int free_objects_count() {
 	return result;
 }
 
+static int get_base_rate(ability_s a) {
+	switch(a) {
+	case Strenght: return 4;
+	case Wits: case Dexterity: return 3;
+	default: return 1;
+	}
+}
+
+static int get_raise_rate(ability_s a) {
+	auto n = get_base_rate(a);
+	auto v = player->basic.abilities[a];
+	if(v >= 50)
+		n += 1;
+	if(v >= 80)
+		n += 1;
+	return n;
+}
+
+static void add_raise(ability_s a) {
+	auto pb = bsdata<abilityi>::begin() + a;
+	auto v = player->basic.abilities[a];
+	if(!v)
+		return;
+	auto r = get_raise_rate(a);
+	if(player->basic.abilities[SkillPoints] < r)
+		return;
+	an.add(pb, getnm("RaiseSkill"), pb->getname(), v + 1, r);
+}
+
+static void raise_ability_by_skill(ability_s a) {
+	auto r = get_raise_rate(a);
+	player->basic.abilities[SkillPoints] -= r;
+	player->basic.abilities[a]++;
+	player->update();
+}
+
+static void raise_skills(int bonus) {
+	static ability_s skills[] = {Strenght, Dexterity, Wits, WeaponSkill, BalisticSkill};
+	char temp[260]; stringbuilder sb(temp);
+	while(true) {
+		an.clear();
+		for(auto a : skills)
+			add_raise(a);
+		if(!an)
+			break;
+		an.console->add(getnm("RaiseSkillChoose"), player->basic.abilities[SkillPoints]);
+		an.add(0, getnm("RaiseSkillCancel"));
+		auto p = (abilityi*)an.choose();
+		if(!p)
+			break;
+		an.console->clear();
+		raise_ability_by_skill((ability_s)bsdata<abilityi>::source.indexof(p));
+	}
+}
+
 static void debug_message(int bonus) {
-	console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
-	auto m = player->getposition();
-	console.addn("Position %1i, %2i.", m.x, m.y);
-	auto f = area->features[m];
-	if(f)
-		console.adds("Feature %1 (%2i).", bsdata<featurei>::elements[f].getname(), f);
+	//console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
+	//auto m = player->getposition();
+	//console.addn("Position %1i, %2i.", m.x, m.y);
+	//auto f = area->features[m];
+	//if(f)
+	//	console.adds("Feature %1 (%2i).", bsdata<featurei>::elements[f].getname(), f);
+	raise_skills(0);
 }
 
 static void open_locked_door(int bonus) {
@@ -1568,7 +1624,7 @@ static bool payment(creature* player, creature* keeper, const char* object, int 
 		if(answers::console)
 			answers::console->clear();
 		player->actp(getnm("WantBuyItem"), object, coins);
-		if(!draw::yesno(0))
+		if(!yesno(0))
 			return false;
 	}
 	auto allow_coins = player->getmoney();
@@ -1586,7 +1642,7 @@ static bool selling(creature* player, creature* opponent, const char* object, in
 		if(answers::console)
 			answers::console->clear();
 		player->actp(getnm("WantSellItem"), object, coins);
-		if(!draw::yesno(0))
+		if(!yesno(0))
 			return false;
 	}
 	auto allow_coins = opponent->getmoney();
@@ -2429,6 +2485,7 @@ BSDATA(script) = {
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
 	{"QuestReward", quest_reward},
+	{"RaiseSkills", raise_skills},
 	{"Random", empthy_script, is_random},
 	{"RandomAbility", random_ability},
 	{"RangeAttack", range_attack},

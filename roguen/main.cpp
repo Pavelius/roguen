@@ -76,7 +76,7 @@ static void main_start() {
 	add_item("Ration", 20);
 	add_item("Bones", 60);
 	add_item("OrnamentalStones", 3);
-	add_item("HealingPotion");
+	add_item("HealingPotion", 5, true);
 	add_item("PotionOfStrenght", 2, true);
 	add_item("RingOfWarrior");
 	add_item("RingOfProtection");
@@ -84,6 +84,7 @@ static void main_start() {
 	add_item("RingOfLevitation");
 	add_item("RingOfRegeneration");
 	add_item("HandPick");
+	add_item("PotionOfLearning", 1, true);
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);

@@ -67,6 +67,7 @@ void* answers::choose(const char* title, const char* cancel_text, int cancel_mod
 	pushvalue push_title(prompa, title);
 	pushvalue push_cancel(answers::cancel_text, cancel_text);
 	pushvalue push_height(height);
+	pushvalue push_choose(choosing, true);
 	auto push_caret = caret;
 	auto push_width = width;
 	while(ismodal()) {

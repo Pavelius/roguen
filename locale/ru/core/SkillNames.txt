@@ -5,6 +5,9 @@ Mining: Шахтерское дело
 Religion: Религия
 Stealth: Скрытность
 
+RaiseSkillCancel: Ничего больше повышать не надо.
+RaiseSkillChoose: Какие атрибуты повысить (осталось [%1i] очков)?
+RaiseSkill: Повысить %1 до %2i за [%3i] очков.
 YouBrokeItem: %герой сломал%а %-$1.
 YouCantMineHere: Вы не можете копать здесь.
 YouCrashWall: %герой разрушил%а стену %1.

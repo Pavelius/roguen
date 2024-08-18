@@ -65,10 +65,10 @@ Skeleton avatar(574) friendly(-20)
  abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) Hits(8) Armor(1) Level(1)
  use Spear Darkvision Undead PoisonImmunity
 Zombie avatar(101) friendly(-20)
- abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(25) Hits(16) Level(1)
+ abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(15) Hits(16) Level(2)
  use Dagger Darkvision Undead PoisonImmunity
 Wolf avatar(20) friendly(-10)
- abilities Strenght(25) Dexterity(30) Wits(3) WeaponSkill(35) Hits(10) Level(1)
+ abilities Strenght(20) Dexterity(30) Wits(3) WeaponSkill(25) Hits(9) Level(1)
  use Bite
 
 #RandomTable

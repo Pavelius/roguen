@@ -732,7 +732,7 @@ static void paint_collection(const collectiona& source, fnevent pcommand) {
 	const int dy = texth() + 1;
 	rectpush push;
 	width = metrics::padding + get_maximum_width(source) + 32;
-	height = last_actions.getcount() * dy; //+ (last_actions.getcount() - 1) * metrics::padding;
+	height = last_actions.getcount() * dy;
 	set_ld_position();
 	strokeout(fillwindow, metrics::padding, metrics::padding);
 	strokeout(strokeborder, metrics::padding, metrics::padding);
@@ -777,7 +777,8 @@ static void reset_message() {
 static void afterpaint() {
 	paint_message();
 	reset_message();
-	paint_actions();
+	if(!answers::choosing)
+		paint_actions();
 }
 
 void afterpaint_no_actions() {

@@ -133,6 +133,8 @@ PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Poti
  use GainExperience+10
 PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Poison-20
+PotionOfLearning cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(167)
+ use SkillPoints+10
 
 BrassRing cost(100) weight(1) count(1) wear(FingerRight) avatar(75)
 IronRing cost(300) weight(1) wear(FingerRight) avatar(74)
