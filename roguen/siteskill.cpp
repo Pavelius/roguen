@@ -5,6 +5,7 @@
 #include "duration.h"
 #include "feature.h"
 #include "game.h"
+#include "hotkey.h"
 #include "indexa.h"
 #include "script.h"
 #include "skilluse.h"
@@ -42,4 +43,11 @@ bool siteskilli::isusable() const {
 		}
 	}
 	return allow_targets(effect);
+}
+
+void site_skills_initialize() {
+	for(auto& e : bsdata<siteskilli>()) {
+		if(e.keyid)
+			e.key = hotkey_parse(e.keyid);
+	}
 }

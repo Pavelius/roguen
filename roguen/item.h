@@ -86,7 +86,7 @@ public:
 	bool			is(const item& v) const { return type == v.type; }
 	bool			ischarges() const { return getcharges() > 0; }
 	bool			ischargeable() const;
-	bool			iscountable() const { return geti().count != 0; }
+	bool			iscountable() const { return !geti().powers; }
 	bool			iscursed() const { return is(Cursed);}
 	bool			isidentified() const { return identified != 0; }
 	bool			ismagical() const;

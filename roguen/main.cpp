@@ -6,6 +6,7 @@
 #include "greatneed.h"
 #include "creature.h"
 #include "hotkey.h"
+#include "siteskill.h"
 #include "speech.h"
 #include "talk.h"
 #include "textscript.h"
@@ -34,7 +35,8 @@ static void initializating() {
 	talki::read();
 	readurl("modules", "*.txt", bsreq::read);
 	check_need_loading();
-	hotkey::initialize();
+	hotkey_initialize();
+	site_skills_initialize();
 #ifdef _DEBUG
 	main_util();
 #endif

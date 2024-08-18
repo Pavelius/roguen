@@ -13,7 +13,7 @@ BSMETA(hotkey) = {
 	BSREQ(keyid), BSREQ(id),
 	{}};
 
-static unsigned parse_key(const char* p) {
+unsigned hotkey_parse(const char* p) {
 	unsigned result = 0;
 	while(*p) {
 		if(ischa(*p)) {
@@ -43,10 +43,10 @@ static unsigned parse_key(const char* p) {
 	return result;
 }
 
-void hotkey::initialize() {
+void hotkey_initialize() {
 	for(auto& e : bsdata<hotkey>()) {
 		if(e.keyid) {
-			e.key = parse_key(e.keyid);
+			e.key = hotkey_parse(e.keyid);
 			if(!e.key)
 				continue;
 		}

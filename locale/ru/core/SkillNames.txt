@@ -4,6 +4,7 @@ Herbalism: Травознавство
 Mining: Шахтерское дело
 Religion: Религия
 Stealth: Скрытность
+Thievery: Воровство
 
 RaiseSkillCancel: Ничего больше повышать не надо.
 RaiseSkillChoose: Какие атрибуты повысить (осталось [%1i] очков)?
@@ -18,6 +19,7 @@ YouMakeRoll: %герой не сделал%а бросок.
 GatherInformation: Узнать слухи
 GatherMellowHerbs: Собрать спелые травы
 GatherSemiMellowHerbs: Собрать травы
+OpenDoorLock: Взломать замок
 SearchRoom: Обыскать комнату
 SearchRoomForGems: Искать драгоценности
 StealCoins: Украсть монеты

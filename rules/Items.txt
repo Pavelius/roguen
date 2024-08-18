@@ -26,21 +26,22 @@ ShieldPowers
 NoItem avatar(1) wear(MeleeWeapon)
  feats Natural
 
-SP cost(1) avatar(898) count(1)
+SP cost(1) avatar(898)
  feats Coins
-GP cost(10) avatar(898) count(1)
+GP cost(10) avatar(898)
  feats Coins
-PP cost(100) avatar(898) count(1)
+PP cost(100) avatar(898)
  feats Coins
 
-OrnamentalStones cost(10) avatar(705) count(1)
-SemiPreciousStones cost(50) avatar(706) count(1)
-FancyStones cost(100) avatar(708) count(1)
-PreciousStones cost(500) avatar(710) count(1)
-GemStones cost(1000) avatar(704) count(1)
+OrnamentalStones cost(10) avatar(705) 
+SemiPreciousStones cost(50) avatar(706) 
+FancyStones cost(100) avatar(708) 
+PreciousStones cost(500) avatar(710) 
+GemStones cost(1000) avatar(704) 
 
-Lags cost(10) avatar(395) count(1)
-SmallLags cost(10) avatar(411) count(1)
+LockPick cost(5) avatar(294) 
+Lags cost(10) avatar(395) 
+SmallLags cost(10) avatar(411) 
 
 BattleAxe cost(7) weight(500) wear(MeleeWeapon) wear_index(0) avatar(447) powers(SlashingWeapons) required(35)
  weapon damage(5) pierce(1)
@@ -111,79 +112,79 @@ PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(Hea
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2
 
-HealingPotion cost(30) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
+HealingPotion cost(30) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
  use Heal+20
-ManaPotion cost(30) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
+ManaPotion cost(30) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
  use Mana+20
-PotionOfStrenght cost(1000) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(162)
+PotionOfStrenght cost(1000) weight(2) unidentified(RedPotion) wear(Potion) avatar(162)
  use Strenght+1
-PotionOfDexterity cost(1000) count(1) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165)
+PotionOfDexterity cost(1000) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165)
  use Dexterity+1
-PotionOfWits cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
+PotionOfWits cost(1000) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
  use Wits+1
-PotionOfExhange cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+PotionOfExhange cost(800) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use AbilityExchange
-PotionOfAbilityRaise cost(800) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(435)
+PotionOfAbilityRaise cost(800) weight(2) unidentified(BluePotion) wear(Potion) avatar(435)
  use RandomAbility+1
-PotionOfHealth cost(1000) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(169)
+PotionOfHealth cost(1000) weight(2) unidentified(RedPotion) wear(Potion) avatar(169)
  use Hits+1
-PotionOfEnergy cost(1000) count(1) weight(2) unidentified(RedPotion) wear(Potion) avatar(169)
+PotionOfEnergy cost(1000) weight(2) unidentified(RedPotion) wear(Potion) avatar(169)
  use Mana+1
-PotionOfWisdow cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+PotionOfWisdow cost(800) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use GainExperience+10
-PotionOfCurePoison cost(800) count(1) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+PotionOfCurePoison cost(800) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
  use Poison-20
-PotionOfLearning cost(1000) count(1) weight(2) unidentified(BluePotion) wear(Potion) avatar(167)
+PotionOfLearning cost(1000) weight(2) unidentified(BluePotion) wear(Potion) avatar(167)
  use SkillPoints+10
 
-BrassRing cost(100) weight(1) count(1) wear(FingerRight) avatar(75)
+BrassRing cost(100) weight(1) wear(FingerRight) avatar(75)
 IronRing cost(300) weight(1) wear(FingerRight) avatar(74)
 SilverRing cost(500) weight(1) wear(FingerRight) avatar(123)
 GoldenRing cost(800) weight(1) wear(FingerRight) avatar(73)
-RingOfAcidResistance cost(1200) weight(1) count(1) wear(FingerRight) avatar(73) unidentified(BrassRing)
+RingOfAcidResistance cost(1200) weight(1) wear(FingerRight) avatar(73) unidentified(BrassRing)
  wearing AcidResistance
-RingOfColdResistance cost(1400) weight(1) count(1) wear(FingerRight) avatar(153) unidentified(BrassRing)
+RingOfColdResistance cost(1400) weight(1) wear(FingerRight) avatar(153) unidentified(BrassRing)
  wearing ColdResistance
-RingOfFireResistance cost(1400) weight(1) count(1) wear(FingerRight) avatar(75) unidentified(BrassRing)
+RingOfFireResistance cost(1400) weight(1) wear(FingerRight) avatar(75) unidentified(BrassRing)
  wearing FireResistance
-RingOfPoisonResistance cost(1800) weight(1) count(1) wear(FingerRight) avatar(73) unidentified(BrassRing)
+RingOfPoisonResistance cost(1800) weight(1) wear(FingerRight) avatar(73) unidentified(BrassRing)
  wearing PoisonResistance
-RingOfLevitation cost(3000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
+RingOfLevitation cost(3000) weight(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Fly
-RingOfDefence cost(2000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
+RingOfDefence cost(2000) weight(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Dodge+15
-RingOfProtection cost(3000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
+RingOfProtection cost(3000) weight(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Block+1
-RingOfRegeneration cost(10000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
+RingOfRegeneration cost(10000) weight(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
  wearing Regeneration
-RingOfWarrior cost(2000) weight(1) count(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
+RingOfWarrior cost(2000) weight(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
  wearing WeaponSkill+10
 
-LeatherBoots weight(20) count(1) wear(Legs) avatar(192)
+LeatherBoots weight(20) wear(Legs) avatar(192)
  wearing Dodge+5
-IronBoots weight(20) count(1) wear(Legs) avatar(192)
+IronBoots weight(20) wear(Legs) avatar(192)
  wearing Dodge-5 Block+1
-BootsOfSneakiness weight(20) count(1) wear(Legs) avatar(226) unidentified(LeatherBoots)
+BootsOfSneakiness weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)
  wearing Dexterity+10
-BootsOfLevitation weight(15) count(1) wear(Legs) avatar(224) unidentified(LeatherBoots)
+BootsOfLevitation weight(15) wear(Legs) avatar(224) unidentified(LeatherBoots)
  wearing Fly
 
-LeatherBracers weight(50) count(1) wear(Elbows) avatar(59)
+LeatherBracers weight(50) wear(Elbows) avatar(59)
  wearing Dodge+5
-IronBracers weight(250) count(1) wear(Elbows) avatar(48)
+IronBracers weight(250) wear(Elbows) avatar(48)
  wearing Dodge-5 Block+1
-BracersOfStrenght weight(250) count(1) wear(Elbows) avatar(219)
+BracersOfStrenght weight(250) wear(Elbows) avatar(219)
  wearing Dodge-5 Block+1 Strenght+15
 
-LeatherGirdle weight(50) count(1) wear(Girdle) avatar(41)
+LeatherGirdle weight(50) wear(Girdle) avatar(41)
  wearing Dodge+5
-IronGirdle weight(250) count(1) wear(Girdle) avatar(14) required(40)
+IronGirdle weight(250) wear(Girdle) avatar(14) required(40)
  wearing Dodge-5 Block+1
-GirdleOfMight weight(50) count(1) wear(Girdle) avatar(18) unidentified(LeatherGirdle) required(40)
+GirdleOfMight weight(50) wear(Girdle) avatar(18) unidentified(LeatherGirdle) required(40)
  wearing Block+1 Strenght+5
-GirdleOfGiantStrenght weight(50) count(1) wear(Girdle) avatar(41) unidentified(LeatherGirdle)
+GirdleOfGiantStrenght weight(50) wear(Girdle) avatar(41) unidentified(LeatherGirdle)
  wearing Block+1 Strenght+25
-GirdleOfCarring weight(50) count(1) wear(Girdle) avatar(88) unidentified(LeatherGirdle)
+GirdleOfCarring weight(50) wear(Girdle) avatar(88) unidentified(LeatherGirdle)
  wearing Dodge+5 CarryCapacity+10
 
 LeadAmulet cost(400) weight(7) avatar(86)
@@ -195,14 +196,14 @@ AmuletOfColdHeart cost(1100) weight(4) avatar(79)
 AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
  wearing DeathResistance+1
 
-Apple weight(2) avatar(503) count(1) rotting(20)
- use GainSatiation+2 Chance+1 Strenght+1
-LoafOfBread weight(40) avatar(160) count(1) rotting(5)
- use GainSatiation+50
-Sausage weight(20) avatar(157) count(1) rotting(10)
- use GainSatiation+50 Chance+3 Strenght+1
-Ration cost(100) weight(50) avatar(126) count(1)
- use GainSatiation+80
+Apple weight(2) avatar(503) rotting(20)
+ use Heal+2 GainSatiation+2 Chance+1 Strenght+1
+LoafOfBread weight(40) avatar(160) rotting(5)
+ use Heal+5 GainSatiation+50
+Sausage weight(20) avatar(157) rotting(10)
+ use Heal+10 GainSatiation+50 Chance+3 Strenght+1
+Ration cost(50) weight(50) avatar(126) 
+ use Heal+15 GainSatiation+80
 Torch cost(10) avatar(207) weight(30) count(3)
  use TorchLight+3
 
@@ -212,38 +213,38 @@ StrangeRedSphere cost(100) weight(50) avatar(231)
 StrangeGreenSphere cost(100) weight(50) avatar(232)
 StrangeRod cost(50) weight(10) avatar(80)
 
-Bones cost(2) weight(3) avatar(899) count(1)
-MonsterSkull cost(50) weight(50) avatar(519) count(1)
+Bones cost(2) weight(3) avatar(899) 
+MonsterSkull cost(50) weight(50) avatar(519) 
 Stones weight(5) avatar(900) count(6)
 
-TinyKey weight(1) avatar(284) count(1)
-SmallKey weight(1) avatar(283) count(1)
-HexagonalKey weight(2) avatar(282) count(1)
-TriangularKey weight(1) avatar(287) count(1)
-RectangularKey weight(1) avatar(285) count(1)
-RoundKey weight(1) avatar(286) count(1)
+TinyKey weight(1) avatar(284) 
+SmallKey weight(1) avatar(283) 
+HexagonalKey weight(2) avatar(282) 
+TriangularKey weight(1) avatar(287) 
+RectangularKey weight(1) avatar(285) 
+RoundKey weight(1) avatar(286) 
 
-AlrauniaAntidote weight(1) avatar(96) count(1)
+AlrauniaAntidote weight(1) avatar(96) 
  use Poison-2
-BurbRoot weight(1) avatar(90) count(1)
+BurbRoot weight(1) avatar(90) 
  use Hits-10
-CurariaMancox weight(1) avatar(91) count(1)
+CurariaMancox weight(1) avatar(91) 
  use Illness-1
-DemonDaisy weight(1) avatar(97) count(1)
+DemonDaisy weight(1) avatar(97) 
  use Poison+10
-DevilsRose weight(1) avatar(94) count(1)
+DevilsRose weight(1) avatar(94) 
  use Illness+2
-MorgiaRoot weight(1) avatar(108) count(1)
+MorgiaRoot weight(1) avatar(108) 
  use Strenght+1
-MossOfMoreilon weight(1) avatar(107) count(1)
+MossOfMoreilon weight(1) avatar(107) 
  use Dexterity+1
-PepperPetal weight(1) avatar(95) count(1)
+PepperPetal weight(1) avatar(95) 
  use Hits+4
-Spenseweed weight(1) avatar(106) count(1)
+Spenseweed weight(1) avatar(106) 
  use Hits+1
-Stomacemptia weight(1) avatar(93) count(1)
+Stomacemptia weight(1) avatar(93) 
  use GainSatiation+20
-Stomafillia weight(1) avatar(89) count(1)
+Stomafillia weight(1) avatar(89) 
  use GainSatiation-10
 
 TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)

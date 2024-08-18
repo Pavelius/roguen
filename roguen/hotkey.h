@@ -8,5 +8,6 @@ struct hotkey {
 	unsigned		key;
 	const char*		keyid;
 	variant			data;
-	static void		initialize();
 };
+void hotkey_initialize();
+unsigned hotkey_parse(const char* p);

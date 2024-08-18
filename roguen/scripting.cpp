@@ -2360,6 +2360,9 @@ static void choose_creature(int bonus) {
 	choose_limit(bonus);
 }
 
+static void steal_opponent_coins(int bonus) {
+}
+
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
@@ -2497,6 +2500,7 @@ BSDATA(script) = {
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
+	{"StealOpponentCoins", steal_opponent_coins},
 	{"TransferCoins", transfer_coins},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},

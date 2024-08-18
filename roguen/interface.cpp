@@ -1329,6 +1329,7 @@ void visualize_images(res pid, point size, point offset) {
 	point d = {(short)(getwidth() / size.x), (short)(getheight() / size.y)};
 	auto per_screen = d.x * d.y;
 	auto maximum_origin = p->count - per_screen;
+	auto show_index = true;
 	if(maximum_origin < 0)
 		maximum_origin = 0;
 	while(ismodal()) {
@@ -1344,7 +1345,8 @@ void visualize_images(res pid, point size, point offset) {
 				caret.y = size.x * y;
 				caret = caret + offset;
 				image(p, i, 0);
-				print(textcn, "%1i", i);
+				if(show_index)
+					print(textcn, "%1i", i);
 			}
 		}
 		paintfinish();
@@ -1354,6 +1356,7 @@ void visualize_images(res pid, point size, point offset) {
 		case KeyPageUp: origin -= per_screen; break;
 		case KeyDown: origin += d.x; break;
 		case KeyPageDown: origin += per_screen; break;
+		case 'I': show_index = !show_index; break;
 		case KeyEscape: breakmodal(0); break;
 		}
 	}
