@@ -18,7 +18,7 @@ struct collectiona : adat<void*, 256> {
 	void	select(array& source, fnvisible proc);
 	void	shuffle();
 	void	sort(fngetname proc);
-	void	sort(fngetname proc, int offset);
+	void	sort(fncompare proc);
 };
 template<typename T>
 struct collection : collectiona {

@@ -70,6 +70,8 @@ wear_s wearable::getwearslot(const item* data) const {
 }
 
 bool wearable::useitem(const itemi* pi) {
+	if(!pi)
+		return false;
 	for(auto& v : backpack()) {
 		if(!v.is(pi))
 			continue;

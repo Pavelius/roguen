@@ -1177,8 +1177,17 @@ static void ready_actions() {
 	last_actions.clear();
 }
 
+static int compare_actions(const void* v1, const void* v2) {
+	auto p1 = *((siteskilli**)v1);
+	auto p2 = *((siteskilli**)v2);
+	if(p1->key != p2->key)
+		return p1->key - p2->key;
+	return strcmp(p1->getname(), p2->getname());
+}
+
 static void ready_skills() {
 	last_actions.select(fntis<siteskilli, &siteskilli::isusable>);
+	last_actions.sort(compare_actions);
 }
 
 int creature::getloh() const {

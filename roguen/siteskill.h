@@ -15,8 +15,11 @@ struct siteskilli : nameable {
 	variants		effect;
 	unsigned		key;
 	const char*		keyid;
+	variant			tool;
 	bool			isusable() const;
+	bool			ishotkeypresent() const;
 	void			fixuse() const;
+	void			usetool();
 };
 typedef collection<siteskilli> siteskilla;
 extern siteskilla last_actions;

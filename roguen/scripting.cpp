@@ -1963,17 +1963,12 @@ static void repair_item(int bonus) {
 //	return result < skill;
 //}
 
-static void fix_action(const char* suffix) {
-	auto id = ids(last_action->id, suffix, "Action");
-	auto p = getdescription(id);
-	if(p)
-		player->act(p);
-}
-
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
-	player->fixaction(last_action->id, 0);
+	if(last_action->tool)
+		last_action->usetool();
+	player->fixaction(last_action->id, "Apply");
 	choose_targets(last_action->effect);
 	player->wait();
 }
@@ -2418,6 +2413,7 @@ static void choose_creature(int bonus) {
 }
 
 static void steal_opponent_coins(int bonus) {
+
 }
 
 static void need_help_info(stringbuilder& sb) {

@@ -68,7 +68,7 @@ Arrow: Стрела
 LongBow: Длинный лук
 
 Bandage: Бандаж
-LockPick: Отмычка
+Lockpick: Отмычка
 Lags: Древесина
 SmallLags: Маленькая ветка
 Torch: Факел

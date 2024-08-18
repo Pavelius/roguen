@@ -40,7 +40,8 @@ PreciousStones cost(500) avatar(710)
 GemStones cost(1000) avatar(704) 
 
 Bandage cost(10) avatar(516)
-LockPick cost(5) avatar(294) 
+ use HaveNext Blooding+1 Blooding-100 Heal+1
+Lockpick cost(5) avatar(294) 
 Lags cost(10) avatar(395) 
 SmallLags cost(10) avatar(411) 
 

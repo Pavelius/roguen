@@ -150,6 +150,7 @@ BSMETA(siteskilli) = {
 	BSENM(retry, durationi),
 	BSREQ(effect),
 	BSREQ(keyid),
+	BSREQ(tool),
 	{}};
 BSMETA(spelli) = {
 	BSREQ(id),
