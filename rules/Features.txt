@@ -54,8 +54,8 @@ RedPool priority(3) features(78 1)
 GatePortal priority(10) features(54 1)
 OpenedGatePortal priority(10) features(55 1) activateto(GatePortal)
 
-StairsUp leadto(StairsDown)
-StairsDown leadto(StairsUp)
+StairsUp leadto(StairsDown) minimap(128 128 128 192)
+StairsDown leadto(StairsUp) minimap(128 128 128 192)
 
 Door activateto(OpenedDoor)
 GatePortal activateto(OpenedGatePortal)

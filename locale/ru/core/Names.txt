@@ -135,10 +135,11 @@ Money: Деньги
 CutWoods: Рубит деревья
 Retaliate: Ответный удар
 
-ColdDamage: Замораживания
-FireDamage: Воспламенения
 AcidResistance: Сопротивление кислоте
+ColdDamage: Замораживания
 ColdResistance: Сопротивление холоду
+Darkvision: Инфрозрение
+FireDamage: Воспламенения
 FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света

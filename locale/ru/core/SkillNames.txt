@@ -3,6 +3,7 @@ Gemcutting: Ювелирное дело
 Herbalism: Травознавство
 Mining: Шахтерское дело
 Religion: Религия
+Stealth: Скрытность
 
 YouBrokeItem: %герой сломал%а %-$1.
 YouCantMineHere: Вы не можете копать здесь.

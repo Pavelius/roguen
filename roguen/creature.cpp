@@ -932,13 +932,27 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		weapon.damage();
 }
 
+static int get_reward(int v, int p1, int p2 = -1, int p3 = -1, int p4 = -1) {
+	auto r = 0;
+	if(p1 != -1 && v >= p1)
+		r += 1;
+	if(p2 != -1 && v >= p2)
+		r += 2;
+	if(p3 != -1 && v >= p3)
+		r += 4;
+	if(p4 != -1 && v >= p4)
+		r += 8;
+	return r;
+}
+
 int	creature::getexpreward() const {
-	static ability_s skills[] = {Strenght, Dexterity, Wits, WeaponSkill, BalisticSkill};
-	auto result = get(Strenght) / 10;
-	result += get(Dexterity) / 20;
-	result += get(WeaponSkill) / 10;
-	result += get(BalisticSkill) / 10;
-	result += getmaximum(Hits) / 2;
+	auto result = get_reward(get(Strenght), 30, 50, 80);
+	result += get_reward(get(Dexterity), 40, 60);
+	result += get_reward(get(WeaponSkill), 20, 40, 60);
+	result += get_reward(get(BalisticSkill), 50, 70);
+	result += get_reward(getmaximum(Hits), 10, 30, 50, 80);
+	if(!result)
+		result = 1;
 	return result;
 }
 
@@ -1638,11 +1652,9 @@ creature* player_create(point m, variant kind, bool female) {
 
 bool creature::isallow(const item& it) const {
 	auto& ei = it.geti();
-	for(auto i = Strenght; i <= sizeof(ei.required) / sizeof(ei.required[0]); i = (ability_s)(i + 1)) {
+	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
 		auto v = ei.required[i];
-		if(!v)
-			continue;
-		if(get(i) < v)
+		if(v && get(i) < v)
 			return false;
 	}
 	return true;

@@ -36,6 +36,7 @@ BSDATA(abilityi) = {
 	{"Hits"},
 	{"Mana"},
 	{"Faith"},
+	{"SkillPoints"},
 	{"Poison"},
 	{"Illness"},
 	{"Corrosion"},

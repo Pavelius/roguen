@@ -1,11 +1,11 @@
 #Advancement
 
 DarkElf 1 Ability
- elements Strenght+20 Dexterity+30 Hits+15 Wits+15 WeaponSkill+20 BalisticSkill+25
+ elements Strenght+25 Dexterity+30 Hits+15 Wits+15 WeaponSkill+20 BalisticSkill+25 Stealth+10 Darkvision
 DarkElf 1 Equipment
  elements Sword LeatherArmor
 
 Human 1 Ability
- elements Strenght+20 Dexterity+20 Hits+20 Wits+10 WeaponSkill+20 BalisticSkill+20 Religion+20
+ elements Strenght+30 Dexterity+20 Hits+20 Wits+10 WeaponSkill+20 BalisticSkill+20 Religion+20
 Human 1 Equipment
  elements Staff
