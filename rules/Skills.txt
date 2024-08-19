@@ -2,6 +2,8 @@
 
 RoomsWhereGemsCanBe
  elements SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
+StealCoinsFail
+ elements GoingAngry StealCoinsAngry
 
 #SiteSkill
 

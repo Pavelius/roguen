@@ -20,6 +20,7 @@ void main_util();
 #endif
 
 static void initializating() {
+	speech_initialize();
 	bsreq::read("rules/Basic.txt");
 	bsreq::read("rules/Tiles.txt");
 	bsreq::read("rules/Items.txt");
@@ -31,7 +32,6 @@ static void initializating() {
 	bsreq::read("rules/Advancement.txt");
 	bsreq::read("rules/Skills.txt");
 	readl("NameCharacters", charname::read);
-	speech_initialize();
 	talki::read();
 	readurl("modules", "*.txt", bsreq::read);
 	check_need_loading();

@@ -55,7 +55,7 @@ rect				last_rect;
 roomi*				last_room;
 const sitei*		last_site;
 greatneed*			last_need;
-int					last_value, last_roll_result, last_cap;
+int					last_value, last_cap;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
@@ -1052,6 +1052,11 @@ template<> void ftscript<dialogi>(int value, int counter) {
 	bsdata<dialogi>::elements[value].open();
 }
 
+template<> void ftscript<speechv2>(int value, int counter) {
+	if(opponent)
+		opponent->say(speech_get(value, -1));
+}
+
 template<> void ftscript<featurei>(int value, int counter) {
 	placement(last_rect, &areamap::setfeature, value, counter);
 }
@@ -1119,14 +1124,6 @@ template<> void ftscript<sitei>(int value, int counter) {
 template<> void ftscript<locationi>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	script_run(bsdata<locationi>::elements[value].landscape);
-}
-
-template<> void ftscript<speechv2>(int value, int counter) {
-	auto count = script_count(counter, 1);
-	if(count <= 0)
-		return;
-	if(player)
-		player->say(speech_getid(value));
 }
 
 template<> bool fttest<needni>(int value, int counter) {
@@ -1996,6 +1993,14 @@ static void wait_hour(int bonus) {
 	player->wait(bonus * 6 * 60 * 24);
 }
 
+static void apply_fail_roll() {
+	if(last_action) {
+		auto p = bsdata<listi>::find(ids(last_action->id, "Fail"));
+		if(p)
+			script_run(p->elements);
+	}
+}
+
 static void roll_value(int bonus) {
 	if(!player)
 		return;
@@ -2003,6 +2008,7 @@ static void roll_value(int bonus) {
 	if(!player->roll(last_ability, bonus)) {
 		player->logs(getnm("YouFailRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
 		script_stop();
+		apply_fail_roll();
 	} else
 		player->logs(getnm("YouMakeRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
 }
@@ -2299,6 +2305,11 @@ static bool is_random(int bonus) {
 static void empthy_script(int bonus) {
 }
 
+static void going_angry(int bonus) {
+	if(opponent)
+		opponent->set(Enemy);
+}
+
 static bool is_npc(int bonus) {
 	return player->is(Local) != 0;
 }
@@ -2518,6 +2529,7 @@ BSDATA(script) = {
 	{"GenerateRoomNoFloor", generate_room_record},
 	{"GenerateWalls", generate_walls},
 	{"GenerateVillage", generate_cityscape},
+	{"GoingAngry", going_angry},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
 	{"HealPoison", heal_poison, is_heal_poison},

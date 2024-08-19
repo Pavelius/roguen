@@ -67,10 +67,14 @@ void script_run(variant v) {
 }
 
 void script_run(const variants& elements) {
-	pushvalue push_begin(script_begin, elements.begin());
-	pushvalue push_end(script_end, elements.end());
+	auto push_begin = script_begin;
+	auto push_end = script_end;
+	script_begin = elements.begin();
+	script_end = elements.end();
 	while(script_begin < script_end)
 		script_run(*script_begin++);
+	script_begin = push_begin;
+	script_end = push_end;
 }
 
 void script_execute(const char* id, int bonus) {

@@ -6,3 +6,4 @@ void speech_read(const char* url);
 
 const char* speech_getid(int index);
 const char* speech_get(const char* id);
+const char* speech_get(int index, int random);

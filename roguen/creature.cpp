@@ -16,7 +16,8 @@
 #include "triggern.h"
 
 extern collection<roomi> rooms;
-extern int last_roll_result;
+int		last_roll_result;
+bool	last_roll_successed;
 
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(const variants& effects);
@@ -1142,10 +1143,12 @@ bool creature::roll(ability_s v, int bonus) const {
 	}
 	last_value = (value - last_roll_result) / 10;
 	if(last_roll_result <= 5)
-		return true;
+		last_roll_successed = true;
 	else if(last_roll_result >= 95)
-		return false;
-	return last_roll_result <= (value + bonus);
+		last_roll_successed = false;
+	else
+		last_roll_successed = last_roll_result <= (value + bonus);
+	return last_roll_successed;
 }
 
 void adventure_mode();

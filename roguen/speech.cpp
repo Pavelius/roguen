@@ -55,6 +55,13 @@ const char* speech_getid(int index) {
 	return bsdata<speechv2>::elements[index].id;
 }
 
+const char* speech_get(int index, int random) {
+	auto p = bsdata<speechv2>::elements + index;
+	if(random==-1)
+		random = rand() % p->source.size();
+	return p->source.begin()[random].name;
+}
+
 const char* speech_get(const char* id) {
 	auto p = bsdata<speechv2>::find(id);
 	if(!p || !p->source)
