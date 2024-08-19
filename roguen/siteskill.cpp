@@ -24,14 +24,14 @@ void siteskilli::fixuse() const {
 		skilluse_add(this, rm->center(), bsid(player), game.getminutes());
 }
 
-static bool have_item(variant v) {
+static bool use_item(variant v, bool run) {
 	if(v.iskind<itemi>())
-		return player->haveitem(bsdata<itemi>::elements + v.value);
+		return player->useitem(bsdata<itemi>::elements + v.value, run);
 	return false;
 }
 
 void siteskilli::usetool() {
-	player->useitem((itemi*)tool);
+	use_item((itemi*)tool, true);
 }
 
 bool siteskilli::ishotkeypresent() const {
@@ -48,7 +48,7 @@ bool siteskilli::isusable() const {
 	if((player->get(skill) + bonus) < 0)
 		return false;
 	if(tool) {
-		if(!have_item(tool))
+		if(!use_item(tool, false))
 			return false;
 	}
 	if(ishotkeypresent())

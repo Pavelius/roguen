@@ -36,16 +36,13 @@ Ghoul avatar(305) friendly(-20)
  use Claws Undead PoisonImmunity
 Goblin avatar(0) friendly(-30)
  abilities Strenght(25) Dexterity(40) Wits(14) WeaponSkill(30) Hits(5)
- use Dagger
- treasure SP-20
+ use Dagger SomeCoins-20
 GoblinFemale avatar(1) parent(Goblin) friendly(-30)
  abilities Strenght(20) Dexterity(40) Wits(15) WeaponSkill(15) Hits(4)
- use Dagger Female
- treasure SP-10
+ use Dagger Female SomeCoins-10
 OrcWarrior avatar(2) friendly(-30)
  abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(35) Hits(15) Level(2)
- use BruteSword LeatherArmor Darkvision
- treasure SP SP-50
+ use BruteSword LeatherArmor Darkvision SomeCoins SomeCoins-50
 Outsider avatar(121) friendly(-20)
  use Tentacle
  abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(4) Level(3)
@@ -97,24 +94,25 @@ Minotaur avatar(580) friendly(-20) minions(GoblinoidTribe)
 
 Bartender avatar(51) unique(1)
  abilities Strenght(30) Dexterity(15) Wits(25) WeaponSkill(25) Hits(10)
- use PlaceOwner KnowRumor
+ use PlaceOwner KnowRumor SomeCoins+5
 Shopkeeper avatar(581) unique(1)
  abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(20) Hits(5)
- use PlaceOwner GP+50
+ use PlaceOwner GP+50 SomeCoins+30
 Theif avatar(313)
  abilities Strenght(30) Dexterity(40) Wits(30) WeaponSkill(30) Hits(12) Thievery(15)
+ use SomeCoins+2
 TheifFemale avatar(314)
  abilities Strenght(26) Dexterity(40) Wits(32) WeaponSkill(30) Hits(10)
- use Female
+ use Female SomeCoins+2
 Farmer avatar(273)
  abilities Strenght(30) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
- use KnowLocation
+ use KnowLocation SomeCoins
 FarmerFemale avatar(276)
  abilities Strenght(26) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
- use Female KnowLocation
+ use Female KnowLocation SomeCoins
 PriestOfTheOne avatar(118) unique(1)
  abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(30) Hits(8)
- use PlaceOwner
+ use PlaceOwner SomeCoins+20
 SmallBoy avatar(274)
  abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
 SmallGirl avatar(275) parent(SmallBoy)

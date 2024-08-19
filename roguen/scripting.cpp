@@ -1718,31 +1718,6 @@ static void use_item(int bonus) {
 		player->use(*p);
 }
 
-static void use_next_item(int bonus) {
-	auto v = *script_begin++;
-	const char* title = getnm("UseNextItem");
-	bonus = script_count(bonus, 1);
-	if(!player->ishuman())
-		title = 0;
-	if(v.iskind<itemi>()) {
-		auto p = bsdata<itemi>::elements + v.value;
-		for(auto& e : player->wears) {
-			if(!bonus)
-				break;
-			if(!e.is(p))
-				continue;
-			while(e && bonus > 0) {
-				bonus--;
-				if(title) {
-					title = 0;
-					player->act(title, e.getname());
-				}
-				e.use();
-			}
-		}
-	}
-}
-
 static void use_magic_item_power(int bonus) {
 	itema items;
 	items.selectbackpack(player);
@@ -1760,6 +1735,13 @@ static void view_stuff(int bonus) {
 
 static void explore_area(int bonus) {
 	area->set({0, 0, area->mps, area->mps}, &areamap::setflag, Explored);
+}
+
+static void some_coins(int bonus) {
+	bonus = script_count(bonus);
+	if(bonus <= 0)
+		return;
+	player->money += xrand(bonus * 50, bonus * 100);
 }
 
 static void test_arena(int bonus) {
@@ -1906,6 +1888,26 @@ static void heal_player(int bonus) {
 	player->abilities[Hits] = add_green(player->get(Hits), bonus, "%Heal%+1i", 0, player->getmaximum(Hits));
 	if(!(*player))
 		player->kill();
+}
+
+static bool is_heal_wounded(int bonus) {
+	return player->abilities[Blooded] > 0;
+}
+static void heal_wounded(int bonus) {
+	if(bonus >= 100)
+		player->abilities[Blooded] = 0;
+	else
+		player->abilities[Blooded] -= bonus;
+}
+
+static bool is_heal_poison(int bonus) {
+	return player->abilities[Poison] > 0;
+}
+static void heal_poison(int bonus) {
+	if(bonus >= 100)
+		player->abilities[Poison] = 0;
+	else
+		player->abilities[Poison] -= bonus;
 }
 
 static void heal_all(int bonus) {
@@ -2301,21 +2303,21 @@ static bool is_npc(int bonus) {
 	return player->is(Local) != 0;
 }
 
-static bool have_next_object(variant v) {
+static bool have_object(variant v) {
 	if(v.iskind<itemi>())
-		return player->haveitem(bsdata<itemi>::begin() + v.value);
+		return player->useitem(bsdata<itemi>::begin() + v.value, false);
 	else if(v.iskind<abilityi>())
 		return player->abilities[v.value] >= v.counter;
 	else if(v.iskind<feati>())
 		return player->is((feat_s)v.value);
 	else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements) {
-			if(have_next_object(v))
+			if(have_object(v))
 				return true;
 		}
 	} else if(v.iskind<randomizeri>()) {
 		for(auto v : bsdata<randomizeri>::elements[v.value].chance) {
-			if(have_next_object(v))
+			if(have_object(v))
 				return true;
 		}
 	}
@@ -2323,7 +2325,7 @@ static bool have_next_object(variant v) {
 }
 
 static bool is_have_next(int bonus) {
-	return have_next_object(*script_begin++) == (bonus >= 0);
+	return have_object(*script_begin++) == (bonus >= 0);
 }
 
 static void have_next(int bonus) {
@@ -2345,15 +2347,9 @@ static const char* get_header_id() {
 
 static void set_magic_effect(magic_s v) {
 	switch(v) {
-	case Artifact:
-		effect_level = 10;
-		break;
-	case Blessed:
-		effect_level = 4;
-		break;
-	default:
-		effect_level = 1;
-		break;
+	case Artifact: effect_level = 10; break;
+	case Blessed: effect_level = 4; break;
+	default: effect_level = 1; break;
 	}
 }
 
@@ -2413,7 +2409,15 @@ static void choose_creature(int bonus) {
 }
 
 static void steal_opponent_coins(int bonus) {
-
+	auto coins = opponent->money;
+	if(!coins)
+		return;
+	auto maximum = xrand((last_value + 1) * 50, (last_value + 1) * 100);
+	if(coins > maximum)
+		coins = maximum;
+	player->money += coins;
+	opponent->money -= coins;
+	gain_experience((coins + 99) / 100);
 }
 
 static void need_help_info(stringbuilder& sb) {
@@ -2516,6 +2520,8 @@ BSDATA(script) = {
 	{"GenerateVillage", generate_cityscape},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
+	{"HealPoison", heal_poison, is_heal_poison},
+	{"HealWounded", heal_wounded, is_heal_wounded},
 	{"HaveNext", have_next, is_have_next},
 	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
@@ -2554,6 +2560,7 @@ BSDATA(script) = {
 	{"ShowImages", show_images},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
+	{"SomeCoins", some_coins},
 	{"StealOpponentCoins", steal_opponent_coins},
 	{"TransferCoins", transfer_coins},
 	{"TestArena", test_arena},
@@ -2566,6 +2573,5 @@ BSDATA(script) = {
 	{"WinGame", win_game},
 	{"Wounded", standart_filter, is_wounded},
 	{"UseItem", use_item},
-	{"UseNextItem", use_next_item, empthy_next_condition},
 };
 BSDATAF(script)

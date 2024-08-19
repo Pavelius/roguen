@@ -546,7 +546,7 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 		if(ei.random_count)
 			activate_item.value += area->param[m] % ei.random_count;
 		if(activate_item.iskind<itemi>()) {
-			if(!player->useitem(bsdata<itemi>::elements + activate_item.value)) {
+			if(!player->useitem(bsdata<itemi>::elements + activate_item.value, true)) {
 				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
 				return false;
 			} else

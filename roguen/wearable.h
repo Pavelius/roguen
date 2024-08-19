@@ -12,13 +12,12 @@ struct wearable : movable {
 	void			equip(item& v);
 	void			equipi(short unsigned type, int count);
 	slice<item>		equipment() { return slice<item>(wears + MeleeWeapon, wears + Legs + 1); }
-	bool			haveitem(const itemi* p) const;
 	bool			iswear(const void* p) const { return p >= wears && p <= wears + Legs; }
 	slice<item>		gears() { return slice<item>(wears + Torso, wears + Legs + 1); }
 	int				getmoney() const { return money; }
 	item*			getwear(wear_s id) { return wears + id; }
 	wear_s			getwearslot(const item* data) const;
 	const item*		getwear(const void* data) const;
-	bool			useitem(const itemi* pi);
+	bool			useitem(const itemi* pi, bool run);
 	slice<item>		weapons() { return slice<item>(wears + MeleeWeapon, wears + RangedWeapon + 1); }
 };

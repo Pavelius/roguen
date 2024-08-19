@@ -69,22 +69,15 @@ wear_s wearable::getwearslot(const item* data) const {
 	return (wear_s)(data - wears);
 }
 
-bool wearable::useitem(const itemi* pi) {
+bool wearable::useitem(const itemi* pi, bool run) {
 	if(!pi)
 		return false;
 	for(auto& v : backpack()) {
 		if(!v.is(pi))
 			continue;
-		v.use();
+		if(run)
+			v.use();
 		return true;
-	}
-	return false;
-}
-
-bool wearable::haveitem(const itemi* p) const {
-	for(auto& v : wears) {
-		if(v.is(p))
-			return true;
 	}
 	return false;
 }

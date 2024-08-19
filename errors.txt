@@ -1,2 +1,14 @@
-﻿In file `rules/Advancement.txt`:
- Line 6: Can't find variant `LockPick`
+﻿In file `rules/Monsters.txt`:
+ Line 96: Not found field `SomeCoins` in dataset `abilities`
+ Line 96: Expected token `(`
+ Line 96: Expected line feed
+In file `rules/Sites.txt`:
+ Line 41: Can't find variant `PriestOfTheOne`
+ Line 50: Can't find variant `Shopkeeper`
+ Line 74: Can't find variant `RandomCaveMonster`
+ Line 186: Can't find variant `RandomWildAnimals`
+ Line 189: Can't find variant `RandomWildAnimals`
+ Line 193: Can't find variant `RandomBogMonsters`
+ Line 193: Can't find variant `RandomWildAnimals`
+In file `locale/ru/core/NameCharacters.txt`:
+ Line 21: Can't find variant `PriestOfTheOne`
