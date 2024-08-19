@@ -1,2 +1,7 @@
-﻿In file `rules/Skills.txt`:
- Line 25: Can't find variant `MarkRoom`
+﻿In file `rules/Items.txt`:
+ Line 202: Can't find variant `GainSatiation`
+ Line 204: Can't find variant `GainSatiation`
+ Line 206: Can't find variant `GainSatiation`
+ Line 208: Can't find variant `GainSatiation`
+ Line 248: Can't find variant `GainSatiation`
+ Line 250: Can't find variant `GainSatiation`

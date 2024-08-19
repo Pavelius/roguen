@@ -2234,10 +2234,6 @@ static void gain_coins(int bonus) {
 	player->money += value;
 }
 
-static void gain_satiation(int bonus) {
-	player->satiation += bonus * 10;
-}
-
 static bool is_random(int bonus) {
 	return d100() < 30;
 }
@@ -2456,7 +2452,6 @@ BSDATA(script) = {
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
-	{"GainSatiation", gain_satiation},
 	{"GatherNextItem", gather_next_item, empthy_next_condition},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCave", generate_cave},

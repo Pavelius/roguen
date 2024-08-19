@@ -114,7 +114,7 @@ PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(Hea
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2
 
-HealingPotion cost(30) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
+HealingPotion cost(100) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
  use Heal+20
 ManaPotion cost(30) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
  use Mana+20
@@ -198,14 +198,14 @@ AmuletOfColdHeart cost(1100) weight(4) avatar(79)
 AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
  wearing DeathResistance+1
 
-Apple weight(2) avatar(503) rotting(20)
- use Heal+2 GainSatiation+2 Chance+1 Strenght+1
-LoafOfBread weight(40) avatar(160) rotting(5)
- use Heal+5 GainSatiation+50
-Sausage weight(20) avatar(157) rotting(10)
- use Heal+10 GainSatiation+50 Chance+3 Strenght+1
+Apple cost(5) weight(2) avatar(503) rotting(20)
+ use Heal+2 Chance+1 Strenght+1
+LoafOfBread cost(20) weight(40) avatar(160) rotting(5)
+ use Heal+5
+Sausage cost(40) weight(20) avatar(157) rotting(10)
+ use Heal+10 Chance+3 Strenght+1
 Ration cost(50) weight(50) avatar(126) 
- use Heal+15 GainSatiation+80
+ use Heal+10
 Torch cost(10) avatar(207) weight(30) count(3)
  use TorchLight+3
 
@@ -216,38 +216,38 @@ StrangeGreenSphere cost(100) weight(50) avatar(232)
 StrangeRod cost(50) weight(10) avatar(80)
 
 Bones cost(2) weight(3) avatar(899) 
-MonsterSkull cost(50) weight(50) avatar(519) 
+MonsterSkull cost(100) weight(50) avatar(519) 
 Stones weight(5) avatar(900) count(6)
 
-TinyKey weight(1) avatar(284) 
-SmallKey weight(1) avatar(283) 
-HexagonalKey weight(2) avatar(282) 
-TriangularKey weight(1) avatar(287) 
-RectangularKey weight(1) avatar(285) 
-RoundKey weight(1) avatar(286) 
+TinyKey cost(20) weight(1) avatar(284) 
+SmallKey cost(50) weight(1) avatar(283) 
+HexagonalKey cost(100) weight(2) avatar(282) 
+TriangularKey cost(150) weight(1) avatar(287) 
+RectangularKey cost(200) weight(1) avatar(285) 
+RoundKey cost(250) weight(1) avatar(286) 
 
-AlrauniaAntidote weight(1) avatar(96) 
+AlrauniaAntidote cost(20) weight(1) avatar(96) 
  use Poison-2
-BurbRoot weight(1) avatar(90) 
- use Hits-10
-CurariaMancox weight(1) avatar(91) 
+BurbRoot cost(30) weight(1) avatar(90) 
+ use Illness+1
+CurariaMancox cost(30) weight(1) avatar(91) 
  use Illness-1
 DemonDaisy weight(1) avatar(97) 
  use Poison+10
 DevilsRose weight(1) avatar(94) 
- use Illness+2
-MorgiaRoot weight(1) avatar(108) 
+ use Wits+1
+MorgiaRoot cost(200) weight(1) avatar(108) 
  use Strenght+1
-MossOfMoreilon weight(1) avatar(107) 
+MossOfMoreilon cost(200) weight(1) avatar(107) 
  use Dexterity+1
-PepperPetal weight(1) avatar(95) 
- use Hits+4
-Spenseweed weight(1) avatar(106) 
+PepperPetal cost(200) weight(1) avatar(95) 
  use Hits+1
+Spenseweed weight(1) avatar(106) 
+ use Heal+1
 Stomacemptia weight(1) avatar(93) 
- use GainSatiation+20
+ use Heal+2
 Stomafillia weight(1) avatar(89) 
- use GainSatiation-10
+ use Heal+1
 
 TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)
  use RollLearning

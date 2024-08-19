@@ -321,9 +321,6 @@
     <ClCompile Include="global.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="skillable.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="feature.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -582,9 +579,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="areapiece.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="skillable.h">
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="feature.h">

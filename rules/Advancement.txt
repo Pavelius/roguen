@@ -11,6 +11,6 @@ Human 1 Equipment
  elements Staff
 
 Dwarf 1 Ability
- elements Strenght+30 Dexterity+10 Hits+30 Wits+10 WeaponSkill+20 BalisticSkill+10 Gemcutting+20 Darkvision
+ elements Strenght+30 Dexterity+10 Hits+30 Wits+10 WeaponSkill+20 BalisticSkill+10 Mining+15 Gemcutting+10 Darkvision PoisonResistance
 Dwarf 1 Equipment
  elements HandAxe LeatherArmor

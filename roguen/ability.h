@@ -11,7 +11,7 @@ enum ability_s : unsigned char {
 	Alertness, Gemcutting, Herbalism, Thievery, Literacy, Mining,
 	Stealth, Survival, Haggling, History, Religion, Woodcutting,
 	CarryCapacity, Level,
-	Hits, Mana, Faith, SkillPoints,
+	Hits, Mana, Faith, Mood, SkillPoints,
 	Poison, Illness, Corrosion, Burning, Freezing,
 	FirstSkill = Alertness, LastSkill = Woodcutting,
 };

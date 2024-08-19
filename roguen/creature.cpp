@@ -24,23 +24,16 @@ bool choose_targets(const variants& effects);
 void damage_item(item& it);
 int getfloor();
 
+static int get_counter(int counter) {
+	if(counter > 100)
+		return xrand(1, counter - 100);
+	return counter;
+}
+
 static int get_experience_reward(creature* p) {
 	static int levels[] = {7, 15, 35, 65, 120, 175, 270, 420, 650, 975, 1400, 2000, 3000};
 	auto r = p->get(Level);
 	return maptbl(levels, r);
-}
-
-static int get_next_level_experience(int level) {
-	static int levels[] = {1000, 2000, 3500, 5000, 7000, 9000, 12000, 15000, 18000};
-	const auto m = sizeof(levels) / sizeof(levels[0]);
-	auto n = maptbl(levels, level);
-	if(level >= m)
-		n += (level - m + 1) * 10000;
-	return n;
-}
-
-static bool need_levelup(int experience, int level) {
-	return experience >= get_next_level_experience(level);
 }
 
 bool creature::fixaction(const char* id, const char* action, ...) const {
@@ -318,6 +311,73 @@ static void nullify_elements(creature* player) {
 	}
 }
 
+static int get_next_level_experience(int level) {
+	static int levels[] = {1000, 2000, 3500, 5000, 7000, 9000, 12000, 15000, 18000};
+	const auto m = sizeof(levels) / sizeof(levels[0]);
+	auto n = maptbl(levels, level);
+	if(level >= m)
+		n += (level - m + 1) * 10000;
+	return n;
+}
+
+static bool need_levelup(int experience, int level) {
+	return experience >= get_next_level_experience(level);
+}
+
+static int additional_skill_points(int v) {
+	auto r = 0;
+	if(v >= 50)
+		r++;
+	if(v >= 70)
+		r++;
+	if(v >= 90)
+		r++;
+	if(v >= 100)
+		r++;
+	return r;
+}
+
+void advance_value(variant v) {
+	if(v.iskind<abilityi>())
+		player->basic.abilities[v.value] += get_counter(v.counter);
+	else if(v.iskind<itemi>()) {
+		if(v.counter >= 0)
+			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
+	} else if(v.iskind<feati>())
+		ftscript<feati>(v.value, v.counter);
+	else if(v.iskind<spelli>())
+		player->spells[v.value] += v.counter;
+	else if(v.iskind<modifieri>())
+		modifier = (modifiers)v.value;
+	else if(v.iskind<script>())
+		bsdata<script>::elements[v.value].proc(v.counter);
+}
+
+static void advance_value(variants elements) {
+	for(auto v : elements)
+		advance_value(v);
+}
+
+static void advance_value(variant kind, int level) {
+	for(auto& e : bsdata<advancement>()) {
+		if(e.type == kind && e.level == level) {
+			advance_value(e.elements);
+			player->update();
+		}
+	}
+}
+
+void player_levelup() {
+	player->basic.abilities[Level] += 1;
+	player->basic.abilities[SkillPoints] += 10 + additional_skill_points(player->basic.abilities[Wits]);
+	advance_value(player->getkind(), player->basic.abilities[Level]);
+}
+
+static void check_levelup() {
+	while(need_levelup(player->experience, player->basic.abilities[Level]))
+		player_levelup();
+}
+
 static void check_burning(creature* player) {
 	if(player->is(Burning)) {
 		if(!player->resist(FireResistance, FireImmunity))
@@ -363,11 +423,6 @@ static void check_stun(creature* p) {
 		if(p->is(StunResistance) && p->roll(Strenght))
 			p->remove(Stun);
 	}
-}
-
-static void check_satiation(creature* p) {
-	if(p->satiation > 0)
-		p->satiation--;
 }
 
 static void random_walk(creature* p) {
@@ -1089,7 +1144,6 @@ void creature::movestep(point ni) {
 }
 
 void creature::finish() {
-	satiation += 2000;
 	update();
 	abilities[Hits] = getmaximum(Hits);
 	abilities[Mana] = getmaximum(Mana);
@@ -1121,12 +1175,6 @@ static void add_ability(ability_s v, int counter, bool interactive, bool basic) 
 		else
 			player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, 100, interactive);
 	}
-}
-
-static int get_counter(int counter) {
-	if(counter > 100)
-		return xrand(1, counter - 100);
-	return counter;
 }
 
 bool creature::roll(ability_s v, int bonus) const {
@@ -1241,7 +1289,6 @@ void creature::makemove() {
 	pushvalue push_site(last_site, get_site(this));
 	pushvalue push_action(last_action);
 	set(EnemyAttacks, 0);
-	check_satiation(this);
 	update();
 	nullify_elements(this);
 	check_blooding(this);
@@ -1250,6 +1297,7 @@ void creature::makemove() {
 	check_burning(this);
 	check_freezing(this);
 	check_corrosion(this);
+	check_levelup();
 	ready_actions();
 	if(ishuman()) {
 		ready_skills();
@@ -1449,36 +1497,6 @@ bool creature::speechlocation() const {
 	return true;
 }
 
-void advance_value(variant v) {
-	if(v.iskind<abilityi>())
-		player->basic.abilities[v.value] += get_counter(v.counter);
-	else if(v.iskind<itemi>()) {
-		if(v.counter >= 0)
-			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
-	} else if(v.iskind<feati>())
-		ftscript<feati>(v.value, v.counter);
-	else if(v.iskind<spelli>())
-		player->spells[v.value] += v.counter;
-	else if(v.iskind<modifieri>())
-		modifier = (modifiers)v.value;
-	else if(v.iskind<script>())
-		bsdata<script>::elements[v.value].proc(v.counter);
-}
-
-static void advance_value(variants elements) {
-	for(auto v : elements)
-		advance_value(v);
-}
-
-static void advance_value(variant kind, int level) {
-	for(auto& e : bsdata<advancement>()) {
-		if(e.type == kind && e.level == level) {
-			advance_value(e.elements);
-			player->update();
-		}
-	}
-}
-
 static void apply_value(variant v) {
 	if(v.iskind<spelli>())
 		ftscript<spelli>(v.value, v.counter);
@@ -1611,11 +1629,6 @@ int	creature::getsellingcost() const {
 	return result;
 }
 
-void player_levelup() {
-	player->basic.abilities[Level] += 1;
-	advance_value(player->getkind(), player->basic.abilities[Level]);
-}
-
 creature* player_create(point m, variant kind, bool female) {
 	if(!kind)
 		return 0;
@@ -1662,7 +1675,7 @@ creature* player_create(point m, variant kind, bool female) {
 bool creature::isallow(const item& it) const {
 	auto& ei = it.geti();
 	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
-		auto v = ei.required[i];
+		auto v = ei.required[i-Strenght];
 		if(v && get(i) < v)
 			return false;
 	}

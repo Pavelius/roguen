@@ -144,3 +144,4 @@ FireDamage: Воспламенения
 FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света
+PoisonResistance: Сопротивление яду

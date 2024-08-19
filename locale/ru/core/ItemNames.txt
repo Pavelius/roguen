@@ -32,6 +32,7 @@ BattleAxe: Боевой топор
 BruteSword: Брутальный меч
 Claws: Когти
 Dagger: Кинжал
+HandAxe: Топор
 HandPick: Кирка
 Halberd: Алебарда
 Spear: Копье

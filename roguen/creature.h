@@ -21,7 +21,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	void			update_abilities();
 	void			update_room_abilities();
 public:
-	int				experience, satiation, wait_seconds;
+	int				experience, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
@@ -126,7 +126,6 @@ extern int window_width, window_height;
 void dialog_message(const char* format);
 bool isneed(const void* p);
 bool ispresent(const void* p);
-void player_levelup();
 
 creature* player_create(point m, variant kind, bool female);
 
