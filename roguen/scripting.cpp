@@ -1057,8 +1057,8 @@ template<> void ftscript<dialogi>(int value, int counter) {
 }
 
 template<> void ftscript<speechv2>(int value, int counter) {
-	if(opponent)
-		opponent->say(speech_get(value, -1));
+	if(player)
+		player->say(speech_get(value, -1));
 }
 
 template<> void ftscript<featurei>(int value, int counter) {
@@ -1547,6 +1547,11 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chatting() {
+	if(opponent->istired()) {
+		opponent->fixaction("IAmTired", 0);
+		opponent->abilities[Mood] -= 1;
+		return;
+	}
 	auto monster = opponent->getmonster();
 	if(monster) {
 		if(player->talk(monster->id))
@@ -1568,6 +1573,7 @@ static void chatting() {
 			return;
 	}
 	opponent->fixaction("HowYouAre", 0);
+	opponent->abilities[Mood] -= xrand(1, 3);
 }
 
 static void chatting(int bonus) {
@@ -1781,6 +1787,7 @@ static void transfer_coins(int bonus) {
 		if(-bonus > opponent->money)
 			bonus = -opponent->money;
 	}
+	last_value = bonus;
 	player->addcoins(-bonus);
 	opponent->addcoins(bonus);
 }
@@ -2241,9 +2248,23 @@ static bool is_random(int bonus) {
 static void empthy_script(int bonus) {
 }
 
-static void going_angry(int bonus) {
-	if(opponent && !opponent->ishuman())
-		opponent->set(Enemy);
+static void opponent_next(int bonus) {
+	auto push_player = player;
+	auto push_opponent = opponent;
+	iswap(player, opponent);
+	auto v = next_script();
+	script_run(v);
+	opponent = push_opponent;
+	player = push_player;
+}
+
+static void add_anger(int bonus) {
+	if(!bonus)
+		bonus = 1;
+	if(bonus >= 0)
+		player->abilities[Mood] -= xrand(bonus, bonus * 3);
+	else
+		player->abilities[Mood] -= bonus;
 }
 
 static bool is_npc(int bonus) {
@@ -2432,6 +2453,7 @@ BSDATA(script) = {
 	{"AddNeedAnswers", add_need_answers},
 	{"ApplyAction", apply_action},
 	{"AnimalInt", empthy_script, is_animal},
+	{"Anger", add_anger},
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"Chatting", chatting},
@@ -2463,7 +2485,6 @@ BSDATA(script) = {
 	{"GenerateRoomNoFloor", generate_room_record},
 	{"GenerateWalls", generate_walls},
 	{"GenerateVillage", generate_cityscape},
-	{"GoingAngry", going_angry},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
 	{"HealPoison", heal_poison, is_heal_poison},
@@ -2488,6 +2509,7 @@ BSDATA(script) = {
 	{"Offset", set_offset},
 	{"OpenLockedDoor", open_locked_door, is_locked_door},
 	{"OpenNearestDoor", open_nearest_door},
+	{"Opponent", opponent_next},
 	{"PickUp", pickup},
 	{"PickUpAll", pickup_all},
 	{"PowerByMagic", power_by_magic},

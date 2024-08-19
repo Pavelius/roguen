@@ -91,3 +91,9 @@ void script_run_ex(const variants& source) {
 	script_end = push_end;
 	script_begin = push_begin;
 }
+
+variant next_script() {
+	if(script_begin < script_end)
+		return *script_begin++;
+	return variant();
+}

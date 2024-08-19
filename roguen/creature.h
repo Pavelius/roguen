@@ -72,6 +72,7 @@ public:
 	bool			isenemy(const creature& opponent) const;
 	bool			ishuman() const;
 	bool			ispresent() const;
+	bool			istired() const { return abilities[Mood] <= -10; }
 	bool			isunaware() const { return wait_seconds >= 100 * 6; }
 	bool			isvalid() const;
 	void			interaction(creature& opponent);

@@ -26,5 +26,7 @@ void script_run(variant v, int counter);
 void script_run(const variants& elements);
 void script_run_ex(const variants& source);
 
+variant next_script();
+
 template<typename T> bool fttest(int index, int value);
 template<typename T> void ftscript(int index, int value);

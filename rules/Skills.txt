@@ -7,7 +7,7 @@ GatherSemiMellowHerbsFail
 RoomsWhereGemsCanBe
  elements DefaultDungeonEntrance DefaultCaveEntrance DefaultMineEntrance SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
 StealCoinsFail
- elements GoingAngry StealCoinsAngry
+ elements Opponent Anger+1 Opponent StealCoinsAngry
 
 #SiteSkill
 

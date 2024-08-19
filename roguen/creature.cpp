@@ -416,12 +416,21 @@ static void check_blooding(creature* p) {
 	}
 }
 
-static void check_stun(creature* p) {
-	if(p->is(Stun)) {
-		if(p->roll(Strenght))
-			p->remove(Stun);
-		if(p->is(StunResistance) && p->roll(Strenght))
-			p->remove(Stun);
+static void check_stun(creature* player) {
+	if(player->is(Stun)) {
+		if(player->roll(Strenght))
+			player->remove(Stun);
+		if(player->is(StunResistance) && player->roll(Strenght))
+			player->remove(Stun);
+	}
+}
+
+static void check_mood() {
+	if(player->abilities[Mood] != 0) {
+		if(player->abilities[Mood] > 0)
+			player->abilities[Mood]--;
+		else
+			player->abilities[Mood]++;
 	}
 }
 
@@ -1548,6 +1557,7 @@ void creature::everyminute() {
 		magic_restore(this, Mana, 3);
 	restore(this, Mana, Wits);
 	check_stun(this);
+	check_mood();
 	posion_recovery(this, Poison);
 }
 
