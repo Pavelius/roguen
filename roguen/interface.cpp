@@ -37,7 +37,7 @@ bool					show_floor_rect;
 int						window_width = 480;
 int						window_height = 280;
 
-typedef int (*fnactionkey)(const void* object, int index);
+typedef unsigned (*fnactionkey)(const void* object, int index);
 
 static point straight_directions[] = {
 	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
@@ -694,7 +694,7 @@ static void execute_action() {
 	last_action = push_action;
 }
 
-static void paint_action(const void* p, int index, int key, fnevent proc) {
+static void paint_action(const void* p, int index, unsigned key, fnevent proc) {
 	auto push_caret = caret;
 	auto result = button(key, 32);
 	text(getnm(((nameable*)p)->id));
@@ -728,7 +728,7 @@ static void set_ld_position() {
 		caret.x = getwidth() - width - metrics::padding * 4 - panel_width;
 }
 
-static int get_action_key(const void* pv, int index) {
+static unsigned get_action_key(const void* pv, int index) {
 	auto p = (siteskilli*)pv;
 	if(p->key)
 		return p->key;

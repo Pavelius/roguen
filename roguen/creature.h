@@ -3,7 +3,6 @@
 #include "answers.h"
 #include "areaf.h"
 #include "areamap.h"
-#include "class.h"
 #include "dice.h"
 #include "moveable.h"
 #include "monster.h"

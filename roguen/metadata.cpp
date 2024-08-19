@@ -30,7 +30,6 @@ BSMETA(varianti) = {BSREQ(id), {}};
 
 BSDATAD(advancement);
 BSDATAD(areapiece);
-BSDATAC(classi, 16);
 BSDATAC(creature, 256);
 BSDATAC(itemi, 512);
 BSDATAC(locationi, 128);
@@ -147,7 +146,6 @@ BSMETA(siteskilli) = {
 	BSREQ(id),
 	BSENM(skill, abilityi),
 	BSREQ(bonus),
-	BSENM(retry, durationi),
 	BSREQ(effect),
 	BSREQ(keyid),
 	BSREQ(tool),

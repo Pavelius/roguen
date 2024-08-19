@@ -8,6 +8,7 @@
 #include "game.h"
 #include "itema.h"
 #include "listcolumn.h"
+#include "markuse.h"
 #include "modifier.h"
 #include "greatneed.h"
 #include "pushvalue.h"
@@ -17,7 +18,6 @@
 #include "script.h"
 #include "site.h"
 #include "siteskill.h"
-#include "skilluse.h"
 #include "speech.h"
 #include "textscript.h"
 #include "trigger.h"
@@ -393,6 +393,10 @@ static void lock_door(point m) {
 		area->setfeature(m, ph - bsdata<featurei>::elements);
 		area->total.doors_locked++;
 	}
+}
+
+static void mark_room(int bonus) {
+	markuse_add(last_action, center(last_rect), bsid(player), 0);
 }
 
 static void lock_all_doors(int bonus) {
@@ -1219,37 +1223,6 @@ bool allow_targets(const variants& conditions) {
 	return script_allow(conditions);
 }
 
-//static void apply_target_effect(const variants& effect) {
-//	if(!effect)
-//		return;
-//	pushvalue push_opponent(opponent, player);
-//	pushvalue push_player(player);
-//	pushvalue push_modifier(modifier);
-//	pushvalue push_item(last_item);
-//	pushvalue push_value(last_room);
-//	pushvalue push_rect(last_rect);
-//	pushvalue push_index(last_index, player->getposition());
-//	for(auto p : targets) {
-//		player = p;
-//		script_run(effect);
-//	}
-//	for(auto p : indecies) {
-//		last_rect = {p.x, p.y, p.x, p.y};
-//		last_index = p;
-//		script_run(effect);
-//	}
-//	for(auto p : rooms) {
-//		last_room = p;
-//		last_rect = p->rc;
-//		last_index = center(last_rect);
-//		script_run(effect);
-//	}
-//	for(auto p : items) {
-//		last_item = p;
-//		script_run(effect);
-//	}
-//}
-
 static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!id)
 		return true;
@@ -1603,16 +1576,6 @@ static void chatting(int bonus) {
 	opponent->wait();
 }
 
-//static void apply_action(const char* id, const variants& targets, const variants& effects) {
-//	if(!choose_targets(targets)) {
-//		player->actp(getdescription(str("%1Fail", id)));
-//		return;
-//	}
-//	if(!bound_targets(id, 0, player->ishuman(), false))
-//		return;
-//	apply_target_effect(effects);
-//}
-
 static void test_rumor(int bonus) {
 	player->speechrumor();
 }
@@ -1954,14 +1917,6 @@ static void repair_item(int bonus) {
 		last_item->setborken(3);
 }
 
-//static bool roll_skill() {
-//	auto skill = player->get(last_action->skill) + last_action->bonus;
-//	auto result = d100();
-//	if(game.getowner() == player || player->is(Visible))
-//		player->logs(getnm("YouRollSkill"), getnm(last_action->id), skill, result);
-//	return result < skill;
-//}
-
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
@@ -2018,25 +1973,10 @@ static void roll_action(int bonus) {
 		return;
 	last_ability = last_action->skill;
 	roll_value(last_action->bonus + bonus);
-	last_action->fixuse();
-}
-
-static void fail_roll_value(int bonus) {
-	if(!player)
-		return;
-	if(!player->roll(last_ability, bonus))
-		player->logs(getnm("YouMakeRoll"), last_value, player->get(last_ability) + bonus, bonus);
-	else {
-		player->logs(getnm("YouFailRoll"), last_value, player->get(last_ability) + bonus, bonus);
-		script_stop();
-	}
-}
-
-static void fail_roll_action(int bonus) {
-	if(!last_action)
-		return;
-	last_ability = last_action->skill;
-	roll_value(last_action->bonus + bonus);
+	if(last_roll_successed)
+		player->fixaction(last_action->id, "Success");
+	else
+		player->fixaction(last_action->id, "Fail");
 }
 
 static void roll_for_effect(int bonus) {
@@ -2306,7 +2246,7 @@ static void empthy_script(int bonus) {
 }
 
 static void going_angry(int bonus) {
-	if(opponent)
+	if(opponent && !opponent->ishuman())
 		opponent->set(Enemy);
 }
 
@@ -2513,7 +2453,6 @@ BSDATA(script) = {
 	{"ForEachFeature", for_each_feature, is_features},
 	{"ForEachOpponent", for_each_opponent, is_targets},
 	{"ForEachRoom", for_each_room, is_room},
-	{"FailRollAction", fail_roll_action},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
@@ -2541,6 +2480,7 @@ BSDATA(script) = {
 	{"LoseGame", lose_game},
 	{"LockAllDoors", lock_all_doors},
 	{"MakeScreenshoot", make_screenshoot},
+	{"MarkRoom", mark_room},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
 	{"MoveDownRight", move_down_right},

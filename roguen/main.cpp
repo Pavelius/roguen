@@ -70,7 +70,7 @@ static creature* find_monster_id(const char* id) {
 }
 
 static void main_start() {
-	player = player_create({5, 5}, "DarkElf", true);
+	player = player_create({5, 5}, "Dwarf", true);
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");

@@ -10,7 +10,7 @@ Web
 #RandomTable
 
 RandomRace
- chance Human+8 HightElf+1
+ chance Human+8 HightElf DarkElf
 
 #Hotkey
 

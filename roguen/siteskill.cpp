@@ -7,8 +7,8 @@
 #include "game.h"
 #include "hotkey.h"
 #include "indexa.h"
+#include "pushvalue.h"
 #include "script.h"
-#include "skilluse.h"
 #include "siteskill.h"
 
 extern indexa indecies;
@@ -17,12 +17,6 @@ siteskilla last_actions;
 siteskilli* last_action;
 
 bool allow_targets(const variants& conditions);
-
-void siteskilli::fixuse() const {
-	auto rm = player->getroom();
-	if(rm)
-		skilluse_add(this, rm->center(), bsid(player), game.getminutes());
-}
 
 static bool use_item(variant v, bool run) {
 	if(v.iskind<itemi>())
@@ -45,6 +39,9 @@ bool siteskilli::ishotkeypresent() const {
 }
 
 bool siteskilli::isusable() const {
+	auto ishuman = player->ishuman();
+	if(!player->basic.abilities[skill])
+		return false;
 	if((player->get(skill) + bonus) < 0)
 		return false;
 	if(tool) {
@@ -53,19 +50,7 @@ bool siteskilli::isusable() const {
 	}
 	if(ishotkeypresent())
 		return false;
-	auto rm = player->getroom();
-	if(rm) {
-		auto su = skilluse_find(this, rm->center(), bsid(player));
-		if(su) {
-			if(!retry)
-				return false;
-			else {
-				auto next_time = su->stamp + get_duration(retry);
-				if(game.getminutes() < next_time)
-					return false;
-			}
-		}
-	}
+	pushvalue push(last_action, const_cast<siteskilli*>(this));
 	return allow_targets(effect);
 }
 

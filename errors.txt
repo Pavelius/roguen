@@ -1,2 +1,2 @@
 ﻿In file `rules/Skills.txt`:
- Line 6: Can't find variant `StealCoinsAngry`
+ Line 25: Can't find variant `MarkRoom`

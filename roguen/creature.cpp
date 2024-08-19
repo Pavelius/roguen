@@ -59,7 +59,7 @@ bool creature::fixaction(const char* id, const char* action, ...) const {
 			return true;
 		}
 	}
-	auto pn = getdescription(str("%1%2", id, action));
+	auto pn = getdescription(ids(id, action));
 	if(pn) {
 		actv(console, pn, xva_start(action), getname(), is(Female), ' ');
 		return true;

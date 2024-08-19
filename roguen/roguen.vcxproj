@@ -227,7 +227,7 @@
     <ClCompile Include="serial.cpp" />
     <ClCompile Include="shape.cpp" />
     <ClCompile Include="siteskill.cpp" />
-    <ClCompile Include="skilluse.cpp" />
+    <ClCompile Include="markuse.cpp" />
     <ClCompile Include="spell.cpp" />
     <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="textscript.cpp" />
@@ -261,7 +261,6 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="charname.h" />
-    <ClInclude Include="class.h" />
     <ClInclude Include="collection.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
@@ -317,7 +316,7 @@
     <ClInclude Include="shape.h" />
     <ClInclude Include="site.h" />
     <ClInclude Include="siteskill.h" />
-    <ClInclude Include="skilluse.h" />
+    <ClInclude Include="markuse.h" />
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />

@@ -3,8 +3,10 @@
 #include "filter.h"
 #include "indexa.h"
 #include "itema.h"
+#include "markuse.h"
 #include "pushvalue.h"
 #include "site.h"
+#include "siteskill.h"
 #include "script.h"
 
 static variant last_variant;
@@ -88,6 +90,11 @@ static bool filter_neutral(const void* object) {
 static bool filter_feature(const void* object) {
 	auto p = (creature*)object;
 	return area->features[p->getposition()] != 0;
+}
+
+static bool filter_room_marked(const void* object) {
+	auto p = (roomi*)object;
+	return markused(last_action, center(p->rc), bsid(player));
 }
 
 static bool filter_notable(const void* object) {
@@ -202,12 +209,13 @@ BSDATA(filteri) = {
 	{"Filter", 0, filter_next},
 	{"FilterBlessed", filter_blessed, filter_items},
 	{"FilterClose", filter_close, match_targets},
-	{"FilterDamaged", filter_damaged, filter_items},
 	{"FilterCursed", filter_cursed, filter_items},
+	{"FilterDamaged", filter_damaged, filter_items},
 	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterIdentified", filter_identified, filter_items},
 	{"FilterFeature", filter_feature, match_targets},
 	{"FilterNotable", filter_notable, match_rooms},
+	{"FilterRoomMarked", filter_room_marked, match_rooms},
 	{"FilterThisRoom", filter_this_room, match_rooms},
 	{"FilterUnaware", filter_unaware, match_targets},
 	{"FilterWounded", filter_wounded, match_targets},

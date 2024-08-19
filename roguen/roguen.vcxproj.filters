@@ -273,13 +273,10 @@
     <ClCompile Include="world.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="race.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="moveable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="skilluse.cpp">
+    <ClCompile Include="markuse.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="item.cpp">
@@ -341,6 +338,9 @@
     </ClCompile>
     <ClCompile Include="speech.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="race.cpp">
+      <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,9 +515,6 @@
     <ClInclude Include="world.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="race.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="moveable.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -527,7 +524,7 @@
     <ClInclude Include="site.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="skilluse.h">
+    <ClInclude Include="markuse.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="siteskill.h">
@@ -590,9 +587,6 @@
     <ClInclude Include="skillable.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="class.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="feature.h">
       <Filter>Logic</Filter>
     </ClInclude>
@@ -607,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="speech.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="race.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
