@@ -1,6 +1,12 @@
 #include "bsreq.h"
 #include "crt.h"
 #include "duration.h"
+#include "nameable.h"
+
+struct durationi : nameable {
+	int	value, per_level;
+	int	get(int level) const { return value + level * per_level; }
+};
 
 BSMETA(durationi) = {
 	BSREQ(id),
@@ -20,3 +26,7 @@ BSDATA(durationi) = {
 	{"Day1", 60 * 24},
 };
 assert_enum(durationi, Day1)
+
+int get_duration(duration_s v, int level) {
+	return bsdata<durationi>::elements[v].get(level);
+}

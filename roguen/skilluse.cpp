@@ -2,7 +2,7 @@
 
 BSDATAD(skilluse)
 
-skilluse* skilluse::find(variant v, point position, short unsigned player_id) {
+skilluse* skilluse_find(variant v, point position, short unsigned player_id) {
 	if(player_id == 0xFFFF)
 		return 0;
 	for(auto& e : bsdata<skilluse>()) {
@@ -12,10 +12,10 @@ skilluse* skilluse::find(variant v, point position, short unsigned player_id) {
 	return 0;
 }
 
-skilluse* skilluse::add(variant v, point position, short unsigned player_id, unsigned stamp) {
+skilluse* skilluse_add(variant v, point position, short unsigned player_id, unsigned stamp) {
 	if(player_id == 0xFFFF)
 		return 0;
-	auto p = find(v, position, player_id);
+	auto p = skilluse_find(v, position, player_id);
 	if(!p)
 		p = bsdata<skilluse>::add();
 	if(!p)

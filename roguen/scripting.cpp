@@ -1299,7 +1299,7 @@ static bool bound_targets(const char* id, int multi_targets, bool interactive, b
 void apply_spell(const spelli& ei, int level) {
 	pushvalue push_value(last_value, ei.getcount(level));
 	if(ei.duration) {
-		auto minutes = bsdata<durationi>::elements[ei.duration].get(level);
+		auto minutes = get_duration(ei.duration, level);
 		auto stop_time = game.getminutes() + minutes;
 		player->fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), ColorGreen);
 		for(auto v : ei.effect)

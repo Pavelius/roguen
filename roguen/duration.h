@@ -1,6 +1,6 @@
-#include "nameable.h"
-
 #pragma once
+
+struct durationi;
 
 enum duration_s : unsigned char {
 	Instant,
@@ -11,7 +11,4 @@ enum duration_s : unsigned char {
 	Day1,
 };
 
-struct durationi : nameable {
-	int			value, per_level;
-	int			get(int level) const { return value + level * per_level; }
-};
+int get_duration(duration_s v, int level = 0);
