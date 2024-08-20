@@ -70,20 +70,18 @@ static creature* find_monster_id(const char* id) {
 }
 
 static void main_start() {
-	player = player_create({5, 5}, "Dwarf", true);
+	player = player_create({5, 5}, "HightElf", true);
 	player->set(Ally);
 	equip_item("LongBow");
 	equip_item("Arrow");
 	add_item("Torch");
 	add_item("Ration", 20);
-	add_item("Bones", 60);
-	add_item("OrnamentalStones", 3);
 	add_item("HealingPotion", 5, true);
 	add_item("PotionOfStrenght", 2, true);
-	add_item("RingOfWarrior");
+	add_item("RingOfWarrior", 1, true);
 	add_item("RingOfProtection");
-	add_item("RingOfFireResistance");
-	add_item("RingOfLevitation");
+	add_item("RingOfFireResistance", 1, true);
+	add_item("RingOfLevitation", 1, true);
 	add_item("RingOfRegeneration");
 	add_item("HandPick");
 	add_item("PotionOfLearning", 1, true);

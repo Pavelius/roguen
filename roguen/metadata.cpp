@@ -155,7 +155,7 @@ BSMETA(spelli) = {
 	BSREQ(mana), BSREQ(count),
 	BSENM(duration, durationi),
 	BSFLG(feats, feati),
-	BSREQ(targets), BSREQ(effect), BSREQ(summon),
+	BSREQ(targets), BSREQ(effect), BSREQ(summon), BSREQ(use),
 	{}};
 BSMETA(weaponi) = {
 	BSREQ(damage), BSREQ(pierce), BSREQ(ammunition),

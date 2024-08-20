@@ -9,14 +9,15 @@ Entaglement mana(6)
  targets SelectEnemies FilterFeature-1
  effect ThornBush
 Gate mana(40)
-TorchLight mana(5) duration(Minute20PL)
+TorchLight mana(5) duration(Minutes) count(20)
  targets SelectYou
  effect LightSource
+ use LightSource
 Mending mana(10)
-Sleep mana(5) duration(Minute20)
+Sleep mana(5) duration(Minutes)
  targets SelectEnemies AnimalInt-1
-SummonUndead mana(20) count(0 0 1)
- summon Skeleton+4 Zombie+2 Ghoul+1
+SummonUndead mana(15) count(4)
+ summon Skeleton+4 Zombie+2
 Teleport mana(5)
  targets SelectRooms FilterNotable FilterExplored FilterThisRoom-1
  effect JumpToSite

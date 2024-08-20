@@ -15,11 +15,15 @@ point			gamei::start_village = {128, 128};
 
 void update_need();
 
-static void all(funct<creature>::command proc) {
+static void all(fnevent proc) {
+	auto push_player = player;
 	for(auto& e : bsdata<creature>()) {
-		if(e.isvalid())
-			(e.*proc)();
+		if(e.isvalid()) {
+			player = &e;
+			proc();
+		}
 	}
+	player = push_player;
 }
 
 static void allnext(funct<creature>::command proc) {
@@ -182,22 +186,22 @@ int gamei::getrange(point m1, point m2) {
 void gamei::passminute() {
 	minutes++;
 	boosti::updateall(getminutes());
-	all(&creature::everyminute);
+	all(creature_every_minute);
 	while(restore_half_turn < minutes) {
-		all(&creature::every5minutes);
+		all(creature_every_5_minutes);
 		restore_half_turn += 5;
 		remove_flags(Iced, 20);
 	}
 	while(restore_turn < minutes) {
-		all(&creature::every10minutes);
+		all(creature_every_10_minutes);
 		restore_turn += 10;
 	}
 	while(restore_hour < minutes) {
-		all(&creature::every1hour);
 		restore_hour = (restore_hour / 60 + 1) * 60 + rand() % 60;
 		update_need();
 	}
 	while(restore_day_part < minutes) {
+		all(creature_every_4_hours);
 		decoy_food();
 		restore_day_part = (restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
 	}

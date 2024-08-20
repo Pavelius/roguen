@@ -19,7 +19,7 @@ extern collection<roomi> rooms;
 int		last_roll_result;
 bool	last_roll_successed;
 
-void apply_spell(const spelli& ei, int level);
+bool allow_targets(const variants& conditions);
 bool choose_targets(const variants& effects);
 void damage_item(item& it);
 void update_console_time();
@@ -189,8 +189,30 @@ void damage_equipment(int bonus, bool allow_save) {
 	}
 }
 
+static void cast_spell(const spelli& e, int mana, bool silent) {
+	if(player->get(Mana) < mana) {
+		player->actp(getnm("NotEnoughtMana"));
+		return;
+	}
+	if(!e.summon && !allow_targets(e.use)) {
+		player->actp(getnm("YouDontValidTargets"));
+		return;
+	}
+	if(!silent) {
+		if(!player->fixaction(e.id, "Casting"))
+			player->fixaction("Spells", "Casting");
+	}
+	if(e.use)
+		script_run(e.effect);
+	if(e.summon)
+		player->summon(player->getposition(), e.summon, e.getcount());
+	player->add(Mana, -mana);
+	player->update();
+	player->wait();
+}
+
 static void special_spell_attack(creature* player, item& weapon, creature* enemy, const spelli& ei) {
-	ei.apply(1, 1, false, true);
+	cast_spell(ei, 0, true);
 	weapon.damage();
 }
 
@@ -234,7 +256,7 @@ static void special_attack(creature* player, item& weapon, creature* enemy, int&
 	}
 }
 
-static void restore(creature* player, ability_s a, ability_s test) {
+static void restore(ability_s a, ability_s test) {
 	auto v = player->get(a);
 	auto mv = player->basic.abilities[a];
 	if(v < mv) {
@@ -243,7 +265,7 @@ static void restore(creature* player, ability_s a, ability_s test) {
 	}
 }
 
-static void magic_restore(creature* player, ability_s a, int max) {
+static void magic_restore(ability_s a, int max) {
 	auto v = player->get(a);
 	auto mv = player->basic.abilities[a];
 	if(v < mv && max) {
@@ -261,7 +283,7 @@ static void add(creature* player, ability_s id, int value, int minimal = 0) {
 	player->set(id, i);
 }
 
-static void posion_recovery(creature* player, ability_s v) {
+static void posion_recovery(ability_s v) {
 	if(player->get(v) > 0) {
 		add(player, v, -1);
 		if(player->is(PoisonResistance))
@@ -307,7 +329,7 @@ static void drop_treasure(creature* pe) {
 	script_run(p->treasure);
 }
 
-static void nullify_elements(creature* player) {
+static void nullify_elements() {
 	if(player->is(Burning) && player->is(Freezing)) {
 		player->set(Burning, 0);
 		player->set(Freezing, 0);
@@ -349,7 +371,7 @@ void advance_value(variant v) {
 	} else if(v.iskind<feati>())
 		ftscript<feati>(v.value, v.counter);
 	else if(v.iskind<spelli>())
-		player->spells[v.value] += v.counter;
+		player->learn_spell(v.value);
 	else if(v.iskind<modifieri>())
 		modifier = (modifiers)v.value;
 	else if(v.iskind<script>())
@@ -381,7 +403,7 @@ static void check_levelup() {
 		player_levelup();
 }
 
-static void check_burning(creature* player) {
+static void check_burning() {
 	if(player->is(Burning)) {
 		if(!player->resist(FireResistance, FireImmunity))
 			player->damage(xrand(1, 3));
@@ -389,7 +411,7 @@ static void check_burning(creature* player) {
 	}
 }
 
-static void check_freezing(creature* player) {
+static void check_freezing() {
 	if(player->is(Freezing)) {
 		if(!player->resist(ColdResistance, ColdImmunity)) {
 			player->damage(1);
@@ -400,8 +422,8 @@ static void check_freezing(creature* player) {
 	}
 }
 
-static void check_corrosion(creature* p) {
-	if(p->is(Corrosion)) {
+static void check_corrosion() {
+	if(player->is(Corrosion)) {
 		if(!player->resist(AcidResistance, AcidImmunity)) {
 			player->damage(player->get(Corrosion));
 			damage_equipment(1, true);
@@ -410,16 +432,16 @@ static void check_corrosion(creature* p) {
 	}
 }
 
-static void check_blooding(creature* p) {
-	if(p->is(Blooding)) {
-		p->damage(1);
-		area->setflag(p->getposition(), Blooded);
-		if(p->roll(Strenght))
-			p->remove(Blooding);
+static void check_blooding() {
+	if(player->is(Blooding)) {
+		player->damage(1);
+		area->setflag(player->getposition(), Blooded);
+		if(player->roll(Strenght))
+			player->remove(Blooding);
 	}
 }
 
-static void check_stun(creature* player) {
+static void check_stun() {
 	if(player->is(Stun)) {
 		if(player->roll(Strenght))
 			player->remove(Stun);
@@ -437,12 +459,12 @@ static void check_mood() {
 	}
 }
 
-static void random_walk(creature* p) {
+static void random_walk() {
 	if(d100() < 60)
-		p->wait();
+		player->wait();
 	else {
 		static direction_s allaround[] = {North, South, East, West};
-		p->movestep(maprnd(allaround));
+		player->movestep(maprnd(allaround));
 	}
 }
 
@@ -536,7 +558,7 @@ static bool check_place_owner(creature* p, point m) {
 	return true;
 }
 
-static void detect_hidden_objects(creature* player) {
+static void detect_hidden_objects() {
 	if(!last_location)
 		return;
 	auto floor = last_location->floors;
@@ -548,7 +570,7 @@ static void detect_hidden_objects(creature* player) {
 		auto& ei = area->getfeature(m);
 		if(ei.isvisible())
 			continue;
-		if(!player->roll(Alertness, -2000))
+		if(!player->roll(Alertness))
 			continue;
 		player->actp(getnm("YouFoundSecretDoor"));
 		area->setreveal(m, floor);
@@ -561,7 +583,7 @@ static void detect_hidden_objects(creature* player) {
 		auto& ei = area->getfeature(m);
 		if(!ei.is(TrappedFeature))
 			continue;
-		if(!player->roll(Alertness, -2000))
+		if(!player->roll(Alertness))
 			continue;
 		area->remove(m, Hidden);
 		player->actp(getdescription("YouDetectTrap"), area->getfeature(m).getname());
@@ -906,16 +928,6 @@ void creature::interaction(creature& opponent) {
 	}
 }
 
-static void apply_damage(creature* player, const item& weapon, int effect) {
-	auto weapon_damage = weapon.geti().weapon.damage;
-	auto damage_reduction = player->get(Armor) - weapon.geti().weapon.pierce;
-	if(damage_reduction < 0)
-		damage_reduction = 0;
-	auto result_damage = weapon_damage - damage_reduction + effect;
-	fixdamage(player, result_damage, weapon_damage, -damage_reduction, effect);
-	player->damage(result_damage);
-}
-
 static ability_s weapon_skill(const item& weapon) {
 	auto& ei = weapon.geti();
 	switch(ei.wear) {
@@ -945,33 +957,14 @@ static void apply_pierce(int& armor, int pierce) {
 		armor = 0;
 }
 
-static void apply_damage(creature* player, int damage, int pierce, bool use_block) {
-	auto armor = player->get(Armor);
-	apply_pierce(armor, pierce);
-	auto damage_result = damage - armor;
-	if(damage_result <= 0)
-		return;
-	if(use_block) {
-		auto block_damage = player->get(Block);
-		if(block_damage > 0) {
-			damage_result -= xrand(0, block_damage);
-			if(damage_result <= 0) {
-				player->fixvalue(getnm("Block"), ColorGreen);
-				return;
-			}
-		}
-	}
-	player->damage(damage_result);
-}
-
-static void make_attack(creature* player, creature* enemy, item& weapon, int attack_skill, int damage_percent) {
-	auto enemy_name = enemy->getname();
+static void make_attack(creature* opponent, item& weapon, int attack_skill, int damage_percent) {
+	auto enemy_name = opponent->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto damage = (int)weapon.geti().weapon.damage;
 	damage += player->get(damage_ability(weapon_ability));
-	damage += add_bonus_damage(player, enemy, weapon, FireDamage, 2, FireResistance, FireImmunity);
-	damage += add_bonus_damage(player, enemy, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
+	damage += add_bonus_damage(player, opponent, weapon, FireDamage, 2, FireResistance, FireImmunity);
+	damage += add_bonus_damage(player, opponent, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	if(weapon.isidentified()) { // Blessed or artifact weapon effective only if identified
 		if(weapon.is(Blessed))
 			damage += 1; // Blessed weapon do more damage
@@ -987,32 +980,32 @@ static void make_attack(creature* player, creature* enemy, item& weapon, int att
 		damage -= 2; // If we miss 
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
-		special_attack(player, weapon, enemy, pierce, damage); // If hit critical
-	auto armor = enemy->get(Armor);
+		special_attack(player, weapon, opponent, pierce, damage); // If hit critical
+	auto armor = opponent->get(Armor);
 	apply_pierce(armor, pierce);
 	auto damage_result = damage - armor;
 	if(damage_result > 0 && weapon.is(Cursed) && (d100() < 50)) // Cursed weapon miss half time
 		damage_result = 0;
 	if(damage_result <= 0) {
-		player->logs(getnm("AttackMiss"), damage_result, enemy->getname(), roll_result, damage, -armor);
+		player->logs(getnm("AttackMiss"), damage_result, opponent->getname(), roll_result, damage, -armor);
 		return;
 	}
-	auto block_damage = enemy->get(Block);
+	auto block_damage = opponent->get(Block);
 	if(block_damage > 0) {
 		damage_result -= xrand(0, block_damage);
 		if(damage_result <= 0) {
-			enemy->fixvalue(getnm("Block"), ColorGreen);
+			opponent->fixvalue(getnm("Block"), ColorGreen);
 			return;
 		}
 	}
-	if(enemy->roll(Dodge)) {
-		player->logs(getnm("AttackHitButEnemyDodge"), enemy->getname());
-		enemy->fixvalue(getnm("Dodge"), ColorGreen);
+	if(opponent->roll(Dodge)) {
+		player->logs(getnm("AttackHitButEnemyDodge"), opponent->getname());
+		opponent->fixvalue(getnm("Dodge"), ColorGreen);
 	} else {
-		player->logs(getnm("AttackHit"), damage_result, enemy->getname(), roll_result, damage, -armor);
-		enemy->damage(damage_result);
-		poison_attack(player, enemy, weapon);
-		if(attack_effect(enemy, enemy->wears[MeleeWeapon], Retaliate)) {
+		player->logs(getnm("AttackHit"), damage_result, opponent->getname(), roll_result, damage, -armor);
+		opponent->damage(damage_result);
+		poison_attack(player, opponent, weapon);
+		if(attack_effect(opponent, opponent->wears[MeleeWeapon], Retaliate)) {
 			if(!player->roll(Dodge))
 				player->damage(1);
 		}
@@ -1051,7 +1044,7 @@ void creature::attackmelee(creature& enemy) {
 	auto number_attackers = enemy.get(EnemyAttacks);
 	if(number_attackers > 3)
 		number_attackers = 3;
-	make_attack(this, &enemy, wears[MeleeWeapon], number_attackers * 10, 100);
+	make_attack(&enemy, wears[MeleeWeapon], number_attackers * 10, 100);
 	pay_attack(this, wears[MeleeWeapon]);
 	enemy.add(EnemyAttacks, 1);
 }
@@ -1088,7 +1081,7 @@ void creature::attackrange(creature& enemy) {
 		fixshoot(enemy.getposition(), pa->wear_index);
 	else
 		fixactivity();
-	make_attack(this, &enemy, wears[RangedWeapon], 0, 100);
+	make_attack(&enemy, wears[RangedWeapon], 0, 100);
 	pay_attack(this, wears[RangedWeapon]);
 	if(pa) {
 		wears[Ammunition].use();
@@ -1105,7 +1098,7 @@ void creature::attackthrown(creature& enemy) {
 	if(!canthrown(false))
 		return;
 	fixthrown(enemy.getposition(), "FlyingItem", wears[MeleeWeapon].geti().getindex());
-	make_attack(this, &enemy, wears[MeleeWeapon], 0, 100);
+	make_attack(&enemy, wears[MeleeWeapon], 0, 100);
 	pay_attack(this, wears[MeleeWeapon]);
 	item it;
 	it.create(&wears[MeleeWeapon].geti(), 1);
@@ -1302,13 +1295,13 @@ void creature::makemove() {
 	pushvalue push_action(last_action);
 	set(EnemyAttacks, 0);
 	update();
-	nullify_elements(this);
-	check_blooding(this);
+	nullify_elements();
+	check_blooding();
 	if(!is(Local))
-		detect_hidden_objects(this);
-	check_burning(this);
-	check_freezing(this);
-	check_corrosion(this);
+		detect_hidden_objects();
+	check_burning();
+	check_freezing();
+	check_corrosion();
 	check_levelup();
 	ready_actions();
 	if(ishuman()) {
@@ -1343,7 +1336,7 @@ void creature::makemove() {
 			if(guardorder != getposition())
 				moveorder = guardorder;
 		} else
-			random_walk(this);
+			random_walk();
 	}
 }
 
@@ -1560,25 +1553,28 @@ void creature::use(item& v) {
 	wait();
 }
 
-void creature::everyminute() {
-	if(is(Regeneration))
-		restore(this, Hits, Strenght);
-	if(is(ManaRegeneration))
-		magic_restore(this, Mana, 3);
-	restore(this, Mana, Wits);
-	check_stun(this);
+void creature_every_minute() {
+	if(player->is(Regeneration))
+		restore(Hits, Strenght);
+	if(player->is(ManaRegeneration))
+		magic_restore(Mana, 3);
+	restore(Mana, Wits);
+	check_stun();
 	check_mood();
-	posion_recovery(this, Poison);
+	posion_recovery(Poison);
 }
 
-void creature::every10minutes() {
-	restore(this, Hits, Strenght);
+void creature_every_5_minutes() {
 }
 
-void creature::every30minutes() {
+void creature_every_10_minutes() {
+	restore(Hits, Strenght);
 }
 
-void creature::every4hour() {
+void creature_every_30_minutes() {
+}
+
+void creature_every_4_hours() {
 }
 
 void apply_ability(ability_s v, int counter) {
@@ -1598,10 +1594,10 @@ void creature::apply(const variants& source) {
 }
 
 void creature::cast(const spelli& e) {
-	cast(e, get(e), e.mana);
+	cast_spell(e, e.getmana(), false);
 }
 
-void creature::summon(point m, const variants& elements, int count, int level) {
+void creature::summon(point m, const variants& elements, int count) {
 	auto isenemy = is(Enemy);
 	auto isally = is(Ally);
 	for(auto i = 0; i < count; i++) {

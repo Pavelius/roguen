@@ -1,2 +1,3 @@
-﻿In file `rules/Skills.txt`:
- Line 10: Can't find variant `GoingAngry`
+﻿In file `rules/Spells.txt`:
+ Line 15: Not found requisit `wearing`
+ Line 15: Expected line feed

@@ -176,7 +176,7 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 	auto count = getcount();
 	auto pn = getname();
 	auto vw = stringbuilder::getgender(pn);
-	sb.adds(getname());
+	sb.adds(pn);
 	if(!iscountable() && identified && power) {
 		auto power = getpower();
 		sb.addsep(' ');

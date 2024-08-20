@@ -38,7 +38,6 @@ public:
 	bool			canspeak() const { return abilities[Wits] >= 5; }
 	bool			canthrown(bool interactive) const;
 	void			cast(const spelli& e);
-	void			cast(const spelli& e, int level, int mana);
 	void			clear();
 	void			equipi(short unsigned type, int count);
 	void			everyminute();
@@ -52,7 +51,6 @@ public:
 	void			fixappear();
 	bool			fixaction(const char* id, const char* action, ...) const;
 	int				get(ability_s v) const { return abilities[v]; }
-	int				get(const spelli& e) const { return spells[bsid(&e)]; }
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
@@ -98,7 +96,7 @@ public:
 	bool			speechneed();
 	bool			speechrumor() const;
 	bool			speechlocation() const;
-	void			summon(point m, const variants& elements, int count, int level);
+	void			summon(point m, const variants& elements, int count);
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update();
@@ -118,11 +116,16 @@ extern creaturea creatures, enemies, targets;
 namespace draw {
 bool				isnext();
 }
-extern int last_value, last_roll_result, last_cap;
+extern int last_value, last_roll_result;
 extern bool last_roll_successed;
 extern rect last_rect;
 extern int window_width, window_height;
 
+void creature_every_minute();
+void creature_every_5_minutes();
+void creature_every_10_minutes();
+void creature_every_30_minutes();
+void creature_every_4_hours();
 void dialog_message(const char* format);
 bool isneed(const void* p);
 bool ispresent(const void* p);

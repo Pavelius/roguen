@@ -54,7 +54,7 @@ rect				last_rect;
 roomi*				last_room;
 const sitei*		last_site;
 greatneed*			last_need;
-int					last_value, last_cap;
+int					last_value;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
@@ -1290,10 +1290,10 @@ static bool bound_targets(const char* id, int multi_targets, bool interactive, b
 	return true;
 }
 
-void apply_spell(const spelli& ei, int level) {
-	pushvalue push_value(last_value, ei.getcount(level));
+void apply_spell(const spelli& ei) {
+	pushvalue push_value(last_value, ei.getcount());
 	if(ei.duration) {
-		auto minutes = get_duration(ei.duration, level);
+		auto minutes = get_duration(ei.duration);
 		auto stop_time = game.getminutes() + minutes;
 		player->fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), ColorGreen);
 		for(auto v : ei.effect)
@@ -1303,42 +1303,7 @@ void apply_spell(const spelli& ei, int level) {
 }
 
 template<> void ftscript<spelli>(int index, int value) {
-	apply_spell(bsdata<spelli>::elements[index], value);
-}
-
-bool spelli::apply(int level, int targets_count, bool interactive, bool silent) const {
-	//if(!bound_targets(id, targets_count, interactive))
-	//	return false;
-	if(!silent) {
-		if(!player->fixaction(id, "Casting"))
-			player->fixaction("Spells", "Casting");
-	}
-	//if(::targets.getcount()) {
-	//	pushvalue push_player(player), push_opponent(opponent, player);
-	//	for(auto p : (::targets)) {
-	//		player = p;
-	//		apply_spell(*this, level);
-	//	}
-	//} else
-	//	apply_target_effect(effect);
-	if(summon)
-		player->summon(player->getposition(), summon, getcount(level), level);
-	return true;
-}
-
-void creature::cast(const spelli& e, int level, int mana) {
-	if(get(Mana) < mana) {
-		actp(getnm("NotEnoughtMana"));
-		return;
-	}
-	if(!e.summon && !choose_targets(e.targets)) {
-		actp(getnm("YouDontValidTargets"));
-		return;
-	}
-	e.apply(level, 0, ishuman(), false);
-	add(Mana, -mana);
-	update();
-	wait();
+	apply_spell(bsdata<spelli>::elements[index]);
 }
 
 static void remove_feature(int bonus) {
