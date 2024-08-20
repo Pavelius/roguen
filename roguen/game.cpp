@@ -26,15 +26,17 @@ static void all(fnevent proc) {
 	player = push_player;
 }
 
-static void allnext(funct<creature>::command proc) {
-	if(draw::isnext())
-		return;
+static void allnext(fnevent proc) {
+	auto push_player = player;
 	for(auto& e : bsdata<creature>()) {
-		if(e.isvalid())
-			(e.*proc)();
 		if(draw::isnext())
 			break;
+		if(e.isvalid()) {
+			player = &e;
+			proc();
+		}
 	}
+	player = push_player;
 }
 
 static bool istriggertype(const void* object, int param) {

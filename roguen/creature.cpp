@@ -1022,8 +1022,8 @@ void creature::kill() {
 	fixeffect("HitVisual");
 	fixremove();
 	drop_treasure(this);
-	if(enemy == this && player)
-		player->experience += get_experience_reward(enemy);
+	if(opponent == this && player)
+		player->experience += get_experience_reward(opponent);
 	fire_trigger(WhenCreatureP1Dead, getkind());
 	clear();
 	if(human_killed)
@@ -1219,10 +1219,10 @@ static void look_creatures() {
 }
 
 static void ready_enemy() {
-	enemy = 0;
+	opponent = 0;
 	if(enemies) {
 		enemies.sort(player->getposition());
-		enemy = enemies[0];
+		opponent = enemies[0];
 	}
 }
 
@@ -1269,9 +1269,9 @@ static const sitei* get_site(creature* p) {
 }
 
 void creature::makemovelong() {
-	if(wait_seconds < 100 * 6)
+	if(player->wait_seconds < 100 * 6)
 		return;
-	wait_seconds -= 100 * 6;
+	player->wait_seconds -= 100 * 6;
 }
 
 static void use_skills() {
@@ -1285,56 +1285,56 @@ static void use_skills() {
 
 void creature::makemove() {
 	// Recoil form action
-	if(wait_seconds > 0) {
-		wait_seconds -= 25;
+	if(player->wait_seconds > 0) {
+		player->wait_seconds -= 25;
 		return;
 	}
-	pushvalue push_player(player, this);
-	pushvalue push_rect(last_rect, getposition().rectangle());
-	pushvalue push_site(last_site, get_site(this));
 	pushvalue push_action(last_action);
-	set(EnemyAttacks, 0);
-	update();
+	pushvalue push_player(opponent);
+	pushvalue push_rect(last_rect, player->getposition().rectangle());
+	pushvalue push_site(last_site, get_site(player));
+	player->set(EnemyAttacks, 0);
+	player->update();
 	nullify_elements();
 	check_blooding();
-	if(!is(Local))
+	if(!player->is(Local))
 		detect_hidden_objects();
 	check_burning();
 	check_freezing();
 	check_corrosion();
 	check_levelup();
 	ready_actions();
-	if(ishuman()) {
+	if(player->ishuman()) {
 		ready_skills();
 		adventure_mode();
-	} else if(enemy) {
+	} else if(opponent) {
 		allowed_spells.match(spell_iscombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 40)
-			cast(*((spelli*)allowed_spells.random()));
-		else if(canshoot(false))
-			attackrange(*enemy);
+			player->cast(*((spelli*)allowed_spells.random()));
+		else if(player->canshoot(false))
+			player->attackrange(*opponent);
 		else
-			moveto(enemy->getposition());
+			player->moveto(opponent->getposition());
 	} else {
 		allowed_spells.match(spell_isnotcombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
-		if(isfollowmaster())
-			moveto(getowner()->getposition());
+		if(player->isfollowmaster())
+			player->moveto(player->getowner()->getposition());
 		else if(d100() < 20)
 			use_skills();
 		else if(allowed_spells && d100() < 20)
-			cast(*((spelli*)allowed_spells.random()));
-		else if(area->isvalid(moveorder)) {
-			if(moveorder == getposition())
-				moveorder = {-1000, -1000};
-			else if(!moveto(moveorder))
-				moveorder = {-1000, -1000};
-		} else if(area->isvalid(guardorder)) {
-			if(guardorder != getposition())
-				moveorder = guardorder;
+			player->cast(*((spelli*)allowed_spells.random()));
+		else if(area->isvalid(player->moveorder)) {
+			if(player->moveorder == player->getposition())
+				player->moveorder = {-1000, -1000};
+			else if(!player->moveto(player->moveorder))
+				player->moveorder = {-1000, -1000};
+		} else if(area->isvalid(player->guardorder)) {
+			if(player->guardorder != player->getposition())
+				player->moveorder = player->guardorder;
 		} else
 			random_walk();
 	}

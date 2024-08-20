@@ -75,8 +75,8 @@ public:
 	void			interaction(creature& opponent);
 	void			kill();
 	void			logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
-	void			makemove();
-	void			makemovelong();
+	static void		makemove();
+	static void		makemovelong();
 	void			movestep(direction_s i);
 	void			movestep(point m);
 	bool			moveto(point m);
@@ -111,7 +111,7 @@ struct creaturea : collection<creature> {
 	void			select(point m, int los, bool visible, const creature* exclude);
 	void			sort(point start);
 };
-extern creature *player, *opponent, *enemy;
+extern creature *player, *opponent;
 extern creaturea creatures, enemies, targets;
 namespace draw {
 bool				isnext();
