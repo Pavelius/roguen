@@ -22,6 +22,7 @@ bool	last_roll_successed;
 void apply_spell(const spelli& ei, int level);
 bool choose_targets(const variants& effects);
 void damage_item(item& it);
+void update_console_time();
 int getfloor();
 
 static int get_counter(int counter) {
@@ -48,12 +49,14 @@ bool creature::fixaction(const char* id, const char* action, ...) const {
 			speech_get(result, id, action, getkind().getid(), 0);
 		speech_get(result, id, action, 0, 0);
 		if(result) {
+			update_console_time();
 			sayv(console, result, xva_start(action));
 			return true;
 		}
 	}
 	auto pn = getdescription(ids(id, action));
 	if(pn) {
+		update_console_time();
 		actv(console, pn, xva_start(action), getname(), is(Female), ' ');
 		return true;
 	}
@@ -1445,18 +1448,25 @@ void creature::unlink() {
 }
 
 void creature::act(const char* format, ...) const {
-	if(ishuman() || is(Visible))
+	if(ishuman() || is(Visible)) {
+		update_console_time();
 		actv(console, format, xva_start(format), getname(), is(Female), '\n');
+	}
 }
 
 void creature::actp(const char* format, ...) const {
-	if(ishuman())
+	if(ishuman()) {
+		update_console_time();
 		actv(console, format, xva_start(format), getname(), is(Female), '\n');
+	}
 }
 
 void creature::sayv(stringbuilder& sb, const char* format, const char* format_param) const {
-	if(ishuman() || is(Visible))
+	if(ishuman() || is(Visible)) {
+		if(&sb == &console)
+			update_console_time();
 		actable::sayv(sb, format, format_param, getname(), is(Female));
+	}
 }
 
 int	creature::getlos() const {

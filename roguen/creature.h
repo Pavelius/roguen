@@ -1,3 +1,4 @@
+#pragma once
 #include "ability.h"
 #include "advancement.h"
 #include "answers.h"
@@ -10,8 +11,6 @@
 #include "site.h"
 #include "spell.h"
 #include "wearable.h"
-
-#pragma once
 
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	room_id;

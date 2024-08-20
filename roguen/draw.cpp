@@ -43,8 +43,6 @@ const void*			draw::hilite_object;
 point				draw::hilite_position;
 int					draw::hilite_size;
 fnbutton			draw::pbutton;
-// Hot keys and menus
-rect				sys_static_area;
 // Locale draw variables
 static draw::surface default_surface;
 draw::surface*		draw::canvas = &default_surface;
@@ -1378,7 +1376,6 @@ static void intersect_rect(rect& r1, const rect& r2) {
 bool draw::ishilite(const rect& rc) {
 	if(hot.key == InputNoUpdate)
 		return false;
-	intersect_rect(sys_static_area, rc);
 	if(dragactive())
 		return false;
 	if(!hot.mouse.in(clipping))
@@ -2439,10 +2436,6 @@ static void beforemodal() {
 		hot.key = InputUpdate;
 	else
 		domodal = standart_domodal;
-	if(hot.mouse.x < 0 || hot.mouse.y < 0)
-		sys_static_area.clear();
-	else
-		sys_static_area = {0, 0, draw::getwidth(), draw::getheight()};
 	tips_sb.clear();
 	tips_caret.clear();
 	tips_size.clear();
