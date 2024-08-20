@@ -7,6 +7,7 @@
 #include "game.h"
 #include "hotkey.h"
 #include "keyname.h"
+#include "indexa.h"
 #include "listcolumn.h"
 #include "log.h"
 #include "creature.h"
@@ -114,6 +115,10 @@ static unsigned char getfow(point m) {
 	return r;
 }
 
+void update_console_time() {
+	last_tick_message = getcputime();
+}
+
 void gamei::next(fnevent proc) {
 	setnext(proc);
 }
@@ -195,6 +200,10 @@ static void fillfow() {
 
 static void paint_resource() {
 	image(((resource*)last_object->data)->get(), last_object->param, 0);
+}
+
+static void paint_sprite() {
+	image((sprite*)last_object->data, last_object->param, 0);
 }
 
 static void paint_feature() {
@@ -758,19 +767,22 @@ static void paint_actions() {
 		paint_collection(last_actions, get_action_key, execute_action);
 }
 
-static void paint_message() {
-	auto p = console.begin();
-	if(!p || !p[0])
+static void paint_message(const char* format) {
+	if(!format || !format[0])
 		return;
 	rectpush push;
 	width = window_width;
-	textfs(p);
+	textfs(format);
 	caret.y = metrics::padding * 2;
 	caret.x = (getwidth() - width - panel_width) / 2;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
 	strokeout(strokeborder, metrics::padding, metrics::padding);
 	message_rect.set(caret.x, caret.y, caret.x + width, caret.y + height);
-	textf(p);
+	textf(format);
+}
+
+static void paint_message() {
+	paint_message(console.begin());
 }
 
 static void reset_message() {
@@ -789,11 +801,6 @@ static void afterpaint() {
 	reset_message();
 	if(!answers::choosing)
 		paint_actions();
-}
-
-void afterpaint_no_actions() {
-	paint_message();
-	reset_message();
 }
 
 static void execute_hotkey() {
@@ -972,7 +979,7 @@ void* answers::choose() const {
 	update_scene();
 	rectpush push;
 	screenshoot screen;
-	pushvalue push_finish(pfinish, afterpaint_no_actions);
+	pushvalue push_choose(choosing, true);
 	while(ismodal()) {
 		screen.restore();
 		get_total_height(*this);
@@ -990,7 +997,6 @@ void* answers::choose() const {
 }
 
 void* choose_answers(answers& an, const char* header, const char* cancel) {
-	pushvalue push_finish(pfinish, afterpaint_no_actions);
 	return an.choose(header, cancel);
 }
 
@@ -1331,6 +1337,40 @@ static void textcn(const char* format) {
 	caret.y -= texth();
 	text(format);
 	caret = push_caret;
+}
+
+int choose_indecies(const indexa& source, const char* header, bool cancel) {
+	auto index = 0;
+	auto marker = addobject({0, 0}, paint_sprite, (void*)gres(res::Cursor), 0, 20);
+	while(ismodal()) {
+		paintstart();
+		marker->position = m2s(source[index]);
+		paintobjects();
+		paint_message(header);
+		domodal();
+		switch(hot.key) {
+		case KeyLeft:
+			index--;
+			if(index < 0)
+				index = source.getcount() - 1;
+			break;
+		case KeyRight:
+			index++;
+			if(index >= source.getcount())
+				index = 0;
+			break;
+		case KeyEscape:
+			if(cancel)
+				breakmodal(-1);
+			break;
+		case KeyEnter:
+		case KeySpace:
+			breakmodal(index);
+			break;
+		}
+	}
+	marker->clear();
+	return getresult();
 }
 
 void visualize_images(res pid, point size, point offset) {

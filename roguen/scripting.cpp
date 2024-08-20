@@ -30,7 +30,6 @@ struct speechv2;
 void add_need(int bonus);
 void add_need_answers(int bonus);
 void advance_value(variant v);
-void afterpaint_no_actions();
 void apply_value(variant v);
 void apply_ability(ability_s v, int counter);
 void animate_figures();
@@ -68,6 +67,7 @@ static adat<variant, 32> sites;
 
 void apply_ability(ability_s v, int counter);
 void* choose_answers(answers& an, const char* header, const char* cancel);
+int choose_indecies(const indexa& source, const char* header, bool cancel);
 
 static int random_value(int value) {
 	if(!value)
@@ -1223,16 +1223,36 @@ bool allow_targets(const variants& conditions) {
 	return script_allow(conditions);
 }
 
+static bool choose_indecies(indexa& indecies, const char* header) {
+	auto index = choose_indecies(indecies, header, true);
+	if(index == -1)
+		return false;
+	iswap(indecies.data[index], indecies.data[0]);
+	return true;
+}
+
+static bool choose_indecies(creaturea& source, const char* header, int offset) {
+	indexa indecies;
+	for(auto i = offset; i<source.getcount(); i++)
+		indecies.add(((creature*)source.data[i])->getposition());
+	if(!indecies)
+		return true;
+	auto index = choose_indecies(indecies, header, true);
+	if(index == -1)
+		return false;
+	iswap(source.data[offset + index], source.data[offset]);
+	return true;
+}
+
 static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!id)
 		return true;
 	auto pn = getdescription(str("%1Choose", id));
 	if(!pn)
 		return true;
-	pushvalue push_finish(draw::pfinish, afterpaint_no_actions);
 	pushvalue push_width(window_width, 300);
 	if(targets) {
-		if(!targets.chooseu(pn, getnm("Cancel"), offset))
+		if(!choose_indecies(targets, pn, offset))
 			return false;
 	}
 	if(rooms) {
@@ -1241,6 +1261,10 @@ static bool choose_target_interactive(const char* id, int offset = 0) {
 	}
 	if(items) {
 		if(!items.chooseu(pn, getnm("Cancel"), offset))
+			return false;
+	}
+	if(indecies) {
+		if(!choose_indecies(indecies, pn))
 			return false;
 	}
 	return true;
