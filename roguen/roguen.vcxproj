@@ -170,6 +170,9 @@
     <ClCompile Include="direction_req.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_answers.cpp" />
+    <ClCompile Include="draw_form.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="draw_message.cpp" />
     <ClCompile Include="draw_object.cpp" />
     <ClCompile Include="draw_text.cpp" />
@@ -340,6 +343,7 @@
     <Text Include="..\locale\ru\core\MonsterNames.txt" />
     <Text Include="..\locale\ru\core\NameCharacters.txt" />
     <Text Include="..\locale\ru\core\Names.txt" />
+    <Text Include="..\locale\ru\core\NamesDescriptions.txt" />
     <Text Include="..\locale\ru\core\NeedDescriptions.txt" />
     <Text Include="..\locale\ru\core\RaceNames.txt" />
     <Text Include="..\locale\ru\core\SiteDescriptions.txt" />

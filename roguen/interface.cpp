@@ -884,7 +884,7 @@ static void answer_paint_cell(int index, const void* value, const char* format, 
 	width = push_width;
 	caret.y = push_caret.y;
 	if(current_columns) {
-		auto total_width = current_columns->totalwidth();
+		auto total_width = current_columns->totalwidth() + 4;
 		char temp[260]; stringbuilder sb(temp);
 		if(width >= total_width) {
 			caret.x = push_caret.x + width - total_width;
@@ -996,17 +996,6 @@ void* answers::choose() const {
 
 void* choose_answers(answers& an, const char* header, const char* cancel) {
 	return an.choose(header, cancel);
-}
-
-static bool backward_button(const char* format, void* value) {
-	auto format_width = textw(format);
-	auto push_width = width;
-	auto push_caret = caret;
-	width = format_width;
-	caret.x -= width;
-	auto result = draw::button(format, 0, draw::pbutton, false);
-	width = push_width;
-	return result;
 }
 
 static void answer_after_paint() {

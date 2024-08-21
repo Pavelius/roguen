@@ -1340,16 +1340,16 @@ static const char* item_weight(const void* object, stringbuilder& sb) {
 }
 
 static item* choose_wear() {
-	answers an;
+	static listcolumn columns[] = {
+		{"Weight", 60, item_weight, true},
+		{}};
+	an.clear();
 	for(auto& e : player->equipment()) {
 		if(e)
 			an.add(&e, e.getfullname());
 		else
 			an.add(&e, "-");
 	}
-	static listcolumn columns[] = {
-		{"Weight", 60, item_weight, true},
-		{}};
 	pushvalue push_columns(current_columns, columns);
 	return (item*)choose_answers(an, getnm("Inventory"), getnm("Cancel"));
 }
@@ -1459,27 +1459,63 @@ static void add_raise(ability_s a) {
 static void raise_ability_by_skill(ability_s a) {
 	auto v = player->basic.abilities[a];
 	auto r = get_rate(a, v);
+	if(player->basic.abilities[SkillPoints] < r)
+		return;
 	player->basic.abilities[SkillPoints] -= r;
 	player->basic.abilities[a]++;
 	player->update();
 }
 
-static void raise_skills(int bonus) {
-	static ability_s skills[] = {Strenght, Dexterity, Wits, WeaponSkill, BalisticSkill};
+static const char* skill_value(const void* object, stringbuilder& sb) {
+	auto i = (ability_s)bsdata<abilityi>::source.indexof(object);
+	auto v = player->basic.abilities[i];
+	sb.add("%1i%%", v);
+	return sb.begin();
+}
+
+static const char* skill_raise_cost(const void* object, stringbuilder& sb) {
+	auto p = (abilityi*)object;
+	auto i = (ability_s)bsdata<abilityi>::source.indexof(object);
+	auto v = player->basic.abilities[i];
+	auto r = get_rate(i, v);
+	sb.add(getnm("RaiseSkill"), p->getname(), v + 1, r);
+	return sb.begin();
+}
+
+static abilityi* choose_skill(listcolumn* columns, const char* header, int dialog_width) {
+	an.clear();
+	for(auto i = Strenght; i <= LastSkill; i = (ability_s)(i + 1)) {
+		if(i >= DamageMelee && i <= EnemyAttacks)
+			continue;
+		if(!player->basic.abilities[i])
+			continue;
+		an.add(bsdata<abilityi>::elements + i, bsdata<abilityi>::elements[i].getname());
+	}
 	char temp[260]; stringbuilder sb(temp);
-	while(true) {
-		an.clear();
-		for(auto a : skills)
-			add_raise(a);
-		if(!an)
-			break;
-		an.console->add(getnm("RaiseSkillChoose"), player->basic.abilities[SkillPoints]);
-		an.add(0, getnm("RaiseSkillCancel"));
-		auto p = (abilityi*)an.choose();
-		if(!p)
-			break;
-		an.console->clear();
-		raise_ability_by_skill((ability_s)bsdata<abilityi>::source.indexof(p));
+	sb.add(getnm(header), player->basic.abilities[SkillPoints]);
+	pushvalue push_columns(current_columns, columns);
+	pushvalue push_width(window_width, dialog_width);
+	return (abilityi*)choose_answers(an, temp, getnm("Cancel"));
+}
+
+static void raise_skills(int bonus) {
+	if(player->basic.abilities[SkillPoints] <= 0) {
+		static listcolumn columns[] = {
+			{"Value", 32, skill_value},
+			{}};
+		choose_skill(columns, "Skills", 248);
+	} else {
+		static listcolumn columns[] = {
+			{"Value", 32, skill_value},
+			{"Cost", 90, skill_raise_cost},
+			{}};
+		while(player->basic.abilities[SkillPoints] > 0) {
+			auto p = choose_skill(columns, "RaiseSkillChoose", 280);
+			if(!p)
+				break;
+			auto a = (ability_s)(p - bsdata<abilityi>::elements);
+			raise_ability_by_skill(a);
+		}
 	}
 }
 
@@ -1771,7 +1807,7 @@ static void site_wall(int bonus) {
 }
 
 static const spelli* choose_spell(int bonus) {
-	pushvalue push_width(window_width, 300);
+	pushvalue push_width(window_width, 248);
 	return allowed_spells.choose(getnm("ChooseSpell"), getnm("Cancel"), player);
 }
 
@@ -2382,7 +2418,6 @@ BSDATA(script) = {
 	{"Chance", random_chance},
 	{"Chatting", chatting},
 	{"ChooseTarget", choose_target, is_full},
-	// {"ChooseCreature", choose_creature, is_full},
 	{"ChooseRandom", choose_random, is_full},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},

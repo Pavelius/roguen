@@ -354,9 +354,11 @@ static void nullify_elements() {
 }
 
 static int get_next_level_experience(int level) {
-	static int levels[] = {1000, 2000, 3500, 5000, 7000, 9000, 12000, 15000, 18000};
+	if(!level)
+		return 0;
+	static int levels[] = {500, 1000, 1500, 2500, 3500, 5000, 7000, 9000, 12000, 15000, 18000};
 	const auto m = sizeof(levels) / sizeof(levels[0]);
-	auto n = maptbl(levels, level);
+	auto n = maptbl(levels, level - 1);
 	if(level >= m)
 		n += (level - m + 1) * 10000;
 	return n;
@@ -410,7 +412,12 @@ static void advance_value(variant kind, int level) {
 
 void player_levelup() {
 	player->basic.abilities[Level] += 1;
-	player->basic.abilities[SkillPoints] += 10 + additional_skill_points(player->basic.abilities[Wits]);
+	if(player->basic.abilities[Level] > 1) {
+		player->basic.abilities[SkillPoints] += 10 + additional_skill_points(player->basic.abilities[Wits]);
+		if(player->ischaracter())
+			player->basic.abilities[Hits] += 1;
+		player->act(getdescription("LevelUp"));
+	}
 	advance_value(player->getkind(), player->basic.abilities[Level]);
 }
 

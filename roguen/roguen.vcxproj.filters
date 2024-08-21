@@ -336,6 +336,9 @@
     <ClCompile Include="race.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="draw_form.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -704,6 +707,9 @@
       <Filter>Locale</Filter>
     </Text>
     <Text Include="..\locale\ru\speech\Chatting.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\core\NamesDescriptions.txt">
       <Filter>Locale</Filter>
     </Text>
   </ItemGroup>

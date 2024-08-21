@@ -1,3 +1,5 @@
+Skills: Навыки
+
 Alertness: Бдительность
 Gemcutting: Ювелирное дело
 Herbalism: Травознавство
@@ -8,8 +10,8 @@ Stealth: Скрытность
 Thievery: Воровство
 
 RaiseSkillCancel: Ничего больше повышать не надо.
-RaiseSkillChoose: Какие атрибуты повысить (осталось [%1i] очков)?
-RaiseSkill: Повысить %1 до %2i за [%3i] очков.
+RaiseSkillChoose: Повышение навыков (осталось %1i)
+RaiseSkill: стоит [%3i] очка
 YouBrokeItem: %герой сломал%а %-$1.
 YouCantMineHere: Вы не можете копать здесь.
 YouCrashWall: %герой разрушил%а стену %1.
