@@ -1824,6 +1824,12 @@ static void heal_player(int bonus) {
 		player->kill();
 }
 
+static void harm_player(int bonus) {
+	player->abilities[Hits] = add_green(player->get(Hits), -bonus, "+1i", 0, player->getmaximum(Hits));
+	if(!(*player))
+		player->kill();
+}
+
 static bool is_heal_wounded(int bonus) {
 	return player->abilities[Blooded] > 0;
 }
@@ -2448,6 +2454,7 @@ BSDATA(script) = {
 	{"GenerateRoomNoFloor", generate_room_record},
 	{"GenerateWalls", generate_walls},
 	{"GenerateVillage", generate_cityscape},
+	{"Harm", harm_player},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
 	{"HealPoison", heal_poison, is_heal_poison},

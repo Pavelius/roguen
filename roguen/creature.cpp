@@ -1175,8 +1175,6 @@ void creature::finish() {
 
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
-	if(value <= 0)
-		return false;
 	auto base = bsdata<abilityi>::elements[v].base;
 	if(base) {
 		// Skills depend on roll.
@@ -1184,6 +1182,8 @@ bool creature::roll(ability_s v, int bonus) const {
 		if(base_value > value)
 			value = base_value;
 	}
+	if(value <= 0)
+		return false;
 	last_roll_result = d100();
 	if(bonus == -2000) {
 		value = value / 2;

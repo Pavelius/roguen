@@ -66,9 +66,9 @@ HerbsFull activateto(Herbs)
 YouAngryAboutDoor
  elements Mana-1
 YouHitByDoor
- elements Hits-1
+ elements Harm-1
 YouTrampedByDoor
- elements Hits-4
+ elements Harm-4
 
 #RandomTable
 
