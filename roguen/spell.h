@@ -9,7 +9,8 @@ struct spelli : nameable {
 	int				mana;
 	diceprogress	count;
 	featable		feats;
-	variants		use, summon;
+	variants		use;
+	variant			summon;
 	int				getcount() const { return count.roll(0); }
 	int				getmana() const;
 	bool			ishostile() const;
@@ -27,4 +28,5 @@ struct spella : collection<spelli> {
 	spelli*			choose(const char* title, const char* cancel, const spellable* context) const;
 	void			select(const spellable* p);
 };
+extern const spelli* last_spell;
 extern spella allowed_spells;

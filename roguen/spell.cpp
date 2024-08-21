@@ -6,6 +6,7 @@
 BSDATAC(spelli, spellable::maximum)
 
 static const spellable* current_spellable;
+const spelli* last_spell;
 
 static const char* object_mana(const void* object, stringbuilder& sb) {
 	auto i = bsdata<spelli>::source.indexof(object);

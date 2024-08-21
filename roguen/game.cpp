@@ -230,7 +230,7 @@ static void skip_long_time() {
 }
 
 void gamei::playminute() {
-	const int moves_per_minute = 6 * 4;
+	const int moves_per_minute = 10 * 4;
 	bool need_continue = true;
 	while(need_continue) {
 		need_continue = true;

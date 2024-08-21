@@ -1,5 +1,6 @@
-﻿In file `Names.txt`:
- Define translation for `CureWounds`
- Define translation for `Gate`
- Define translation for `Mending`
- Define translation for `Sleep`
+﻿In file `rules/Spells.txt`:
+ Line 16: Not found requisit `Skeleton`
+ Line 16: Expected token `(`
+ Line 16: Expected line feed
+In file `rules/Advancement.txt`:
+ Line 16: Can't find variant `Teleport`

@@ -207,7 +207,7 @@ Sausage cost(40) weight(20) avatar(157) rotting(10)
 Ration cost(50) weight(50) avatar(126) 
  use Heal+10
 Torch cost(10) avatar(207) weight(30) count(3)
- use TorchLight+3
+ use EnchantHours+1 LightSource
 
 StrangeBlueSphere cost(100) weight(50) avatar(229)
 StrangeAquaSphere cost(100) weight(50) avatar(230)
@@ -257,7 +257,7 @@ ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll)
 ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll)
  use SelectYourItems FilterIdentified FilterCursed ChooseTarget ForEachItem CurseItem-1
 ScrollOfRepair avatar(440) weight(2) unidentified(Scroll)
- use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-10
+ use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-1
 ScrollOfOpening avatar(441) weight(2) unidentified(Scroll)
  use SelectFeatures Filter LockedDoor ChooseTarget ForEachFeature OpenedDoor
 ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll)

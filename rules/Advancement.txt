@@ -12,8 +12,8 @@ Human 1 Equipment
  elements Staff
 
 HightElf 1 Ability
- elements Strenght+25 Dexterity+30 Hits+15 Wits+25 Mana+10 WeaponSkill+20 BalisticSkill+20 Dodge+10\
-	TorchLight
+ elements Strenght+25 Dexterity+30 Hits+15 Wits+25 Mana+50 WeaponSkill+20 BalisticSkill+20 Dodge+10\
+	LightSpell
 HightElf 1 Equipment
  elements Staff
 

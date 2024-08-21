@@ -1204,7 +1204,7 @@ static bool have_targets() {
 		|| indecies.getcount() != 0;
 }
 
-static bool choose_targets(const variants& conditions) {
+bool apply_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	items.clear();
@@ -1771,9 +1771,10 @@ static const spelli* choose_spell(int bonus) {
 }
 
 static void cast_spell(int bonus) {
-	auto p = choose_spell(bonus);
-	if(p)
-		player->cast(*p);
+	pushvalue push(last_spell);
+	last_spell = choose_spell(bonus);
+	if(last_spell)
+		player->cast(*last_spell);
 }
 
 static void heal_player(int bonus) {
@@ -1855,7 +1856,7 @@ static void apply_action(int bonus) {
 	if(last_action->tool)
 		last_action->usetool();
 	player->fixaction(last_action->id, "Apply");
-	choose_targets(last_action->effect);
+	apply_targets(last_action->effect);
 	player->wait();
 }
 
@@ -2097,7 +2098,7 @@ static void for_each_opponent(int bonus) {
 	for(auto p : source) {
 		opponent = p;
 		auto pt = p->getposition();
-		last_rect = {pt.x, pt.y, pt.x, pt.y};
+		last_rect = pt.rectangle();
 		last_index = pt;
 		script_run(commands);
 	}
@@ -2257,6 +2258,8 @@ static bool is_animal(int bonus) {
 static const char* get_header_id() {
 	if(last_action)
 		return last_action->getid();
+	if(last_spell)
+		return last_spell->getid();
 	if(last_item)
 		return last_item->geti().id;
 	return "Common";
@@ -2333,7 +2336,7 @@ static void enchant_minutes(int bonus) {
 }
 
 static void enchant_hours(int bonus) {
-	enchant_minutes(script_count(bonus), 60, "%1 %2i %-Minutes");
+	enchant_minutes(script_count(bonus), 60, "%1 %2i %-Hours");
 }
 
 static void enchant_days(int bonus) {

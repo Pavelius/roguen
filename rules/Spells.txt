@@ -7,13 +7,13 @@ Entaglement mana(6)
  feats Enemy
  use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature ThornBush
 Gate mana(40)
-TorchLight mana(5)
+LightSpell mana(5)
  use EnchantMinutes+20 LightSource
 Mending mana(10)
+ use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-1
 Sleep mana(5)
  use SelectEnemies AnimalInt-1
-SummonUndead mana(15)
- summon Skeleton+4
+SummonUndead mana(15) summon(Skeleton+4)
 Teleport mana(5)
  use SelectRooms FilterNotable FilterExplored FilterThisRoom-1 ChooseTarget ForEachRoom JumpToSite
 Web mana(4)

@@ -20,6 +20,7 @@ int		last_roll_result;
 bool	last_roll_successed;
 
 bool allow_targets(const variants& conditions);
+bool apply_targets(const variants& conditions);
 void damage_item(item& it);
 void update_console_time();
 int getfloor();
@@ -86,7 +87,7 @@ static creature* findalive(point m) {
 }
 
 static void pay_movement() {
-	auto cost = 100 + (30 - player->get(Dexterity)) / 4;
+	auto cost = 200 - player->get(Dexterity);
 	if(!player->is(Fly)) {
 		auto& ei = area->getfeature(player->getposition());
 		if(ei.movedifficult)
@@ -189,6 +190,28 @@ void damage_equipment(int bonus, bool allow_save) {
 	}
 }
 
+static void summon_minions(point m, variant v) {
+	auto push_player = player;
+	auto isenemy = player->is(Enemy);
+	auto isally = player->is(Ally);
+	auto count = script_count(v.counter);
+	auto leader = player;
+	for(auto i = 0; i < count; i++) {
+		auto p = player_create(m, v, false);
+		if(isenemy)
+			p->set(Enemy);
+		else
+			p->remove(Enemy);
+		if(isally)
+			p->set(Ally);
+		else
+			p->remove(Ally);
+		p->set(Summoned);
+		p->setowner(leader);
+	}
+	player = push_player;
+}
+
 void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
 		player->actp(getnm("NotEnoughtMana"));
@@ -203,9 +226,9 @@ void cast_spell(const spelli& e, int mana, bool silent) {
 			player->fixaction("Spells", "Casting");
 	}
 	if(e.use)
-		script_run(e.use);
+		apply_targets(e.use);
 	if(e.summon)
-		player->summon(player->getposition(), e.summon, e.getcount());
+		summon_minions(player->getposition(), e.summon);
 	player->add(Mana, -mana);
 	player->update();
 }
@@ -1246,7 +1269,6 @@ static int compare_actions(const void* v1, const void* v2) {
 
 static void ready_skills() {
 	last_actions.select(fntis<siteskilli, &siteskilli::isusable>);
-	last_actions.sort(compare_actions);
 }
 
 int creature::getloh() const {
@@ -1286,6 +1308,10 @@ static void use_skills() {
 		player->wait();
 }
 
+static void use_spells() {
+	allowed_spells.select(player);
+}
+
 void make_move() {
 	// Recoil form action
 	if(player->wait_seconds > 0) {
@@ -1311,16 +1337,18 @@ void make_move() {
 	ready_actions();
 	if(player->ishuman()) {
 		ready_skills();
+		last_actions.sort(compare_actions);
 		adventure_mode();
 	} else if(opponent) {
+		allowed_spells.select(player);
 		allowed_spells.match(spell_iscombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
-		if(allowed_spells && d100() < 40)
+		if(allowed_spells && d100() < 70)
 			player->cast(*((spelli*)allowed_spells.random()));
 		else if(can_shoot())
 			attack_range(0);
-		else if(d100() < 60 && can_thrown())
+		else if(can_thrown() && d100() < 60)
 			attack_thrown(0);
 		else
 			player->moveto(opponent->getposition());
@@ -1550,7 +1578,7 @@ void creature::use(item& v) {
 	auto push_item = last_item;
 	last_item = &v;
 	act(getnm("YouUseItem"), v.getname());
-	apply(script);
+	script_run(script);
 	auto power = v.getpower();
 	if(power)
 		apply_value(power, this);
@@ -1603,25 +1631,6 @@ void creature::apply(const variants& source) {
 void creature::cast(const spelli& e) {
 	cast_spell(e, e.getmana(), false);
 	player->wait();
-}
-
-void creature::summon(point m, const variants& elements, int count) {
-	auto isenemy = is(Enemy);
-	auto isally = is(Ally);
-	for(auto i = 0; i < count; i++) {
-		auto v = randomizeri::random(elements);
-		auto p = player_create(m, v, false);
-		if(isenemy)
-			p->set(Enemy);
-		else
-			p->remove(Enemy);
-		if(isally)
-			p->set(Ally);
-		else
-			p->remove(Ally);
-		p->set(Summoned);
-		p->setowner(this);
-	}
 }
 
 bool creature::ispresent() const {

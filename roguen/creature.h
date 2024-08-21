@@ -81,7 +81,7 @@ public:
 	bool			speechneed();
 	bool			speechrumor() const;
 	bool			speechlocation() const;
-	void			summon(point m, const variants& elements, int count);
+	void			summon(point m, const variants& elements);
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update();
