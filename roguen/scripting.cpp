@@ -19,7 +19,6 @@
 #include "site.h"
 #include "siteskill.h"
 #include "speech.h"
-#include "textscript.h"
 #include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"
@@ -55,7 +54,6 @@ quest*				last_quest;
 rect				last_rect;
 roomi*				last_room;
 const sitei*		last_site;
-greatneed*			last_need;
 int					last_value;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
@@ -1421,22 +1419,30 @@ static int free_objects_count() {
 	return result;
 }
 
-static int get_base_rate(ability_s a) {
+static int get_rate(ability_s a, int v) {
 	switch(a) {
-	case Strenght: return 4;
-	case Wits: case Dexterity: return 3;
-	default: return 1;
+	case Strenght:
+		if(v >= 80)
+			return 6;
+		else if(v >= 50)
+			return 5;
+		return 4;
+	case Wits:
+	case Dexterity:
+		if(v >= 80)
+			return 5;
+		else if(v >= 50)
+			return 4;
+		return 3;
+	default:
+		if(v >= 90)
+			return 4;
+		else if(v >= 60)
+			return 3;
+		else if(v >= 30)
+			return 2;
+		return 1;
 	}
-}
-
-static int get_raise_rate(ability_s a) {
-	auto n = get_base_rate(a);
-	auto v = player->basic.abilities[a];
-	if(v >= 50)
-		n += 1;
-	if(v >= 80)
-		n += 1;
-	return n;
 }
 
 static void add_raise(ability_s a) {
@@ -1444,14 +1450,15 @@ static void add_raise(ability_s a) {
 	auto v = player->basic.abilities[a];
 	if(!v)
 		return;
-	auto r = get_raise_rate(a);
+	auto r = get_rate(a, v);
 	if(player->basic.abilities[SkillPoints] < r)
 		return;
 	an.add(pb, getnm("RaiseSkill"), pb->getname(), v + 1, r);
 }
 
 static void raise_ability_by_skill(ability_s a) {
-	auto r = get_raise_rate(a);
+	auto v = player->basic.abilities[a];
+	auto r = get_rate(a, v);
 	player->basic.abilities[SkillPoints] -= r;
 	player->basic.abilities[a]++;
 	player->update();
@@ -2353,54 +2360,6 @@ static void steal_opponent_coins(int bonus) {
 	gain_experience((coins + 99) / 100);
 }
 
-static void need_help_info(stringbuilder& sb) {
-	if(!last_need)
-		return;
-	auto pn = getdescription(last_need->geti().getid());
-	if(!pn)
-		return;
-	sb.add(pn, game.timeleft(last_need->deadline));
-}
-
-static const char* visualize_progress(int score) {
-	if(score == 0)
-		return "NoAnyProgress";
-	else if(score < 40)
-		return "LittleProgress";
-	else if(score < 70)
-		return "HalfwayProgress";
-	else
-		return "AlmostFinishProgress";
-}
-
-static void actual_need_state(stringbuilder& sb) {
-	if(!last_need)
-		return;
-	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), game.timeleft(last_need->deadline));
-}
-
-static void list_of_feats(stringbuilder& sb) {
-	for(auto i = (feat_s)0; i <= Blooding; i = (feat_s)(i + 1)) {
-		if(player->is(i))
-			sb.addn(bsdata<feati>::elements[i].getname());
-	}
-}
-
-static void list_of_skills(stringbuilder& sb) {
-	for(auto i = FirstSkill; i <= LastSkill; i = (ability_s)(i + 1)) {
-		auto v = player->get(i);
-		if(v)
-			sb.addn("%1\t%2i%%", bsdata<abilityi>::elements[i].getname(), v);
-	}
-}
-
-BSDATA(textscript) = {
-	{"ActualNeedState", actual_need_state},
-	{"ListOfFeats", list_of_feats},
-	{"ListOfSkills", list_of_skills},
-	{"NeedHelpIntro", need_help_info},
-};
-BSDATAF(textscript)
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},

@@ -93,7 +93,7 @@ public:
 	bool			isranged() const { return geti().wear == RangedWeapon; }
 	bool			isusable() const { return geti().use.size() != 0; }
 	bool			isdamaged() const { return iscountable() && broken > 0; }
-	bool			isheavydamaged() const { return iscountable() && broken >= 7; }
+	bool			isheavydamaged() const { return iscountable() && broken >= 5; }
 	void			set(magic_s v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);

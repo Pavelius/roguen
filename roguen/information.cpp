@@ -1,7 +1,10 @@
 #include "areapiece.h"
 #include "creature.h"
+#include "crt.h"
 #include "game.h"
+#include "greatneed.h"
 #include "race.h"
+#include "textscript.h"
 
 static const char* getnameshort(const char* id) {
 	auto pn = getnme(str("%1Short", id));
@@ -104,7 +107,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn(getname());
 	sb.addn(getrace(getkind(), is(Female)));
 	sb.addn("%1i %-Level", get(Level));
-	sb.addn("$tab -40");
+	sb.addn("$tab -50");
 	sb.addn("---");
 	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
 		addf(sb, i, abilities[i]);
@@ -166,3 +169,52 @@ void roomi::getrumor(stringbuilder& sb) const {
 		site_name);
 	area->set(rc, &areamap::setflag, Explored);
 }
+
+static const char* visualize_progress(int score) {
+	if(score == 0)
+		return "NoAnyProgress";
+	else if(score < 40)
+		return "LittleProgress";
+	else if(score < 70)
+		return "HalfwayProgress";
+	else
+		return "AlmostFinishProgress";
+}
+
+static void actual_need_state(stringbuilder& sb) {
+	if(!last_need)
+		return;
+	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), game.timeleft(last_need->deadline));
+}
+
+static void list_of_feats(stringbuilder& sb) {
+	for(auto i = (feat_s)0; i <= Blooding; i = (feat_s)(i + 1)) {
+		if(player->is(i))
+			sb.addn(bsdata<feati>::elements[i].getname());
+	}
+}
+
+static void list_of_skills(stringbuilder& sb) {
+	for(auto i = FirstSkill; i <= LastSkill; i = (ability_s)(i + 1)) {
+		auto v = player->get(i);
+		if(v)
+			sb.addn("%1\t%2i%%", bsdata<abilityi>::elements[i].getname(), v);
+	}
+}
+
+static void need_help_info(stringbuilder& sb) {
+	if(!last_need)
+		return;
+	auto pn = getdescription(last_need->geti().getid());
+	if(!pn)
+		return;
+	sb.add(pn, game.timeleft(last_need->deadline));
+}
+
+BSDATA(textscript) = {
+	{"ActualNeedState", actual_need_state},
+	{"ListOfFeats", list_of_feats},
+	{"ListOfSkills", list_of_skills},
+	{"NeedHelpIntro", need_help_info},
+};
+BSDATAF(textscript)

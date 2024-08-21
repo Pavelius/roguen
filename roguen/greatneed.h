@@ -31,7 +31,6 @@ struct greatneed {
 	unsigned			flags;
 	int					score; // percent of completion
 	explicit operator bool() const { return deadline != 0; }
-	static greatneed*	add(const greatneedi* type, variant owner, unsigned deadline);
 	void				clear() { zclear(this); }
 	static greatneed*	find(variant owner);
 	static greatneed*	find(variant owner, needn f);
@@ -39,6 +38,9 @@ struct greatneed {
 	bool				is(needn v) const { return (flags & (1 << v)) != 0; }
 	void				remove(needn v) { flags &= ~(1 << v); }
 	void				set(needn v) { flags |= (1 << v); }
-	static void			shrink();
 };
-void					check_need_loading();
+extern greatneed* last_need;
+
+void add_greatneed(const greatneedi* type, variant owner, unsigned deadline);
+void check_need_loading();
+void shrink_greatneed();

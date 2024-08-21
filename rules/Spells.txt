@@ -15,4 +15,4 @@ SummonUndead mana(15) summon(Skeleton+4)
 Teleport mana(15) adventure(1)
  use SelectRooms FilterNotable FilterExplored FilterThisRoom-1 ChooseTarget ForEachRoom JumpToSite
 Web mana(4)
- use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature Web+1
+ use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature Webbed

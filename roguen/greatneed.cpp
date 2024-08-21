@@ -4,6 +4,8 @@
 
 void check_description(const char* id, const char** psuffix);
 
+greatneed* last_need;
+
 NOBSDATA(dice)
 
 BSDATA(needni) = {
@@ -51,19 +53,15 @@ greatneed* greatneed::find(variant owner, needn f) {
 	return 0;
 }
 
-greatneed* greatneed::add(const greatneedi* type, variant owner, unsigned deadline) {
-	//auto p = find(owner);
-	//if(p)
-	//	return p;
+void add_greatneed(const greatneedi* type, variant owner, unsigned deadline) {
 	auto p = bsdata<greatneed>::addz();
 	p->clear();
 	p->type = type - bsdata<greatneedi>::elements;
 	p->owner = owner;
 	p->deadline = deadline;
-	return p;
 }
 
-void greatneed::shrink() {
+void shrink_greatneed() {
 	auto ps = bsdata<greatneed>::elements;
 	for(auto& e : bsdata<greatneed>()) {
 		if(!e)

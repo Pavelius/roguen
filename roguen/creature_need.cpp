@@ -27,12 +27,12 @@ void add_need(int bonus) {
 		days.max = 8;
 	}
 	days.correct();
-	greatneed::add(p, pc, game.getminutes() + xrand(24 * 60 * days.min, 24 * 60 * days.max));
+	add_greatneed(p, pc, game.getminutes() + xrand(24 * 60 * days.min, 24 * 60 * days.max));
 }
 
 static void add_need(variant owner) {
 	auto p = needs.pick();
-	greatneed::add(p, owner, game.getminutes() + xrand(24 * 60 * 5, 24 * 60 * 8));
+	add_greatneed(p, owner, game.getminutes() + xrand(24 * 60 * 5, 24 * 60 * 8));
 }
 
 static int getneedcount(const item& e, const variants& source) {
@@ -162,7 +162,7 @@ bool creature::speechneed() {
 		} else
 			say_need("Partial");
 		last_need->clear();
-		last_need->shrink();
+		shrink_greatneed();
 		return true;
 	}
 	last_need = greatneed::find(this, NeedCompleted);

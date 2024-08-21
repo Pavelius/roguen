@@ -1,2 +1,8 @@
-﻿In file `Names.txt`:
+﻿{+ H12
+{+ V10
+Что такое наше все?
+-}
+-}
+
+In file `Names.txt`:
  Define translation for `Literacy`
