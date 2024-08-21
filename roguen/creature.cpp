@@ -25,6 +25,10 @@ void damage_item(item& it);
 void update_console_time();
 int getfloor();
 
+static void copy(statable& v1, const statable& v2) {
+	v1 = v2;
+}
+
 static int get_counter(int counter) {
 	if(counter > 100)
 		return xrand(1, counter - 100);
@@ -35,6 +39,13 @@ static int get_experience_reward(creature* p) {
 	static int levels[] = {7, 15, 35, 65, 120, 175, 270, 420, 650, 975, 1400, 2000, 3000};
 	auto r = p->get(Level);
 	return maptbl(levels, r);
+}
+
+static void add(creature* player, ability_s id, int value, int minimal = 0) {
+	auto i = player->get(id) + value;
+	if(i < minimal)
+		i = minimal;
+	player->set(id, i);
 }
 
 bool creature::fixaction(const char* id, const char* action, ...) const {
@@ -63,10 +74,6 @@ bool creature::fixaction(const char* id, const char* action, ...) const {
 	return false;
 }
 
-static void copy(statable& v1, const statable& v2) {
-	v1 = v2;
-}
-
 static void fixdamage(const creature* p, int total, int damage_weapon, int damage_armor, int damage_bonus) {
 	p->logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor);
 }
@@ -79,7 +86,7 @@ static creature* findalive(point m) {
 	return 0;
 }
 
-static void pay_movement(creature* player) {
+static void pay_movement() {
 	auto cost = 100 + (30 - player->get(Dexterity)) / 4;
 	if(!player->is(Fly)) {
 		auto& ei = area->getfeature(player->getposition());
@@ -89,7 +96,7 @@ static void pay_movement(creature* player) {
 	player->waitseconds(cost);
 }
 
-static void pay_attack(creature* player, const item& weapon) {
+static void pay_attack(const item& weapon) {
 	player->waitseconds(100);
 }
 
@@ -98,12 +105,6 @@ static ability_s damage_ability(ability_s v) {
 	case BalisticSkill: return DamageRanged;
 	default: return DamageMelee;
 	}
-}
-
-static bool attack_effect(const creature* p, const item& w, feat_s v) {
-	if(w.is(v))
-		return true;
-	return p->is(v);
 }
 
 bool creature::resist(feat_s resist, feat_s immunity) const {
@@ -138,15 +139,15 @@ static void poison_attack(creature* player, int value) {
 		player->set(Poison, v);
 }
 
-static void poison_attack(const creature* player, creature* enemy, const item& weapon) {
+static void poison_attack(const item& weapon) {
 	auto strenght = 0;
-	if(attack_effect(player, weapon, WeakPoison))
+	if(player->is(WeakPoison, weapon))
 		strenght += xrand(1, 2);
-	if(attack_effect(player, weapon, StrongPoison))
+	if(player->is(StrongPoison, weapon))
 		strenght += xrand(2, 4);
-	if(attack_effect(player, weapon, DeathPoison))
+	if(player->is(DeathPoison, weapon))
 		strenght += xrand(3, 6);
-	poison_attack(enemy, strenght);
+	poison_attack(opponent, strenght);
 }
 
 static void illness_attack(creature* player, int value) {
@@ -211,7 +212,7 @@ static void cast_spell(const spelli& e, int mana, bool silent) {
 	player->wait();
 }
 
-static void special_spell_attack(creature* player, item& weapon, creature* enemy, const spelli& ei) {
+static void special_spell_attack(item& weapon, creature* enemy, const spelli& ei) {
 	cast_spell(ei, 0, true);
 	weapon.damage();
 }
@@ -223,35 +224,35 @@ static void attack_effect_stun(creature* enemy) {
 	}
 }
 
-static void special_attack(creature* player, item& weapon, creature* enemy, int& pierce, int& damage) {
-	if(attack_effect(player, weapon, Vorpal)) {
-		if(!enemy->resist(DeathResistance, DeathImmunity)) {
+static void special_attack(item& weapon, creature* opponent, int& pierce, int& damage) {
+	if(player->is(Vorpal, weapon)) {
+		if(!opponent->resist(DeathResistance, DeathImmunity)) {
 			damage = 100;
 			pierce = 100;
 		}
 	}
-	if(attack_effect(player, weapon, BleedingHit))
-		enemy->set(Blooding);
-	if(attack_effect(player, weapon, StunningHit))
-		attack_effect_stun(enemy);
-	if(attack_effect(player, weapon, PierceHit))
+	if(player->is(BleedingHit, weapon))
+		opponent->set(Blooding);
+	if(player->is(StunningHit, weapon))
+		attack_effect_stun(opponent);
+	if(player->is(PierceHit, weapon))
 		pierce += 4;
-	if(attack_effect(player, weapon, MightyHit))
+	if(player->is(MightyHit, weapon))
 		damage += 2;
-	if(attack_effect(player, weapon, ColdDamage)) {
-		enemy->add(Freezing, 2);
-		area->setflag(enemy->getposition(), Iced);
+	if(player->is(ColdDamage, weapon)) {
+		opponent->add(Freezing, 2);
+		area->setflag(opponent->getposition(), Iced);
 	}
-	if(attack_effect(player, weapon, FireDamage))
-		enemy->add(Burning, 2);
-	if(attack_effect(player, weapon, AcidDamage))
-		enemy->add(Corrosion, 2);
+	if(player->is(FireDamage, weapon))
+		opponent->add(Burning, 2);
+	if(player->is(AcidDamage, weapon))
+		opponent->add(Corrosion, 2);
 	auto power = weapon.getpower();
 	if(power.iskind<spelli>() && weapon.ischarge())
-		special_spell_attack(player, weapon, enemy, bsdata<spelli>::elements[power.value]);
+		special_spell_attack(weapon, opponent, bsdata<spelli>::elements[power.value]);
 	// Damage equipment sometime
 	if(d100() < 30) {
-		pushvalue push_player(player, enemy);
+		pushvalue push_player(player, opponent);
 		damage_equipment(1, false);
 	}
 }
@@ -276,13 +277,6 @@ static void magic_restore(ability_s a, int max) {
 	}
 }
 
-static void add(creature* player, ability_s id, int value, int minimal = 0) {
-	auto i = player->get(id) + value;
-	if(i < minimal)
-		i = minimal;
-	player->set(id, i);
-}
-
 static void posion_recovery(ability_s v) {
 	if(player->get(v) > 0) {
 		add(player, v, -1);
@@ -295,7 +289,7 @@ static void posion_recovery(ability_s v) {
 	}
 }
 
-static direction_s movedirection(point m) {
+static direction_s move_direction(point m) {
 	if(m.x < 0)
 		return West;
 	else if(m.y < 0)
@@ -464,15 +458,15 @@ static void random_walk() {
 		player->wait();
 	else {
 		static direction_s allaround[] = {North, South, East, West};
-		player->movestep(maprnd(allaround));
+		move_step(maprnd(allaround));
 	}
 }
 
-static bool check_stairs_movement(creature* p, point m) {
+static bool check_stairs_movement(point m) {
 	auto& ei = area->getfeature(m);
 	auto pf = ei.getlead();
 	if(pf) {
-		if(p->ishuman()) {
+		if(player->ishuman()) {
 			if(yesno(getnm(str("Move%1", ei.id)))) {
 				game.enter(game.position, game.level + ei.lead, pf, Center);
 				return false;
@@ -482,24 +476,24 @@ static bool check_stairs_movement(creature* p, point m) {
 	return true;
 }
 
-static bool check_dangerous_feature(creature* p, point m) {
+static bool check_dangerous_feature(point m) {
 	auto& ei = area->getfeature(m);
 	if(ei.is(DangerousFeature)) {
-		p->wait(2);
-		if(!p->roll(Strenght)) {
-			p->act(getnme(str("%1Entagled", ei.id)));
-			p->damage(1);
-			p->wait();
-			p->fixactivity();
+		player->wait(2);
+		if(!player->roll(Strenght)) {
+			player->act(getnme(str("%1Entagled", ei.id)));
+			player->damage(1);
+			player->wait();
+			player->fixactivity();
 			return false;
 		}
-		p->act(getnme(str("%1Break", ei.id)));
+		player->act(getnme(str("%1Break", ei.id)));
 		area->setfeature(m, 0);
 	}
 	return true;
 }
 
-static void check_trap(creature* player, point m) {
+static void check_trap(point m) {
 	if(player->is(Fly))
 		return;
 	auto& ei = area->getfeature(m);
@@ -516,7 +510,7 @@ static void check_trap(creature* player, point m) {
 	}
 }
 
-static bool check_webbed_tile(creature* player, point m) {
+static bool check_webbed_tile(point m) {
 	if(player->is(IgnoreWeb))
 		return true;
 	if(player->is(Webbed)) {
@@ -533,25 +527,25 @@ static bool check_webbed_tile(creature* player, point m) {
 	return true;
 }
 
-static bool check_leave_area(creature* p, point m) {
+static bool check_leave_area(point m) {
 	if(!area->isvalid(m) && game.level == 0) {
-		if(p->ishuman()) {
-			auto direction = movedirection(m);
+		if(player->ishuman()) {
+			auto direction = move_direction(m);
 			auto np = to(game.position, direction);
 			if(yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
 				game.enter(np, 0, 0, direction);
 		}
-		p->wait();
+		player->wait();
 		return false;
 	}
 	return true;
 }
 
-static bool check_place_owner(creature* p, point m) {
-	if(p->is(PlaceOwner)) {
+static bool check_place_owner(point m) {
+	if(player->is(PlaceOwner)) {
 		auto pr = roomi::find(m);
-		if(p->getroom() != pr) {
-			p->wait();
+		if(player->getroom() != pr) {
+			player->wait();
 			return false;
 		}
 	}
@@ -890,41 +884,29 @@ bool creature::is(areaf v) const {
 	return ispresent() && area->is(getposition(), v);
 }
 
-void creature::movestep(direction_s v) {
-	if(is(Iced)) {
-		if(!roll(Dexterity, 30)) {
-			act(getnm("IcedSlice"));
-			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
-			wait();
-		}
-	}
-	setdirection(v);
-	movestep(to(getposition(), v));
-}
-
-void creature::interaction(creature& opponent) {
-	if(opponent.isenemy(*this))
-		attackmelee(opponent);
-	else if(!ishuman())
-		pay_movement(this);
-	else if(opponent.is(PlaceOwner)) {
-		fixactivity();
-		opponent.wait();
-		if(d100() < 40 && opponent.canspeak())
-			opponent.fixaction("DontPushMePlaceOwner", 0);
-		pay_movement(this);
+static void opponent_interaction() {
+	if(opponent->isenemy(*player))
+		attack_melee(0);
+	else if(!player->ishuman())
+		pay_movement();
+	else if(opponent->is(PlaceOwner)) {
+		player->fixactivity();
+		opponent->wait();
+		if(d100() < 40 && opponent->canspeak())
+			opponent->fixaction("DontPushMePlaceOwner", 0);
+		pay_movement();
 	} else {
-		auto pt = opponent.getposition();
-		opponent.setposition(getposition());
-		opponent.fixmovement();
-		opponent.wait();
-		update_room(&opponent);
-		setposition(pt);
-		update_room(this);
-		fixmovement();
-		if(d100() < 40 && opponent.canspeak())
-			opponent.fixaction("DontPushMe", 0);
-		pay_movement(this);
+		auto pt = opponent->getposition();
+		opponent->setposition(player->getposition());
+		opponent->fixmovement();
+		opponent->wait();
+		update_room(opponent);
+		player->setposition(pt);
+		update_room(player);
+		player->fixmovement();
+		if(d100() < 40 && opponent->canspeak())
+			opponent->fixaction("DontPushMe", 0);
+		pay_movement();
 	}
 }
 
@@ -936,8 +918,8 @@ static ability_s weapon_skill(const item& weapon) {
 	}
 }
 
-static int add_bonus_damage(creature* player, creature* enemy, item& weapon, feat_s feat, int value, feat_s resistance, feat_s immunity) {
-	if(!attack_effect(player, weapon, feat))
+static int add_bonus_damage(creature* enemy, item& weapon, feat_s feat, int value, feat_s resistance, feat_s immunity) {
+	if(!player->is(feat, weapon))
 		return 0;
 	auto bonus_damage = value;
 	if(immunity && enemy->is(immunity))
@@ -957,14 +939,14 @@ static void apply_pierce(int& armor, int pierce) {
 		armor = 0;
 }
 
-static void make_attack(creature* opponent, item& weapon, int attack_skill, int damage_percent) {
+static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 	auto enemy_name = opponent->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto damage = (int)weapon.geti().weapon.damage;
 	damage += player->get(damage_ability(weapon_ability));
-	damage += add_bonus_damage(player, opponent, weapon, FireDamage, 2, FireResistance, FireImmunity);
-	damage += add_bonus_damage(player, opponent, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
+	damage += add_bonus_damage(opponent, weapon, FireDamage, 2, FireResistance, FireImmunity);
+	damage += add_bonus_damage(opponent, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
 	if(weapon.isidentified()) { // Blessed or artifact weapon effective only if identified
 		if(weapon.is(Blessed))
 			damage += 1; // Blessed weapon do more damage
@@ -980,7 +962,7 @@ static void make_attack(creature* opponent, item& weapon, int attack_skill, int 
 		damage -= 2; // If we miss 
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
-		special_attack(player, weapon, opponent, pierce, damage); // If hit critical
+		special_attack(weapon, opponent, pierce, damage); // If hit critical
 	auto armor = opponent->get(Armor);
 	apply_pierce(armor, pierce);
 	auto damage_result = damage - armor;
@@ -1004,8 +986,8 @@ static void make_attack(creature* opponent, item& weapon, int attack_skill, int 
 	} else {
 		player->logs(getnm("AttackHit"), damage_result, opponent->getname(), roll_result, damage, -armor);
 		opponent->damage(damage_result);
-		poison_attack(player, opponent, weapon);
-		if(attack_effect(opponent, opponent->wears[MeleeWeapon], Retaliate)) {
+		poison_attack(weapon);
+		if(opponent->is(Retaliate, opponent->wears[MeleeWeapon])) {
 			if(!player->roll(Dodge))
 				player->damage(1);
 		}
@@ -1039,77 +1021,84 @@ void creature::damage(int v) {
 		kill();
 }
 
-void creature::attackmelee(creature& enemy) {
-	fixactivity();
-	auto number_attackers = enemy.get(EnemyAttacks);
+static void turn_to_opponent() {
+	player->setdirection(area->getdirection(player->getposition(), opponent->getposition()));
+}
+
+static void drop_to_opponent(const itemi& ei) {
+	item it;
+	it.create(&ei, 1);
+	it.setcount(1);
+	it.drop(opponent->getposition());
+}
+
+void attack_melee(int bonus) {
+	player->fixactivity();
+	auto number_attackers = opponent->get(EnemyAttacks);
 	if(number_attackers > 3)
 		number_attackers = 3;
-	make_attack(&enemy, wears[MeleeWeapon], number_attackers * 10, 100);
-	pay_attack(this, wears[MeleeWeapon]);
-	enemy.add(EnemyAttacks, 1);
+	make_attack(player->wears[MeleeWeapon], number_attackers * 10, 100);
+	pay_attack(player->wears[MeleeWeapon]);
+	opponent->add(EnemyAttacks, 1);
 }
 
-bool creature::canshoot(bool interactive) const {
-	if(!wears[RangedWeapon]) {
-		if(interactive)
-			actp(getnm("YouNeedRangeWeapon"));
+static bool can_shoot() {
+	if(!opponent) {
+		player->actp(getnm("YouDontSeeAnyEnemy"));
 		return false;
 	}
-	auto ammo = wears[RangedWeapon].geti().weapon.ammunition;
-	if(ammo && !wears[Ammunition].is(*ammo)) {
-		if(interactive)
-			actp(getnm("YouNeedAmmunition"), ammo->getname());
+	if(!player->wears[RangedWeapon]) {
+		player->actp(getnm("YouNeedRangeWeapon"));
 		return false;
 	}
-	return true;
-}
-
-bool creature::canthrown(bool interactive) const {
-	if(!wears[MeleeWeapon].is(Thrown)) {
-		if(interactive)
-			actp(getnm("YouNeedThrownWeapon"));
+	auto ammo = player->wears[RangedWeapon].geti().weapon.ammunition;
+	if(ammo && !player->wears[Ammunition].is(*ammo)) {
+		player->actp(getnm("YouNeedAmmunition"), ammo->getname());
 		return false;
 	}
 	return true;
 }
 
-void creature::attackrange(creature& enemy) {
-	if(!canshoot(false))
+void attack_range(int bonus) {
+	if(!can_shoot())
 		return;
-	auto pa = wears[RangedWeapon].geti().weapon.ammunition;
+	turn_to_opponent();
+	auto& weapon = player->wears[RangedWeapon];
+	auto pa = weapon.geti().weapon.ammunition;
 	if(pa)
-		fixshoot(enemy.getposition(), pa->wear_index);
+		player->fixshoot(opponent->getposition(), pa->wear_index);
 	else
-		fixactivity();
-	make_attack(&enemy, wears[RangedWeapon], 0, 100);
-	pay_attack(this, wears[RangedWeapon]);
+		player->fixactivity();
+	make_attack(weapon, 0, 100);
+	pay_attack(weapon);
 	if(pa) {
-		wears[Ammunition].use();
-		if(d100() < 50) {
-			item it;
-			it.create(pa, 1);
-			it.setcount(1);
-			it.drop(enemy.getposition());
-		}
+		player->wears[Ammunition].use();
+		if(d100() < 50)
+			drop_to_opponent(*pa);
 	}
 }
 
-void creature::attackthrown(creature& enemy) {
-	if(!canthrown(false))
-		return;
-	fixthrown(enemy.getposition(), "FlyingItem", wears[MeleeWeapon].geti().getindex());
-	make_attack(&enemy, wears[MeleeWeapon], 0, 100);
-	pay_attack(this, wears[MeleeWeapon]);
-	item it;
-	it.create(&wears[MeleeWeapon].geti(), 1);
-	it.setcount(1);
-	it.drop(enemy.getposition());
-	wears[MeleeWeapon].use();
+static bool can_thrown() {
+	if(!player->wears[MeleeWeapon].is(Thrown)) {
+		player->actp(getnm("YouNeedThrownWeapon"));
+		return false;
+	}
+	return true;
 }
 
-void creature::fixcantgo() const {
-	fixactivity();
-	act(getnm("CantGoThisWay"));
+void attack_thrown(int bonus) {
+	if(!can_thrown())
+		return;
+	if(!opponent) {
+		player->actp(getnm("YouDontSeeAnyEnemy"));
+		return;
+	}
+	turn_to_opponent();
+	player->fixthrown(opponent->getposition(), "FlyingItem", player->wears[MeleeWeapon].geti().getindex());
+	make_attack(player->wears[MeleeWeapon], 0, 100);
+	pay_attack(player->wears[MeleeWeapon]);
+	drop_to_opponent(player->wears[MeleeWeapon].geti());
+	player->wears[MeleeWeapon].use();
 }
 
 static bool isfreeplace(creature* player, point ni) {
@@ -1118,34 +1107,48 @@ static bool isfreeplace(creature* player, point ni) {
 	return isfreecr(ni);
 }
 
-void creature::movestep(point ni) {
-	if(!check_leave_area(this, ni))
+static void move_step(point ni) {
+	if(!check_leave_area(ni))
 		return;
-	if(!check_place_owner(this, ni))
+	if(!check_place_owner(ni))
 		return;
-	auto m = getposition();
-	if(!check_dangerous_feature(this, m))
+	auto m = player->getposition();
+	if(!check_dangerous_feature(m))
 		return;
-	if(!check_stairs_movement(this, ni))
+	if(!check_stairs_movement(ni))
 		return;
-	if(!check_webbed_tile(this, m))
+	if(!check_webbed_tile(m))
 		return;
-	auto opponent = findalive(ni);
+	auto push_opponent = opponent;
+	opponent = findalive(ni);
 	if(opponent)
-		interaction(*opponent);
-	else if(isfreeplace(this, ni)) {
-		setposition(ni);
-		update_room(this);
-		fixmovement();
-		look_items(this, getposition());
-		pay_movement(this);
+		opponent_interaction();
+	else if(isfreeplace(player, ni)) {
+		player->setposition(ni);
+		update_room(player);
+		player->fixmovement();
+		look_items(player, player->getposition());
+		pay_movement();
 	} else {
-		check_mining(this, ni);
-		check_interaction(this, ni);
-		fixactivity();
-		pay_movement(this);
+		check_mining(player, ni);
+		check_interaction(player, ni);
+		player->fixactivity();
+		pay_movement();
 	}
-	check_trap(this, getposition());
+	opponent = push_opponent;
+	check_trap(player->getposition());
+}
+
+void move_step(direction_s v) {
+	if(player->is(Iced)) {
+		if(!player->roll(Dexterity, 30)) {
+			player->act(getnm("IcedSlice"));
+			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
+			player->wait();
+		}
+	}
+	player->setdirection(v);
+	move_step(to(player->getposition(), v));
 }
 
 void creature::finish() {
@@ -1268,7 +1271,7 @@ static const sitei* get_site(creature* p) {
 	return p->getroom() ? &p->getroom()->geti() : 0;
 }
 
-void creature::makemovelong() {
+void make_move_long() {
 	if(player->wait_seconds < 100 * 6)
 		return;
 	player->wait_seconds -= 100 * 6;
@@ -1283,7 +1286,7 @@ static void use_skills() {
 		player->wait();
 }
 
-void creature::makemove() {
+void make_move() {
 	// Recoil form action
 	if(player->wait_seconds > 0) {
 		player->wait_seconds -= 25;
@@ -1302,6 +1305,8 @@ void creature::makemove() {
 	check_burning();
 	check_freezing();
 	check_corrosion();
+	if(!(*player))
+		return; // Dead from blooding, burning, cold or other bad
 	check_levelup();
 	ready_actions();
 	if(player->ishuman()) {
@@ -1313,8 +1318,10 @@ void creature::makemove() {
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 40)
 			player->cast(*((spelli*)allowed_spells.random()));
-		else if(player->canshoot(false))
-			player->attackrange(*opponent);
+		else if(can_shoot())
+			attack_range(0);
+		else if(d100() < 60 && can_thrown())
+			attack_thrown(0);
 		else
 			player->moveto(opponent->getposition());
 	} else {
@@ -1428,7 +1435,7 @@ bool creature::moveto(point ni) {
 	auto m1 = area->getnext(m0, ni);
 	if(!area->isvalid(m1))
 		return false;
-	movestep(area->getdirection(m0, m1));
+	move_step(area->getdirection(m0, m1));
 	return true;
 }
 

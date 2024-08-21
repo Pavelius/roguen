@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ability.h"
 #include "advancement.h"
 #include "answers.h"
@@ -14,9 +15,6 @@
 
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	room_id;
-	point			moveorder, guardorder;
-	void			fixcantgo() const;
-	bool			isfollowmaster() const;
 	void			update_abilities();
 	void			update_room_abilities();
 public:
@@ -24,28 +22,18 @@ public:
 	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
+	point			moveorder, guardorder;
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
 	void			apply(const featable& v) { feats.add(v); }
 	void			apply(const variants& source);
-	void			attackmelee(creature& enemy);
-	void			attackrange(creature& enemy);
-	void			attackthrown(creature& enemy);
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
-	bool			canshoot(bool interactive) const;
 	bool			canspeak() const { return abilities[Wits] >= 5; }
-	bool			canthrown(bool interactive) const;
 	void			cast(const spelli& e);
 	void			clear();
 	void			equipi(short unsigned type, int count);
-	void			everyminute();
-	void			every10minutes();
-	void			every30minutes();
-	void			every5minutes() {}
-	void			every1hour() {}
-	void			every4hour();
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
@@ -65,20 +53,17 @@ public:
 	bool			is(areaf v) const;
 	bool			is(ability_s v) const { return get(v) > 0; }
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
+	bool			is(feat_s v, const item& i) const { return feats.is(v) || i.is(v); }
 	bool			isallow(const item& it) const;
 	bool			isenemy(const creature& opponent) const;
+	bool			isfollowmaster() const;
 	bool			ishuman() const;
 	bool			ispresent() const;
 	bool			istired() const { return abilities[Mood] <= -10; }
 	bool			isunaware() const { return wait_seconds >= 100 * 6; }
 	bool			isvalid() const;
-	void			interaction(creature& opponent);
 	void			kill();
 	void			logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
-	static void		makemove();
-	static void		makemovelong();
-	void			movestep(direction_s i);
-	void			movestep(point m);
 	bool			moveto(point m);
 	void			paint() const;
 	void			paintbarsall() const;
@@ -121,6 +106,9 @@ extern bool last_roll_successed;
 extern rect last_rect;
 extern int window_width, window_height;
 
+void attack_melee(int bonus);
+void attack_range(int bonus);
+void attack_thrown(int bonus);
 void creature_every_minute();
 void creature_every_5_minutes();
 void creature_every_10_minutes();
@@ -129,6 +117,9 @@ void creature_every_4_hours();
 void dialog_message(const char* format);
 bool isneed(const void* p);
 bool ispresent(const void* p);
+void make_move();
+void make_move_long();
+void move_step(direction_s v);
 
 creature* player_create(point m, variant kind, bool female);
 

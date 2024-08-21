@@ -44,7 +44,7 @@ void visualize_images(res pid, point size, point offset);
 itema				items;
 indexa				indecies;
 spella				allowed_spells;
-creature			*player, *opponent, *enemy;
+creature			*player, *opponent;
 int					last_coins;
 const char*			last_id;
 static point		last_door;
@@ -1166,35 +1166,35 @@ template<> void ftscript<feati>(int value, int counter) {
 }
 
 static void move_left(int bonus) {
-	player->movestep(West);
+	move_step(West);
 }
 
 static void move_right(int bonus) {
-	player->movestep(East);
+	move_step(East);
 }
 
 static void move_up(int bonus) {
-	player->movestep(North);
+	move_step(North);
 }
 
 static void move_down(int bonus) {
-	player->movestep(South);
+	move_step(South);
 }
 
 static void move_up_left(int bonus) {
-	player->movestep(NorthWest);
+	move_step(NorthWest);
 }
 
 static void move_up_right(int bonus) {
-	player->movestep(NorthEast);
+	move_step(NorthEast);
 }
 
 static void move_down_left(int bonus) {
-	player->movestep(SouthWest);
+	move_step(SouthWest);
 }
 
 static void move_down_right(int bonus) {
-	player->movestep(SouthEast);
+	move_step(SouthEast);
 }
 
 static bool have_targets() {
@@ -1720,34 +1720,6 @@ static void test_arena(int bonus) {
 
 static void toggle_floor_rect(int bonus) {
 	show_floor_rect = !show_floor_rect;
-}
-
-static void range_attack(int bonud) {
-	if(!player->canshoot(true))
-		return;
-	if(!enemy) {
-		player->actp(getnm("YouDontSeeAnyEnemy"));
-		return;
-	}
-	if(enemy) {
-		player->setdirection(area->getdirection(player->getposition(), enemy->getposition()));
-		player->attackrange(*enemy);
-		player->wait();
-	}
-}
-
-static void thrown_attack(int bonud) {
-	if(!player->canthrown(true))
-		return;
-	if(!enemy) {
-		player->actp(getnm("YouDontSeeAnyEnemy"));
-		return;
-	}
-	if(enemy) {
-		player->setdirection(area->getdirection(player->getposition(), enemy->getposition()));
-		player->attackthrown(*enemy);
-		player->wait();
-	}
 }
 
 static void show_images(int bonus) {
@@ -2509,7 +2481,7 @@ BSDATA(script) = {
 	{"RaiseSkills", raise_skills},
 	{"Random", empthy_script, is_random},
 	{"RandomAbility", random_ability},
-	{"RangeAttack", range_attack},
+	{"RangeAttack", attack_range},
 	{"RepairItem", repair_item},
 	{"RemoveFeature", remove_feature},
 	{"Roll", roll_value},
@@ -2523,7 +2495,7 @@ BSDATA(script) = {
 	{"TransferCoins", transfer_coins},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},
-	{"ThrownAttack", thrown_attack},
+	{"ThrownAttack", attack_thrown},
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"TriggerText", trigger_text},
 	{"ViewStuff", view_stuff},

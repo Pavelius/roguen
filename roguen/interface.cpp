@@ -33,7 +33,6 @@ static const void*		focus_pressed;
 static unsigned long	last_tick_message;
 static unsigned long	start_stamp;
 static int				wears_offset = 80;
-static rect				message_rect;
 bool					show_floor_rect;
 int						window_width = 480;
 int						window_height = 280;
@@ -116,7 +115,7 @@ static unsigned char getfow(point m) {
 }
 
 void update_console_time() {
-	last_tick_message = getcputime();
+	// last_tick_message = getcputime();
 }
 
 void gamei::next(fnevent proc) {
@@ -777,7 +776,6 @@ static void paint_message(const char* format) {
 	caret.x = (getwidth() - width - panel_width) / 2;
 	strokeout(fillwindow, metrics::padding, metrics::padding);
 	strokeout(strokeborder, metrics::padding, metrics::padding);
-	message_rect.set(caret.x, caret.y, caret.x + width, caret.y + height);
 	textf(format);
 }
 
@@ -1278,7 +1276,6 @@ static void paint_status() {
 }
 
 static void beforepaint() {
-	message_rect.clear();
 	paint_status();
 }
 

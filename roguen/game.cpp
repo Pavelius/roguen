@@ -224,7 +224,7 @@ static void skip_long_time() {
 	if(!human)
 		return;
 	while(human->isunaware()) {
-		allnext(&creature::makemovelong);
+		allnext(make_move_long);
 		game.passminute();
 	}
 }
@@ -236,7 +236,7 @@ void gamei::playminute() {
 		need_continue = true;
 		for(auto i = 0; i < moves_per_minute; i++) {
 			update_los();
-			allnext(&creature::makemove);
+			allnext(make_move);
 			if(!game.getowner() || draw::isnext()) {
 				need_continue = false;
 				break;
