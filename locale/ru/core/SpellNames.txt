@@ -1,6 +1,10 @@
+CureWounds: Лечение легких ранений
 Entaglement: Рост колючек
+Gate: Врата
 IdentifySpell: Опознание
 KnockDoor: Вскрыть замки
+Mending: Ремонт
+Sleep: Сон
 SummonUndead: Призвать мертвецов
 Teleport: Телепорт
 TorchLight: Свет

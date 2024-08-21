@@ -20,7 +20,6 @@ int		last_roll_result;
 bool	last_roll_successed;
 
 bool allow_targets(const variants& conditions);
-bool choose_targets(const variants& effects);
 void damage_item(item& it);
 void update_console_time();
 int getfloor();
@@ -204,7 +203,7 @@ void cast_spell(const spelli& e, int mana, bool silent) {
 			player->fixaction("Spells", "Casting");
 	}
 	if(e.use)
-		script_run(e.effect);
+		script_run(e.use);
 	if(e.summon)
 		player->summon(player->getposition(), e.summon, e.getcount());
 	player->add(Mana, -mana);
@@ -768,9 +767,9 @@ static bool spell_allowmana(const void* object) {
 
 static bool spell_allowuse(const void* object) {
 	auto p = (spelli*)object;
-	if(p->summon.size() != 0)
+	if(p->summon)
 		return true;
-	return choose_targets(p->targets);
+	return allow_targets(p->use);
 }
 
 static bool spell_iscombat(const void* object) {

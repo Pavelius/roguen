@@ -12,7 +12,7 @@ StealCoinsFail
 #SiteSkill
 
 GatherInformation skill(Wits) keyid("C")
- effect SelectNeutralCreatures FilterClose ChooseCreature ForEachOpponent Chatting
+ effect SelectNeutralCreatures FilterClose ChooseTarget ForEachOpponent Chatting
 GatherMellowHerbs skill(Herbalism)
  effect SelectFeatures Filter HerbsFull ForEachFeature GatherNextItem GrassHerbs RemoveFeature+50 RollAction
 GatherSemiMellowHerbs skill(Herbalism)

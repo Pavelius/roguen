@@ -253,13 +253,13 @@ TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)
  use RollLearning
 
 ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll)
- use SelectYourItems FilterIdentified-1 ChooseByMagic IdentifyItem
+ use SelectYourItems FilterIdentified-1 ChooseTarget ForEachItem IdentifyItem
 ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll)
- use SelectYourItems FilterIdentified FilterCursed ChooseByMagic CurseItem-1
+ use SelectYourItems FilterIdentified FilterCursed ChooseTarget ForEachItem CurseItem-1
 ScrollOfRepair avatar(440) weight(2) unidentified(Scroll)
- use SelectYourItems FilterDamaged ChooseByMagic DamageItem-10
+ use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-10
 ScrollOfOpening avatar(441) weight(2) unidentified(Scroll)
- use SelectFeatures Filter LockedDoor ChooseByMagic OpenedDoor
+ use SelectFeatures Filter LockedDoor ChooseTarget ForEachFeature OpenedDoor
 ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll)
  use ExploreArea
 

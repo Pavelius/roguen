@@ -1,2 +1,5 @@
-﻿In file `rules/Spells.txt`:
- Line 15: Not found requisit `duration`
+﻿In file `Names.txt`:
+ Define translation for `CureWounds`
+ Define translation for `Gate`
+ Define translation for `Mending`
+ Define translation for `Sleep`

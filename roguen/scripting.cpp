@@ -1204,7 +1204,7 @@ static bool have_targets() {
 		|| indecies.getcount() != 0;
 }
 
-bool choose_targets(const variants& conditions) {
+static bool choose_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	items.clear();
@@ -1251,19 +1251,19 @@ static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!pn)
 		return true;
 	pushvalue push_width(window_width, 300);
-	if(targets) {
+	if(targets.getcount() > 1) {
 		if(!choose_indecies(targets, pn, offset))
 			return false;
 	}
-	if(rooms) {
+	if(rooms.getcount() > 1) {
 		if(!rooms.chooseu(pn, getnm("Cancel"), offset))
 			return false;
 	}
-	if(items) {
+	if(items.getcount() > 1) {
 		if(!items.chooseu(pn, getnm("Cancel"), offset))
 			return false;
 	}
-	if(indecies) {
+	if(indecies.getcount() > 1) {
 		if(!choose_indecies(indecies, pn))
 			return false;
 	}
@@ -1275,19 +1275,6 @@ static int get_target_count() {
 		+ rooms.getcount()
 		+ items.getcount()
 		+ indecies.getcount();
-}
-
-static bool bound_targets(const char* id, int multi_targets, bool interactive, bool force_choose = false) {
-	pushvalue push_interactive(answers::interactive, interactive);
-	unsigned target_count = 1 + multi_targets;
-	if(!multi_targets) {
-		if(!force_choose)
-			force_choose = get_target_count() > 1;
-		if(force_choose && !choose_target_interactive(id))
-			return false;
-	}
-	choose_limit(target_count);
-	return true;
 }
 
 template<> void ftscript<spelli>(int index, int value) {
@@ -1344,13 +1331,6 @@ static bool iskind(variant v, const char* id) {
 	auto pr = bsdata<randomizeri>::find(id);
 	if(pr)
 		return pr->is(v);
-	return true;
-}
-
-static bool is_locked_door(int bonus) {
-	auto pf = bsdata<featurei>::elements + area->features[last_index];
-	if(!pf->activate_item)
-		return false;
 	return true;
 }
 
@@ -1506,10 +1486,6 @@ static void debug_message(int bonus) {
 	//if(f)
 	//	console.adds("Feature %1 (%2i).", bsdata<featurei>::elements[f].getname(), f);
 	raise_skills(0);
-}
-
-static void open_locked_door(int bonus) {
-	area->setactivate(last_index);
 }
 
 static void open_nearest_door(int bonus) {
@@ -1884,11 +1860,9 @@ static void apply_action(int bonus) {
 }
 
 static void jump_to_site(int bonus) {
-	if(!last_room)
-		return;
 	if(!player->ishuman())
 		player->act(getnm("YouSundellyDisappear"));
-	auto m = area->getfree(center(last_room->rc), 8, isfreecr);
+	auto m = area->getfree(last_index, 8, isfreecr);
 	player->place(m);
 	if(!player->ishuman())
 		player->act(getnm("YouSundellyAppear"));
@@ -2114,23 +2088,44 @@ static bool is_targets(int bonus) {
 	return targets.getcount() > 0;
 }
 
-static void for_each_creature(int bonus) {
-	pushvalue push(player);
+static void for_each_opponent(int bonus) {
+	pushvalue push(opponent);
+	pushvalue push_rect(last_rect);
+	pushvalue push_index(last_index);
 	variants commands; commands.set(script_begin, script_end - script_begin);
 	creaturea source(targets);
 	for(auto p : source) {
-		player = p;
+		opponent = p;
+		auto pt = p->getposition();
+		last_rect = {pt.x, pt.y, pt.x, pt.y};
+		last_index = pt;
 		script_run(commands);
 	}
 	script_stop();
 }
 
-static void for_each_opponent(int bonus) {
-	pushvalue push(opponent);
+static void for_each_creature(int bonus) {
+	pushvalue push(player);
+	pushvalue push_rect(last_rect);
+	pushvalue push_index(last_index);
 	variants commands; commands.set(script_begin, script_end - script_begin);
 	creaturea source(targets);
 	for(auto p : source) {
-		opponent = p;
+		player = p;
+		auto pt = p->getposition();
+		last_rect = {pt.x, pt.y, pt.x, pt.y};
+		last_index = pt;
+		script_run(commands);
+	}
+	script_stop();
+}
+
+static void for_each_item(int bonus) {
+	pushvalue push(last_item);
+	variants commands; commands.set(script_begin, script_end - script_begin);
+	itema source(items);
+	for(auto p : source) {
+		last_item = p;
 		script_run(commands);
 	}
 	script_stop();
@@ -2139,6 +2134,11 @@ static void for_each_opponent(int bonus) {
 static bool is_features(int bonus) {
 	script_stop();
 	return indecies.getcount() > 0;
+}
+
+static bool is_items(int bonus) {
+	script_stop();
+	return items.getcount() > 0;
 }
 
 static void for_each_feature(int bonus) {
@@ -2277,19 +2277,11 @@ static void check_script_targets() {
 	}
 }
 
-static void choose_by_magic(int bonus) {
-	pushvalue push(effect_level);
-	if(last_item)
-		set_magic_effect(last_item->getmagic());
-	if(effect_level <= 2) {
+static void choose_target(int bonus) {
+	if(player->ishuman())
 		choose_target_interactive(get_header_id());
-		choose_limit(1);
-	}
+	choose_limit(1);
 	check_script_targets();
-}
-
-static void power_by_magic(int bonus) {
-	last_value = bonus + effect_level / 2;
 }
 
 static void choose_limit(int counter) {
@@ -2429,8 +2421,8 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"Chatting", chatting},
-	{"ChooseByMagic", choose_by_magic, is_full},
-	{"ChooseCreature", choose_creature, is_full},
+	{"ChooseTarget", choose_target, is_full},
+	// {"ChooseCreature", choose_creature, is_full},
 	{"ChooseRandom", choose_random, is_full},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},
@@ -2439,9 +2431,12 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
 	{"EnchantMinutes", enchant_minutes, empthy_next_condition},
+	{"EnchantHours", enchant_hours, empthy_next_condition},
+	{"EnchantDays", enchant_days, empthy_next_condition},
 	{"ExploreArea", explore_area},
 	{"ForEachCreature", for_each_creature, is_targets},
 	{"ForEachFeature", for_each_feature, is_features},
+	{"ForEachItem", for_each_item, is_items},
 	{"ForEachOpponent", for_each_opponent, is_targets},
 	{"ForEachRoom", for_each_room, is_room},
 	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
@@ -2480,12 +2475,10 @@ BSDATA(script) = {
 	{"MoveUpLeft", move_up_left},
 	{"NPC", empthy_script, is_npc},
 	{"Offset", set_offset},
-	{"OpenLockedDoor", open_locked_door, is_locked_door},
 	{"OpenNearestDoor", open_nearest_door},
 	{"Opponent", opponent_next},
 	{"PickUp", pickup},
 	{"PickUpAll", pickup_all},
-	{"PowerByMagic", power_by_magic},
 	{"QuestGuardian", quest_guardian},
 	{"QuestLandscape", quest_landscape},
 	{"QuestMinion", quest_minion},
