@@ -137,8 +137,7 @@ void item::damage(int bonus) {
 		setcount(getcount() - 1); // Countable items break always
 	else if(bonus >= 0) {
 		// Damage item state
-		bool need_break = (broken >= 7);
-		if(need_break)
+		if(broken >= 7)
 			setcount(getcount() - 1);
 		else
 			broken++;

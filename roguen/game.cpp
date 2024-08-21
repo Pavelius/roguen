@@ -187,7 +187,7 @@ int gamei::getrange(point m1, point m2) {
 
 void gamei::passminute() {
 	minutes++;
-	boosti::updateall(getminutes());
+	update_all_boost(getminutes());
 	all(creature_every_minute);
 	while(restore_half_turn < minutes) {
 		all(creature_every_5_minutes);

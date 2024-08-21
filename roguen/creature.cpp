@@ -190,7 +190,7 @@ void damage_equipment(int bonus, bool allow_save) {
 	}
 }
 
-static void cast_spell(const spelli& e, int mana, bool silent) {
+void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
 		player->actp(getnm("NotEnoughtMana"));
 		return;
@@ -209,10 +209,11 @@ static void cast_spell(const spelli& e, int mana, bool silent) {
 		player->summon(player->getposition(), e.summon, e.getcount());
 	player->add(Mana, -mana);
 	player->update();
-	player->wait();
 }
 
 static void special_spell_attack(item& weapon, creature* enemy, const spelli& ei) {
+	if(weapon.isheavydamaged())
+		return;
 	cast_spell(ei, 0, true);
 	weapon.damage();
 }
@@ -1440,7 +1441,7 @@ bool creature::moveto(point ni) {
 }
 
 void creature::unlink() {
-	boosti::remove(this);
+	remove_boost(this);
 	for(auto& e : bsdata<creature>()) {
 		if(e.getowner() == this)
 			e.setowner(0);
@@ -1602,6 +1603,7 @@ void creature::apply(const variants& source) {
 
 void creature::cast(const spelli& e) {
 	cast_spell(e, e.getmana(), false);
+	player->wait();
 }
 
 void creature::summon(point m, const variants& elements, int count) {
@@ -1698,7 +1700,7 @@ creature* player_create(point m, variant kind, bool female) {
 bool creature::isallow(const item& it) const {
 	auto& ei = it.geti();
 	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
-		auto v = ei.required[i-Strenght];
+		auto v = ei.required[i - Strenght];
 		if(v && get(i) < v)
 			return false;
 	}

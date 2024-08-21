@@ -153,7 +153,6 @@ BSMETA(siteskilli) = {
 BSMETA(spelli) = {
 	BSREQ(id),
 	BSREQ(mana), BSREQ(count),
-	BSENM(duration, durationi),
 	BSFLG(feats, feati),
 	BSREQ(targets), BSREQ(effect), BSREQ(summon), BSREQ(use),
 	{}};

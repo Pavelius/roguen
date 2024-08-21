@@ -2,7 +2,6 @@
 #include "areapiece.h"
 #include "bsreq.h"
 #include "creature.h"
-#include "duration.h"
 #include "feature.h"
 #include "game.h"
 #include "hotkey.h"

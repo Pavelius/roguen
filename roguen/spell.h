@@ -1,18 +1,16 @@
 #include "collection.h"
 #include "diceprogress.h"
 #include "feat.h"
-#include "duration.h"
 #include "variant.h"
 
 #pragma once
 
 struct spelli : nameable {
 	int				mana;
-	duration_s		duration;
 	diceprogress	count;
 	featable		feats;
-	variants		targets, effect, summon;
-	variants		use;
+	variants		targets, effect;
+	variants		use, summon;
 	int				getcount() const { return count.roll(0); }
 	int				getmana() const;
 	bool			ishostile() const;

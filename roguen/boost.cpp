@@ -2,7 +2,7 @@
 
 BSDATAC(boosti, 256);
 
-void boosti::updateall(unsigned current_stamp) {
+void update_all_boost(unsigned current_stamp) {
 	auto ps = bsdata<boosti>::elements;
 	for(auto& e : bsdata<boosti>()) {
 		if(e.stamp < current_stamp)
@@ -12,14 +12,14 @@ void boosti::updateall(unsigned current_stamp) {
 	bsdata<boosti>::source.count = ps - bsdata<boosti>::begin();
 }
 
-void boosti::remove(variant parent) {
+void remove_boost(variant parent) {
 	for(auto& e : bsdata<boosti>()) {
 		if(e.parent==parent)
 			e.clear();
 	}
 }
 
-boosti* boosti::find(variant parent, variant effect) {
+static boosti* find_boost(variant parent, variant effect) {
 	for(auto& e : bsdata<boosti>()) {
 		if(e.effect == effect && e.parent == parent)
 			return &e;
@@ -27,8 +27,8 @@ boosti* boosti::find(variant parent, variant effect) {
 	return 0;
 }
 
-boosti* boosti::add(variant parent, variant effect, unsigned stop_time) {
-	auto p = find(parent, effect);
+void add_boost(variant parent, variant effect, unsigned stop_time) {
+	auto p = find_boost(parent, effect);
 	if(!p) {
 		p = bsdata<boosti>::add();
 		p->clear();
@@ -37,5 +37,4 @@ boosti* boosti::add(variant parent, variant effect, unsigned stop_time) {
 	}
 	if(p->stamp < stop_time)
 		p->stamp = stop_time;
-	return p;
 }

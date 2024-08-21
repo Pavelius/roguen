@@ -1,6 +1,6 @@
 #Spell
 
-CureWounds mana(10) count(1 4)
+CureWounds mana(10)
  feats Enemy
  targets SelectAllies FilterClose FilterWounded
  effect Heal+5
@@ -9,14 +9,12 @@ Entaglement mana(6)
  targets SelectEnemies FilterFeature-1
  effect ThornBush
 Gate mana(40)
-TorchLight mana(5) duration(Minutes) count(20)
- targets SelectYou
- effect LightSource
- use LightSource
+TorchLight mana(5)
+ use EnchantMinutes+20 LightSource
 Mending mana(10)
-Sleep mana(5) duration(Minutes)
+Sleep mana(5)
  targets SelectEnemies AnimalInt-1
-SummonUndead mana(15) count(4)
+SummonUndead mana(15)
  summon Skeleton+4 Zombie+2
 Teleport mana(5)
  targets SelectRooms FilterNotable FilterExplored FilterThisRoom-1

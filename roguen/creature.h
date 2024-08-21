@@ -31,7 +31,7 @@ public:
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
 	bool			canspeak() const { return abilities[Wits] >= 5; }
-	void			cast(const spelli& e);
+	static void		cast(const spelli& e);
 	void			clear();
 	void			equipi(short unsigned type, int count);
 	void			damage(int v);
@@ -109,6 +109,7 @@ extern int window_width, window_height;
 void attack_melee(int bonus);
 void attack_range(int bonus);
 void attack_thrown(int bonus);
+void cast_spell(const spelli& e, int mana, bool silent);
 void creature_every_minute();
 void creature_every_5_minutes();
 void creature_every_10_minutes();

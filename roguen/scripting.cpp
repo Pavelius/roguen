@@ -1233,7 +1233,7 @@ static bool choose_indecies(indexa& indecies, const char* header) {
 
 static bool choose_indecies(creaturea& source, const char* header, int offset) {
 	indexa indecies;
-	for(auto i = offset; i<source.getcount(); i++)
+	for(auto i = offset; i < source.getcount(); i++)
 		indecies.add(((creature*)source.data[i])->getposition());
 	if(!indecies)
 		return true;
@@ -1290,20 +1290,8 @@ static bool bound_targets(const char* id, int multi_targets, bool interactive, b
 	return true;
 }
 
-void apply_spell(const spelli& ei) {
-	pushvalue push_value(last_value, ei.getcount());
-	if(ei.duration) {
-		auto minutes = get_duration(ei.duration);
-		auto stop_time = game.getminutes() + minutes;
-		player->fixvalue(str("%1 %2i %-Minutes", ei.getname(), minutes), ColorGreen);
-		for(auto v : ei.effect)
-			boosti::add(player, v, stop_time);
-	} else
-		player->apply(ei.effect);
-}
-
 template<> void ftscript<spelli>(int index, int value) {
-	apply_spell(bsdata<spelli>::elements[index]);
+	cast_spell(bsdata<spelli>::elements[index], 0, true);
 }
 
 static void remove_feature(int bonus) {
@@ -2337,6 +2325,29 @@ static void choose_creature(int bonus) {
 	choose_limit(bonus);
 }
 
+static void enchant_minutes(int count, int koeff, const char* format) {
+	auto v = *script_begin++;
+	auto minutes = count * koeff;
+	if(minutes <= 0)
+		return;
+	auto stop_time = game.getminutes() + minutes;
+	if(format)
+		player->fixvalue(str(format, v.getname(), count), ColorGreen);
+	add_boost(player, v, stop_time);
+}
+
+static void enchant_minutes(int bonus) {
+	enchant_minutes(script_count(bonus), 1, "%1 %2i %-Minutes");
+}
+
+static void enchant_hours(int bonus) {
+	enchant_minutes(script_count(bonus), 60, "%1 %2i %-Minutes");
+}
+
+static void enchant_days(int bonus) {
+	enchant_minutes(script_count(bonus), 24 * 60, "%1 %2i %-Days");
+}
+
 static void steal_opponent_coins(int bonus) {
 	auto coins = opponent->money;
 	if(!coins)
@@ -2427,6 +2438,7 @@ BSDATA(script) = {
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
 	{"DropDown", dropdown},
+	{"EnchantMinutes", enchant_minutes, empthy_next_condition},
 	{"ExploreArea", explore_area},
 	{"ForEachCreature", for_each_creature, is_targets},
 	{"ForEachFeature", for_each_feature, is_features},

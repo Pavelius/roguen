@@ -3,13 +3,14 @@
 #pragma once
 
 struct boosti {
-	variant			parent;
-	variant			effect;
-	unsigned		stamp;
+	variant		parent;
+	variant		effect;
+	unsigned	stamp;
 	constexpr explicit operator bool() const { return parent.operator bool(); }
-	static boosti*	add(variant parent, variant effect, unsigned stop_time);
-	void			clear() { memset(this, 0, sizeof(*this)); }
-	static boosti*	find(variant parent, variant effect);
-	static void		remove(variant parent);
-	static void		updateall(unsigned current_stamp);
+	void		clear() { memset(this, 0, sizeof(*this)); }
 };
+
+void add_boost(variant parent, variant effect, unsigned stop_time);
+void update_all_boost(unsigned current_stamp);
+void remove_boost(variant parent);
+

@@ -1,3 +1,2 @@
 ﻿In file `rules/Spells.txt`:
- Line 15: Not found requisit `wearing`
- Line 15: Expected line feed
+ Line 15: Not found requisit `duration`
