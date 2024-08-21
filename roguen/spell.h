@@ -7,13 +7,11 @@
 
 struct spelli : nameable {
 	int				mana;
-	diceprogress	count;
 	featable		feats;
 	variants		use;
 	variant			summon;
-	int				getcount() const { return count.roll(0); }
+	bool			adventure;
 	int				getmana() const;
-	bool			ishostile() const;
 };
 struct spellable {
 	constexpr static const int maximum = 64;

@@ -31,7 +31,6 @@ void add_need(int bonus);
 void add_need_answers(int bonus);
 void advance_value(variant v);
 void apply_value(variant v);
-void apply_ability(ability_s v, int counter);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
 void choose_limit(int counter);
@@ -40,6 +39,9 @@ bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
 void visualize_images(res pid, point size, point offset);
+
+void* choose_answers(answers& an, const char* header, const char* cancel);
+int choose_indecies(const indexa& source, const char* header, bool cancel);
 
 itema				items;
 indexa				indecies;
@@ -64,10 +66,6 @@ static adat<point, 512> points;
 static rect			correct_conncetors;
 static direction_s	last_direction;
 static adat<variant, 32> sites;
-
-void apply_ability(ability_s v, int counter);
-void* choose_answers(answers& an, const char* header, const char* cancel);
-int choose_indecies(const indexa& source, const char* header, bool cancel);
 
 static int random_value(int value) {
 	if(!value)
@@ -1146,11 +1144,11 @@ template<> void ftscript<needni>(int value, int counter) {
 
 template<> bool fttest<abilityi>(int value, int counter) {
 	if(counter < 0)
-		return player->get((ability_s)value) >= -counter;
+		return player->basic.abilities[value] >= -counter;
 	return true;
 }
 template<> void ftscript<abilityi>(int value, int counter) {
-	apply_ability((ability_s)value, counter);
+	player->basic.abilities[value] += counter;
 }
 
 template<> bool fttest<feati>(int value, int counter) {
@@ -1912,12 +1910,12 @@ static void roll_action(int bonus) {
 
 static void roll_for_effect(int bonus) {
 	roll_value(0);
-	if(script_stopped()) {
+	if(script_stopped())
 		player->fixaction("CantLearnTome", 0);
-	} else {
+	else {
 		auto number_effects = script_end - script_begin;
 		if(number_effects)
-			advance_value(script_begin[rand() % number_effects]);
+			script_run(script_begin[rand() % number_effects]);
 	}
 }
 
@@ -2027,7 +2025,7 @@ static void damage_item(int bonus) {
 
 static void random_ability(int bonus) {
 	static ability_s source[] = {Strenght, Dexterity, Wits};
-	apply_ability(maprnd(source), bonus);
+	ftscript<abilityi>(maprnd(source), bonus);
 }
 
 static void filter_allies(int bonus) {

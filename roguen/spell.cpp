@@ -18,10 +18,6 @@ int	spelli::getmana() const {
 	return mana;
 }
 
-bool spelli::ishostile() const {
-	return feats.is(Enemy);
-}
-
 spelli*	spella::choose(const char* title, const char* cancel, const spellable* context) const {
 	static listcolumn columns[] = {
 		{"Mana", 80, object_mana},

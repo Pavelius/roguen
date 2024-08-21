@@ -53,6 +53,7 @@ MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
 Minute: Минута
 Minutes: Минут
+Hours: Часов
 Mundane: Обычный
 Natural: Родное
 No: Нет

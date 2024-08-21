@@ -380,17 +380,16 @@ static int additional_skill_points(int v) {
 }
 
 void advance_value(variant v) {
-	if(v.iskind<abilityi>())
-		player->basic.abilities[v.value] += get_counter(v.counter);
-	else if(v.iskind<itemi>()) {
-		if(v.counter >= 0)
-			player->wearable::equipi(v.value, v.counter ? v.counter : 1);
-	} else if(v.iskind<feati>())
+	if(v.iskind<itemi>())
+		player->wearable::equipi(v.value, v.counter > 0 ? v.counter : 1);
+	else if(v.iskind<feati>())
 		ftscript<feati>(v.value, v.counter);
-	else if(v.iskind<spelli>())
-		player->learn_spell(v.value);
+	else if(v.iskind<abilityi>())
+		ftscript<abilityi>(v.value, v.counter);
 	else if(v.iskind<modifieri>())
 		modifier = (modifiers)v.value;
+	else if(v.iskind<spelli>())
+		player->learn_spell(v.value);
 	else if(v.iskind<script>())
 		bsdata<script>::elements[v.value].proc(v.counter);
 }
@@ -797,11 +796,9 @@ static bool spell_allowuse(const void* object) {
 
 static bool spell_iscombat(const void* object) {
 	auto p = (spelli*)object;
-	if(p->summon)
-		return true;
-	if(p->ishostile())
-		return true;
-	return false;
+	if(p->adventure)
+		return false;
+	return true;
 }
 
 static bool	spell_isnotcombat(const void* object) {
@@ -852,18 +849,6 @@ static void update_room(creature* player) {
 			fire_trigger(WhenCreatureP1EnterSiteP2, player->getkind(), &pn->geti());
 	} else
 		player->setroom(0);
-}
-
-static void update_skills() {
-	for(auto& e : bsdata<abilityi>()) {
-		// Pure skill get bonus if you learn it
-		if(!e.base)
-			continue;
-		auto i = e.getindex();
-		if(!player->basic.abilities[i])
-			continue;
-		player->abilities[i] += player->get(e.base) / 3;
-	}
 }
 
 void creature::update_abilities() {
@@ -1181,33 +1166,6 @@ void creature::finish() {
 	fixappear();
 }
 
-static int add_ability(ability_s i, int value, int current_value, int minimum, int maximum, bool interactive) {
-	value += current_value;
-	if(value < minimum)
-		value = minimum;
-	else if(value > maximum)
-		value = maximum;
-	auto delta = value - current_value;
-	if(interactive && delta != 0) {
-		auto color_positive = get_positive_color(i);
-		auto color_negative = get_negative_color(i);
-		if(color_negative != ColorNone)
-			player->fixvalue(delta, color_positive, color_negative);
-	}
-	return value;
-}
-
-static void add_ability(ability_s v, int counter, bool interactive, bool basic) {
-	if(v < sizeof(player->basic.abilities) / sizeof(player->basic.abilities[0])) {
-		if(basic)
-			player->basic.abilities[v] = add_ability(v, counter, player->basic.abilities[v], 0, 100, interactive);
-		else if(v == Hits || v == Mana)
-			player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, player->basic.abilities[v], interactive);
-		else
-			player->abilities[v] = add_ability(v, counter, player->abilities[v], 0, 100, interactive);
-	}
-}
-
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	if(value <= 0)
@@ -1427,7 +1385,6 @@ void creature::update() {
 	update_boost(feats_active, this);
 	update_wears();
 	update_room_abilities();
-	update_skills();
 	update_abilities();
 	update_negative_skills();
 	player = push_player;
@@ -1610,15 +1567,6 @@ void creature_every_30_minutes() {
 }
 
 void creature_every_4_hours() {
-}
-
-void apply_ability(ability_s v, int counter) {
-	last_ability = v;
-	if(!counter)
-		return;
-	add_ability(v, counter, true, false);
-	if(player->abilities[Hits] <= 0)
-		player->kill();
 }
 
 void creature::apply(const variants& source) {

@@ -1,6 +1,7 @@
 Alertness: Бдительность
 Gemcutting: Ювелирное дело
 Herbalism: Травознавство
+Literacy: Грамотность
 Mining: Шахтерское дело
 Religion: Религия
 Stealth: Скрытность
