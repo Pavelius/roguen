@@ -86,7 +86,6 @@ public:
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update();
-	void			use(item& v);
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }
 	void			waitseconds(int value) { wait_seconds += value; }
 };
@@ -122,6 +121,8 @@ bool ispresent(const void* p);
 void make_move();
 void make_move_long();
 void move_step(direction_s v);
+void pay_action();
+void use_item(item& v);
 
 creature* player_create(point m, variant kind, bool female);
 

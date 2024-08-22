@@ -1,16 +1,2 @@
-﻿{+ H12
-{+ V10
-Что такое наше все?
--}
--}
-
-#+ v100 w200
-#+ h3
-#+ h3
-Просто посмотри на этот форматы
-#-
-#-
-#-
-
-In file `Names.txt`:
- Define translation for `Literacy`
+﻿In file `rules/Items.txt`:
+ Line 24: Can't find variant `BallisticSkill`

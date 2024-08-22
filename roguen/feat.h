@@ -8,6 +8,7 @@ enum feat_s : unsigned char {
 	BleedingHit, StunningHit, PierceHit, MightyHit, Vorpal,
 	AcidDamage, FireDamage, ColdDamage,
 	IgnoreWeb, Fly, LightSource, Regeneration, ManaRegeneration,
+	FastMove, SlowMove, FastAttack, SlowAttack, FastAction, SlowAction,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
 	AcidResistance, AcidImmunity, ColdResistance, ColdImmunity, DeathResistance, DeathImmunity,
 	DiseaseResist, DiseaseImmunity, FireResistance, FireImmunity, StunResistance, StunImmunity,

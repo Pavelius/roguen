@@ -8,7 +8,7 @@ TreePalm priority(10) features(101 6) minimap(35 79 31 192)
  flags Impassable Woods
 DeadTree priority(10) features(45 4) overlay(49 3)
  flags Impassable Woods
-ThornBush priority(10) features(97 3) movedifficult(150)
+ThornBush priority(10) features(97 3) movedifficult(200)
  flags DangerousFeature Woods
 
 FootMud priority(5) features(14 1) movedifficult(300)

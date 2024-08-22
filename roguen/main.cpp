@@ -78,8 +78,7 @@ static void main_start() {
 	add_item("Ration", 20);
 	add_item("HealingPotion", 5, true);
 	add_item("PotionOfStrenght", 2, true);
-	add_item("RingOfWarrior", 1, true);
-	add_item("RingOfProtection");
+	add_item("BootsOfLongStride", 1, true);
 	add_item("RingOfFireResistance", 1, true);
 	add_item("RingOfLevitation", 1, true);
 	add_item("RingOfRegeneration");
@@ -89,7 +88,8 @@ static void main_start() {
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);
-	equip_item("Bones");
+	player->wears[RangedWeapon].createpower(100);
+	player->wears[RangedWeapon].setidentified(1);
 	game.setowner(player);
 	game.newgame();
 }

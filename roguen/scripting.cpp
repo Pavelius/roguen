@@ -58,6 +58,7 @@ int					last_value;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
+static ability_s	last_ability;
 
 static adat<rect, 64> locations;
 static adat<point, 512> points;
@@ -1141,11 +1142,13 @@ template<> void ftscript<needni>(int value, int counter) {
 }
 
 template<> bool fttest<abilityi>(int value, int counter) {
+	last_ability = (ability_s)value;
 	if(counter < 0)
 		return player->basic.abilities[value] >= -counter;
 	return true;
 }
 template<> void ftscript<abilityi>(int value, int counter) {
+	last_ability = (ability_s)value;
 	player->basic.abilities[value] += counter;
 }
 
@@ -1572,7 +1575,7 @@ static void chatting() {
 
 static void chatting(int bonus) {
 	chatting();
-	player->wait();
+	pay_action();
 	opponent->wait();
 }
 
@@ -1675,7 +1678,7 @@ static void use_item(int bonus) {
 		return;
 	auto p = items.choose(getnm("UseItem"), getnm("Cancel"), false);
 	if(p)
-		player->use(*p);
+		use_item(*p);
 }
 
 static void use_magic_item_power(int bonus) {
@@ -1686,7 +1689,7 @@ static void use_magic_item_power(int bonus) {
 		return;
 	auto p = items.choose(getnm("UseZapItem"), getnm("Cancel"), false);
 	if(p)
-		player->use(*p);
+		use_item(*p);
 }
 
 static void view_stuff(int bonus) {
@@ -1720,7 +1723,7 @@ static void test_arena(int bonus) {
 	auto p = player_create(m.to(3, 0), pm, false);
 	p->set(Enemy);
 	p->wait();
-	player->wait();
+	pay_action();
 }
 
 static void toggle_floor_rect(int bonus) {
@@ -1743,6 +1746,13 @@ static void show_images(int bonus) {
 		visualize_images(id, {80, 90}, {80 / 2, 90});
 		break;
 	}
+}
+
+static bool is_transfer_coins(int bonus) {
+	if(bonus > 0)
+		return player->money >= bonus;
+	else
+		return opponent->money >= -bonus;
 }
 
 static void transfer_coins(int bonus) {
@@ -1825,9 +1835,7 @@ static void heal_player(int bonus) {
 }
 
 static void harm_player(int bonus) {
-	player->abilities[Hits] = add_green(player->get(Hits), -bonus, "+1i", 0, player->getmaximum(Hits));
-	if(!(*player))
-		player->kill();
+	player->damage(bonus);
 }
 
 static bool is_heal_wounded(int bonus) {
@@ -1904,7 +1912,7 @@ static void apply_action(int bonus) {
 		last_action->usetool();
 	player->fixaction(last_action->id, "Apply");
 	apply_targets(last_action->effect);
-	player->wait();
+	pay_action();
 }
 
 static void jump_to_site(int bonus) {
@@ -2120,8 +2128,9 @@ static void standart_filter(int bonus) {
 static void acid_harm(int bonus) {
 	if(player->resist(AcidResistance, AcidImmunity))
 		return;
+	auto damage = xrand(bonus / 2, bonus);
 	player->fixeffect("AcidSplash");
-	player->damage(xrand(bonus / 2, bonus));
+	player->damage(damage);
 	player->add(Corrosion, 1);
 	damage_equipment(bonus, true);
 }
@@ -2499,7 +2508,7 @@ BSDATA(script) = {
 	{"SiteWall", site_wall},
 	{"SomeCoins", some_coins},
 	{"StealOpponentCoins", steal_opponent_coins},
-	{"TransferCoins", transfer_coins},
+	{"TransferCoins", transfer_coins, is_transfer_coins},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},
 	{"ThrownAttack", attack_thrown},

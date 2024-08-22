@@ -36,7 +36,7 @@ static int get_counter(int counter) {
 }
 
 static int get_experience_reward(creature* p) {
-	static int levels[] = {7, 15, 35, 65, 120, 175, 270, 420, 650, 975, 1400, 2000, 3000};
+	static int levels[] = {15, 35, 65, 120, 175, 270, 420, 650, 975, 1400, 2000, 3000};
 	auto r = p->get(Level);
 	return maptbl(levels, r);
 }
@@ -74,10 +74,6 @@ bool creature::fixaction(const char* id, const char* action, ...) const {
 	return false;
 }
 
-static void fixdamage(const creature* p, int total, int damage_weapon, int damage_armor, int damage_bonus) {
-	p->logs(getnm("ApplyDamage"), total, damage_weapon, damage_armor);
-}
-
 static creature* findalive(point m) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid() && e.getposition() == m)
@@ -93,11 +89,29 @@ static void pay_movement() {
 		if(ei.movedifficult)
 			cost = cost * ei.movedifficult / 100;
 	}
+	if(player->is(FastMove))
+		cost /= 2;
+	else if(player->is(SlowMove))
+		cost *= 2;
 	player->waitseconds(cost);
 }
 
 static void pay_attack(const item& weapon) {
-	player->waitseconds(100);
+	auto cost = 100;
+	if(player->is(FastAttack, weapon))
+		cost /= 2;
+	else if(player->is(SlowAttack, weapon))
+		cost *= 2;
+	player->waitseconds(cost);
+}
+
+void pay_action() {
+	auto percent = 100;
+	if(player->is(FastAction))
+		percent -= 50;
+	else if(player->is(SlowAction))
+		percent += 100;
+	player->waitseconds(100 * percent / 100);
 }
 
 static ability_s damage_ability(ability_s v) {
@@ -174,7 +188,7 @@ static void damage_backpack_item(wear_s type, int chance) {
 }
 
 void damage_equipment(int bonus, bool allow_save) {
-	static wear_s equipment_order[] = {Torso, Backward, Head, Elbows, Neck, Girdle, Gloves, Legs, FingerRight, FingerLeft};
+	static wear_s equipment_order[] = {Torso, MeleeWeapon, MeleeWeaponOffhand, Head, Backward, Elbows, Neck, Girdle, Gloves, Legs, FingerRight, FingerLeft};
 	for(auto w : equipment_order) {
 		auto& e = player->wears[w];
 		if(bonus <= 0)
@@ -346,11 +360,26 @@ static void drop_treasure(creature* pe) {
 	script_run(p->treasure);
 }
 
-static void nullify_elements() {
-	if(player->is(Burning) && player->is(Freezing)) {
-		player->set(Burning, 0);
-		player->set(Freezing, 0);
+static void nullify_elements(feat_s v1, feat_s v2) {
+	if(player->is(v1) && player->is(v2)) {
+		player->remove(v1);
+		player->remove(v2);
 	}
+}
+
+static void nullify_elements(ability_s v1, ability_s v2) {
+	if(player->is(v1) && player->is(v2)) {
+		player->set(v1, 0);
+		player->set(v2, 0);
+	}
+}
+
+static void nullify_elements() {
+	nullify_elements(Burning, Freezing);
+	nullify_elements(FastAction, SlowAction);
+	nullify_elements(FastAttack, SlowAttack);
+	nullify_elements(FastMove, SlowMove);
+	nullify_elements(Enemy, Ally);
 }
 
 static int get_next_level_experience(int level) {
@@ -484,7 +513,7 @@ static void check_mood() {
 
 static void random_walk() {
 	if(d100() < 60)
-		player->wait();
+		pay_action();
 	else {
 		static direction_s allaround[] = {North, South, East, West};
 		move_step(maprnd(allaround));
@@ -508,11 +537,11 @@ static bool check_stairs_movement(point m) {
 static bool check_dangerous_feature(point m) {
 	auto& ei = area->getfeature(m);
 	if(ei.is(DangerousFeature)) {
-		player->wait(2);
+		pay_action();
+		pay_action();
 		if(!player->roll(Strenght)) {
 			player->act(getnme(str("%1Entagled", ei.id)));
 			player->damage(1);
-			player->wait();
 			player->fixactivity();
 			return false;
 		}
@@ -543,10 +572,10 @@ static bool check_webbed_tile(point m) {
 	if(player->is(IgnoreWeb))
 		return true;
 	if(player->is(Webbed)) {
-		player->wait(2);
+		pay_action();
+		pay_action();
 		if(!player->roll(Strenght)) {
 			player->act(getnm("WebEntagled"));
-			player->wait();
 			player->fixactivity();
 			return false;
 		}
@@ -564,7 +593,7 @@ static bool check_leave_area(point m) {
 			if(yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
 				game.enter(np, 0, 0, direction);
 		}
-		player->wait();
+		pay_action();
 		return false;
 	}
 	return true;
@@ -574,7 +603,7 @@ static bool check_place_owner(point m) {
 	if(player->is(PlaceOwner)) {
 		auto pr = roomi::find(m);
 		if(player->getroom() != pr) {
-			player->wait();
+			pay_action();
 			return false;
 		}
 	}
@@ -1159,7 +1188,7 @@ void move_step(direction_s v) {
 		if(!player->roll(Dexterity, 30)) {
 			player->act(getnm("IcedSlice"));
 			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
-			player->wait();
+			pay_action();
 		}
 	}
 	player->setdirection(v);
@@ -1277,7 +1306,7 @@ static void use_skills() {
 		last_action = last_actions.random();
 		script_execute("ApplyAction");
 	} else
-		player->wait();
+		pay_action();
 }
 
 static void use_spells() {
@@ -1538,25 +1567,22 @@ static void apply_value(variant v, creature* target) {
 	apply_value(v);
 }
 
-void creature::use(item& v) {
+void use_item(item& v) {
 	if(!v)
 		return;
 	auto script = v.getuse();
 	if(!script) {
-		actp(getnm("ItemNotUsable"), v.getname());
+		player->actp(getnm("ItemNotUsable"), v.getname());
 		return;
 	}
 	auto push_item = last_item;
 	last_item = &v;
-	act(getnm("YouUseItem"), v.getname());
+	player->act(getnm("YouUseItem"), v.getname());
 	script_run(script);
-	auto power = v.getpower();
-	if(power)
-		apply_value(power, this);
 	v.use();
 	last_item = push_item;
-	update();
-	wait();
+	player->update();
+	pay_action();
 }
 
 void creature_every_minute() {
@@ -1592,7 +1618,7 @@ void creature::apply(const variants& source) {
 
 void creature::cast(const spelli& e) {
 	cast_spell(e, e.getmana(), false);
-	player->wait();
+	pay_action();
 }
 
 bool creature::ispresent() const {

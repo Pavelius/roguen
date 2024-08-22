@@ -20,6 +20,8 @@ HeavyArmorPowers
  elements Block+1 Armor+1 Armor+2 FireResistance ColdResistance
 ShieldPowers
  elements Block+1 Armor+1 AcidResistance FireResistance ColdResistance DeathResistance Block+2 Armor+2
+RangedWeapons
+ elements BalisticSkill+10 Dexterity+10 ColdDamage FireDamage
 
 #Item
 
@@ -85,13 +87,13 @@ StrangeSword cost(500) weight(200) wear(MeleeWeapon) avatar(173) wear_index(23) 
 Arrow wear(Ammunition) weight(3) count(30) wear_index(0) avatar(210)
 Bolt wear(Ammunition) weight(2) count(20) wear_index(3) avatar(211)
 
-Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636)
+Crossbow cost(30) weight(50) wear(RangedWeapon) avatar(636) powers(RangedWeapons)
  weapon damage(5) pierce(5)
  feats TwoHanded
-ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448)
+ShortBow cost(25) weight(30) wear(RangedWeapon) wear_index(7) avatar(448) powers(RangedWeapons)
  weapon damage(3) ammunition(Arrow)
  feats TwoHanded
-LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5)
+LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) powers(RangedWeapons)
  weapon damage(4) ammunition(Arrow)
  feats TwoHanded
 
@@ -168,6 +170,8 @@ BootsOfSneakiness weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)
  wearing Dexterity+10
 BootsOfLevitation weight(15) wear(Legs) avatar(224) unidentified(LeatherBoots)
  wearing Fly
+BootsOfLongStride weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)
+ wearing FastMove
 
 LeatherBracers weight(50) wear(Elbows) avatar(59)
  wearing Dodge+5
@@ -274,7 +278,7 @@ RandomArtifact
 RandomCoins
  chance SP+8 GP+3 PP
 RandomGear
- chance Torch+8
+ chance Torch+8 Lockpick
 RandomGem
  chance OrnamentalStones+25 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
 RandomAmulet
@@ -292,7 +296,7 @@ RandomRing
 RandomScroll
  chance ScrollOfIdentify ScrollOfRemoveCurse ScrollOfRepair ScrollOfOpening ScrollOfMagicMap
 RandomBoots
- chance LeatherBoots+4 BootsOfLevitation BootsOfSneakiness
+ chance LeatherBoots+4 BootsOfLevitation BootsOfSneakiness BootsOfLongStride
 RandomBracers
  chance LeatherBracers+4 IronBracers BracersOfStrenght
 RandomGirdle
