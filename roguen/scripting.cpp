@@ -943,20 +943,20 @@ static void remove_summoned(geoposition geo) {
 }
 
 void gamei::enter(point m, int level, const featurei* feature, direction_s appear_side) {
-	write("autosave");
-	geoposition old_pos = *this;
+	save_game("autosave");
+	geoposition old_pos = game;
 	remove_summoned(old_pos);
-	this->position = m;
-	this->level = level;
-	ready_area(*this);
+	game.position = m;
+	game.level = level;
+	ready_area(game);
 	point start = {-1000, -1000};
 	if(feature)
 		start = area->findfeature((unsigned char)bsid(feature));
 	if(!isvalid(start))
 		start = area->bordered(round(appear_side, South));
-	set_party_position(old_pos, *this, start);
+	set_party_position(old_pos, game, start);
 	update_ui();
-	draw::setnext(play);
+	next_phase(play_game);
 }
 
 static const script* get_local_method() {
@@ -1873,13 +1873,13 @@ static void trigger_text(int bonus) {
 static void win_game(int bonus) {
 	auto pn = bonus ? str("WinGame%1i", bonus) : "WinGame";
 	dialog_message(getdescription(pn));
-	game.next(game.mainmenu);
+	next_phase(main_menu);
 }
 
 static void lose_game(int bonus) {
 	auto pn = bonus ? str("LoseGame%1i", bonus) : "LoseGame";
 	dialog_message(getdescription(pn));
-	game.next(game.mainmenu);
+	next_phase(main_menu);
 }
 
 static void add_dungeon_rumor(int bonus) {

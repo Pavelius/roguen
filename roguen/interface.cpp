@@ -118,7 +118,7 @@ void update_console_time() {
 	// last_tick_message = getcputime();
 }
 
-void gamei::next(fnevent proc) {
+void next_phase(fnevent proc) {
 	setnext(proc);
 }
 

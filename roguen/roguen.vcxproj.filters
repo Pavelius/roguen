@@ -339,6 +339,9 @@
     <ClCompile Include="draw_form.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
+    <ClCompile Include="fraction.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -594,6 +597,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="race.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="fraction.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

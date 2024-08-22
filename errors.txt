@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translation for `FastMove`
+﻿In file `rules/Items.txt`:
+ Line 243: Not found identifier `HerbOfPoiso1n`

@@ -8,9 +8,14 @@ static_assert(sizeof(item) == 4, "Structure `item` must 4 bytes");
 
 const char* item::getname() const {
 	auto& ei = geti();
-	auto id = identified ? ei.id : ei.unidentified;
-	if(!id)
-		id = ei.id;
+	auto id = ei.id;
+	if(identified) {
+		if(magic == Cursed && ei.cursed)
+			id = ei.cursed->id;
+	} else {
+		if(ei.unidentified)
+			id = ei.unidentified;
+	}
 	return getnm(id);
 }
 
@@ -174,7 +179,6 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 	stringbuilder sb(temp);
 	auto count = getcount();
 	auto pn = getname();
-	auto vw = stringbuilder::getgender(pn);
 	sb.adds(pn);
 	if(!iscountable() && identified && power) {
 		auto power = getpower();
@@ -187,8 +191,6 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 			sb.addof(tid);
 		} else
 			sb.addof(power.getname());
-		if(power.counter)
-			sb.add("%+1i", power.counter);
 	}
 	if(count > 1)
 		sb.adds("%1i %-Pieces", count);
@@ -207,6 +209,9 @@ int	item::getweight() const {
 }
 
 variants item::getuse() const {
+	auto& ei = geti();
+	if(iscursed() && ei.cursed)
+		return ei.cursed->elements;
 	return geti().use;
 }
 

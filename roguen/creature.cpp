@@ -1000,12 +1000,12 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 	if(roll_result > attack_skill)
 		damage -= 2; // If we miss
 	// Expert addition attack
-	if(attack_skill > 30) {
+	if(player->isexpert(weapon_ability)) {
 		if(d100() < (attack_skill - 30))
 			damage += weapon_damage;
 	}
 	// Master addition attack
-	if(attack_skill > 60) {
+	if(player->ismaster(weapon_ability)) {
 		if(d100() < (attack_skill - 60))
 			damage += weapon_damage;
 	}
@@ -1058,7 +1058,7 @@ void creature::kill() {
 	fire_trigger(WhenCreatureP1Dead, getkind());
 	clear();
 	if(human_killed)
-		game.endgame();
+		end_game();
 }
 
 void creature::damage(int v) {

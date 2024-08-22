@@ -22,6 +22,18 @@ ShieldPowers
  elements Block+1 Armor+1 AcidResistance FireResistance ColdResistance DeathResistance Block+2 Armor+2
 RangedWeapons
  elements BalisticSkill+5 Dexterity+5 ColdDamage FireDamage
+PotionOfPoison
+ elements Poison+10
+PotionOfDumbness
+ elements Wits-1
+PotionOfWeakness
+ elements Strenght-1
+HerbOfIllness
+ elements Illness+2
+HerbOfPoison
+ elements Poison+15
+HerbOfWeakness
+ elements Strenght-1
 
 #Item
 
@@ -116,27 +128,27 @@ PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(Hea
 Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2
 
-HealingPotion cost(100) weight(2) unidentified(RedPotion) wear(Potion) avatar(164)
+HealingPotion cost(100) weight(2) unidentified(RedPotion) wear(Potion) avatar(164) cursed(PotionOfPoison)
  use Heal+20
-ManaPotion cost(80) weight(2) unidentified(BluePotion) wear(Potion) avatar(436)
+ManaPotion cost(80) weight(2) unidentified(BluePotion) wear(Potion) avatar(436) cursed(PotionOfPoison)
  use Mana+20
-PotionOfStrenght cost(10000) weight(2) unidentified(RedPotion) wear(Potion) avatar(162)
+PotionOfStrenght cost(10000) weight(2) unidentified(RedPotion) wear(Potion) avatar(162) cursed(PotionOfWeakness)
  use Strenght+3
-PotionOfDexterity cost(8000) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165)
+PotionOfDexterity cost(8000) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165) cursed(PotionOfWeakness)
  use Dexterity+3
-PotionOfWits cost(8000) weight(2) unidentified(BluePotion) wear(Potion) avatar(433)
+PotionOfWits cost(8000) weight(2) unidentified(BluePotion) wear(Potion) avatar(433) cursed(PotionOfDumbness)
  use Wits+3
-PotionOfAbilityRaise cost(8000) weight(2) unidentified(BluePotion) wear(Potion) avatar(435)
+PotionOfAbilityRaise cost(8000) weight(2) unidentified(BluePotion) wear(Potion) avatar(435) cursed(PotionOfWeakness)
  use RandomAbility+1
-PotionOfHealth cost(5000) weight(2) unidentified(RedPotion) wear(Potion) avatar(169)
+PotionOfHealth cost(5000) weight(2) unidentified(RedPotion) wear(Potion) avatar(169) cursed(PotionOfPoison)
  use Hits+1
-PotionOfEnergy cost(4000) weight(2) unidentified(RedPotion) wear(Potion) avatar(169)
+PotionOfEnergy cost(4000) weight(2) unidentified(RedPotion) wear(Potion) avatar(169) cursed(PotionOfDumbness)
  use Mana+1
-PotionOfWisdow cost(1000) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+PotionOfWisdow cost(1000) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169) cursed(PotionOfDumbness)
  use GainExperience+10
-PotionOfCurePoison cost(800) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169)
+PotionOfCurePoison cost(800) weight(2) unidentified(YellowPotion) wear(Potion) avatar(169) cursed(PotionOfPoison)
  use Poison-20
-PotionOfLearning cost(3000) weight(2) unidentified(BluePotion) wear(Potion) avatar(167)
+PotionOfLearning cost(3000) weight(2) unidentified(BluePotion) wear(Potion) avatar(167) cursed(PotionOfDumbness)
  use SkillPoints+5
 
 BrassRing cost(100) weight(1) wear(FingerRight) avatar(75)
@@ -228,27 +240,27 @@ TriangularKey cost(150) weight(1) avatar(287)
 RectangularKey cost(200) weight(1) avatar(285) 
 RoundKey cost(250) weight(1) avatar(286) 
 
-AlrauniaAntidote cost(20) weight(1) avatar(96) 
+AlrauniaAntidote cost(20) weight(1) avatar(96) cursed(HerbOfPoison)
  use Poison-2
-BurbRoot cost(30) weight(1) avatar(90) 
+BurbRoot cost(30) weight(1) avatar(90) cursed(HerbOfIllness)
  use Illness+1
-CurariaMancox cost(30) weight(1) avatar(91) 
+CurariaMancox cost(30) weight(1) avatar(91) cursed(HerbOfIllness)
  use Illness-1
-DemonDaisy weight(1) avatar(97) 
+DemonDaisy weight(1) avatar(97) cursed(HerbOfWeakness)
  use Poison+10
-DevilsRose weight(1) avatar(94) 
+DevilsRose weight(1) avatar(94) cursed(HerbOfWeakness)
  use Wits+1
-MorgiaRoot cost(200) weight(1) avatar(108) 
+MorgiaRoot cost(200) weight(1) avatar(108) cursed(HerbOfWeakness)
  use Strenght+1
-MossOfMoreilon cost(200) weight(1) avatar(107) 
+MossOfMoreilon cost(200) weight(1) avatar(107) cursed(HerbOfWeakness)
  use Dexterity+1
-PepperPetal cost(200) weight(1) avatar(95) 
+PepperPetal cost(200) weight(1) avatar(95) cursed(HerbOfIllness)
  use Hits+1
-Spenseweed weight(1) avatar(106) 
+Spenseweed weight(1) avatar(106) cursed(HerbOfIllness)
  use Heal+1
-Stomacemptia weight(1) avatar(93) 
+Stomacemptia weight(1) avatar(93) cursed(HerbOfIllness)
  use Heal+2
-Stomafillia weight(1) avatar(89) 
+Stomafillia weight(1) avatar(89) cursed(HerbOfIllness)
  use Heal+1
 
 TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)

@@ -22,6 +22,7 @@ public:
 	featable		feats, feats_active;
 	geoposition		worldpos;
 	point			moveorder, guardorder;
+	unsigned char	fraction;
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
@@ -53,11 +54,12 @@ public:
 	bool			is(ability_s v) const { return get(v) > 0; }
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
 	bool			is(feat_s v, const item& i) const { return feats.is(v) || i.is(v); }
-	bool			ismaster(ability_s v) const { return get(v) >= 90; }
 	bool			isallow(const item& it) const;
 	bool			isenemy(const creature& opponent) const;
+	bool			isexpert(ability_s v) const { return get(v) >= 30; }
 	bool			isfollowmaster() const;
 	bool			ishuman() const;
+	bool			ismaster(ability_s v) const { return get(v) >= 60; }
 	bool			ispresent() const;
 	bool			istired() const { return abilities[Mood] <= -10; }
 	bool			isunaware() const { return wait_seconds >= 100 * 6; }

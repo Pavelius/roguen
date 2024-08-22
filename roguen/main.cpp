@@ -2,6 +2,7 @@
 #include "bsreq.h"
 #include "charname.h"
 #include "draw.h"
+#include "fraction.h"
 #include "game.h"
 #include "greatneed.h"
 #include "creature.h"
@@ -37,6 +38,7 @@ static void initializating() {
 	check_need_loading();
 	hotkey_initialize();
 	site_skills_initialize();
+	initialize_fractions();
 #ifdef _DEBUG
 	main_util();
 #endif
@@ -91,7 +93,7 @@ static void main_start() {
 	player->wears[RangedWeapon].createpower(100);
 	player->wears[RangedWeapon].setidentified(1);
 	game.setowner(player);
-	game.newgame();
+	new_game();
 }
 
 int start_application(fnevent proc, fnevent initializing);

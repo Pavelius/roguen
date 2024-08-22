@@ -150,7 +150,7 @@ static void auto_activate_features() {
 	for(m.y = 0; m.y < area->mps; m.y++)
 		for(m.x = 0; m.x < area->mps; m.x++) {
 			auto f = area->features[m];
-			if(f==0)
+			if(f == 0)
 				continue;
 			auto p = bsdata<featurei>::elements + (int)f;
 			if(!p->autoactivated())
@@ -185,37 +185,37 @@ int gamei::getrange(point m1, point m2) {
 	return (dx > dy) ? dx : dy;
 }
 
-void gamei::passminute() {
-	minutes++;
-	update_all_boost(getminutes());
+void pass_minute() {
+	game.minutes++;
+	update_all_boost(game.getminutes());
 	all(creature_every_minute);
-	while(restore_half_turn < minutes) {
+	while(game.restore_half_turn < game.minutes) {
 		all(creature_every_5_minutes);
-		restore_half_turn += 5;
+		game.restore_half_turn += 5;
 		remove_flags(Iced, 20);
 	}
-	while(restore_turn < minutes) {
+	while(game.restore_turn < game.minutes) {
 		all(creature_every_10_minutes);
-		restore_turn += 10;
+		game.restore_turn += 10;
 	}
-	while(restore_hour < minutes) {
-		restore_hour = (restore_hour / 60 + 1) * 60 + rand() % 60;
+	while(game.restore_hour < game.minutes) {
+		game.restore_hour = (game.restore_hour / 60 + 1) * 60 + rand() % 60;
 		update_need();
 	}
-	while(restore_day_part < minutes) {
+	while(game.restore_day_part < game.minutes) {
 		all(creature_every_4_hours);
 		decoy_food();
-		restore_day_part = (restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
+		game.restore_day_part = (game.restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
 	}
-	while(restore_day < minutes) {
+	while(game.restore_day < game.minutes) {
 		auto_activate_features();
-		restore_day = (restore_day / (60 * 24) + 1) * (60 * 24) + rand() % (60 * 24);
+		game.restore_day = (game.restore_day / (60 * 24) + 1) * (60 * 24) + rand() % (60 * 24);
 	}
-	while(restore_several_days < minutes) {
+	while(game.restore_several_days < game.minutes) {
 		all_creatures(EverySeveralDaysForP1);
 		all_features(EverySeveralDaysForP1);
 		fire_trigger(EverySeveralDays);
-		restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
+		game.restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
 	}
 }
 
@@ -225,7 +225,7 @@ static void skip_long_time() {
 		return;
 	while(human->isunaware()) {
 		allnext(make_move_long);
-		game.passminute();
+		pass_minute();
 	}
 }
 
@@ -242,23 +242,23 @@ void gamei::playminute() {
 				break;
 			}
 		}
-		passminute();
+		pass_minute();
 		skip_long_time();
 	}
 }
 
-void gamei::play() {
+void play_game() {
 	while(checkalive() && !draw::isnext())
 		game.playminute();
 }
 
-void gamei::endgame() {
+void end_game() {
 	dialog_message(getdescription("LoseGame"));
-	next(game.mainmenu);
+	next_phase(main_menu);
 }
 
-void gamei::mainmenu() {
-	writelog();
+void main_menu() {
+	save_log();
 }
 
 int gamei::getcount(variant v, int minimal) {
@@ -319,7 +319,7 @@ const char* gamei::timeleft(unsigned end_stamp) const {
 	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
 }
 
-void gamei::newgame() {
+void new_game() {
 	game.randomworld();
-	game.enter(start_village, 0, bsdata<featurei>::find("StairsDown"), NorthEast);
+	game.enter(game.start_village, 0, bsdata<featurei>::find("StairsDown"), NorthEast);
 }

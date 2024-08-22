@@ -27,6 +27,7 @@ struct itemi : nameable {
 	variants		wearing, use;
 	char			charges, rotting;
 	listi*			powers;
+	listi*			cursed;
 	char			chance_power;
 	char			required[3]; // required Strenght, Dexterity or Wits to use this item
 	bool operator==(const itemi& v) const { return this == &v; }
@@ -69,7 +70,7 @@ public:
 	int				getcostall() const;
 	int				getcount() const;
 	int				geteffect() const;
-	const char*		getfullname(int price_percent = 0, bool uppercase = false) const;
+	const char*		getfullname(int price_percent = 0, bool uppercase = true) const;
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
 	void			getinfo(stringbuilder& sb) const;
 	short unsigned	getkind() const { return type; }

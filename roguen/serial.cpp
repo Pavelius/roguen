@@ -73,23 +73,31 @@ static bool serial_game(const char* url, bool write_mode, bool head_only, draw::
 	return true;
 }
 
-static void serial_game_name(const char* id, bool write_mode, bool head_only, draw::surface& dc) {
-	char temp[260]; stringbuilder sb(temp);
+static const char* game_url(const char* id) {
+	static char temp[260]; stringbuilder sb(temp);
 	sb.add("saves/%1.sav", id);
-	serial_game(temp, write_mode, head_only, dc);
+	return temp;
 }
 
-void gamei::write(const char* name) {
+static void serial_game_name(const char* id, bool write_mode, bool head_only, draw::surface& dc) {
+	serial_game(game_url(id), write_mode, head_only, dc);
+}
+
+bool present_game(const char* name) {
+	return io::file::exist(game_url(name));
+}
+
+void save_game(const char* name) {
 	draw::surface dc; capture_game_screen_small(dc, 3, 3);
 	serial_game_name(name, true, false, dc);
 }
 
-void gamei::read(const char* name) {
+void load_game(const char* name) {
 	draw::surface dc; capture_game_screen_small(dc, 3, 3);
 	serial_game_name(name, false, false, dc);
 }
 
-void gamei::writelog() {
+void save_log() {
 	io::file file("logs.txt", StreamWrite | StreamText);
 	if(!file)
 		return;
