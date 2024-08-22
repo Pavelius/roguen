@@ -241,3 +241,18 @@ void item::use() {
 	} else
 		setcount(getcount() - 1);
 }
+
+int	item::geteffect() const {
+	switch(magic) {
+	case Cursed: return - 1;
+	case Blessed:
+		if(identified)
+			return 2;
+		return 1;
+	case Artifact:
+		if(identified)
+			return 4;
+		return 1;
+	default: return 1;
+	}
+}

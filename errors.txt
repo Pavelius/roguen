@@ -1,2 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 24: Can't find variant `BallisticSkill`
+﻿In file `Names.txt`:
+ Define translation for `FastMove`

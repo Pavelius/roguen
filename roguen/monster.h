@@ -12,7 +12,6 @@ struct monsteri : nameable, statable {
 	variants		use;
 	monsteri*		parent;
 	randomizeri*	minions;
-	variants		treasure;
 	monsteri*		ally() const;
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 	static bool		isboss(const void* p) { return ((monsteri*)p)->minions != 0; }

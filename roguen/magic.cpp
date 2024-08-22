@@ -2,8 +2,9 @@
 #include "magic.h"
 
 BSDATA(magici) = {
-	{"Mundane", 1},
-	{"Blessed", 2},
-	{"Cursed", -1},
-	{"Artifact", 3},
+	{"Mundane"},
+	{"Blessed"},
+	{"Cursed"},
+	{"Artifact"},
 };
+assert_enum(magici, Artifact)

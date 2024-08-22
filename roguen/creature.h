@@ -16,7 +16,6 @@
 class creature : public wearable, public statable, public spellable, public ownerable {
 	unsigned short	room_id;
 	void			update_abilities();
-	void			update_room_abilities();
 public:
 	int				experience, wait_seconds;
 	statable		basic;

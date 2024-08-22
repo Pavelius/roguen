@@ -122,7 +122,6 @@ BSMETA(monsteri) = {
 	BSREQ(avatar),
 	BSREQ(friendly),
 	BSREQ(parent),
-	BSREQ(treasure),
 	BSREQ(minions),
 	{}};
 BSMETA(point) = {
@@ -180,7 +179,7 @@ BSDATA(varianti) = {
 	{"Item", VAR(itemi), 1, 0, ftscript<itemi>},
 	{"List", VAR(listi), 1, 0, ftscript<listi>, fttest<listi>},
 	{"Location", VAR(locationi), 1, 0, ftscript<locationi>},
-	{"Modifier", VAR(modifieri), 1, 0, ftscript<modifieri>},
+	{"Modifier", VAR(modifieri), 1, 0, ftscript<modifieri>, fttest<modifieri>},
 	{"Monster", VAR(monsteri), 1, 0, ftscript<monsteri>, fttest<monsteri>},
 	{"Need", VAR(greatneedi), 1, 0, ftscript<needni>, fttest<needni>},
 	{"NeedFlag", VAR(needni), 1},

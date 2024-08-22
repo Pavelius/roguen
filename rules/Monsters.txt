@@ -11,13 +11,12 @@ ChaosHydra avatar(339) friendly(-20)
  use Bite Regeneration
 CityGuard avatar(543)
  abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10) Level(2)
- use Spear ChainArmor
- treasure SP GP-10
+ use Spear ChainArmor SomeCoins+3
 DireBoar avatar(377) friendly(-20)
- abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(40) Hits(40) Armor(1) Level(4)
+ abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(35) Hits(40) Armor(1) Level(4)
  use Bite
 DireWolf avatar(52) friendly(-20)
- abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(40) Hits(30) Armor(1) Level(3)
+ abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(35) Hits(30) Armor(1) Level(3)
  use Bite
 Dog avatar(292)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) Hits(4)
@@ -29,7 +28,7 @@ GiantLizard avatar(220) friendly(-20)
  abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4) Level(3)
  use Bite
 GiantSpider avatar(591) friendly(-20)
- abilities Strenght(35) Dexterity(20) Wits(6) WeaponSkill(40) Hits(20) Level(5)
+ abilities Strenght(35) Dexterity(20) Wits(6) WeaponSkill(30) Hits(20) Level(5)
  use Bite StrongPoison IgnoreWeb Web+4
 Ghoul avatar(305) friendly(-20)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
@@ -56,10 +55,10 @@ Rat avatar(293) friendly(-10)
  abilities Strenght(5) Dexterity(30) Wits(3) WeaponSkill(15) Hits(2)
  use Bite
 ShamblingMound avatar(9) friendly(-20)
- abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(40) Hits(30) Level(4)
+ abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(30) Hits(30) Level(4)
  use Bite
 Skeleton avatar(574) friendly(-20)
- abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(30) Hits(8) Armor(1) Level(1)
+ abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(25) Hits(8) Armor(1) Level(1)
  use Spear Darkvision Undead PoisonImmunity
 Zombie avatar(101) friendly(-20)
  abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(15) Hits(16) Level(2)
@@ -80,16 +79,16 @@ UndeadHorde
 #Monster
 
 Ettin avatar(516) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(70) Dexterity(25) Wits(15) WeaponSkill(60) Hits(70) Level(8)
+ abilities Strenght(70) Dexterity(25) Wits(15) WeaponSkill(35) Hits(70) Level(8)
  use Club
 HillGiant avatar(537) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(70) Dexterity(20) Wits(10) WeaponSkill(50) Hits(60) Level(7)
+ abilities Strenght(70) Dexterity(20) Wits(10) WeaponSkill(30) Hits(60) Level(7)
  use Club LeatherArmor
 Necromant avatar(43) friendly(-20) minions(UndeadHorde)
  abilities Strenght(25) Dexterity(20) Wits(45) WeaponSkill(30) Hits(20) Mana(50) Level(5)
  use Staff SummonUndead
 Minotaur avatar(580) friendly(-20) minions(GoblinoidTribe)
- abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(60) Hits(25) Level(6)
+ abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(40) Hits(25) Level(6)
  use Sword
 
 Bartender avatar(51) unique(1)

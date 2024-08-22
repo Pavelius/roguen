@@ -141,6 +141,7 @@ AcidResistance: Сопротивление кислоте
 ColdDamage: Замораживания
 ColdResistance: Сопротивление холоду
 Darkvision: Инфрозрение
+FastMove: Быстрое движение
 FireDamage: Воспламенения
 FireResistance: Сопротивление огню
 Fly: Полет

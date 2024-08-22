@@ -569,7 +569,7 @@ int get_deafault_count(const monsteri& e, int area_level) {
 		{3, 8},
 		{2, 6},
 		{2, 4},
-		{1, 2}, // 0
+		{1, 2},
 		{1},
 	};
 	if(e.unique)
@@ -583,14 +583,6 @@ int get_deafault_count(const monsteri& e, int area_level) {
 }
 
 static void place_creature(variant v, int count) {
-	if(count <= 0) {
-		if(v.iskind<monsteri>())
-			count = get_deafault_count(bsdata<monsteri>::elements[v.value], game.level);
-		else
-			count = xrand(2, 5);
-		if(!count)
-			count = 1;
-	}
 	for(auto i = 0; i < count; i++) {
 		auto p = player_create(area->get(last_rect), v, false);
 		p->set(Local);
@@ -1079,10 +1071,8 @@ template<> void ftscript<monsteri>(int value, int counter) {
 	auto count = script_count(counter, 0);
 	if(count < 0)
 		return;
-	if(count == 0)
-		count = get_deafault_count(bsdata<monsteri>::elements[value], game.level);
 	if(!count)
-		count = 1;
+		count = get_deafault_count(bsdata<monsteri>::elements[value], game.level);
 	place_creature(bsdata<monsteri>::elements + value, count);
 }
 

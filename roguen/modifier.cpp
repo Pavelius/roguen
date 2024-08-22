@@ -13,3 +13,7 @@ modifiers modifier;
 template<> void ftscript<modifieri>(int value, int counter) {
 	modifier = (modifiers)value;
 }
+template<> bool fttest<modifieri>(int value, int counter) {
+	ftscript<modifieri>(value, counter);
+	return true;
+}

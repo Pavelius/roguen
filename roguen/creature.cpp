@@ -352,12 +352,6 @@ static void drop_treasure(creature* pe) {
 	if(pe->is(Summoned))
 		return;
 	drop_wears(pe, 15);
-	monsteri* p = pe->getkind();
-	if(!p)
-		return;
-	pushvalue push_player(player, pe);
-	pushvalue push_rect(last_rect, pe->getposition().rectangle());
-	script_run(p->treasure);
 }
 
 static void nullify_elements(feat_s v1, feat_s v2) {
@@ -987,7 +981,8 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 	auto enemy_name = opponent->getname();
 	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
-	auto damage = (int)weapon.geti().weapon.damage;
+	auto weapon_damage = (int)weapon.geti().weapon.damage;
+	auto damage = weapon_damage;
 	damage += player->get(damage_ability(weapon_ability));
 	damage += add_bonus_damage(opponent, weapon, FireDamage, 2, FireResistance, FireImmunity);
 	damage += add_bonus_damage(opponent, weapon, ColdDamage, 2, ColdResistance, ColdImmunity);
@@ -1003,7 +998,17 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 		damage = damage * damage_percent / 100;
 	damage += (attack_skill - roll_result) / 10;
 	if(roll_result > attack_skill)
-		damage -= 2; // If we miss 
+		damage -= 2; // If we miss
+	// Expert addition attack
+	if(attack_skill > 30) {
+		if(d100() < (attack_skill - 30))
+			damage += weapon_damage;
+	}
+	// Master addition attack
+	if(attack_skill > 60) {
+		if(d100() < (attack_skill - 60))
+			damage += weapon_damage;
+	}
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
 		special_attack(weapon, opponent, pierce, damage); // If hit critical
@@ -1376,8 +1381,6 @@ void make_move() {
 	}
 }
 
-static void wearing(variants source, int multiplier);
-
 static void wearing(variant v, int multiplier) {
 	if(v.iskind<abilityi>())
 		player->abilities[v.value] += v.counter * multiplier;
@@ -1387,31 +1390,29 @@ static void wearing(variant v, int multiplier) {
 			player->feats_active.set(v.value);
 		else
 			player->feats_active.remove(v.value);
-	} else if(v.iskind<listi>())
-		wearing(bsdata<listi>::elements[v.value].elements, multiplier);
-}
-
-static void wearing(variants source, int multiplier) {
-	for(auto v : source)
-		wearing(v, multiplier);
+	} else if(v.iskind<listi>()) {
+		for(auto e : bsdata<listi>::elements[v.value].elements)
+			wearing(e, multiplier);
+	}
 }
 
 static void update_wears() {
 	for(auto& e : player->equipment()) {
 		if(!e)
 			continue;
-		wearing(e.geti().wearing, 1);
+		for(auto v : e.geti().wearing)
+			wearing(v, 1);
 		auto power = e.getpower();
 		if(power)
-			wearing(power, bsdata<magici>::elements[e.getmagic()].multiplier);
+			wearing(power, e.geteffect());
 	}
 }
 
-void creature::update_room_abilities() {
-	auto p = getroom();
+static void update_room_abilities() {
+	auto p = player->getroom();
 	if(!p)
 		return;
-	fire_trigger(WhenCreatureP1InSiteP2UpdateAbilities, getkind(), &p->geti());
+	fire_trigger(WhenCreatureP1InSiteP2UpdateAbilities, player->getkind(), &p->geti());
 }
 
 static void update_negative_skills() {

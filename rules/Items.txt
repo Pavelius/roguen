@@ -9,19 +9,19 @@ OpenedDoor
 #List
 
 PierceWeapons
- elements WeaponSkill+10 Dexterity+10 Block+1 Block+2 DamageMelee+1 ColdDamage FireDamage
+ elements WeaponSkill+5 Dexterity+5 Block+1 DamageMelee+1 ColdDamage FireDamage
 SlashingWeapons
- elements WeaponSkill+10 Strenght+10 Dexterity+10 Block+1 DamageMelee+1 DamageMelee+2 ColdDamage FireDamage
+ elements WeaponSkill+5 Strenght+5 Block+1 DamageMelee+1 ColdDamage FireDamage
 BludgeonWeapons
- elements Strenght+5 Strenght+10 Block+1 DamageMelee+1 FireDamage Strenght+20 DamageMelee+2 DamageMelee+3
+ elements Strenght+5 Block+1 DamageMelee+1 FireDamage
 LightArmorPowers
- elements Block+1 Block+2 Dodge+5 Dodge+10 Dexterity+5 Dexterity+10 Wits+10
+ elements Block+1 Dodge+5 Dexterity+5 Wits+5
 HeavyArmorPowers
- elements Block+1 Armor+1 Armor+2 FireResistance ColdResistance
+ elements Block+1 Armor+1 FireResistance ColdResistance
 ShieldPowers
  elements Block+1 Armor+1 AcidResistance FireResistance ColdResistance DeathResistance Block+2 Armor+2
 RangedWeapons
- elements BalisticSkill+10 Dexterity+10 ColdDamage FireDamage
+ elements BalisticSkill+5 Dexterity+5 ColdDamage FireDamage
 
 #Item
 
@@ -154,20 +154,20 @@ RingOfPoisonResistance cost(1800) weight(1) wear(FingerRight) avatar(73) unident
 RingOfLevitation cost(3000) weight(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Fly
 RingOfDefence cost(2000) weight(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
- wearing Dodge+15
+ wearing Dodge+10
 RingOfProtection cost(3000) weight(1) wear(FingerRight) avatar(655) unidentified(SilverRing)
  wearing Block+1
 RingOfRegeneration cost(10000) weight(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
  wearing Regeneration
 RingOfWarrior cost(2000) weight(1) wear(FingerRight) avatar(655) unidentified(GoldenRing)
- wearing WeaponSkill+10
+ wearing WeaponSkill+5
 
 LeatherBoots weight(20) wear(Legs) avatar(192)
  wearing Dodge+5
 IronBoots weight(20) wear(Legs) avatar(192)
  wearing Dodge-5 Block+1
 BootsOfSneakiness weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)
- wearing Dexterity+10
+ wearing Dexterity+5
 BootsOfLevitation weight(15) wear(Legs) avatar(224) unidentified(LeatherBoots)
  wearing Fly
 BootsOfLongStride weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)

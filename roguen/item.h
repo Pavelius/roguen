@@ -68,6 +68,7 @@ public:
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
+	int				geteffect() const;
 	const char*		getfullname(int price_percent = 0, bool uppercase = false) const;
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
 	void			getinfo(stringbuilder& sb) const;
