@@ -2,7 +2,6 @@
 #include "bsreq.h"
 #include "charname.h"
 #include "draw.h"
-#include "fraction.h"
 #include "game.h"
 #include "greatneed.h"
 #include "creature.h"
@@ -38,7 +37,6 @@ static void initializating() {
 	check_need_loading();
 	hotkey_initialize();
 	site_skills_initialize();
-	initialize_fractions();
 #ifdef _DEBUG
 	main_util();
 #endif
@@ -101,9 +99,9 @@ int start_application(fnevent proc, fnevent initializing);
 int main(int argc, char *argv[]) {
 	auto seed = getcputime();
 	//auto seed = 157145343; // Error dungeon room
-	string_initialize();
+	initialize_strings();
 	answers::console = &console;
-	logv(str("Seed is %1i", seed), 0, 0, false);
+	logv(str("Seed is %1i", seed));
 	srand(seed);
 	return start_application(main_start, initializating);
 }

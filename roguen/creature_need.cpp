@@ -4,10 +4,16 @@
 #include "pushvalue.h"
 #include "script.h"
 #include "speech.h"
+#include "textscript.h"
 
 extern greatneed* last_need;
 static collection<greatneedi> needs;
 extern int last_coins;
+
+static bool isneed(const void* object) {
+	auto p = (creature*)object;
+	return greatneed::find(p) != 0;
+}
 
 static creature* random_target(const greatneedi* p) {
 	collection<creature> source;
@@ -80,10 +86,10 @@ static void say_thank_you(const char* item_name, int count, int coins) {
 	auto t1 = speech_get("ThankYouForService");
 	auto name = opponent->getname();
 	auto female = opponent->is(Female);
-	actvf(sb, name, female, 0, t1, item_name, count);
+	actvf(sb, 0, t1, item_name, count);
 	if(coins) {
 		auto t2 = speech_get("HereYourMoney");
-		actvf(sb, name, female, ' ', t2, coins);
+		actvf(sb, ' ', t2, coins);
 	}
 	opponent->say(temp);
 	pause();
@@ -142,11 +148,6 @@ void add_need_answers(int bonus) {
 void prepare_need() {
 	needs.select();
 	needs.shuffle();
-}
-
-bool isneed(const void* object) {
-	auto p = (creature*)object;
-	return greatneed::find(p) != 0;
 }
 
 bool creature::speechneed() {

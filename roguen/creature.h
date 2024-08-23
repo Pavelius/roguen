@@ -17,12 +17,11 @@ class creature : public wearable, public statable, public spellable, public owne
 	unsigned short	room_id;
 	void			update_abilities();
 public:
-	int				experience, wait_seconds;
+	int				experience, reputation, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
 	point			moveorder, guardorder;
-	unsigned char	fraction;
 	operator bool() const { return abilities[Hits] > 0; }
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
@@ -63,7 +62,7 @@ public:
 	bool			isunaware() const { return wait_seconds >= 100 * 6; }
 	bool			isvalid() const;
 	void			kill();
-	void			logs(const char* format, ...) const { logv(format, xva_start(format), getname(), is(Female)); }
+	void			logs(const char* format, ...) const;
 	bool			moveto(point m);
 	void			paint() const;
 	void			paintbarsall() const;
@@ -81,7 +80,6 @@ public:
 	bool			speechneed();
 	bool			speechrumor() const;
 	bool			speechlocation() const;
-	void			summon(point m, const variants& elements);
 	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update();
@@ -107,13 +105,7 @@ void attack_range(int bonus);
 void attack_thrown(int bonus);
 void cast_spell(const spelli& e, int mana, bool silent);
 void cast_spell(const spelli& e);
-void creature_every_minute();
-void creature_every_5_minutes();
-void creature_every_10_minutes();
-void creature_every_30_minutes();
-void creature_every_4_hours();
 void dialog_message(const char* format);
-bool isneed(const void* p);
 bool ispresent(const void* p);
 void make_move();
 void make_move_long();

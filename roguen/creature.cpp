@@ -12,6 +12,7 @@
 #include "script.h"
 #include "siteskill.h"
 #include "speech.h"
+#include "textscript.h"
 #include "trigger.h"
 #include "triggern.h"
 
@@ -48,6 +49,10 @@ static void add(creature* player, ability_s id, int value, int minimal = 0) {
 	player->set(id, i);
 }
 
+void creature::logs(const char* format, ...) const {
+	logv(format, xva_start(format));
+}
+
 bool creature::fixaction(const char* id, const char* action, ...) const {
 	const char* result = 0;
 	if(canspeak()) {
@@ -68,7 +73,7 @@ bool creature::fixaction(const char* id, const char* action, ...) const {
 	auto pn = getdescription(ids(id, action));
 	if(pn) {
 		update_console_time();
-		actv(console, pn, xva_start(action), getname(), is(Female), ' ');
+		actv(console, pn, xva_start(action), ' ');
 		return true;
 	}
 	return false;
@@ -226,7 +231,7 @@ static void summon_minions(point m, variant v) {
 	player = push_player;
 }
 
-static void cast_spell(const spelli& e, int mana, bool silent) {
+void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
 		player->actp(getnm("NotEnoughtMana"));
 		return;
@@ -1492,14 +1497,14 @@ void creature::unlink() {
 void creature::act(const char* format, ...) const {
 	if(ishuman() || is(Visible)) {
 		update_console_time();
-		actv(console, format, xva_start(format), getname(), is(Female), '\n');
+		actv(console, format, xva_start(format), '\n');
 	}
 }
 
 void creature::actp(const char* format, ...) const {
 	if(ishuman()) {
 		update_console_time();
-		actv(console, format, xva_start(format), getname(), is(Female), '\n');
+		actv(console, format, xva_start(format), '\n');
 	}
 }
 
@@ -1507,7 +1512,7 @@ void creature::sayv(stringbuilder& sb, const char* format, const char* format_pa
 	if(ishuman() || is(Visible)) {
 		if(&sb == &console)
 			update_console_time();
-		actable::sayv(sb, format, format_param, getname(), is(Female));
+		sayva(sb, format, format_param);
 	}
 }
 
@@ -1591,12 +1596,6 @@ void creature_every_5_minutes() {
 
 void creature_every_10_minutes() {
 	restore(Hits, Strenght);
-}
-
-void creature_every_30_minutes() {
-}
-
-void creature_every_4_hours() {
 }
 
 bool creature::ispresent() const {

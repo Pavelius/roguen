@@ -3,7 +3,6 @@
 #include "greatneed.h"
 #include "global.h"
 #include "game.h"
-#include "fraction.h"
 #include "pushvalue.h"
 #include "script.h"
 #include "trigger.h"
@@ -19,6 +18,9 @@ stringbuilder	console(console_text);
 gamei			game;
 point			start_village = {128, 128};
 
+void creature_every_minute();
+void creature_every_5_minutes();
+void creature_every_10_minutes();
 void prepare_need();
 void update_need();
 
@@ -197,7 +199,6 @@ void pass_minute() {
 	update_all_boost(game.getminutes());
 	all(creature_every_minute);
 	while(game.restore_half_turn < game.minutes) {
-		all(creature_every_5_minutes);
 		game.restore_half_turn += 5;
 		remove_flags(Iced, 20);
 	}
@@ -208,10 +209,8 @@ void pass_minute() {
 	while(game.restore_hour < game.minutes) {
 		game.restore_hour = (game.restore_hour / 60 + 1) * 60 + rand() % 60;
 		update_need();
-		update_relations();
 	}
 	while(game.restore_day_part < game.minutes) {
-		all(creature_every_4_hours);
 		decoy_food();
 		game.restore_day_part = (game.restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
 	}

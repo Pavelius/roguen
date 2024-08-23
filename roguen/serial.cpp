@@ -7,6 +7,7 @@
 #include "greatneed.h"
 #include "creature.h"
 #include "io_memory.h"
+#include "textscript.h"
 
 static const char* save_folder = "save";
 

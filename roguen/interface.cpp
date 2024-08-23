@@ -1296,8 +1296,6 @@ static void right_border() {
 }
 
 static void show_block(const char* format, ...) {
-	pushvalue push_name(last_name, player->getname());
-	pushvalue push_female(last_female, player->is(Female));
 	pushvalue push_tab(draw::tab_pixels, width - 26);
 	char temp[2048]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));

@@ -1,9 +1,7 @@
+#include "creature.h"
 #include "crt.h"
 #include "textscript.h"
 #include "speech.h"
-
-const char* last_name;
-bool		last_female;
 
 namespace {
 struct change_string {
@@ -25,25 +23,105 @@ static change_string player_gender[] = {
 
 bool parse_speech(stringbuilder& sb, const char* id);
 
+static array gamelog(1);
+
+static const char* get_player_name() {
+	if(!player)
+		return 0;
+	return player->getname();
+}
+
+static bool is_player_female() {
+	if(!player)
+		return false;
+	return player->is(Female);
+}
+
+static void logc(const char* format) {
+	if(!format || format[0] == 0)
+		return;
+	auto i = zlen(format);
+	gamelog.reserve(gamelog.getcount() + i + 1);
+	auto m = gamelog.getcount();
+	if(m) {
+		memcpy(gamelog.ptr(m - 1), format, i + 1);
+		gamelog.count += i;
+	} else {
+		memcpy(gamelog.ptr(0), format, i + 1);
+		gamelog.count += i + 1;
+	}
+}
+
+void logv(const char* format) {
+	if(gamelog.getcount() > 0)
+		logc("\n");
+	logc(format);
+}
+
+static void named_say(stringbuilder& sb, const char* format) {
+	sb.addsep('\n');
+	auto pb = sb.get();
+	sb.add("[%1] \"", get_player_name());
+	sb.addv(format, 0);
+	sb.add("\"");
+	logv(pb);
+}
+
+static const char* skipncr(const char* p) {
+	while(*p && !(*p == 10 || *p == 13))
+		p++;
+	return skipspcr(p);
+}
+
+static void complex_say(stringbuilder& sb, const char* format) {
+	char dialog_text[512];
+	while(format[0]) {
+		auto pe = skipncr(format);
+		auto len = pe - format;
+		if(format[len] == 0) {
+			named_say(sb, format);
+			break;
+		} else {
+			if(len > sizeof(dialog_text) - 16)
+				len = sizeof(dialog_text) - 16;
+			memcpy(dialog_text, format, len);
+			dialog_text[len] = 0;
+			while(len > 0 && (dialog_text[len - 1] == 10 || dialog_text[len - 1] == 13))
+				dialog_text[--len] = 0;
+			named_say(sb, dialog_text);
+			pause();
+			format = skipspcr(format + len);
+		}
+	}
+}
+
+static void say_format(stringbuilder& sb, const char* format, const char* format_param) {
+	char temp[4096]; stringbuilder sba(temp);
+	sba.addv(format, format_param);
+	complex_say(sb, temp);
+}
+
 static bool parse_name(stringbuilder& sb, const char* id) {
-	if(!last_name)
+	auto name = get_player_name();
+	if(!name || !name[0])
 		return false;
 	if(equal(id, "герой") || equal(id, "name"))
-		sb.add(last_name);
-	else if(strcmp(id, "героя") == 0)
-		sb.addof(last_name);
-	else if(strcmp(id, "герою") == 0)
-		sb.addto(last_name);
+		sb.add(name);
+	else if(equal(id, "героя") == 0)
+		sb.addof(name);
+	else if(equal(id, "герою") == 0)
+		sb.addto(name);
 	else
 		return false;
 	return true;
 }
 
 static bool parse_gender(stringbuilder& sb, const char* id) {
+	auto female = is_player_female();
 	for(auto& e : player_gender) {
 		if(strcmp(e.female, id) != 0)
 			continue;
-		if(last_female)
+		if(female)
 			sb.add(e.female);
 		else
 			sb.add(e.male);
@@ -74,6 +152,38 @@ static void custom_string(stringbuilder& sb, const char* id) {
 	sb.add(getnm(id));
 }
 
-void string_initialize() {
+const char* getlog() {
+	return gamelog.begin();
+}
+
+void logv(const char* format, const char* format_param) {
+	char temp[1024]; stringbuilder sb(temp); sb.clear();
+	sb.addv(format, format_param);
+	logv(temp);
+}
+
+void actv(stringbuilder& sb, const char* format, const char* format_param, char separator) {
+	if(!format)
+		return;
+	sb.addsep(separator);
+	auto pb = sb.get();
+	sb.addv(format, format_param);
+	logv(pb);
+}
+
+void actvf(stringbuilder& sb, char separator, const char* format, ...) {
+	sb.addsep(separator);
+	auto pb = sb.get();
+	sb.addv(format, xva_start(format));
+}
+
+void sayva(stringbuilder& sb, const char* format, const char* format_param) {
+	if(format[0] == '>')
+		actv(sb, format + 1, format_param, '\n');
+	else
+		say_format(sb, format, format_param);
+}
+
+void initialize_strings() {
 	stringbuilder::custom = custom_string;
 }

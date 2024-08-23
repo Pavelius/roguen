@@ -182,7 +182,9 @@
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="filter.cpp" />
     <ClCompile Include="font_util.cpp" />
-    <ClCompile Include="fraction.cpp" />
+    <ClCompile Include="fraction.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="game.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="greatneed.cpp" />
@@ -310,7 +312,9 @@
     <ClInclude Include="race.h" />
     <ClInclude Include="randomizer.h" />
     <ClInclude Include="rect.h" />
-    <ClInclude Include="fraction.h" />
+    <ClInclude Include="fraction.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="resid.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />

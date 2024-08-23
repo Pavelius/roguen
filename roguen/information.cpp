@@ -156,7 +156,7 @@ void creature::getrumor(quest& e, stringbuilder& sb) const {
 	auto part_one = "RumorDungeon";
 	if(!range)
 		part_one = "RumorDungeonHere";
-	actvf(sb, getname(), is(Female), 0,
+	actvf(sb, 0,
 		getnm(part_one),
 		getnm(bsdata<directioni>::elements[direction].id),
 		site_name,
@@ -164,11 +164,11 @@ void creature::getrumor(quest& e, stringbuilder& sb) const {
 		range);
 	monsteri* guardian = e.problem;
 	if(guardian) {
-		actvf(sb, getname(), is(Female), ' ',
+		actvf(sb, ' ',
 			getnm("RumorDungeonMore"),
 			e.reward.getname(),
 			guardian->minions->getname());
-		actvf(sb, getname(), is(Female), ' ',
+		actvf(sb, ' ',
 			getnm("RumorDungeonGuardian"),
 			guardian->getname());
 	}
