@@ -1017,21 +1017,16 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 	}
 	attack_skill += player->get(weapon_ability);
 	auto roll_result = d100();
+	if(roll_result <= attack_skill)
+		damage += xrand(0, 2);
+	else
+		damage -= xrand(1, 3);
+	if(roll_result <= attack_skill - 30)
+		damage += weapon_damage;
+	if(roll_result <= attack_skill - 60)
+		damage += weapon_damage;
 	if(damage_percent)
 		damage = damage * damage_percent / 100;
-	damage += (attack_skill - roll_result) / 10;
-	if(roll_result > attack_skill)
-		damage -= 2; // If we miss
-	// Expert addition attack
-	if(player->isexpert(weapon_ability)) {
-		if(d100() < (attack_skill - 30))
-			damage += weapon_damage;
-	}
-	// Master addition attack
-	if(player->ismaster(weapon_ability)) {
-		if(d100() < (attack_skill - 60))
-			damage += weapon_damage;
-	}
 	auto pierce = (int)weapon.geti().weapon.pierce;
 	if(roll_result < attack_skill / 3)
 		special_attack(weapon, opponent, pierce, damage); // If hit critical
@@ -1233,9 +1228,10 @@ void creature::finish() {
 bool creature::roll(ability_s v, int bonus) const {
 	auto value = get(v);
 	auto base = bsdata<abilityi>::elements[v].base;
-	if(base) {
+	auto skill_divider = bsdata<abilityi>::elements[v].skill_divider;
+	if(base && skill_divider) {
 		// Skills depend on roll.
-		auto base_value = get(base) / 3;
+		auto base_value = get(base) / skill_divider;
 		if(base_value > value)
 			value = base_value;
 	}

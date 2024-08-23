@@ -18,6 +18,7 @@
 #include "script.h"
 #include "screenshoot.h"
 #include "siteskill.h"
+#include "shortcut.h"
 #include "textscript.h"
 #include "visualeffect.h"
 
@@ -25,9 +26,10 @@ using namespace draw;
 
 const int panel_width = 130;
 
-void set_dark_theme();
-void initialize_translation(const char* locale);
 void initialize_png();
+void initialize_translation(const char* locale);
+void set_dark_theme();
+void show_manual();
 
 static const void*		focus_pressed;
 static unsigned long	last_tick_message;
@@ -666,17 +668,30 @@ static void paint_button(const char* format, bool pressed) {
 	caret = push_caret;
 }
 
-static bool button(unsigned key, int format_width) {
+bool button(unsigned key, int format_width) {
 	if(!key)
 		return false;
 	char temp[32]; stringbuilder sb(temp);
 	addkeyname(sb, key);
 	auto push_width = width;
+	if(format_width == -1)
+		format_width = textw(temp) + metrics::padding * 2;
 	width = format_width;
 	auto result = draw::button(temp, key, draw::pbutton, false);
 	width = push_width;
 	return result;
 }
+
+//static bool button(unsigned key, const char* format) {
+//	auto push_fore = fore;
+//	auto result = button(key, -1);
+//	caret.x -= metrics::padding / 2;
+//	fore = colors::border;
+//	textrp(format);
+//	caret.x += metrics::padding;
+//	fore = push_fore;
+//	return result;
+//}
 
 static void player_info() {
 	char temp[1024]; stringbuilder sb(temp); sb.clear();
@@ -1427,7 +1442,8 @@ int start_application(fnevent proc, fnevent initializing) {
 
 BSDATA(dialogi) = {
 	{"ShowLogs", show_logs, before_show_logs},
-	{"ShowMinimap", show_area},
+	{"ShowManual", show_manual, 0, false, true},
+	{"ShowMinimap", show_area, 0, true},
 	{"ShowCharsheet", show_charsheet},
 };
 BSDATAF(dialogi)

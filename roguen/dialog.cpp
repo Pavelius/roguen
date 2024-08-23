@@ -1,3 +1,4 @@
+#include "crt.h"
 #include "dialog.h"
 #include "draw.h"
 
@@ -12,13 +13,23 @@ int dialogi::open() const {
 	if(beforeopen)
 		beforeopen();
 	while(ismodal()) {
-		paintstart();
+		if(std_paint)
+			paintstart();
 		fillform();
 		setoffset(metrics::padding, metrics::padding);
 		mainscene();
-		pause_keys();
-		paintfinish();
+		if(!no_keys)
+			pause_keys();
+		if(std_paint)
+			paintfinish();
 		domodal();
 	}
 	return getresult();
+}
+
+void open_dialog(const char* id) {
+	auto p = bsdata<dialogi>::find(id);
+	if(!p)
+		return;
+	p->open();
 }

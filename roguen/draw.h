@@ -259,6 +259,7 @@ void					textf(const char* string);
 void					textf(const char* string, int& cashe_origin, int& cashe_string);
 void					textfs(const char* string);
 int						texth();
+void					textrp(const char* string, int count = -1, unsigned feats = 0);
 int						texth(const char* string, int width);
 int						textw(int sym);
 int						textw(const char* string, int count = -1);

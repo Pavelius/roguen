@@ -1,11 +1,11 @@
+#pragma once
+
 #include "feat.h"
 #include "point.h"
 #include "list.h"
 #include "magic.h"
 #include "wear.h"
 #include "variant.h"
-
-#pragma once
 
 enum ability_s : unsigned char;
 

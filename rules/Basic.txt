@@ -41,6 +41,7 @@ RandomRace
 
 "Ctrl+O" MakeScreenshoot
 
+"Ctrl+M" TestManual
 "Ctrl+D" DebugMessage
 "Ctrl+E" ExploreArea
 "Ctrl+H" HealAll

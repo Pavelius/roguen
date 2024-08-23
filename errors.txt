@@ -1,2 +1,2 @@
-﻿In file `rules/Items.txt`:
- Line 243: Not found identifier `HerbOfPoiso1n`
+﻿In file `Names.txt`:
+ Define translation for `Manual`

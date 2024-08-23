@@ -37,6 +37,7 @@ void damage_equipment(int bonus, bool allow_save);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
+void open_manual(const char* manual_header, const char* manual_content);
 bool talk_opponent(const char* id, fncommand proc = 0);
 void visualize_images(res pid, point size, point offset);
 
@@ -2378,21 +2379,25 @@ static void enchant_minutes(int count, int koeff, const char* format) {
 	if(minutes <= 0)
 		return;
 	auto stop_time = game.getminutes() + minutes;
-	if(format)
-		player->fixvalue(str(format, v.getname(), count), ColorGreen);
+	if(format) {
+		char temp[260]; stringbuilder sb(temp);
+		sb.addv(v.getname(), 0);
+		sb.adds("%1i %-2", count, getnm(str_count(format, count)));
+		player->fixvalue(temp, ColorGreen);
+	}
 	add_boost(player, v, stop_time);
 }
 
 static void enchant_minutes(int bonus) {
-	enchant_minutes(script_count(bonus), 1, "%1 %2i %-Minutes");
+	enchant_minutes(script_count(bonus), 1, "Minute");
 }
 
 static void enchant_hours(int bonus) {
-	enchant_minutes(script_count(bonus), 60, "%1 %2i %-Hours");
+	enchant_minutes(script_count(bonus), 60, "Hour");
 }
 
 static void enchant_days(int bonus) {
-	enchant_minutes(script_count(bonus), 24 * 60, "%1 %2i %-Days");
+	enchant_minutes(script_count(bonus), 24 * 60, "Day");
 }
 
 static void steal_opponent_coins(int bonus) {
@@ -2409,6 +2414,11 @@ static void steal_opponent_coins(int bonus) {
 
 static void add_reputation(int bonus) {
 	add_safe(Reputation, bonus);
+}
+
+static void test_manual(int bonus) {
+	static auto p = loadt("test_logs.txt");
+	open_manual("Test logs", p);
 }
 
 BSDATA(triggerni) = {
@@ -2512,6 +2522,7 @@ BSDATA(script) = {
 	{"TransferCoins", transfer_coins, is_transfer_coins},
 	{"TestArena", test_arena},
 	{"TestRumor", test_rumor},
+	{"TestManual", test_manual},
 	{"ThrownAttack", attack_thrown},
 	{"ToggleFloorRect", toggle_floor_rect},
 	{"TriggerText", trigger_text},

@@ -21,6 +21,7 @@ enum color_s : unsigned char {
 };
 struct abilityi : nameable {
 	ability_s	base;
+	int			skill_divider;
 	ability_s	getindex() const;
 	bool		isskill() const { return !base; }
 };

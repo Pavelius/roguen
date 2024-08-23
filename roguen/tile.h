@@ -1,7 +1,7 @@
+#pragma once
+
 #include "color.h"
 #include "framerange.h"
-
-#pragma once
 
 enum tilef : unsigned char {
 	Impassable, CanSwim, DangerousFeature, BetweenWalls, Undeground,

@@ -333,14 +333,14 @@
     <ClCompile Include="draw_form.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
-    <ClCompile Include="fraction.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="textscript.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="greatneed.cpp">
       <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_manual.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -593,14 +593,14 @@
     <ClInclude Include="race.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="fraction.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="textscript.h">
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="greatneed.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="shortcut.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

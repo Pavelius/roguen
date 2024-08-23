@@ -44,6 +44,7 @@ LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
 LockedDoor: Дверь с замком
 LockedDoorNoActivateItem: Дверь закрыта на [%-1].
 LockedDoorUseActivateItem: Использовав [%-1] %герой открыл%а закрытую дверь.
+Manual: Мануал
 Monster: Монстр
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?

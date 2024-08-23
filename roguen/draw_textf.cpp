@@ -450,7 +450,7 @@ void draw::textf(const char* p) {
 
 void draw::textf(const char* string, int& cashe_origin, int& cashe_string) {
 	auto push_caret = caret;
-	if(cashe_string == -1) {
+	if(cashe_string < 0) {
 		textf(string);
 		cashe_string = text_start_string ? text_start_string - string : 0;
 		cashe_origin = text_start_horiz;

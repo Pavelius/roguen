@@ -1526,7 +1526,7 @@ int draw::textw(const char* string, int count) {
 	return x1;
 }
 
-void draw::text(const char* string, int count, unsigned feats) {
+void draw::textrp(const char* string, int count, unsigned feats) {
 	if(!font)
 		return;
 	auto dy = texth();
@@ -1536,7 +1536,6 @@ void draw::text(const char* string, int count, unsigned feats) {
 		count = zlen(string);
 	const char *s1 = string;
 	const char *s2 = string + count;
-	auto push_caret = caret;
 	unsigned char s0 = 0x0;
 	while(s1 < s2) {
 		int sm = szget(&s1);
@@ -1544,36 +1543,13 @@ void draw::text(const char* string, int count, unsigned feats) {
 			glyph(sm, feats);
 		caret.x += textw(sm);
 	}
-	caret = push_caret;
 }
 
-/*void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped) {
-	if(clipped)
-		*clipped = false;
-	if(!font)
-		return;
-	auto dy = texth();
-	if(y >= clipping.y2 || y + dy < clipping.y1)
-		return;
-	if(count == -1)
-		count = zlen(string);
-	const char *s1 = string;
-	const char *s2 = string + count;
-	auto x2 = x + maximum_width - textw('.') * 3;
-	while(s1 < s2) {
-		int sm = szget(&s1);
-		auto x1 = x + textw(sm);
-		if(x1 >= x2) {
-			text(x, y, "...", -1, flags);
-			if(clipped)
-				*clipped = true;
-			break;
-		}
-		if(sm >= 0x21)
-			glyph(x, y, sm, flags);
-		x = x1;
-	}
-}*/
+void draw::text(const char* string, int count, unsigned feats) {
+	auto push_caret = caret;
+	textrp(string, count, feats);
+	caret = push_caret;
+}
 
 void draw::textcj(const char* string) {
 	auto push_caret = caret;

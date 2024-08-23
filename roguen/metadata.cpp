@@ -64,7 +64,6 @@ BSMETA(color) = {
 	{}};
 BSMETA(dialogi) = {
 	BSREQ(id),
-	BSREQ(buttons),
 	{}};
 BSMETA(dice) = {
 	BSREQ(min),
