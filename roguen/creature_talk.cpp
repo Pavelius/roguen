@@ -78,7 +78,7 @@ static void talk_entry(const phrasei* p) {
 	}
 }
 
-bool creature::talk(const char* id, fncommand proc) {
+bool talk_opponent(const char* id, fncommand proc) {
 	auto current_talk = bsdata<talki>::find(id);
 	if(!current_talk)
 		return false;

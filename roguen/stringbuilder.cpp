@@ -255,14 +255,6 @@ void stringbuilder::addlocalefile(const char* folder, const char* name, const ch
 	add("%1.%2", name, ext);
 }
 
-const char* stringbuilder::getbycount(const char* id, int count) {
-	switch(count) {
-	case 0: case 1: return getnm(id);
-		//case 2: case 3: case 4: return getnmof(id);
-	default: return getnm(id);
-	}
-}
-
 static void add_by_count(stringbuilder& sb, const char* name, int count) {
 	switch(count) {
 	case 0: case 1: sb.add(name); break;
@@ -271,10 +263,20 @@ static void add_by_count(stringbuilder& sb, const char* name, int count) {
 	}
 }
 
-void stringbuilder::addcount(const char* id, int count, const char* format) {
-	if(!format)
-		format = "%1i %2";
-	add(format, count, getbycount(id, count));
+const char* str_count(const char* id, int count) {
+	static char temp[64]; stringbuilder sb(temp);
+	switch(count) {
+	case 0: case 1: return id;
+	case 2: case 3: case 4:
+		sb.addv(id, 0);
+		sb.addv("Of", 0);
+		break;
+	default:
+		sb.addv(id, 0);
+		sb.addv("Pl", 0);
+		break;
+	}
+	return temp;
 }
 
 unsigned char stringbuilder::upper(unsigned char u) {

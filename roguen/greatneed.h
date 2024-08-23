@@ -44,3 +44,4 @@ extern greatneed* last_need;
 void add_greatneed(const greatneedi* type, variant owner, unsigned deadline);
 void check_need_loading();
 void shrink_greatneed();
+bool speech_need();

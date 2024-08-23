@@ -76,12 +76,12 @@ static const char* time_left(unsigned end_stamp) {
 		return getnm("FewTime");
 	auto value = (end_stamp - stamp) / (24 * 60);
 	if(value > 0)
-		return str("%1i %-2", value, stringbuilder::getbycount("Day", value));
+		return str("%1i %-2", value, getnm(str_count("Day", value)));
 	value = (end_stamp - stamp) / 60;
 	if(value > 0)
-		return str("%1i %-2", value, stringbuilder::getbycount("Hour", value));
+		return str("%1i %-2", value, getnm(str_count("Hour", value)));
 	value = end_stamp - stamp;
-	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
+	return str("%1i %-2", value, getnm(str_count("Minute", value)));
 }
 
 static void addf(stringbuilder& sb, const char* id, int value, int value_maximum = 0) {

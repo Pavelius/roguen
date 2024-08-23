@@ -72,6 +72,7 @@ static creature* find_monster_id(const char* id) {
 static void main_start() {
 	player = player_create({5, 5}, "DarkElf", true);
 	player->set(Ally);
+	player->experience += 600;
 	equip_item("LongBow");
 	equip_item("Arrow");
 	add_item("Torch");

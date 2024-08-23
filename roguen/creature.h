@@ -77,10 +77,8 @@ public:
 	void			set(ability_s i, int v) { abilities[i] = v; }
 	void			setroom(const roomi* v);
 	void			slowdown(int seconds) { wait_seconds += seconds; }
-	bool			speechneed();
 	bool			speechrumor() const;
 	bool			speechlocation() const;
-	bool			talk(const char* id, fncommand proc = 0);
 	void			unlink();
 	void			update();
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }

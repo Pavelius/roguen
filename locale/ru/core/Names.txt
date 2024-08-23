@@ -1,4 +1,3 @@
-AlmostFinishProgress: Почти уже закончили
 Ally: Союзник
 And: и
 ApplyDamage: %герой получил%а [%1i] (%2i%+3i%+4i) урона.
@@ -24,7 +23,6 @@ ChooseSpell: Выбирайте заклинание
 Continue: Продолжить
 Coins: Монет
 Cost: Стоит
-Day: День
 DodgeSuccess: Уклонение
 Door: Дверь
 DropItem: Избавиться от предмета
@@ -33,7 +31,6 @@ Experience: Опыт
 Female: Женщина
 FewTime: Совсем мало времени
 GlobalMapPosition: Позиция на карте мира %1i, %2i
-HalfwayProgress: Находимся на полпути
 Heal: Лечение
 Hour: Час
 IcedSlice: %герой подскалзнул%ась на льду.
@@ -44,20 +41,15 @@ Kg: кг
 KnowRumor: Узнать сплетни
 Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
-LittleProgress: Немного двинулись вперед
 LockedDoor: Дверь с замком
 LockedDoorNoActivateItem: Дверь закрыта на [%-1].
 LockedDoorUseActivateItem: Использовав [%-1] %герой открыл%а закрытую дверь.
 Monster: Монстр
 MoveStairsUp: Поднятся по лестнице наверх?
 MoveStairsDown: Спустится по лестнице вниз?
-Minute: Минута
-Minutes: Минут
-Hours: Часов
 Mundane: Обычный
 Natural: Родное
 No: Нет
-NoAnyProgress: Еще даже не начинали
 NoCreaturesNearby: Вокруг никого нет.
 NotEnoughtMana: Не хватает маны.
 NothingToSay: Нечего сказать.
@@ -81,12 +73,24 @@ Tree: Дерево
 TwoHanded: Двуручное
 UseItem: Использовать предмет
 UseNextItem: %герой израсходовал%а %1. 
-VisualizeProgress: Мы %-1 и осталось примерно %-2.
 WantBuyItem: Вы действительно хотите купить %1 за [%2i] монет?
 WantSellItem: Хотите продать %1 за [%2i] монет?
 WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
+
+Month: Месяц
+MonthOf: Месяца
+MonthPl: Месяцев
+Day: День
+DayOf: Дня
+DayPl: Дней
+Hour: Час
+HourOf: Часа
+HourPl: Часов
+Minute: Минута
+MinuteOf: Минуты
+MinutePl: Минут
 
 YouCantPickUpAllForCost: Вы не можете поднять все предметы если а каждый из них надо платить.
 YouCantWearItem: Вы не можете носить [%1], так как подходите под минимальные требования для этого.
@@ -147,6 +151,12 @@ FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света
 PoisonResistance: Сопротивление яду
+
+VisualizeProgress: Мы c тобой %-1. При этом осталось примерно %-2.
+NoAnyProgress: Еще даже не начинали
+LittleProgress: Немного двинулись вперед
+HalfwayProgress: Находимся на полпути
+AlmostFinishProgress: Почти уже закончили
 
 ReputationM5: Мясник
 ReputationM4: Убийца

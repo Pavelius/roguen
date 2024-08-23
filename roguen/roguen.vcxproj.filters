@@ -252,9 +252,6 @@
     <ClCompile Include="quest.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="greatneed.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="creature_need.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -340,6 +337,9 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="textscript.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="greatneed.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -497,9 +497,6 @@
     <ClInclude Include="quest.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="greatneed.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="framerange.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -600,6 +597,9 @@
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="textscript.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="greatneed.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>

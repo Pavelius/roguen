@@ -10,6 +10,8 @@ extern greatneed* last_need;
 static collection<greatneedi> needs;
 extern int last_coins;
 
+bool talk_opponent(const char* id, fncommand proc);
+
 static bool isneed(const void* object) {
 	auto p = (creature*)object;
 	return greatneed::find(p) != 0;
@@ -84,8 +86,6 @@ static int getprogress(int count, int maximum) {
 static void say_thank_you(const char* item_name, int count, int coins) {
 	char temp[512]; stringbuilder sb(temp);
 	auto t1 = speech_get("ThankYouForService");
-	auto name = opponent->getname();
-	auto female = opponent->is(Female);
 	actvf(sb, 0, t1, item_name, count);
 	if(coins) {
 		auto t2 = speech_get("HereYourMoney");
@@ -150,9 +150,9 @@ void prepare_need() {
 	needs.shuffle();
 }
 
-bool creature::speechneed() {
+bool speech_need() {
 	pushvalue push_need(last_need);
-	last_need = greatneed::find(this, NeedFinished);
+	last_need = greatneed::find(opponent, NeedFinished);
 	if(last_need) {
 		if(last_need->is(NeedSuccess)) {
 			say_need("Success");
@@ -166,15 +166,15 @@ bool creature::speechneed() {
 		shrink_greatneed();
 		return true;
 	}
-	last_need = greatneed::find(this, NeedCompleted);
+	last_need = greatneed::find(opponent, NeedCompleted);
 	if(last_need) {
 		if(d100() < 30)
 			return false;
-		fixaction("VisitMeLater", 0);
+		opponent->fixaction("VisitMeLater", 0);
 		return true;
 	}
-	last_need = greatneed::find(this);
+	last_need = greatneed::find(opponent);
 	if(!last_need)
 		return false;
-	return talk("NeedTalk", apply_answer);
+	return talk_opponent("NeedTalk", apply_answer);
 }

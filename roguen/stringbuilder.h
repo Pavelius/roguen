@@ -28,7 +28,6 @@ public:
 	void				add(char sym);
 	void				addby(const char* s);
 	void				addch(char sym);
-	void				addcount(const char* id, int count, const char* format = 0);
 	void				addicon(const char* id, int value);
 	void				addint(int value, int precision, const int radix);
 	void				adjective(const char* name, int m);
@@ -57,7 +56,6 @@ public:
 	static void			defidentifier(stringbuilder& sb, const char* id);
 	const char*			end() const { return pe; }
 	char*				get() const { return p; }
-	static const char*	getbycount(const char* id, int count);
 	static int			getgender(const char* s);
 	static int			getnum(const char* v);
 	unsigned			getlenght() const { return p - pb; }
@@ -90,5 +88,5 @@ typedef void (*fnoutput)(const char* format);
 const char* ids(const char* p1, const char* p2);
 const char* ids(const char* p1, const char* p2, const char* p3);
 const char* str(const char* format, ...);
-
+const char* str_count(const char* id, int count);
 void print(fnoutput proc, const char* format, ...);

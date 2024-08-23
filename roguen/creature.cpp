@@ -419,9 +419,15 @@ static void advance_value(variant v) {
 		player->wearable::equipi(v.value, v.counter > 0 ? v.counter : 1);
 	else if(v.iskind<feati>())
 		ftscript<feati>(v.value, v.counter);
-	else if(v.iskind<abilityi>())
-		ftscript<abilityi>(v.value, v.counter);
-	else if(v.iskind<modifieri>())
+	else if(v.iskind<abilityi>()) {
+		int bonus = v.counter;
+		bonus += player->basic.abilities[v.value];
+		if(bonus > 100)
+			bonus = 100;
+		else if(bonus < 0)
+			bonus = 0;
+		player->basic.abilities[v.value] = bonus;
+	} else if(v.iskind<modifieri>())
 		modifier = (modifiers)v.value;
 	else if(v.iskind<spelli>())
 		player->learn_spell(v.value);
@@ -436,20 +442,27 @@ static void advance_value(variants elements) {
 
 static void advance_value(variant kind, int level) {
 	for(auto& e : bsdata<advancement>()) {
-		if(e.type == kind && e.level == level) {
-			advance_value(e.elements);
-			player->update();
-		}
+		if(e.type != kind)
+			continue;
+		if(e.level < 0) {
+			if(level <= 1)
+				continue;
+			if((level % -e.level) != 0)
+				continue;
+		} else if(e.level != level)
+			continue;
+		advance_value(e.elements);
+		player->update();
 	}
 }
 
 void player_levelup() {
 	player->basic.abilities[Level] += 1;
+	if(!player->ischaracter())
+		return;
 	if(player->basic.abilities[Level] > 1) {
-		player->basic.abilities[SkillPoints] += 10 + additional_skill_points(player->basic.abilities[Wits]);
-		if(player->ischaracter())
-			player->basic.abilities[Hits] += 1;
-		player->act(getdescription("LevelUp"));
+		player->basic.abilities[SkillPoints] += additional_skill_points(player->basic.abilities[Wits]);
+		player->actp(getdescription("LevelUp"));
 	}
 	advance_value(player->getkind(), player->basic.abilities[Level]);
 }
@@ -1497,6 +1510,7 @@ void creature::unlink() {
 void creature::act(const char* format, ...) const {
 	if(ishuman() || is(Visible)) {
 		update_console_time();
+		pushvalue push_player(player, const_cast<creature*>(this));
 		actv(console, format, xva_start(format), '\n');
 	}
 }
@@ -1504,6 +1518,7 @@ void creature::act(const char* format, ...) const {
 void creature::actp(const char* format, ...) const {
 	if(ishuman()) {
 		update_console_time();
+		pushvalue push_player(player, const_cast<creature*>(this));
 		actv(console, format, xva_start(format), '\n');
 	}
 }
@@ -1512,6 +1527,7 @@ void creature::sayv(stringbuilder& sb, const char* format, const char* format_pa
 	if(ishuman() || is(Visible)) {
 		if(&sb == &console)
 			update_console_time();
+		pushvalue push_player(player, const_cast<creature*>(this));
 		sayva(sb, format, format_param);
 	}
 }

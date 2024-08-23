@@ -29,7 +29,7 @@ struct speechv2;
 void add_need(int bonus);
 void add_need_answers(int bonus);
 void advance_value(variant v);
-void apply_value(variant v);
+//void apply_value(variant v);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
 void choose_limit(int counter);
@@ -37,6 +37,7 @@ void damage_equipment(int bonus, bool allow_save);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
+bool talk_opponent(const char* id, fncommand proc = 0);
 void visualize_images(res pid, point size, point offset);
 
 void* choose_answers(answers& an, const char* header, const char* cancel);
@@ -1561,15 +1562,15 @@ static void chatting() {
 	}
 	auto monster = opponent->getmonster();
 	if(monster) {
-		if(player->talk(monster->id))
+		if(talk_opponent(monster->id))
 			return;
 	}
 	auto room = opponent->getroom();
 	if(room) {
-		if(player->talk(room->geti().id))
+		if(talk_opponent(room->geti().id))
 			return;
 	}
-	if(opponent->speechneed())
+	if(speech_need())
 		return;
 	if(opponent->is(KnowRumor) && d100() < 70) {
 		if(opponent->speechrumor())
