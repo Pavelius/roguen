@@ -520,7 +520,7 @@ static bool check_stairs_movement(point m) {
 	if(pf) {
 		if(player->ishuman()) {
 			if(yesno(getnm(str("Move%1", ei.id)))) {
-				game.enter(game.position, game.level + ei.lead, pf, Center);
+				enter_area(game.position, game.level + ei.lead, pf, Center);
 				return false;
 			}
 		}
@@ -585,7 +585,7 @@ static bool check_leave_area(point m) {
 			auto direction = move_direction(m);
 			auto np = to(game.position, direction);
 			if(yesno(getnm("LeaveArea"), getnm(bsdata<directioni>::elements[direction].id)))
-				game.enter(np, 0, 0, direction);
+				enter_area(np, 0, 0, direction);
 		}
 		pay_action();
 		return false;

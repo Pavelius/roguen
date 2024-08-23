@@ -47,17 +47,17 @@ int get_relation(int f1, int f2) {
 	return current_realation[i];
 }
 
-void normalize_relations(int maximum) {
+void update_relations() {
 	for(auto i = 0; i < fraction_lenght; i++) {
 		auto v = current_realation[i];
 		auto s = start_realation[i];
 		if(v < s) {
-			auto n = current_realation[i] + xrand(1, maximum);
+			auto n = current_realation[i] + 1;
 			if(n > s)
 				n = s;
 			current_realation[i] = n;
 		} else {
-			auto n = current_realation[i] - xrand(1, maximum);
+			auto n = current_realation[i] - 1;
 			if(n < s)
 				n = s;
 			current_realation[i] = n;

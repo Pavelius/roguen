@@ -1,3 +1,4 @@
+#include "crt.h"
 #include "point.h"
 
 bool point::in(const point p1, const point p2, const point p3) const {
@@ -6,6 +7,12 @@ bool point::in(const point p1, const point p2, const point p3) const {
 	int c = (p3.x - x) * (p1.y - p3.y) - (p1.x - p3.x) * (p3.y - y);
 	return (a >= 0 && b >= 0 && c >= 0)
 		|| (a < 0 && b < 0 && c < 0);
+}
+
+int point::range(point m2) const {
+	auto dx = iabs(x - m2.x);
+	auto dy = iabs(y - m2.y);
+	return (dx > dy) ? dx : dy;
 }
 
 point center(const rect& rc) {

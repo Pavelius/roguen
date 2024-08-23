@@ -1,19 +1,30 @@
 #include "areapiece.h"
 #include "boost.h"
 #include "greatneed.h"
+#include "global.h"
 #include "game.h"
+#include "fraction.h"
 #include "pushvalue.h"
 #include "script.h"
 #include "trigger.h"
 #include "triggern.h"
 #include "creature.h"
 
-gamei			game;
+namespace draw {
+bool			isnext();
+}
+
 static char		console_text[4096];
 stringbuilder	console(console_text);
-point			gamei::start_village = {128, 128};
+gamei			game;
+point			start_village = {128, 128};
 
+void prepare_need();
 void update_need();
+
+void gamei::clear() {
+	memset(this, 0, sizeof(*this));
+}
 
 static void all(fnevent proc) {
 	auto push_player = player;
@@ -179,12 +190,6 @@ static void remove_flags(areaf v, int chance) {
 	}
 }
 
-int gamei::getrange(point m1, point m2) {
-	auto dx = iabs(m1.x - m2.x);
-	auto dy = iabs(m1.y - m2.y);
-	return (dx > dy) ? dx : dy;
-}
-
 void pass_minute() {
 	game.minutes++;
 	update_all_boost(game.getminutes());
@@ -201,6 +206,7 @@ void pass_minute() {
 	while(game.restore_hour < game.minutes) {
 		game.restore_hour = (game.restore_hour / 60 + 1) * 60 + rand() % 60;
 		update_need();
+		update_relations();
 	}
 	while(game.restore_day_part < game.minutes) {
 		all(creature_every_4_hours);
@@ -229,7 +235,7 @@ static void skip_long_time() {
 	}
 }
 
-void gamei::playminute() {
+static void play_minute() {
 	const int moves_per_minute = 10 * 4;
 	bool need_continue = true;
 	while(need_continue) {
@@ -249,7 +255,7 @@ void gamei::playminute() {
 
 void play_game() {
 	while(checkalive() && !draw::isnext())
-		game.playminute();
+		play_minute();
 }
 
 void end_game() {
@@ -261,27 +267,18 @@ void main_menu() {
 	save_log();
 }
 
-int gamei::getcount(variant v, int minimal) {
-	auto count = v.counter;
-	if(count < 0 && d100() >= -count)
-		return -1;
-	if(count < minimal)
-		count = minimal;
-	return count;
-}
-
-int gamei::getpositivecount(variant v) {
+int get_positive_count(variant v) {
 	if(v.counter < 1)
 		return 1;
 	return v.counter;
 }
 
-void gamei::setup_globals() {
+static void initialize_globals() {
 	for(auto& e : bsdata<globali>())
-		globals[bsid(&e)] = e.current;
+		game.globals[bsid(&e)] = e.current;
 }
 
-void gamei::setup_rumors(int count) {
+static void initialize_rumors(int count) {
 	point pt;
 	quest::add(KillBossQuest, start_village);
 	const int r = 6;
@@ -292,34 +289,14 @@ void gamei::setup_rumors(int count) {
 	}
 }
 
-void gamei::clear() {
-	memset(this, 0, sizeof(*this));
-}
-
-void prepare_need();
-
-void gamei::randomworld() {
-	clear();
-	setup_globals();
-	setup_rumors(xrand(4, 7));
+static void random_world() {
+	game.clear();
+	initialize_globals();
+	initialize_rumors(xrand(4, 7));
 	prepare_need();
 }
 
-const char* gamei::timeleft(unsigned end_stamp) const {
-	auto stamp = getminutes();
-	if(end_stamp <= stamp)
-		return getnm("FewTime");
-	auto value = (end_stamp - stamp) / (24 * 60);
-	if(value > 0)
-		return str("%1i %-2", value, stringbuilder::getbycount("Day", value));
-	value = (end_stamp - stamp) / 60;
-	if(value > 0)
-		return str("%1i %-2", value, stringbuilder::getbycount("Hour", value));
-	value = end_stamp - stamp;
-	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
-}
-
 void new_game() {
-	game.randomworld();
-	game.enter(game.start_village, 0, bsdata<featurei>::find("StairsDown"), NorthEast);
+	random_world();
+	enter_area(start_village, 0, bsdata<featurei>::find("StairsDown"), NorthEast);
 }

@@ -14,5 +14,6 @@ struct point {
 	bool			in(const point p1, const point p2, const point p3) const;
 	constexpr rect	rectangle() const { return {x, y, x, y}; }
 	constexpr point to(short dx, short dy) const { return {(short)(x + dx), (short)(y + dy)}; }
+	int				range(point m2) const;
 };
 point center(const rect& rc);

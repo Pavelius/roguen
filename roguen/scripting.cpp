@@ -42,6 +42,8 @@ void visualize_images(res pid, point size, point offset);
 void* choose_answers(answers& an, const char* header, const char* cancel);
 int choose_indecies(const indexa& source, const char* header, bool cancel);
 
+extern point		start_village;
+
 itema				items;
 indexa				indecies;
 spella				allowed_spells;
@@ -591,10 +593,19 @@ static void place_creature(variant v, int count) {
 	}
 }
 
+static int get_count(variant v, int minimal = 1) {
+	auto count = v.counter;
+	if(count < 0 && d100() >= -count)
+		return -1;
+	if(count < minimal)
+		count = minimal;
+	return count;
+}
+
 static void add_area_sites(variant v) {
 	if(!v)
 		return;
-	auto count = game.getcount(v);
+	auto count = get_count(v);
 	if(count <= 0)
 		return;
 	if(v.iskind<locationi>()) {
@@ -864,7 +875,7 @@ static void create_random_area() {
 	variant rt;
 	last_quest = quest::find(area->position);
 	if(area->level == 0) {
-		auto range = getrange(area->position, game.start_village);
+		auto range = getrange(area->position, start_village);
 		if(range == 0)
 			rt = single("StartVillage");
 		else if(range <= 2)
@@ -942,7 +953,7 @@ static void remove_summoned(geoposition geo) {
 	}
 }
 
-void gamei::enter(point m, int level, const featurei* feature, direction_s appear_side) {
+void enter_area(point m, int level, const featurei* feature, direction_s appear_side) {
 	save_game("autosave");
 	geoposition old_pos = game;
 	remove_summoned(old_pos);
@@ -952,7 +963,7 @@ void gamei::enter(point m, int level, const featurei* feature, direction_s appea
 	point start = {-1000, -1000};
 	if(feature)
 		start = area->findfeature((unsigned char)bsid(feature));
-	if(!isvalid(start))
+	if(!game.isvalid(start))
 		start = area->bordered(round(appear_side, South));
 	set_party_position(old_pos, game, start);
 	update_ui();
@@ -1978,28 +1989,13 @@ static void random_chance(int bonus) {
 		script_stop();
 }
 
-static void select_raw_abilities() {
-	auto p = raw_abilities;
-	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
-		*p++ = i;
-}
-
-static int compare_player_ability(const void* p1, const void* p2) {
-	auto a1 = *((ability_s*)p1);
-	auto a2 = *((ability_s*)p2);
-	auto v1 = player->get(a1);
-	auto v2 = player->get(a2);
-	return v1 - v2;
-}
-
-static void sort_raw_ability_topmost() {
-	qsort(raw_abilities, sizeof(raw_abilities) / sizeof(raw_abilities[0]), sizeof(raw_abilities[0]), compare_player_ability);
-}
-
 static void ability_exchange(int bonus) {
-	select_raw_abilities();
-	sort_raw_ability_topmost();
-	iswap(player->abilities[raw_abilities[1]], player->abilities[raw_abilities[2]]);
+	switch(rand() % 4) {
+	case 1: iswap(player->basic.abilities[Strenght], player->basic.abilities[Wits]); break;
+	case 2: iswap(player->basic.abilities[Strenght], player->basic.abilities[Dexterity]); break;
+	default: iswap(player->basic.abilities[Wits], player->basic.abilities[Dexterity]); break;
+	}
+
 }
 
 static void activate_feature(int bonus) {

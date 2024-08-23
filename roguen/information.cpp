@@ -70,6 +70,20 @@ static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 
 	}
 }
 
+static const char* time_left(unsigned end_stamp) {
+	auto stamp = game.getminutes();
+	if(end_stamp <= stamp)
+		return getnm("FewTime");
+	auto value = (end_stamp - stamp) / (24 * 60);
+	if(value > 0)
+		return str("%1i %-2", value, stringbuilder::getbycount("Day", value));
+	value = (end_stamp - stamp) / 60;
+	if(value > 0)
+		return str("%1i %-2", value, stringbuilder::getbycount("Hour", value));
+	value = end_stamp - stamp;
+	return str("%1i %-2", value, stringbuilder::getbycount("Minute", value));
+}
+
 static void addf(stringbuilder& sb, const char* id, int value, int value_maximum = 0) {
 	sb.addn("[~%1]\t%2i", getnm(id), value);
 }
@@ -136,7 +150,7 @@ void item::getinfo(stringbuilder& sb) const {
 void creature::getrumor(quest& e, stringbuilder& sb) const {
 	char temp[64]; stringbuilder sba(temp);
 	auto direction = area->getdirection(game.position, e.position);
-	auto range = game.getrange(game.position, e.position);
+	auto range = game.position.range(e.position);
 	auto site_name = e.level.getname();
 	sba.adjective(e.modifier.getname(), stringbuilder::getgender(site_name));
 	auto part_one = "RumorDungeon";
@@ -184,7 +198,7 @@ static const char* visualize_progress(int score) {
 static void actual_need_state(stringbuilder& sb) {
 	if(!last_need)
 		return;
-	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), game.timeleft(last_need->deadline));
+	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), time_left(last_need->deadline));
 }
 
 static void list_of_feats(stringbuilder& sb) {
@@ -208,7 +222,7 @@ static void need_help_info(stringbuilder& sb) {
 	auto pn = getdescription(last_need->geti().getid());
 	if(!pn)
 		return;
-	sb.add(pn, game.timeleft(last_need->deadline));
+	sb.add(pn, time_left(last_need->deadline));
 }
 
 BSDATA(textscript) = {

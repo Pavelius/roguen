@@ -2,7 +2,6 @@
 #include "crt.h"
 
 ability_s last_ability;
-ability_s raw_abilities[3];
 
 BSDATA(abilityi) = {
 	{"LineOfSight"},
@@ -50,18 +49,18 @@ ability_s abilityi::getindex() const {
 	return (ability_s)(this - bsdata<abilityi>::elements);
 }
 
-color_s get_negative_color(ability_s v) {
-	switch(v) {
-	case Hits: return ColorRed;
-	default: return ColorNone;
-	}
-}
-
-color_s get_positive_color(ability_s v) {
-	switch(v) {
-	case Hits: return ColorGreen;
-	case Mana: return ColorBlue;
-	case Faith: return ColorYellow;
-	default: return ColorNone;
-	}
-}
+//color_s negative_color(ability_s v) {
+//	switch(v) {
+//	case Hits: return ColorRed;
+//	default: return ColorNone;
+//	}
+//}
+//
+//color_s positive_color(ability_s v) {
+//	switch(v) {
+//	case Hits: return ColorGreen;
+//	case Mana: return ColorBlue;
+//	case Faith: return ColorYellow;
+//	default: return ColorNone;
+//	}
+//}

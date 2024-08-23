@@ -25,11 +25,7 @@ struct abilityi : nameable {
 	bool		isskill() const { return !base; }
 };
 extern ability_s last_ability;
-extern ability_s raw_abilities[3];
 struct statable {
 	char		abilities[Freezing + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 };
-
-color_s get_negative_color(ability_s v);
-color_s get_positive_color(ability_s v);
