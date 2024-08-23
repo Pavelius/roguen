@@ -1826,7 +1826,7 @@ static void cast_spell(int bonus) {
 	pushvalue push(last_spell);
 	last_spell = choose_spell(bonus);
 	if(last_spell)
-		player->cast(*last_spell);
+		cast_spell(*last_spell);
 }
 
 static void heal_player(int bonus) {

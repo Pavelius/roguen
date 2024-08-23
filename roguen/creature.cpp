@@ -226,7 +226,7 @@ static void summon_minions(point m, variant v) {
 	player = push_player;
 }
 
-void cast_spell(const spelli& e, int mana, bool silent) {
+static void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
 		player->actp(getnm("NotEnoughtMana"));
 		return;
@@ -245,6 +245,11 @@ void cast_spell(const spelli& e, int mana, bool silent) {
 		summon_minions(player->getposition(), e.summon);
 	player->add(Mana, -mana);
 	player->update();
+}
+
+void cast_spell(const spelli& e) {
+	cast_spell(e, e.getmana(), false);
+	pay_action();
 }
 
 static void special_spell_attack(item& weapon, creature* enemy, const spelli& ei) {
@@ -404,7 +409,7 @@ static int additional_skill_points(int v) {
 	return r;
 }
 
-void advance_value(variant v) {
+static void advance_value(variant v) {
 	if(v.iskind<itemi>())
 		player->wearable::equipi(v.value, v.counter > 0 ? v.counter : 1);
 	else if(v.iskind<feati>())
@@ -555,7 +560,7 @@ static void check_trap(point m) {
 			auto pn = getdescription(ei.id);
 			if(pn)
 				player->act(pn, getnm(ei.id));
-			player->apply(ei.effect);
+			script_run(ei.effect);
 		}
 		if(!player->is(Local))
 			area->remove(m, Hidden);
@@ -1351,7 +1356,7 @@ void make_move() {
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
 		if(allowed_spells && d100() < 70)
-			player->cast(*((spelli*)allowed_spells.random()));
+			cast_spell(*((spelli*)allowed_spells.random()));
 		else if(can_shoot())
 			attack_range(0);
 		else if(can_thrown() && d100() < 60)
@@ -1367,7 +1372,7 @@ void make_move() {
 		else if(d100() < 20)
 			use_skills();
 		else if(allowed_spells && d100() < 20)
-			player->cast(*((spelli*)allowed_spells.random()));
+			cast_spell(*((spelli*)allowed_spells.random()));
 		else if(area->isvalid(player->moveorder)) {
 			if(player->moveorder == player->getposition())
 				player->moveorder = {-1000, -1000};
@@ -1385,6 +1390,14 @@ static void wearing(variant v, int multiplier) {
 	if(v.iskind<abilityi>())
 		player->abilities[v.value] += v.counter * multiplier;
 	else if(v.iskind<feati>()) {
+		auto f = (feat_s)v.value;
+		if(multiplier < 0) {
+			auto f1 = negative_feat(f);
+			if(f1) {
+				f = f1;
+				multiplier = -multiplier;
+			}
+		}
 		multiplier = v.counter * multiplier;
 		if(multiplier >= 0)
 			player->feats_active.set(v.value);
@@ -1503,8 +1516,7 @@ int	creature::getlos() const {
 	auto m = 1;
 	if(is(Darkvision))
 		m++;
-	// Local folk knows his place better that you
-	if(is(Local))
+	if(is(Local)) // Local folk knows his place better that you
 		m++;
 	if(r < m)
 		r = m;
@@ -1543,29 +1555,6 @@ bool creature::speechlocation() const {
 	p->getrumor(sb);
 	say(temp);
 	return true;
-}
-
-static void apply_value(variant v) {
-	if(v.iskind<spelli>())
-		ftscript<spelli>(v.value, v.counter);
-	else if(v.iskind<areafi>()) {
-		if(v.counter < 0)
-			area->remove(player->getposition(), v.value);
-		else
-			area->setflag(player->getposition(), v.value);
-	} else if(v.iskind<featurei>()) {
-		if(v.counter < 0)
-			area->setfeature(player->getposition(), 0);
-		else
-			area->setfeature(player->getposition(), v.value);
-	} else
-		advance_value(v);
-}
-
-static void apply_value(variant v, creature* target) {
-	pushvalue push_modifier(modifier);
-	pushvalue push_player(player, target);
-	apply_value(v);
 }
 
 void use_item(item& v) {
@@ -1608,18 +1597,6 @@ void creature_every_30_minutes() {
 }
 
 void creature_every_4_hours() {
-}
-
-void creature::apply(const variants& source) {
-	pushvalue push_modifier(modifier);
-	pushvalue push_player(player, this);
-	for(auto v : source)
-		apply_value(v);
-}
-
-void creature::cast(const spelli& e) {
-	cast_spell(e, e.getmana(), false);
-	pay_action();
 }
 
 bool creature::ispresent() const {

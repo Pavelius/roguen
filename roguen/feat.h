@@ -21,3 +21,5 @@ struct feati : nameable {
 	feat_s		immunity;
 };
 
+feat_s negative_feat(feat_s v);
+

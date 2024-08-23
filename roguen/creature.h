@@ -27,11 +27,9 @@ public:
 	void			act(const char* format, ...) const;
 	void			actp(const char* format, ...) const;
 	void			apply(const featable& v) { feats.add(v); }
-	void			apply(const variants& source);
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
 	bool			canspeak() const { return abilities[Wits] >= 5; }
-	static void		cast(const spelli& e);
 	void			clear();
 	void			equipi(short unsigned type, int count);
 	void			damage(int v);
@@ -108,6 +106,7 @@ void attack_melee(int bonus);
 void attack_range(int bonus);
 void attack_thrown(int bonus);
 void cast_spell(const spelli& e, int mana, bool silent);
+void cast_spell(const spelli& e);
 void creature_every_minute();
 void creature_every_5_minutes();
 void creature_every_10_minutes();

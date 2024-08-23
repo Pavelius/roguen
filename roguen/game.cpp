@@ -82,17 +82,19 @@ static collection<trigger>& get_triggers(triggern type, fnvisible proc) {
 }
 
 static void all_creatures(triggern type) {
+	auto push_player = player;
 	auto& source = get_triggers(type, iscreature);
 	for(auto& e : bsdata<creature>()) {
 		if(!e.isvalid())
 			continue;
-		auto v1 = &e;
 		for(auto p : source) {
-			if(!p->match(v1, {}))
+			if(!p->match(&e, {}))
 				continue;
-			e.apply(p->effect);
+			player = &e;
+			script_run(p->effect);
 		}
 	}
+	player = push_player;
 }
 
 static void all_features(triggern type) {

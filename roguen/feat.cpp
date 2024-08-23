@@ -60,3 +60,12 @@ BSDATA(feati) = {
 	{"Blooding"},
 };
 assert_enum(feati, Blooding)
+
+feat_s negative_feat(feat_s v) {
+	switch(v) {
+	case FastAction: return SlowAction;
+	case FastAttack: return SlowAttack;
+	case FastMove: return SlowMove;
+	default: return Darkvision;
+	}
+}
