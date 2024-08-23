@@ -8,6 +8,8 @@ using namespace log;
 BSDATAD(phrasei)
 BSDATAD(talki)
 
+const phrasei* last_phrase;
+
 static bool isanswer(const char* p) {
 	return isnum(*p);
 }
@@ -114,7 +116,50 @@ static const char* read_answers(const char* p, short parent, stringbuilder& sb) 
 	return p;
 }
 
-void talki::read(const char* url) {
+phrasei* talki::find(short v) const {
+	auto push_last = last_phrase;
+	for(auto& e : elements) {
+		if(e.index == v && !e.isanswer()) {
+			if(script_allow(e.elements)) {
+				last_phrase = push_last;
+				return &e;
+			}
+		}
+	}
+	last_phrase = push_last;
+	return 0;
+}
+
+const phrasei* phrasei::nextanswer() const {
+	auto pt = find_talk(this);
+	if(!pt)
+		return 0;
+	auto pb = this + 1;
+	auto pe = pt->elements.end();
+	auto push_last = last_phrase;
+	while(pb < pe) {
+		if(pb->index != index || !pb->isanswer())
+			break;
+		last_phrase = pb;
+		if(script_allow(pb->elements)) {
+			last_phrase = push_last;
+			return pb;
+		}
+		pb++;
+	}
+	last_phrase = push_last;
+	return 0;
+}
+
+talki* find_talk(const phrasei* p) {
+	for(auto& e : bsdata<talki>()) {
+		if(p >= e.elements.begin() && p < e.elements.end())
+			return &e;
+	}
+	return 0;
+}
+
+void read_talk(const char* url) {
 	auto p = log::read(url);
 	if(!p)
 		return;
@@ -139,48 +184,8 @@ void talki::read(const char* url) {
 		ptb->elements.set(&bsdata<phrasei>::get(n1), n2 - n1);
 }
 
-void talki::read() {
+void read_talk() {
 	char temp[260]; stringbuilder sb(temp);
 	sb.addlocaleurl(); sb.add("talk/");
-	for(io::file::find file(temp); file; file.next()) {
-		auto p = file.name();
-		if(p[0] == '.')
-			continue;
-		if(!szpmatch(p, "*.txt"))
-			continue;
-		char url[260]; file.fullname(url);
-		read(url);
-	}
-}
-
-phrasei* talki::find(short v) const {
-	for(auto& e : elements) {
-		if(e.index == v && !e.isanswer() && script_allow(e.elements))
-			return &e;
-	}
-	return 0;
-}
-
-const phrasei* phrasei::nextanswer() const {
-	auto pt = talki::owner(this);
-	if(!pt)
-		return 0;
-	auto pb = this + 1;
-	auto pe = pt->elements.end();
-	while(pb < pe) {
-		if(pb->index != index || !pb->isanswer())
-			break;
-		if(script_allow(pb->elements))
-			return pb;
-		pb++;
-	}
-	return 0;
-}
-
-talki* talki::owner(const phrasei* p) {
-	for(auto& e : bsdata<talki>()) {
-		if(p >= e.elements.begin() && p < e.elements.end())
-			return &e;
-	}
-	return 0;
+	readurl(temp, "*.txt", read_talk);
 }

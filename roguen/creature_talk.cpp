@@ -72,7 +72,7 @@ static void talk_entry(const phrasei* p) {
 		console.clear();
 		script_run(p->elements);
 		opponent->say(p->text);
-		auto owner = talki::owner(p);
+		auto owner = find_talk(p);
 		p = ask_answer(p);
 		p = apply_answer(p, owner);
 	}

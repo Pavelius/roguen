@@ -12,14 +12,16 @@ struct phrasei {
 	const phrasei*	nextanswer() const;
 	bool			isanswer() const { return next != -1; }
 };
+extern const phrasei* last_phrase;
 struct talki : nameable {
 	sliceu<phrasei>	elements;
 	flagable<16>	visited;
 	void			clear() { memset(this, 0, sizeof(*this)); }
 	bool			isvisited(short v) const { return visited.is(v); }
 	phrasei*		find(short v) const;
-	static talki*	owner(const phrasei* p);
-	static void		read(const char* url);
-	static void		read();
 	void			setvisit(short v) { visited.set(v); }
 };
+talki* find_talk(const phrasei* p);
+
+void read_talk();
+void read_talk(const char* url);

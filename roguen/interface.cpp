@@ -1292,7 +1292,7 @@ static void right_border() {
 	pushvalue push_fore(draw::fore, colors::border);
 	caret.x += width - 1;
 	//caret.y -= metrics::padding;
-	line(caret.x, caret.y + height + metrics::padding);
+	line(caret.x, caret.y + height);
 }
 
 static void show_block(const char* format, ...) {
@@ -1307,7 +1307,7 @@ static void show_charsheet() {
 	rectpush push;
 	width = 150;
 	right_border();
-	show_block("%ListOfFeats");
+	show_block("%ListOfFeats\n%Reputation");
 	caret.y = push.caret.y;
 	caret.x += width + metrics::padding * 2;
 	right_border();

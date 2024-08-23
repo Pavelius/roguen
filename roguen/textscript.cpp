@@ -107,9 +107,9 @@ static bool parse_name(stringbuilder& sb, const char* id) {
 		return false;
 	if(equal(id, "герой") || equal(id, "name"))
 		sb.add(name);
-	else if(equal(id, "героя") == 0)
+	else if(equal(id, "героя"))
 		sb.addof(name);
-	else if(equal(id, "герою") == 0)
+	else if(equal(id, "герою"))
 		sb.addto(name);
 	else
 		return false;

@@ -17,7 +17,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	unsigned short	room_id;
 	void			update_abilities();
 public:
-	int				experience, reputation, wait_seconds;
+	int				experience, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
@@ -93,6 +93,7 @@ struct creaturea : collection<creature> {
 	void			select(point m, int los, bool visible, const creature* exclude);
 	void			sort(point start);
 };
+
 extern creature *player, *opponent;
 extern creaturea creatures, enemies, targets;
 extern int last_value, last_roll_result;

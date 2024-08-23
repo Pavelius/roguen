@@ -32,7 +32,7 @@ static void initializating() {
 	bsreq::read("rules/Advancement.txt");
 	bsreq::read("rules/Skills.txt");
 	readl("NameCharacters", charname::read);
-	talki::read();
+	read_talk();
 	readurl("modules", "*.txt", bsreq::read);
 	check_need_loading();
 	hotkey_initialize();

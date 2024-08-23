@@ -201,8 +201,20 @@ static void actual_need_state(stringbuilder& sb) {
 	sb.add(getnm("VisualizeProgress"), getnm(visualize_progress(last_need->score)), time_left(last_need->deadline));
 }
 
+static void print_reputation(stringbuilder& sb) {
+	if(!player)
+		return;
+	auto v = player->get(Reputation) / 20;
+	if(v < 0)
+		sb.add(getnm(str("ReputationM%1i", -v)));
+	else
+		sb.add(getnm(str("Reputation%1i", v)));
+}
+
 static void list_of_feats(stringbuilder& sb) {
 	for(auto i = (feat_s)0; i <= Blooding; i = (feat_s)(i + 1)) {
+		if(i == Female || i == Ally)
+			continue;
 		if(player->is(i))
 			sb.addn(bsdata<feati>::elements[i].getname());
 	}
@@ -230,5 +242,6 @@ BSDATA(textscript) = {
 	{"ListOfFeats", list_of_feats},
 	{"ListOfSkills", list_of_skills},
 	{"NeedHelpIntro", need_help_info},
+	{"Reputation", print_reputation},
 };
 BSDATAF(textscript)

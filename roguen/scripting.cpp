@@ -90,6 +90,15 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
+static void add_safe(ability_s v, int bonus) {
+	bonus += player->abilities[v];
+	if(bonus >= 120)
+		bonus = 120;
+	else if(bonus <= -120)
+		bonus = -120;
+	player->abilities[v] = bonus;
+}
+
 static void fix_yellow(const char* format, int value) {
 	if(!value)
 		return;
@@ -2397,6 +2406,10 @@ static void steal_opponent_coins(int bonus) {
 	gain_experience((coins + 99) / 100);
 }
 
+static void add_reputation(int bonus) {
+	add_safe(Reputation, bonus);
+}
+
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -2412,6 +2425,7 @@ BSDATA(script) = {
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
+	{"AddReputation", add_reputation},
 	{"ApplyAction", apply_action},
 	{"AnimalInt", empthy_script, is_animal},
 	{"Anger", add_anger},

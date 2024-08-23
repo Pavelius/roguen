@@ -147,3 +147,15 @@ FireResistance: Сопротивление огню
 Fly: Полет
 LightSource: Источник света
 PoisonResistance: Сопротивление яду
+
+ReputationM5: Мясник
+ReputationM4: Убийца
+ReputationM3: Бандит
+ReputationM2: Мошенник
+ReputationM1: Нарушитель
+Reputation0: Незнакомец
+Reputation1: Гражданин
+Reputation2: Друг
+Reputation3: Защитник
+Reputation4: Рыцарь
+Reputation5: Паладин
