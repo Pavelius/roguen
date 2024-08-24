@@ -50,6 +50,7 @@ static void add(creature* player, ability_s id, int value, int minimal = 0) {
 }
 
 void creature::logs(const char* format, ...) const {
+	pushvalue push(player, const_cast<creature*>(this));
 	logv(format, xva_start(format));
 }
 
