@@ -130,7 +130,7 @@ DefaultDungeonEntrance
  feats Notable
 
 TestArea
- landscape RandomHerbs+3 Chest
+ landscape RandomHerbs+3 LockedChest TreePalm+4
  feats Notable
 
 #Location

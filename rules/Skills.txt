@@ -11,6 +11,8 @@ GatherInformation skill(Wits) keyid("C")
  effect SelectNeutralCreatures FilterClose ChooseTarget ForEachOpponent Chatting
 OpenDoorLock skill(Thievery) tool(Lockpick)
  effect SelectFeatures Filter LockedDoor ForEachFeature RollAction Activate GainExperience+1
+OpenChestLock skill(Thievery) tool(Lockpick)
+ effect SelectFeatures Filter LockedChest ForEachFeature RollAction Activate GainExperience+1
 SacrificeEvilAltar skill(Religion)
  effect SelectFeatures Filter AltarEvil ForEachFeature RollAction GainExperience+1
 SearchRoomForGems skill(Gemcutting)

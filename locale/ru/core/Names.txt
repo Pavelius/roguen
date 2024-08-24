@@ -42,6 +42,8 @@ Kg: кг
 KnowRumor: Узнать сплетни
 Level: Уровень
 LeaveArea: Вы действительно хотите отправиться в путишествие на [%-1]?
+LockedChestNoActivateItem: Сундук заперт на [%-1].
+LockedChestUseActivateItem: Использовав [%-1] %герой открыл%а тяжелую крышку сундука.
 LockedDoor: Дверь с замком
 LockedDoorNoActivateItem: Дверь закрыта на [%-1].
 LockedDoorUseActivateItem: Использовав [%-1] %герой открыл%а закрытую дверь.

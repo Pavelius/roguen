@@ -4,7 +4,7 @@ NoFeature priority(10)
 
 Tree priority(10) features(7 4) overlay(11 3) minimap(35 79 31 192)
  flags Impassable Woods
-TreePalm priority(10) features(101 6) minimap(35 79 31 192)
+TreePalm priority(10) features(100 6) minimap(35 79 31 192)
  flags Impassable Woods
 DeadTree priority(10) features(45 4) overlay(49 3)
  flags Impassable Woods
@@ -54,6 +54,7 @@ OpenedGatePortal priority(10) features(55 1) activateto(GatePortal)
 
 Chest priority(6) features(106 1)
  flags Container
+LockedChest priority(6) features(106 1) activateto(Chest) activate_item(TinyKey) random_count(6)
 ChestOpen priority(6) features(107 1) activateto(Chest)
 
 StairsUp leadto(StairsDown) minimap(128 128 128 192)

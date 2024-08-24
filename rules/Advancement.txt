@@ -1,11 +1,11 @@
 #Advancement
 
 DarkElf 1 Ability
- elements Strenght+25 Dexterity+30 Hits+15 Wits+15 Mana+35 Darkvision
+ elements Strenght+25 Dexterity+30 Hits+15 Wits+15 Mana+5 Darkvision
 DarkElf 1 Skills
  elements WeaponSkill+20 BalisticSkill+25 Thievery+15
 DarkElf 1 Spells
- elements Web Teleport
+ elements Web
 DarkElf 1 Equipment
  elements Sword LeatherArmor Lockpick+4
 DarkElf -1 AdditionalHits
@@ -37,8 +37,9 @@ HightElf -1 AdditionalSkills
  elements SkillPoints+10
 
 Dwarf 1 Ability
- elements Strenght+30 Dexterity+10 Hits+30 Wits+10 WeaponSkill+20 BalisticSkill+10 Mining+15 Gemcutting+10\
-	Darkvision PoisonResistance
+ elements Strenght+30 Dexterity+10 Hits+30 Wits+10 Darkvision PoisonResistance
+Dwarf 1 Skills
+ elements WeaponSkill+20 BalisticSkill+10 Mining+15 Gemcutting+10
 Dwarf 1 Equipment
  elements HandAxe LeatherArmor
 Dwarf -1 AdditionalHits

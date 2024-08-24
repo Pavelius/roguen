@@ -1984,7 +1984,7 @@ static void roll_for_effect(int bonus) {
 
 static void roll_learning(int bonus) {
 	auto push_ability = last_ability;
-	last_ability = Wits;
+	last_ability = Literacy;
 	roll_for_effect(bonus);
 	last_ability = push_ability;
 }

@@ -23,6 +23,7 @@ BindWounds: Перевязать раны
 GatherInformation: Узнать слухи
 GatherMellowHerbs: Собрать спелые травы
 GatherSemiMellowHerbs: Собрать травы
+OpenChestLock: Взломать сундук
 OpenDoorLock: Взломать замок
 SearchRoom: Обыскать комнату
 SearchRoomForGems: Искать драгоценности

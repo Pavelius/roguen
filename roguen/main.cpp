@@ -76,21 +76,20 @@ static void main_start() {
 	equip_item("LongBow");
 	equip_item("Arrow");
 	add_item("Torch");
-	add_item("Ration", 20);
+	add_item("Ration", 10);
 	add_item("HealingPotion", 5, true);
 	add_item("PotionOfStrenght", 2, true);
-	add_item("BootsOfLongStride", 1, true);
-	add_item("RingOfFireResistance", 1, true);
 	add_item("RingOfLevitation", 1, true);
 	add_item("RingOfRegeneration");
 	add_item("HandPick");
-	add_item("PotionOfLearning", 2, true);
+	add_item("PotionOfLearning", 5, true);
 	add_item("Bandage", 3, true);
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);
-	player->wears[RangedWeapon].createpower(100);
-	player->wears[RangedWeapon].setidentified(1);
+	player->wears[Torso].createpower(100);
+	player->wears[Torso].setidentified(1);
+	player->wears[Torso].set(Blessed);
 	game.setowner(player);
 	new_game();
 }
