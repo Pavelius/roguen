@@ -19,7 +19,6 @@ struct speechv2;
 NOBSDATA(buttoni)
 NOBSDATA(color)
 NOBSDATA(dice)
-NOBSDATA(diceprogress)
 NOBSDATA(framerange)
 NOBSDATA(point)
 NOBSDATA(weaponi)
@@ -110,9 +109,6 @@ BSMETA(locationi) = {
 	BSENM(floors, tilei),
 	BSENM(doors, featurei),
 	BSREQ(minimap),
-	{}};
-BSMETA(modifieri) = {
-	BSREQ(id),
 	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),

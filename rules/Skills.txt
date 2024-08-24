@@ -1,9 +1,5 @@
 #List
 
-GatherMellowHerbsFail
- elements RepairItem-1
-GatherSemiMellowHerbsFail
- elements RepairItem-1
 RoomsWhereGemsCanBe
  elements DefaultDungeonEntrance DefaultCaveEntrance DefaultMineEntrance SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
 StealCoinsFail
@@ -13,10 +9,6 @@ StealCoinsFail
 
 GatherInformation skill(Wits) keyid("C")
  effect SelectNeutralCreatures FilterClose ChooseTarget ForEachOpponent Chatting
-GatherMellowHerbs skill(Herbalism)
- effect SelectFeatures Filter HerbsFull ForEachFeature GatherNextItem GrassHerbs RemoveFeature+50 RollAction
-GatherSemiMellowHerbs skill(Herbalism)
- effect SelectFeatures Filter HerbsSemi ForEachFeature GatherNextItem GrassHerbs RemoveFeature RollAction
 OpenDoorLock skill(Thievery) tool(Lockpick)
  effect SelectFeatures Filter LockedDoor ForEachFeature RollAction Activate GainExperience+1
 SacrificeEvilAltar skill(Religion)

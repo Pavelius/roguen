@@ -1,5 +1,4 @@
 #include "collection.h"
-#include "diceprogress.h"
 #include "feat.h"
 #include "variant.h"
 

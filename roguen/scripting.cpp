@@ -146,8 +146,6 @@ static int getrange(point m1, point m2) {
 static bool isfreeft(point m) {
 	if(!area->isvalid(m))
 		return false;
-	if(area->features[m])
-		return false;
 	if(area->iswall(m))
 		return false;
 	return area->features[m] == 0;
@@ -1113,11 +1111,15 @@ template<> void ftscript<shapei>(int value, int counter) {
 }
 
 template<> void ftscript<itemi>(int value, int counter) {
-	int count = script_count(counter, 1);
+	auto count = script_count(counter, 1);
 	switch(modifier) {
 	case InPlayerBackpack:
 		for(auto i = 0; i < count; i++)
 			place_item(bsdata<itemi>::elements + value);
+		break;
+	case InPosition:
+		for(auto i = 0; i < count; i++)
+			place_item(last_index, bsdata<itemi>::elements + value);
 		break;
 	default:
 		for(auto i = 0; i < count; i++)
@@ -1162,7 +1164,12 @@ template<> bool fttest<abilityi>(int value, int counter) {
 }
 template<> void ftscript<abilityi>(int value, int counter) {
 	last_ability = (ability_s)value;
-	player->basic.abilities[value] += counter;
+	counter += player->basic.abilities[value];
+	if(counter < 0)
+		counter = 0;
+	else if(counter > 100)
+		counter = 100;
+	player->basic.abilities[value] = counter;
 }
 
 template<> bool fttest<feati>(int value, int counter) {
@@ -1318,22 +1325,9 @@ static featurei* herbs_base(featurei* p) {
 	return p;
 }
 
-static void gather_item(variant v, int bonus) {
-	if(v.iskind<itemi>()) {
-		item it; it.create(bsdata<itemi>::elements + v.value, v.counter);
-		player->act(getnm("YouGatherItems"), it.getfullname());
-		player->additem(it);
-	}
-}
-
 static bool empthy_next_condition(int bonus) {
 	script_begin++;
 	return true;
-}
-
-static void gather_next_item(int bonus) {
-	auto v = single(*script_begin++);
-	gather_item(v, bonus);
 }
 
 static bool iskind(variant v, const char* id) {
@@ -1892,11 +1886,6 @@ static void set_offset(int bonus) {
 	last_rect.offset(bonus);
 }
 
-static void trigger_text(int bonus) {
-	if(!last_site)
-		return;
-}
-
 static void win_game(int bonus) {
 	auto pn = bonus ? str("WinGame%1i", bonus) : "WinGame";
 	dialog_message(getdescription(pn));
@@ -2024,47 +2013,6 @@ static void destroy_feature(int bonus) {
 	point m = center(last_rect);
 	visualize_activity(m);
 	area->setfeature(m, 0);
-}
-
-static bool feature_match(variant f, variant v);
-
-static bool feature_match_one_of(variant f, const variants& source) {
-	pushvalue push_begin(script_begin, source.begin());
-	pushvalue push_end(script_end, source.end());
-	while(script_begin < script_end) {
-		if(feature_match(f, *script_begin++))
-			return true;
-	}
-	return false;
-}
-
-static bool feature_match(variant f, variant v) {
-	if(v.iskind<listi>())
-		return feature_match_one_of(f, bsdata<listi>::elements[v.value].elements);
-	else if(v.iskind<randomizeri>())
-		return feature_match_one_of(f, bsdata<randomizeri>::elements[v.value].chance);
-	else if(v.iskind<featurei>())
-		return v.value == f.value;
-	return false;
-}
-
-static bool feature_match(variant f, const variants& source) {
-	pushvalue push_begin(script_begin, source.begin());
-	pushvalue push_end(script_end, source.end());
-	while(script_begin < script_end) {
-		if(!feature_match(f, *script_begin++))
-			return false;
-	}
-	return true;
-}
-
-static bool feature_match_next_allow(int bonus) {
-	variant f = bsdata<featurei>::elements + area->features[last_index];
-	return feature_match(f, *script_begin++);
-}
-static void feature_match_next(int bonus) {
-	if(!feature_match_next_allow(bonus))
-		script_stop();
 }
 
 static void identify_item(int bonus) {
@@ -2249,10 +2197,6 @@ static void gain_coins(int bonus) {
 	player->money += value;
 }
 
-static bool is_random(int bonus) {
-	return d100() < 30;
-}
-
 static void empthy_script(int bonus) {
 }
 
@@ -2346,6 +2290,9 @@ static void choose_target(int bonus) {
 }
 
 static void choose_limit(int counter) {
+	counter = script_count(counter, 1);
+	if(counter <= 0)
+		return;
 	if(targets.getcount() > counter)
 		targets.count = counter;
 	if(items.getcount() > counter)
@@ -2465,10 +2412,8 @@ BSDATA(script) = {
 	{"ForEachItem", for_each_item, is_items},
 	{"ForEachOpponent", for_each_opponent, is_targets},
 	{"ForEachRoom", for_each_room, is_room},
-	{"FeatureMatchNext", feature_match_next, feature_match_next_allow},
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
-	{"GatherNextItem", gather_next_item, empthy_next_condition},
 	{"GenerateBuilding", generate_building},
 	{"GenerateCave", generate_cave},
 	{"GenerateCorridors", generate_corridors},
@@ -2511,7 +2456,6 @@ BSDATA(script) = {
 	{"QuestMinion", quest_minion},
 	{"QuestReward", quest_reward},
 	{"RaiseSkills", raise_skills},
-	{"Random", empthy_script, is_random},
 	{"RandomAbility", random_ability},
 	{"RangeAttack", attack_range},
 	{"RepairItem", repair_item},
@@ -2531,7 +2475,6 @@ BSDATA(script) = {
 	{"TestManual", test_manual},
 	{"ThrownAttack", attack_thrown},
 	{"ToggleFloorRect", toggle_floor_rect},
-	{"TriggerText", trigger_text},
 	{"ViewStuff", view_stuff},
 	{"WaitHour", wait_hour},
 	{"WinGame", win_game},

@@ -5,11 +5,22 @@
 BSMETA(script) = {
 	BSREQ(id),
 	{}};
+BSMETA(modifieri) = {
+	BSREQ(id),
+	{}};
 
-variant param1, param2;
+variant	param1, param2;
 variant* script_begin;
 variant* script_end;
-fnvariant last_script_apply;
+modifiern modifier;
+
+template<> void ftscript<modifieri>(int value, int counter) {
+	modifier = (modifiern)value;
+}
+template<> bool fttest<modifieri>(int value, int counter) {
+	ftscript<modifieri>(value, counter);
+	return true;
+}
 
 template<> bool fttest<script>(int value, int counter) {
 	if(bsdata<script>::elements[value].test)
@@ -23,6 +34,8 @@ template<> void ftscript<script>(int value, int counter) {
 int script_count(int count, int minimal) {
 	if(count < 0 && d100() >= -count)
 		return -1;
+	if(count > 100)
+		count = xrand(1, count - 100);
 	if(count < minimal)
 		count = minimal;
 	return count;
@@ -67,6 +80,7 @@ void script_run(variant v) {
 }
 
 void script_run(const variants& elements) {
+	auto push_modifier = modifier;
 	auto push_begin = script_begin;
 	auto push_end = script_end;
 	script_begin = elements.begin();
@@ -75,21 +89,13 @@ void script_run(const variants& elements) {
 		script_run(*script_begin++);
 	script_begin = push_begin;
 	script_end = push_end;
+	modifier = push_modifier;
 }
 
 void script_execute(const char* id, int bonus) {
 	auto p = bsdata<script>::find(id);
 	if(p)
 		p->proc(bonus);
-}
-
-void script_run_ex(const variants& source) {
-	auto push_begin = script_begin; script_begin = source.begin();
-	auto push_end = script_end; script_end = source.end();
-	while(script_begin < script_end)
-		last_script_apply(*script_begin++);
-	script_end = push_end;
-	script_begin = push_begin;
 }
 
 variant next_script() {

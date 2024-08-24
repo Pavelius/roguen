@@ -1,9 +1,5 @@
 #pragma once
 
-enum modifiers : unsigned char {
-	NoModifier, InPlayerBackpack
+enum modifiern : unsigned char {
+	NoModifier, InPlayerBackpack, InPosition,
 };
-struct modifieri {
-	const char*	id;
-};
-extern modifiers modifier;

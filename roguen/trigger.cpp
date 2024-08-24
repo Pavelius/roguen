@@ -12,14 +12,12 @@ BSMETA(trigger) = {
 	BSREQ(p2),
 	BSREQ(effect),
 	{}};
-trigger* last_trigger;
 
 void fire_trigger(triggern type, variant p1, variant p2) {
 	for(auto& e : bsdata<trigger>()) {
 		if(e.type == type
 			&& (!e.p1 || e.p1 == p1)
 			&& (!e.p2 || e.p2 == p2)) {
-			pushvalue last_push(last_trigger, &e);
 			script_run(e.effect);
 		}
 	}

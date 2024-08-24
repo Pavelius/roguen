@@ -243,9 +243,6 @@
     <ClCompile Include="boost.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="diceprogress.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="actable.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -341,6 +338,9 @@
     </ClCompile>
     <ClCompile Include="draw_manual.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="global_req.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -486,9 +486,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="diceprogress.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="actable.h">
@@ -705,9 +702,6 @@
     </Text>
     <Text Include="..\locale\ru\core\TrapNames.txt">
       <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\rules\Form.txt">
-      <Filter>Data</Filter>
     </Text>
     <Text Include="..\locale\ru\speech\General.txt">
       <Filter>Locale</Filter>

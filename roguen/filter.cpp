@@ -18,10 +18,6 @@ static void clear_all_collections() {
 	items.clear();
 }
 
-static void read_next_variant() {
-	last_variant = *script_begin++;
-}
-
 static bool match_list_value(int value) {
 	if(last_variant.iskind<listi>()) {
 		pushvalue push(last_variant);
@@ -33,7 +29,7 @@ static bool match_list_value(int value) {
 		}
 	} else if(last_variant.iskind<randomizeri>()) {
 		pushvalue push(last_variant);
-		auto& source = bsdata<listi>::elements[last_variant.value].elements;
+		auto& source = bsdata<randomizeri>::elements[last_variant.value].chance;
 		for(auto v : source) {
 			last_variant = v;
 			if(match_list_value(value))
@@ -181,6 +177,14 @@ static void select_features(fnvisible proc, int counter) {
 	indecies.select(player->getposition(), counter ? counter : 1);
 }
 
+static void select_next_features(fnvisible proc, int counter) {
+	clear_all_collections();
+	auto push = last_variant;
+	last_variant = next_script();
+	indecies.select(match_list_feature, counter >= 0, 0);
+	last_variant = push;
+}
+
 static void select_custom_creatures(fnvisible proc, int counter) {
 	clear_all_collections();
 	auto keep = counter >= 0;
@@ -224,6 +228,7 @@ BSDATA(filteri) = {
 	{"SelectEnemies", 0, select_enemies},
 	{"SelectFeatures", 0, select_features},
 	{"SelectNeutralCreatures", filter_neutral, select_custom_creatures},
+	{"SelectNextFeatures", 0, select_next_features},
 	{"SelectRooms", 0, select_rooms},
 	{"SelectYou", 0, select_you},
 	{"SelectYourItems", 0, select_your_items},

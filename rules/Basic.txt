@@ -1,9 +1,5 @@
 #Spell
 
-Entaglement
-IdentifySpell
-Gate
-TorchLight
 SummonUndead
 Web
 

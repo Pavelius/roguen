@@ -19,7 +19,6 @@ gamei			game;
 point			start_village = {128, 128};
 
 void creature_every_minute();
-void creature_every_5_minutes();
 void creature_every_10_minutes();
 void prepare_need();
 void update_need();

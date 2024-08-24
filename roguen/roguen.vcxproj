@@ -165,7 +165,6 @@
     <ClCompile Include="dataset.cpp" />
     <ClCompile Include="dialog.cpp" />
     <ClCompile Include="dice.cpp" />
-    <ClCompile Include="diceprogress.cpp" />
     <ClCompile Include="direction.cpp" />
     <ClCompile Include="direction_req.cpp" />
     <ClCompile Include="draw.cpp" />
@@ -185,6 +184,7 @@
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="global.cpp" />
+    <ClCompile Include="global_req.cpp" />
     <ClCompile Include="greatneed.cpp" />
     <ClCompile Include="hotkey.cpp" />
     <ClCompile Include="indexa.cpp" />
@@ -276,7 +276,6 @@
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="dice.h" />
-    <ClInclude Include="diceprogress.h" />
     <ClInclude Include="direction.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_object.h" />
@@ -368,7 +367,6 @@
     <Text Include="..\rules\Advancement.txt" />
     <Text Include="..\rules\Basic.txt" />
     <Text Include="..\rules\Features.txt" />
-    <Text Include="..\rules\Form.txt" />
     <Text Include="..\rules\Items.txt" />
     <Text Include="..\rules\Monsters.txt" />
     <Text Include="..\rules\Shapes.txt" />

@@ -429,7 +429,7 @@ static void advance_value(variant v) {
 			bonus = 0;
 		player->basic.abilities[v.value] = bonus;
 	} else if(v.iskind<modifieri>())
-		modifier = (modifiers)v.value;
+		modifier = (modifiern)v.value;
 	else if(v.iskind<spelli>())
 		player->learn_spell(v.value);
 	else if(v.iskind<script>())
@@ -1602,9 +1602,6 @@ void creature_every_minute() {
 	check_stun();
 	check_mood();
 	posion_recovery(Poison);
-}
-
-void creature_every_5_minutes() {
 }
 
 void creature_every_10_minutes() {

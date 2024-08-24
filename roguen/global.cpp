@@ -1,14 +1,6 @@
 #include "archive.h"
-#include "bsreq.h"
 #include "global.h"
 #include "script.h"
-
-BSMETA(globali) = {
-	BSREQ(id),
-	BSREQ(minimum), BSREQ(maximum), BSREQ(current),
-	BSREQ(effect), BSREQ(fail),
-	{}};
-BSDATAC(globali, 128);
 
 globali*	last_global;
 extern int	last_value;

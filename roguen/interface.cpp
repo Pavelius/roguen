@@ -135,7 +135,7 @@ static void paint_items() {
 			continue;
 		if(!e.position.in(rc))
 			continue;
-		addobject(m2s(e.position), ftpaint<itemi>, &const_cast<itemi&>(e.geti()), 0, 6);
+		addobject(m2s(e.position), ftpaint<itemi>, &const_cast<itemi&>(e.geti()), 0, 7);
 	}
 }
 

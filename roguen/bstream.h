@@ -4,9 +4,7 @@ struct bstream {
 	unsigned char*		data;
 	unsigned			pos;
 	unsigned			maximum;
-	//
 	bstream(unsigned char* data, unsigned maximum_bytes);
-	//
 	operator bool() const { return pos < maximum; }
 	unsigned			bit(unsigned pos);
 	unsigned			get();
