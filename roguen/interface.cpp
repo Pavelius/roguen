@@ -135,6 +135,9 @@ static void paint_items() {
 			continue;
 		if(!e.position.in(rc))
 			continue;
+		auto& ei = area->getfeature(e.position);
+		if(ei.is(Container))
+			continue;
 		addobject(m2s(e.position), ftpaint<itemi>, &const_cast<itemi&>(e.geti()), 0, 7);
 	}
 }

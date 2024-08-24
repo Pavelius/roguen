@@ -26,5 +26,6 @@ BSDATA(tilefi) = {
 	{"TrappedFeature"},
 	{"Woods"},
 	{"Mines"},
+	{"Container"},
 };
-assert_enum(tilefi, Mines)
+assert_enum(tilefi, Container)

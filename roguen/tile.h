@@ -5,7 +5,7 @@
 
 enum tilef : unsigned char {
 	Impassable, CanSwim, DangerousFeature, BetweenWalls, Undeground,
-	StuckFeature, TrappedFeature, Woods, Mines
+	StuckFeature, TrappedFeature, Woods, Mines, Container,
 };
 
 struct tilefi {

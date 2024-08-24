@@ -10,6 +10,8 @@ void itema::select(point m) {
 			continue;
 		if(e.position != m)
 			continue;
+		if(area->getfeature(m).is(Container))
+			continue;
 		if(pb < pe)
 			*pb++ = &e;
 	}

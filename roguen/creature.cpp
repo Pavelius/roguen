@@ -128,6 +128,8 @@ static ability_s damage_ability(ability_s v) {
 }
 
 bool creature::resist(feat_s resist, feat_s immunity) const {
+	if(!resist)
+		return false;
 	if(is(immunity))
 		return true;
 	if(is(resist)) {
@@ -182,12 +184,13 @@ static void illness_attack(creature* player, int value) {
 		player->set(Illness, v);
 }
 
-static void damage_backpack_item(wear_s type, int chance) {
+void damage_backpack_item(wear_s type, int chance, int count) {
 	if(d100() >= chance)
 		return;
 	itema source;
 	source.selectbackpack(player);
 	source.matchf(Potion, true);
+	source.top(count);
 	auto pi = source.random();
 	if(pi)
 		pi->damage();

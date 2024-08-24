@@ -131,7 +131,7 @@ Shield cost(10) weight(100) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) p
 HealingPotion cost(100) weight(2) unidentified(RedPotion) wear(Potion) avatar(164) cursed(PotionOfPoison)
  use Heal+20
 ManaPotion cost(80) weight(2) unidentified(BluePotion) wear(Potion) avatar(436) cursed(PotionOfPoison)
- use Mana+20
+ use AddMana+20
 PotionOfStrenght cost(10000) weight(2) unidentified(RedPotion) wear(Potion) avatar(162) cursed(PotionOfWeakness)
  use Strenght+3
 PotionOfDexterity cost(8000) weight(2) unidentified(BrownPotion) wear(Potion) avatar(165) cursed(PotionOfWeakness)

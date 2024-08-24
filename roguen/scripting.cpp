@@ -93,12 +93,12 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
-static void add_safe(ability_s v, int bonus) {
+static void add_safe(ability_s v, int bonus, int minimal = -120, int maximal = 120) {
 	bonus += player->abilities[v];
-	if(bonus >= 120)
-		bonus = 120;
-	else if(bonus <= -120)
-		bonus = -120;
+	if(bonus >= maximal)
+		bonus = maximal;
+	else if(bonus <= minimal)
+		bonus = minimal;
 	player->abilities[v] = bonus;
 }
 
@@ -2085,6 +2085,19 @@ static void acid_harm(int bonus) {
 	damage_equipment(bonus, true);
 }
 
+static void fire_harm(int bonus) {
+	if(player->resist(FireResistance, FireImmunity))
+		return;
+	auto damage = xrand(bonus / 2, bonus) - player->get(Armor);
+	if(damage <= 0)
+		return;
+	player->fixeffect("FireSplash");
+	player->damage(damage);
+	player->add(Burning, 1);
+	damage_backpack_item(Scroll, 60);
+	damage_backpack_item(Scroll, 40);
+}
+
 static bool is_full(int bonus) {
 	script_stop();
 	return have_targets();
@@ -2368,6 +2381,10 @@ static void add_reputation(int bonus) {
 	add_safe(Reputation, bonus);
 }
 
+static void add_mana(int bonus) {
+	add_safe(Mana, bonus, 0, player->basic.abilities[Mana]);
+}
+
 static void test_manual(int bonus) {
 	static auto p = loadt("test_logs.txt");
 	open_manual("Test logs", p);
@@ -2389,6 +2406,7 @@ BSDATA(script) = {
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
 	{"AddReputation", add_reputation},
+	{"AddMana", add_mana},
 	{"ApplyAction", apply_action},
 	{"AnimalInt", empthy_script, is_animal},
 	{"Anger", add_anger},
@@ -2432,6 +2450,7 @@ BSDATA(script) = {
 	{"HaveNext", have_next, is_have_next},
 	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
+	{"FireHarm", fire_harm},
 	{"JumpToSite", jump_to_site},
 	{"LoseGame", lose_game},
 	{"LockAllDoors", lock_all_doors},

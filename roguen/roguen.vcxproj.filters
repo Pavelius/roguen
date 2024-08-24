@@ -342,6 +342,9 @@
     <ClCompile Include="global_req.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -598,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="shortcut.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

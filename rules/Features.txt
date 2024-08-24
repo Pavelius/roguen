@@ -19,10 +19,8 @@ Statue priority(10) features(43 2)
 HiveHole priority(5) features(18 1)
 Hive priority(10) features(19 1)
 Hole priority(10) features(20 1)
-Plant priority(10) features(21 3) minimap(77 111 62 160) power(3)
-HerbsFull priority(6) features(26 1) minimap(77 111 62 128) chance_auto_activate(30) power(2)
-HerbsSemi priority(6) features(25 1) minimap(77 111 62 128) chance_auto_activate(20) activateto(HerbsFull) power(1)
-Herbs priority(6) features(24 1) minimap(77 111 62 128) chance_auto_activate(10) activateto(HerbsSemi)
+Plant priority(10) features(21 3) minimap(77 111 62 160) power(2)
+Herbs priority(6) features(24 3) minimap(77 111 62 128)
 
 AltarGood priority(6) features(56 1)
 AltarNeutral priority(6) features(57 1)
@@ -54,17 +52,22 @@ RedPool priority(3) features(78 1)
 GatePortal priority(10) features(54 1)
 OpenedGatePortal priority(10) features(55 1) activateto(GatePortal)
 
+Chest priority(6) features(106 1)
+ flags Container
+ChestOpen priority(6) features(107 1) activateto(Chest)
+
 StairsUp leadto(StairsDown) minimap(128 128 128 192)
 StairsDown leadto(StairsUp) minimap(128 128 128 192)
 
 Door activateto(OpenedDoor)
 GatePortal activateto(OpenedGatePortal)
 HerbsFull activateto(Herbs)
+Chest activateto(ChestOpen)
 
 #List
 
 YouAngryAboutDoor
- elements Harm+1
+ elements AddMana-1
 YouHitByDoor
  elements Harm+1
 YouTrampedByDoor
@@ -73,7 +76,7 @@ YouTrampedByDoor
 #RandomTable
 
 RandomHerbs
- chance Herbs+6 HerbsSemi+4 HerbsFull+2 Plant
+ chance Herbs+6 Plant
 RandomAltars
  chance AltarGood AltarNeutral AltarEvil
 StuckDoorFail

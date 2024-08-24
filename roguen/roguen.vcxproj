@@ -72,6 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath />
+    <ExternalIncludePath />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -198,6 +200,9 @@
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="listcolumn.cpp" />
+    <ClCompile Include="material.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -296,6 +301,9 @@
     <ClInclude Include="logparse.h" />
     <ClInclude Include="magic.h" />
     <ClInclude Include="creature.h" />
+    <ClInclude Include="material.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="modifier.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="moveable.h" />
