@@ -448,9 +448,24 @@ void draw::textf(const char* p) {
 	height = push_height;
 }
 
-void draw::textf(const char* string, int& cashe_origin, int& cashe_string) {
-	auto push_caret = caret;
+void draw::textf(const char* string, int& origin, int& maximum, int& cashe_origin, int& cashe_string) {
+	rectpush push;
+	if(!maximum) {
+		textfs(string);
+		maximum = height;
+		height = push.height;
+		width = push.width;
+	}
+	if(origin + height > maximum) {
+		origin = maximum - height;
+		cashe_string = -1;
+	}
+	if(origin < 0) {
+		origin = 0;
+		cashe_string = -1;
+	}
 	if(cashe_string < 0) {
+		caret.y -= origin;
 		textf(string);
 		cashe_string = text_start_string ? text_start_string - string : 0;
 		cashe_origin = text_start_horiz;
@@ -458,7 +473,6 @@ void draw::textf(const char* string, int& cashe_origin, int& cashe_string) {
 		caret.y += cashe_origin;
 		textf(string + cashe_string);
 	}
-	caret = push_caret;
 }
 
 void draw::textfs(const char* string) {

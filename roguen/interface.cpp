@@ -1130,24 +1130,6 @@ static void paint_area_screen(point origin, int z) {
 	rectb();
 }
 
-static void paint_logs(const char* format, int& origin, int& format_origin, int& maximum) {
-	if(!format)
-		return;
-	rectpush push;
-	if(format_origin == -1) {
-		textfs(format);
-		maximum = height;
-		height = push.height;
-		width = push.width;
-		caret = push.caret;
-		if(maximum > height)
-			caret.y -= maximum - height;
-	}
-	auto push_clip = clipping; setclip();
-	textf(format, origin, format_origin);
-	clipping = push_clip;
-}
-
 static void text_header(const char* format) {
 	auto push_caret = caret;
 	auto push_font = font;
@@ -1281,18 +1263,6 @@ static void paint_status() {
 
 static void beforepaint() {
 	paint_status();
-}
-
-static int logs_maximum, logs_format_origin, logs_origin;
-
-static void before_show_logs() {
-	logs_maximum = 0;
-	logs_format_origin = -1;
-	logs_origin = 0;
-}
-
-static void show_logs() {
-	paint_logs(getlog(), logs_origin, logs_format_origin, logs_maximum);
 }
 
 static void window_back() {
@@ -1441,7 +1411,6 @@ int start_application(fnevent proc, fnevent initializing) {
 }
 
 BSDATA(dialogi) = {
-	{"ShowLogs", show_logs, before_show_logs},
 	{"ShowManual", show_manual, 0, false, true},
 	{"ShowMinimap", show_area, 0, true},
 	{"ShowCharsheet", show_charsheet},

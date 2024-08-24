@@ -30,6 +30,7 @@ DropdownItem: %герой положил%а %-1.
 Experience: Опыт
 Female: Женщина
 FewTime: Совсем мало времени
+GameLogs: Игровые логи
 GlobalMapPosition: Позиция на карте мира %1i, %2i
 Heal: Лечение
 Hour: Час

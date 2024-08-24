@@ -29,7 +29,6 @@ struct speechv2;
 void add_need(int bonus);
 void add_need_answers(int bonus);
 void advance_value(variant v);
-//void apply_value(variant v);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
 void choose_limit(int counter);
@@ -43,6 +42,8 @@ void visualize_images(res pid, point size, point offset);
 
 void* choose_answers(answers& an, const char* header, const char* cancel);
 int choose_indecies(const indexa& source, const char* header, bool cancel);
+
+const char* getlog();
 
 extern point		start_village;
 
@@ -1742,6 +1743,10 @@ static void toggle_floor_rect(int bonus) {
 	show_floor_rect = !show_floor_rect;
 }
 
+static void show_logs(int bonus) {
+	open_manual(getnm("GameLogs"), getlog());
+}
+
 static void show_images(int bonus) {
 	static res source[] = {res::Monsters, res::Items};
 	answers an;
@@ -2515,6 +2520,7 @@ BSDATA(script) = {
 	{"RollAction", roll_action},
 	{"RollLearning", roll_learning},
 	{"ShowImages", show_images},
+	{"ShowLogs", show_logs},
 	{"SiteFloor", site_floor},
 	{"SiteWall", site_wall},
 	{"SomeCoins", some_coins},
