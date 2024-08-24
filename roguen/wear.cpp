@@ -4,8 +4,8 @@
 BSDATA(weari) = {
 	{"Backpack"},
 	{"Potion"},
-	{"Backpack2"},
-	{"Backpack3"},
+	{"Scroll"},
+	{"Tome"},
 	{"Backpack4"},
 	{"Backpack5"},
 	{"Backpack6"},

@@ -1,14 +1,15 @@
+#pragma once
 #include "nameable.h"
 #include "variant.h"
 
-#pragma once
+int	random_total(const variants& elements);
+
+variant random_value(const variants& elements, int bonus, int range);
+variant single(variant v);
+inline variant random_value(const variants& elements) { return random_value(elements, 0, random_total(elements)); }
 
 struct randomizeri : nameable {
 	variants	chance;
 	bool		is(variant v) const { for(auto e : chance) if(e.issame(v)) return true; return false; }
-	static variant random(const variants& elements, int bonus, int range);
-	static variant random(const variants& elements) { return random(elements, 0, total(elements)); }
-	variant		random() const { return random(chance); }
-	static int	total(const variants& elements);
+	variant		random() const { return random_value(chance); }
 };
-variant			single(variant v);

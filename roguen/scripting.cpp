@@ -684,9 +684,9 @@ static void create_corridor_loot(point i) {
 	variant treasure = "RandomLoot";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->loot && d100() < 40)
-		treasure = randomizeri::random(last_location->getloot());
+		treasure = random_value(last_location->getloot());
 	else if(quest_modifier && quest_modifier->loot && d100() < 30)
-		treasure = randomizeri::random(quest_modifier->getloot());
+		treasure = random_value(quest_modifier->getloot());
 	pushvalue push_rect(last_rect, {i.x, i.y, i.x, i.y});
 	script_run(treasure);
 	area->total.loots++;
@@ -991,7 +991,7 @@ static const script* get_local_method() {
 static void apply_magical(item& it) {
 	if(!it.getpower())
 		return;
-	static magic_s chance_special[20] = {
+	static magicn chance_special[20] = {
 		Mundane, Mundane, Mundane, Mundane, Mundane,
 		Mundane, Mundane, Mundane, Mundane, Mundane,
 		Mundane, Mundane, Mundane, Blessed, Blessed,
@@ -1688,17 +1688,6 @@ static void use_item(int bonus) {
 		use_item(*p);
 }
 
-static void use_magic_item_power(int bonus) {
-	itema items;
-	items.selectbackpack(player);
-	items.match(fntis<item, &item::ischarges>, true);
-	if(!items)
-		return;
-	auto p = items.choose(getnm("UseZapItem"), getnm("Cancel"), false);
-	if(p)
-		use_item(*p);
-}
-
 static void view_stuff(int bonus) {
 	choose_stuff(Backpack);
 }
@@ -1971,15 +1960,76 @@ static void roll_action(int bonus) {
 		player->fixaction(last_action->id, "Fail");
 }
 
+static int chance_to_read(magicn v) {
+	switch(v) {
+	case Artifact: return 10;
+	case Blessed: return 20;
+	default: return 30;
+	}
+}
+
+static void read_item() {
+	player->wait(xrand(600, 1200));
+	if(!last_item)
+		return;
+	auto result = d100();
+	auto chance = chance_to_read(last_item->getmagic());
+	if(result < chance) {
+		player->fixaction("TotallyReadItem", 0, last_item->getname());
+		last_item->use();
+	}
+}
+
+static void learn_value(variant v) {
+	auto id = v.getid();
+	auto prefix = "Default";
+	auto alternate = false;
+	if(v.iskind<feati>()) {
+		prefix = "Feat";
+		if(player->basic.abilities[v.value] < 120) {
+			add_safe((ability_s)v.value, v.counter);
+		} else
+			alternate = true;
+	} else if(v.iskind<abilityi>()) {
+		prefix = "Ability";
+		if(player->basic.abilities[v.value] < 120)
+			add_safe((ability_s)v.value, v.counter);
+		else
+			alternate = true;
+	} else if(v.iskind<spelli>()) {
+		prefix = "Spell";
+		auto p = bsdata<spelli>::elements + v.value;
+		if(!player->known_spell(v.value) && player->basic.abilities[Mana] < p->mana)
+			player->learn_spell(v.value);
+		else
+			alternate = true;
+	} else
+		return;
+	if(alternate) {
+		auto ability = Mana;
+		if(player->basic.abilities[ability] >= 120)
+			ability = Hits;
+		player->basic.abilities[ability]++;
+		if(!player->fixaction(id, "LearnAlternate"))
+			player->fixaction("DefaultLearnAlternate", 0, getnm(id), bsdata<abilityi>::elements[ability].getname());
+	} else {
+		if(!player->fixaction(id, "Learn")) {
+			if(!player->fixaction(prefix, "Learn", getnm(id)))
+				player->fixaction("DefaultLearn", 0, getnm(id));
+		}
+	}
+}
+
 static void roll_for_effect(int bonus) {
 	roll_value(0);
 	if(script_stopped())
-		player->fixaction("CantLearnTome", 0);
+		player->fixaction("FailLearn", 0);
 	else {
 		auto number_effects = script_end - script_begin;
 		if(number_effects)
-			script_run(script_begin[rand() % number_effects]);
+			learn_value(script_begin[rand() % number_effects]);
 	}
+	read_item();
 }
 
 static void roll_learning(int bonus) {
@@ -2280,7 +2330,7 @@ static const char* get_header_id() {
 	return "Common";
 }
 
-static void set_magic_effect(magic_s v) {
+static void set_magic_effect(magicn v) {
 	switch(v) {
 	case Artifact: effect_level = 10; break;
 	case Blessed: effect_level = 4; break;

@@ -124,5 +124,6 @@ BootsOfSneakiness: Ботинки скрытности
 BootsOfLongStride: Ботинки прыжков
 
 OldTome: Старый фолиант
+TomeOfLight: Книга света
 
 Scroll: Свиток

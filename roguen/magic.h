@@ -2,7 +2,7 @@
 
 #pragma once
 
-enum magic_s : unsigned char {
+enum magicn : unsigned char {
 	Mundane, Blessed, Cursed, Artifact,
 };
 struct magici : nameable {

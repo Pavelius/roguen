@@ -1590,7 +1590,8 @@ void use_item(item& v) {
 	last_item = &v;
 	player->act(getnm("YouUseItem"), v.getname());
 	script_run(script);
-	v.use();
+	if(!last_item->is(SpecialUse))
+		v.use();
 	last_item = push_item;
 	player->update();
 	pay_action();

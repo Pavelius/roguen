@@ -1,5 +1,7 @@
 #Spell
 
+CureWounds
+LightSpell
 SummonUndead
 Web
 

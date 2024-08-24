@@ -41,7 +41,7 @@ class item {
 	union {
 		unsigned char stats;
 		struct {
-			magic_s	magic : 2;
+			magicn	magic : 2;
 			unsigned char identified : 1;
 			unsigned char personal : 1;
 		};
@@ -65,7 +65,6 @@ public:
 	void			damage(int value = 1);
 	void			drop(point m);
 	int				getavatar() const { return geti().wear_index; }
-	int				getcharges() const { return ischargeable() ? broken : 0; }
 	int				getcost() const;
 	int				getcostall() const;
 	int				getcount() const;
@@ -74,20 +73,18 @@ public:
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
 	void			getinfo(stringbuilder& sb) const;
 	short unsigned	getkind() const { return type; }
-	magic_s			getmagic() const { return magic; }
+	magicn			getmagic() const { return magic; }
 	const char*		getname() const;
 	static const char* getname(const void* p) { return ((item*)p)->getfullname(); }
 	variant			getpower() const;
 	variants		getuse() const;
 	int				getweight() const;
 	bool			is(feat_s v) const;
-	bool			is(magic_s v) const { return magic == v; }
+	bool			is(magicn v) const { return magic == v; }
 	bool			is(wear_s v) const;
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
-	bool			ischarges() const { return getcharges() > 0; }
-	bool			ischargeable() const;
 	bool			iscountable() const { return !geti().powers; }
 	bool			iscursed() const { return is(Cursed); }
 	bool			isidentified() const { return identified != 0; }
@@ -96,7 +93,7 @@ public:
 	bool			isusable() const { return geti().use.size() != 0; }
 	bool			isdamaged() const { return iscountable() && broken > 0; }
 	bool			isheavydamaged() const { return iscountable() && broken >= 5; }
-	void			set(magic_s v) { magic = v; }
+	void			set(magicn v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v);
 	void			setidentified(int v) { identified = v; }

@@ -263,18 +263,22 @@ Stomacemptia weight(1) avatar(93) cursed(HerbOfIllness)
 Stomafillia weight(1) avatar(89) cursed(HerbOfIllness)
  use Heal+1
 
-TomeOfLight weight(10) avatar(649) charges(5) unidentified(OldTome)
- use RollLearning
+TomeOfLight weight(10) avatar(650) unidentified(OldTome) wear(Tome)
+ use RollLearning LightSpell
+ feats SpecialUse
+TomeOfNecromancy weight(10) avatar(649) unidentified(OldTome) wear(Tome)
+ use RollLearning SummonUndead
+ feats SpecialUse
 
-ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll)
+ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectYourItems FilterIdentified-1 ChooseTarget ForEachItem IdentifyItem
-ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll)
+ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectYourItems FilterIdentified FilterCursed ChooseTarget ForEachItem CurseItem-1
-ScrollOfRepair avatar(440) weight(2) unidentified(Scroll)
+ScrollOfRepair avatar(440) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-1
-ScrollOfOpening avatar(441) weight(2) unidentified(Scroll)
+ScrollOfOpening avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectFeatures Filter LockedDoor ChooseTarget ForEachFeature OpenedDoor
-ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll)
+ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
  use ExploreArea
 
 #RandomTable

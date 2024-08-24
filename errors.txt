@@ -1,3 +1,2 @@
-﻿In file `rules/Skills.txt`:
- Line 17: Can't find variant `GatherNextItem`
- Line 19: Can't find variant `GatherNextItem`
+﻿In file `rules/Items.txt`:
+ Line 267: Can't find variant `LightSpell`

@@ -15,14 +15,14 @@ static int getcounter(variant v) {
 	return v.counter;
 }
 
-int randomizeri::total(const variants& elements) {
+int random_total(const variants& elements) {
 	auto result = 0;
 	for(auto& e : elements)
 		result += getcounter(e);
 	return result;
 }
 
-variant randomizeri::random(const variants& elements, int bonus, int summary) {
+variant random_value(const variants& elements, int bonus, int summary) {
 	if(summary) {
 		auto result = rand() % summary + bonus;
 		for(auto& e : elements) {

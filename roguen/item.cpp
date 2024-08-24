@@ -233,18 +233,8 @@ bool item::ismagical() const {
 	return power != 0;
 }
 
-bool item::ischargeable() const {
-	return geti().charges > 0;
-}
-
 void item::use() {
-	if(ischargeable()) {
-		if(getcharges() >= geti().charges)
-			setcount(getcount() - 1);
-		else
-			broken++;
-	} else
-		setcount(getcount() - 1);
+	setcount(getcount() - 1);
 }
 
 int	item::geteffect() const {

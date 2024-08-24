@@ -70,7 +70,7 @@ static creature* find_monster_id(const char* id) {
 }
 
 static void main_start() {
-	player = player_create({5, 5}, "DarkElf", true);
+	player = player_create({5, 5}, "HightElf", true);
 	player->set(Ally);
 	player->experience += 600;
 	equip_item("LongBow");
@@ -84,12 +84,13 @@ static void main_start() {
 	add_item("HandPick");
 	add_item("PotionOfLearning", 5, true);
 	add_item("Bandage", 3, true);
+	add_item("TomeOfLight", 1, true);
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);
-	player->wears[Torso].createpower(100);
-	player->wears[Torso].setidentified(1);
-	player->wears[Torso].set(Blessed);
+	//player->wears[Torso].createpower(100);
+	//player->wears[Torso].setidentified(1);
+	//player->wears[Torso].set(Blessed);
 	game.setowner(player);
 	new_game();
 }
