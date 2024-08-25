@@ -32,10 +32,10 @@ bool archive::version(short major, short minor) {
 
 void archive::set(array& v) {
 	set(v.count);
-	set(v.size);
+	set(v.element_size);
 	if(!writemode)
 		v.reserve(v.count);
-	set(v.data, v.size * v.count);
+	set(v.data, v.element_size * v.count);
 }
 
 void archive::set(void* value, unsigned size) {

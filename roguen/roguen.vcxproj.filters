@@ -144,7 +144,7 @@
     <ClCompile Include="io_bsreq.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="logparse.cpp">
+    <ClCompile Include="logvalue.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="ability.cpp">
@@ -416,7 +416,7 @@
     <ClInclude Include="resource.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="logparse.h">
+    <ClInclude Include="logvalue.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="sprite_util.h">

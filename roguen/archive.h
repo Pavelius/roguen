@@ -43,7 +43,7 @@ struct archive {
 			v.setcount(size);
 		}
 		auto pe = v.end();
-		for(auto p = v.begin(); p < pe; p += v.size)
+		for(auto p = v.begin(); p < pe; p += v.element_size)
 			set(*((T*)p));
 	}
 };

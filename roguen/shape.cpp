@@ -1,8 +1,9 @@
+#include "bsdata.h"
 #include "direction.h"
 #include "shape.h"
 #include "stringbuilder.h"
 #include "imath.h"
-#include "logparse.h"
+#include "log.h"
 
 using namespace log;
 
@@ -105,7 +106,7 @@ void shapei::read(const char* url) {
 		if(!checksym(p, '#'))
 			break;
 		auto ps = bsdata<shapei>::add();
-		p = readidn(p + 1, sb);
+		p = psidf(p + 1, sb);
 		ps->id = szdup(temp);
 		if(!checksym(p, '\n'))
 			break;

@@ -1,8 +1,6 @@
 #include "answers.h"
 #include "rand.h"
 
-extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
-
 const char* answers::header;
 const char* answers::prompt;
 const char* answers::prompa;
@@ -19,7 +17,7 @@ answers::fnpaint answers::paintcell;
 answers an;
 
 int answers::compare(const void* v1, const void* v2) {
-	return strcmp(((answers::element*)v1)->text, ((answers::element*)v2)->text);
+	return szcmp(((answers::element*)v1)->text, ((answers::element*)v2)->text);
 }
 
 void answers::addv(const void* value, const char* text, const char* format) {

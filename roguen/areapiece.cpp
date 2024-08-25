@@ -4,6 +4,6 @@ areapiece* area;
 
 void areapiece::clear() {
 	memset(this, 0, sizeof(*this));
-	rooms.size = sizeof(roomi);
-	items.size = sizeof(itemground);
+	rooms.element_size = sizeof(roomi);
+	items.element_size = sizeof(itemground);
 }

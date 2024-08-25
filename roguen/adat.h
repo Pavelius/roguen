@@ -7,7 +7,7 @@ struct adat {
 	typedef T data_type;
 	size_t count;
 	T data[count_max];
-	constexpr adat() : data{}, count(0) {}
+	constexpr adat() : count(0) {}
 	constexpr const T& operator[](unsigned index) const { return data[index]; }
 	constexpr T& operator[](unsigned index) { return data[index]; }
 	explicit operator bool() const { return count != 0; }
@@ -21,7 +21,7 @@ struct adat {
 	const T* end() const { return data + count; }
 	const T* endof() const { return data + count_max; }
 	int	find(const T t) const { for(auto& e : *this) if(e == t) return &e - data; return -1; }
-	int	getcount() const { return count; }
+	size_t getcount() const { return count; }
 	size_t getmaximum() const { return count_max; }
 	int	indexof(const void* e) const { if(e >= data && e < data + count) return (T*)e - data; return -1; }
 	bool have(const T t) const { for(auto& e : *this) if(e == t) return true; return false; }

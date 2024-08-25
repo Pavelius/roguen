@@ -104,3 +104,9 @@ const char* szdup(const char* text) {
 	else
 		return big.add(text, lenght);
 }
+
+const char* szdupz(const char* text) {
+	if(!text || text[0] == 0)
+		return 0;
+	return szdup(text);
+}

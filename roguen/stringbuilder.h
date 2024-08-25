@@ -58,7 +58,7 @@ public:
 	bool			ispos(const char* v) const { return p == v; }
 	void			lower();
 	const char*		psidf(const char* pb);
-	const char*		psline(const char* pb);
+	const char*		psparam(const char* p);
 	const char*		psstr(const char* p, char end_symbol);
 	const char*		psstrlf(const char* p);
 	void			set(char* v) { p = v; p[0] = 0; }
@@ -79,6 +79,8 @@ const char* getnme(const char* id, const char* p1);
 
 const char* ids(const char* p1, const char* p2);
 const char* ids(const char* p1, const char* p2, const char* p3);
+const char* psbon(const char* p, int& result);
+const char*	psidf(const char* p, stringbuilder& result);
 const char*	psnum(const char* p, long& result);
 const char*	psnum(const char* p, int& result);
 const char*	psnum(const char* p, short& result);
@@ -88,9 +90,11 @@ const char* skipcr(const char* format);
 const char* skipsp(const char* p);
 const char* skipspcr(const char* p);
 const char* szdup(const char* text);
+const char* szdupz(const char* text);
 
 int get_number(const char* p);
 int	szcmpi(const char* p1, const char* p2);
+int szcmp(const char* p1, const char* p2);
 
 void default_string(stringbuilder& sb, const char* id);
 bool equal(const char* s1, const char* s2);

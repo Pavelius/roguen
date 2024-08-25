@@ -1,5 +1,5 @@
 #include "charname.h"
-#include "logparse.h"
+#include "log.h"
 #include "rand.h"
 
 using namespace log;
@@ -61,8 +61,8 @@ static const char* read_line(const char* p, variant* conditions, stringbuilder& 
 		auto pe = bsdata<charname>::add();
 		memset(pe, 0, sizeof(*pe));
 		memcpy(pe->conditions, conditions, sizeof(pe->conditions));
-		p = readname(skipws(p), sb);
-		pe->name = getstring(sb);
+		sb.clear(); p = sb.psparam(skipws(p));
+		pe->name = szdupz(sb);
 		p = skipws(p);
 		if(*p == 13 || *p == 10 || *p == 0)
 			break;
@@ -76,7 +76,7 @@ static const char* read_line(const char* p, variant* conditions, stringbuilder& 
 static const char* read_conditions(const char* p, stringbuilder& sb, variant* pb, const variant* pe) {
 	auto count = pe - pb;
 	while(ischa(p[0])) {
-		p = readidn(p, sb);
+		p = psidf(p, sb);
 		variant v = (const char*)sb.begin();
 		if(!v)
 			log::errorp(p, "Can't find variant `%1`", sb.begin());

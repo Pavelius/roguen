@@ -1,5 +1,5 @@
 #include "io_stream.h"
-#include "logparse.h"
+#include "log.h"
 #include "script.h"
 #include "talk.h"
 
@@ -47,9 +47,9 @@ static const char* read_variants(const char* p, stringbuilder& result, variants&
 		p = skipws(p);
 		if(!ischa(*p))
 			break;
-		p = readidn(p, result);
+		p = psidf(p, result);
 		auto pn = result.begin();
-		int bonus; p = readbon(p, bonus);
+		int bonus; p = psbon(p, bonus);
 		p = skipws(p);
 		variant v = (const char*)result.begin();
 		if(!v)
@@ -77,11 +77,11 @@ static const char* read_params(const char* p, stringbuilder& result) {
 	if(!checksym(p, '('))
 		return p;
 	p = skipws(p + 1);
-	if(p[0] == '\"') {
-		result.clear();
+	result.clear();
+	if(p[0] == '\"')
 		p = result.psstr(p + 1, p[0]);
-	} else
-		p = readidn(p, result);
+	else
+		p = result.psidf(p);
 	p = skipws(p);
 	if(!checksym(p, ')'))
 		return p;
@@ -98,7 +98,7 @@ static const char* read_event(const char* p, short& parent, stringbuilder& sb) {
 	pe->next = -1;
 	p = read_variants(skipws(p), sb, pe->elements, pe);
 	p = read_string(skipwscr(p), sb);
-	pe->text = getstring(sb);
+	pe->text = szdupz(sb);
 	return p;
 }
 
@@ -111,7 +111,7 @@ static const char* read_answers(const char* p, short parent, stringbuilder& sb) 
 		if(!checksym(p, ')'))
 			break;
 		p = read_string(skipws(p + 1), sb);
-		pe->text = getstring(sb);
+		pe->text = szdupz(sb);
 	}
 	return p;
 }

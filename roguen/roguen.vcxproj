@@ -201,7 +201,7 @@
     <ClCompile Include="listcolumn.cpp" />
     <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
-    <ClCompile Include="logparse.cpp" />
+    <ClCompile Include="logvalue.cpp" />
     <ClCompile Include="magic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
@@ -300,7 +300,7 @@
     <ClInclude Include="keyname.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="logparse.h" />
+    <ClInclude Include="logvalue.h" />
     <ClInclude Include="magic.h" />
     <ClInclude Include="creature.h" />
     <ClInclude Include="modifier.h" />

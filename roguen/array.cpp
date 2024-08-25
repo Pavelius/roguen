@@ -25,7 +25,7 @@ void* array::add() {
 		else
 			return data;
 	}
-	return (char*)data + size * (count++);
+	return (char*)data + element_size * (count++);
 }
 
 void* array::add(const void* element) {
@@ -61,24 +61,24 @@ void array::setup(size_t size) {
 	if(!isgrowable())
 		return;
 	clear();
-	this->size = size;
+	this->element_size = size;
 }
 
 void array::reserve(unsigned count) {
 	if(!isgrowable())
 		return;
-	if(!size)
+	if(!element_size)
 		return;
 	if(data && count < getmaximum())
 		return;
 	count_maximum = rmoptimal(count);
 	if(data) {
-		auto p = realloc(data, count_maximum * size);
+		auto p = realloc(data, count_maximum * element_size);
 		if(!p)
 			exit(0);
 		data = p;
 	} else
-		data = malloc(count_maximum * size);
+		data = malloc(count_maximum * element_size);
 }
 
 static bool matchstring(const char* v1, const char* v2, size_t size) {
@@ -93,7 +93,7 @@ void* array::findv(const char* value, unsigned offset, size_t string_size) const
 	if(!data)
 		return 0;
 	auto pe = end();
-	for(auto p = begin() + offset; p < pe; p += size) {
+	for(auto p = begin() + offset; p < pe; p += element_size) {
 		auto pn = *((const char**)p);
 		if(!pn)
 			continue;
@@ -148,26 +148,26 @@ void array::remove(int index, int elements_count) {
 }
 
 int	array::indexof(const void* element) const {
-	if(element >= data && element < ((char*)data + size * count))
-		return ((char*)element - (char*)data) / size;
+	if(element >= data && element < ((char*)data + element_size * count))
+		return ((char*)element - (char*)data) / element_size;
 	return -1;
 }
 
 void* array::insert(int index, const void* element) {
 	auto count_before = getcount(); add();
-	memmove((char*)data + (index + 1) * size, (char*)data + index * size, (count_before - index) * size);
+	memmove((char*)data + (index + 1) * element_size, (char*)data + index * element_size, (count_before - index) * element_size);
 	void* p = ptr(index);
 	if(element)
-		memcpy(p, element, size);
+		memcpy(p, element, element_size);
 	else
-		memset(p, 0, size);
+		memset(p, 0, element_size);
 	return p;
 }
 
 void array::swap(int i1, int i2) {
 	unsigned char* a1 = (unsigned char*)ptr(i1);
 	unsigned char* a2 = (unsigned char*)ptr(i2);
-	for(unsigned i = 0; i < size; i++) {
+	for(unsigned i = 0; i < element_size; i++) {
 		char a = a1[i];
 		a1[i] = a2[i];
 		a2[i] = a;
@@ -181,8 +181,8 @@ void array::shift(int i1, int i2, size_t c1, size_t c2) {
 	}
 	auto a1 = (char*)ptr(i1);
 	auto a2 = (char*)ptr(i2);
-	auto s1 = c1 * size;
-	auto s2 = c2 * size;
+	auto s1 = c1 * element_size;
+	auto s2 = c2 * element_size;
 	unsigned s = (a2 - a1) + s2 - 1;
 	for(unsigned i = 0; i < s1; i++) {
 		auto a = a1[0];
@@ -192,12 +192,12 @@ void array::shift(int i1, int i2, size_t c1, size_t c2) {
 }
 
 void array::shrink(unsigned offset, size_t delta) {
-	if(offset + delta > size)
+	if(offset + delta > element_size)
 		return;
 	auto p1 = (char*)data;
 	auto p2 = (char*)data;
-	const auto s2 = size - delta - offset;
-	auto pe = p1 + count * size;
+	const auto s2 = element_size - delta - offset;
+	auto pe = p1 + count * element_size;
 	while(p1 < pe) {
 		if(offset) {
 			memcpy(p2, p1, offset);
@@ -209,9 +209,9 @@ void array::shrink(unsigned offset, size_t delta) {
 			p2 += s2; p1 += s2;
 		}
 	}
-	auto new_size = size - delta;
-	count_maximum = getmaximum() * size / new_size;
-	size = new_size;
+	auto new_size = element_size - delta;
+	count_maximum = getmaximum() * element_size / new_size;
+	element_size = new_size;
 }
 
 void array::grow(unsigned offset, size_t delta) {
@@ -219,7 +219,7 @@ void array::grow(unsigned offset, size_t delta) {
 		return;
 	if(!isgrowable())
 		return;
-	auto new_size = size + delta;
+	auto new_size = element_size + delta;
 	auto new_size_bytes = count_maximum * new_size;
 	if(data) {
 		auto p = realloc(data, new_size_bytes);
@@ -228,8 +228,8 @@ void array::grow(unsigned offset, size_t delta) {
 	} else
 		data = malloc(new_size_bytes);
 	auto p1 = (char*)data + new_size * count;
-	auto p2 = (char*)data + size * count;
-	auto s2 = size - offset;
+	auto p2 = (char*)data + element_size * count;
+	auto s2 = element_size - offset;
 	while(p1 > data) {
 		if(s2) {
 			memcpy(p1 - s2, p1 - s2, s2);
@@ -241,14 +241,14 @@ void array::grow(unsigned offset, size_t delta) {
 			p2 -= offset; p1 -= offset;
 		}
 	}
-	size = new_size;
+	element_size = new_size;
 }
 
 void array::zero(unsigned offset, size_t delta) {
 	if(!delta)
 		return;
-	auto pe = (char*)data + size * count;
-	for(auto p = (char*)data + offset; p < pe; p += size)
+	auto pe = (char*)data + element_size * count;
+	for(auto p = (char*)data + offset; p < pe; p += element_size)
 		memset(p, 0, delta);
 }
 
@@ -264,7 +264,7 @@ void array::change(unsigned offset, int size) {
 
 const void* array::findu(const void* value, size_t size) const {
 	auto p = (char*)data;
-	auto pe = (char*)data + count * (this->size);
+	auto pe = (char*)data + count * (this->element_size);
 	auto s = *((char*)value);
 	while(p < pe) {
 		p = (char*)memchr(p, s, pe - p);
@@ -278,7 +278,7 @@ const void* array::findu(const void* value, size_t size) const {
 }
 
 void* array::addu(const void* element, unsigned count) {
-	auto s = count * size;
+	auto s = count * element_size;
 	auto p = findu(element, s);
 	if(p)
 		return (void*)p;
@@ -291,8 +291,8 @@ void* array::addu(const void* element, unsigned count) {
 }
 
 const char* array::findus(const char* value, size_t size) const {
-	auto p = (char*)data;
-	auto pe = (char*)data + count * (this->size);
+	auto p = begin();
+	auto pe = end();
 	auto s = *value;
 	while(p < pe) {
 		p = (char*)memchr(p, s, pe - p);

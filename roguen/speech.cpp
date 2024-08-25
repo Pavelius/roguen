@@ -31,7 +31,7 @@ void speech_read(const char* url) {
 	while(allowparse && *p) {
 		if(!checksym(p, '#'))
 			break;
-		p = readidn(p + 1, sb);
+		p = psidf(p + 1, sb);
 		auto pr = bsdata<speechv2>::add();
 		pr->id = szdup(temp);
 		if(!checksym(p, '\n'))

@@ -3,14 +3,12 @@
 #include "iswap.h"
 #include "rand.h"
 
-extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
-
 static fngetname sort_proc;
 
 static int compare_proc(const void* v1, const void* v2) {
 	auto p1 = *((void**)v1);
 	auto p2 = *((void**)v2);
-	return strcmp(sort_proc(p1), sort_proc(p2));
+	return szcmp(sort_proc(p1), sort_proc(p2));
 }
 
 static bool exist(void** pb, void** pe, const void* v) {

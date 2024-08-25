@@ -11,12 +11,10 @@ struct translate {
 }
 static array source_name(sizeof(translate));
 
-extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
-
 static int compare(const void* v1, const void* v2) {
 	auto p1 = (const translate*)v1;
 	auto p2 = (const translate*)v2;
-	return strcmp(p1->id, p2->id);
+	return szcmp(p1->id, p2->id);
 }
 
 static void update_elements() {

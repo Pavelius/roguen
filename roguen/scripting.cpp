@@ -1257,7 +1257,7 @@ static bool choose_indecies(indexa& indecies, const char* header) {
 
 static bool choose_indecies(creaturea& source, const char* header, int offset) {
 	indexa indecies;
-	for(auto i = offset; i < source.getcount(); i++)
+	for(size_t i = offset; i < source.getcount(); i++)
 		indecies.add(((creature*)source.data[i])->getposition());
 	if(!indecies)
 		return true;
@@ -2361,13 +2361,13 @@ static void choose_limit(int counter) {
 	counter = script_count(counter, 1);
 	if(counter <= 0)
 		return;
-	if(targets.getcount() > counter)
+	if(targets.getcount() > (size_t)counter)
 		targets.count = counter;
-	if(items.getcount() > counter)
+	if(items.getcount() > (size_t)counter)
 		items.count = counter;
-	if(rooms.getcount() > counter)
+	if(rooms.getcount() > (size_t)counter)
 		rooms.count = counter;
-	if(indecies.getcount() > counter)
+	if(indecies.getcount() > (size_t)counter)
 		indecies.count = counter;
 }
 

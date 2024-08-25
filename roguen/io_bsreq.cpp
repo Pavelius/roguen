@@ -1,5 +1,6 @@
 #include "bsreq.h"
-#include "logparse.h"
+#include "log.h"
+#include "logvalue.h"
 #include "stringbuilder.h"
 #include "variant.h"
 
@@ -160,7 +161,7 @@ static const bsreq* find_key(const bsreq* type) {
 
 static void* find_object(array* source, const bsreq* type, valuei* keys, int key_count) {
 	auto pe = source->end();
-	for(auto p = source->begin(); p < pe; p += source->size) {
+	for(auto p = source->begin(); p < pe; p += source->element_size) {
 		if(compare(p, type, keys, key_count))
 			return p;
 	}

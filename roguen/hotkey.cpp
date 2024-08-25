@@ -17,7 +17,7 @@ unsigned hotkey_parse(const char* p) {
 	while(*p) {
 		if(ischa(*p)) {
 			char temp[64]; stringbuilder sb(temp);
-			p = sb.psidf(p);
+			p = psidf(p, sb);
 			if(temp[1] == 0)
 				result |= temp[0];
 			else {

@@ -4,6 +4,7 @@ namespace log {
 extern bool allowparse;
 typedef void(*fnread)(const char* url);
 void			close();
+bool			checksym(const char* p, char sym);
 int				geterrors();
 void			errorp(const char* position, const char* format, ...);
 void			errorv(const char* position, const char* format);

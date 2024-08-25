@@ -137,3 +137,31 @@ void log::readlf(fnread proc, const char* folder, const char* filter) {
 	sb.add("%1/%2", folder, current_locale);
 	readf(proc, temp, filter);
 }
+
+static const char* example(const char* p, stringbuilder& sb) {
+	while(*p && *p != '\n' && *p != '\r') {
+		if(sb.isfull())
+			break;
+		sb.add(*p++);
+	}
+	return sb.begin();
+}
+
+bool log::checksym(const char* p, char sym) {
+	if(!allowparse)
+		return false;
+	if(sym == '\n') {
+		if(*p != '\n' && *p != '\r') {
+			log::errorp(p, "Expected symbol line feed");
+			allowparse = false;
+			return false;
+		}
+	} else if(*p != sym) {
+		char result[] = {sym, 0};
+		char string[16]; stringbuilder sb(string); sb.clear();
+		log::errorp(p, "Expected symbol `%1`, but you have string `%2`", result, example(p, sb));
+		allowparse = false;
+		return false;
+	}
+	return true;
+}

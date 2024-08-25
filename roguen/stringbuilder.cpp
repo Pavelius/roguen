@@ -109,6 +109,21 @@ const char* psnum(const char* p, short& value) {
 	return result;
 }
 
+const char* psbon(const char* p, int& bonus) {
+	if(*p == '-')
+		p = psnum(p, bonus);
+	else if(*p == '+')
+		p = psnum(p + 1, bonus);
+	else
+		bonus = 0;
+	return p;
+}
+
+const char*	psidf(const char* p, stringbuilder& result) {
+	result.clear();
+	return result.psidf(p);
+}
+
 static const char* word_end(const char* ps) {
 	while(*ps) {
 		for(auto e : spaces) {
@@ -232,6 +247,15 @@ int szcmpi(const char* p1, const char* p2) {
 	while(true) {
 		auto s1 = upper_symbol(*p1++);
 		auto s2 = upper_symbol(*p2++);
+		if(!s1 || !s2 || s1 != s2)
+			return s1 - s2;
+	}
+}
+
+int szcmp(const char* p1, const char* p2) {
+	while(true) {
+		auto s1 = *p1++;
+		auto s2 = *p2++;
 		if(!s1 || !s2 || s1 != s2)
 			return s1 - s2;
 	}
@@ -587,20 +611,6 @@ const char* stringbuilder::psidf(const char* pb) {
 	return pb;
 }
 
-const char* stringbuilder::psline(const char* pb) {
-	while(*pb) {
-		if(pb[0] == '}' && pb[1] == '$') {
-			pb = skipsp(pb + 2);
-			break;
-		}
-		if(p < pe)
-			*p++ = *pb;
-		pb++;
-	}
-	*p = 0;
-	return pb;
-}
-
 void stringbuilder::addch(char sym) {
 	switch(sym) {
 	case -85: case -69: add('\"'); break;
@@ -615,8 +625,16 @@ const char* stringbuilder::psstrlf(const char* p) {
 	while(*p) {
 		if(*p == '\n' || *p == '\r')
 			break;
-		else
-			addch(*p++);
+		addch(*p++);
+	}
+	return p;
+}
+
+const char* stringbuilder::psparam(const char* p) {
+	while(*p) {
+		if(*p == '\n' || *p == '\r' || *p == ',')
+			break;
+		addch(*p++);
 	}
 	return p;
 }

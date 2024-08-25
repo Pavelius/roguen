@@ -1328,7 +1328,7 @@ int choose_indecies(const indexa& source, const char* header, bool cancel) {
 			break;
 		case KeyRight:
 			index++;
-			if(index >= source.getcount())
+			if((size_t)index >= source.getcount())
 				index = 0;
 			break;
 		case KeyEscape:

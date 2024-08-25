@@ -23,8 +23,6 @@ extern collection<roomi> rooms;
 int		last_roll_result;
 bool	last_roll_successed;
 
-extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
-
 bool allow_targets(const variants& conditions);
 bool apply_targets(const variants& conditions);
 void damage_item(item& it);
@@ -1298,7 +1296,7 @@ static int compare_actions(const void* v1, const void* v2) {
 	auto p2 = *((siteskilli**)v2);
 	if(p1->key != p2->key)
 		return p1->key - p2->key;
-	return strcmp(p1->getname(), p2->getname());
+	return szcmp(p1->getname(), p2->getname());
 }
 
 static void ready_skills() {
