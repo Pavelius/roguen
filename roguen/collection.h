@@ -1,6 +1,11 @@
-#include "crt.h"
-
 #pragma once
+
+#include "adat.h"
+#include "bsdata.h"
+
+typedef bool(*fnallow)(const void* object, int index); // Callback function of status probing. Return true if `object` allow `index` status.
+typedef const char*(*fngetname)(const void* object); // Callback function of get object name
+typedef bool(*fnvisible)(const void* object); // Callback function of checking some functionality of `object`
 
 struct collectiona : adat<void*, 256> {
 	typedef void* fngroup(const void* object);

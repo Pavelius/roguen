@@ -1,3 +1,4 @@
+#include "adat.h"
 #include "variant.h"
 
 #pragma once

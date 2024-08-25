@@ -1,5 +1,7 @@
+#include "bsdata.h"
 #include "draw_object.h"
 #include "screenshoot.h"
+#include "timer.h"
 
 using namespace draw;
 

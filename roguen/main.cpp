@@ -11,6 +11,7 @@
 #include "speech.h"
 #include "talk.h"
 #include "textscript.h"
+#include "timer.h"
 
 void dialog_message(const char* format);
 

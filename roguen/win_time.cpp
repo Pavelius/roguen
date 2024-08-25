@@ -1,5 +1,7 @@
 #include "win.h"
 
+extern "C" int time(void* p);
+
 void waitcputime(unsigned v) {
 	LARGE_INTEGER liDueTime;
 	liDueTime.QuadPart = (long long)v * -100000;
@@ -14,8 +16,6 @@ void waitcputime(unsigned v) {
 unsigned long getcputime() {
     return GetTickCount();
 }
-
-extern "C" int time(void* p);
 
 unsigned int randomseed() {
 	return time(0);

@@ -2,14 +2,9 @@
 
 #include "slice.h"
 
-class array {
-	size_t count_maximum;
-	void grow(unsigned offset, size_t delta);
-	void shrink(unsigned offset, size_t delta);
-	void zero(unsigned offset, size_t delta);
-public:
+struct array {
 	void* data;
-	size_t count, size;
+	size_t count, size, count_maximum;
 	constexpr array(size_t size = 0) : count_maximum(0), data(0), count(0), size(size) {}
 	constexpr array(void* data, size_t size, size_t count) : count_maximum(count | 0x80000000), data(data), count(count), size(size) {}
 	constexpr array(void* data, size_t size, size_t count, unsigned count_maximum) : count_maximum(count_maximum | 0x80000000), data(data), count(count), size(size) {}
@@ -27,11 +22,10 @@ public:
 	char* end() const { return (char*)data + size * count; }
 	int find(int i1, int i2, void* value, unsigned offset, size_t size) const;
 	int find(void* value, unsigned offset, size_t size) const { return find(0, -1, value, offset, size); }
-	int findps(const char* value, unsigned offset, size_t size) const;
-	int find(const char* value, unsigned offset) const;
 	const void* findu(const void* value, size_t size) const;
 	const char* findus(const char* value, size_t size) const;
 	void* findv(const char* value, unsigned offset) const;
+	void* findv(const char* value, unsigned offset, size_t size) const;
 	size_t getmaximum() const { return count_maximum & 0x7FFFFFFF; }
 	size_t getcount() const { return count; }
 	size_t getsize() const { return size; }
@@ -48,4 +42,8 @@ public:
 	void setup(size_t size);
 	void swap(int i1, int i2);
 	void reserve(unsigned count);
+private:
+	void grow(unsigned offset, size_t delta);
+	void shrink(unsigned offset, size_t delta);
+	void zero(unsigned offset, size_t delta);
 };

@@ -339,9 +339,6 @@
     <ClCompile Include="global_req.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="material.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -599,16 +596,10 @@
     <ClInclude Include="shortcut.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="assert.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="rand.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="iabs.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="iswap.h">
@@ -618,6 +609,24 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="array.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="adat.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="bsdata.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="sliceu.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="imath.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

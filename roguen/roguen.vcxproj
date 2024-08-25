@@ -199,9 +199,6 @@
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="listcolumn.cpp" />
-    <ClCompile Include="material.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logparse.cpp" />
@@ -256,6 +253,7 @@
   <ItemGroup>
     <ClInclude Include="ability.h" />
     <ClInclude Include="actable.h" />
+    <ClInclude Include="adat.h" />
     <ClInclude Include="advancement.h" />
     <ClInclude Include="answers.h" />
     <ClInclude Include="anymap.h" />
@@ -266,6 +264,7 @@
     <ClInclude Include="array.h" />
     <ClInclude Include="assert.h" />
     <ClInclude Include="boost.h" />
+    <ClInclude Include="bsdata.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="charname.h" />
@@ -289,7 +288,7 @@
     <ClInclude Include="geoposition.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="greatneed.h" />
-    <ClInclude Include="iabs.h" />
+    <ClInclude Include="imath.h" />
     <ClInclude Include="indexa.h" />
     <ClInclude Include="io_memory.h" />
     <ClInclude Include="iswap.h" />
@@ -304,9 +303,6 @@
     <ClInclude Include="logparse.h" />
     <ClInclude Include="magic.h" />
     <ClInclude Include="creature.h" />
-    <ClInclude Include="material.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="modifier.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="moveable.h" />
@@ -331,6 +327,7 @@
     <ClInclude Include="siteskill.h" />
     <ClInclude Include="markuse.h" />
     <ClInclude Include="slice.h" />
+    <ClInclude Include="sliceu.h" />
     <ClInclude Include="speech.h" />
     <ClInclude Include="spell.h" />
     <ClInclude Include="sprite_util.h" />
@@ -338,10 +335,12 @@
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />
     <ClInclude Include="tile.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="trigger.h" />
     <ClInclude Include="triggern.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="variantc.h" />
+    <ClInclude Include="vector.h" />
     <ClInclude Include="visualeffect.h" />
     <ClInclude Include="wear.h" />
     <ClInclude Include="wearable.h" />

@@ -1,4 +1,6 @@
-#include "crt.h"
+#include "adat.h"
+#include "sliceu.h"
+#include "vector.h"
 
 #pragma once
 
@@ -66,10 +68,10 @@ template<class T> struct meta_decoy<const T*> : meta_decoy<T> {};
 template<class T, size_t N> struct meta_decoy<T[N]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<T[]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<const T> : meta_decoy<T> {};
-template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
+//template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
 template<class T> struct meta_decoy<sliceu<T>> : meta_decoy<T> {};
 template<class T> struct meta_decoy<slice<T>> : meta_decoy<T> {};
-template<class T, size_t N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
+//template<class T, size_t N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
 
 template<> struct bsmeta<unsigned char> : bsmeta<int> {};
 template<> struct bsmeta<char> : bsmeta<int> {};

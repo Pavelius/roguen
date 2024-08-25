@@ -4,6 +4,7 @@
 #include "charname.h"
 #include "creature.h"
 #include "direction.h"
+#include "imath.h"
 #include "indexa.h"
 #include "itema.h"
 #include "modifier.h"
@@ -1659,14 +1660,14 @@ creature* player_create(point m, variant kind, bool female) {
 		advance_value(pm->use);
 		adat<variant> conditions;
 		conditions.add(kind);
-		player->setname(charname::param({conditions.data, conditions.count}));
+		player->setname(charname::param(conditions));
 		player->basic.abilities[LineOfSight] += 4;
 	} else {
 		adat<variant> conditions;
 		conditions.add(kind);
 		if(player->is(Female))
 			conditions.add("Female");
-		player->setname(charname::param({conditions.data, conditions.count}));
+		player->setname(charname::param(conditions));
 		player->basic.abilities[LineOfSight] += 4;
 		advance_value(kind, 0);
 		player_levelup();

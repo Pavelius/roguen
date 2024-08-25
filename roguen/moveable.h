@@ -14,6 +14,8 @@ const int mst = 260;
 inline point m2s(point v) { return point{(short)(v.x * tsx), (short)(v.y * tsy)}; }
 inline point s2m(point v) { return point{(short)(v.x / tsx), (short)(v.y / tsy)}; }
 
+typedef void(*fnevent)(); // Callback function of any command executing
+
 class movable : public actable {
 	point			position;
 	direction_s		direction;

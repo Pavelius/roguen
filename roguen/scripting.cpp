@@ -6,7 +6,7 @@
 #include "dialog.h"
 #include "filter.h"
 #include "game.h"
-#include "iabs.h"
+#include "imath.h"
 #include "itema.h"
 #include "iswap.h"
 #include "io_stream.h"

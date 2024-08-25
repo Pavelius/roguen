@@ -38,7 +38,7 @@ template<> variant::variant(const void* v) : u(0) {
 int varianti::found(const char* id, size_t size) const {
 	int i = -1;
 	if(isnamed())
-		i = source->findps(id, 0, size);
+		i = source->indexof(source->findv(id, 0, size));
 	return i;
 }
 
@@ -47,7 +47,7 @@ const varianti* varianti::getsource(const char* id) {
 		for(auto& e : bsdata<varianti>()) {
 			if(!e.source || !e.id)
 				continue;
-			if(strcmp(e.id, id) == 0)
+			if(equal(e.id, id))
 				return &e;
 		}
 	}

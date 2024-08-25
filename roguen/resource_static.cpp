@@ -1,6 +1,6 @@
-#include "crt.h"
-#include "io_stream.h"
+#include "bsdata.h"
 #include "draw.h"
+#include "io_stream.h"
 #include "resource.h"
 
 using namespace draw;

@@ -1,5 +1,5 @@
 #include "areapiece.h"
-#include "iabs.h"
+#include "imath.h"
 #include "item.h"
 #include "magic.h"
 #include "rand.h"

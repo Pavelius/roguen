@@ -1,6 +1,6 @@
 #include "areamap.h"
 #include "direction.h"
-#include "iabs.h"
+#include "imath.h"
 #include "rand.h"
 
 const short unsigned Blocked = 0xFFFF;

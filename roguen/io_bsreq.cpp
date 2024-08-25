@@ -17,7 +17,7 @@ static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
 		if(!v1 && !v2)
 			return true;
 		if(v1 && v2)
-			return (strcmp(v1, v2) == 0);
+			return equal(v1, v2);
 	} else {
 		auto v1 = requisit->get(pv);
 		return value.number == v1;
@@ -139,7 +139,7 @@ static varianti* find_type(const char* id) {
 	for(auto& e : bsdata<varianti>()) {
 		if(!e.source || !e.id)
 			continue;
-		if(strcmp(e.id, id) == 0)
+		if(equal(e.id, id))
 			return &e;
 	}
 	return 0;
@@ -213,7 +213,7 @@ static void read_value(valuei& e, const bsreq* req) {
 			if(!req->source)
 				log::errorp(p, "Invalid source array where read identifier `%1`", temp);
 			else {
-				e.number = req->source->find(temp, shift);
+				e.number = req->source->indexof(req->source->findv(temp, shift));
 				if(e.number == -1) {
 					log::errorp(p, "Not found identifier `%1`", temp);
 					e.number = 0;
@@ -276,7 +276,7 @@ static void read_dset(void* object, const bsreq* req) {
 	while(allowparse && isvalue()) {
 		valuei v;
 		readid();
-		index = req->source->find(temp, 0);
+		index = req->source->indexof(req->source->findv(temp, 0));
 		if(index == -1) {
 			index = 0;
 			log::errorp(p, "Not found field `%1` in dataset `%2`", temp, req->id);

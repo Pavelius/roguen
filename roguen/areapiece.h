@@ -1,6 +1,7 @@
 #include "areamap.h"
 #include "site.h"
 #include "item.h"
+#include "vector.h"
 
 #pragma once
 

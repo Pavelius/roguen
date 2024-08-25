@@ -1,6 +1,7 @@
 #include "direction.h"
 #include "shape.h"
 #include "stringbuilder.h"
+#include "imath.h"
 #include "logparse.h"
 
 using namespace log;

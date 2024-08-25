@@ -1,7 +1,7 @@
 #include "color.h"
 #include "draw.h"
 #include "io_stream.h"
-#include "iabs.h"
+#include "imath.h"
 #include "iswap.h"
 #include "slice.h"
 

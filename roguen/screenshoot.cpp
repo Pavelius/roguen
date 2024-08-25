@@ -1,5 +1,5 @@
-﻿#include "crt.h"
-#include "screenshoot.h"
+﻿#include "screenshoot.h"
+#include "timer.h"
 
 using namespace draw;
 

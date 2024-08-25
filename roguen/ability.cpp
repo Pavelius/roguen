@@ -1,5 +1,5 @@
 #include "ability.h"
-#include "crt.h"
+#include "bsdata.h"
 
 ability_s last_ability;
 

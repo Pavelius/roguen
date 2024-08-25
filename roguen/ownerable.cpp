@@ -1,4 +1,4 @@
-#include "crt.h"
+#include "bsdata.h"
 #include "ownerable.h"
 
 creature* ownerable::getowner() const {

@@ -1,9 +1,11 @@
-#include "crt.h"
-
 #pragma once
 
-class dataset : public adat<short unsigned> {
-public:
+#include "adat.h"
+#include "array.h"
+
+typedef bool(*fnvisible)(const void* object); // Callback function of checking some functionality of `object`
+
+struct dataset : public adat<short unsigned> {
 	void select(array& source);
 	void select(array& source, fnvisible proc);
 };

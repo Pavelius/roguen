@@ -1,5 +1,4 @@
 #include "array.h"
-#include "io_stream.h"
 #include "iswap.h"
 #include "stringbuilder.h"
 
@@ -18,70 +17,6 @@ unsigned rmoptimal(unsigned need_count) {
 	}
 	return need_count + mc;
 }
-
-//float sqrt(const float x) {
-//	const float xhalf = 0.5f * x;
-//	// get bits for floating value
-//	union {
-//		float x;
-//		int i;
-//	} u;
-//	u.x = x;
-//	u.i = 0x5f3759df - (u.i >> 1);  // gives initial guess y0
-//	return x * u.x * (1.5f - xhalf * u.x * u.x);// Newton step, repeating increases accuracy
-//}
-
-//bool matchuc(const char* name, const char* filter) {
-//	if(!name || name[0] == 0)
-//		return false;
-//	auto sym = szupper(szget(&filter));
-//	auto pn = name;
-//	while(pn[0]) {
-//		auto sym1 = szupper(szget(&pn));
-//		if(sym1 == sym) {
-//			auto pf = filter;
-//			auto ps = pn;
-//			while(true) {
-//				if(pf[0] == 0)
-//					return true;
-//				auto sym2 = szupper(szget(&pf));
-//				auto sym1 = szupper(szget(&pn));
-//				if(sym1 != sym2)
-//					break;
-//			}
-//			pn = ps;
-//		}
-//	}
-//	return false;
-//}
-
-//void szchange(char* p, char s1, char s2) {
-//	while(*p) {
-//		if(*p == s1)
-//			*p = s2;
-//		p++;
-//	}
-//}
-
-//int getdigitscount(unsigned number) {
-//	if(number < 10)
-//		return 1;
-//	if(number < 100)
-//		return 2;
-//	if(number < 1000)
-//		return 3;
-//	if(number < 10000)
-//		return 4;
-//	if(number < 100000)
-//		return 5;
-//	if(number < 1000000)
-//		return 6;
-//	if(number < 10000000)
-//		return 7;
-//	if(number < 100000000)
-//		return 8;
-//	return 9;
-//}
 
 void* array::add() {
 	if(count >= getmaximum()) {
@@ -154,29 +89,22 @@ static bool matchstring(const char* v1, const char* v2, size_t size) {
 	return v1[size] == 0;
 }
 
-int array::findps(const char* value, unsigned offset, size_t size) const {
-	auto m = getcount();
-	for(unsigned i = 0; i < m; i++) {
-		auto p = (const char**)((char*)ptr(i) + offset);
-		if(!(*p))
+void* array::findv(const char* value, unsigned offset, size_t string_size) const {
+	if(!data)
+		return 0;
+	auto pe = end();
+	for(auto p = begin() + offset; p < pe; p += size) {
+		auto pn = *((const char**)p);
+		if(!pn)
 			continue;
-		if(matchstring(*p, value, size))
-			return i;
+		if(memcmp(pn, value, string_size) == 0)
+			return p;
 	}
-	return -1;
-}
-
-int array::find(const char* value, unsigned offset) const {
-	return findps(value, offset, zlen(value));
+	return 0;
 }
 
 void* array::findv(const char* id, unsigned offset) const {
-	if(!id)
-		return 0;
-	auto i = findps(id, offset, zlen(id));
-	if(i == -1)
-		return 0;
-	return ptr(i);
+	return findv(id, offset, zlen(id) + 1);
 }
 
 int array::find(int i1, int i2, void* value, unsigned offset, size_t size) const {
@@ -210,21 +138,6 @@ int array::find(int i1, int i2, void* value, unsigned offset, size_t size) const
 	}
 	return -1;
 }
-
-//void array::sort(int i1, int i2, pcompare compare, void* param) {
-//	if(i2 == -1)
-//		i2 = count;
-//	if(i1 == -1)
-//		i1 = 0;
-//	for(int i = i2; i > i1; i--) {
-//		for(int j = i1; j < i; j++) {
-//			auto t1 = ptr(j);
-//			auto t2 = ptr(j + 1);
-//			if(compare(t1, t2, param) > 0)
-//				swap(j, j + 1);
-//		}
-//	}
-//}
 
 void array::remove(int index, int elements_count) {
 	if(((unsigned)index) >= count)
@@ -308,9 +221,11 @@ void array::grow(unsigned offset, size_t delta) {
 		return;
 	auto new_size = size + delta;
 	auto new_size_bytes = count_maximum * new_size;
-	if(data)
-		data = realloc(data, new_size_bytes);
-	else
+	if(data) {
+		auto p = realloc(data, new_size_bytes);
+		if(p)
+			data = p;
+	} else
 		data = malloc(new_size_bytes);
 	auto p1 = (char*)data + new_size * count;
 	auto p2 = (char*)data + size * count;
@@ -349,7 +264,7 @@ void array::change(unsigned offset, int size) {
 
 const void* array::findu(const void* value, size_t size) const {
 	auto p = (char*)data;
-	auto pe = (char*)data + count*(this->size);
+	auto pe = (char*)data + count * (this->size);
 	auto s = *((char*)value);
 	while(p < pe) {
 		p = (char*)memchr(p, s, pe - p);
@@ -383,7 +298,7 @@ const char* array::findus(const char* value, size_t size) const {
 		p = (char*)memchr(p, s, pe - p);
 		if(!p || (unsigned(pe - p) < size))
 			break;
-		if(memcmp(p, value, size) == 0 && p[size]==0)
+		if(memcmp(p, value, size) == 0 && p[size] == 0)
 			return p;
 		p++;
 	}

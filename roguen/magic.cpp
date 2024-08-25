@@ -1,4 +1,4 @@
-#include "crt.h"
+#include "bsdata.h"
 #include "magic.h"
 
 BSDATA(magici) = {

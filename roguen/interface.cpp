@@ -20,6 +20,7 @@
 #include "siteskill.h"
 #include "shortcut.h"
 #include "textscript.h"
+#include "timer.h"
 #include "visualeffect.h"
 
 using namespace draw;
