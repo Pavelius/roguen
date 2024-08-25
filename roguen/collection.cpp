@@ -1,5 +1,7 @@
 #include "answers.h"
 #include "collection.h"
+#include "iswap.h"
+#include "rand.h"
 
 static fngetname sort_proc;
 

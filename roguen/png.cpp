@@ -1,5 +1,6 @@
-﻿#include "crt.h"
+﻿#include "iabs.h"
 #include "draw.h"
+#include "slice.h"
 
 int decode_zip(unsigned char* output, const unsigned char* input, int input_size);
 

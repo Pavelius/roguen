@@ -139,7 +139,7 @@ draworder* object::add(int milliseconds, draworder* depend, bool cleanup) {
 }
 
 void object::clear() {
-	zclear(this);
+	memset(this, 0, sizeof(*this));
 }
 
 void object::disappear(int milliseconds) {

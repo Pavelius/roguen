@@ -1,5 +1,6 @@
 #include "bsreq.h"
 #include "pushvalue.h"
+#include "rand.h"
 #include "script.h"
 
 BSMETA(script) = {

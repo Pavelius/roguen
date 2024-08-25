@@ -17,7 +17,7 @@ struct quest {
 	constexpr operator bool() const { return problem.operator bool(); }
 	static quest*	add(questn type, point position);
 	static quest*	add(questn type, point position, variant modifier, variant level, variant reward);
-	void			clear() { zclear(this); }
+	void			clear();
 	static quest*	find(point v);
 };
 extern quest* last_quest;

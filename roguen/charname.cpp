@@ -1,5 +1,6 @@
 #include "charname.h"
 #include "logparse.h"
+#include "rand.h"
 
 using namespace log;
 

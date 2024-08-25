@@ -6,7 +6,9 @@ BossRoom: Логово
 CaveMonsterLair: Зверинное логово
 CaveStairsUpRoom: Проход наверх
 ChurchOneBuilding: Церковь единого
+ChurchOneBuildingLook: В помещении было множество свечек. На стенах была мозаика, изображающего старца в белой рясе.
 DarkestRoom: Истинная тьма
+DarkestRoomLook: Странная игра со светом делает это место неестественно темным.
 DeepForest: Дремучий лес
 DefaultCave: Пещера
 DefaultCaveEntrance: Вход в пещеру
@@ -17,25 +19,33 @@ DefaultDungeonFinal: Подземелье
 DefaultMine: Шахта
 DefaultMineEntrance: Вход в шахту
 FamousHeroMonument: Монумент герою
+FamousHeroMonumentLook: Статуя неизвестного героя возвышалась недалеко от вас.
 ForestSwamps: Заболоченный лес
 GeneralStore: Магазин
+GeneralStoreLook: Вокруг стен стояли стеллажи заваленные самыми разнообразными вещами. Стоял запах кислого пива.
 GoblinScouts: Гоблинские разведчики
 Hills: Холмы
 InscribedRoom: Надписи на стенах
-LightForest: Лес
+InscribedRoomLook: На стенах виднелись странные какие-то странные иероглифы.
+sLightForest: Лес
 MinionsRoom: Монстры
 MysteryHouse: Странный дом
+MysteryHouseLook: Внутри ощущалось присутствие чего-то странного. Слегка покалывало на спине и в пояснице.
 NPCHouses: Дом влиятельного горожанина
 PitRoom: Ямы
 Plains: Равнины
 PortalRoom: Портал
 SarcaphagusRoom: Саркофаг
+SarcaphagusRoomLook: Стены этой комнаты содержат ниши в которых лежат останки и кости.
 SpiderNest: Логово пауков
-StairsUp: Лестница вверх
-StairsUpRoom: Лестница вверх
 StairsDown: Лестница вниз
 StairsDownHouses: Дом с лестницей вниз
+StairsDownHousesLook: Недалеко от стены находилась лестница, ведущая в подвал.
 StairsDownRoom: Лестница вниз
+StairsDownRoomLook: Посредине комнаты вы увидели каменную лестницу, спскающуюся вниз.
+StairsUp: Лестница вверх
+StairsUpRoom: Лестница вверх
+StairsUpRoomLook: Посредине комнаты вы увидели каменную лестницу, ведущую наверх.
 StartVillage: Деревня "Клюв грифона"
 StrangeFloraRoom: Дивная растительность
 TheifGuild: Гильдия воров
@@ -45,6 +55,7 @@ TestArea: Тестовая область
 TreasureRoom: Сокровища
 UnholyAltarRoom: Алтарь проклятых
 UnholyPlace: Проклятое место
+UnholyPlaceLook: В этом месте ощущается присутствие зла.
 
 AncientSite: Древний
 DarkSite: Темный
@@ -52,17 +63,5 @@ EvilSite: Злой
 FrozenSite: Ледяной
 
 WallCave: Пещера
-
-ChurchOneBuildingLook: В помещении было множество свечек. На стенах была мозаика, изображающего старца в белой рясе.
-DarkestRoomLook: Странная игра со светом делает это место неестественно темным.
-FamousHeroMonumentLook: Статуя неизвестного героя возвышалась недалеко от вас.
-GeneralStoreLook: Вокруг стен стояли стеллажи заваленные самыми разнообразными вещами. Стоял запах кислого пива.
-InscribedRoomLook: На стенах виднелись странные какие-то странные иероглифы.
-MysteryHouseLook: Внутри ощущалось присутствие чего-то странного. Слегка покалывало на спине и в пояснице.
-SarcaphagusRoomLook: Стены этой комнаты содержат ниши в которых лежат останки и кости.
-StairsDownHousesLook: Недалеко от стены находилась лестница, ведущая в подвал.
-StairsDownRoomLook: Посредине комнаты вы увидели каменную лестницу, спскающуюся вниз.
-StairsUpRoomLook: Посредине комнаты вы увидели каменную лестницу, ведущую наверх.
-UnholyPlaceLook: В этом месте ощущается присутствие зла.
 
 SearchRoomForGemsFail: %герой осмотрел%ась по сторонам и не обнаружил%а никакой ценной породы.

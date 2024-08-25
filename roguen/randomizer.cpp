@@ -1,5 +1,6 @@
 #include "bsreq.h"
 #include "list.h"
+#include "rand.h"
 #include "randomizer.h"
 #include "script.h"
 

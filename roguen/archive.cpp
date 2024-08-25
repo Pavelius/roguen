@@ -1,10 +1,12 @@
 #include "archive.h"
+#include "stringbuilder.h"
 
 bool archive::signature(const char* id) {
 	char temp[4];
 	if(writemode) {
 		memset(temp, 0, sizeof(temp));
-		zcpy(temp, id, sizeof(temp) - 1);
+		stringbuilder sb(temp);
+		sb.addv(id, 0);
 		set(temp, sizeof(temp));
 	} else {
 		set(temp, sizeof(temp));

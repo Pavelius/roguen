@@ -1,6 +1,7 @@
 #include "areaf.h"
 #include "areapiece.h"
 #include "indexa.h"
+#include "rand.h"
 
 static point compare_position;
 

@@ -1,6 +1,7 @@
 #include "areamap.h"
 #include "direction.h"
-#include "crt.h"
+#include "iabs.h"
+#include "rand.h"
 
 const short unsigned Blocked = 0xFFFF;
 const short unsigned NotCalculatedMovement = 0xFFF0;

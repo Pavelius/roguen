@@ -1,6 +1,9 @@
-#include "crt.h"
+#include "array.h"
 #include "io_stream.h"
+#include "iswap.h"
+#include "stringbuilder.h"
 
+extern "C" void exit(int exit_code);
 extern "C" void* malloc(long unsigned size);
 extern "C" void* realloc(void *ptr, long unsigned size);
 extern "C" void	free(void* pointer);
@@ -16,264 +19,69 @@ unsigned rmoptimal(unsigned need_count) {
 	return need_count + mc;
 }
 
-float sqrt(const float x) {
-	const float xhalf = 0.5f * x;
-	// get bits for floating value
-	union {
-		float x;
-		int i;
-	} u;
-	u.x = x;
-	u.i = 0x5f3759df - (u.i >> 1);  // gives initial guess y0
-	return x * u.x * (1.5f - xhalf * u.x * u.x);// Newton step, repeating increases accuracy
-}
+//float sqrt(const float x) {
+//	const float xhalf = 0.5f * x;
+//	// get bits for floating value
+//	union {
+//		float x;
+//		int i;
+//	} u;
+//	u.x = x;
+//	u.i = 0x5f3759df - (u.i >> 1);  // gives initial guess y0
+//	return x * u.x * (1.5f - xhalf * u.x * u.x);// Newton step, repeating increases accuracy
+//}
 
-int isqrt(int num) {
-	int res = 0;
-	int bit = 1 << 30;
-	// "bit" starts at the highest power of four <= the argument.
-	while(bit > num)
-		bit >>= 2;
-	while(bit != 0) {
-		if(num >= res + bit) {
-			num -= res + bit;
-			res = (res >> 1) + bit;
-		} else
-			res >>= 1;
-		bit >>= 2;
-	}
-	return res;
-}
+//bool matchuc(const char* name, const char* filter) {
+//	if(!name || name[0] == 0)
+//		return false;
+//	auto sym = szupper(szget(&filter));
+//	auto pn = name;
+//	while(pn[0]) {
+//		auto sym1 = szupper(szget(&pn));
+//		if(sym1 == sym) {
+//			auto pf = filter;
+//			auto ps = pn;
+//			while(true) {
+//				if(pf[0] == 0)
+//					return true;
+//				auto sym2 = szupper(szget(&pf));
+//				auto sym1 = szupper(szget(&pn));
+//				if(sym1 != sym2)
+//					break;
+//			}
+//			pn = ps;
+//		}
+//	}
+//	return false;
+//}
 
-int szcmpi(const char* p1, const char* p2) {
-	while(*p2 && *p1) {
-		unsigned s1 = szupper(szget(&p1));
-		unsigned s2 = szupper(szget(&p2));
-		if(s1 == s2)
-			continue;
-		return s1 - s2;
-	}
-	unsigned s1 = szupper(szget(&p1));
-	unsigned s2 = szupper(szget(&p2));
-	return s1 - s2;
-}
+//void szchange(char* p, char s1, char s2) {
+//	while(*p) {
+//		if(*p == s1)
+//			*p = s2;
+//		p++;
+//	}
+//}
 
-int szcmpi(const char* p1, const char* p2, int max_count) {
-	while(*p2 && *p1 && max_count-- > 0) {
-		unsigned s1 = szupper(szget(&p1));
-		unsigned s2 = szupper(szget(&p2));
-		if(s1 == s2)
-			continue;
-		return s1 - s2;
-	}
-	if(!max_count)
-		return 0;
-	unsigned s1 = szupper(szget(&p1));
-	unsigned s2 = szupper(szget(&p2));
-	return s1 - s2;
-}
-
-bool equal(const char* p, const char* s) {
-	if(!p || !s)
-		return false;
-	while(*s && *p)
-		if(*p++ != *s++)
-			return false;
-	return *s == *p;
-}
-
-bool matchuc(const char* name, const char* filter) {
-	if(!name || name[0] == 0)
-		return false;
-	auto sym = szupper(szget(&filter));
-	auto pn = name;
-	while(pn[0]) {
-		auto sym1 = szupper(szget(&pn));
-		if(sym1 == sym) {
-			auto pf = filter;
-			auto ps = pn;
-			while(true) {
-				if(pf[0] == 0)
-					return true;
-				auto sym2 = szupper(szget(&pf));
-				auto sym1 = szupper(szget(&pn));
-				if(sym1 != sym2)
-					break;
-			}
-			pn = ps;
-		}
-	}
-	return false;
-}
-
-bool ischa(unsigned u) {
-	return (u >= 'A' && u <= 'Z')
-		|| (u >= 'a' && u <= 'z')
-		|| (u >= 0x410 && u <= 0x44F);
-}
-
-unsigned szupper(unsigned u) {
-	if(u >= 0x61 && u <= 0x7A)
-		return u - 0x61 + 0x41;
-	else if(u >= 0x430 && u <= 0x44F)
-		return u - 0x430 + 0x410;
-	return u;
-}
-
-void szupper(char* p) {
-	char* s1 = p;
-	const char* p1 = p;
-	unsigned sym;
-	do {
-		sym = szget(&p1);
-		szput(&s1, szupper(sym));
-	} while(sym);
-}
-
-void szlower(char* p) {
-	char* s1 = p;
-	const char* p1 = p;
-	unsigned sym;
-	do {
-		sym = szget(&p1);
-		szput(&s1, szlower(sym));
-	} while(sym);
-}
-
-void szchange(char* p, char s1, char s2) {
-	while(*p) {
-		if(*p == s1)
-			*p = s2;
-		p++;
-	}
-}
-
-unsigned szlower(unsigned u) {
-	if(u >= 0x41 && u <= 0x5A)
-		return u - 0x41 + 0x61;
-	else if(u >= 0x410 && u <= 0x42F)
-		return u - 0x410 + 0x430;
-	return u;
-}
-
-int getdigitscount(unsigned number) {
-	if(number < 10)
-		return 1;
-	if(number < 100)
-		return 2;
-	if(number < 1000)
-		return 3;
-	if(number < 10000)
-		return 4;
-	if(number < 100000)
-		return 5;
-	if(number < 1000000)
-		return 6;
-	if(number < 10000000)
-		return 7;
-	if(number < 100000000)
-		return 8;
-	return 9;
-}
-
-unsigned szget(const char** input, codepage code) {
-	const unsigned char* p;
-	unsigned result;
-	switch(code) {
-	case codepage::UTF8:
-		p = (unsigned char*)*input;
-		result = *p++;
-		if(result >= 192 && result <= 223)
-			result = (result - 192) * 64 + (*p++ - 128);
-		else if(result >= 224 && result <= 239) {
-			result = (result - 224) * 4096 + (p[0] - 128) * 64 + (p[1] - 128);
-			p += 2;
-		}
-		*input = (const char*)p;
-		return result;
-	case codepage::U16LE:
-		p = (unsigned char*)*input;
-		result = p[0] | (p[1] << 8);
-		*input = (const char*)(p + 2);
-		return result;
-	case codepage::W1251:
-		result = (unsigned char)*(*input)++;
-		if(((unsigned char)result >= 0xC0))
-			return result - 0xC0 + 0x410;
-		else switch(result) {
-		case 0xB2: return 0x406;
-		case 0xAF: return 0x407;
-		case 0xB3: return 0x456;
-		case 0xBF: return 0x457;
-		}
-		return result;
-	default:
-		return *(*input)++;
-	}
-}
-
-void szput(char** output, unsigned value, codepage code) {
-	char* p;
-	switch(code) {
-	case codepage::UTF8:
-		p = *output;
-		if(((unsigned short)value) < 128)
-			*p++ = (unsigned char)value;
-		else if(((unsigned short)value) < 2047) {
-			*p++ = (unsigned char)(192 + (((unsigned short)value) / 64));
-			*p++ = (unsigned char)(128 + (((unsigned short)value) % 64));
-		} else {
-			*p++ = (unsigned char)(224 + (((unsigned short)value) / 4096));
-			*p++ = (unsigned char)(128 + ((((unsigned short)value) / 64) % 64));
-			*p++ = (unsigned char)(224 + (((unsigned short)value) % 64));
-		}
-		*output = p;
-		break;
-	case codepage::W1251:
-		if(value >= 0x410 && value <= 0x44F)
-			value = value - 0x410 + 0xC0;
-		else switch(value) {
-		case 0x406: value = 0xB2; break; // I
-		case 0x407: value = 0xAF; break; // ¯
-		case 0x456: value = 0xB3; break;
-		case 0x457: value = 0xBF; break;
-		}
-		*(*output)++ = (unsigned char)value;
-		break;
-	case codepage::U16LE:
-		*(*output)++ = (unsigned char)(value & 0xFF);
-		*(*output)++ = (unsigned char)(((unsigned)value >> 8));
-		break;
-	case codepage::U16BE:
-		*(*output)++ = (unsigned char)(((unsigned)value >> 8));
-		*(*output)++ = (unsigned char)(value & 0xFF);
-		break;
-	default:
-		*(*output)++ = (unsigned char)value;
-		break;
-	}
-}
-
-char* szput(char* result, unsigned sym, codepage page) {
-	char* p = result;
-	szput(&p, sym, page);
-	*p = 0;
-	return result;
-}
-
-void szencode(char* output, int output_count, codepage output_code, const char* input, int input_count, codepage input_code) {
-	char* s1 = output;
-	char* s2 = s1 + output_count;
-	const char* p1 = input;
-	const char* p2 = p1 + input_count;
-	while(p1 < p2 && s1 < s2)
-		szput(&s1, szget(&p1, input_code), output_code);
-	if(s1 < s2) {
-		s1[0] = 0;
-		if((output_code == codepage::U16BE || output_code == codepage::U16LE) && (s1 + 1) < s2)
-			s1[1] = 0;
-	}
-}
+//int getdigitscount(unsigned number) {
+//	if(number < 10)
+//		return 1;
+//	if(number < 100)
+//		return 2;
+//	if(number < 1000)
+//		return 3;
+//	if(number < 10000)
+//		return 4;
+//	if(number < 100000)
+//		return 5;
+//	if(number < 1000000)
+//		return 6;
+//	if(number < 10000000)
+//		return 7;
+//	if(number < 100000000)
+//		return 8;
+//	return 9;
+//}
 
 void* array::add() {
 	if(count >= getmaximum()) {
@@ -292,10 +100,10 @@ void* array::add(const void* element) {
 }
 
 void* array::addfind(const char* id) {
-	auto i = find(id, 0);
-	if(i!=-1)
-		return ptr(i);
-	auto p = add();
+	auto p = findv(id, 0);
+	if(p)
+		return p;
+	p = add();
 	*((const char**)p) = id;
 	return p;
 }
@@ -358,6 +166,10 @@ int array::findps(const char* value, unsigned offset, size_t size) const {
 	return -1;
 }
 
+int array::find(const char* value, unsigned offset) const {
+	return findps(value, offset, zlen(value));
+}
+
 void* array::findv(const char* id, unsigned offset) const {
 	if(!id)
 		return 0;
@@ -399,20 +211,20 @@ int array::find(int i1, int i2, void* value, unsigned offset, size_t size) const
 	return -1;
 }
 
-void array::sort(int i1, int i2, pcompare compare, void* param) {
-	if(i2 == -1)
-		i2 = count;
-	if(i1 == -1)
-		i1 = 0;
-	for(int i = i2; i > i1; i--) {
-		for(int j = i1; j < i; j++) {
-			auto t1 = ptr(j);
-			auto t2 = ptr(j + 1);
-			if(compare(t1, t2, param) > 0)
-				swap(j, j + 1);
-		}
-	}
-}
+//void array::sort(int i1, int i2, pcompare compare, void* param) {
+//	if(i2 == -1)
+//		i2 = count;
+//	if(i1 == -1)
+//		i1 = 0;
+//	for(int i = i2; i > i1; i--) {
+//		for(int j = i1; j < i; j++) {
+//			auto t1 = ptr(j);
+//			auto t2 = ptr(j + 1);
+//			if(compare(t1, t2, param) > 0)
+//				swap(j, j + 1);
+//		}
+//	}
+//}
 
 void array::remove(int index, int elements_count) {
 	if(((unsigned)index) >= count)

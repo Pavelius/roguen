@@ -9,6 +9,7 @@
 #include "modifier.h"
 #include "game.h"
 #include "pushvalue.h"
+#include "rand.h"
 #include "script.h"
 #include "siteskill.h"
 #include "speech.h"
@@ -895,7 +896,7 @@ static void update_room(creature* player) {
 		auto room_changed = false;
 		if(pn != pb) {
 			if(player->ishuman()) {
-				auto pd = getnme(pn->geti().id);
+				auto pd = getnme(pn->geti().id, "Look");
 				if(pd)
 					player->actp(pd);
 			}
@@ -1658,14 +1659,14 @@ creature* player_create(point m, variant kind, bool female) {
 		advance_value(pm->use);
 		adat<variant> conditions;
 		conditions.add(kind);
-		player->setname(charname::param(conditions));
+		player->setname(charname::param({conditions.data, conditions.count}));
 		player->basic.abilities[LineOfSight] += 4;
 	} else {
 		adat<variant> conditions;
 		conditions.add(kind);
 		if(player->is(Female))
 			conditions.add("Female");
-		player->setname(charname::param(conditions));
+		player->setname(charname::param({conditions.data, conditions.count}));
 		player->basic.abilities[LineOfSight] += 4;
 		advance_value(kind, 0);
 		player_levelup();

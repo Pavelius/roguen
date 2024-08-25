@@ -1,4 +1,6 @@
-#include "crt.h"
+#include "stringbuilder.h"
+
+extern "C" void* memcpy(void* destination, const void* source, long unsigned size) noexcept(true);
 
 template<class T> static void remove(T* p) {
 	T* z = p->next;
@@ -101,32 +103,4 @@ const char* szdup(const char* text) {
 		return small.add(text, lenght);
 	else
 		return big.add(text, lenght);
-}
-
-static bool ischa(unsigned char u) {
-	return (u >= 'A' && u <= 'Z')
-		|| (u >= 'a' && u <= 'z')
-		|| (u >= ((unsigned char)'À') && u <= ((unsigned char)'ß'))
-		|| (u >= ((unsigned char)'à') && u <= ((unsigned char)'ÿ'));
-}
-
-// Work only with english symbols
-const char* sztag(const char* p) {
-	char temp[128];
-	char* s = temp;
-	bool upper = true;
-	while(*p) {
-		if(*p != '_' && !ischa((unsigned char)*p) && !isnum(*p)) {
-			upper = true;
-			p++;
-			continue;
-		}
-		if(upper) {
-			szput(&s, szupper(szget(&p)));
-			upper = false;
-		} else
-			*s++ = *p++;
-	}
-	*s++ = 0;
-	return szdup(temp);
 }

@@ -1,5 +1,7 @@
 #include "color.h"
-#include "crt.h"
+#include "iabs.h"
+#include "iswap.h"
+#include "slice.h"
 
 color colors::black;
 color colors::blue(0, 0, 255);

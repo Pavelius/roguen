@@ -6,6 +6,7 @@ enum stream_flags {
 	StreamWrite = 2,
 	StreamText = 4,
 };
+enum class codepage { No, W1251, UTF8, U16BE, U16LE };
 
 namespace io {
 // Abstract bi-stream interface
@@ -54,3 +55,15 @@ private:
 	void*				handle;
 };
 }
+
+unsigned szget(const char** input, codepage code);
+
+char* szput(char* output, unsigned value, codepage code);
+char* loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
+
+void* loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
+void szencode(char* output, int output_count, codepage output_code, const char* input, int input_count, codepage input_code);
+
+const char* szext(const char* path);
+const char* szfname(const char* path);
+char* szfnamewe(char* result, const char* name);

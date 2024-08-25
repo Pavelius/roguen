@@ -45,13 +45,10 @@
     <ClCompile Include="color.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="crt.cpp">
+    <ClCompile Include="array.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="crt_file.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="crt_locale.cpp">
+    <ClCompile Include="locale.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="dataset.cpp">
@@ -605,6 +602,24 @@
     <ClInclude Include="material.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="assert.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="rand.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="iabs.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="iswap.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="slice.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="array.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
@@ -631,47 +646,11 @@
     <Text Include="..\logs.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\DirectionNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\ItemNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\MonsterNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\NameCharacters.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\Names.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\RaceNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\SiteDescriptions.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\SiteNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\SpellNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\UnknownNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\WearNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
     <Text Include="..\locale\ru\talk\NPCHouses.txt">
       <Filter>Talk</Filter>
     </Text>
     <Text Include="..\rules\Spells.txt">
       <Filter>Data</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\EffectDescriptions.txt">
-      <Filter>Locale</Filter>
     </Text>
     <Text Include="..\rules\Tiles.txt">
       <Filter>Data</Filter>
@@ -679,14 +658,8 @@
     <Text Include="..\rules\Features.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\NeedDescriptions.txt">
-      <Filter>Locale</Filter>
-    </Text>
     <Text Include="..\locale\ru\talk\NeedTalk.txt">
       <Filter>Talk</Filter>
-    </Text>
-    <Text Include="..\locale\ru\core\EndGameDescriptions.txt">
-      <Filter>Locale</Filter>
     </Text>
     <Text Include="..\modules\ChurchOfOne.txt">
       <Filter>Modules</Filter>
@@ -694,28 +667,61 @@
     <Text Include="..\rules\Skills.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\SkillNames.txt">
-      <Filter>Locale</Filter>
-    </Text>
     <Text Include="..\modules\AncientRace.txt">
       <Filter>Modules</Filter>
     </Text>
     <Text Include="..\locale\ru\talk\AncientRaceProgress.txt">
       <Filter>Talk</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\TrapDescriptions.txt">
+    <Text Include="..\locale\ru\Directions.txt">
       <Filter>Locale</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\TrapNames.txt">
+    <Text Include="..\locale\ru\Effects.txt">
       <Filter>Locale</Filter>
     </Text>
-    <Text Include="..\locale\ru\speech\General.txt">
+    <Text Include="..\locale\ru\EndGames.txt">
       <Filter>Locale</Filter>
     </Text>
-    <Text Include="..\locale\ru\speech\Chatting.txt">
+    <Text Include="..\locale\ru\Items.txt">
       <Filter>Locale</Filter>
     </Text>
-    <Text Include="..\locale\ru\core\NamesDescriptions.txt">
+    <Text Include="..\locale\ru\Monsters.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Names.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Needs.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Races.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Reputation.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Sites.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Skills.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Spells.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Time.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Traps.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\UnknownNames.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Wears.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\names\ru\Characters.txt">
       <Filter>Locale</Filter>
     </Text>
   </ItemGroup>

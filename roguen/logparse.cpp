@@ -33,9 +33,9 @@ const char* log::readval(const char* p, stringbuilder& sb, variant& result) {
 
 const char* log::readbon(const char* p, int& bonus) {
 	if(*p == '-')
-		p = stringbuilder::read(p, bonus);
+		p = psnum(p, bonus);
 	else if(*p == '+')
-		p = stringbuilder::read(p + 1, bonus);
+		p = psnum(p + 1, bonus);
 	else
 		bonus = 0;
 	return p;
@@ -87,7 +87,7 @@ const char* log::valuei::read(const char* p, stringbuilder& sb) {
 			minus = true;
 			p++;
 		}
-		p = stringbuilder::read(p, number);
+		p = psnum(p, number);
 		if(minus)
 			number = -number;
 	} else if(ischa(p[0])) {

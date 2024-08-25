@@ -1,11 +1,15 @@
 #include "color.h"
-#include "crt.h"
 #include "draw.h"
+#include "io_stream.h"
+#include "iabs.h"
+#include "iswap.h"
+#include "slice.h"
 
 #ifndef __GNUC__
 #pragma optimize("t", on)
 #endif
 
+extern "C" void exit(int exit_code);
 extern "C" void* malloc(unsigned long size);
 extern "C" void* realloc(void *ptr, unsigned long size);
 extern "C" void	free(void* pointer);
@@ -35,7 +39,6 @@ int					draw::width, draw::height, draw::dialog_width = 500;
 extern int			draw::fsize = 32;
 bool				draw::text_clipped, draw::control_hilited;
 const sprite*		draw::font;
-double				draw::linw = 1.0;
 color*				draw::palt;
 rect				draw::clipping;
 hoti				draw::hot;
@@ -65,6 +68,23 @@ static fnevent		next_proc;
 extern rect			sys_static_area;
 static char			tips_text[4096];
 stringbuilder		draw::tips_sb(tips_text);
+
+int isqrt(int num) {
+	int res = 0;
+	int bit = 1 << 30;
+	// "bit" starts at the highest power of four <= the argument.
+	while(bit > num)
+		bit >>= 2;
+	while(bit != 0) {
+		if(num >= res + bit) {
+			num -= res + bit;
+			res = (res >> 1) + bit;
+		} else
+			res >>= 1;
+		bit >>= 2;
+	}
+	return res;
+}
 
 long distance(point p1, point p2) {
 	auto dx = p1.x - p2.x;
@@ -1007,35 +1027,9 @@ void draw::pixel(int x, int y, unsigned char a) {
 	}
 }
 
-static void linew(int x1, int y1, double wd) {
-	int x0 = caret.x, y0 = caret.y;
-	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-	int err = dx - dy, e2, x2, y2; /* error value e_xy */
-	float ed = dx + dy == 0 ? 1 : sqrt((float)dx * dx + (float)dy * dy);
-	for(wd = (wd + 1) / 2; ; ) {                                    /* pixel loop */
-		draw::pixel(x0, y0, (unsigned char)imax((int)0, (int)(255 * (iabs(err - dx + dy) / ed - wd + 1))));
-		e2 = err; x2 = x0;
-		if(2 * e2 >= -dx) {                                            /* x step */
-			for(e2 += dy, y2 = y0; e2 < ed * wd && (y1 != y2 || dx > dy); e2 += dx)
-				draw::pixel(x0, y2 += sy, (unsigned char)imax((int)0, (int)(255 * (iabs(e2) / ed - wd + 1))));
-			if(x0 == x1) break;
-			e2 = err; err -= dy; x0 += sx;
-		}
-		if(2 * e2 <= dy) {                                             /* y step */
-			for(e2 = dx - e2; e2 < ed * wd && (x1 != x2 || dx < dy); e2 += dy)
-				draw::pixel(x2 += sx, y0, (unsigned char)imax((int)0, (int)(255 * (iabs(e2) / ed - wd + 1))));
-			if(y0 == y1) break;
-			err += dx; y0 += sy;
-		}
-	}
-}
-
 void draw::line(int xt, int yt) {
 	int x0 = caret.x, y0 = caret.y, x1 = xt, y1 = yt;
-	if(linw != 1.0)
-		linew(x1, y1, linw);
-	else if(caret.x == x1) {
+	if(caret.x == x1) {
 		if(correct(x0, y0, x1, y1, clipping, false))
 			set32h(canvas->ptr(x0, y0), y1 - y0 + 1);
 	} else if(caret.y == y1) {
@@ -1516,12 +1510,12 @@ int draw::textw(const char* string, int count) {
 	if(count == -1) {
 		const char *s1 = string;
 		while(*s1)
-			x1 += textw(szget(&s1));
+			x1 += textw(szget(&s1, codepage::W1251));
 	} else {
 		const char *s1 = string;
 		const char *s2 = string + count;
 		while(s1 < s2)
-			x1 += textw(szget(&s1));
+			x1 += textw(szget(&s1, codepage::W1251));
 	}
 	return x1;
 }
@@ -1538,7 +1532,7 @@ void draw::textrp(const char* string, int count, unsigned feats) {
 	const char *s2 = string + count;
 	unsigned char s0 = 0x0;
 	while(s1 < s2) {
-		int sm = szget(&s1);
+		int sm = szget(&s1, codepage::W1251);
 		if(sm >= 0x21)
 			glyph(sm, feats);
 		caret.x += textw(sm);
@@ -1578,7 +1572,7 @@ int draw::textbc(const char* string, int width) {
 	int w = 0;
 	const char* s1 = string;
 	while(true) {
-		unsigned s = szget(&s1);
+		unsigned s = szget(&s1, codepage::W1251);
 		if(s == 0x20 || s == 9)
 			p = s1 - string;
 		else if(s == 0) {
@@ -1725,7 +1719,7 @@ int draw::hittest(int x, int hit_x, const char* p, int lenght) {
 	int index = 0;
 	int syw = 0;
 	while(index < lenght) {
-		syw = draw::textw(szget(&p));
+		syw = draw::textw(szget(&p, codepage::W1251));
 		if(hit_x <= x + 1 + syw / 2)
 			break;
 		x += syw;
@@ -2376,7 +2370,7 @@ void draw::key2str(stringbuilder& sb, int key) {
 	case KeyEscape: sb.add("Esc"); break;
 	default:
 		if(key >= 0x20) {
-			char temp[2] = {(char)szupper(key), 0};
+			char temp[2] = {(char)upper_symbol(key), 0};
 			sb.add(temp);
 		}
 		break;

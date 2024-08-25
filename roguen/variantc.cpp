@@ -1,4 +1,5 @@
 #include "variantc.h"
+#include "rand.h"
 
 void variantc::select(array& source) {
 	auto ps = data;

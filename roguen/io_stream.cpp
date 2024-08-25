@@ -15,8 +15,8 @@ io::stream&	io::stream::operator<<(const char* t) {
 	while(*t) {
 		char temp[8];
 		char* s1 = temp;
-		unsigned u = szget(&t);
-		szput(&s1, u, codepage::UTF8);
+		unsigned u = szget(&t, codepage::W1251);
+		s1 = szput(s1, u, codepage::UTF8);
 		write(temp, s1 - temp);
 	}
 	return *this;
@@ -72,40 +72,11 @@ char* loadt(const char* url, int* size) {
 		// UTF8
 		// Перекодируем блок через декодировщик. Может быть только меньше,
 		// так как системная кодировка ANSI
-		szencode((char*)p, s1, metrics::code, (char*)p + 3, s1, codepage::UTF8);
+		szencode((char*)p, s1, codepage::W1251, (char*)p + 3, s1, codepage::UTF8);
 	}
 	if(size)
 		*size = s1;
 	return (char*)p;
-}
-
-char* szurlc(char* result) {
-	char* p = result;
-	while(*p) {
-		if(*p == '\\')
-			*p = '/';
-		p++;
-	}
-	return result;
-}
-
-char* szurl(char* p, const char* path, const char* name, const char* ext, const char* suffix) {
-	if(!p)
-		return 0;
-	*p = 0;
-	if(path && path[0]) {
-		zcpy(p, path);
-		zcat(p, "/");
-	}
-	if(name)
-		zcat(p, name);
-	if(suffix)
-		zcat(p, suffix);
-	if(ext && szext(p) == 0) {
-		zcat(p, ".");
-		zcat(p, ext);
-	}
-	return szurlc(p);
 }
 
 const char* szext(const char* path) {
@@ -127,21 +98,100 @@ const char* szfname(const char* path) {
 }
 
 char* szfnamewe(char* result, const char* name) {
-	zcpy(result, szfname(name));
+	stringbuilder sb(result, result + 260); sb.clear();
+	sb.addv(szfname(name), 0);
 	char* p = (char*)szext(result);
 	if(p && p != result)
 		p[-1] = 0;
 	return result;
 }
 
-void readurl(const char* folder, const char* mask, fnread proc) {
-	char temp[260];
-	for(io::file::find file(folder); file; file.next()) {
-		auto pn = file.name();
-		if(pn[0] == '.')
-			continue;
-		if(mask && !szpmatch(pn, mask))
-			continue;
-		proc(file.fullname(temp));
+unsigned szget(const char** input, codepage code) {
+	const unsigned char* p;
+	unsigned result;
+	switch(code) {
+	case codepage::UTF8:
+		p = (unsigned char*)*input;
+		result = *p++;
+		if(result >= 192 && result <= 223)
+			result = (result - 192) * 64 + (*p++ - 128);
+		else if(result >= 224 && result <= 239) {
+			result = (result - 224) * 4096 + (p[0] - 128) * 64 + (p[1] - 128);
+			p += 2;
+		}
+		*input = (const char*)p;
+		return result;
+	case codepage::U16LE:
+		p = (unsigned char*)*input;
+		result = p[0] | (p[1] << 8);
+		*input = (const char*)(p + 2);
+		return result;
+	case codepage::W1251:
+		result = (unsigned char)*(*input)++;
+		if(((unsigned char)result >= 0xC0))
+			return result - 0xC0 + 0x410;
+		else switch(result) {
+		case 0xB2: return 0x406;
+		case 0xAF: return 0x407;
+		case 0xB3: return 0x456;
+		case 0xBF: return 0x457;
+		}
+		return result;
+	default:
+		return *(*input)++;
+	}
+}
+
+char* szput(char* p, unsigned value, codepage code) {
+	switch(code) {
+	case codepage::UTF8:
+		if(((unsigned short)value) < 128)
+			*p++ = (unsigned char)value;
+		else if(((unsigned short)value) < 2047) {
+			*p++ = (unsigned char)(192 + (((unsigned short)value) / 64));
+			*p++ = (unsigned char)(128 + (((unsigned short)value) % 64));
+		} else {
+			*p++ = (unsigned char)(224 + (((unsigned short)value) / 4096));
+			*p++ = (unsigned char)(128 + ((((unsigned short)value) / 64) % 64));
+			*p++ = (unsigned char)(224 + (((unsigned short)value) % 64));
+		}
+		break;
+	case codepage::W1251:
+		if(value >= 0x410 && value <= 0x44F)
+			value = value - 0x410 + 0xC0;
+		else switch(value) {
+		case 0x406: value = 0xB2; break; // I
+		case 0x407: value = 0xAF; break; // Ї
+		case 0x456: value = 0xB3; break;
+		case 0x457: value = 0xBF; break;
+		}
+		*p++ = (unsigned char)value;
+		break;
+	case codepage::U16LE:
+		*p++ = (unsigned char)(value & 0xFF);
+		*p++ = (unsigned char)(((unsigned)value >> 8));
+		break;
+	case codepage::U16BE:
+		*p++ = (unsigned char)(((unsigned)value >> 8));
+		*p++ = (unsigned char)(value & 0xFF);
+		break;
+	default:
+		*p++ = (unsigned char)value;
+		break;
+	}
+	return p;
+}
+
+void szencode(char* output, int output_count, codepage output_code, const char* input, int input_count, codepage input_code) {
+	char* s1 = output;
+	char* s2 = s1 + output_count;
+	const char* p1 = input;
+	const char* p2 = p1 + input_count;
+	while(p1 < p2 && s1 < s2)
+		s1 = szput(s1, szget(&p1, input_code), output_code);
+	if(s1 < s2) {
+		s1[0] = 0;
+		if((output_code == codepage::U16BE || output_code == codepage::U16LE) && (s1 + 1) < s2)
+			s1[1] = 0;
 	}
 }

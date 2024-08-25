@@ -31,7 +31,7 @@ struct greatneed {
 	unsigned			flags;
 	int					score; // percent of completion
 	explicit operator bool() const { return deadline != 0; }
-	void				clear() { zclear(this); }
+	void				clear();
 	static greatneed*	find(variant owner);
 	static greatneed*	find(variant owner, needn f);
 	const greatneedi&	geti() const { return bsdata<greatneedi>::elements[type]; }

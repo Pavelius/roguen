@@ -1,5 +1,5 @@
-#include "crt.h"
 #include "dice.h"
+#include "rand.h"
 
 int dice::roll() const {
 	int v = min;

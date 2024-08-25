@@ -65,7 +65,7 @@ static const char* read_params(const char* p, short& v) {
 	if(!checksym(p, '('))
 		return p;
 	p = skipws(p + 1);
-	p = stringbuilder::read(p, v);
+	p = psnum(p, v);
 	p = skipws(p);
 	if(!checksym(p, ')'))
 		return p;
@@ -92,7 +92,7 @@ static const char* read_params(const char* p, stringbuilder& result) {
 static const char* read_event(const char* p, short& parent, stringbuilder& sb) {
 	if(!allowparse)
 		return p;
-	p = stringbuilder::read(skipws(p), parent);
+	p = psnum(skipws(p), parent);
 	auto pe = bsdata<phrasei>::add(); pe->clear();
 	pe->index = parent;
 	pe->next = -1;
@@ -106,7 +106,7 @@ static const char* read_answers(const char* p, short parent, stringbuilder& sb) 
 	while(allowparse && isanswer(p)) {
 		auto pe = bsdata<phrasei>::add(); pe->clear();
 		pe->index = parent;
-		p = stringbuilder::read(p, pe->next);
+		p = psnum(p, pe->next);
 		p = read_variants(skipws(p), sb, pe->elements, pe);
 		if(!checksym(p, ')'))
 			break;

@@ -82,7 +82,7 @@ static const char* read_identifier(const char* p, char* ps, const char* pe) {
 static void apply_value(const char* id, const char* name) {
 	id = szdup(id);
 	name = szdup(name);
-	if(source_name.find(id, 0) != -1)
+	if(source_name.findv(id, 0))
 		return;
 	auto p = (translate*)source_name.add();
 	p->id = id;
@@ -177,6 +177,13 @@ const char* getnme(const char* id) {
 	translate key = {id, 0};
 	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
 	return p ? p->name : 0;
+}
+
+const char* getnme(const char* id, const char* p1) {
+	char temp[128]; stringbuilder sb(temp);
+	sb.addv(id, 0);
+	sb.addv(p1, 0);
+	return getnme(temp);
 }
 
 const char* getnm(const char* id) {

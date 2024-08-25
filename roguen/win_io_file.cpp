@@ -1,5 +1,5 @@
-#include "crt.h"
 #include "io_stream.h"
+#include "stringbuilder.h"
 #include "win.h"
 
 void printcnf(const char* text) {
@@ -19,21 +19,22 @@ io::file::~file() {
 }
 
 io::file::find::find(const char* url) {
-	path[0] = 0;
-	zcpy(path, url);
-	char temp[261];
-	zcpy(temp, path);
-	zcat(temp, "/*.*");
+	stringbuilder sp(path);
+	sp.add(url);
+	char temp[261]; stringbuilder sb(temp);
+	sb.add(path);
+	sb.add("/*.*");
 	handle = FindFirstFileA(temp, (WIN32_FIND_DATA*)&reserved);
 	if(handle == ((void*)-1))
 		handle = 0;
 }
 
 const char* io::file::find::fullname(char* result) {
-	zcpy(result, path);
-	if(result[0])
-		zcat(result, "/");
-	zcat(result, name());
+	stringbuilder sb(result, result + 260);
+	sb.clear();
+	sb.add(path);
+	sb.add("/");
+	sb.add(name());
 	return result;
 }
 

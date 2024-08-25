@@ -1218,10 +1218,10 @@ static void paint_legends_text(point origin) {
 
 static void show_area() {
 	if(game.level)
-		print(text_header, "%1 (%Level %2i)", last_location->getname(), game.level);
+		text_header(str("%1 (%Level %2i)", last_location->getname(), game.level));
 	else
 		text_header(last_location->getname());
-	print(small_header, getnm("GlobalMapPosition"), game.position.x, game.position.y);
+	small_header(str(getnm("GlobalMapPosition"), game.position.x, game.position.y));
 	const int z = 4;
 	point origin;
 	origin.x = 16;
@@ -1367,7 +1367,7 @@ void visualize_images(res pid, point size, point offset) {
 				caret = caret + offset;
 				image(p, i, 0);
 				if(show_index)
-					print(textcn, "%1i", i);
+					textcn(str("%1i", i));
 			}
 		}
 		paintfinish();

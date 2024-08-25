@@ -4,6 +4,7 @@
 #include "global.h"
 #include "game.h"
 #include "pushvalue.h"
+#include "rand.h"
 #include "script.h"
 #include "trigger.h"
 #include "triggern.h"

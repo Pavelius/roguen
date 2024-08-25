@@ -86,9 +86,9 @@ static void readid() {
 
 static const char* readbonus(const char* p) {
 	if(*p == '-')
-		p = stringbuilder::read(p, last_bonus);
+		p = psnum(p, last_bonus);
 	else if(*p == '+')
-		p = stringbuilder::read(p + 1, last_bonus);
+		p = psnum(p + 1, last_bonus);
 	else
 		last_bonus = 0;
 	return p;
@@ -190,7 +190,7 @@ static void read_value(valuei& e, const bsreq* req) {
 			minus = true;
 			p++;
 		}
-		p = stringbuilder::read(p, e.number);
+		p = psnum(p, e.number);
 		if(minus)
 			e.number = -e.number;
 	} else if(ischa(p[0])) {

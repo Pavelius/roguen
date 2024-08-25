@@ -2,6 +2,7 @@
 #include "game.h"
 #include "greatneed.h"
 #include "pushvalue.h"
+#include "rand.h"
 #include "script.h"
 #include "speech.h"
 #include "textscript.h"

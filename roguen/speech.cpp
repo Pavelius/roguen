@@ -2,6 +2,7 @@
 #include "crt.h"
 #include "logparse.h"
 #include "nameable.h"
+#include "rand.h"
 #include "speech.h"
 
 using namespace log;

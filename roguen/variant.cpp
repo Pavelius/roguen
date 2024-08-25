@@ -85,9 +85,9 @@ const char* getvalues(const char* p, size_t& size, int& counter) {
 		p++;
 	size = p - pb;
 	if(*p == '-')
-		stringbuilder::read(p, counter);
+		psnum(p, counter);
 	else if(*p == '+')
-		stringbuilder::read(p + 1, counter);
+		psnum(p + 1, counter);
 	else
 		counter = 0;
 	return p;

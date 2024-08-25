@@ -33,6 +33,10 @@ BSMETA(greatneedi) = {
 BSDATAC(greatneedi, 32)
 BSDATAC(greatneed, 64)
 
+void greatneed::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
 greatneed* greatneed::find(variant owner) {
 	if(!owner)
 		return 0;

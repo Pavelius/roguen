@@ -1,5 +1,7 @@
 ﻿#include "bstream.h"
-#include "crt.h"
+#include "assert.h"
+
+extern "C" void* memset(void* destination, int value, long unsigned size) noexcept(true);
 
 #define FIRST_LENGTH_CODE_INDEX 257
 #define LAST_LENGTH_CODE_INDEX 285

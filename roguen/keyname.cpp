@@ -67,5 +67,5 @@ void addkeyname(stringbuilder& sb, unsigned key) {
 	if(pn)
 		sb.add(pn->format ? pn->format : pn->id);
 	else
-		sb.addsym(key);
+		sb.add(key);
 }

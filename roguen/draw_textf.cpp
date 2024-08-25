@@ -66,7 +66,7 @@ static const char* getparam(const char*& p, stringbuilder& sb) {
 static int getparam(const char*& p) {
 	if(isnum(p[0]) || (p[0] == '-' && isnum(p[1]))) {
 		int result = 0;
-		p = stringbuilder::read(p, result);
+		p = psnum(p, result);
 		p = skipsp(p);
 		return result;
 	}
@@ -349,7 +349,7 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 		auto w = 0;
 		if(p[0] == ':' && p[1] >= '0' && p[1] <= '9') {
 			auto index = 0;
-			p = stringbuilder::read(p + 1, index);
+			p = psnum(p + 1, index);
 			if(*p == ':')
 				p++;
 			if(metrics::icons) {

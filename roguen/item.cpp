@@ -1,6 +1,8 @@
 #include "areapiece.h"
+#include "iabs.h"
 #include "item.h"
 #include "magic.h"
+#include "rand.h"
 
 item* last_item;
 

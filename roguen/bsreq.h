@@ -53,26 +53,39 @@ struct bsreq {
 	void					set(const void* p, long value) const;
 };
 NOBSDATA(bsreq)
-// Abstract metadata class
+
 template<typename T> struct bsmeta {
 	typedef T				data_type;
 	static const bsreq		meta[];
 };
+
+template<class T> struct meta_decoy { typedef T value; };
+template<> struct meta_decoy<const char*> { typedef const char* value; };
+template<class T> struct meta_decoy<T*> : meta_decoy<T> {};
+template<class T> struct meta_decoy<const T*> : meta_decoy<T> {};
+template<class T, size_t N> struct meta_decoy<T[N]> : meta_decoy<T> {};
+template<class T> struct meta_decoy<T[]> : meta_decoy<T> {};
+template<class T> struct meta_decoy<const T> : meta_decoy<T> {};
+template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
+template<class T> struct meta_decoy<sliceu<T>> : meta_decoy<T> {};
+template<class T> struct meta_decoy<slice<T>> : meta_decoy<T> {};
+template<class T, size_t N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
+
 template<> struct bsmeta<unsigned char> : bsmeta<int> {};
 template<> struct bsmeta<char> : bsmeta<int> {};
 template<> struct bsmeta<unsigned short> : bsmeta<int> {};
 template<> struct bsmeta<short> : bsmeta<int> {};
 template<> struct bsmeta<unsigned> : bsmeta<int> {};
 template<> struct bsmeta<bool> : bsmeta<int> {};
-// Untility structures
+
 template<typename T, T v> struct static_value { static constexpr T value = v; };
 template<int v> struct static_int : static_value<int, v> {};
-// Get array elments
+
 template<class T> struct meta_count : static_int<1> {};
 template<class T, unsigned N> struct meta_count<T[N]> : static_int<N> {};
 template<class T> struct meta_count<T[]> : static_int<0> {};
 template<class T, unsigned N> struct meta_count<adat<T, N>> : static_int<N> {};
-// Get base size
+
 template<class T> struct meta_size : meta_decoy<T> {};
 template<class T> struct meta_size<T*> { typedef T* value; };
 template<class T> struct meta_size<const T*> { typedef T* value; };
@@ -80,7 +93,7 @@ template<class T, unsigned N> struct meta_size<T[N]> : meta_size<T> {};
 template<class T> struct meta_size<T[]> : meta_size<T> {};
 template<class T, unsigned N> struct meta_size<adat<T, N>> : meta_size<T> {};
 template<class T> struct meta_size<sliceu<T>> : meta_size<T> {};
-// Get kind
+
 template<class T> struct meta_kind : static_value<bstype_s, __is_enum(T) ? KindEnum : KindScalar> {};
 template<> struct meta_kind<const char*> : static_value<bstype_s, KindText> {};
 template<> struct meta_kind<char> : static_value<bstype_s, KindNumber> {};

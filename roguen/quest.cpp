@@ -1,6 +1,7 @@
 #include "bsreq.h"
 #include "collection.h"
 #include "quest.h"
+#include "rand.h"
 #include "monster.h"
 
 BSDATA(questni) = {
@@ -24,6 +25,10 @@ static monsteri* random_boss() {
 	collection<monsteri> source;
 	source.select(monsteri::isboss);
 	return source.random();
+}
+
+void quest::clear() {
+	memset(this, 0, sizeof(*this));
 }
 
 quest* quest::add(questn type, point position, variant modifier, variant level, variant reward) {
