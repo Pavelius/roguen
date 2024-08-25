@@ -243,7 +243,6 @@ typedef void(*fnread)(const char* url);
 
 inline int d100() { return rand() % 100; }
 bool						equal(const char* s1, const char* s2);
-const char*					getdescription(const char* id);
 int							getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
 const char*					getnm(const char* id);
 const char*					getnme(const char* id);
@@ -253,9 +252,6 @@ int							isqrt(const int x); // Return aquare root of 'x'
 void*						loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
 char*						loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
 bool						matchuc(const char* name, const char* filter);
-void						readl(const char* id, void(*proc)(const char* url));
-void						readfl(const char* folder, void(*proc)(const char* url));
-void						readurl(const char* folder, const char* mask, fnread proc);
 float						sqrt(const float x); // Return aquare root of 'x'
 inline const char*			skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }
 inline const char*			skipspcr(const char* p) { if(p) while(*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++; return p; }

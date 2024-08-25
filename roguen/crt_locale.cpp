@@ -5,14 +5,11 @@
 
 namespace {
 struct translate {
-	const char*						id;
-	const char*						name;
+	const char* id;
+	const char* name;
 };
 }
-
-static char main_locale[4];
 static array source_name(sizeof(translate));
-static array source_text(sizeof(translate));
 
 static int compare(const void* v1, const void* v2) {
 	auto p1 = (const translate*)v1;
@@ -20,10 +17,10 @@ static int compare(const void* v1, const void* v2) {
 	return strcmp(p1->id, p2->id);
 }
 
-static void update_elements(array& ei) {
-	if(ei.getcount() == 0)
+static void update_elements() {
+	if(!source_name)
 		return;
-	qsort(ei.data, ei.getcount(), ei.getsize(), compare);
+	qsort(source_name.data, source_name.count, source_name.getsize(), compare);
 }
 
 static const char* read_string_v1(const char* p, char* ps, const char* pe) {
@@ -82,17 +79,17 @@ static const char* read_identifier(const char* p, char* ps, const char* pe) {
 	return p;
 }
 
-static void apply_value(array& source, const char* id, const char* name) {
+static void apply_value(const char* id, const char* name) {
 	id = szdup(id);
 	name = szdup(name);
-	if(source.find(id, 0) != -1)
+	if(source_name.find(id, 0) != -1)
 		return;
-	auto p = (translate*)source.add();
+	auto p = (translate*)source_name.add();
 	p->id = id;
 	p->name = name;
 }
 
-static void readl_extend(const char* p, array& source, int& records_read) {
+static void readl_extend(const char* p, int& records_read) {
 	char name[128], value[8192];
 	while(*p && log::allowparse) {
 		p = log::skipwscr(p);
@@ -100,20 +97,20 @@ static void readl_extend(const char* p, array& source, int& records_read) {
 			p = read_identifier(p+1, name, name + sizeof(name) - 1);
 		p = log::skipwscr(p);
 		p = read_string_v2(p, value, value + sizeof(value) - 1);
-		apply_value(source, name, value);
+		apply_value(name, value);
 		records_read++;
 	}
 }
 
-static void readl(const char* url, array& source, bool required) {
-	auto p = log::read(url, required);
+static void read_names(const char* url) {
+	auto p = log::read(url, true);
 	if(!p)
 		return;
 	char name[128], value[8192];
 	auto records_read = 0;
 	p = log::skipwscr(p);
 	if(p[0] == '#')
-		readl_extend(p, source, records_read);
+		readl_extend(p, records_read);
 	else {
 		while(*p) {
 			p = read_identifier(p, name, name + sizeof(name) - 1);
@@ -121,21 +118,21 @@ static void readl(const char* url, array& source, bool required) {
 				break;
 			p = skipsp(p + 1);
 			p = read_string_v1(p, value, value + sizeof(value) - 1);
-			apply_value(source, name, value);
+			apply_value(name, value);
 			records_read++;
 		}
 	}
 	log::close();
-	update_elements(source);
+	update_elements();
 }
 
-static void savel(const char* url, array& source, bool only_empthy) {
+static void save_names(const char* url) {
 	io::file file(url, StreamText | StreamWrite);
 	if(!file)
 		return;
 	auto records_write = 0;
-	for(auto& e : source.records<translate>()) {
-		if(only_empthy && e.name)
+	for(auto& e : source_name.records<translate>()) {
+		if(e.name)
 			continue;
 		file << e.id << ": ";
 		if(e.name) {
@@ -146,64 +143,25 @@ static void savel(const char* url, array& source, bool only_empthy) {
 	}
 }
 
-static void setlist(array& source, const char* id, const char* locale, const char* folder) {
-	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.addlocaleurl(); sb.add("core/");
-	char filter[260]; stringbuilder sf(filter);
-	sf.add("*%1.txt", id);
-	for(io::file::find find(temp); find; find.next()) {
-		auto pn = find.name();
-		if(pn[0] == '.')
-			continue;
-		if(!szpmatch(pn, filter))
-			continue;
-		char file[512]; stringbuilder st(file);
-		st.add("%1.txt", id);
-		if(equal(pn, file))
-			continue;
-		readl(find.fullname(file), source, false);
-	}
-}
-
-static void seriall(array& source, const char* id, const char* locale, bool write_mode, bool required, bool only_empthy) {
-	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.addlocalefile("core", id, "txt");
-	if(write_mode)
-		savel(temp, source, only_empthy);
-	else {
-		readl(temp, source, required);
-		setlist(source, id, locale, "core");
-	}
-}
-
 static void deinitialize() {
-	seriall(source_name, "UnknownNames", main_locale, true, false, true);
-}
-
-static void check(array& source, const char* locale, const char* url) {
-	log::seturl(url);
-	for(auto& e : source.records<translate>()) {
-		if(e.name && e.name[0])
-			continue;
-		log::error(0, " Define translation for `%1`", e.id);
-	}
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("locale/%1/UnknownNames.txt", current_locale);
+	save_names(temp);
 }
 
 static void check_translation() {
-	check(source_name, main_locale, "Names.txt");
+	log::seturl("Names.txt");
+	for(auto& e : source_name.records<translate>()) {
+		if(e.name && e.name[0])
+			continue;
+		log::errorp(0, " Define translation for `%1`", e.id);
+	}
 }
 
-static void copy_locale(const char* locale) {
-	stringbuilder sb(main_locale);
-	sb.add(locale);
-}
-
-void initialize_translation(const char* locale) {
-	if(main_locale[0])
-		return;
-	copy_locale(locale);
-	seriall(source_name, "Names", main_locale, false, true, false);
-	seriall(source_text, "Descriptions", main_locale, false, false, false);
+void initialize_translation() {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("locale/%1", current_locale);
+	log::readf(read_names, temp, "*.txt");
 #ifdef _DEBUG
 	check_translation();
 	if(!log::geterrors())
@@ -221,16 +179,6 @@ const char* getnme(const char* id) {
 	return p ? p->name : 0;
 }
 
-const char* getdescription(const char* id) {
-	if(!id || id[0] == 0)
-		return 0;
-	if(!ischa(id[0]))
-		return id;
-	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_text.data, source_text.getcount(), source_text.getsize(), compare);
-	return p ? p->name : 0;
-}
-
 const char* getnm(const char* id) {
 	if(!id || id[0] == 0)
 		return "";
@@ -241,9 +189,9 @@ const char* getnm(const char* id) {
 	if(!p) {
 #ifdef _DEBUG
 		p = (translate*)source_name.add();
-		memset(p, 0, sizeof(*p));
 		p->id = szdup(id);
-		update_elements(source_name);
+		p->name = 0;
+		update_elements();
 #endif
 		return id;
 	}
@@ -252,29 +200,12 @@ const char* getnm(const char* id) {
 	return p->name;
 }
 
-void readl(const char* id, void(*proc)(const char* url)) {
-	if(!proc)
-		return;
-	char temp[260]; stringbuilder sb(temp);
-	sb.addlocalefile("core", id, "txt");
-	proc(temp);
-}
-
-void readfl(const char* url, void(*proc)(const char* url)) {
-	if(!proc)
-		return;
-	char temp[260]; stringbuilder sb(temp);
-	sb.addlocaleurl();
-	sb.add(url);
-	readurl(temp, "*.txt", proc);
-}
-
 void check_description(const char* id, const char** psuffix) {
-	if(!getdescription(id))
-		log::error(0, " Define description for `%1`", id);
+	if(!getnme(id))
+		log::errorp(0, " Define translation for `%1`", id);
 	for(auto p = psuffix; *p; p++) {
 		auto name = str("%1%2", id, *p);
-		if(!getdescription(name))
-			log::error(0, " Define description for `%1`", name);
+		if(!getnme(name))
+			log::errorp(0, " Define translation for `%1`", name);
 	}
 }

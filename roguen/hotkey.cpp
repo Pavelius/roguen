@@ -24,7 +24,7 @@ unsigned hotkey_parse(const char* p) {
 			else {
 				auto key = findkeybyname(temp);
 				if(!key) {
-					log::error(0, "Wrong key name '%1' in hotkey", temp);
+					log::errorp(0, "Wrong key name '%1' in hotkey", temp);
 					return 0;
 				} else
 					result |= key;
@@ -36,7 +36,7 @@ unsigned hotkey_parse(const char* p) {
 			continue;
 		} else {
 			p++;
-			log::error(0, "Wrong key symbol '%1' in hotkey", p);
+			log::errorp(0, "Wrong key symbol '%1' in hotkey", p);
 			return 0;
 		}
 	}
@@ -52,6 +52,6 @@ void hotkey_initialize() {
 		}
 		e.data = e.id;
 		if(!e.data)
-			log::error(0, "Can't find script or dialog with name '%1'", e.id);
+			log::errorp(0, "Can't find script or dialog with name '%1'", e.id);
 	}
 }

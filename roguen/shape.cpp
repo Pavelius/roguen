@@ -64,7 +64,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 	e.origin.x = 0;
 	e.origin.y = 0;
 	if(!isallowed(*p))
-		error(p, "Expected shape data");
+		errorp(p, "Expected shape data");
 	while(allowparse && *p && (isallowed(*p) || *p == '\n' || *p == '\r')) {
 		if((*p == '\n') || (*p == '\r')) {
 			if(e.size.x == 0)
@@ -72,7 +72,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 			else {
 				auto n = p - pb;
 				if(n != e.size.x)
-					error(p, "Shape row '%2' must be %1i characters", e.size.x, ps);
+					errorp(p, "Shape row '%2' must be %1i characters", e.size.x, ps);
 			}
 			while(*p == '\n' || *p == '\r')
 				p = skipcr(p);
@@ -85,7 +85,7 @@ static const char* read_block(const char* p, shapei& e, stringbuilder& sb) {
 	size_t mr = e.size.x * e.size.y;
 	size_t mn = sb.getmaximum();
 	if(mr > mn)
-		error(pb, "Shape size %1ix%2i is too big. Try make it smallest. Multiplied width and height of shape must be not greater that %3i.", e.size.x, e.size.y, mn);
+		errorp(pb, "Shape size %1ix%2i is too big. Try make it smallest. Multiplied width and height of shape must be not greater that %3i.", e.size.x, e.size.y, mn);
 	e.content = szdup(sb.begin());
 	for(auto sym : "0123456789")
 		e.points[sym - '0'] = e.find(sym);

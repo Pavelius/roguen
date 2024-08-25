@@ -1,7 +1,7 @@
 #include "crt.h"
 #include "stringbuilder.h"
 
-static char current_locale[4] = {"ru"};
+char current_locale[4] = {"ru"};
 static const char spaces[] = " \n\t\r.,!?;:";
 
 stringbuilder::fncustom stringbuilder::custom = stringbuilder::defidentifier;
@@ -162,97 +162,34 @@ bool szmatch(const char* text, const char* name) {
 	return true;
 }
 
-static const char* skipspecial(const char* p) {
-	while(*p && *p != '*' && *p != '?' && *p != ',')
-		p++;
-	return p;
-}
-
-static const char* find_part(const char* ps, const char* p, unsigned s) {
-	while(*ps) {
-		if(memcmp(ps, p, s) == 0)
-			return ps;
-		ps++;
-	}
-	return 0;
-}
-
-static bool pszmatch(const char* ps, const char* p) {
-	while(*p == '*') {
-		p++;
-		auto b = p;
-		while(*p && *p != ',' && *p != '*')
+bool szpmatch(const char* string, const char* pattern) {
+	auto p = string;
+	while(*p) {
+		auto symbol = *pattern++;
+		switch(symbol) {
+		case 0:
+			return false;
+		case '*':
+			while(*p && *p != *pattern)
+				p++;
+			continue;
+		case '?':
 			p++;
-		auto s = p - b;
-		if(!s)
-			return true;
-		ps = find_part(ps, b, s);
-		if(!ps)
-			return false;
-		ps += s;
-	}
-}
-
-static bool szpmatch(const char* text, const char* s, const char* s2) {
-	while(true) {
-		const char* d = text;
-		while(s < s2) {
-			if(*d == 0)
-				return false;
-			unsigned char c = *s;
-			if(c == '?') {
-				s++;
-				d++;
-			} else if(c == '*') {
-				s++;
-				if(s == s2)
-					return true;
-				while(*d) {
-					if(*d == *s)
-						break;
-					d++;
-				}
-			} else {
-				if(*d++ != *s++)
-					return false;
-			}
+			continue;
 		}
-		return true;
-	}
-}
-
-bool szpmatch(const char* text, const char* pattern) {
-	const char* p = pattern;
-	while(true) {
-		const char* p2 = zchr(p, ',');
-		if(!p2)
-			p2 = zend(p);
-		if(szpmatch(text, p, p2))
-			return true;
-		if(*p2 == 0)
+		if(*p != symbol) {
+			while(symbol && symbol != ',')
+				symbol = *pattern++;
+			if(symbol == ',') {
+				p = string;
+				pattern = skipsp(pattern);
+				continue;
+			}
 			return false;
-		p = skipsp(p2 + 1);
+		}
+		p++;
 	}
-}
-
-void stringbuilder::setlocale(const char* id) {
-	if(!id || !id[0])
-		return;
-	stringbuilder sb(current_locale);
-	sb.add(id);
-}
-
-void stringbuilder::addlocaleurl() {
-	add("locale/%1/", current_locale);
-}
-
-void stringbuilder::addlocalefile(const char* folder, const char* name, const char* ext) {
-	if(!ext)
-		ext = "txt";
-	addlocaleurl();
-	if(folder)
-		add("%1/", folder);
-	add("%1.%2", name, ext);
+	return (*pattern == 0) || (*pattern == ',');
 }
 
 static void add_by_count(stringbuilder& sb, const char* name, int count) {
@@ -279,7 +216,7 @@ const char* str_count(const char* id, int count) {
 	return temp;
 }
 
-unsigned char stringbuilder::upper(unsigned char u) {
+unsigned char upper_symbol(unsigned char u) {
 	if(u >= 0x61 && u <= 0x7A)
 		return u - 0x61 + 0x41;
 	else if(u >= 0xE0)
@@ -287,7 +224,7 @@ unsigned char stringbuilder::upper(unsigned char u) {
 	return u;
 }
 
-unsigned char stringbuilder::lower(unsigned char u) {
+unsigned char lower_symbol(unsigned char u) {
 	if(u >= 0x41 && u <= 0x5A)
 		return u - 0x41 + 0x61;
 	else if(u >= 0xC0 && u <= 0xDF)
@@ -297,12 +234,12 @@ unsigned char stringbuilder::lower(unsigned char u) {
 
 void stringbuilder::lower() {
 	for(auto p = pb; *p; p++)
-		*p = lower(*p);
+		*p = lower_symbol(*p);
 }
 
 void stringbuilder::upper() {
 	for(auto p = pb; *p; p++)
-		*p = upper(*p);
+		*p = upper_symbol(*p);
 }
 
 void stringbuilder::defidentifier(stringbuilder& sb, const char* id) {
@@ -404,7 +341,6 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 				case '$': addof(p1); break;
 				case '@': addto(p1); break;
 				case '~': addby(p1); break;
-				case '*': add_by_count(*this, p1, ((int*)vl)[pn - 2]); break;
 				default:
 					while(*p1 && p < pe)
 						*p++ = *p1++;
@@ -426,8 +362,8 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 	}
 	if(p0 && p0 != p) {
 		switch(prefix) {
-		case '-': *p0 = lower(*p0); break;
-		case '+': *p0 = upper(*p0); break;
+		case '-': *p0 = lower_symbol(*p0); break;
+		case '+': *p0 = upper_symbol(*p0); break;
 		default: break;
 		}
 	}
@@ -878,6 +814,7 @@ const char* ids(const char* p1, const char* p2, const char* p3) {
 	static char temp[64]; stringbuilder sb(temp);
 	sb.addv(p1, 0);
 	sb.addv(p2, 0);
+	sb.addv(p3, 0);
 	return temp;
 }
 

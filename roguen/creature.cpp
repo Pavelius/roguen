@@ -71,7 +71,7 @@ bool creature::fixaction(const char* id, const char* action, ...) const {
 			return true;
 		}
 	}
-	auto pn = getdescription(ids(id, action));
+	auto pn = getnme(ids(id, action));
 	if(pn) {
 		update_console_time();
 		actv(console, pn, xva_start(action), ' ');
@@ -466,7 +466,7 @@ void player_levelup() {
 		return;
 	if(player->basic.abilities[Level] > 1) {
 		player->basic.abilities[SkillPoints] += additional_skill_points(player->basic.abilities[Wits]);
-		player->actp(getdescription("LevelUp"));
+		player->actp(getnme("LevelUp"));
 	}
 	advance_value(player->getkind(), player->basic.abilities[Level]);
 }
@@ -579,7 +579,7 @@ static void check_trap(point m) {
 	if(ei.is(TrappedFeature)) {
 		auto bonus = area->is(m, Hidden) ? -30 : 20;
 		if(!player->roll(Wits, bonus)) {
-			auto pn = getdescription(ei.id);
+			auto pn = getnme(ei.id);
 			if(pn)
 				player->act(pn, getnm(ei.id));
 			script_run(ei.effect);
@@ -659,7 +659,7 @@ static void detect_hidden_objects() {
 		if(!player->roll(Alertness))
 			continue;
 		area->remove(m, Hidden);
-		player->actp(getdescription("YouDetectTrap"), area->getfeature(m).getname());
+		player->actp(getnme("YouDetectTrap"), area->getfeature(m).getname());
 		break;
 	}
 }
@@ -687,7 +687,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 			auto effect = random_table->random();
 			if(effect.iskind<listi>()) {
 				auto p = bsdata<listi>::elements + effect.value;
-				auto pn = getdescription(p->id);
+				auto pn = getnme(p->id);
 				if(pn)
 					player->act(pn, getnm(ei.id));
 				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
@@ -895,7 +895,7 @@ static void update_room(creature* player) {
 		auto room_changed = false;
 		if(pn != pb) {
 			if(player->ishuman()) {
-				auto pd = getdescription(pn->geti().id);
+				auto pd = getnme(pn->geti().id);
 				if(pd)
 					player->actp(pd);
 			}

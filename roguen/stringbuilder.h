@@ -31,8 +31,6 @@ public:
 	void				addicon(const char* id, int value);
 	void				addint(int value, int precision, const int radix);
 	void				adjective(const char* name, int m);
-	void				addlocalefile(const char* folder, const char* name, const char* ext = 0);
-	void				addlocaleurl();
 	void				addn(const char* format, ...) { addx('\n', format, xva_start(format)); }
 	void				addnounf(const char* s);
 	void				addnouni(const char* s);
@@ -65,7 +63,6 @@ public:
 	bool				isfull() const { return p >= pe; }
 	static bool			isnum(unsigned char sym) { return sym >= '0' && sym <= '9'; }
 	bool				ispos(const char* v) const { return p == v; }
-	static unsigned char lower(unsigned char sym);
 	void				lower();
 	const char*			psidf(const char* pb);
 	const char*			psline(const char* pb);
@@ -75,9 +72,7 @@ public:
 	static const char*	read(const char* p, int& result);
 	static const char*	read(const char* p, short& result);
 	void				set(char* v) { p = v; p[0] = 0; }
-	static void			setlocale(const char* id);
 	void				trimr();
-	static unsigned char upper(unsigned char sym);
 	void				upper();
 };
 typedef const char* (*fntext)(const void* object, stringbuilder& sb);
@@ -85,8 +80,19 @@ typedef void (*fnstatus)(const void* object, stringbuilder& sb);
 typedef void (*fnprint)(stringbuilder& sb);
 typedef void (*fnoutput)(const char* format);
 
+unsigned char lower_symbol(unsigned char sym);
+unsigned char upper_symbol(unsigned char sym);
+
 const char* ids(const char* p1, const char* p2);
 const char* ids(const char* p1, const char* p2, const char* p3);
 const char* str(const char* format, ...);
 const char* str_count(const char* id, int count);
+const char* skipcr(const char* format);
+
+void initialize_translation();
+bool szstart(const char* text, const char* name);
+bool szmatch(const char* text, const char* name);
+bool szpmatch(const char* text, const char* pattern);
 void print(fnoutput proc, const char* format, ...);
+
+extern char current_locale[4];

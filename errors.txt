@@ -1,2 +1,18 @@
-﻿In file `rules/Items.txt`:
- Line 267: Can't find variant `LightSpell`
+﻿In file `rules/Skills.txt`:
+ Line 6: Can't find variant `StealCoinsAngry`
+In file `Descriptions.txt`:
+ Define translation for `SkullInvestigation`
+ Define translation for `SkullInvestigationCompleted`
+ Define translation for `SkullInvestigationFail`
+ Define translation for `SkullInvestigationPartial`
+ Define translation for `SkullInvestigationSuccess`
+ Define translation for `DeepDwarfTradeRoute`
+ Define translation for `DeepDwarfTradeRouteCompleted`
+ Define translation for `DeepDwarfTradeRouteFail`
+ Define translation for `DeepDwarfTradeRoutePartial`
+ Define translation for `DeepDwarfTradeRouteSuccess`
+ Define translation for `AccumulationWeaponArsenal`
+ Define translation for `AccumulationWeaponArsenalCompleted`
+ Define translation for `AccumulationWeaponArsenalFail`
+ Define translation for `AccumulationWeaponArsenalPartial`
+ Define translation for `AccumulationWeaponArsenalSuccess`

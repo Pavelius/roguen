@@ -50,7 +50,7 @@ static bool isequal(const char* pn) {
 
 static void skip(const char* command) {
 	if(allowparse && !isequal(command)) {
-		log::error(p, "Expected token `%1`", command);
+		log::errorp(p, "Expected token `%1`", command);
 		allowparse = false;
 	}
 }
@@ -77,7 +77,7 @@ static bool islevel(int level) {
 static void readid() {
 	stringbuilder sb(temp); temp[0] = 0;
 	if(!ischa(*p)) {
-		log::error(p, "Expected identifier");
+		log::errorp(p, "Expected identifier");
 		allowparse = false;
 	} else
 		p = sb.psidf(p);
@@ -97,7 +97,7 @@ static const char* readbonus(const char* p) {
 static void readidbonus() {
 	stringbuilder sb(temp); temp[0] = 0;
 	if(!ischa(*p)) {
-		log::error(p, "Expected identifier");
+		log::errorp(p, "Expected identifier");
 		allowparse = false;
 	} else {
 		p = sb.psidf(p);
@@ -114,7 +114,7 @@ static const char* skipallcr(const char* p) {
 
 static void skiplinefeed() {
 	if(*p && *p != 10 && *p != 13) {
-		log::error(p, "Expected line feed");
+		log::errorp(p, "Expected line feed");
 		allowparse = false;
 	}
 	while(*p && (*p == 10 || *p == 13)) {
@@ -150,7 +150,7 @@ static const bsreq* find_requisit(const bsreq* type, const char* id) {
 		return 0;
 	auto req = type->find(temp);
 	if(!req)
-		log::error(p, "Not found requisit `%1`", id);
+		log::errorp(p, "Not found requisit `%1`", id);
 	return req;
 }
 
@@ -202,7 +202,7 @@ static void read_value(valuei& e, const bsreq* req) {
 		else if(req->type == bsmeta<variant>::meta) {
 			variant v1 = (const char*)temp;
 			if(!v1)
-				log::error(p, "Can't find variant `%1`", temp);
+				log::errorp(p, "Can't find variant `%1`", temp);
 			v1.counter = last_bonus;
 			e.number = v1.u;
 		} else {
@@ -211,11 +211,11 @@ static void read_value(valuei& e, const bsreq* req) {
 			if(pk)
 				shift = pk->offset;
 			if(!req->source)
-				log::error(p, "Invalid source array where read identifier `%1`", temp);
+				log::errorp(p, "Invalid source array where read identifier `%1`", temp);
 			else {
 				e.number = req->source->find(temp, shift);
 				if(e.number == -1) {
-					log::error(p, "Not found identifier `%1`", temp);
+					log::errorp(p, "Not found identifier `%1`", temp);
 					e.number = 0;
 				} else
 					e.data = req->source->ptr(e.number);
@@ -263,7 +263,7 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 	} else if(req->is(KindReference))
 		req->set(p1, (long)v.data);
 	else
-		log::error(p, "Unknown type in requisit `%1`", req->id);
+		log::errorp(p, "Unknown type in requisit `%1`", req->id);
 }
 
 static void fill_object(void* object, const bsreq* type, const valuei* keys, int key_count) {
@@ -279,7 +279,7 @@ static void read_dset(void* object, const bsreq* req) {
 		index = req->source->find(temp, 0);
 		if(index == -1) {
 			index = 0;
-			log::error(p, "Not found field `%1` in dataset `%2`", temp, req->id);
+			log::errorp(p, "Not found field `%1` in dataset `%2`", temp, req->id);
 		}
 		skip("(");
 		read_value(v, req);
@@ -338,7 +338,7 @@ static void read_dictionary(void* object, const bsreq* type, int level, bool nee
 				readid();
 				auto req = type->find(temp);
 				if(!req) {
-					log::error(p, "Not found requisit `%1`", temp);
+					log::errorp(p, "Not found requisit `%1`", temp);
 					allowparse = false;
 				} else if(req->is(KindDSet))
 					read_dset(object, req);
@@ -360,7 +360,7 @@ static void read_dictionary(void* object, const bsreq* type, int level, bool nee
 
 static void* read_object(const bsreq* type, array* source, int key_count, int level, const char* common_initialize) {
 	if(!isvalue()) {
-		log::error(p, "Expected value");
+		log::errorp(p, "Expected value");
 		allowparse = false;
 	}
 	valuei keys[8] = {};
@@ -391,7 +391,7 @@ static void parse() {
 		auto pd = find_type(temp);
 		if(!pd) {
 			if(temp[0])
-				log::error(p, "Not find data type for `%1`", temp);
+				log::errorp(p, "Not find data type for `%1`", temp);
 			return;
 		}
 		auto common_initialize = p;

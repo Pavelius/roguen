@@ -83,19 +83,6 @@ WebBreak: %герой порвал%а паутину.
 WebEntagled: %герой запутал%ась в паутине.
 Yes: Да
 
-Month: Месяц
-MonthOf: Месяца
-MonthPl: Месяцев
-Day: День
-DayOf: Дня
-DayPl: Дней
-Hour: Час
-HourOf: Часа
-HourPl: Часов
-Minute: Минута
-MinuteOf: Минуты
-MinutePl: Минут
-
 YouCantPickUpAllForCost: Вы не можете поднять все предметы если а каждый из них надо платить.
 YouCantWearItem: Вы не можете носить [%1], так как подходите под минимальные требования для этого.
 YouCutWood: %герой срубил%а %-1.
@@ -161,15 +148,3 @@ NoAnyProgress: Еще даже не начинали
 LittleProgress: Немного двинулись вперед
 HalfwayProgress: Находимся на полпути
 AlmostFinishProgress: Почти уже закончили
-
-ReputationM5: Мясник
-ReputationM4: Убийца
-ReputationM3: Бандит
-ReputationM2: Мошенник
-ReputationM1: Нарушитель
-Reputation0: Незнакомец
-Reputation1: Гражданин
-Reputation2: Друг
-Reputation3: Защитник
-Reputation4: Рыцарь
-Reputation5: Паладин

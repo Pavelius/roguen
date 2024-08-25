@@ -6,6 +6,7 @@
 #include "greatneed.h"
 #include "creature.h"
 #include "hotkey.h"
+#include "log.h"
 #include "siteskill.h"
 #include "speech.h"
 #include "talk.h"
@@ -31,9 +32,9 @@ static void initializating() {
 	bsreq::read("rules/Sites.txt");
 	bsreq::read("rules/Advancement.txt");
 	bsreq::read("rules/Skills.txt");
-	readl("NameCharacters", charname::read);
+	log::readlf(charname::read, "names", "*.txt");
 	read_talk();
-	readurl("modules", "*.txt", bsreq::read);
+	log::readf(bsreq::read, "modules", "*.txt");
 	check_need_loading();
 	hotkey_initialize();
 	site_skills_initialize();

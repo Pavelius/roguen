@@ -259,7 +259,7 @@ void play_game() {
 }
 
 void end_game() {
-	dialog_message(getdescription("LoseGame"));
+	dialog_message(getnme("LoseGame"));
 	next_phase(main_menu);
 }
 

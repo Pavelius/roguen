@@ -78,9 +78,9 @@ static const char* read_conditions(const char* p, stringbuilder& sb, variant* pb
 		p = readidn(p, sb);
 		variant v = (const char*)sb.begin();
 		if(!v)
-			log::error(p, "Can't find variant `%1`", sb.begin());
+			log::errorp(p, "Can't find variant `%1`", sb.begin());
 		else if(pb >= pe)
-			log::error(p, "Too many conditions when save variant %1 (only %2i allowed)", v.getid(), count);
+			log::errorp(p, "Too many conditions when save variant %1 (only %2i allowed)", v.getid(), count);
 		else
 			*pb++ = v;
 		p = skipws(p);

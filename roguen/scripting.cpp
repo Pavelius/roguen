@@ -1266,7 +1266,7 @@ static bool choose_indecies(creaturea& source, const char* header, int offset) {
 static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!id)
 		return true;
-	auto pn = getdescription(str("%1Choose", id));
+	auto pn = getnme(str("%1Choose", id));
 	if(!pn)
 		return true;
 	pushvalue push_width(window_width, 300);
@@ -1877,13 +1877,13 @@ static void set_offset(int bonus) {
 
 static void win_game(int bonus) {
 	auto pn = bonus ? str("WinGame%1i", bonus) : "WinGame";
-	dialog_message(getdescription(pn));
+	dialog_message(getnm(pn));
 	next_phase(main_menu);
 }
 
 static void lose_game(int bonus) {
 	auto pn = bonus ? str("LoseGame%1i", bonus) : "LoseGame";
-	dialog_message(getdescription(pn));
+	dialog_message(getnm(pn));
 	next_phase(main_menu);
 }
 

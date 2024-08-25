@@ -21,7 +21,7 @@ const char* log::read(const char* url, bool error_if_not_exist) {
 	if(!p_alloc) {
 		current_url = 0;
 		if(error_if_not_exist)
-			error(0, "Can't find file '%1'", url);
+			errorp(0, "Can't find file '%1'", url);
 		return 0;
 	}
 	seturl(url);
@@ -62,7 +62,7 @@ void log::errorv(const char* position, const char* format) {
 	file << format << "\n";
 }
 
-void log::error(const char* position, const char* format, ...) {
+void log::errorp(const char* position, const char* format, ...) {
 	char temp[4096]; stringbuilder sb(temp);
 	if(current_url) {
 		sb.add("In file `%1`:", current_url);
@@ -116,4 +116,25 @@ const char* log::skipwscr(const char* p) {
 		break;
 	}
 	return p;
+}
+
+void log::readf(fnread proc, const char* folder, const char* filter) {
+	for(io::file::find find(folder); find; find.next()) {
+		auto pn = find.name();
+		if(!pn || pn[0] == '.')
+			continue;
+		if(filter) {
+			if(!szpmatch(pn, filter))
+				continue;
+		}
+		char temp2[260];
+		find.fullname(temp2);
+		proc(temp2);
+	}
+}
+
+void log::readlf(fnread proc, const char* folder, const char* filter) {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("%1/%2", folder, current_locale);
+	readf(proc, temp, filter);
 }

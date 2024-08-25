@@ -231,7 +231,7 @@ static void list_of_skills(stringbuilder& sb) {
 static void need_help_info(stringbuilder& sb) {
 	if(!last_need)
 		return;
-	auto pn = getdescription(last_need->geti().getid());
+	auto pn = getnme(last_need->geti().getid());
 	if(!pn)
 		return;
 	sb.add(pn, time_left(last_need->deadline));

@@ -53,7 +53,7 @@ static const char* read_variants(const char* p, stringbuilder& result, variants&
 		p = skipws(p);
 		variant v = (const char*)result.begin();
 		if(!v)
-			log::error(p, "Can't find variant `%1`", result.begin());
+			log::errorp(p, "Can't find variant `%1`", result.begin());
 		else
 			v.counter = bonus;
 		add(source, v);
@@ -171,7 +171,7 @@ void read_talk(const char* url) {
 	auto n1 = bsdata<phrasei>::source.getcount();
 	while(allowparse && *p) {
 		if(!isevent(p)) {
-			log::error(p, "Expected symbol `#` followed by event number");
+			log::errorp(p, "Expected symbol `#` followed by event number");
 			break;
 		}
 		short event_parent = -1; sb.clear();
@@ -185,7 +185,5 @@ void read_talk(const char* url) {
 }
 
 void read_talk() {
-	char temp[260]; stringbuilder sb(temp);
-	sb.addlocaleurl(); sb.add("talk/");
-	readurl(temp, "*.txt", read_talk);
+	log::readlf(read_talk, "dialogs", "*.txt");
 }

@@ -96,7 +96,7 @@ static void say_thank_you(const char* item_name, int count, int coins) {
 }
 
 static void say_need(const char* suffix, ...) {
-	auto pn = getdescription(str("%1%2", last_need->geti().getid(), suffix));
+	auto pn = getnme(str("%1%2", last_need->geti().getid(), suffix));
 	if(!pn)
 		return;
 	opponent->sayv(console, pn, xva_start(suffix));

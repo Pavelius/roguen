@@ -18,7 +18,7 @@ struct greatneedi : nameable {
 	dice				days;
 	unsigned			coins;
 	unsigned			flags;
-	const char*			get(const char* suffix) const { return getdescription(str("%1%2", id, suffix)); }
+	const char*			get(const char* suffix) const { return getnme(str("%1%2", id, suffix)); }
 	const char*			getcompleted() const { return get("Completed"); }
 	const char*			getfail() const { return get("Fail"); }
 	const char*			getpartial() const { return get("Partial"); }

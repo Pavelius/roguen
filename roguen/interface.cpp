@@ -27,7 +27,6 @@ using namespace draw;
 const int panel_width = 130;
 
 void initialize_png();
-void initialize_translation(const char* locale);
 void set_dark_theme();
 void show_manual();
 
@@ -1389,7 +1388,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	if(!proc)
 		return -1;
 	set_dark_theme();
-	initialize_translation("ru");
+	initialize_translation();
 	if(initializing)
 		initializing();
 	if(log::geterrors())

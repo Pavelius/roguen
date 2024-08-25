@@ -200,7 +200,7 @@ const char*	item::getfullname(int price_percent, bool uppercase) const {
 	}
 	sb.lower();
 	if(uppercase)
-		temp[0] = stringbuilder::upper(temp[0]);
+		temp[0] = upper_symbol(temp[0]);
 	return temp;
 }
 

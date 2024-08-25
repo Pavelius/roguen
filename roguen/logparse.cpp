@@ -24,7 +24,7 @@ const char* log::readval(const char* p, stringbuilder& sb, variant& result) {
 	p = readidn(p, sb);
 	result = (const char*)sb.begin();
 	if(!result)
-		log::error(p, "Unknown variant identifier `%1`", sb.begin());
+		log::errorp(p, "Unknown variant identifier `%1`", sb.begin());
 	int bonus;
 	p = readbon(p, bonus);
 	result.counter = bonus;
@@ -62,14 +62,14 @@ bool log::checksym(const char* p, char sym) {
 		return false;
 	if(sym == '\n') {
 		if(*p != '\n' && *p != '\r') {
-			log::error(p, "Expected symbol line feed");
+			log::errorp(p, "Expected symbol line feed");
 			allowparse = false;
 			return false;
 		}
 	} else if(*p != sym) {
 		char result[] = {sym, 0};
 		char string[16]; stringbuilder sb(string); sb.clear();
-		log::error(p, "Expected symbol `%1`, but you have string `%2`", result, example(p, sb));
+		log::errorp(p, "Expected symbol `%1`, but you have string `%2`", result, example(p, sb));
 		allowparse = false;
 		return false;
 	}

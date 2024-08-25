@@ -8,13 +8,6 @@ static const char* match(const char* text, const char* name) {
 	return text;
 }
 
-const char* variant::getdescription() const {
-	auto& e = bsdata<varianti>::elements[type];
-	if(!e.source || !e.isnamed())
-		return 0;
-	return ::getdescription(getid());
-}
-
 const char* variant::getname() const {
 	auto& e = to();
 	if(!e.source)

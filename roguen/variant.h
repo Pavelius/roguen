@@ -3,15 +3,9 @@
 
 #pragma once
 
-#define VKIND(T, V) template<> constexpr variant_s variant::kind<T>() { return V; }
 #define VAR(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 
 struct bsreq;
-union variant;
-
-typedef sliceu<variant> variants;
-typedef void (*fnvariant)(variant v);
-typedef bool (*fntestvariant)(variant v);
 
 struct varianti {
 	typedef void(*fnscript)(int index, int bonus);
@@ -52,7 +46,6 @@ union variant {
 	constexpr bool	issame(const variant& v) const { return type == v.type && value == v.value; }
 	constexpr variant nocounter() const { return variant(type, 0, value); }
 	template<class T> constexpr bool iskind() const { return bsdata<varianti>::elements[type].source==bsdata<T>::source_ptr; }
-	const char*		getdescription() const;
 	const varianti&	to() const { return bsdata<varianti>::elements[type]; }
 	const char*		getid() const;
 	void*			getpointer() const { return to().source->ptr(value); }
@@ -61,3 +54,7 @@ union variant {
 };
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);
+
+typedef sliceu<variant> variants;
+typedef void (*fnvariant)(variant v);
+typedef bool (*fntestvariant)(variant v);

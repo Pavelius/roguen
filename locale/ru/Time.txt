@@ -1,0 +1,12 @@
+﻿Month: Месяц
+MonthOf: Месяца
+MonthPl: Месяцев
+Day: День
+DayOf: Дня
+DayPl: Дней
+Hour: Час
+HourOf: Часа
+HourPl: Часов
+Minute: Минута
+MinuteOf: Минуты
+MinutePl: Минут
