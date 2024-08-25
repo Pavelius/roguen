@@ -4,6 +4,7 @@
 #include "charname.h"
 #include "creature.h"
 #include "direction.h"
+#include "functor.h"
 #include "imath.h"
 #include "indexa.h"
 #include "itema.h"
@@ -21,6 +22,8 @@
 extern collection<roomi> rooms;
 int		last_roll_result;
 bool	last_roll_successed;
+
+extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
 
 bool allow_targets(const variants& conditions);
 bool apply_targets(const variants& conditions);

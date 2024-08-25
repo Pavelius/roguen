@@ -356,7 +356,7 @@
     <ClInclude Include="color.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="crt.h">
+    <ClInclude Include="functor.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="datamap.h">

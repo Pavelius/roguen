@@ -1,7 +1,7 @@
-#include "crt.h"
 #include "draw.h"
 #include "pushvalue.h"
 #include "shortcut.h"
+#include "slice.h"
 
 using namespace draw;
 

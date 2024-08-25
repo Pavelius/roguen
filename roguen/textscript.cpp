@@ -1,5 +1,4 @@
 #include "creature.h"
-#include "crt.h"
 #include "textscript.h"
 #include "speech.h"
 
@@ -119,7 +118,7 @@ static bool parse_name(stringbuilder& sb, const char* id) {
 static bool parse_gender(stringbuilder& sb, const char* id) {
 	auto female = is_player_female();
 	for(auto& e : player_gender) {
-		if(strcmp(e.female, id) != 0)
+		if(!equal(e.female, id))
 			continue;
 		if(female)
 			sb.add(e.female);
@@ -132,7 +131,7 @@ static bool parse_gender(stringbuilder& sb, const char* id) {
 
 static bool parse_script(stringbuilder& sb, const char* id) {
 	for(auto& e : bsdata<textscript>()) {
-		if(strcmp(e.id, id) != 0)
+		if(!equal(e.id, id))
 			continue;
 		e.proc(sb);
 		return true;

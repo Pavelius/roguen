@@ -37,7 +37,6 @@ struct bsreq {
 	bstype_s				subtype; // metadata subtype
 	array*					source; // data source for enumerators
 	constexpr explicit operator bool() const { return id != 0; }
-	bool					equal(const void* v1, const void* v2) const;
 	const bsreq*			find(const char* name) const;
 	const bsreq*			find(const char* name, unsigned count) const;
 	const bsreq*			find(const char* name, const bsreq* type) const;
@@ -68,10 +67,10 @@ template<class T> struct meta_decoy<const T*> : meta_decoy<T> {};
 template<class T, size_t N> struct meta_decoy<T[N]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<T[]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<const T> : meta_decoy<T> {};
-//template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
+template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
 template<class T> struct meta_decoy<sliceu<T>> : meta_decoy<T> {};
 template<class T> struct meta_decoy<slice<T>> : meta_decoy<T> {};
-//template<class T, size_t N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
+template<class T, size_t N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
 
 template<> struct bsmeta<unsigned char> : bsmeta<int> {};
 template<> struct bsmeta<char> : bsmeta<int> {};

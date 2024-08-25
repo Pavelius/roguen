@@ -1,5 +1,4 @@
 #include "bsreq.h"
-#include "crt.h"
 #include "stringbuilder.h"
 
 BSMETA(int) = {{"number"}, {}};
@@ -11,13 +10,13 @@ BSMETA(bsreq) = {
 	BSREQ(lenght),
 	BSREQ(count),
 	BSREQ(type),
-{}};
+	{}};
 
 const bsreq* bsreq::find(const char* name) const {
 	if(!name || name[0] == 0)
 		return 0;
 	for(auto p = this; p->id; p++) {
-		if(strcmp(p->id, name) == 0)
+		if(equal(p->id, name))
 			return p;
 	}
 	return 0;
@@ -37,7 +36,7 @@ const bsreq* bsreq::find(const char* name, const bsreq* type) const {
 	for(auto p = this; p->id; p++) {
 		if(p->type != type)
 			continue;
-		if(strcmp(p->id, name) == 0)
+		if(equal(p->id, name))
 			return p;
 	}
 	return 0;
@@ -54,19 +53,19 @@ int bsreq::findenum(const char* name) const {
 
 long bsreq::get(const void* p) const {
 	switch(size) {
-	case sizeof(char) : return *((char*)p);
-	case sizeof(short) : return *((short*)p);
-	case sizeof(long) : return *((long*)p);
-	default: return *((int*)p);
+		case sizeof(char) : return *((char*)p);
+			case sizeof(short) : return *((short*)p);
+				case sizeof(long) : return *((long*)p);
+				default: return *((int*)p);
 	}
 }
 
 void bsreq::set(const void* p, long value) const {
 	switch(size) {
-	case sizeof(char) : *((char*)p) = (char)value; break;
-	case sizeof(short) : *((short*)p) = (short)value; break;
-	case sizeof(long) : *((long*)p) = value; break;
-	default: *((int*)p) = value; break;
+		case sizeof(char) : *((char*)p) = (char)value; break;
+			case sizeof(short) : *((short*)p) = (short)value; break;
+				case sizeof(long) : *((long*)p) = value; break;
+				default: *((int*)p) = value; break;
 	}
 }
 
@@ -128,15 +127,15 @@ const char* bsreq::get(const void* p, char* result, const char* result_max) cons
 	return gets(p);
 }
 
-bool bsreq::equal(const void* v1, const void* v2) const {
-	if(type == bsmeta<const char*>::meta) {
-		auto p1 = *((const char**)ptr(v1));
-		if(!p1)
-			p1 = "";
-		auto p2 = *((const char**)ptr(v2));
-		if(!p2)
-			p2 = "";
-		return strcmp(p1, p2);
-	} else
-		return memcmp(ptr(v1), ptr(v2), lenght);
-}
+//bool bsreq::equal(const void* v1, const void* v2) const {
+//	if(type == bsmeta<const char*>::meta) {
+//		auto p1 = *((const char**)ptr(v1));
+//		if(!p1)
+//			p1 = "";
+//		auto p2 = *((const char**)ptr(v2));
+//		if(!p2)
+//			p2 = "";
+//		return equal(p1, p2);
+//	} else
+//		return memcmp(ptr(v1), ptr(v2), lenght) == 0;
+//}

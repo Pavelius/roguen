@@ -3,6 +3,8 @@
 #include "iswap.h"
 #include "rand.h"
 
+extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
+
 static fngetname sort_proc;
 
 static int compare_proc(const void* v1, const void* v2) {

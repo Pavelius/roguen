@@ -1,6 +1,8 @@
 #include "answers.h"
 #include "rand.h"
 
+extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
+
 const char* answers::header;
 const char* answers::prompt;
 const char* answers::prompa;

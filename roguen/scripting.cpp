@@ -5,6 +5,7 @@
 #include "draw_object.h"
 #include "dialog.h"
 #include "filter.h"
+#include "functor.h"
 #include "game.h"
 #include "imath.h"
 #include "itema.h"
@@ -23,6 +24,7 @@
 #include "site.h"
 #include "siteskill.h"
 #include "speech.h"
+#include "talk.h"
 #include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"
@@ -41,7 +43,6 @@ bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
 void open_manual(const char* manual_header, const char* manual_content);
-bool talk_opponent(const char* id, fncommand proc = 0);
 void visualize_images(res pid, point size, point offset);
 
 void* choose_answers(answers& an, const char* header, const char* cancel);
@@ -1562,12 +1563,12 @@ static void chatting() {
 	}
 	auto monster = opponent->getmonster();
 	if(monster) {
-		if(talk_opponent(monster->id))
+		if(talk_opponent(monster->id, 0))
 			return;
 	}
 	auto room = opponent->getroom();
 	if(room) {
-		if(talk_opponent(room->geti().id))
+		if(talk_opponent(room->geti().id, 0))
 			return;
 	}
 	if(speech_need())

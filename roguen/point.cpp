@@ -1,4 +1,4 @@
-#include "iabs.h"
+#include "imath.h"
 #include "point.h"
 
 bool point::in(const point p1, const point p2, const point p3) const {

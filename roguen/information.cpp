@@ -1,6 +1,5 @@
 #include "areapiece.h"
 #include "creature.h"
-#include "crt.h"
 #include "game.h"
 #include "greatneed.h"
 #include "race.h"

@@ -1,4 +1,3 @@
-#include "crt.h"
 #include "io_stream.h"
 #include "log.h"
 #include "stringbuilder.h"

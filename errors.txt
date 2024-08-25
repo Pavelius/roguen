@@ -1,18 +1,11 @@
-﻿In file `rules/Skills.txt`:
- Line 6: Can't find variant `StealCoinsAngry`
-In file `Descriptions.txt`:
- Define translation for `SkullInvestigation`
- Define translation for `SkullInvestigationCompleted`
- Define translation for `SkullInvestigationFail`
- Define translation for `SkullInvestigationPartial`
- Define translation for `SkullInvestigationSuccess`
- Define translation for `DeepDwarfTradeRoute`
- Define translation for `DeepDwarfTradeRouteCompleted`
- Define translation for `DeepDwarfTradeRouteFail`
- Define translation for `DeepDwarfTradeRoutePartial`
- Define translation for `DeepDwarfTradeRouteSuccess`
- Define translation for `AccumulationWeaponArsenal`
- Define translation for `AccumulationWeaponArsenalCompleted`
- Define translation for `AccumulationWeaponArsenalFail`
- Define translation for `AccumulationWeaponArsenalPartial`
- Define translation for `AccumulationWeaponArsenalSuccess`
+﻿In file `rules/Basic.txt`:
+ Line 11: Not found requisit `chance`
+ Line 11: Expected line feed
+In file `rules/Tiles.txt`:
+ Line 5: Not found requisit `floor`
+ Line 6: Not found requisit `floor`
+ Line 7: Not found requisit `flags`
+ Line 7: Expected line feed
+In file `rules/Items.txt`:
+ Line 12: Not found requisit `elements`
+ Line 12: Expected line feed

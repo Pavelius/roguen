@@ -1,5 +1,4 @@
 #include "bsreq.h"
-#include "crt.h"
 #include "draw.h"
 #include "dialog.h"
 #include "hotkey.h"

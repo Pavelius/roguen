@@ -1,5 +1,4 @@
 #include "areaf.h"
-#include "crt.h"
 #include "point.h"
 
 #pragma once

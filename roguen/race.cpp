@@ -1,5 +1,4 @@
 #include "bsreq.h"
-#include "crt.h"
 #include "race.h"
 
 BSMETA(racei) = {

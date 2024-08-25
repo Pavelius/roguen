@@ -1,5 +1,5 @@
-#include "crt.h"
 #include "io_memory.h"
+#include "slice.h"
 
 extern "C" void* malloc(long unsigned size);
 extern "C" void* realloc(void *ptr, long unsigned size);

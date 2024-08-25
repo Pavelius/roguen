@@ -1,17 +1,17 @@
 #include "creature.h"
+#include "functor.h"
 #include "game.h"
 #include "greatneed.h"
 #include "pushvalue.h"
 #include "rand.h"
 #include "script.h"
 #include "speech.h"
+#include "talk.h"
 #include "textscript.h"
 
 extern greatneed* last_need;
 static collection<greatneedi> needs;
 extern int last_coins;
-
-bool talk_opponent(const char* id, fncommand proc);
 
 static bool isneed(const void* object) {
 	auto p = (creature*)object;

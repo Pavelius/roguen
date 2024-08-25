@@ -1,6 +1,7 @@
 #pragma once
 
 typedef int (*fncompare)(const void*, const void*);
+typedef void(*fnevent)(); // Callback function of any command executing
 
 extern "C" void* bsearch(const void* key, const void* base, unsigned num, size_t size, fncompare proc);
 extern "C" void* memchr(const void* ptr, int value, long unsigned num);

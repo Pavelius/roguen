@@ -1,5 +1,5 @@
-#include "crt.h"
 #include "draw.h"
+#include "slice.h"
 #include "win.h"
 
 #define ZOOM 2

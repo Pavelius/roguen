@@ -1,6 +1,6 @@
-#include "crt.h"
 #include "io_stream.h"
 #include "stringbuilder.h"
+#include "slice.h"
 
 io::stream& io::stream::operator<<(const int n) {
 	char temp[32]; stringbuilder sb(temp);

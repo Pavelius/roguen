@@ -7,6 +7,7 @@
 #include "creature.h"
 #include "hotkey.h"
 #include "log.h"
+#include "rand.h"
 #include "siteskill.h"
 #include "speech.h"
 #include "talk.h"

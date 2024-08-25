@@ -1,4 +1,3 @@
-#include "crt.h"
 #include "direction.h"
 #include "pushvalue.h"
 #include "rand.h"

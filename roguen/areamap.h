@@ -1,5 +1,4 @@
 #include "anymap.h"
-#include "crt.h"
 #include "feature.h"
 
 #pragma once

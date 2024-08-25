@@ -1,4 +1,4 @@
-#include "crt.h"
+#include "array.h"
 #include "io_stream.h"
 #include "log.h"
 #include "stringbuilder.h"
@@ -10,6 +10,8 @@ struct translate {
 };
 }
 static array source_name(sizeof(translate));
+
+extern "C" int strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
 
 static int compare(const void* v1, const void* v2) {
 	auto p1 = (const translate*)v1;

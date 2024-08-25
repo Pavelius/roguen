@@ -1,4 +1,3 @@
-#include "crt.h"
 #include "draw.h"
 #include "screenshoot.h"
 #include "creature.h"
