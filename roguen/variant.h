@@ -17,15 +17,11 @@ struct varianti {
 	fnstatus		pgetinfo;
 	fnscript		pscript;
 	fntest			ptest;
-	static const array* getarray(const void* object, const char* id);
 	static const varianti* getsource(const char* id);
-	static const varianti* getmetadata(const void* object);
 	const char*		getid(const void* object) const;
 	const char*		getname(const void* object) const;
 	int				found(const char* id, size_t size) const;
 	constexpr bool	isnamed() const { return key_count==1; }
-	void			set(void* object, const char* id, void* value) const;
-	void			set(void* object, const char* id, int value) const;
 };
 union variant {
 	unsigned char	uc[4];
@@ -50,7 +46,6 @@ union variant {
 	const char*		getid() const;
 	void*			getpointer() const { return to().source->ptr(value); }
 	const char*		getname() const;
-	void			setvariant(unsigned char t, unsigned short v) { type = t; value = v; counter = 0; }
 };
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);

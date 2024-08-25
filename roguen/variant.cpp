@@ -69,16 +69,6 @@ const char* varianti::getid(const void* object) const {
 	return "NoName";
 }
 
-const varianti* varianti::getmetadata(const void* object) {
-	if(object) {
-		for(auto& e : bsdata<varianti>()) {
-			if(e.source && e.source->have(object))
-				return &e;
-		}
-	}
-	return 0;
-}
-
 const char* getvalues(const char* p, size_t& size, int& counter) {
 	auto pb = p;
 	while(ischa(*p) || isnum(*p) || *p == '_')

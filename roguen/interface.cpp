@@ -1392,7 +1392,7 @@ int start_application(fnevent proc, fnevent initializing) {
 	initialize_translation();
 	if(initializing)
 		initializing();
-	if(log::geterrors())
+	if(log::errors)
 		return -1;
 	metrics::border = 4;
 	metrics::padding = 4;

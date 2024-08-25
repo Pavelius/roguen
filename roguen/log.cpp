@@ -3,7 +3,7 @@
 #include "stringbuilder.h"
 
 bool log::allowparse = true;
-static int error_count;
+int log::errors;
 static const char* current_url;
 static const char* current_file;
 
@@ -55,7 +55,7 @@ void log::errorv(const char* position, const char* format) {
 	static io::file file("errors.txt", StreamWrite | StreamText);
 	if(!file)
 		return;
-	error_count++;
+	errors++;
 	if(position)
 		file << " Line " << getline(current_file, position) << ": ";
 	file << format << "\n";
@@ -71,10 +71,6 @@ void log::errorp(const char* position, const char* format, ...) {
 	}
 	sb.addv(format, xva_start(format));
 	errorv(position, temp);
-}
-
-int log::geterrors() {
-	return error_count;
 }
 
 const char* log::skipws(const char* p) {

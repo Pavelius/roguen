@@ -49,15 +49,8 @@ short unsigned charname::param(const slice<variant>& source) {
 	return 0xFFFF;
 }
 
-static bool ischax(unsigned char u) {
-	return (u >= 'A' && u <= 'Z')
-		|| (u >= 'a' && u <= 'z')
-		|| (u >= 0xC0 && u <= 0xFF)
-		|| (u >= 0x410 && u <= 0x44F);
-}
-
 static const char* read_line(const char* p, variant* conditions, stringbuilder& sb) {
-	while(ischax(*p)) {
+	while(ischa(*p)) {
 		auto pe = bsdata<charname>::add();
 		memset(pe, 0, sizeof(*pe));
 		memcpy(pe->conditions, conditions, sizeof(pe->conditions));
@@ -79,9 +72,9 @@ static const char* read_conditions(const char* p, stringbuilder& sb, variant* pb
 		p = psidf(p, sb);
 		variant v = (const char*)sb.begin();
 		if(!v)
-			log::errorp(p, "Can't find variant `%1`", sb.begin());
+			errorp(p, "Can't find variant `%1`", sb.begin());
 		else if(pb >= pe)
-			log::errorp(p, "Too many conditions when save variant %1 (only %2i allowed)", v.getid(), count);
+			errorp(p, "Too many conditions when save variant %1 (only %2i allowed)", v.getid(), count);
 		else
 			*pb++ = v;
 		p = skipws(p);

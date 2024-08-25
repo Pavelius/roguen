@@ -164,7 +164,7 @@ void initialize_translation() {
 	log::readf(read_names, temp, "*.txt");
 #ifdef _DEBUG
 	check_translation();
-	if(!log::geterrors())
+	if(!log::errors)
 		atexit(deinitialize);
 #endif
 }
