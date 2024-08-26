@@ -119,6 +119,7 @@ BSMETA(monsteri) = {
 	BSREQ(friendly),
 	BSREQ(parent),
 	BSREQ(minions),
+	BSREQ(rest),
 	{}};
 BSMETA(point) = {
 	BSREQ(x), BSREQ(y),

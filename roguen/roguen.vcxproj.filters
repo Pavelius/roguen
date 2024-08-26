@@ -652,9 +652,6 @@
     <Text Include="..\logs.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\talk\NPCHouses.txt">
-      <Filter>Talk</Filter>
-    </Text>
     <Text Include="..\rules\Spells.txt">
       <Filter>Data</Filter>
     </Text>
@@ -664,9 +661,6 @@
     <Text Include="..\rules\Features.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="..\locale\ru\talk\NeedTalk.txt">
-      <Filter>Talk</Filter>
-    </Text>
     <Text Include="..\modules\ChurchOfOne.txt">
       <Filter>Modules</Filter>
     </Text>
@@ -675,9 +669,6 @@
     </Text>
     <Text Include="..\modules\AncientRace.txt">
       <Filter>Modules</Filter>
-    </Text>
-    <Text Include="..\locale\ru\talk\AncientRaceProgress.txt">
-      <Filter>Talk</Filter>
     </Text>
     <Text Include="..\locale\ru\Directions.txt">
       <Filter>Locale</Filter>
@@ -729,6 +720,15 @@
     </Text>
     <Text Include="..\names\ru\Characters.txt">
       <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\talk\ru\AncientRaceProgress.txt">
+      <Filter>Talk</Filter>
+    </Text>
+    <Text Include="..\talk\ru\NeedTalk.txt">
+      <Filter>Talk</Filter>
+    </Text>
+    <Text Include="..\talk\ru\NPCHouses.txt">
+      <Filter>Talk</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

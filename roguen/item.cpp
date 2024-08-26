@@ -36,7 +36,7 @@ int item::getcostall() const {
 	return ei.cost * c;
 }
 
-void item::setcount(int v) {
+void item::setcount(int v, const char* interactive) {
 	if(v <= 0)
 		clear();
 	else if(iscountable())

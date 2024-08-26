@@ -361,9 +361,6 @@
     <Text Include="..\locale\ru\Sites.txt" />
     <Text Include="..\locale\ru\Skills.txt" />
     <Text Include="..\locale\ru\Spells.txt" />
-    <Text Include="..\locale\ru\talk\AncientRaceProgress.txt" />
-    <Text Include="..\locale\ru\talk\NeedTalk.txt" />
-    <Text Include="..\locale\ru\talk\NPCHouses.txt" />
     <Text Include="..\locale\ru\Time.txt" />
     <Text Include="..\locale\ru\Traps.txt" />
     <Text Include="..\locale\ru\UnknownNames.txt" />
@@ -382,6 +379,9 @@
     <Text Include="..\rules\Skills.txt" />
     <Text Include="..\rules\Spells.txt" />
     <Text Include="..\rules\Tiles.txt" />
+    <Text Include="..\talk\ru\AncientRaceProgress.txt" />
+    <Text Include="..\talk\ru\NeedTalk.txt" />
+    <Text Include="..\talk\ru\NPCHouses.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

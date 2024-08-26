@@ -232,7 +232,8 @@ StrangeRedSphere cost(100) weight(50) avatar(231)
 StrangeGreenSphere cost(100) weight(50) avatar(232)
 StrangeRod cost(50) weight(10) avatar(80)
 
-Bones cost(2) weight(3) avatar(899) 
+DeadBody cost(1) weight(200) avatar(8) rotting(30)
+Bones cost(2) weight(3) avatar(899)
 MonsterSkull cost(100) weight(50) avatar(519) 
 Stones weight(5) avatar(900) count(6)
 
@@ -241,7 +242,7 @@ SmallKey cost(50) weight(1) avatar(283)
 HexagonalKey cost(100) weight(2) avatar(282) 
 TriangularKey cost(150) weight(1) avatar(287) 
 RectangularKey cost(200) weight(1) avatar(285) 
-RoundKey cost(250) weight(1) avatar(286) 
+RoundKey cost(250) weight(1) avatar(286)
 
 AlrauniaAntidote cost(20) weight(1) avatar(96) cursed(HerbOfPoison)
  use Poison-2
@@ -290,6 +291,8 @@ ScrollOfOpening avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectFeatures Filter LockedDoor ChooseTarget ForEachFeature OpenedDoor
 ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
  use ExploreArea
+ScrollOfGoldDetection avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
+ use DetectItems Coins
 
 #RandomTable
 
@@ -302,7 +305,7 @@ MiningGem
 RandomArtifact
  chance StrangeBlueSphere StrangeAquaSphere StrangeRedSphere StrangeGreenSphere StrangeRod+2 StrangeSword+2
 RandomCoins
- chance SP+7 SP+6 SP+8 GP+3 GP+4 GP+5 GP+8 PP PP+1 PP+2 PP+5
+ chance SP+6 GP+3 PP
 RandomGear
  chance Torch+8 Lockpick
 RandomGem
@@ -320,7 +323,7 @@ RandomPotion
 RandomRing
  chance BrassRing+5 IronRing+4 RingOfAcidResistance RingOfColdResistance SilverRing+4 RingOfFireResistance GoldenRing RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
 RandomScroll
- chance ScrollOfIdentify ScrollOfRemoveCurse ScrollOfRepair ScrollOfOpening ScrollOfMagicMap
+ chance ScrollOfIdentify ScrollOfRemoveCurse ScrollOfRepair ScrollOfOpening ScrollOfMagicMap ScrollOfGoldDetection+2
 RandomBoots
  chance LeatherBoots+4 BootsOfLevitation BootsOfSneakiness BootsOfLongStride
 RandomBracers

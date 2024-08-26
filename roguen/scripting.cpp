@@ -1329,7 +1329,7 @@ static featurei* herbs_base(featurei* p) {
 }
 
 static bool empthy_next_condition(int bonus) {
-	script_begin++;
+	next_script();
 	return true;
 }
 
@@ -1699,6 +1699,52 @@ static void view_stuff(int bonus) {
 
 static void explore_area(int bonus) {
 	area->set({0, 0, area->mps, area->mps}, &areamap::setflag, Explored);
+}
+
+static void detect_all_items(int bonus) {
+	for(auto& e : area->items) {
+		if(!e)
+			continue;
+		area->setflag(e.position, Explored);
+		area->setflag(e.position, Visible);
+	}
+}
+
+static void detect_items(wear_s v) {
+	for(auto& e : area->items) {
+		if(!e || !e.is(v))
+			continue;
+		area->setflag(e.position, Explored);
+		area->setflag(e.position, Visible);
+	}
+}
+
+static void detect_items(feat_s v) {
+	for(auto& e : area->items) {
+		if(!e || !e.is(v))
+			continue;
+		area->setflag(e.position, Explored);
+		area->setflag(e.position, Visible);
+	}
+}
+
+static void detect_area_items(variant v) {
+	if(v.iskind<weari>())
+		detect_items((wear_s)v.value);
+	else if(v.iskind<feati>())
+		detect_items((feat_s)v.value);
+	else if(v.iskind<listi>()) {
+		for(auto ev : bsdata<listi>::elements[v.value].elements)
+			detect_area_items(ev);
+	} else if(v.iskind<randomizeri>()) {
+		for(auto ev : bsdata<randomizeri>::elements[v.value].chance)
+			detect_area_items(ev);
+	}
+}
+
+static void detect_items(int bonus) {
+	auto v = next_script();
+	detect_area_items(v);
 }
 
 static void some_coins(int bonus) {
@@ -2557,6 +2603,7 @@ BSDATA(script) = {
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
 	{"DestroyWall", destroy_wall},
+	{"DetectItems", detect_items, empthy_next_condition},
 	{"DropDown", dropdown},
 	{"EnchantMinutes", enchant_minutes, empthy_next_condition},
 	{"EnchantHours", enchant_hours, empthy_next_condition},

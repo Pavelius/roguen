@@ -379,10 +379,23 @@ static void drop_wears(creature* player, int chance) {
 	}
 }
 
-static void drop_treasure(creature* pe) {
-	if(pe->is(Summoned))
+static void drop_treasure(creature* player) {
+	if(player->is(Summoned))
 		return;
-	drop_wears(pe, 15);
+	drop_wears(player, 15);
+}
+
+static void drop_throphy(creature* player, int chance) {
+	if(player->is(Summoned))
+		return;
+	auto pm = player->getmonster();
+	if(!pm)
+		return;
+	if(d100() >= chance)
+		return;
+	point pt = player->getposition();
+	item it; it.create(pm->rest);
+	it.drop(pt);
 }
 
 static void nullify_elements(feat_s v1, feat_s v2) {
@@ -1123,6 +1136,7 @@ void creature::kill() {
 	fixeffect("HitVisual");
 	fixremove();
 	drop_treasure(this);
+	drop_throphy(this, 30);
 	if(opponent == this && player)
 		player->experience += get_experience_reward(opponent);
 	fire_trigger(WhenCreatureP1Dead, getkind());

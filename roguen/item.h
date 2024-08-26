@@ -96,7 +96,7 @@ public:
 	bool			isheavydamaged() const { return iscountable() && broken >= 5; }
 	void			set(magicn v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
-	void			setcount(int v);
+	void			setcount(int v, const char* interactive = 0);
 	void			setidentified(int v) { identified = v; }
 	void			use();
 };

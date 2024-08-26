@@ -114,6 +114,7 @@ StrangeGreenSphere: Зеленая сфера
 StrangeRedSphere: Красная сфера
 StrangeRod: Прутик
 
+DeadBody: Труп
 Bones: Кости
 MonsterSkull: Череп монстра
 Stones: Камни
@@ -125,6 +126,8 @@ BootsOfLongStride: Ботинки прыжков
 
 OldTome: Старый фолиант
 TomeOfLight: Книга света
+
+ScrollOfGoldDetection: Свиток обнаружения золота
 
 RodOfBurning: Прутик поджигания
 WandOfDigging: Палочка копания

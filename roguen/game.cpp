@@ -148,7 +148,7 @@ static void update_los() {
 	}
 }
 
-static void decoy_food() {
+static void decoy_items() {
 	for(auto& e : area->items) {
 		if(!e)
 			continue;
@@ -211,7 +211,7 @@ void pass_minute() {
 		update_need();
 	}
 	while(game.restore_day_part < game.minutes) {
-		decoy_food();
+		decoy_items();
 		game.restore_day_part = (game.restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
 	}
 	while(game.restore_day < game.minutes) {
@@ -237,7 +237,7 @@ static void skip_long_time() {
 }
 
 static void play_minute() {
-	const int moves_per_minute = 10 * 4;
+	const int moves_per_minute = 6 * 4;
 	bool need_continue = true;
 	while(need_continue) {
 		need_continue = true;

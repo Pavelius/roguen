@@ -185,5 +185,5 @@ void read_talk(const char* url) {
 }
 
 void read_talk() {
-	log::readlf(read_talk, "dialogs", "*.txt");
+	log::readlf(read_talk, "talk", "*.txt");
 }
