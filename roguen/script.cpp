@@ -14,6 +14,7 @@ variant	param1, param2;
 variant* script_begin;
 variant* script_end;
 modifiern modifier;
+bool script_fail;
 
 template<> void ftscript<modifieri>(int value, int counter) {
 	modifier = (modifiern)value;

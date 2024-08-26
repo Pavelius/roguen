@@ -1,4 +1,7 @@
 #include "wearable.h"
+#include "imath.h"
+
+wear_s last_player_used_wear = IncorrectWearSlot;
 
 void wearable::addcoins(int v) {
 	if(!v)
@@ -65,8 +68,8 @@ const item*	wearable::getwear(const void* data) const {
 
 wear_s wearable::getwearslot(const item* data) const {
 	if(!data)
-		return Backpack;
-	return (wear_s)(data - wears);
+		return IncorrectWearSlot;
+	return imin(IncorrectWearSlot, (wear_s)(data - wears));
 }
 
 bool wearable::useitem(const itemi* pi, bool run) {

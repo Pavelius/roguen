@@ -103,7 +103,6 @@ YouSundellyAppear: %герой внезапно появил%ась из неоткуда.
 YouSundellyDisappear: %герой внезапно исчез%ла из виду.
 YouTakeCoins: %герой получил% %1i монет.
 YouTookAllHerbs: Все травы были собраны.
-YouUseItem: %герой использовал%а %-1.
 
 Regeneration: Регенерация
 

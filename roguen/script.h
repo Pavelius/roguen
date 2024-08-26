@@ -17,6 +17,7 @@ struct modifieri {
 extern modifiern modifier;
 extern variant* script_begin;
 extern variant* script_end;
+extern bool script_fail;
 
 int script_count(int count, int minimal = 1);
 

@@ -88,6 +88,7 @@ static void main_start() {
 	add_item("PotionOfLearning", 5, true);
 	add_item("Bandage", 3, true);
 	add_item("TomeOfLight", 1, true);
+	add_item("RodOfBurning", 1, true);
 	player->add(Herbalism, 25);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);

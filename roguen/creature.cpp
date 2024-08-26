@@ -93,15 +93,16 @@ static creature* findalive(point m) {
 
 static void last_item_fix_action(const char* action) {
 	auto& ei = last_item->geti();
-	if(player->fixaction(ei.id, action))
+	auto name = last_item->getname();
+	if(player->fixaction(ei.id, action, name))
 		return;
 	if(ei.unidentified) {
-		if(player->fixaction(ei.unidentified, action))
+		if(player->fixaction(ei.unidentified, action, name))
 			return;
 	}
-	if(player->fixaction(bsdata<weari>::elements[ei.wear].id, action))
+	if(player->fixaction(bsdata<weari>::elements[ei.wear].id, action, name))
 		return;
-	player->fixaction(action, 0);
+	player->fixaction("You", action, name);
 }
 
 static void pay_movement() {
@@ -1603,17 +1604,25 @@ void use_item(item& v) {
 		return;
 	}
 	auto push_item = last_item;
+	auto push_state = script_fail; script_fail = false;
 	last_item = &v;
-	player->act(getnm("YouUseItem"), v.getname());
+	if(player->ishuman())
+		last_player_used_wear = player->getwearslot(last_item);
+	last_item_fix_action("UseItem");
 	script_run(script);
-	auto chance_consume = last_item->chance_consume();
-	if(chance_consume) {
-		if(d100() < chance_consume) {
-			last_item_fix_action("ConsumeItem");
+	if(script_fail)
+		player->actp(getnm("ItemFailScript"), v.getname());
+	else {
+		auto chance_consume = last_item->chance_consume();
+		if(chance_consume) {
+			if(d100() < chance_consume) {
+				last_item_fix_action("ConsumeItem");
+				v.use();
+			}
+		} else
 			v.use();
-		}
-	} else
-		v.use();
+	}
+	script_fail = push_state;
 	last_item = push_item;
 	player->update();
 	pay_action();

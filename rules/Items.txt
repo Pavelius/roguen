@@ -268,6 +268,9 @@ TomeOfLight weight(10) avatar(650) unidentified(OldTome) wear(Tome) chance_consu
 TomeOfNecromancy weight(10) avatar(649) unidentified(OldTome) wear(Tome) chance_consume(30)
  use RollLearning SummonUndead
 
+RodOfBurning weight(2) avatar(488) wear(Rod) chance_consume(20)
+ use SelectEnemies ChooseLimit+1 ForEachCreature FireHarm+4
+
 ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectYourItems FilterIdentified-1 ChooseTarget ForEachItem IdentifyItem
 ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll) wear(Scroll)

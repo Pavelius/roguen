@@ -126,4 +126,6 @@ BootsOfLongStride: Ботинки прыжков
 OldTome: Старый фолиант
 TomeOfLight: Книга света
 
+RodOfBurning: Прутик поджигания
+
 Scroll: Свиток

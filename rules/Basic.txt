@@ -23,6 +23,7 @@ RandomRace
 "T" ThrownAttack
 "V" ViewStuff
 "X" ShowCharsheet
+"Z" RepeatUseItem
 
 "Up" MoveUp
 "Home" MoveUpLeft

@@ -37,7 +37,6 @@ void add_need_answers(int bonus);
 void advance_value(variant v);
 void animate_figures();
 bool check_activate(creature* player, point m, const featurei& ei);
-void choose_limit(int counter);
 void damage_equipment(int bonus, bool allow_save);
 bool isfreeltsv(point m);
 bool isfreecr(point m);
@@ -1372,6 +1371,8 @@ static item* choose_wear() {
 static item* choose_stuff(wear_s wear) {
 	answers an;
 	char temp[512]; stringbuilder sb(temp);
+	if(wear >= IncorrectWearSlot)
+		wear = Backpack;
 	for(auto& e : player->backpack()) {
 		if(!e)
 			continue;
@@ -2128,10 +2129,10 @@ static void acid_harm(int bonus) {
 static void fire_harm(int bonus) {
 	if(player->resist(FireResistance, FireImmunity))
 		return;
-	auto damage = xrand(bonus / 2, bonus) - player->get(Armor);
+	player->fixeffect("FireSplash");
+	auto damage = xrand(bonus / 2, bonus) - imax(player->get(Armor) - 2, 0);
 	if(damage <= 0)
 		return;
-	player->fixeffect("FireSplash");
 	player->damage(damage);
 	player->add(Burning, 1);
 	damage_backpack_item(Scroll, 60);
@@ -2149,6 +2150,11 @@ static bool is_targets(int bonus) {
 }
 
 static void for_each_opponent(int bonus) {
+	if(!targets) {
+		script_fail = true;
+		script_stop();
+		return;
+	}
 	pushvalue push(opponent);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
@@ -2165,6 +2171,11 @@ static void for_each_opponent(int bonus) {
 }
 
 static void for_each_creature(int bonus) {
+	if(!targets) {
+		script_fail = true;
+		script_stop();
+		return;
+	}
 	pushvalue push(player);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
@@ -2181,6 +2192,11 @@ static void for_each_creature(int bonus) {
 }
 
 static void for_each_item(int bonus) {
+	if(!items) {
+		script_fail = true;
+		script_stop();
+		return;
+	}
 	pushvalue push(last_item);
 	variants commands; commands.set(script_begin, script_end - script_begin);
 	itema source(items);
@@ -2202,6 +2218,11 @@ static bool is_items(int bonus) {
 }
 
 static void for_each_feature(int bonus) {
+	if(!indecies) {
+		script_fail = true;
+		script_stop();
+		return;
+	}
 	auto push_source(indecies);
 	auto push_rect = last_rect;
 	auto push_index = last_index;
@@ -2223,6 +2244,11 @@ static bool is_room(int bonus) {
 }
 
 static void for_each_room(int bonus) {
+	if(!rooms) {
+		script_fail = true;
+		script_stop();
+		return;
+	}
 	rooma push_source(rooms);
 	pushvalue push(last_room);
 	pushvalue push_rect(last_rect);
@@ -2329,13 +2355,6 @@ static void check_script_targets() {
 	}
 }
 
-static void choose_target(int bonus) {
-	if(player->ishuman())
-		choose_target_interactive(get_header_id());
-	choose_limit(1);
-	check_script_targets();
-}
-
 static void choose_limit(int counter) {
 	counter = script_count(counter, 1);
 	if(counter <= 0)
@@ -2348,6 +2367,13 @@ static void choose_limit(int counter) {
 		rooms.count = counter;
 	if(indecies.getcount() > (size_t)counter)
 		indecies.count = counter;
+}
+
+static void choose_target(int bonus) {
+	if(player->ishuman())
+		choose_target_interactive(get_header_id());
+	choose_limit(1);
+	check_script_targets();
 }
 
 static void choose_random(int bonus) {
@@ -2420,8 +2446,17 @@ static void add_mana(int bonus) {
 }
 
 static void test_manual(int bonus) {
-	static auto p = loadt("test_logs.txt");
-	open_manual("Test logs", p);
+}
+
+static void repeat_use_item(int bonus) {
+	if(last_player_used_wear >= IncorrectWearSlot)
+		return;
+	auto& v = player->wears[last_player_used_wear];
+	if(!v) {
+		last_player_used_wear = IncorrectWearSlot;
+		return;
+	}
+	use_item(v);
 }
 
 BSDATA(triggerni) = {
@@ -2449,6 +2484,7 @@ BSDATA(script) = {
 	{"Chatting", chatting},
 	{"ChooseTarget", choose_target, is_full},
 	{"ChooseRandom", choose_random, is_full},
+	{"ChooseLimit", choose_limit, is_full},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},
 	{"DamageItem", damage_item},
@@ -2513,6 +2549,7 @@ BSDATA(script) = {
 	{"RangeAttack", attack_range},
 	{"RepairItem", repair_item},
 	{"RemoveFeature", remove_feature},
+	{"RepeatUseItem", repeat_use_item},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
 	{"RollLearning", roll_learning},

@@ -21,3 +21,5 @@ struct wearable : movable {
 	bool			useitem(const itemi* pi, bool run);
 	slice<item>		weapons() { return slice<item>(wears + MeleeWeapon, wears + RangedWeapon + 1); }
 };
+extern wear_s last_player_used_wear;
+
