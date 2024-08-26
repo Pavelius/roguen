@@ -1,6 +1,5 @@
 #include "color.h"
-#include "imath.h"
-#include "iswap.h"
+#include "math.h"
 #include "slice.h"
 
 color colors::black;

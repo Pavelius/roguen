@@ -5,7 +5,7 @@
 #include "creature.h"
 #include "direction.h"
 #include "functor.h"
-#include "imath.h"
+#include "math.h"
 #include "indexa.h"
 #include "itema.h"
 #include "modifier.h"

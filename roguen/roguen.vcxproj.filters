@@ -602,9 +602,6 @@
     <ClInclude Include="rand.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="iswap.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="slice.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -626,7 +623,7 @@
     <ClInclude Include="sliceu.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="imath.h">
+    <ClInclude Include="math.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

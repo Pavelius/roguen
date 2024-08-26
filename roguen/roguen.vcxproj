@@ -288,10 +288,9 @@
     <ClInclude Include="geoposition.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="greatneed.h" />
-    <ClInclude Include="imath.h" />
+    <ClInclude Include="math.h" />
     <ClInclude Include="indexa.h" />
     <ClInclude Include="io_memory.h" />
-    <ClInclude Include="iswap.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="itema.h" />
     <ClInclude Include="listcolumn.h" />

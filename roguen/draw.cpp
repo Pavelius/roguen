@@ -1,8 +1,7 @@
 #include "color.h"
 #include "draw.h"
 #include "io_stream.h"
-#include "imath.h"
-#include "iswap.h"
+#include "math.h"
 #include "slice.h"
 
 #ifndef __GNUC__

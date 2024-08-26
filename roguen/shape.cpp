@@ -2,7 +2,7 @@
 #include "direction.h"
 #include "shape.h"
 #include "stringbuilder.h"
-#include "imath.h"
+#include "math.h"
 #include "log.h"
 
 using namespace log;

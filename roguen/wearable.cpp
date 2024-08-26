@@ -1,5 +1,5 @@
 #include "wearable.h"
-#include "imath.h"
+#include "math.h"
 
 wear_s last_player_used_wear = IncorrectWearSlot;
 
