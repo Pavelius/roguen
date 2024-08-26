@@ -4,73 +4,71 @@
 
 bool log::allowparse = true;
 int log::errors;
-static const char* current_url;
-static const char* current_file;
+log::contexti log::context;
 
-void log::setfile(const char* v) {
-	current_file = v;
+static void print_file_error(const char* format) {
+	static io::file file("errors.txt", StreamWrite | StreamText);
+	if(!file)
+		return;
+	file << format;
+}
+fnoutput log::print_proc = print_file_error;
+
+void log::printv(const char* format) {
+	if(!print_proc)
+		return;
+	print_proc(format);
 }
 
-void log::seturl(const char* v) {
-	current_url = v;
+void log::printv(const char* format, const char* format_param) {
+	char temp[4096]; stringbuilder sb(temp);
+	sb.addv(format, format_param);
+	printv(temp);
+}
+
+void log::print(const char* format, ...) {
+	printv(format, xva_start(format));
+}
+
+void log::println() {
+	printv("\n\r");
 }
 
 const char* log::read(const char* url, bool error_if_not_exist) {
+	context.url = 0;
+	context.file = 0;
 	auto p_alloc = loadt(url);
 	if(!p_alloc) {
-		current_url = 0;
 		if(error_if_not_exist)
 			errorp(0, "Can't find file '%1'", url);
 		return 0;
 	}
-	seturl(url);
-	setfile(p_alloc);
+	context.url = url;
+	context.file = p_alloc;
 	return p_alloc;
 }
 
 void log::close() {
-	if(current_file)
-		delete current_file;
-	current_file = 0;
+	if(context.file)
+		delete context.file;
+	context.file = 0;
 }
 
-const char* endline(const char* p) {
-	while(*p && !(*p == 10 || *p == 13))
-		p++;
-	return p;
-}
-
-int getline(const char* pb, const char* pc) {
-	auto p = pb;
-	auto r = 0;
-	while(*p && p < pc) {
-		p = endline(p);
-		p = skipcr(p);
-		r++;
-	}
-	return r;
-}
-
-void log::errorv(const char* position, const char* format) {
-	static io::file file("errors.txt", StreamWrite | StreamText);
-	if(!file)
-		return;
+void log::errorv(const char* position, const char* format, const char* format_param) {
 	errors++;
-	if(position)
-		file << " Line " << getline(current_file, position) << ": ";
-	file << format << "\n";
+	if(context.url) {
+		print("In file `%1`:", context.url);
+		println();
+		context.url = 0;
+	}
+	if(position && context.file)
+		print(" Line %1i: ", get_line_number(context.file, position));
+	printv(format, format_param);
+	println();
 }
 
 void log::errorp(const char* position, const char* format, ...) {
-	char temp[4096]; stringbuilder sb(temp);
-	if(current_url) {
-		sb.add("In file `%1`:", current_url);
-		current_url = 0;
-		errorv(0, temp);
-		sb.clear();
-	}
-	sb.addv(format, xva_start(format));
-	errorv(position, temp);
+	errorv(position, format, xva_start(format));
 }
 
 const char* log::skipws(const char* p) {

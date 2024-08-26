@@ -1,8 +1,9 @@
 #include "bsreq.h"
-#include "logparse.h"
+#include "log.h"
 #include "nameable.h"
 #include "rand.h"
 #include "speech.h"
+#include "stringbuilder.h"
 
 using namespace log;
 

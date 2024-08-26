@@ -52,6 +52,8 @@ static void logc(const char* format) {
 }
 
 void logv(const char* format) {
+	if(!format || !format[0])
+		return;
 	if(gamelog.getcount() > 0)
 		logc("\n");
 	logc(format);

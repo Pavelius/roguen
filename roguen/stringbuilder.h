@@ -26,7 +26,6 @@ public:
 	void			add(char sym);
 	void			addby(const char* s);
 	void			addch(char sym);
-	void			addicon(const char* id, int value);
 	void			addint(int value, int precision, const int radix);
 	void			adjective(const char* name, int m);
 	void			addn(const char* format, ...) { addx('\n', format, xva_start(format)); }
@@ -89,10 +88,12 @@ const char* str_count(const char* id, int count);
 const char* skipcr(const char* format);
 const char* skipsp(const char* p);
 const char* skipspcr(const char* p);
+const char* skipline(const char* p);
 const char* szdup(const char* text);
 const char* szdupz(const char* text);
 
 int get_number(const char* p);
+int get_line_number(const char* start, const char* position);
 int	szcmpi(const char* p1, const char* p2);
 int szcmp(const char* p1, const char* p2);
 

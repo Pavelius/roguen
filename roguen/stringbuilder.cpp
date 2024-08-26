@@ -179,6 +179,23 @@ const char* skipspcr(const char* p) {
 	return p;
 }
 
+const char* skipline(const char* p) {
+	while(*p && !(*p == 10 || *p == 13))
+		p++;
+	return p;
+}
+
+int get_line_number(const char* start, const char* position) {
+	auto p = start;
+	auto r = 0;
+	while(*p && p < position) {
+		p = skipline(p);
+		p = skipcr(p);
+		r++;
+	}
+	return r;
+}
+
 bool szstart(const char* text, const char* name) {
 	while(*name) {
 		if(*name++ != *text++)
@@ -482,13 +499,6 @@ void stringbuilder::addx(const char* separator, const char* format, const char* 
 	addv(format, format_param);
 }
 
-void stringbuilder::addicon(const char* id, int value) {
-	if(value < 0)
-		adds(":%1:[-%2i]", id, -value);
-	else
-		adds(":%1:%2i", id, value);
-}
-
 void stringbuilder::change(char s1, char s2) {
 	for(auto p = pb; p < pe; p++) {
 		if(*p == 0)
@@ -686,12 +696,10 @@ const char* stringbuilder::psstr(const char* pb, char end_symbol) {
 			pb++;
 			break;
 		case '\n': case '\r':
-			// Перевод строки в конце
 			while(*pb == '\n' || *p == '\r')
 				pb = skipcr(pb);
 			break;
 		default:
-			// Любой символ, который будет экранирован ( \', \", \\)
 			if(p < pe)
 				*p++ = *pb;
 			pb++;
@@ -813,17 +821,17 @@ void stringbuilder::adjective(const char* name, int m) {
 	}
 }
 
-const char* str(const char* format, ...) {
-	static char temp[512]; stringbuilder sb(temp);
-	sb.addv(format, xva_start(format));
-	return temp;
-}
-
 void stringbuilder::trimr() {
 	while(p > pb && (p[-1] == ' ' || p[-1] == '\t' || p[-1] == '\n')) {
 		p[-1] = 0;
 		p--;
 	}
+}
+
+const char* str(const char* format, ...) {
+	static char temp[1024]; stringbuilder sb(temp);
+	sb.addv(format, xva_start(format));
+	return temp;
 }
 
 const char* ids(const char* p1, const char* p2) {

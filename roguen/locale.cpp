@@ -23,8 +23,8 @@ static void update_elements() {
 	qsort(source_name.data, source_name.count, source_name.getsize(), compare);
 }
 
-static const char* read_string_v1(const char* p, char* ps, const char* pe) {
-	char sym;
+static const char* read_string_v1(const char* p, stringbuilder& sb) {
+	char sym; sb.clear();
 	while(*p && *p != '\n' && *p != '\r') {
 		if(p[0] == '\\' && p[1] == 'n') {
 			sym = '\n';
@@ -33,14 +33,8 @@ static const char* read_string_v1(const char* p, char* ps, const char* pe) {
 			sym = *p;
 			p++;
 		}
-		switch(sym) {
-		case -72: sym = 'å'; break;
-		case -105: case 17: sym = '-'; break;
-		}
-		if(ps < pe)
-			*ps++ = sym;
+		sb.addch(sym);
 	}
-	*ps = 0;
 	while(*p == '\n' || *p == '\r') {
 		p = skipcr(p);
 		p = skipsp(p);
@@ -48,23 +42,19 @@ static const char* read_string_v1(const char* p, char* ps, const char* pe) {
 	return p;
 }
 
-static const char* read_string_v2(const char* p, char* ps, const char* pe) {
-	char sym;
-	auto pb = ps;
+static const char* read_string_v2(const char* p, stringbuilder& sb) {
+	sb.clear();
 	while(*p && *p != '#') {
-		sym = *p++;
+		auto sym = *p++;
 		switch(sym) {
-		case -72: sym = 'å'; break;
-		case -105: case 17: sym = '-'; break;
-		case '\n': case '\r': sym = '\n'; p = skipspcr(p); break;
+		case '\n': case '\r':
+			sym = '\n';
+			p = skipspcr(p);
+			break;
 		}
-		if(ps < pe)
-			*ps++ = sym;
+		sb.addch(sym);
 	}
-	*ps = 0;
-	while(ps > pb && (ps[-1]=='\n' || ps[-1]=='\r')) {
-		ps--; ps[0] = 0;
-	}
+	sb.trimr();
 	return p;
 }
 
@@ -90,13 +80,13 @@ static void apply_value(const char* id, const char* name) {
 }
 
 static void readl_extend(const char* p, int& records_read) {
-	char name[128], value[8192];
+	char name[128], value[8192]; stringbuilder sb(value);
 	while(*p && log::allowparse) {
 		p = log::skipwscr(p);
 		if(p[0]=='#')
 			p = read_identifier(p+1, name, name + sizeof(name) - 1);
 		p = log::skipwscr(p);
-		p = read_string_v2(p, value, value + sizeof(value) - 1);
+		p = read_string_v2(p, sb);
 		apply_value(name, value);
 		records_read++;
 	}
@@ -106,7 +96,7 @@ static void read_names(const char* url) {
 	auto p = log::read(url, true);
 	if(!p)
 		return;
-	char name[128], value[8192];
+	char name[128], value[8192]; stringbuilder sb(value);
 	auto records_read = 0;
 	p = log::skipwscr(p);
 	if(p[0] == '#')
@@ -117,7 +107,7 @@ static void read_names(const char* url) {
 			if(p[0] != ':')
 				break;
 			p = skipsp(p + 1);
-			p = read_string_v1(p, value, value + sizeof(value) - 1);
+			p = read_string_v1(p, sb);
 			apply_value(name, value);
 			records_read++;
 		}
@@ -150,7 +140,7 @@ static void deinitialize() {
 }
 
 static void check_translation() {
-	log::seturl("Names.txt");
+	log::context.url = "UnknownNames.txt";
 	for(auto& e : source_name.records<translate>()) {
 		if(e.name && e.name[0])
 			continue;

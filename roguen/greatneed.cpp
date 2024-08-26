@@ -77,7 +77,7 @@ void shrink_greatneed() {
 
 void check_need_loading() {
 	static const char* suffix[] = {"Completed", "Fail", "Partial", "Success", 0};
-	log::seturl("Descriptions.txt");
+	log::context.url = "Descriptions.txt";
 	for(auto& e : bsdata<greatneedi>())
 		check_description(e.id, suffix);
 }
