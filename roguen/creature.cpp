@@ -156,13 +156,6 @@ bool creature::resist(feat_s resist, feat_s immunity) const {
 	return false;
 }
 
-bool creature::resist(feat_s feat) const {
-	auto immunity = bsdata<feati>::elements[feat].immunity;
-	if(!immunity)
-		return false;
-	return resist(feat, immunity);
-}
-
 static void poison_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
@@ -189,12 +182,13 @@ static void poison_attack(const item& weapon) {
 	poison_attack(opponent, strenght);
 }
 
-void illness_attack(creature* player, int value) {
+static void illness_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
 	if(player->resist(DiseaseResist, DiseaseImmunity))
 		return;
 	auto v = player->get(Illness) + value;
+	player->fixeffect("PoisonVisual");
 	if(v >= player->get(Strenght))
 		player->kill();
 	else
@@ -315,6 +309,8 @@ static void special_attack(item& weapon, creature* opponent, int& pierce, int& d
 		opponent->add(Burning, 2);
 	if(player->is(AcidDamage, weapon))
 		opponent->add(Corrosion, 2);
+	if(player->is(IllnessDamage, weapon))
+		illness_attack(opponent, 1);
 	auto power = weapon.getpower();
 	if(power.iskind<spelli>() && weapon.ischarge())
 		special_spell_attack(weapon, opponent, bsdata<spelli>::elements[power.value]);
@@ -368,6 +364,12 @@ static direction_s move_direction(point m) {
 		return South;
 	else
 		return East;
+}
+
+static void add_hits(creature* player, int v) {
+	player->abilities[Hits] += v;
+	if(player->abilities[Hits] <= 0)
+		player->kill();
 }
 
 static void drop_wears(creature* player, int chance) {
@@ -592,14 +594,14 @@ static void check_illness_effect() {
 		return;
 	auto minimal_hp = player->getmaximum(Hits) / 3;
 	if(player->abilities[Hits] > minimal_hp)
-		player->abilities[Hits]--;
+		add_hits(player, -1);
 }
 
 static void check_illness_cure() {
 	if(player->abilities[Illness] > 0) {
-		if(player->roll(Strenght))
+		if(player->resist(DiseaseResist, DiseaseImmunity) || player->roll(Strenght))
 			player->abilities[Illness]--;
-		else if(d100()<20)
+		else if(d100() < 20)
 			illness_attack(player, 1); // Disease have 20% chance to progress
 	}
 }
@@ -1168,9 +1170,7 @@ void creature::damage(int v) {
 	if(v <= 0)
 		return;
 	fixvalue(-v);
-	abilities[Hits] -= v;
-	if(abilities[Hits] <= 0)
-		kill();
+	add_hits(this, -v);
 }
 
 static void turn_to_opponent() {

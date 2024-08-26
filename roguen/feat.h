@@ -6,7 +6,7 @@
 enum feat_s : unsigned char {
 	Darkvision, TwoHanded, CutWoods, CutMines, Retaliate, Thrown,
 	BleedingHit, StunningHit, PierceHit, MightyHit, Vorpal,
-	AcidDamage, FireDamage, ColdDamage,
+	AcidDamage, FireDamage, ColdDamage, IllnessDamage,
 	IgnoreWeb, Fly, LightSource, Regeneration, ManaRegeneration,
 	FastMove, SlowMove, FastAttack, SlowAttack, FastAction, SlowAction,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
