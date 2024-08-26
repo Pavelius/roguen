@@ -189,7 +189,7 @@ static void poison_attack(const item& weapon) {
 	poison_attack(opponent, strenght);
 }
 
-static void illness_attack(creature* player, int value) {
+void illness_attack(creature* player, int value) {
 	if(value <= 0)
 		return;
 	if(player->resist(DiseaseResist, DiseaseImmunity))
@@ -326,6 +326,8 @@ static void special_attack(item& weapon, creature* opponent, int& pierce, int& d
 }
 
 static void restore(ability_s a, ability_s test) {
+	if(player->is(Illness))
+		return;
 	auto v = player->get(a);
 	auto mv = player->basic.abilities[a];
 	if(v < mv) {
@@ -583,6 +585,23 @@ static bool check_stairs_movement(point m) {
 		}
 	}
 	return true;
+}
+
+static void check_illness_effect() {
+	if(!player->is(Illness))
+		return;
+	auto minimal_hp = player->getmaximum(Hits) / 3;
+	if(player->abilities[Hits] > minimal_hp)
+		player->abilities[Hits]--;
+}
+
+static void check_illness_cure() {
+	if(player->abilities[Illness] > 0) {
+		if(player->roll(Strenght))
+			player->abilities[Illness]--;
+		else if(d100()<20)
+			illness_attack(player, 1); // Disease have 20% chance to progress
+	}
 }
 
 static bool check_dangerous_feature(point m) {
@@ -1686,6 +1705,11 @@ void creature_every_minute() {
 
 void creature_every_10_minutes() {
 	restore(Hits, Strenght);
+	check_illness_effect();
+}
+
+void creature_every_day_part() {
+	check_illness_cure();
 }
 
 bool creature::ispresent() const {

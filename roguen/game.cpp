@@ -21,6 +21,7 @@ point			start_village = {128, 128};
 
 void creature_every_minute();
 void creature_every_10_minutes();
+void creature_every_day_part();
 void prepare_need();
 void update_need();
 
@@ -211,6 +212,7 @@ void pass_minute() {
 		update_need();
 	}
 	while(game.restore_day_part < game.minutes) {
+		all(creature_every_day_part);
 		decoy_items();
 		game.restore_day_part = (game.restore_day_part / (60 * 4) + 1) * (60 * 4) + rand() % (60 * 4);
 	}

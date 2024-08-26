@@ -1,9 +1,9 @@
 #Monster
 
-Bear avatar(360) friendly(-10) rest(DeadBody)
+Bear avatar(360) friendly(-10) rest(Meat)
  abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) Hits(40) Level(3)
  use Bite
-Boar avatar(376) friendly(-20) rest(DeadBody)
+Boar avatar(376) friendly(-20) rest(Meat)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
  use Bite
 ChaosHydra avatar(339) friendly(-20) rest(DeadBody)
@@ -12,7 +12,7 @@ ChaosHydra avatar(339) friendly(-20) rest(DeadBody)
 CityGuard avatar(543) rest(DeadBody)
  abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10) Level(2)
  use Spear ChainArmor SomeCoins+3
-DireBoar avatar(377) friendly(-20) rest(DeadBody)
+DireBoar avatar(377) friendly(-20) rest(Meat)
  abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(35) Hits(40) Armor(1) Level(4)
  use Bite
 DireWolf avatar(52) friendly(-20) rest(DeadBody)
@@ -45,10 +45,10 @@ OrcWarrior avatar(2) friendly(-30) rest(DeadBody)
 Outsider avatar(121) friendly(-20) rest(DeadBody)
  use Tentacle
  abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(3) Level(3)
-Rabbit avatar(7) rest(DeadBody)
+Rabbit avatar(7) rest(DeadBody) rest(Meat)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
  use Bite
-RabbitFemale avatar(8) parent(Rabbit) rest(DeadBody)
+RabbitFemale avatar(8) parent(Rabbit) rest(Meat)
  abilities Strenght(5) Dexterity(22) Wits(3) WeaponSkill(8) Hits(2)
  use Bite
 Rat avatar(293) friendly(-10) rest(DeadBody)
