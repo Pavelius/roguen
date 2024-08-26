@@ -85,7 +85,7 @@ BSMETA(itemi) = {
 	BSREQ(parent),
 	BSREQ(count),
 	BSREQ(avatar),
-	BSREQ(chance_consume),
+	BSREQ(chance_consume), BSREQ(chance_ill),
 	BSREQ(rotting),
 	BSENM(wear, weari),
 	BSREQ(wear_index),

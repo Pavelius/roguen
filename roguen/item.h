@@ -25,7 +25,7 @@ struct itemi : nameable {
 	weaponi			weapon;
 	featable		feats;
 	variants		wearing, use;
-	char			chance_consume, rotting;
+	char			chance_consume, chance_ill, rotting;
 	listi*			powers;
 	listi*			cursed;
 	char			chance_power;

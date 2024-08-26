@@ -1948,11 +1948,16 @@ static void roll_value(int bonus) {
 		return;
 	auto p = bsdata<abilityi>::elements + last_ability;
 	if(!player->roll(last_ability, bonus)) {
+#ifdef _DEBUG
 		player->logs(getnm("YouFailRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
+#endif // _DEBUG
 		script_stop();
 		apply_fail_roll();
-	} else
+	} else {
+#ifdef _DEBUG
 		player->logs(getnm("YouMakeRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
+#endif // _DEBUG
+	}
 }
 
 static void roll_action(int bonus) {
@@ -1972,9 +1977,9 @@ static void gain_experience(int bonus) {
 	player->experience += value;
 }
 
-static bool learn_value(variant v) {
+static bool learn_value(variant v, const char* action) {
 	if(v.iskind<feati>()) {
-		if(v.value >= 0) {
+		if(v.counter >= 0) {
 			if(!player->feats.is(v.value))
 				player->feats.set(v.value);
 			else
@@ -1986,35 +1991,75 @@ static bool learn_value(variant v) {
 				return false;
 		}
 	} else if(v.iskind<abilityi>()) {
-		if(player->basic.abilities[v.value] + v.counter < 120)
+		if(v.counter >= 0) {
+			if(player->basic.abilities[v.value] + v.counter < 120)
+				add_safe((ability_s)v.value, v.counter);
+			else
+				return false;
+		} else
 			add_safe((ability_s)v.value, v.counter);
-		else
-			return false;
 	} else if(v.iskind<spelli>()) {
 		auto p = bsdata<spelli>::elements + v.value;
-		if(!player->known_spell(v.value) && player->basic.abilities[Mana] < p->mana)
-			player->learn_spell(v.value);
-		else
-			return false;
+		if(v.counter >= 0) {
+			if(!player->known_spell(v.value) && player->basic.abilities[Mana] < p->mana)
+				player->learn_spell(v.value);
+			else
+				return false;
+		} else {
+			if(player->known_spell(v.value))
+				player->forget_spell(v.value);
+			else
+				return false;
+		}
 	} else
 		return false;
 	auto id = v.getid();
-	if(!player->fixaction(id, "Learn")) {
-		if(!player->fixaction(bsdata<varianti>::elements[v.type].id, "Learn", getnm(id)))
-			player->fixaction("DefaultLearn", 0, getnm(id));
+	if(!player->fixaction(id, action)) {
+		if(!player->fixaction(bsdata<varianti>::elements[v.type].id, action, getnm(id)))
+			player->fixaction("Default", action, getnm(id));
 	}
 	return true;
 }
 
+static const listi* chance_ill(const item* pi) {
+	if(!pi)
+		return 0;
+	auto& ei = last_item->geti();
+	if(!ei.cursed)
+		return 0;
+	int chance = last_item->geti().chance_ill;
+	switch(pi->getmagic()) {
+	case Artifact: chance -= 40; break;
+	case Cursed: chance += 40; break;
+	case Blessed: chance -= 10; break;
+	}
+	if(chance < 0)
+		chance = 0;
+	else if(chance > 90)
+		chance = 90;
+	if(d100() < chance)
+		return ei.cursed;
+	return 0;
+}
+
 static void roll_for_effect(int bonus) {
 	roll_value(0);
-	if(script_stopped())
+	if(script_stopped()) {
+		auto ill_effect = chance_ill(last_item);
+		if(ill_effect) {
+			auto number_effects = ill_effect->elements.size();
+			if(number_effects) {
+				auto value = ill_effect->elements.begin()[rand() % number_effects];
+				if(learn_value(value, "LearnBad"))
+					return;
+			}
+		}
 		player->fixaction("FailLearn", 0);
-	else {
+	} else {
 		auto number_effects = script_end - script_begin;
 		if(number_effects) {
 			auto value = script_begin[rand() % number_effects];
-			if(!learn_value(value)) {
+			if(!learn_value(value, "Learn")) {
 				gain_experience(xrand(4, 10));
 				player->fixaction("GainExperienceLearn", 0);
 			}
