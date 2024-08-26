@@ -86,12 +86,9 @@ static int getprogress(int count, int maximum) {
 
 static void say_thank_you(const char* item_name, int count, int coins) {
 	char temp[512]; stringbuilder sb(temp);
-	auto t1 = speech_get("ThankYouForService");
-	actvf(sb, 0, t1, item_name, count);
-	if(coins) {
-		auto t2 = speech_get("HereYourMoney");
-		actvf(sb, ' ', t2, coins);
-	}
+	actvf(sb, 0, speech_get("ThankYouForService"), item_name, count);
+	if(coins)
+		actvf(sb, ' ', speech_get("HereYourMoney"), coins);
 	opponent->say(temp);
 	pause();
 }

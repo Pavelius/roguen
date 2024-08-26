@@ -14,7 +14,7 @@
 #include "visualeffect.h"
 #include "widget.h"
 
-struct speechv2;
+struct speechi;
 
 NOBSDATA(buttoni)
 NOBSDATA(color)
@@ -187,7 +187,7 @@ BSDATA(varianti) = {
 	{"Site", VAR(sitei), 1, 0, ftscript<sitei>},
 	{"SiteSkill", VAR(siteskilli), 1},
 	{"Spell", VAR(spelli), 1, 0, ftscript<spelli>},
-	{"Speech", VAR(speechv2), 1, 0, ftscript<speechv2>},
+	{"Speech", VAR(speechi), 1, 0, ftscript<speechi>},
 	{"Tile", VAR(tilei), 1, 0, ftscript<tilei>},
 	{"TileFlag", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},

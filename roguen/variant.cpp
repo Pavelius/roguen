@@ -36,10 +36,7 @@ template<> variant::variant(const void* v) : u(0) {
 }
 
 int varianti::found(const char* id, size_t size) const {
-	int i = -1;
-	if(isnamed())
-		i = source->indexof(source->findv(id, 0, size));
-	return i;
+	return isnamed() ? source->indexof(source->findv(id, 0, size)) : -1;
 }
 
 const varianti* varianti::getsource(const char* id) {
@@ -69,23 +66,11 @@ const char* varianti::getid(const void* object) const {
 	return "NoName";
 }
 
-const char* getvalues(const char* p, size_t& size, int& counter) {
-	auto pb = p;
-	while(ischa(*p) || isnum(*p) || *p == '_')
-		p++;
-	size = p - pb;
-	if(*p == '-')
-		psnum(p, counter);
-	else if(*p == '+')
-		psnum(p + 1, counter);
-	else
-		counter = 0;
-	return p;
-}
-
 template<> variant::variant(const char* v) : u(0) {
 	if(v) {
-		auto size = zlen(v);
+		auto size = zlen(v) + 1;
+		if(size <= 1)
+			return;
 		for(auto& e : bsdata<varianti>()) {
 			if(!e.source || !e.metadata || e.key_count != 1)
 				continue;
@@ -98,14 +83,4 @@ template<> variant::variant(const char* v) : u(0) {
 			}
 		}
 	}
-}
-
-void store_begin(sliceu<variant>& result) {
-	result.set(bsdata<variant>::source.getcount(), 0);
-}
-
-void store_end(sliceu<variant>& result) {
-	auto p1 = bsdata<variant>::source.indexof(result.begin());
-	auto p2 = bsdata<variant>::source.getcount();
-	result.set(p1, p2 - p1);
 }

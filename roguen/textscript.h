@@ -1,9 +1,10 @@
 #pragma once
+
 #include "stringbuilder.h"
 
 struct textscript {
-	const char*		id;
-	fnprint			proc;
+	const char*	id;
+	fnprint		proc;
 };
 
 void actv(stringbuilder& sb, const char* format, const char* format_param, char separator);

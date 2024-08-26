@@ -30,7 +30,7 @@
 #include "indexa.h"
 #include "variant.h"
 
-struct speechv2;
+struct speechi;
 
 void add_need(int bonus);
 void add_need_answers(int bonus);
@@ -1071,7 +1071,7 @@ template<> void ftscript<dialogi>(int value, int counter) {
 	bsdata<dialogi>::elements[value].open();
 }
 
-template<> void ftscript<speechv2>(int value, int counter) {
+template<> void ftscript<speechi>(int value, int counter) {
 	if(player)
 		player->say(speech_get(value, -1));
 }

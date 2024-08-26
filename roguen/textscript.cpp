@@ -173,9 +173,7 @@ void actv(stringbuilder& sb, const char* format, const char* format_param, char 
 }
 
 void actvf(stringbuilder& sb, char separator, const char* format, ...) {
-	sb.addsep(separator);
-	auto pb = sb.get();
-	sb.addv(format, xva_start(format));
+	sb.addx(separator, format, xva_start(format));
 }
 
 void sayva(stringbuilder& sb, const char* format, const char* format_param) {
