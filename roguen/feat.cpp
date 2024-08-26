@@ -16,7 +16,6 @@ BSDATA(feati) = {
 	{"AcidDamage"},
 	{"FireDamage"},
 	{"ColdDamage"},
-	{"SpecialUse"},
 	{"IgnoreWeb"},
 	{"Fly"},
 	{"LightSource"},

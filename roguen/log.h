@@ -16,6 +16,7 @@ bool			checksym(const char* p, char sym);
 void			errorp(const char* position, const char* format, ...);
 extern int		errors;
 void			errorv(const char* position, const char* format, const char* format_param);
+bool			errorpresent();
 void			print(const char* format, ...);
 void			println();
 void			printv(const char* format);

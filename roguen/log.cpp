@@ -31,7 +31,7 @@ void log::print(const char* format, ...) {
 }
 
 void log::println() {
-	printv("\n\r");
+	printv("\r\n");
 }
 
 const char* log::read(const char* url, bool error_if_not_exist) {
@@ -158,4 +158,12 @@ bool log::checksym(const char* p, char sym) {
 		return false;
 	}
 	return true;
+}
+
+bool log::errorpresent() {
+	if(errors > 0)
+		return true;
+	if(io::file::exist("errors.txt"))
+		io::file::remove("errors.txt");
+	return false;
 }
