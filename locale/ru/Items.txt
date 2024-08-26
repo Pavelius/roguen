@@ -127,5 +127,7 @@ OldTome: Старый фолиант
 TomeOfLight: Книга света
 
 RodOfBurning: Прутик поджигания
+WandOfDigging: Палочка копания
+WandOfDiggingChoose: Копать в каком направлении?
 
 Scroll: Свиток

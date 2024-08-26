@@ -936,6 +936,10 @@ void creature::update_abilities() {
 	}
 	if(is(LightSource))
 		abilities[LineOfSight] += 3;
+	if(is(Freezing))
+		abilities[Armor] += 2;
+	if(is(Burning))
+		abilities[Dodge] -= 20;
 	if(ispresent()) {
 		if(!is(IgnoreWeb) && is(Webbed)) {
 			abilities[WeaponSkill] -= 10;
@@ -954,6 +958,33 @@ void creature::place(point m) {
 
 bool creature::ishuman() const {
 	return game.getowner() == this;
+}
+
+static bool is_enemy(const creature* p1, const creature* p2) {
+	if(p1->getenemy() == p2)
+		return true;
+	auto r = p1->getreputation();
+	if(r < 0)
+		return p2->getreputation() >= 0;
+	else if(r > 0)
+		return p2->getreputation() < 0;
+	return false;
+}
+
+static bool is_enemy(const void* object) {
+	auto opponent = (creature*)object;
+	if(is_enemy(player, opponent))
+		return true;
+	if(is_enemy(opponent, player))
+		return true;
+	opponent = opponent->getowner();
+	if(opponent) {
+		if(is_enemy(player, opponent))
+			return true;
+		if(is_enemy(opponent, player))
+			return true;
+	}
+	return false;
 }
 
 bool creature::isenemy(const creature& opponent) const {
@@ -1768,4 +1799,8 @@ bool ispresent(const void* p) {
 
 int get_maximum_faith(creature* p) {
 	return p->get(Religion) / 4;
+}
+
+creature* creature::getenemy() const {
+	return (enemy_id != 0xFFFF) ? bsdata<creature>::elements + enemy_id : 0;
 }

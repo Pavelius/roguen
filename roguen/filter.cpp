@@ -3,6 +3,7 @@
 #include "filter.h"
 #include "indexa.h"
 #include "itema.h"
+#include "imath.h"
 #include "markuse.h"
 #include "pushvalue.h"
 #include "site.h"
@@ -46,6 +47,15 @@ static bool match_list_feature(point m) {
 
 static bool match_list_room(const void* object) {
 	return match_list_value(&((roomi*)object)->geti() - bsdata<sitei>::elements);
+}
+
+static bool match_wall(point m) {
+	return bsdata<tilei>::elements[area->tiles[m]].iswall();
+}
+
+static bool match_wall_mines(point m) {
+	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
+	return ei.iswall() && ei.is(Mines);
 }
 
 template<> void ftscript<filteri>(int value, int counter) {
@@ -177,6 +187,16 @@ static void select_features(fnvisible proc, int counter) {
 	indecies.select(player->getposition(), counter ? counter : 1);
 }
 
+static void select_walls(fnvisible proc, int counter) {
+	clear_all_collections();
+	indecies.select(match_wall, true, player->getposition(), imax(1, counter));
+}
+
+static void select_walls_mines(fnvisible proc, int counter) {
+	clear_all_collections();
+	indecies.select(match_wall_mines, true, player->getposition(), imax(1, counter));
+}
+
 static void select_next_features(fnvisible proc, int counter) {
 	clear_all_collections();
 	auto push = last_variant;
@@ -230,6 +250,8 @@ BSDATA(filteri) = {
 	{"SelectNeutralCreatures", filter_neutral, select_custom_creatures},
 	{"SelectNextFeatures", 0, select_next_features},
 	{"SelectRooms", 0, select_rooms},
+	{"SelectWalls", 0, select_walls},
+	{"SelectWallsMines", 0, select_walls_mines},
 	{"SelectYou", 0, select_you},
 	{"SelectYourItems", 0, select_your_items},
 	{"SelectYourRoom", 0, select_your_room},

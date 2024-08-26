@@ -35,6 +35,23 @@ void indexa::select(point pt, int range) {
 	count = pb - data;
 }
 
+void indexa::select(fnallowposition allow, bool keep, point pt, int range) {
+	auto pb = data;
+	auto pe = endof();
+	point m;
+	for(m.y = pt.y - range; m.y <= pt.y + range; m.y++) {
+		for(m.x = pt.x - range; m.x <= pt.x + range; m.x++) {
+			if(!area->isvalid(m))
+				continue;
+			if(allow(m) != keep)
+				continue;
+			if(pb < pe)
+				*pb++ = m;
+		}
+	}
+	count = pb - data;
+}
+
 void indexa::select(fnallowposition proc, bool keep, int offset) {
 	auto pb = data;
 	auto pe = endof();

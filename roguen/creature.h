@@ -14,7 +14,7 @@
 #include "wearable.h"
 
 class creature : public wearable, public statable, public spellable, public ownerable {
-	unsigned short	room_id;
+	unsigned short	room_id, enemy_id;
 	void			update_abilities();
 public:
 	int				experience, wait_seconds;
@@ -36,6 +36,7 @@ public:
 	void			fixappear();
 	bool			fixaction(const char* id, const char* action, ...) const;
 	int				get(ability_s v) const { return abilities[v]; }
+	creature*		getenemy() const;
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
@@ -43,6 +44,7 @@ public:
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
 	int				getpaymentcost() const;
+	int				getreputation() const { return abilities[Reputation] / 20; }
 	roomi*			getroom() const;
 	void			getrumor(quest& e, stringbuilder& sb) const;
 	int				getsellingcost() const;

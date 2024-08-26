@@ -26,6 +26,8 @@ WallCave borders(-1) tile(Cave) walls(0 2)
  flags Mines
 WallBuilding borders(-1) tile(WoodenFloor) walls(13 1)
 WallDungeon borders(-1) tile(DungeonFloor) walls(25 3)
+ flags Mines
 WallFire borders(-1) tile(Lava) walls(39 5)
+ flags Mines
 WallIce borders(-1) tile(Snow) walls(55 3)
  flags Mines

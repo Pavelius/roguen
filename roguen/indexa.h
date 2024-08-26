@@ -10,6 +10,7 @@ struct indexa : adat<point, 1024> {
 	void	match(areaf v, bool keep);
 	void	select(point m, int range);
 	void	select(fnallowposition allow, bool keep, int offset);
+	void	select(fnallowposition allow, bool keep, point pt, int range);
 	void	shuffle();
 	void	sort(point m);
 };

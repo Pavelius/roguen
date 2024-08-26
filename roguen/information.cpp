@@ -203,7 +203,7 @@ static void actual_need_state(stringbuilder& sb) {
 static void print_reputation(stringbuilder& sb) {
 	if(!player)
 		return;
-	auto v = player->get(Reputation) / 20;
+	auto v = player->getreputation();
 	if(v < 0)
 		sb.add(getnm(str("ReputationM%1i", -v)));
 	else

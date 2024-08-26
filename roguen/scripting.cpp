@@ -2056,6 +2056,15 @@ static void destroy_feature(int bonus) {
 	area->setfeature(m, 0);
 }
 
+static void destroy_wall(int bonus) {
+	point m = center(last_rect);
+	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
+	if(ei.tile) {
+		visualize_activity(m);
+		area->settile(m, ei.tile);
+	}
+}
+
 static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
 }
@@ -2130,13 +2139,25 @@ static void fire_harm(int bonus) {
 	if(player->resist(FireResistance, FireImmunity))
 		return;
 	player->fixeffect("FireSplash");
+	player->add(Burning, 1);
 	auto damage = xrand(bonus / 2, bonus) - imax(player->get(Armor) - 2, 0);
 	if(damage <= 0)
 		return;
 	player->damage(damage);
-	player->add(Burning, 1);
-	damage_backpack_item(Scroll, 60);
-	damage_backpack_item(Scroll, 40);
+	damage_backpack_item(Scroll, 50);
+	damage_backpack_item(Tome, 40);
+}
+
+static void cold_harm(int bonus) {
+	if(player->resist(ColdResistance, ColdImmunity))
+		return;
+	player->fixeffect("IceSplash");
+	player->add(Freezing, 3);
+	auto damage = xrand(1, bonus) - player->get(Armor);
+	if(damage <= 0)
+		return;
+	player->damage(damage);
+	damage_backpack_item(Potion, 20);
 }
 
 static bool is_full(int bonus) {
@@ -2485,11 +2506,13 @@ BSDATA(script) = {
 	{"ChooseTarget", choose_target, is_full},
 	{"ChooseRandom", choose_random, is_full},
 	{"ChooseLimit", choose_limit, is_full},
+	{"ColdHarm", cold_harm},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},
 	{"DamageItem", damage_item},
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
+	{"DestroyWall", destroy_wall},
 	{"DropDown", dropdown},
 	{"EnchantMinutes", enchant_minutes, empthy_next_condition},
 	{"EnchantHours", enchant_hours, empthy_next_condition},
