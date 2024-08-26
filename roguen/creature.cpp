@@ -91,6 +91,19 @@ static creature* findalive(point m) {
 	return 0;
 }
 
+static void last_item_fix_action(const char* action) {
+	auto& ei = last_item->geti();
+	if(player->fixaction(ei.id, action))
+		return;
+	if(ei.unidentified) {
+		if(player->fixaction(ei.unidentified, action))
+			return;
+	}
+	if(player->fixaction(bsdata<weari>::elements[ei.wear].id, action))
+		return;
+	player->fixaction(action, 0);
+}
+
 static void pay_movement() {
 	auto cost = 200 - player->get(Dexterity);
 	if(!player->is(Fly)) {
@@ -1593,7 +1606,13 @@ void use_item(item& v) {
 	last_item = &v;
 	player->act(getnm("YouUseItem"), v.getname());
 	script_run(script);
-	if(!last_item->is(SpecialUse))
+	auto chance_consume = last_item->chance_consume();
+	if(chance_consume) {
+		if(d100() < chance_consume) {
+			last_item_fix_action("ConsumeItem");
+			v.use();
+		}
+	} else
 		v.use();
 	last_item = push_item;
 	player->update();

@@ -1965,64 +1965,44 @@ static void roll_action(int bonus) {
 		player->fixaction(last_action->id, "Fail");
 }
 
-static int chance_to_read(magicn v) {
-	switch(v) {
-	case Artifact: return 10;
-	case Blessed: return 20;
-	default: return 30;
-	}
+static void gain_experience(int bonus) {
+	auto value = bonus * 100;
+	fix_yellow("%Experience%+1i", value);
+	player->experience += value;
 }
 
-static void read_item() {
-	player->wait(xrand(600, 1200));
-	if(!last_item)
-		return;
-	auto result = d100();
-	auto chance = chance_to_read(last_item->getmagic());
-	if(result < chance) {
-		player->fixaction("TotallyReadItem", 0, last_item->getname());
-		last_item->use();
-	}
-}
-
-static void learn_value(variant v) {
-	auto id = v.getid();
-	auto prefix = "Default";
-	auto alternate = false;
+static bool learn_value(variant v) {
 	if(v.iskind<feati>()) {
-		prefix = "Feat";
-		if(player->basic.abilities[v.value] < 120) {
-			add_safe((ability_s)v.value, v.counter);
-		} else
-			alternate = true;
+		if(v.value >= 0) {
+			if(!player->feats.is(v.value))
+				player->feats.set(v.value);
+			else
+				return false;
+		} else {
+			if(player->feats.is(v.value))
+				player->feats.remove(v.value);
+			else
+				return false;
+		}
 	} else if(v.iskind<abilityi>()) {
-		prefix = "Ability";
-		if(player->basic.abilities[v.value] < 120)
+		if(player->basic.abilities[v.value] + v.counter < 120)
 			add_safe((ability_s)v.value, v.counter);
 		else
-			alternate = true;
+			return false;
 	} else if(v.iskind<spelli>()) {
-		prefix = "Spell";
 		auto p = bsdata<spelli>::elements + v.value;
 		if(!player->known_spell(v.value) && player->basic.abilities[Mana] < p->mana)
 			player->learn_spell(v.value);
 		else
-			alternate = true;
+			return false;
 	} else
-		return;
-	if(alternate) {
-		auto ability = Mana;
-		if(player->basic.abilities[ability] >= 120)
-			ability = Hits;
-		player->basic.abilities[ability]++;
-		if(!player->fixaction(id, "LearnAlternate"))
-			player->fixaction("DefaultLearnAlternate", 0, getnm(id), bsdata<abilityi>::elements[ability].getname());
-	} else {
-		if(!player->fixaction(id, "Learn")) {
-			if(!player->fixaction(prefix, "Learn", getnm(id)))
-				player->fixaction("DefaultLearn", 0, getnm(id));
-		}
+		return false;
+	auto id = v.getid();
+	if(!player->fixaction(id, "Learn")) {
+		if(!player->fixaction(bsdata<varianti>::elements[v.type].id, "Learn", getnm(id)))
+			player->fixaction("DefaultLearn", 0, getnm(id));
 	}
+	return true;
 }
 
 static void roll_for_effect(int bonus) {
@@ -2031,16 +2011,21 @@ static void roll_for_effect(int bonus) {
 		player->fixaction("FailLearn", 0);
 	else {
 		auto number_effects = script_end - script_begin;
-		if(number_effects)
-			learn_value(script_begin[rand() % number_effects]);
+		if(number_effects) {
+			auto value = script_begin[rand() % number_effects];
+			if(!learn_value(value)) {
+				gain_experience(xrand(4, 10));
+				player->fixaction("GainExperienceLearn", 0);
+			}
+		}
 	}
-	read_item();
 }
 
 static void roll_learning(int bonus) {
 	auto push_ability = last_ability;
 	last_ability = Literacy;
 	roll_for_effect(bonus);
+	player->wait(xrand(600, 1200));
 	last_ability = push_ability;
 }
 
@@ -2251,12 +2236,6 @@ static void for_each_room(int bonus) {
 	}
 	script_stop();
 	rooms = push_source;
-}
-
-static void gain_experience(int bonus) {
-	auto value = bonus * 100;
-	fix_yellow("%Experience%+1i", value);
-	player->experience += value;
 }
 
 static void gain_coins(int bonus) {

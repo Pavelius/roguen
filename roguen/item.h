@@ -25,7 +25,7 @@ struct itemi : nameable {
 	weaponi			weapon;
 	featable		feats;
 	variants		wearing, use;
-	char			charges, rotting;
+	char			chance_consume, rotting;
 	listi*			powers;
 	listi*			cursed;
 	char			chance_power;
@@ -57,6 +57,7 @@ public:
 	explicit operator bool() const { return type != 0; }
 	void			add(item& v);
 	bool			canequip(wear_s v) const;
+	int				chance_consume() const;
 	void			clear() { type = count = stats = 0; }
 	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);

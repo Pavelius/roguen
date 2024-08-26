@@ -6,12 +6,12 @@
 #include "ownerable.h"
 
 struct gamei : public geoposition, public ownerable {
-	unsigned		minutes;
-	unsigned		restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day, restore_several_days;
-	int				globals[128];
-	void			clear();
-	unsigned		getminutes() const { return minutes; }
-	static bool		isvalid(point m) { return m.x > 0 && m.x < 256 && m.y > 0 && m.y < 256; }
+	unsigned	minutes;
+	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day, restore_several_days;
+	int			globals[128];
+	void		clear();
+	unsigned	getminutes() const { return minutes; }
+	static bool	isvalid(point m) { return m.x > 0 && m.x < 256 && m.y > 0 && m.y < 256; }
 };
 extern gamei game;
 

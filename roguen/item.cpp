@@ -241,7 +241,7 @@ void item::use() {
 
 int	item::geteffect() const {
 	switch(magic) {
-	case Cursed: return - 1;
+	case Cursed: return -1;
 	case Blessed:
 		if(identified)
 			return 2;
@@ -252,4 +252,17 @@ int	item::geteffect() const {
 		return 1;
 	default: return 1;
 	}
+}
+
+int	item::chance_consume() const {
+	auto chance = geti().chance_consume;
+	if(!chance)
+		return 0;
+	switch(magic) {
+	case Blessed: chance = chance * 2 / 3; break;
+	case Artifact: chance = chance / 4; break;
+	}
+	if(chance < 3)
+		chance = 3;
+	return chance;
 }
