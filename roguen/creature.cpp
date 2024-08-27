@@ -1743,16 +1743,14 @@ creature* player_create(point m, variant kind, bool female) {
 	if(pm) {
 		copy(player->basic, *pm);
 		advance_value(pm->use);
-		adat<variant> conditions;
-		conditions.add(kind);
-		player->setname(charname::param(conditions));
+		player->setname(random_charname(pm->id));
 		player->basic.abilities[LineOfSight] += 4;
 	} else {
-		adat<variant> conditions;
-		conditions.add(kind);
+		char temp[64]; stringbuilder sb(temp);
+		sb.addv(kind.getid(), 0);
 		if(player->is(Female))
-			conditions.add("Female");
-		player->setname(charname::param(conditions));
+			sb.addv("Female", 0);
+		player->setname(random_charname(temp));
 		player->basic.abilities[LineOfSight] += 4;
 		advance_value(kind, 0);
 		player_levelup();

@@ -1,39 +1,31 @@
+#include "bsreq.h"
 #include "charname.h"
 #include "log.h"
 #include "rand.h"
+#include "stringbuilder.h"
 
 using namespace log;
 
+struct charname {
+	const char* id;
+	const char*	name;
+};
 BSDATAD(charname)
+BSMETA(charname) = {
+	BSREQ(id),
+	BSREQ(name),
+	{}};
 
-bool charname::match(variant v) const {
-	for(auto e : conditions) {
-		if(e == v)
-			return true;
-	}
-	return false;
-}
-
-bool charname::match(const slice<variant>& source) const {
-	for(auto e : source) {
-		if(!e)
-			break;
-		if(!match(e))
-			return false;
-	}
-	return true;
-}
-
-const char* charname::getname(unsigned short v) {
+const char* get_charname(unsigned short v) {
 	if(v == 0xFFFF)
 		return "No name";
 	return ((charname*)bsdata<charname>::source.ptr(v))->name;
 }
 
-unsigned charname::select(short unsigned* pb, short unsigned* pe, const slice<variant>& source) {
+short unsigned select_charname(short unsigned* pb, short unsigned* pe, const char* pattern) {
 	auto ps = pb;
 	for(auto& e : bsdata<charname>()) {
-		if(!e.match(source))
+		if(!szpmatch(e.id, pattern))
 			continue;
 		if(ps < pe)
 			*ps++ = bsdata<charname>::source.indexof(&e);
@@ -41,19 +33,18 @@ unsigned charname::select(short unsigned* pb, short unsigned* pe, const slice<va
 	return ps - pb;
 }
 
-short unsigned charname::param(const slice<variant>& source) {
+short unsigned random_charname(const char* pattern) {
 	short unsigned temp[512];
-	auto count = select(temp, temp + sizeof(temp) / sizeof(temp[0]), source);
+	auto count = select_charname(temp, temp + sizeof(temp) / sizeof(temp[0]), pattern);
 	if(count)
 		return temp[rand() % count];
 	return 0xFFFF;
 }
 
-static const char* read_line(const char* p, variant* conditions, stringbuilder& sb) {
+static const char* read_line(const char* p, const char* id, stringbuilder& sb) {
 	while(ischa(*p)) {
 		auto pe = bsdata<charname>::add();
-		memset(pe, 0, sizeof(*pe));
-		memcpy(pe->conditions, conditions, sizeof(pe->conditions));
+		pe->id = id;
 		sb.clear(); p = sb.psparam(skipws(p));
 		pe->name = szdupz(sb);
 		p = skipws(p);
@@ -66,23 +57,7 @@ static const char* read_line(const char* p, variant* conditions, stringbuilder& 
 	return p;
 }
 
-static const char* read_conditions(const char* p, stringbuilder& sb, variant* pb, const variant* pe) {
-	auto count = pe - pb;
-	while(ischa(p[0])) {
-		p = psidf(p, sb);
-		variant v = (const char*)sb.begin();
-		if(!v)
-			errorp(p, "Can't find variant `%1`", sb.begin());
-		else if(pb >= pe)
-			errorp(p, "Too many conditions when save variant %1 (only %2i allowed)", v.getid(), count);
-		else
-			*pb++ = v;
-		p = skipws(p);
-	}
-	return p;
-}
-
-void charname::read(const char* url) {
+void read_charname(const char* url) {
 	auto p = log::read(url);
 	if(!p)
 		return;
@@ -91,11 +66,14 @@ void charname::read(const char* url) {
 	while(allowparse && *p) {
 		if(!checksym(p, '#'))
 			break;
-		variant conditions[4] = {};
-		p = read_conditions(skipws(p + 1), sb, conditions, conditions + sizeof(conditions) / sizeof(conditions[0]));
+		auto pn = p;
+		p = psidf(p + 1, sb);
+		if(temp[0] == 0)
+			errorp(pn, "Expected identifier");
+		auto id = szdup(temp);
 		if(!checksym(p, '\n'))
 			break;
-		p = read_line(skipwscr(p), conditions, sb);
+		p = read_line(skipwscr(p), id, sb);
 		p = skipwscr(p);
 	}
 	log::close();

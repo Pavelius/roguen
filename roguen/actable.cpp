@@ -22,7 +22,7 @@ bool actable::ischaracter() const {
 
 const char* actable::getname() const {
 	if(name_id != 0xFFFF)
-		return charname::getname(name_id);
+		return get_charname(name_id);
 	return kind.getname();
 }
 

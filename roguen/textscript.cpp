@@ -157,15 +157,6 @@ void logv(const char* format, const char* format_param) {
 	logv(temp);
 }
 
-void actv(stringbuilder& sb, const char* format, const char* format_param, char separator) {
-	if(!format)
-		return;
-	sb.addsep(separator);
-	auto pb = sb.get();
-	sb.addv(format, format_param);
-	logv(pb);
-}
-
 static const char* getformat(const char* id, const char* action) {
 	if(!id)
 		return getnme(action);
@@ -173,6 +164,15 @@ static const char* getformat(const char* id, const char* action) {
 	sb.add(id);
 	sb.add(action);
 	return getnme(temp);
+}
+
+void actv(stringbuilder& sb, const char* format, const char* format_param, char separator) {
+	if(!format)
+		return;
+	sb.addsep(separator);
+	auto pb = sb.get();
+	sb.addv(format, format_param);
+	logv(pb);
 }
 
 bool actn(stringbuilder& sb, const char* id, const char* action, const char* format_param, char separator) {

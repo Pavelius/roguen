@@ -56,10 +56,6 @@ BSMETA(buttoni) = {
 	BSREQ(id),
 	BSREQ(key),
 	{}};
-BSMETA(charname) = {
-	BSREQ(name),
-	BSREQ(conditions),
-	{}};
 BSMETA(creature) = {
 	BSREQ(abilities),
 	{}};
@@ -175,7 +171,7 @@ BSDATA(varianti) = {
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
 	{"Creature", VAR(creature), 0},
-	{"Charname", VAR(charname), 2, 0, 0, 0, charname::read},
+	{"Charname", VAR(charname), 2, 0, 0, 0, read_charname},
 	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
 	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
