@@ -168,7 +168,7 @@ bool speech_need() {
 	if(last_need) {
 		if(d100() < 30)
 			return false;
-		opponent->fixaction("VisitMeLater", 0);
+		opponent->speak("VisitMeLater", 0);
 		return true;
 	}
 	last_need = greatneed::find(opponent);

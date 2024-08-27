@@ -730,6 +730,12 @@
     <Text Include="..\talk\ru\NPCHouses.txt">
       <Filter>Talk</Filter>
     </Text>
+    <Text Include="..\speech\ru\Chatting.txt">
+      <Filter>Talk</Filter>
+    </Text>
+    <Text Include="..\speech\ru\General.txt">
+      <Filter>Talk</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">

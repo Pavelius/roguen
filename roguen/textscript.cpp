@@ -96,12 +96,6 @@ static void complex_say(stringbuilder& sb, const char* format) {
 	}
 }
 
-static void say_format(stringbuilder& sb, const char* format, const char* format_param) {
-	char temp[4096]; stringbuilder sba(temp);
-	sba.addv(format, format_param);
-	complex_say(sb, temp);
-}
-
 static bool parse_name(stringbuilder& sb, const char* id) {
 	auto name = get_player_name();
 	if(!name || !name[0])
@@ -172,15 +166,31 @@ void actv(stringbuilder& sb, const char* format, const char* format_param, char 
 	logv(pb);
 }
 
+static const char* getformat(const char* id, const char* action) {
+	if(!id)
+		return getnme(action);
+	char temp[64]; stringbuilder sb(temp);
+	sb.add(id);
+	sb.add(action);
+	return getnme(temp);
+}
+
+bool actn(stringbuilder& sb, const char* id, const char* action, const char* format_param, char separator) {
+	auto format = getformat(id, action);
+	if(!format)
+		return false;
+	actv(sb, format, format_param, separator);
+	return true;
+}
+
 void actvf(stringbuilder& sb, char separator, const char* format, ...) {
 	sb.addx(separator, format, xva_start(format));
 }
 
 void sayva(stringbuilder& sb, const char* format, const char* format_param) {
-	if(format[0] == '>')
-		actv(sb, format + 1, format_param, '\n');
-	else
-		say_format(sb, format, format_param);
+	char temp[4096]; stringbuilder sba(temp);
+	sba.addv(format, format_param);
+	complex_say(sb, temp);
 }
 
 void initialize_strings() {

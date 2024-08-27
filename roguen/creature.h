@@ -23,8 +23,8 @@ public:
 	geoposition		worldpos;
 	point			moveorder, guardorder;
 	operator bool() const { return abilities[Hits] > 0; }
-	void			act(const char* format, ...) const;
-	void			actp(const char* format, ...) const;
+	bool			act(const char* action, const char* id = 0, ...) const;
+	bool			actp(const char* action, const char* id = 0, ...) const;
 	void			apply(const featable& v) { feats.add(v); }
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
@@ -34,7 +34,6 @@ public:
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
-	bool			fixaction(const char* id, const char* action, ...) const;
 	int				get(ability_s v) const { return abilities[v]; }
 	creature*		getenemy() const;
 	void			getinfo(stringbuilder& sb) const;
@@ -80,6 +79,7 @@ public:
 	void			slowdown(int seconds) { wait_seconds += seconds; }
 	bool			speechrumor() const;
 	bool			speechlocation() const;
+	bool			speak(const char* action, const char* id = 0, ...) const;
 	void			unlink();
 	void			update();
 	void			wait(int rounds = 1) { wait_seconds += 100 * rounds; }

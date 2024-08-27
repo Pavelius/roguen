@@ -20,8 +20,8 @@
 #include "triggern.h"
 
 extern collection<roomi> rooms;
-int		last_roll_result;
-bool	last_roll_successed;
+int last_roll_result;
+bool last_roll_successed;
 
 bool allow_targets(const variants& conditions);
 bool apply_targets(const variants& conditions);
@@ -57,30 +57,26 @@ void creature::logs(const char* format, ...) const {
 	logv(format, xva_start(format));
 }
 
-bool creature::fixaction(const char* id, const char* action, ...) const {
-	const char* result = 0;
-	if(canspeak()) {
-		auto pm = getmonster();
-		if(pm) {
-			speech_get(result, id, action, pm->getid(), 0);
-			if(pm->parent)
-				speech_get(result, id, action, pm->parent->getid(), 0);
-		} else
-			speech_get(result, id, action, getkind().getid(), 0);
-		speech_get(result, id, action, 0, 0);
-		if(result) {
-			update_console_time();
-			sayv(console, result, xva_start(action));
-			return true;
-		}
-	}
-	auto pn = getnme(ids(id, action));
-	if(pn) {
-		update_console_time();
-		actv(console, pn, xva_start(action), ' ');
+bool creature::speak(const char* action, const char* id, ...) const {
+	if(!ishuman() && !is(Visible))
 		return true;
-	}
-	return false;
+	if(!canspeak())
+		return true;
+	auto pm = getmonster();
+	const char* format = 0;
+	if(pm) {
+		speech_get(format, id, action, pm->getid(), 0);
+		if(pm->parent)
+			speech_get(format, id, action, pm->parent->getid(), 0);
+	} else
+		speech_get(format, id, action, getkind().getid(), 0);
+	speech_get(format, id, action, 0, 0);
+	if(!format)
+		return false;
+	pushvalue push_player(player, const_cast<creature*>(this));
+	update_console_time();
+	sayv(console, format, xva_start(action));
+	return true;
 }
 
 static creature* findalive(point m) {
@@ -94,15 +90,15 @@ static creature* findalive(point m) {
 static void last_item_fix_action(const char* action) {
 	auto& ei = last_item->geti();
 	auto name = last_item->getname();
-	if(player->fixaction(ei.id, action, name))
+	if(player->act(action, ei.id, name))
 		return;
 	if(ei.unidentified) {
-		if(player->fixaction(ei.unidentified, action, name))
+		if(player->act(action, ei.unidentified, name))
 			return;
 	}
-	if(player->fixaction(bsdata<weari>::elements[ei.wear].id, action, name))
+	if(player->act(action, bsdata<weari>::elements[ei.wear].id, name))
 		return;
-	player->fixaction("You", action, name);
+	player->act(action, "You", name);
 }
 
 static void pay_movement() {
@@ -248,16 +244,16 @@ static void summon_minions(point m, variant v) {
 
 void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
-		player->actp(getnm("NotEnoughtMana"));
+		player->actp("NotEnoughtMana");
 		return;
 	}
 	if(!e.summon && !allow_targets(e.use)) {
-		player->actp(getnm("YouDontValidTargets"));
+		player->actp("YouDontValidTargets");
 		return;
 	}
 	if(!silent) {
-		if(!player->fixaction(e.id, "Casting"))
-			player->fixaction("Spells", "Casting");
+		if(!player->speak("Casting", e.id))
+			player->act("Casting", e.id);
 	}
 	if(e.use)
 		apply_targets(e.use);
@@ -500,7 +496,7 @@ void player_levelup() {
 		return;
 	if(player->basic.abilities[Level] > 1) {
 		player->basic.abilities[SkillPoints] += additional_skill_points(player->basic.abilities[Wits]);
-		player->actp(getnme("LevelUp"));
+		player->actp("LevelUp");
 	}
 	advance_value(player->getkind(), player->basic.abilities[Level]);
 }
@@ -612,12 +608,12 @@ static bool check_dangerous_feature(point m) {
 		pay_action();
 		pay_action();
 		if(!player->roll(Strenght)) {
-			player->act(getnme(str("%1Entagled", ei.id)));
+			player->act("Entagled", ei.id);
 			player->damage(1);
 			player->fixactivity();
 			return false;
 		}
-		player->act(getnme(str("%1Break", ei.id)));
+		player->act("Break", ei.id);
 		area->setfeature(m, 0);
 	}
 	return true;
@@ -630,9 +626,7 @@ static void check_trap(point m) {
 	if(ei.is(TrappedFeature)) {
 		auto bonus = area->is(m, Hidden) ? -30 : 20;
 		if(!player->roll(Wits, bonus)) {
-			auto pn = getnme(ei.id);
-			if(pn)
-				player->act(pn, getnm(ei.id));
+			player->act(ei.id, 0, getnm(ei.id));
 			script_run(ei.effect);
 		}
 		if(!player->is(Local))
@@ -647,11 +641,11 @@ static bool check_webbed_tile(point m) {
 		pay_action();
 		pay_action();
 		if(!player->roll(Strenght)) {
-			player->act(getnm("WebEntagled"));
+			player->act("WebEntagled");
 			player->fixactivity();
 			return false;
 		}
-		player->act(getnm("WebBreak"));
+		player->act("WebBreak");
 		area->remove(m, Webbed);
 	}
 	return true;
@@ -696,7 +690,7 @@ static void detect_hidden_objects() {
 			continue;
 		if(!player->roll(Alertness))
 			continue;
-		player->actp(getnm("YouFoundSecretDoor"));
+		player->actp("YouFoundSecretDoor");
 		area->setreveal(m, floor);
 		break;
 	}
@@ -710,7 +704,7 @@ static void detect_hidden_objects() {
 		if(!player->roll(Alertness))
 			continue;
 		area->remove(m, Hidden);
-		player->actp(getnme("YouDetectTrap"), area->getfeature(m).getname());
+		player->actp("YouDetectTrap", 0, area->getfeature(m).getname());
 		break;
 	}
 }
@@ -729,7 +723,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 	if(!ei.is(StuckFeature))
 		return false;
 	if(p->roll(Strenght, -10)) {
-		p->act(getnm("YouOpenStuckDoor"), getnm(ei.id));
+		p->act("YouOpenStuckDoor", 0, getnm(ei.id));
 		area->setactivate(m);
 		area->setactivate(m);
 	} else {
@@ -738,9 +732,7 @@ static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 			auto effect = random_table->random();
 			if(effect.iskind<listi>()) {
 				auto p = bsdata<listi>::elements + effect.value;
-				auto pn = getnme(p->id);
-				if(pn)
-					player->act(pn, getnm(ei.id));
+				player->act(p->id, 0, getnm(ei.id));
 				pushvalue push_rect(last_rect, {m.x, m.y, m.x, m.y});
 				script_run(p->elements);
 			}
@@ -761,10 +753,10 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 			activate_item.value += area->param[m] % ei.random_count;
 		if(activate_item.iskind<itemi>()) {
 			if(!player->useitem(bsdata<itemi>::elements + activate_item.value, true)) {
-				player->actp(getnm(str("%1%2", ei.id, "NoActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+				player->actp("NoActivateItem", ei.id, bsdata<itemi>::elements[activate_item.value].getname());
 				return false;
 			} else
-				player->actp(getnm(str("%1%2", ei.id, "UseActivateItem")), bsdata<itemi>::elements[activate_item.value].getname());
+				player->actp("UseActivateItem", ei.id, bsdata<itemi>::elements[activate_item.value].getname());
 		}
 	}
 	area->setactivate(m);
@@ -784,7 +776,7 @@ static int chance_cut_wood(const item& weapon) {
 static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
 		if(player->roll(Woodcutting)) {
-			player->act(getnm("YouCutWood"), getnm(ei.id));
+			player->act("YouCutWood", 0, getnm(ei.id));
 			area->setfeature(m, 0);
 			drop_item(m, "WoodenLagsTable");
 			return true;
@@ -820,11 +812,11 @@ static bool check_mining(creature* player, point m) {
 		return false;
 	auto direction = area->getdirection(player->getposition(), m);
 	if(!issame(m, direction, Mines) || !m.in({2, 2, areamap::mps - 2, areamap::mps - 2})) {
-		player->actp(getnm("YouCantMineHere"));
+		player->actp("YouCantMineHere");
 		return false;
 	}
 	if(player->roll(Mining)) {
-		player->act(getnm("YouCrashWall"), getnm(bsdata<tilei>::elements[area->tiles[m]].id));
+		player->act("YouCrashWall", 0, getnm(bsdata<tilei>::elements[area->tiles[m]].id));
 		area->setfeature(m, 0);
 		area->settile(m, getfloor());
 		if(d100() < 25) {
@@ -872,7 +864,7 @@ static void look_items(creature* player, point m) {
 			index++;
 		}
 		sb.add(".");
-		player->actp(temp);
+		actv(console, temp, 0, '\n');
 	}
 }
 
@@ -945,11 +937,7 @@ static void update_room(creature* player) {
 		auto pb = player->getroom();
 		auto room_changed = false;
 		if(pn != pb) {
-			if(player->ishuman()) {
-				auto pd = getnme(pn->geti().id, "Look");
-				if(pd)
-					player->actp(pd);
-			}
+			player->actp("Look", pn->geti().id);
 			room_changed = true;
 		}
 		player->setroom(pn);
@@ -1040,7 +1028,7 @@ static void opponent_interaction() {
 		player->fixactivity();
 		opponent->wait();
 		if(d100() < 40 && opponent->canspeak())
-			opponent->fixaction("DontPushMePlaceOwner", 0);
+			opponent->speak("DontPushMePlaceOwner");
 		pay_movement();
 	} else {
 		auto pt = opponent->getposition();
@@ -1052,7 +1040,7 @@ static void opponent_interaction() {
 		update_room(player);
 		player->fixmovement();
 		if(d100() < 40 && opponent->canspeak())
-			opponent->fixaction("DontPushMe", 0);
+			opponent->speak("DontPushMe");
 		pay_movement();
 	}
 }
@@ -1196,16 +1184,16 @@ void attack_melee(int bonus) {
 
 static bool can_shoot() {
 	if(!opponent) {
-		player->actp(getnm("YouDontSeeAnyEnemy"));
+		player->actp("YouDontSeeAnyEnemy");
 		return false;
 	}
 	if(!player->wears[RangedWeapon]) {
-		player->actp(getnm("YouNeedRangeWeapon"));
+		player->actp("YouNeedRangeWeapon");
 		return false;
 	}
 	auto ammo = player->wears[RangedWeapon].geti().weapon.ammunition;
 	if(ammo && !player->wears[Ammunition].is(*ammo)) {
-		player->actp(getnm("YouNeedAmmunition"), ammo->getname());
+		player->actp("YouNeedAmmunition", 0, ammo->getname());
 		return false;
 	}
 	return true;
@@ -1232,7 +1220,7 @@ void attack_range(int bonus) {
 
 static bool can_thrown() {
 	if(!player->wears[MeleeWeapon].is(Thrown)) {
-		player->actp(getnm("YouNeedThrownWeapon"));
+		player->actp("YouNeedThrownWeapon");
 		return false;
 	}
 	return true;
@@ -1242,7 +1230,7 @@ void attack_thrown(int bonus) {
 	if(!can_thrown())
 		return;
 	if(!opponent) {
-		player->actp(getnm("YouDontSeeAnyEnemy"));
+		player->actp("YouDontSeeAnyEnemy");
 		return;
 	}
 	turn_to_opponent();
@@ -1294,7 +1282,7 @@ static void move_step(point ni) {
 void move_step(direction_s v) {
 	if(player->is(Iced)) {
 		if(!player->roll(Dexterity, 30)) {
-			player->act(getnm("IcedSlice"));
+			player->act("IcedSlice");
 			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
 			pay_action();
 		}
@@ -1588,20 +1576,20 @@ void creature::unlink() {
 	}
 }
 
-void creature::act(const char* format, ...) const {
-	if(ishuman() || is(Visible)) {
-		update_console_time();
-		pushvalue push_player(player, const_cast<creature*>(this));
-		actv(console, format, xva_start(format), '\n');
-	}
+bool creature::act(const char* action, const char* id, ...) const {
+	if(!ishuman() && !is(Visible))
+		return true;
+	update_console_time();
+	pushvalue push_player(player, const_cast<creature*>(this));
+	return actn(console, id, action, xva_start(id), '\n');
 }
 
-void creature::actp(const char* format, ...) const {
-	if(ishuman()) {
-		update_console_time();
-		pushvalue push_player(player, const_cast<creature*>(this));
-		actv(console, format, xva_start(format), '\n');
-	}
+bool creature::actp(const char* action, const char* id, ...) const {
+	if(!ishuman())
+		return true;
+	update_console_time();
+	pushvalue push_player(player, const_cast<creature*>(this));
+	return actn(console, id, action, xva_start(id), '\n');
 }
 
 void creature::sayv(stringbuilder& sb, const char* format, const char* format_param) const {
@@ -1664,7 +1652,7 @@ void use_item(item& v) {
 		return;
 	auto script = v.getuse();
 	if(!script) {
-		player->actp(getnm("ItemNotUsable"), v.getname());
+		player->actp("ItemNotUsable", 0, v.getname());
 		return;
 	}
 	auto push_item = last_item;
@@ -1675,7 +1663,7 @@ void use_item(item& v) {
 	last_item_fix_action("UseItem");
 	script_run(script);
 	if(script_fail)
-		player->actp(getnm("ItemFailScript"), v.getname());
+		player->actp("ItemFailScript", 0, v.getname());
 	else {
 		auto chance_consume = last_item->chance_consume();
 		if(chance_consume) {
@@ -1806,7 +1794,7 @@ void creature::equipi(short unsigned type, int count) {
 bool creature::canremove(item& it) const {
 	if(it.iscursed()) {
 		it.setidentified(true);
-		fixaction("ThisIsMyCursedItem", 0, it.getname());
+		speak("ThisIsMyCursedItem", 0, it.getname());
 		return false;
 	}
 	return true;

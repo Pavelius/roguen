@@ -135,9 +135,9 @@ void damage_item(item& it) {
 	auto name = it.getname();
 	it.damage();
 	if(it)
-		player->act(getnm("YouDamageItem"), name);
+		player->act("YouDamageItem", 0, name);
 	else
-		player->act(getnm("YouBrokeItem"), name);
+		player->act("YouBrokeItem", 0, name);
 }
 
 static int getrange(point m1, point m2) {
@@ -1557,7 +1557,7 @@ static void open_nearest_door(int bonus) {
 
 static void chatting() {
 	if(opponent->istired()) {
-		opponent->fixaction("IAmTired", 0);
+		opponent->speak("IAmTired");
 		opponent->abilities[Mood] -= 1;
 		return;
 	}
@@ -1581,7 +1581,7 @@ static void chatting() {
 		if(opponent->speechlocation())
 			return;
 	}
-	opponent->fixaction("HowYouAre", 0);
+	opponent->speak("HowYouAre");
 	opponent->abilities[Mood] -= xrand(1, 3);
 }
 
@@ -1599,13 +1599,13 @@ static bool payment(creature* player, creature* keeper, const char* object, int 
 	if(player->ishuman()) {
 		if(answers::console)
 			answers::console->clear();
-		player->actp(getnm("WantBuyItem"), object, coins);
+		player->actp("WantBuyItem", 0, object, coins);
 		if(!yesno(0))
 			return false;
 	}
 	auto allow_coins = player->getmoney();
 	if(player->getmoney() < coins) {
-		keeper->fixaction("NotEnoughCoins", 0, allow_coins, coins, coins - allow_coins);
+		keeper->speak("NotEnoughCoins", 0, allow_coins, coins, coins - allow_coins);
 		return false;
 	}
 	keeper->addcoins(coins);
@@ -1617,13 +1617,13 @@ static bool selling(creature* player, creature* opponent, const char* object, in
 	if(player->ishuman()) {
 		if(answers::console)
 			answers::console->clear();
-		player->actp(getnm("WantSellItem"), object, coins);
+		player->actp("WantSellItem", 0, object, coins);
 		if(!yesno(0))
 			return false;
 	}
 	auto allow_coins = opponent->getmoney();
 	if(opponent->getmoney() < coins) {
-		opponent->fixaction("KeeperNotEnoughCoins", 0, allow_coins, coins, coins - allow_coins);
+		opponent->speak("KeeperNotEnoughCoins", 0, allow_coins, coins, coins - allow_coins);
 		return false;
 	}
 	player->addcoins(coins);
@@ -1645,7 +1645,7 @@ static void pickup(int bonus) {
 			if(!payment(player, keeper, p->getfullname(), item_cost))
 				return;
 		}
-		player->act(getnm("PickupItem"), p->getfullname());
+		player->act("PickupItem", 0, p->getfullname());
 		player->additem(*p);
 	}
 }
@@ -1658,7 +1658,7 @@ static void pickup_all(int bonus) {
 	itema items;
 	items.select(player->getposition());
 	for(auto p : items) {
-		player->act(getnm("PickupItem"), p->getfullname());
+		player->act("PickupItem", 0, p->getfullname());
 		player->additem(*p);
 	}
 }
@@ -1677,7 +1677,7 @@ static void dropdown(int bonus) {
 			if(!selling(player, keeper, p->getfullname(), item_cost))
 				return;
 		}
-		player->act(getnm("DropdownItem"), p->getfullname());
+		player->act("DropdownItem", 0, p->getfullname());
 		p->drop(player->getposition());
 	}
 }
@@ -1787,7 +1787,7 @@ static void show_images(int bonus) {
 	for(auto id : source)
 		an.add((void*)id, bsdata<resource>::elements[(int)id].name);
 	console.clear();
-	player->act(getnm("ChooseImageSet"));
+	player->act("ChooseImageSet");
 	auto id = (res)(int)an.choose();
 	switch(id) {
 	case res::Items:
@@ -1956,18 +1956,19 @@ static void apply_action(int bonus) {
 		return;
 	if(last_action->tool)
 		last_action->usetool();
-	player->fixaction(last_action->id, "Apply");
+	if(!player->speak("Apply", last_action->id))
+		player->act("Apply", last_action->id);
 	apply_targets(last_action->effect);
 	pay_action();
 }
 
 static void jump_to_site(int bonus) {
 	if(!player->ishuman())
-		player->act(getnm("YouSundellyDisappear"));
+		player->act("YouSundellyDisappear");
 	auto m = area->getfree(last_index, 8, isfreecr);
 	player->place(m);
 	if(!player->ishuman())
-		player->act(getnm("YouSundellyAppear"));
+		player->act("YouSundellyAppear");
 	else
 		area->setlos(m, player->getlos(), isfreeltsv);
 	player->fixteleport(player->ishuman());
@@ -2010,10 +2011,13 @@ static void roll_action(int bonus) {
 		return;
 	last_ability = last_action->skill;
 	roll_value(last_action->bonus + bonus);
-	if(last_roll_successed)
-		player->fixaction(last_action->id, "Success");
-	else
-		player->fixaction(last_action->id, "Fail");
+	if(last_roll_successed) {
+		if(!player->speak("Success", last_action->id))
+			player->act("Success", last_action->id);
+	} else {
+		if(!player->speak("Fail", last_action->id))
+			player->act("Fail", last_action->id);
+	}
 }
 
 static void gain_experience(int bonus) {
@@ -2059,9 +2063,10 @@ static bool learn_value(variant v, const char* action) {
 	} else
 		return false;
 	auto id = v.getid();
-	if(!player->fixaction(id, action)) {
-		if(!player->fixaction(bsdata<varianti>::elements[v.type].id, action, getnm(id)))
-			player->fixaction("Default", action, getnm(id));
+	auto name = getnm(id);
+	if(!player->act(action, id)) {
+		if(!player->act(action, bsdata<varianti>::elements[v.type].id, name))
+			player->act(action, "Default", name);
 	}
 	return true;
 }
@@ -2099,14 +2104,14 @@ static void roll_for_effect(int bonus) {
 					return;
 			}
 		}
-		player->fixaction("FailLearn", 0);
+		player->act("FailLearn");
 	} else {
 		auto number_effects = script_end - script_begin;
 		if(number_effects) {
 			auto value = script_begin[rand() % number_effects];
 			if(!learn_value(value, "Learn")) {
 				gain_experience(xrand(4, 10));
-				player->fixaction("GainExperienceLearn", 0);
+				player->act("GainExperienceLearn");
 			}
 		}
 	}
@@ -2462,7 +2467,7 @@ static void set_magic_effect(magicn v) {
 static void check_script_targets() {
 	if(!have_targets()) {
 		script_stop();
-		player->actp(getnm("YouDontValidTargets"));
+		player->actp("YouDontValidTargets");
 	}
 }
 

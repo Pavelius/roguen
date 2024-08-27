@@ -379,6 +379,8 @@
     <Text Include="..\rules\Skills.txt" />
     <Text Include="..\rules\Spells.txt" />
     <Text Include="..\rules\Tiles.txt" />
+    <Text Include="..\speech\ru\Chatting.txt" />
+    <Text Include="..\speech\ru\General.txt" />
     <Text Include="..\talk\ru\AncientRaceProgress.txt" />
     <Text Include="..\talk\ru\NeedTalk.txt" />
     <Text Include="..\talk\ru\NPCHouses.txt" />
