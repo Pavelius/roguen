@@ -183,7 +183,3 @@ void read_talk(const char* url) {
 	if(n1 < n2)
 		ptb->elements.set(&bsdata<phrasei>::get(n1), n2 - n1);
 }
-
-void read_talk() {
-	log::readlf(read_talk, "talk", "*.txt");
-}

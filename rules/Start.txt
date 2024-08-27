@@ -1,0 +1,51 @@
+#Spell
+
+CureWounds
+LightSpell
+SummonUndead
+Web
+
+#RandomTable
+
+RandomRace
+ chance Human+8 HightElf DarkElf
+
+#Hotkey
+
+"S" RaiseSkills
+"D" DropDown
+"I" Inventory
+"U" OpenNearestDoor
+"P" PickUp
+"Q" RangeAttack
+"M" ShowMinimap
+"L" ShowLogs
+"T" ThrownAttack
+"V" ViewStuff
+"X" ShowCharsheet
+"Z" RepeatUseItem
+
+"Up" MoveUp
+"Home" MoveUpLeft
+"PageUp" MoveUpRight
+"Down" MoveDown
+"End" MoveDownLeft
+"PageDown" MoveDownRight
+"Right" MoveRight
+"Left" MoveLeft
+
+"Ctrl+P" PickUpAll
+"Ctrl+U" UseItem
+"Ctrl+S" CastSpell
+
+"Ctrl+O" MakeScreenshoot
+
+"Ctrl+M" TestManual
+"Ctrl+D" DebugMessage
+"Ctrl+E" ExploreArea
+"Ctrl+H" HealAll
+"Ctrl+I" ShowImages
+"Ctrl+A" TestArena
+"Ctrl+R" TestRumor
+"Ctrl+F" ToggleFloorRect
+"Ctrl+W" WaitHour

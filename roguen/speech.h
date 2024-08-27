@@ -1,6 +1,7 @@
 #pragma once
 
-void speech_initialize();
+struct speechi;
+
 void speech_get(const char*& result, const char* id, const char* action, const char* middle);
 void speech_read(const char* url);
 

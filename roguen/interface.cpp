@@ -1384,14 +1384,27 @@ void visualize_images(res pid, point size, point offset) {
 	}
 }
 
-int start_application(fnevent proc, fnevent initializing) {
+#ifdef _DEBUG
+void main_util();
+#endif
+
+int start_application(fnevent proc) {
 	initialize_png();
 	if(!proc)
 		return -1;
 	set_dark_theme();
 	initialize_translation();
-	if(initializing)
-		initializing();
+	if(log::errors)
+		return -1;
+	bsreq::read("rules/Basic.txt");
+	if(log::errors)
+		return -1;
+	script_run("InitializeScript");
+	if(log::errors)
+		return -1;
+#ifdef _DEBUG
+	main_util();
+#endif
 	if(log::errorpresent())
 		return -1;
 	metrics::border = 4;

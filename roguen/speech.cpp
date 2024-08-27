@@ -87,7 +87,3 @@ bool parse_speech(stringbuilder& sb, const char* id) {
 	sb.addv(p, 0);
 	return true;
 }
-
-void speech_initialize() {
-	log::readlf(speech_read, "speech", "*.txt");
-}

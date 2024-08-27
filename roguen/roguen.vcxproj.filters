@@ -22,11 +22,11 @@
     <Filter Include="Talk">
       <UniqueIdentifier>{8b5ad259-2ea2-4d82-9254-415b3c164511}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Modules">
       <UniqueIdentifier>{67ec43f9-3859-4284-a8da-fbab3a3dda7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rules">
+      <UniqueIdentifier>{65e40586-131e-4756-9b45-580c43ecaffa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -629,43 +629,43 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\errors.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Items.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Advancement.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Shapes.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Sites.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Monsters.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\logs.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Spells.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Tiles.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\rules\Features.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\modules\ChurchOfOne.txt">
       <Filter>Modules</Filter>
     </Text>
     <Text Include="..\rules\Skills.txt">
-      <Filter>Data</Filter>
+      <Filter>Rules</Filter>
     </Text>
     <Text Include="..\modules\AncientRace.txt">
       <Filter>Modules</Filter>
@@ -735,6 +735,9 @@
     </Text>
     <Text Include="..\speech\ru\General.txt">
       <Filter>Talk</Filter>
+    </Text>
+    <Text Include="..\rules\Start.txt">
+      <Filter>Rules</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

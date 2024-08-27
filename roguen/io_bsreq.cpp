@@ -8,8 +8,8 @@
 using namespace log;
 
 static char	temp[512];
-static const char* p;
 static int last_bonus;
+static const char* p;
 
 static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
 	auto pv = requisit->ptr(p);
@@ -387,10 +387,76 @@ static void* read_object(const bsreq* type, array* source, int key_count, int le
 	return object;
 }
 
+static const char* read_string(bool required = false) {
+	valuei value;
+	auto pn = p;
+	read_value(value, 0);
+	if(required && !value.text) {
+		errorp(pn, "Expected string value");
+		allowparse = false;
+		return 0;
+	}
+	return value.text;
+}
+
+static fnread read_reader() {
+	stringbuilder sb(temp);
+	auto pn = p;
+	sb.clear(); p = sb.psidf(p);
+	next();
+	if(!sb)
+		return 0;
+	if(equal(temp, "Default"))
+		return 0;
+	auto p = find_type(temp);
+	if(!p) {
+		errorp(pn, "Can't find type `%1`", temp);
+		allowparse = false;
+		return 0;
+	}
+	if(!p->pread) {
+		errorp(pn, "In type `%1` don't defined file reader", temp);
+		allowparse = false;
+		return 0;
+	}
+	return p->pread;
+}
+
+static bool parse_directives() {
+	if(equal(temp, "include")) {
+		auto url = read_string(true);
+		if(!url)
+			return true;
+		auto reader = read_reader();
+		auto mask_name = read_string();
+		if(!reader)
+			reader = bsreq::read;
+		char temp[260]; stringbuilder sb(temp);
+		sb.add(url, current_locale);
+		if(!allowparse)
+			return true;
+		if(mask_name)
+			readf(reader, temp, mask_name);
+		else
+			reader(szdup(temp));
+		return true;
+	}
+	//else if(equal(temp, "setlocale"))
+	//	return set_locale();
+	return false;
+}
+
 static void parse() {
 	while(*p && allowparse) {
 		skip("#");
+		if(!allowparse)
+			break;
 		readid();
+		if(parse_directives()) {
+			skipline();
+			skiplinefeed();
+			continue;
+		}
 		auto pd = find_type(temp);
 		if(!pd) {
 			if(temp[0])
@@ -407,10 +473,13 @@ static void parse() {
 
 void bsreq::read(const char* url) {
 	pushvalue push_context(context);
+	auto push_p = p;
 	p = log::read(url);
-	if(!p)
-		return;
-	allowparse = true;
-	parse();
-	log::close();
+	if(p) {
+		allowparse = true;
+		p = log::skipwscr(p);
+		parse();
+		log::close();
+	}
+	p = push_p;
 }

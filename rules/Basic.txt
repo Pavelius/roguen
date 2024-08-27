@@ -1,51 +1,22 @@
-#Spell
+#include "speech/%1" Speech "*.txt"
+#include "rules/Shapes.txt" Shape
 
-CureWounds
-LightSpell
-SummonUndead
-Web
+#include "rules/Start.txt"
+#include "rules/Tiles.txt"
+#include "rules/Items.txt"
+#include "rules/Features.txt"
+#include "rules/Monsters.txt"
+#include "rules/Spells.txt"
+#include "rules/Sites.txt"
+#include "rules/Advancement.txt"
+#include "rules/Skills.txt"
 
-#RandomTable
+#include "talk/%1" Talk "*.txt"
+#include "modules" Default "*.txt"
 
-RandomRace
- chance Human+8 HightElf DarkElf
+#include "names/%1" Charname "*.txt"
 
-#Hotkey
+#List
 
-"S" RaiseSkills
-"D" DropDown
-"I" Inventory
-"U" OpenNearestDoor
-"P" PickUp
-"Q" RangeAttack
-"M" ShowMinimap
-"L" ShowLogs
-"T" ThrownAttack
-"V" ViewStuff
-"X" ShowCharsheet
-"Z" RepeatUseItem
-
-"Up" MoveUp
-"Home" MoveUpLeft
-"PageUp" MoveUpRight
-"Down" MoveDown
-"End" MoveDownLeft
-"PageDown" MoveDownRight
-"Right" MoveRight
-"Left" MoveLeft
-
-"Ctrl+P" PickUpAll
-"Ctrl+U" UseItem
-"Ctrl+S" CastSpell
-
-"Ctrl+O" MakeScreenshoot
-
-"Ctrl+M" TestManual
-"Ctrl+D" DebugMessage
-"Ctrl+E" ExploreArea
-"Ctrl+H" HealAll
-"Ctrl+I" ShowImages
-"Ctrl+A" TestArena
-"Ctrl+R" TestRumor
-"Ctrl+F" ToggleFloorRect
-"Ctrl+W" WaitHour
+InitializeScript
+ elements CheckNeedObjects CheckHotkeys CheckSiteSkills

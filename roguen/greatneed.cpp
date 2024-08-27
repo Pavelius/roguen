@@ -75,7 +75,7 @@ void shrink_greatneed() {
 	bsdata<greatneed>::source.count = ps - bsdata<greatneed>::elements;
 }
 
-void check_need_loading() {
+void check_need_objects(int bonus) {
 	static const char* suffix[] = {"Completed", "Fail", "Partial", "Success", 0};
 	log::context.url = "Descriptions.txt";
 	for(auto& e : bsdata<greatneedi>())

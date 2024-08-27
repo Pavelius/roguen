@@ -22,4 +22,4 @@ typedef collection<siteskilli> siteskilla;
 extern siteskilla last_actions;
 extern siteskilli* last_action;
 
-void site_skills_initialize();
+void check_site_skills(int bonus);

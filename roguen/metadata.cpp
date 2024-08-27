@@ -5,16 +5,17 @@
 #include "hotkey.h"
 #include "global.h"
 #include "greatneed.h"
+#include "charname.h"
 #include "creature.h"
 #include "modifier.h"
 #include "race.h"
 #include "script.h"
 #include "siteskill.h"
+#include "speech.h"
+#include "talk.h"
 #include "trigger.h"
 #include "visualeffect.h"
 #include "widget.h"
-
-struct speechi;
 
 NOBSDATA(buttoni)
 NOBSDATA(color)
@@ -54,6 +55,10 @@ BSMETA(areafi) = {
 BSMETA(buttoni) = {
 	BSREQ(id),
 	BSREQ(key),
+	{}};
+BSMETA(charname) = {
+	BSREQ(name),
+	BSREQ(conditions),
 	{}};
 BSMETA(creature) = {
 	BSREQ(abilities),
@@ -152,6 +157,9 @@ BSMETA(spelli) = {
 	BSFLG(feats, feati),
 	BSREQ(summon), BSREQ(use),
 	{}};
+BSMETA(talki) = {
+	BSREQ(id),
+	{}};
 BSMETA(weaponi) = {
 	BSREQ(damage), BSREQ(pierce), BSREQ(ammunition),
 	{}};
@@ -167,6 +175,7 @@ BSDATA(varianti) = {
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
 	{"Creature", VAR(creature), 0},
+	{"Charname", VAR(charname), 2, 0, 0, 0, charname::read},
 	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
 	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
@@ -184,11 +193,12 @@ BSDATA(varianti) = {
 	{"Race", VAR(racei), 1, 0, ftscript<racei>},
 	{"RandomTable", VAR(randomizeri), 1, 0, ftscript<randomizeri>},
 	{"Script", VAR(script), 1, 0, ftscript<script>, fttest<script>},
-	{"Shape", VAR(shapei), 1, 0, ftscript<shapei>},
+	{"Shape", VAR(shapei), 1, 0, ftscript<shapei>, 0, shapei::read},
 	{"Site", VAR(sitei), 1, 0, ftscript<sitei>},
 	{"SiteSkill", VAR(siteskilli), 1},
 	{"Spell", VAR(spelli), 1, 0, ftscript<spelli>},
-	{"Speech", VAR(speechi), 1, 0, ftscript<speechi>},
+	{"Speech", VAR(speechi), 1, 0, ftscript<speechi>, 0, speech_read},
+	{"Talk", VAR(talki), 1, 0, 0, 0, read_talk},
 	{"Tile", VAR(tilei), 1, 0, ftscript<tilei>},
 	{"TileFlag", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},

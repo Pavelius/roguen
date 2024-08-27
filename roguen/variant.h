@@ -9,6 +9,7 @@ struct bsreq;
 
 struct varianti {
 	typedef void(*fnscript)(int index, int bonus);
+	typedef void(*fnread)(const char* url);
 	typedef bool(*fntest)(int index, int bonus);
 	const char*		id;
 	const bsreq*	metadata;
@@ -17,6 +18,7 @@ struct varianti {
 	fnstatus		pgetinfo;
 	fnscript		pscript;
 	fntest			ptest;
+	fnread			pread;
 	static const varianti* getsource(const char* id);
 	const char*		getid(const void* object) const;
 	const char*		getname(const void* object) const;

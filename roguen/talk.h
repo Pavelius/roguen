@@ -25,6 +25,5 @@ struct talki : nameable {
 };
 talki* find_talk(const phrasei* p);
 
-void read_talk();
 void read_talk(const char* url);
 bool talk_opponent(const char* id, fncommand proc);

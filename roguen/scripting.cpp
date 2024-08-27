@@ -6,6 +6,7 @@
 #include "dialog.h"
 #include "filter.h"
 #include "functor.h"
+#include "hotkey.h"
 #include "game.h"
 #include "math.h"
 #include "itema.h"
@@ -2598,6 +2599,9 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"Chance", random_chance},
 	{"Chatting", chatting},
+	{"CheckHotkeys", check_hotkeys},
+	{"CheckNeedObjects", check_need_objects},
+	{"CheckSiteSkills", check_site_skills},
 	{"ChooseTarget", choose_target, is_full},
 	{"ChooseRandom", choose_random, is_full},
 	{"ChooseLimit", choose_limit, is_full},

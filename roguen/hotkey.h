@@ -9,5 +9,5 @@ struct hotkey {
 	const char*		keyid;
 	variant			data;
 };
-void hotkey_initialize();
+void check_hotkeys(int bonus);
 unsigned hotkey_parse(const char* p);
