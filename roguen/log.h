@@ -7,6 +7,8 @@ namespace log {
 struct contexti {
 	const char* url;
 	const char* file;
+	const char* header;
+	void clear();
 };
 extern contexti context;
 extern bool allowparse;

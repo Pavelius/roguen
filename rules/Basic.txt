@@ -1,3 +1,5 @@
+#setlocale "ru"
+
 #include "speech/%1" Speech "*.txt"
 #include "rules/Shapes.txt" Shape
 
@@ -15,8 +17,3 @@
 #include "modules" Default "*.txt"
 
 #include "names/%1" Charname "*.txt"
-
-#List
-
-InitializeScript
- elements CheckNeedObjects CheckHotkeys CheckSiteSkills

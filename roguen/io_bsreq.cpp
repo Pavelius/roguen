@@ -440,9 +440,14 @@ static bool parse_directives() {
 		else
 			reader(szdup(temp));
 		return true;
+	} else if(equal(temp, "setlocale")) {
+		auto url = read_string(true);
+		if(!url)
+			return true;
+		stringbuilder sb(current_locale);
+		sb.addv(url, 0);
+		return true;
 	}
-	//else if(equal(temp, "setlocale"))
-	//	return set_locale();
 	return false;
 }
 

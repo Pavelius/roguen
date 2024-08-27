@@ -1,5 +1,6 @@
 #include "io_stream.h"
 #include "log.h"
+#include "slice.h"
 #include "stringbuilder.h"
 
 bool log::allowparse = true;
@@ -13,6 +14,10 @@ static void print_file_error(const char* format) {
 	file << format;
 }
 fnoutput log::print_proc = print_file_error;
+
+void log::contexti::clear() {
+	memset(this, 0, sizeof(*this));
+}
 
 void log::printv(const char* format) {
 	if(!print_proc)
@@ -35,14 +40,14 @@ void log::println() {
 }
 
 const char* log::read(const char* url, bool error_if_not_exist) {
-	context.url = 0;
-	context.file = 0;
+	context.clear();
 	auto p_alloc = loadt(url);
 	if(!p_alloc) {
 		if(error_if_not_exist)
 			errorp(0, "Can't find file '%1'", url);
 		return 0;
 	}
+	context.header = "Error in file `%1`:";
 	context.url = url;
 	context.file = p_alloc;
 	return p_alloc;
@@ -56,10 +61,10 @@ void log::close() {
 
 void log::errorv(const char* position, const char* format, const char* format_param) {
 	errors++;
-	if(context.url) {
-		print("In file `%1`:", context.url);
+	if(context.header) {
+		print(context.header, context.url);
 		println();
-		context.url = 0;
+		context.header = 0;
 	}
 	if(position && context.file)
 		print(" Line %1i: ", get_line_number(context.file, position));

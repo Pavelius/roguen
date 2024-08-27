@@ -35,7 +35,7 @@ unsigned hotkey_parse(const char* p) {
 			continue;
 		} else {
 			p++;
-			log::errorp(0, "Wrong key symbol '%1' in hotkey", p);
+			log::errorp(0, " Wrong key symbol '%1' in hotkey", p);
 			return 0;
 		}
 	}
@@ -51,6 +51,6 @@ void check_hotkeys(int bonus) {
 		}
 		e.data = e.id;
 		if(!e.data)
-			log::errorp(0, "Can't find script or dialog with name '%1'", e.id);
+			log::errorp(0, " Can't find script or dialog with name '%1'", e.id);
 	}
 }
