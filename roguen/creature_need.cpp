@@ -94,7 +94,10 @@ static void say_thank_you(const char* item_name, int count, int coins) {
 }
 
 static void say_need(const char* suffix, ...) {
-	opponent->sayv(getnm(str("%1%2", last_need->geti().getid(), suffix)), xva_start(suffix));
+	if(!opponent->ishuman() && !opponent->is(Visible))
+		return;
+	pushvalue push(player, opponent);
+	sayv(console, getnm(str("%1%2", last_need->geti().getid(), suffix)), xva_start(suffix));
 	pause();
 }
 

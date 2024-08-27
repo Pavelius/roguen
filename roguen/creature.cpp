@@ -75,7 +75,7 @@ bool creature::speak(const char* action, const char* id, ...) const {
 		return false;
 	pushvalue push_player(player, const_cast<creature*>(this));
 	update_console_time();
-	sayv(format, xva_start(action));
+	sayv(console, format, xva_start(action));
 	return true;
 }
 
@@ -1581,7 +1581,7 @@ bool creature::act(const char* action, const char* id, ...) const {
 		return true;
 	update_console_time();
 	pushvalue push_player(player, const_cast<creature*>(this));
-	return actn(console, id, action, xva_start(id), '\n');
+	return actn(console, id, action, xva_start(id), ' ');
 }
 
 bool creature::actp(const char* action, const char* id, ...) const {
@@ -1589,14 +1589,14 @@ bool creature::actp(const char* action, const char* id, ...) const {
 		return true;
 	update_console_time();
 	pushvalue push_player(player, const_cast<creature*>(this));
-	return actn(console, id, action, xva_start(id), '\n');
+	return actn(console, id, action, xva_start(id), ' ');
 }
 
-void creature::sayv(const char* format, const char* format_param) const {
+void creature::say(const char* format, ...) const {
 	if(ishuman() || is(Visible)) {
 		update_console_time();
 		pushvalue push_player(player, const_cast<creature*>(this));
-		sayva(console, format, format_param);
+		sayv(console, format, xva_start(format));
 	}
 }
 

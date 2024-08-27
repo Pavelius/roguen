@@ -71,8 +71,7 @@ public:
 	void			remove(feat_s v) { feats.remove(v); }
 	bool			resist(feat_s resist, feat_s immunity) const;
 	bool			roll(ability_s v, int bonus = 0) const;
-	void			say(const char* format, ...) const { sayv(format, xva_start(format)); }
-	void			sayv(const char* format, const char* format_param) const;
+	void			say(const char* format, ...) const;
 	void			set(feat_s v) { feats.set(v); }
 	void			set(ability_s i, int v) { abilities[i] = v; }
 	void			setroom(const roomi* v);

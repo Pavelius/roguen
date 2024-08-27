@@ -74,7 +74,7 @@ static const char* skipncr(const char* p) {
 	return skipspcr(p);
 }
 
-static void complex_say(stringbuilder& sb, const char* format) {
+void sayv(stringbuilder& sb, const char* format) {
 	char dialog_text[512];
 	while(format[0]) {
 		auto pe = skipncr(format);
@@ -187,10 +187,10 @@ void actvf(stringbuilder& sb, char separator, const char* format, ...) {
 	sb.addx(separator, format, xva_start(format));
 }
 
-void sayva(stringbuilder& sb, const char* format, const char* format_param) {
+void sayv(stringbuilder& sb, const char* format, const char* format_param) {
 	char temp[4096]; stringbuilder sba(temp);
 	sba.addv(format, format_param);
-	complex_say(sb, temp);
+	sayv(sb, temp);
 }
 
 void initialize_strings() {
