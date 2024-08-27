@@ -65,17 +65,17 @@ bool creature::speak(const char* action, const char* id, ...) const {
 	auto pm = getmonster();
 	const char* format = 0;
 	if(pm) {
-		speech_get(format, id, action, pm->getid(), 0);
+		speech_get(format, id, action, pm->getid());
 		if(pm->parent)
-			speech_get(format, id, action, pm->parent->getid(), 0);
+			speech_get(format, id, action, pm->parent->getid());
 	} else
-		speech_get(format, id, action, getkind().getid(), 0);
-	speech_get(format, id, action, 0, 0);
+		speech_get(format, id, action, getkind().getid());
+	speech_get(format, id, action, 0);
 	if(!format)
 		return false;
 	pushvalue push_player(player, const_cast<creature*>(this));
 	update_console_time();
-	sayv(console, format, xva_start(action));
+	sayv(format, xva_start(action));
 	return true;
 }
 
@@ -1592,12 +1592,11 @@ bool creature::actp(const char* action, const char* id, ...) const {
 	return actn(console, id, action, xva_start(id), '\n');
 }
 
-void creature::sayv(stringbuilder& sb, const char* format, const char* format_param) const {
+void creature::sayv(const char* format, const char* format_param) const {
 	if(ishuman() || is(Visible)) {
-		if(&sb == &console)
-			update_console_time();
+		update_console_time();
 		pushvalue push_player(player, const_cast<creature*>(this));
-		sayva(sb, format, format_param);
+		sayva(console, format, format_param);
 	}
 }
 

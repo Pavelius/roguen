@@ -70,17 +70,14 @@ const char* speech_get(const char* id) {
 	return p->source.begin()[n].name;
 }
 
-void speech_get(const char*& result, const char* id, const char* action, const char* middle, const char* postfix) {
-	if(result)
-		return;
-	char temp[64]; stringbuilder sb(temp);
-	sb.addv(id, 0);
-	sb.addv(action, 0);
-	sb.addv(middle, 0);
-	sb.addv(postfix, 0);
-	auto p = speech_get(temp);
-	if(p)
-		result = p;
+void speech_get(const char*& result, const char* id, const char* action, const char* middle) {
+	if(!result) {
+		char temp[64]; stringbuilder sb(temp);
+		sb.addv(id, 0);
+		sb.addv(action, 0);
+		sb.addv(middle, 0);
+		result = speech_get(temp);
+	}
 }
 
 bool parse_speech(stringbuilder& sb, const char* id) {
