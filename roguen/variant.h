@@ -19,6 +19,7 @@ struct varianti {
 	fnscript		pscript;
 	fntest			ptest;
 	fnread			pread;
+	fnevent			pinitialize;
 	static const varianti* getsource(const char* id);
 	const char*		getid(const void* object) const;
 	const char*		getname(const void* object) const;

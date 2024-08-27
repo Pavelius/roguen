@@ -42,6 +42,6 @@ struct greatneed {
 extern greatneed* last_need;
 
 void add_greatneed(const greatneedi* type, variant owner, unsigned deadline);
-void check_need_objects(int bonus);
+void check_need_objects();
 void shrink_greatneed();
 bool speech_need();

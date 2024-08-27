@@ -53,7 +53,7 @@ bool siteskilli::isusable() const {
 	return allow_targets(effect);
 }
 
-void check_site_skills(int bonus) {
+void check_site_skills() {
 	for(auto& e : bsdata<siteskilli>()) {
 		if(e.keyid)
 			e.key = hotkey_parse(e.keyid);

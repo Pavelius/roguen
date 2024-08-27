@@ -1391,15 +1391,12 @@ void main_util();
 static void check_metatdata() {
 	pushvalue push(log::context);
 	for(auto& ei : bsdata<varianti>()) {
-		if(!ei.source)
-			continue;
-		auto ps = bsdata<script>::find(ids("Checking", ei.id));
-		if(!ps)
+		if(!ei.pinitialize)
 			continue;
 		log::context.clear();
 		log::context.url = ei.id;
 		log::context.header = "Error when checking `%1` elements:";
-		ps->proc(0);
+		ei.pinitialize();
 	}
 	log::context = push;
 }

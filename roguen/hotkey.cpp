@@ -42,7 +42,7 @@ unsigned hotkey_parse(const char* p) {
 	return result;
 }
 
-void check_hotkeys(int bonus) {
+void check_hotkeys() {
 	for(auto& e : bsdata<hotkey>()) {
 		if(e.keyid) {
 			e.key = hotkey_parse(e.keyid);
