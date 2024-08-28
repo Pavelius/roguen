@@ -1,0 +1,20 @@
+﻿ChooseBackpack: Выбирайте предмет из рюкзака
+ChooseMeleeWeapon: Выбирайте оружие ближнего боя
+ChooseMeleeWeaponOffhand: Выбирайте оружие или щит
+ChooseRangedWeapon: Выбирайте дистанционное оружие
+ChooseAmmunition: Выбирайте аммуницию
+ChooseTorso: Выбирайте броню или одежду
+ChooseHead: Выбирайте головной убор
+ChooseNeck: Выбирайте украшение на шею
+ChooseBackward: Выбирайте плащ или накидку
+ChooseGirdle: Выбирайте пояс
+ChooseGloves: Выбирайте перчатки на руки
+ChooseFingerRight: Выбирайте кольцо
+ChooseFingerLeft: Выбирайте кольцо
+ChooseElbows: Выбирайте браслеты
+ChooseLegs: Выбирайте обувь
+
+ChooseAction: Выбирайте особое действие
+ChooseImageSet: Выбирайте набор изображений
+ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
+ChooseSpell: Выбирайте заклинание

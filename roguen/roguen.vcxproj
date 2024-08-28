@@ -353,9 +353,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\errors.txt" />
+    <Text Include="..\locale\ru\Choose.txt" />
     <Text Include="..\locale\ru\Directions.txt" />
     <Text Include="..\locale\ru\Effects.txt" />
     <Text Include="..\locale\ru\EndGames.txt" />
+    <Text Include="..\locale\ru\Feats.txt" />
     <Text Include="..\locale\ru\Items.txt" />
     <Text Include="..\locale\ru\Monsters.txt" />
     <Text Include="..\locale\ru\Names.txt" />

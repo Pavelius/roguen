@@ -149,6 +149,8 @@ void item::getinfo(stringbuilder& sb) const {
 	addv(sb, "Pierce", ei.weapon.pierce);
 	if(is(SlowAction))
 		addf(sb, "SlowUse");
+	if(is(TwoHanded))
+		addf(sb, "TwoHanded");
 	wearing(sb, ei.wearing);
 }
 

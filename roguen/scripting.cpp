@@ -1393,12 +1393,20 @@ static item* choose_wear() {
 	return (item*)choose_answers(getnm("Inventory"), getnm("Cancel"));
 }
 
+static item* choose_items(itema& items, const char* header) {
+	static listcolumn columns[] = {
+		{"Weight", 60, item_weight, true},
+		{}};
+	pushvalue push_columns(current_columns, columns);
+	return (item*)items.choose(header, getnm("Cancel"), false);
+}
+
 static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible proc = 0) {
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},
 		{}};
 	if(!header_format)
-		header_format = "%Choose %-1";
+		header_format = getnm(ids("Choose", bsdata<weari>::elements[wear].id));
 	an.clear();
 	char temp[512]; stringbuilder sb(temp);
 	for(auto& e : player->backpack()) {
@@ -1413,7 +1421,7 @@ static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible 
 		an.add(&e, temp);
 	}
 	sb.clear();
-	sb.add(header_format, bsdata<weari>::elements[wear].getname());
+	sb.add(header_format);
 	pushvalue push_columns(current_columns, columns);
 	return (item*)choose_answers(temp, getnm("Cancel"));
 }
@@ -1695,7 +1703,7 @@ static void pickup(int bonus) {
 	items.select(player->getposition());
 	if(!items)
 		return;
-	auto p = items.choose(getnm("PickItem"), getnm("Cancel"));
+	auto p = choose_items(items, getnm("PickItem"));
 	if(p) {
 		auto payment_cost = player->getpaymentcost();
 		if(payment_cost) {
@@ -1727,7 +1735,7 @@ static void dropdown(int bonus) {
 	items.selectbackpack(player);
 	if(!items)
 		return;
-	auto p = items.choose(getnm("DropItem"), getnm("Cancel"));
+	auto p = choose_items(items, getnm("DropItem"));
 	if(p) {
 		auto payment_cost = player->getsellingcost();
 		if(payment_cost) {

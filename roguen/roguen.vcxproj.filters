@@ -754,6 +754,12 @@
     <Text Include="..\talk\ru\VillageElder.txt">
       <Filter>Talk</Filter>
     </Text>
+    <Text Include="..\locale\ru\Choose.txt">
+      <Filter>Locale</Filter>
+    </Text>
+    <Text Include="..\locale\ru\Feats.txt">
+      <Filter>Locale</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">

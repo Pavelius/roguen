@@ -1,0 +1,17 @@
+AcidResistance: Сопротивление кислоте
+AcidImmunity: Иммунитет кислоте
+ColdDamage: Замораживания
+ColdResistance: Сопротивление холоду
+ColdImmunity: Иммунитет холоду
+Darkvision: Инфрозрение
+FireDamage: Воспламенения
+FireResistance: Сопротивление огню
+Fly: Полет
+LightSource: Источник света
+PoisonResistance: Сопротивление яду
+
+CutWoods: Рубит деревья
+FastMove: Быстрое движение
+Retaliate: Ответный удар
+SlowUse: Медленно
+TwoHanded: Две руки

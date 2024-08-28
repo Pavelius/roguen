@@ -16,10 +16,6 @@ BlockSuccess: Блок
 Cancel: Отмена
 CantGoThisWay: Сюда не пройти.
 Choose: Выбирайте
-ChooseAction: Выбирайте особое действие
-ChooseImageSet: Выбирайте набор изображений
-ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
-ChooseSpell: Выбирайте заклинание
 Continue: Продолжить
 Coins: Монет
 Cost: Стоит
@@ -70,7 +66,6 @@ RumorDungeonMore: Я слышал%а что там находятся %-1, которые охраняет %-2.
 RumorDungeonGuardian: Но, поберегись. Я слышал%а что командует ими %-1.
 RumorLocation: Не так далеко отсюда на %-1, есть %2. Возможно, вам не мешало бы посетить это место.
 Rounds: Раунды
-SlowUse: Медленно
 Speed: Скорость
 StuckDoor: Заевшая дверь
 ThereIsLying: Здесь лежит
@@ -130,20 +125,6 @@ DamageReduciton: Броня
 Hits: Хиты
 Mana: Мана
 Money: Деньги
-
-CutWoods: Рубит деревья
-Retaliate: Ответный удар
-
-AcidResistance: Сопротивление кислоте
-ColdDamage: Замораживания
-ColdResistance: Сопротивление холоду
-Darkvision: Инфрозрение
-FastMove: Быстрое движение
-FireDamage: Воспламенения
-FireResistance: Сопротивление огню
-Fly: Полет
-LightSource: Источник света
-PoisonResistance: Сопротивление яду
 
 VisualizeProgress: Мы c тобой %-1. При этом осталось примерно %-2.
 NoAnyProgress: Еще даже не начинали
