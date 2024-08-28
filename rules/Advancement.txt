@@ -29,7 +29,7 @@ HightElf 1 Ability
 HightElf 1 Skills
  elements WeaponSkill+15 BalisticSkill+20 Dodge+10 Literacy+20
 HightElf 1 Spells
- elements LightSpell BurningHands
+ elements LightSpell IceSpear
 HightElf 1 Equipment
  elements Staff
 HightElf -2 AdditionalHits

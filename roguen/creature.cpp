@@ -511,8 +511,7 @@ static void check_burning() {
 static void check_freezing() {
 	if(player->is(Freezing)) {
 		if(!player->resist(ColdResistance, ColdImmunity)) {
-			player->damage(1);
-			player->slowdown(100 / 2);
+			player->slowdown(100);
 			damage_backpack_item(Potion, 20);
 		}
 		player->add(Freezing, -1);

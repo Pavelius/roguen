@@ -2,6 +2,7 @@ BurningHands: Сжигающие руки
 CureWounds: Лечение легких ранений
 Entaglement: Рост колючек
 Gate: Врата
+IceSpear: Ледяное копье
 KnockDoor: Вскрыть замки
 LightSpell: Свет
 Mending: Ремонт

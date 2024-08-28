@@ -6,6 +6,8 @@ CureWounds mana(10)
  use SelectAllies FilterClose FilterWounded ChooseTarget ForEachCreature Heal+5
 Entaglement mana(6)
  use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature ThornBush
+IceSpear mana(6)
+ use SelectEnemies ChooseLimit+1 ForEachCreature ColdHarm+5
 Gate mana(40) adventure(1)
 LightSpell mana(5) adventure(1)
  use EnchantMinutes+20 LightSource

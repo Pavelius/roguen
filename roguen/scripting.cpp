@@ -1025,6 +1025,14 @@ static void add_item(point index, const itemi* pe, int count = 1, int chance_pow
 	it.drop(index);
 }
 
+static void add_item(item it) {
+	player->additem(it);
+	if(it) {
+		if(player->ispresent())
+			it.drop(player->getposition());
+	}
+}
+
 static void add_item(const itemi* pe, int count = 1) {
 	if(!player || !pe || pe == bsdata<itemi>::elements || count <= 0)
 		return;
@@ -1035,11 +1043,7 @@ static void add_item(const itemi* pe, int count = 1) {
 	add_statistic(it);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
-	player->additem(it);
-	if(it) {
-		if(player->ispresent())
-			it.drop(player->getposition());
-	}
+	add_item(it);
 }
 
 static void visualize_activity(point m) {
@@ -1372,6 +1376,9 @@ static item* choose_wear() {
 }
 
 static item* choose_stuff(wear_s wear) {
+	static listcolumn columns[] = {
+		{"Weight", 60, item_weight, true},
+		{}};
 	an.clear();
 	char temp[512]; stringbuilder sb(temp);
 	if(wear >= IncorrectWearSlot)
@@ -1387,6 +1394,7 @@ static item* choose_stuff(wear_s wear) {
 	}
 	sb.clear();
 	sb.add("%Choose %-1", bsdata<weari>::elements[wear].getname());
+	pushvalue push_columns(current_columns, columns);
 	return (item*)choose_answers(temp, getnm("Cancel"));
 }
 
@@ -2268,8 +2276,8 @@ static void cold_harm(int bonus) {
 	if(player->resist(ColdResistance, ColdImmunity))
 		return;
 	player->fixeffect("IceSplash");
-	player->add(Freezing, 3);
-	auto damage = xrand(1, bonus) - player->get(Armor);
+	player->add(Freezing, 2);
+	auto damage = bonus - player->get(Armor);
 	if(damage <= 0)
 		return;
 	player->damage(damage);
@@ -2658,12 +2666,6 @@ static void select_craft_items(crafti* craft, unsigned allowed_items) {
 	}
 }
 
-static void add_drop_item(item it) {
-	player->additem(it);
-	if(it)
-		it.drop(player->getposition());
-}
-
 static void use_craft(int bonus) {
 	auto craft = bsdata<crafti>::elements + last_craft;
 	auto known_items = player->receipts[last_craft];
@@ -2695,7 +2697,7 @@ static void use_craft(int bonus) {
 			}
 		}
 	}
-	add_drop_item(craft_item(pi, magic));
+	add_item(craft_item(pi, magic));
 }
 
 static int find_craft_index(variant v) {
