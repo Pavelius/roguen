@@ -56,7 +56,9 @@ public:
 	bool			isallow(const item& it) const;
 	bool			isenemy(const creature& opponent) const;
 	bool			isexpert(ability_s v) const { return get(v) >= 30; }
+	bool			isevil() const { return abilities[Reputation] < -30; }
 	bool			isfollowmaster() const;
+	bool			isgood() const { return abilities[Reputation] >= 0; }
 	bool			ishuman() const;
 	bool			ismaster(ability_s v) const { return get(v) >= 60; }
 	bool			ispresent() const;

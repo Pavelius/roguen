@@ -96,14 +96,14 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
-static void add_safe(ability_s v, int bonus, int minimal = -120, int maximal = 120) {
-	bonus += player->abilities[v];
-	if(bonus >= maximal)
-		bonus = maximal;
-	else if(bonus <= minimal)
-		bonus = minimal;
-	player->abilities[v] = bonus;
-}
+//static void add_safe(ability_s v, int bonus, int minimal = -120, int maximal = 120) {
+//	bonus += player->abilities[v];
+//	if(bonus >= maximal)
+//		bonus = maximal;
+//	else if(bonus <= minimal)
+//		bonus = minimal;
+//	player->abilities[v] = bonus;
+//}
 
 static void fix_yellow(const char* format, int value) {
 	if(!value)
@@ -1585,6 +1585,10 @@ static void open_nearest_door(int bonus) {
 }
 
 static void chatting() {
+	if(opponent->isgood() && player->isevil()) {
+		opponent->speak("DoNotSpeakEvil");
+		return;
+	}
 	if(opponent->istired()) {
 		opponent->speak("IAmTired");
 		opponent->abilities[Mood] -= 1;
@@ -2070,12 +2074,12 @@ static bool learn_value(variant v, const char* action) {
 		}
 	} else if(v.iskind<abilityi>()) {
 		if(v.counter >= 0) {
-			if(player->basic.abilities[v.value] + v.counter < 120)
-				add_safe((ability_s)v.value, v.counter);
+			if(player->basic.abilities[v.value] + v.counter < 100)
+				ftscript<abilityi>(v.value, v.counter);
 			else
 				return false;
 		} else
-			add_safe((ability_s)v.value, v.counter);
+			ftscript<abilityi>(v.value, v.counter);
 	} else if(v.iskind<spelli>()) {
 		auto p = bsdata<spelli>::elements + v.value;
 		if(v.counter >= 0) {
@@ -2431,10 +2435,12 @@ static void opponent_next(int bonus) {
 static void add_anger(int bonus) {
 	if(!bonus)
 		bonus = 1;
-	if(bonus >= 0)
-		player->abilities[Mood] -= xrand(bonus, bonus * 3);
-	else
-		player->abilities[Mood] -= bonus;
+	bonus = player->abilities[Mood] - ((bonus>=0) ? xrand(bonus, bonus * 3) : bonus);
+	if(bonus > 100)
+		bonus = 100;
+	else if(bonus < -100)
+		bonus = -100;
+	player->abilities[Mood] = bonus;
 }
 
 static bool have_object(variant v) {
@@ -2576,6 +2582,15 @@ static void steal_opponent_coins(int bonus) {
 	player->money += coins;
 	opponent->money -= coins;
 	gain_experience((coins + 99) / 100);
+}
+
+static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
+	bonus += player->abilities[v];
+	if(bonus < minimum)
+		bonus = minimum;
+	else if(bonus > maximum)
+		bonus = maximum;
+	player->abilities[v] = bonus;
 }
 
 static void add_reputation(int bonus) {

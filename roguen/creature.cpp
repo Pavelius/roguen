@@ -351,6 +351,13 @@ static void posion_recovery(ability_s v) {
 	}
 }
 
+static void normalize_reputation() {
+	if(player->abilities[Reputation] < player->basic.abilities[Reputation])
+		player->abilities[Reputation]++;
+	else if(player->abilities[Reputation] > player->basic.abilities[Reputation])
+		player->abilities[Reputation]--;
+}
+
 static direction_s move_direction(point m) {
 	if(m.x < 0)
 		return West;
@@ -1686,6 +1693,7 @@ void creature_every_minute() {
 void creature_every_10_minutes() {
 	restore(Hits, Strenght);
 	check_illness_effect();
+	normalize_reputation();
 }
 
 void creature_every_day_part() {
