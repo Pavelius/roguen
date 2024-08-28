@@ -96,14 +96,14 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
-//static void add_safe(ability_s v, int bonus, int minimal = -120, int maximal = 120) {
-//	bonus += player->abilities[v];
-//	if(bonus >= maximal)
-//		bonus = maximal;
-//	else if(bonus <= minimal)
-//		bonus = minimal;
-//	player->abilities[v] = bonus;
-//}
+static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
+	bonus += player->abilities[v];
+	if(bonus < minimum)
+		bonus = minimum;
+	else if(bonus > maximum)
+		bonus = maximum;
+	player->abilities[v] = bonus;
+}
 
 static void fix_yellow(const char* format, int value) {
 	if(!value)
@@ -1615,7 +1615,7 @@ static void chatting() {
 			return;
 	}
 	opponent->speak("HowYouAre");
-	opponent->abilities[Mood] -= xrand(1, 3);
+	add_safe(Mood, -xrand(1, 3), -100, 100);
 }
 
 static void chatting(int bonus) {
@@ -2582,15 +2582,6 @@ static void steal_opponent_coins(int bonus) {
 	player->money += coins;
 	opponent->money -= coins;
 	gain_experience((coins + 99) / 100);
-}
-
-static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
-	bonus += player->abilities[v];
-	if(bonus < minimum)
-		bonus = minimum;
-	else if(bonus > maximum)
-		bonus = maximum;
-	player->abilities[v] = bonus;
 }
 
 static void add_reputation(int bonus) {
