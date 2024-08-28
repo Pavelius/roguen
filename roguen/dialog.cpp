@@ -10,18 +10,13 @@ static void pause_keys() {
 }
 
 int dialogi::open() const {
-	if(beforeopen)
-		beforeopen();
 	while(ismodal()) {
-		if(std_paint)
-			paintstart();
+		paintstart();
 		fillform();
 		setoffset(metrics::padding, metrics::padding);
 		mainscene();
-		if(!no_keys)
-			pause_keys();
-		if(std_paint)
-			paintfinish();
+		pause_keys();
+		paintfinish();
 		domodal();
 	}
 	return getresult();

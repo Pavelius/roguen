@@ -1434,8 +1434,7 @@ int start_application(fnevent proc) {
 }
 
 BSDATA(dialogi) = {
-	{"ShowManual", show_manual, 0, false, true},
-	{"ShowMinimap", show_area, 0, true},
+	{"ShowMinimap", show_area},
 	{"ShowCharsheet", show_charsheet},
 };
 BSDATAF(dialogi)

@@ -8,8 +8,7 @@ struct buttoni {
 };
 struct dialogi {
 	const char*	id;
-	fnevent		mainscene, beforeopen;
-	bool		std_paint, no_keys;
+	fnevent		mainscene;
 	int			open() const;
 };
 void open_dialog(const char* id);

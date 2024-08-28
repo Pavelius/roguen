@@ -1393,12 +1393,12 @@ static item* choose_wear() {
 	return (item*)choose_answers(getnm("Inventory"), getnm("Cancel"));
 }
 
-static item* choose_items(itema& items, const char* header) {
+static item* choose_items(itema& items, const char* header, bool autochoose = false) {
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},
 		{}};
 	pushvalue push_columns(current_columns, columns);
-	return (item*)items.choose(header, getnm("Cancel"), false);
+	return (item*)items.choose(header, getnm("Cancel"), autochoose);
 }
 
 static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible proc = 0) {
@@ -1703,7 +1703,7 @@ static void pickup(int bonus) {
 	items.select(player->getposition());
 	if(!items)
 		return;
-	auto p = choose_items(items, getnm("PickItem"));
+	auto p = choose_items(items, getnm("PickItem"), true);
 	if(p) {
 		auto payment_cost = player->getpaymentcost();
 		if(payment_cost) {
@@ -1730,7 +1730,7 @@ static void pickup_all(int bonus) {
 	}
 }
 
-static void dropdown(int bonus) {
+static void drop_down(int bonus) {
 	itema items;
 	items.selectbackpack(player);
 	if(!items)
@@ -2789,7 +2789,7 @@ BSDATA(script) = {
 	{"DestroyFeature", destroy_feature},
 	{"DestroyWall", destroy_wall},
 	{"DetectItems", detect_items, empthy_next_condition},
-	{"DropDown", dropdown},
+	{"DropDown", drop_down},
 	{"EnchantMinutes", enchant_minutes, empthy_next_condition},
 	{"EnchantHours", enchant_hours, empthy_next_condition},
 	{"EnchantDays", enchant_days, empthy_next_condition},
