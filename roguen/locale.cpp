@@ -20,7 +20,7 @@ static int compare(const void* v1, const void* v2) {
 static void update_elements() {
 	if(!source_name)
 		return;
-	qsort(source_name.data, source_name.count, source_name.getsize(), compare);
+	qsort(source_name.data, source_name.count, source_name.size(), compare);
 }
 
 static const char* read_string_v1(const char* p, stringbuilder& sb) {
@@ -165,7 +165,7 @@ const char* getnme(const char* id) {
 	if(!ischa(id[0]))
 		return id;
 	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
+	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.size(), compare);
 	return p ? p->name : 0;
 }
 
@@ -182,7 +182,7 @@ const char* getnm(const char* id) {
 	if(!ischa(id[0]))
 		return id;
 	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
+	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.size(), compare);
 	if(!p) {
 #ifdef _DEBUG
 		p = (translate*)source_name.add();

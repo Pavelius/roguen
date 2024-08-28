@@ -196,19 +196,7 @@ static void remove_flags(areaf v, int chance) {
 	}
 }
 
-void check_time_passed() {
-	timemanage push_time;
-	zcopy<timemanage>(push_time, game);
-	zcopy<timemanage>(game, *area);
-	while(game.minutes < push_time.minutes) {
-		pass_minute();
-		if((push_time.minutes - game.minutes) > 600)
-			game.minutes += xrand(10, 60);
-	}
-	zcopy<timemanage>(game, push_time);
-}
-
-void pass_minute() {
+static void pass_minute() {
 	game.minutes++;
 	update_all_boost(game.getminutes());
 	all(creature_every_minute);
@@ -239,6 +227,23 @@ void pass_minute() {
 		fire_trigger(EverySeveralDays);
 		game.restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
 	}
+}
+
+void check_time_passed() {
+	timemanage push_time;
+	zcopy<timemanage>(push_time, game);
+	zcopy<timemanage>(game, *area);
+	while(game.minutes < push_time.minutes) {
+		pass_minute();
+		if((push_time.minutes - game.minutes) > 600)
+			game.minutes += xrand(10, 60);
+	}
+	zcopy<timemanage>(game, push_time);
+}
+
+static void make_move_long() {
+	if(player->wait_seconds >= 100 * 6)
+		player->wait_seconds -= 100 * 6;
 }
 
 static void skip_long_time() {

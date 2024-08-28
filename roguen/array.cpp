@@ -30,7 +30,7 @@ void* array::add() {
 
 void* array::add(const void* element) {
 	auto p = add();
-	memcpy(p, element, getsize());
+	memcpy(p, element, size());
 	return p;
 }
 
@@ -143,7 +143,7 @@ void array::remove(int index, int elements_count) {
 	if(((unsigned)index) >= count)
 		return;
 	if((unsigned)index < count - elements_count)
-		memcpy(ptr(index), ptr(index + elements_count), (count - (index + elements_count)) * getsize());
+		memcpy(ptr(index), ptr(index + elements_count), (count - (index + elements_count)) * size());
 	count -= elements_count;
 }
 

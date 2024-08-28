@@ -63,7 +63,7 @@ public:
 	bool			ismaster(ability_s v) const { return get(v) >= 60; }
 	bool			ispresent() const;
 	bool			istired() const { return abilities[Mood] <= -10; }
-	bool			isunaware() const { return wait_seconds >= 100 * 6; }
+	bool			isunaware() const { return wait_seconds >= 25 * 4 * 6; }
 	bool			isvalid() const;
 	void			kill();
 	void			logs(const char* format, ...) const;
@@ -111,7 +111,6 @@ void damage_backpack_item(wear_s type, int chance, int count = 1);
 void dialog_message(const char* format);
 bool ispresent(const void* p);
 void make_move();
-void make_move_long();
 void move_step(direction_s v);
 void pay_action();
 void use_item(item& v);

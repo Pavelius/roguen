@@ -1389,12 +1389,6 @@ static const sitei* get_site(creature* p) {
 	return p->getroom() ? &p->getroom()->geti() : 0;
 }
 
-void make_move_long() {
-	if(player->wait_seconds < 100 * 6)
-		return;
-	player->wait_seconds -= 100 * 6;
-}
-
 static void use_skills() {
 	ready_skills();
 	if(last_actions) {

@@ -28,7 +28,6 @@
 #include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"
-//#include "variant.h"
 #include "zcopy.h"
 
 struct speechi;
@@ -944,9 +943,11 @@ static void ready_area(geoposition geo) {
 		area->clear();
 		area->position = geo.position;
 		area->level = geo.level;
+		if(game.minutes > 60 * 20)
+			area->minutes = game.minutes - xrand(60 * 4, 60 * 18);
 		create_random_area();
-	} else
-		check_time_passed();
+	}
+	check_time_passed();
 }
 
 static void update_ui() {

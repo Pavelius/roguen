@@ -5,7 +5,7 @@ void variantc::select(array& source) {
 	auto ps = data;
 	auto pe = endof();
 	auto ae = source.end();
-	auto s = source.getsize();
+	auto s = source.size();
 	for(auto p = source.begin(); p < ae; p += s) {
 		if(ps >= pe)
 			break;

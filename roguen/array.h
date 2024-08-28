@@ -28,7 +28,7 @@ struct array {
 	void* findv(const char* value, unsigned offset, size_t size) const;
 	size_t getmaximum() const { return count_maximum & 0x7FFFFFFF; }
 	size_t getcount() const { return count; }
-	size_t getsize() const { return element_size; }
+	size_t size() const { return element_size; }
 	constexpr bool have(const void* element) const { return element >= data && element < (char*)data + element_size * count; }
 	int indexof(const void* element) const;
 	void* insert(int index, const void* element);
