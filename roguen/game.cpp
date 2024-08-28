@@ -9,6 +9,7 @@
 #include "trigger.h"
 #include "triggern.h"
 #include "creature.h"
+#include "zcopy.h"
 
 namespace draw {
 bool			isnext();
@@ -193,6 +194,18 @@ static void remove_flags(areaf v, int chance) {
 			area->remove(m, v);
 		}
 	}
+}
+
+void check_time_passed() {
+	timemanage push_time;
+	zcopy<timemanage>(push_time, game);
+	zcopy<timemanage>(game, *area);
+	while(game.minutes < push_time.minutes) {
+		pass_minute();
+		if((push_time.minutes - game.minutes) > 600)
+			game.minutes += xrand(10, 60);
+	}
+	zcopy<timemanage>(game, push_time);
 }
 
 void pass_minute() {

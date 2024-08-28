@@ -28,7 +28,8 @@
 #include "trigger.h"
 #include "triggern.h"
 #include "indexa.h"
-#include "variant.h"
+//#include "variant.h"
+#include "zcopy.h"
 
 struct speechi;
 
@@ -944,7 +945,8 @@ static void ready_area(geoposition geo) {
 		area->position = geo.position;
 		area->level = geo.level;
 		create_random_area();
-	}
+	} else
+		check_time_passed();
 }
 
 static void update_ui() {
@@ -978,6 +980,8 @@ static void remove_summoned(geoposition geo) {
 }
 
 void enter_area(point m, int level, const featurei* feature, direction_s appear_side) {
+	if(area)
+		zcopy<timemanage>(*area, game);
 	save_game("autosave");
 	geoposition old_pos = game;
 	remove_summoned(old_pos);
@@ -985,10 +989,12 @@ void enter_area(point m, int level, const featurei* feature, direction_s appear_
 	game.level = level;
 	ready_area(game);
 	point start = {-1000, -1000};
-	if(feature)
-		start = area->findfeature((unsigned char)bsid(feature));
-	if(!game.isvalid(start))
-		start = area->bordered(round(appear_side, South));
+	if(area) {
+		if(feature)
+			start = area->findfeature((unsigned char)bsid(feature));
+		if(!game.isvalid(start))
+			start = area->bordered(round(appear_side, South));
+	}
 	set_party_position(old_pos, game, start);
 	update_ui();
 	next_phase(play_game);

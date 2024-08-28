@@ -4,17 +4,16 @@
 #include "feature.h"
 #include "geoposition.h"
 #include "ownerable.h"
+#include "timemanage.h"
 
-struct gamei : public geoposition, public ownerable {
-	unsigned	minutes;
-	unsigned	restore_half_turn, restore_turn, restore_hour, restore_day_part, restore_day, restore_several_days;
+struct gamei : geoposition, ownerable, timemanage {
 	int			globals[128];
 	void		clear();
-	unsigned	getminutes() const { return minutes; }
 	static bool	isvalid(point m) { return m.x > 0 && m.x < 256 && m.y > 0 && m.y < 256; }
 };
 extern gamei game;
 
+void check_time_passed();
 void end_game();
 void enter_area(point m, int level, const featurei* entry, direction_s appear_side);
 void main_menu();

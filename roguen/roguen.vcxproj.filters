@@ -632,6 +632,12 @@
     <ClInclude Include="craft.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="timemanage.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="zcopy.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\rules\Basic.txt">

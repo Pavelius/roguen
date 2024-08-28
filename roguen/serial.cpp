@@ -49,6 +49,7 @@ template<> void archive::set<draw::surface>(draw::surface& e) {
 
 template<> void archive::set<areapiece>(areapiece& e) {
 	set(*static_cast<areaheadi*>(&e));
+	set(*static_cast<timemanage*>(&e));
 	set(*static_cast<areamap*>(&e));
 	setc<roomi>(e.rooms);
 	setc<itemground>(e.items);

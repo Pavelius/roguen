@@ -336,6 +336,7 @@
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="talk.h" />
     <ClInclude Include="tile.h" />
+    <ClInclude Include="timemanage.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="trigger.h" />
     <ClInclude Include="triggern.h" />
@@ -348,6 +349,7 @@
     <ClInclude Include="widget.h" />
     <ClInclude Include="win.h" />
     <ClInclude Include="world.h" />
+    <ClInclude Include="zcopy.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\errors.txt" />
