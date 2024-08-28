@@ -1641,9 +1641,15 @@ bool creature::speechlocation() const {
 void use_item(item& v) {
 	if(!v)
 		return;
+	auto name = v.getname();
 	auto script = v.getuse();
 	if(!script) {
-		player->actp("ItemNotUsable", 0, v.getname());
+		player->actp("ItemNotUsable", 0, name);
+		return;
+	}
+	auto slow_action = v.is(SlowAction);
+	if(slow_action && enemies) {
+		player->actp("NotUsableInCombat", 0, name);
 		return;
 	}
 	auto push_item = last_item;
@@ -1654,7 +1660,7 @@ void use_item(item& v) {
 	last_item_fix_action("UseItem");
 	script_run(script);
 	if(script_fail)
-		player->actp("ItemFailScript", 0, v.getname());
+		player->actp("ItemFailScript", 0, name);
 	else {
 		auto chance_consume = last_item->chance_consume();
 		if(chance_consume) {
@@ -1669,6 +1675,8 @@ void use_item(item& v) {
 	last_item = push_item;
 	player->update();
 	pay_action();
+	if(slow_action)
+		player->wait(xrand(3, 8));
 }
 
 void creature_every_minute() {

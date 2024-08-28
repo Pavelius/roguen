@@ -70,6 +70,7 @@ RumorDungeonMore: Я слышал%а что там находятся %-1, которые охраняет %-2.
 RumorDungeonGuardian: Но, поберегись. Я слышал%а что командует ими %-1.
 RumorLocation: Не так далеко отсюда на %-1, есть %2. Возможно, вам не мешало бы посетить это место.
 Rounds: Раунды
+SlowUse: Медленно
 Speed: Скорость
 StuckDoor: Заевшая дверь
 ThereIsLying: Здесь лежит
@@ -103,6 +104,8 @@ YouSundellyAppear: %герой внезапно появил%ась из неоткуда.
 YouSundellyDisappear: %герой внезапно исчез%ла из виду.
 YouTakeCoins: %герой получил% %1i монет.
 YouTookAllHerbs: Все травы были собраны.
+
+NotUsableInCombat: Нельзя использовать в бою!
 
 Regeneration: Регенерация
 

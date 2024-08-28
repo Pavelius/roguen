@@ -1393,25 +1393,27 @@ static item* choose_wear() {
 	return (item*)choose_answers(getnm("Inventory"), getnm("Cancel"));
 }
 
-static item* choose_stuff(wear_s wear) {
+static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible proc = 0) {
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},
 		{}};
+	if(!header_format)
+		header_format = "%Choose %-1";
 	an.clear();
 	char temp[512]; stringbuilder sb(temp);
-	if(wear >= IncorrectWearSlot)
-		wear = Backpack;
 	for(auto& e : player->backpack()) {
 		if(!e)
 			continue;
 		if(wear && !e.is(wear))
+			continue;
+		if(proc && !proc(&e))
 			continue;
 		sb.clear();
 		e.getinfo(sb);
 		an.add(&e, temp);
 	}
 	sb.clear();
-	sb.add("%Choose %-1", bsdata<weari>::elements[wear].getname());
+	sb.add(header_format, bsdata<weari>::elements[wear].getname());
 	pushvalue push_columns(current_columns, columns);
 	return (item*)choose_answers(temp, getnm("Cancel"));
 }
@@ -1740,12 +1742,7 @@ static void dropdown(int bonus) {
 }
 
 static void use_item(int bonus) {
-	itema items;
-	items.selectbackpack(player);
-	items.match(fntis<item, &item::isusable>, true);
-	if(!items)
-		return;
-	auto p = items.choose(getnm("UseItem"), getnm("Cancel"), false);
+	auto p = choose_stuff(Backpack, "%UseItem", fntis<item, &item::isusable>);
 	if(p)
 		use_item(*p);
 }
@@ -2628,13 +2625,9 @@ static void test_manual(int bonus) {
 }
 
 static void repeat_use_item(int bonus) {
-	if(last_player_used_wear >= IncorrectWearSlot)
-		return;
 	auto& v = player->wears[last_player_used_wear];
-	if(!v) {
-		last_player_used_wear = IncorrectWearSlot;
+	if(!v)
 		return;
-	}
 	use_item(v);
 }
 

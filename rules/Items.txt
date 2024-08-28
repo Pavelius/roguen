@@ -217,12 +217,16 @@ AmuletOfDeathSaving cost(1600) weight(7) avatar(86)
 
 Apple cost(5) weight(2) avatar(503) rotting(20)
  use Heal+2 Chance+1 Strenght+1
+ feats SlowAction
 LoafOfBread cost(20) weight(40) avatar(160) rotting(5)
  use Heal+5
+ feats SlowAction
 Sausage cost(40) weight(20) avatar(157) rotting(10)
  use Heal+10 Chance+3 Strenght+1
+ feats SlowAction
 Ration cost(50) weight(50) avatar(126) 
  use Heal+10
+ feats SlowAction
 Torch cost(10) avatar(207) weight(30) count(3)
  use EnchantHours+1 LightSource
 
@@ -251,29 +255,38 @@ AlrauniaAntidote cost(20) weight(1) avatar(96) cursed(HerbOfPoison)
  use Poison-2
 BurbRoot cost(30) weight(1) avatar(90) cursed(HerbOfIllness)
  use Illness+1
+ feats SlowAction
 CurariaMancox cost(30) weight(1) avatar(91) cursed(HerbOfIllness)
  use Illness-1
+ feats SlowAction
 DemonDaisy weight(1) avatar(97) cursed(HerbOfWeakness)
  use Poison+10
 DevilsRose weight(1) avatar(94) cursed(HerbOfWeakness)
  use Wits+1
+ feats SlowAction
 MorgiaRoot cost(200) weight(1) avatar(108) cursed(HerbOfWeakness)
  use Strenght+1
+ feats SlowAction
 MossOfMoreilon cost(200) weight(1) avatar(107) cursed(HerbOfWeakness)
  use Dexterity+1
+ feats SlowAction
 PepperPetal cost(200) weight(1) avatar(95) cursed(HerbOfIllness)
  use Hits+1
+ feats SlowAction
 Spenseweed weight(1) avatar(106) cursed(HerbOfIllness)
  use Heal+1
 Stomacemptia weight(1) avatar(93) cursed(HerbOfIllness)
  use Illness-1
+ feats SlowAction
 Stomafillia weight(1) avatar(89) cursed(HerbOfIllness)
  use Heal+1
 
 TomeOfLight weight(10) avatar(650) unidentified(OldTome) wear(Tome) chance_consume(40) chance_ill(10) cursed(TomeIllEffect)
  use RollLearning LightSpell Mana+1
+ feats SlowAction
 TomeOfNecromancy weight(10) avatar(649) unidentified(OldTome) wear(Tome) chance_consume(30) chance_ill(50) cursed(TomeIllEffect)
  use RollLearning SummonUndead Mana+1
+ feats SlowAction
 
 RodOfBurning weight(2) avatar(488) wear(Rod) chance_consume(20)
  use SelectEnemies ChooseLimit+1 ForEachCreature FireHarm+4

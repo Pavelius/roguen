@@ -39,6 +39,10 @@ static void addv(stringbuilder& sb, const char* id) {
 	sb.adds(getnm(id));
 }
 
+static void addf(stringbuilder& sb, const char* id) {
+	sb.adds("[~%-1]", getnm(id));
+}
+
 static void addv(stringbuilder& sb, ability_s id, int value) {
 	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1 [%2i]");
 }
@@ -143,6 +147,8 @@ void item::getinfo(stringbuilder& sb) const {
 	sb.adds(getfullname());
 	addv(sb, "Damage", ei.weapon.damage);
 	addv(sb, "Pierce", ei.weapon.pierce);
+	if(is(SlowAction))
+		addf(sb, "SlowUse");
 	wearing(sb, ei.wearing);
 }
 
