@@ -168,7 +168,7 @@ void read_talk(const char* url) {
 	auto ptb = bsdata<talki>::add();
 	ptb->clear();
 	ptb->id = szdup(szfnamewe(temp, url));
-	auto n1 = bsdata<phrasei>::source.getcount();
+	ptb->elements.setbegin();
 	while(allowparse && *p) {
 		if(!isevent(p)) {
 			log::errorp(p, "Expected symbol `#` followed by event number");
@@ -179,7 +179,5 @@ void read_talk(const char* url) {
 		p = read_answers(p, event_parent, sb);
 	}
 	log::close();
-	auto n2 = bsdata<phrasei>::source.getcount();
-	if(n1 < n2)
-		ptb->elements.set(&bsdata<phrasei>::get(n1), n2 - n1);
+	ptb->elements.setend();
 }

@@ -13,7 +13,8 @@ struct sliceu {
 	T*		begin() const { return (T*)bsdata<T>::source.ptr(start); }
 	void	clear() { start = count = 0; }
 	T*		end() const { return (T*)bsdata<T>::source.ptr(start + count); }
-	void	set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
+	void	set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(v); this->count = count; }
+	void	setu(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
 	void	setbegin() { start = bsdata<T>::source.getcount(); count = 0; }
 	void	setend() { count = bsdata<T>::source.getcount() - start; }
 	constexpr unsigned size() const { return count; }
