@@ -449,11 +449,22 @@ static int additional_skill_points(int v) {
 }
 
 static void advance_value(variant v) {
-	if(v.iskind<itemi>())
-		player->wearable::equipi(v.value, v.counter > 0 ? v.counter : 1);
-	else if(v.iskind<feati>())
+	if(v.iskind<itemi>()) {
+		switch(modifier) {
+		case InPosition:
+			break;
+		case CraftReceipt:
+			break;
+		default:
+			player->wearable::equipi(v.value, v.counter > 0 ? v.counter : 1);
+			break;
+		}
+	} else if(v.iskind<feati>())
+		ftscript<feati>(v.value, v.counter);
+	else if(v.iskind<modifieri>())
 		ftscript<feati>(v.value, v.counter);
 	else if(v.iskind<abilityi>()) {
+		last_ability = (ability_s)v.value;
 		int bonus = v.counter;
 		bonus += player->basic.abilities[v.value];
 		if(bonus > 100)

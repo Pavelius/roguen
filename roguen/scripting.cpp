@@ -44,7 +44,6 @@ void make_game_map_screenshoot();
 void open_manual(const char* manual_header, const char* manual_content);
 void visualize_images(res pid, point size, point offset);
 
-void* choose_answers(answers& an, const char* header, const char* cancel);
 int choose_indecies(const indexa& source, const char* header, bool cancel);
 
 const char* getlog();
@@ -64,10 +63,10 @@ rect				last_rect;
 roomi*				last_room;
 const sitei*		last_site;
 int					last_value;
+listi*				last_craft_list;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
-static ability_s	last_ability;
 
 static adat<rect, 64> locations;
 static adat<point, 512> points;
@@ -1220,6 +1219,10 @@ static void move_down_right(int bonus) {
 	move_step(SouthEast);
 }
 
+static void* choose_answers(const char* header, const char* cancel) {
+	return an.choose(header, cancel);
+}
+
 static bool have_targets() {
 	return targets.getcount() != 0
 		|| rooms.getcount() != 0
@@ -1365,11 +1368,11 @@ static item* choose_wear() {
 			an.add(&e, "-");
 	}
 	pushvalue push_columns(current_columns, columns);
-	return (item*)choose_answers(an, getnm("Inventory"), getnm("Cancel"));
+	return (item*)choose_answers(getnm("Inventory"), getnm("Cancel"));
 }
 
 static item* choose_stuff(wear_s wear) {
-	answers an;
+	an.clear();
 	char temp[512]; stringbuilder sb(temp);
 	if(wear >= IncorrectWearSlot)
 		wear = Backpack;
@@ -1384,7 +1387,24 @@ static item* choose_stuff(wear_s wear) {
 	}
 	sb.clear();
 	sb.add("%Choose %-1", bsdata<weari>::elements[wear].getname());
-	return (item*)choose_answers(an, temp, getnm("Cancel"));
+	return (item*)choose_answers(temp, getnm("Cancel"));
+}
+
+static listi* get_ingridient_list(const itemi& ei) {
+	auto p = bsdata<listi>::find(ids(ei.id, "Ingridients"));
+	if(!p && ei.unidentified)
+		p = bsdata<listi>::find(ids(ei.unidentified, "Ingridients"));
+	if(!p)
+		p = bsdata<listi>::find(ids(bsdata<weari>::elements[ei.wear].id, "Ingridients"));
+	return p;
+}
+
+static listi* get_ability_craft(ability_s v) {
+	static listi* alchemy = bsdata<listi>::find("AlchemyCraft");
+	switch(v) {
+	case Alchemy: return alchemy;
+	default: return 0;
+	}
 }
 
 static creature* getowner(const item* pi) {
@@ -1511,7 +1531,7 @@ static abilityi* choose_skill(listcolumn* columns, const char* header, int dialo
 	sb.add(getnm(header), player->basic.abilities[SkillPoints]);
 	pushvalue push_columns(current_columns, columns);
 	pushvalue push_width(window_width, dialog_width);
-	return (abilityi*)choose_answers(an, temp, getnm("Cancel"));
+	return (abilityi*)choose_answers(temp, getnm("Cancel"));
 }
 
 static void raise_skills(int bonus) {
@@ -1756,7 +1776,7 @@ static void some_coins(int bonus) {
 }
 
 static void test_arena(int bonus) {
-	answers an;
+	an.clear();
 	auto count = 0;
 	for(auto& e : bsdata<monsteri>()) {
 		if(e.friendly <= -5)
@@ -1764,7 +1784,7 @@ static void test_arena(int bonus) {
 	}
 	pushvalue push_column(answers::column_count);
 	answers::column_count = 3;
-	auto pm = (monsteri*)choose_answers(an, getnm("ChooseMonsterToFight"), getnm("Cancel"));
+	auto pm = (monsteri*)choose_answers(getnm("ChooseMonsterToFight"), getnm("Cancel"));
 	if(!pm)
 		return;
 	auto m = player->getposition();
@@ -1979,7 +1999,7 @@ static void wait_hour(int bonus) {
 	if(bonus < 0)
 		return;
 	normalize_bonus(bonus);
-	player->wait(bonus * 6 * 60 * 24);
+	player->waitseconds(xrand(bonus * 600 / 2, bonus * 600));
 }
 
 static void apply_fail_roll() {
@@ -2576,6 +2596,101 @@ static void repeat_use_item(int bonus) {
 	use_item(v);
 }
 
+static bool isf(unsigned source, int v) {
+	return (source & (1 << v)) != 0;
+}
+
+static void consume_ingridients(const itemi* pi, magicn magic, int& count, bool run) {
+	if(count <= 0)
+		return;
+	for(auto& e : player->backpack()) {
+		if(&e.geti() != pi)
+			continue;
+		if(!e.isidentified())
+			continue;
+		if(e.getmagic() != magic)
+			continue;
+		auto count_allow = e.getcount();
+		if(count_allow >= count) {
+			if(run)
+				e.setcount(count_allow - count);
+			count = 0;
+		} else {
+			count -= count_allow;
+			if(run)
+				e.setcount(0);
+		}
+		if(!count)
+			break;
+	}
+}
+
+static bool consume_ingridients(const itemi* pi, int count, bool run) {
+	if(count <= 0)
+		return true;
+	consume_ingridients(pi, Mundane, count, run);
+	consume_ingridients(pi, Blessed, count, run);
+	consume_ingridients(pi, Artifact, count, run);
+	return count == 0;
+}
+
+static bool consume_ingridients(const listi* source, bool run) {
+	if(!source)
+		return false;
+	for(auto v : source->elements) {
+		if(v.iskind<itemi>()) {
+			if(!consume_ingridients(bsdata<itemi>::elements + v.value, v.counter, run))
+				return false;
+		}
+	}
+	return true;
+}
+
+static void select_craft_items(crafti* craft, unsigned allowed_items) {
+	auto index = 0;
+	an.clear();
+	for(auto v : craft->elements) {
+		if(!isf(allowed_items, index++))
+			continue;
+		if(v.iskind<itemi>()) {
+			auto& ei = bsdata<itemi>::elements[v.value];
+			auto ingridients = get_ingridient_list(ei);
+			if(!consume_ingridients(ingridients, false))
+				continue;
+			an.add(&ei, v.getname());
+		}
+	}
+}
+
+static void use_craft(int bonus) {
+	auto craft = bsdata<crafti>::elements + last_craft;
+	auto known_items = player->receipts[last_craft];
+	select_craft_items(craft, known_items);
+	if(!an) {
+		if(!known_items)
+			player->actp("NoCraftItems", craft->id);
+		else
+			player->actp("NoIngridients", craft->id);
+		script_fail = true;
+		return;
+	}
+	choose_answers(getnm(craft->id), getnm("Cancel"));
+}
+
+static int find_craft_index(variant v) {
+	auto index = 0;
+	for(auto e : bsdata<crafti>::elements[last_craft].elements) {
+		if(e.issame(v))
+			return index;
+		index++;
+	}
+	return -1;
+}
+
+static void add_craft(int bonus) {
+	player->receipts[last_craft] |= (1 << bonus);
+}
+
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -2588,6 +2703,7 @@ BSDATA(script) = {
 	{"AbilityExchange", ability_exchange},
 	{"AcidHarm", acid_harm},
 	{"Activate", activate_feature},
+	{"AddCraft", add_craft},
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
@@ -2615,6 +2731,7 @@ BSDATA(script) = {
 	{"EnchantHours", enchant_hours, empthy_next_condition},
 	{"EnchantDays", enchant_days, empthy_next_condition},
 	{"ExploreArea", explore_area},
+	{"FireHarm", fire_harm},
 	{"ForEachCreature", for_each_creature, is_targets},
 	{"ForEachFeature", for_each_feature, is_features},
 	{"ForEachItem", for_each_item, is_items},
@@ -2640,7 +2757,6 @@ BSDATA(script) = {
 	{"HealWounded", heal_wounded, is_heal_wounded},
 	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
-	{"FireHarm", fire_harm},
 	{"JumpToSite", jump_to_site},
 	{"LoseGame", lose_game},
 	{"LockAllDoors", lock_all_doors},
@@ -2690,5 +2806,6 @@ BSDATA(script) = {
 	{"WinGame", win_game},
 	{"Wounded", standart_filter, is_wounded},
 	{"UseItem", use_item},
+	{"UseCraft", use_craft},
 };
 BSDATAF(script)

@@ -157,6 +157,7 @@
     <ClCompile Include="charname.cpp" />
     <ClCompile Include="collection.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="craft.cpp" />
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="creaturea.cpp" />
     <ClCompile Include="creature_need.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="collection.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
+    <ClInclude Include="craft.h" />
     <ClInclude Include="dialog.h" />
     <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />

@@ -266,7 +266,7 @@ PepperPetal cost(200) weight(1) avatar(95) cursed(HerbOfIllness)
 Spenseweed weight(1) avatar(106) cursed(HerbOfIllness)
  use Heal+1
 Stomacemptia weight(1) avatar(93) cursed(HerbOfIllness)
- use Heal+2
+ use Illness-1
 Stomafillia weight(1) avatar(89) cursed(HerbOfIllness)
  use Heal+1
 
@@ -349,3 +349,11 @@ WoodenLagsTable
 StolenTreasures
  elements GP+3 GP-50 GP-50 GP-50 GP-50 SP+8 SP-50 SP-50 SP-50 PP-40 PP-40 PP-20\
  RandomGem+3 RandomArtifact-60 RandomJewelry-40
+
+HealingPotionIngridients
+ elements Stomafillia+2
+
+#Craft
+
+AlchemyCraft
+ elements HealingPotion ManaPotion PotionOfStrenght PotionOfDexterity PotionOfWits

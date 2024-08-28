@@ -32,3 +32,6 @@ YouTrampedByDoor: %герой не успел%а во врем€ отскачить и дверь упала пр€мо на %н
 
 GatherInformationChoose: — кем именно пообщатьс€?
 OpenDoorLockApply: %герой использовал%а отмычки, чтобы взломать замок.
+
+AlchemyCraftNoIngridients: Ќе достаточно трав из которых можно изготовить хот€ бы одно зелье.
+AlchemyCraftNoCraftItems: ¬ы не знаете ни одного рецепта приготовлени€ зелий.

@@ -19,3 +19,5 @@ SearchRoomForGems skill(Gemcutting)
  effect HaveNext-1 Local SelectYourRoom Filter RoomsWhereGemsCanBe FilterRoomMarked-1 ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)
  effect SelectNeutralCreatures FilterClose ForEachOpponent RollAction StealOpponentCoins
+CreatePotions skill(Alchemy)
+ effect AlchemyCraft UseCraft

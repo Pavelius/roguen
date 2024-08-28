@@ -1,5 +1,6 @@
 #include "areapiece.h"
 #include "bsreq.h"
+#include "craft.h"
 #include "dialog.h"
 #include "filter.h"
 #include "hotkey.h"
@@ -55,6 +56,10 @@ BSMETA(areafi) = {
 BSMETA(buttoni) = {
 	BSREQ(id),
 	BSREQ(key),
+	{}};
+BSMETA(crafti) = {
+	BSREQ(id),
+	BSREQ(elements),
 	{}};
 BSMETA(creature) = {
 	BSREQ(abilities),
@@ -170,6 +175,7 @@ BSDATA(varianti) = {
 	{"Ability", VAR(abilityi), 1, 0, ftscript<abilityi>, fttest<abilityi>},
 	{"Advancement", VAR(advancement), 3},
 	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
+	{"Craft", VAR(crafti), 1, 0, ftscript<crafti>},
 	{"Creature", VAR(creature), 0},
 	{"Charname", VAR(charname), 2, 0, 0, 0, read_charname},
 	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},

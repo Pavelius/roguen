@@ -8,7 +8,7 @@ enum ability_s : unsigned char {
 	WeaponSkill, BalisticSkill, Dodge,
 	DamageMelee, DamageRanged, DamageThrown,
 	Armor, Block, BlockRanged, EnemyAttacks,
-	Alertness, Gemcutting, Herbalism, Thievery, Literacy, Mining,
+	Alertness, Gemcutting, Alchemy, Thievery, Literacy, Mining,
 	Stealth, Survival, Haggling, History, Religion, Woodcutting,
 	CarryCapacity, Level,
 	Hits, Mana, Faith, Mood, Reputation, SkillPoints,

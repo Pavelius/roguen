@@ -5,6 +5,7 @@
 #include "answers.h"
 #include "areaf.h"
 #include "areamap.h"
+#include "craft.h"
 #include "dice.h"
 #include "moveable.h"
 #include "monster.h"
@@ -13,7 +14,7 @@
 #include "spell.h"
 #include "wearable.h"
 
-class creature : public wearable, public statable, public spellable, public ownerable {
+class creature : public wearable, public statable, public spellable, public ownerable, public receipti {
 	unsigned short	room_id, enemy_id;
 	void			update_abilities();
 public:

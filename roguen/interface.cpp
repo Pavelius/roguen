@@ -1012,10 +1012,6 @@ void* answers::choose() const {
 	return (void*)getresult();
 }
 
-void* choose_answers(answers& an, const char* header, const char* cancel) {
-	return an.choose(header, cancel);
-}
-
 static void answer_after_paint() {
 	auto push_caret = caret;
 	caret = answer_end;

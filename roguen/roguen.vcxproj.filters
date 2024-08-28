@@ -339,6 +339,9 @@
     <ClCompile Include="global_req.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="craft.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -625,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="math.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="craft.h">
+      <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
