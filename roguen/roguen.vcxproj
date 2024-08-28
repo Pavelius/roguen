@@ -387,6 +387,7 @@
     <Text Include="..\talk\ru\AncientRaceProgress.txt" />
     <Text Include="..\talk\ru\NeedTalk.txt" />
     <Text Include="..\talk\ru\NPCHouses.txt" />
+    <Text Include="..\talk\ru\VillageElder.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -33,5 +33,7 @@ Theif: Вор
 Wolf: Волк
 Zombie: Зомби
 
+VillageElder: Староста деревни
+
 GoblinoidTribe: Племя гоблинов
 UndeadHorde: Орда мартвых

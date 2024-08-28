@@ -57,6 +57,9 @@ TheifGuildTreasure walls(WallBuilding) floors(WoodenFloor) local(GenerateBuildin
  feats Notable
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  feats Notable
+VillageElderHouse walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
+ landscape VillageElder+1
+ feats Notable
 
 AltarRoom
  landscape QuestLandscape RandomAltar
@@ -202,7 +205,7 @@ AshenLand minimap(128 128 128) floors(GrassCorupted) walls(WallCave) doors(Door)
  sites DarkLake DarkLake-20 RockyMountains+3 RockyMountains-60 ArtifactStatue-70 ArtifactStatue-20 DefaultDungeonEntrance-10
 StartVillage minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) offset(4) global(GenerateVillage) chance_hidden_doors(-1)
  landscape Tree+80 FootMud+20 FootHill+90
- sites TestArea GeneralStore Tavern ChurchOneBuilding TheifGuildTreasure LockedBuilding+6 Building+64
+ sites TestArea VillageElderHouse GeneralStore Tavern ChurchOneBuilding TheifGuildTreasure LockedBuilding+6 Building+64
 
 #RandomTable
 

@@ -56,6 +56,7 @@ TreasureRoom: Сокровища
 UnholyAltarRoom: Алтарь проклятых
 UnholyPlace: Проклятое место
 UnholyPlaceLook: В этом месте ощущается присутствие зла.
+VillageElderHouse: Дом старосты
 
 AncientSite: Древний
 DarkSite: Темный

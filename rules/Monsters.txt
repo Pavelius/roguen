@@ -117,6 +117,8 @@ SmallBoy avatar(274) rest(DeadBody)
 SmallGirl avatar(275) parent(SmallBoy) rest(DeadBody)
  abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
  use Female
+VillageElder avatar(302) rest(DeadBody)
+ abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(20) Hits(8)
 
 #RandomTable
 

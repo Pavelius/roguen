@@ -745,6 +745,9 @@
     <Text Include="..\rules\Start.txt">
       <Filter>Rules</Filter>
     </Text>
+    <Text Include="..\talk\ru\VillageElder.txt">
+      <Filter>Talk</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
