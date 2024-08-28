@@ -50,7 +50,7 @@ GeneralStore walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Shopkeeper+1 Ration+10 LoafOfBread+2 Sausage+1
  feats Notable
 Tavern walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape Bartender+1
+ landscape Bartender+1 CreateHero+2
  feats Notable
 TheifGuildTreasure walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape LockAllDoors StolenTreasures

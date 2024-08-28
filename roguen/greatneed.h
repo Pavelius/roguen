@@ -32,14 +32,15 @@ struct greatneed {
 	int					score; // percent of completion
 	explicit operator bool() const { return deadline != 0; }
 	void				clear();
-	static greatneed*	find(variant owner);
-	static greatneed*	find(variant owner, needn f);
 	const greatneedi&	geti() const { return bsdata<greatneedi>::elements[type]; }
 	bool				is(needn v) const { return (flags & (1 << v)) != 0; }
 	void				remove(needn v) { flags &= ~(1 << v); }
 	void				set(needn v) { flags |= (1 << v); }
 };
 extern greatneed* last_need;
+
+greatneed* find_need(variant owner);
+greatneed* find_need(variant owner, needn f);
 
 void add_greatneed(const greatneedi* type, variant owner, unsigned deadline);
 void check_need_objects();

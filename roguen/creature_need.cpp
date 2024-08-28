@@ -15,7 +15,7 @@ extern int last_coins;
 
 static bool isneed(const void* object) {
 	auto p = (creature*)object;
-	return greatneed::find(p) != 0;
+	return find_need(p) != 0;
 }
 
 static creature* random_target(const greatneedi* p) {
@@ -150,7 +150,7 @@ void prepare_need() {
 
 bool speech_need() {
 	pushvalue push_need(last_need);
-	last_need = greatneed::find(opponent, NeedFinished);
+	last_need = find_need(opponent, NeedFinished);
 	if(last_need) {
 		if(last_need->is(NeedSuccess)) {
 			say_need("Success");
@@ -164,14 +164,14 @@ bool speech_need() {
 		shrink_greatneed();
 		return true;
 	}
-	last_need = greatneed::find(opponent, NeedCompleted);
+	last_need = find_need(opponent, NeedCompleted);
 	if(last_need) {
 		if(d100() < 30)
 			return false;
-		opponent->speak("VisitMeLater", 0);
+		opponent->speak("VisitMeLater");
 		return true;
 	}
-	last_need = greatneed::find(opponent);
+	last_need = find_need(opponent);
 	if(!last_need)
 		return false;
 	return talk_opponent("NeedTalk", apply_answer);

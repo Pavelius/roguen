@@ -553,13 +553,11 @@ static void check_stun() {
 	}
 }
 
-static void check_mood() {
-	if(player->abilities[Mood] != 0) {
-		if(player->abilities[Mood] > 0)
-			player->abilities[Mood]--;
-		else
-			player->abilities[Mood]++;
-	}
+static void normalize_ability(ability_s v) {
+	if(player->abilities[v] > player->basic.abilities[v])
+		player->abilities[v]--;
+	else if(player->abilities[v] < player->basic.abilities[v])
+		player->abilities[Mood]++;
 }
 
 static void random_walk() {
@@ -1686,14 +1684,13 @@ void creature_every_minute() {
 		magic_restore(Mana, 3);
 	restore(Mana, Wits);
 	check_stun();
-	check_mood();
 	posion_recovery(Poison);
 }
 
 void creature_every_10_minutes() {
 	restore(Hits, Strenght);
 	check_illness_effect();
-	normalize_reputation();
+	normalize_ability(Mood);
 }
 
 void creature_every_day_part() {
@@ -1729,6 +1726,19 @@ int	creature::getsellingcost() const {
 	return result;
 }
 
+static void random_name() {
+	auto pm = player->getmonster();
+	if(pm)
+		player->setname(random_charname(pm->id));
+	else {
+		char temp[64]; stringbuilder sb(temp);
+		sb.addv(player->getkind().getid(), 0);
+		if(player->is(Female))
+			sb.addv("Female", 0);
+		player->setname(random_charname(temp));
+	}
+}
+
 creature* player_create(point m, variant kind, bool female) {
 	if(!kind)
 		return 0;
@@ -1744,14 +1754,10 @@ creature* player_create(point m, variant kind, bool female) {
 	if(pm) {
 		copy(player->basic, *pm);
 		advance_value(pm->use);
-		player->setname(random_charname(pm->id));
 		player->basic.abilities[LineOfSight] += 4;
+		random_name();
 	} else {
-		char temp[64]; stringbuilder sb(temp);
-		sb.addv(kind.getid(), 0);
-		if(player->is(Female))
-			sb.addv("Female", 0);
-		player->setname(random_charname(temp));
+		random_name();
 		player->basic.abilities[LineOfSight] += 4;
 		advance_value(kind, 0);
 		player_levelup();

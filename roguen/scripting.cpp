@@ -105,6 +105,17 @@ static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 1
 	player->abilities[v] = bonus;
 }
 
+static void add_opponent_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
+	if(!opponent)
+		return;
+	bonus += opponent->abilities[v];
+	if(bonus < minimum)
+		bonus = minimum;
+	else if(bonus > maximum)
+		bonus = maximum;
+	opponent->abilities[v] = bonus;
+}
+
 static void fix_yellow(const char* format, int value) {
 	if(!value)
 		return;
@@ -1591,31 +1602,37 @@ static void chatting() {
 	}
 	if(opponent->istired()) {
 		opponent->speak("IAmTired");
-		opponent->abilities[Mood] -= 1;
+		add_opponent_safe(Mood, -1);
 		return;
 	}
-	auto monster = opponent->getmonster();
-	if(monster) {
-		if(talk_opponent(monster->id, 0))
+	if(player->ishuman()) {
+		auto monster = opponent->getmonster();
+		if(monster) {
+			if(talk_opponent(monster->id, 0))
+				return;
+		}
+		auto room = opponent->getroom();
+		if(room) {
+			if(talk_opponent(room->geti().id, 0))
+				return;
+		}
+		if(speech_need())
 			return;
 	}
-	auto room = opponent->getroom();
-	if(room) {
-		if(talk_opponent(room->geti().id, 0))
-			return;
-	}
-	if(speech_need())
-		return;
 	if(opponent->is(KnowRumor) && d100() < 70) {
-		if(opponent->speechrumor())
+		if(opponent->speechrumor()) {
+			add_opponent_safe(Mood, -xrand(2, 5));
 			return;
+		}
 	}
-	if(opponent->is(KnowLocation) && !player->is(Local) && d100() < 30) {
-		if(opponent->speechlocation())
+	if(player->ishuman() && opponent->is(KnowLocation) && d100() < 30) {
+		if(opponent->speechlocation()) {
+			add_opponent_safe(Mood, -xrand(2, 5));
 			return;
+		}
 	}
 	opponent->speak("HowYouAre");
-	add_safe(Mood, -xrand(1, 3), -100, 100);
+	add_opponent_safe(Mood, -xrand(2, 4), -100, 100);
 }
 
 static void chatting(int bonus) {
@@ -2435,12 +2452,9 @@ static void opponent_next(int bonus) {
 static void add_anger(int bonus) {
 	if(!bonus)
 		bonus = 1;
-	bonus = player->abilities[Mood] - ((bonus>=0) ? xrand(bonus, bonus * 3) : bonus);
-	if(bonus > 100)
-		bonus = 100;
-	else if(bonus < -100)
-		bonus = -100;
-	player->abilities[Mood] = bonus;
+	if(bonus > 0)
+		bonus = xrand(bonus, bonus * 3);
+	add_safe(Mood, -bonus);
 }
 
 static bool have_object(variant v) {
@@ -2590,6 +2604,17 @@ static void add_reputation(int bonus) {
 
 static void add_mana(int bonus) {
 	add_safe(Mana, bonus, 0, player->basic.abilities[Mana]);
+}
+
+static void create_hero(int bonus) {
+	bonus = script_count(bonus);
+	auto random_race = bsdata<randomizeri>::find("RandomRace");
+	if(!random_race)
+		return;
+	for(auto i = 0; i < bonus; i++) {
+		auto v = single(random_race);
+		player_create(area->get(last_rect), v, false);
+	}
 }
 
 static void test_manual(int bonus) {
@@ -2748,6 +2773,7 @@ BSDATA(script) = {
 	{"ChooseRandom", choose_random, is_full},
 	{"ChooseLimit", choose_limit, is_full},
 	{"ColdHarm", cold_harm},
+	{"CreateHero", create_hero},
 	{"CurseItem", curse_item},
 	{"Damage", damage_all},
 	{"DamageItem", damage_item},

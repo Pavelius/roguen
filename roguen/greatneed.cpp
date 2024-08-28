@@ -37,7 +37,7 @@ void greatneed::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-greatneed* greatneed::find(variant owner) {
+greatneed* find_need(variant owner) {
 	if(!owner)
 		return 0;
 	for(auto& e : bsdata<greatneed>()) {
@@ -47,7 +47,7 @@ greatneed* greatneed::find(variant owner) {
 	return 0;
 }
 
-greatneed* greatneed::find(variant owner, needn f) {
+greatneed* find_need(variant owner, needn f) {
 	if(!owner)
 		return 0;
 	for(auto& e : bsdata<greatneed>()) {
