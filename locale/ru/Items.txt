@@ -134,3 +134,5 @@ WandOfDigging: Палочка копания
 WandOfDiggingChoose: Копать в каком направлении?
 
 Scroll: Свиток
+
+AlchemyCraft: Создание зельев

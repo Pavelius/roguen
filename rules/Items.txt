@@ -352,6 +352,8 @@ StolenTreasures
 
 HealingPotionIngridients
  elements Stomafillia+2
+BluePotionIngridients
+ elements Stomacemptia+2
 
 #Craft
 

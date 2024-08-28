@@ -41,6 +41,7 @@ static void main_start() {
 	add_item("PotionOfStrenght", 2, true);
 	add_item("RingOfLevitation", 1, true);
 	add_item("Stomafillia", 5, true);
+	add_item("Stomacemptia", 5, true);
 	add_item("HandPick");
 	add_item("PotionOfLearning", 5, true);
 	add_item("Bandage", 3, true);

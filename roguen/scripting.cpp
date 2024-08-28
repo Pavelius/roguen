@@ -1390,12 +1390,12 @@ static item* choose_stuff(wear_s wear) {
 	return (item*)choose_answers(temp, getnm("Cancel"));
 }
 
-static listi* get_ingridient_list(const itemi& ei) {
-	auto p = bsdata<listi>::find(ids(ei.id, "Ingridients"));
-	if(!p && ei.unidentified)
-		p = bsdata<listi>::find(ids(ei.unidentified, "Ingridients"));
+static listi* get_ingridient_list(const itemi* pi) {
+	auto p = bsdata<listi>::find(ids(pi->id, "Ingridients"));
+	if(!p && pi->unidentified)
+		p = bsdata<listi>::find(ids(pi->unidentified, "Ingridients"));
 	if(!p)
-		p = bsdata<listi>::find(ids(bsdata<weari>::elements[ei.wear].id, "Ingridients"));
+		p = bsdata<listi>::find(ids(bsdata<weari>::elements[pi->wear].id, "Ingridients"));
 	return p;
 }
 
@@ -2653,13 +2653,20 @@ static void select_craft_items(crafti* craft, unsigned allowed_items) {
 		if(!isf(allowed_items, index++))
 			continue;
 		if(v.iskind<itemi>()) {
-			auto& ei = bsdata<itemi>::elements[v.value];
-			auto ingridients = get_ingridient_list(ei);
+			auto pi = bsdata<itemi>::elements + v.value;
+			auto ingridients = get_ingridient_list(pi);
 			if(!consume_ingridients(ingridients, false))
 				continue;
-			an.add(&ei, v.getname());
+			an.add(pi, v.getname());
 		}
 	}
+}
+
+static void add_drop_item(const itemi* pi, int count) {
+	item it; it.create(pi);
+	player->additem(it);
+	if(it)
+		it.drop(player->getposition());
 }
 
 static void use_craft(int bonus) {
@@ -2674,7 +2681,12 @@ static void use_craft(int bonus) {
 		script_fail = true;
 		return;
 	}
-	choose_answers(getnm(craft->id), getnm("Cancel"));
+	auto pi = (itemi*)choose_answers(getnm(craft->id), getnm("Cancel"));
+	if(!pi)
+		return;
+	if(!consume_ingridients(get_ingridient_list(pi), true))
+		return;
+	add_drop_item(pi, 1);
 }
 
 static int find_craft_index(variant v) {

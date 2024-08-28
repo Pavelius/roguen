@@ -33,7 +33,7 @@ HightElf 1 Spells
 HightElf 1 Equipment
  elements Staff
 HightElf 1 Craft
- elements AlchemyCraft AddCraft
+ elements AlchemyCraft AddCraft AddCraft+1
 HightElf -2 AdditionalHits
  elements Hits+1
 HightElf -1 AdditionalMana
