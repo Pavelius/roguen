@@ -308,7 +308,7 @@ static void special_attack(item& weapon, creature* opponent, int& pierce, int& d
 	if(player->is(IllnessDamage, weapon))
 		illness_attack(opponent, 1);
 	auto power = weapon.getpower();
-	if(power.iskind<spelli>() && weapon.ischarge())
+	if(power.iskind<spelli>())
 		special_spell_attack(weapon, opponent, bsdata<spelli>::elements[power.value]);
 	// Damage equipment sometime
 	if(d100() < 30) {
@@ -449,31 +449,14 @@ static int additional_skill_points(int v) {
 }
 
 static void advance_value(variant v) {
-	if(v.iskind<itemi>()) {
-		switch(modifier) {
-		case InPosition:
-			break;
-		case CraftReceipt:
-			break;
-		default:
-			player->wearable::equipi(v.value, v.counter > 0 ? v.counter : 1);
-			break;
-		}
-	} else if(v.iskind<feati>())
+	if(v.iskind<itemi>())
+		player->wearable::equip(bsdata<itemi>::elements + v.value, v.counter);
+	else if(v.iskind<feati>())
 		ftscript<feati>(v.value, v.counter);
 	else if(v.iskind<modifieri>())
-		ftscript<feati>(v.value, v.counter);
-	else if(v.iskind<abilityi>()) {
-		last_ability = (ability_s)v.value;
-		int bonus = v.counter;
-		bonus += player->basic.abilities[v.value];
-		if(bonus > 100)
-			bonus = 100;
-		else if(bonus < 0)
-			bonus = 0;
-		player->basic.abilities[v.value] = bonus;
-	} else if(v.iskind<modifieri>())
-		modifier = (modifiern)v.value;
+		ftscript<modifieri>(v.value, v.counter);
+	else if(v.iskind<abilityi>())
+		ftscript<abilityi>(v.value, v.counter);
 	else if(v.iskind<spelli>())
 		player->learn_spell(v.value);
 	else if(v.iskind<script>())

@@ -13,28 +13,20 @@
 
 using namespace draw;
 
-static void equip_item(const char* id, int count = 1) {
-	item it;
-	it.create(id, count);
-	player->equip(it);
-	if(it)
-		player->additem(it);
-}
-
 static void add_item(const char* id, int count = 1, bool identified = false) {
 	item it;
-	it.create(id, count);
+	it.create(bsdata<itemi>::find(id), count);
 	if(identified)
 		it.setidentified(1);
-	player->additem(it);
+	player->equip(it);
 }
 
 static void main_start() {
 	player = player_create({5, 5}, "HightElf", true);
 	player->set(Ally);
 	player->experience += 600;
-	equip_item("LongBow");
-	equip_item("Arrow");
+	add_item("LongBow");
+	add_item("Arrow");
 	add_item("Torch");
 	add_item("Ration", 10);
 	add_item("HealingPotion", 5, true);

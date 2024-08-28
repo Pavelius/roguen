@@ -90,6 +90,19 @@ static int random_power(powera& result) {
 	return 1 + result.data[rand() % result.count];
 }
 
+void item::createmagical(int magical, int cursed, int artifact) {
+	if(!getpower())
+		return;
+	if(d100() < magical) {
+		if(d100() < cursed)
+			set(Cursed);
+		else if(d100() < artifact)
+			set(Artifact);
+		else
+			set(Blessed);
+	}
+}
+
 void item::createpower(int chance_power) {
 	if(iscountable())
 		return;
@@ -115,14 +128,11 @@ void item::create(const itemi* pi, int count) {
 		return;
 	clear();
 	type = pi - bsdata<itemi>::elements;
-	if(pi->count)
-		count = count * pi->count;
-	if(count)
-		setcount(count);
-	else if(pi->count > 1)
-		setcount(xrand(1, pi->count));
-	else
-		setcount(1);
+	if(count <= 1)
+		count = 1;
+	if(pi->count > 1)
+		count = xrand(count * 1, count * pi->count);
+	setcount(count);
 }
 
 bool item::is(wear_s v) const {

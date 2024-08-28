@@ -991,16 +991,7 @@ static const script* get_local_method() {
 	return 0;
 }
 
-static void apply_magical(item& it) {
-	if(!it.getpower())
-		return;
-	static magicn chance_special[20] = {
-		Mundane, Mundane, Mundane, Mundane, Mundane,
-		Mundane, Mundane, Mundane, Mundane, Mundane,
-		Mundane, Mundane, Mundane, Blessed, Blessed,
-		Blessed, Cursed, Cursed, Cursed, Artifact
-	};
-	it.set(maprnd(chance_special));
+static void add_statistic(item& it) {
 	switch(it.getmagic()) {
 	case Artifact: area->total.artifacts++; break;
 	case Blessed: area->total.blessed++; break;
@@ -1009,31 +1000,46 @@ static void apply_magical(item& it) {
 	}
 }
 
-static void place_item(point index, const itemi* pe) {
-	if(!pe || pe == bsdata<itemi>::elements)
+static item craft_item(const itemi* pi, magicn magic) {
+	item it;
+	it.create(pi, 1);
+	it.set(magic);
+	it.setidentified(1);
+	return it;
+}
+
+static void add_item(point index, const itemi* pe, int count = 1, int chance_power = 0) {
+	if(!pe || pe == bsdata<itemi>::elements || count <= 0)
 		return;
 	if(area->iswall(index))
 		return;
 	item it; it.clear();
-	it.create(pe);
-	auto chance_power = 0;
+	it.create(pe, count);
 	if(area->level)
 		chance_power += iabs(area->level) * 5;
 	it.createpower(chance_power);
-	apply_magical(it);
+	it.createmagical();
+	add_statistic(it);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	it.drop(index);
 }
 
-static void place_item(const itemi* pe) {
-	if(!player || !pe || pe == bsdata<itemi>::elements)
+static void add_item(const itemi* pe, int count = 1) {
+	if(!player || !pe || pe == bsdata<itemi>::elements || count <= 0)
 		return;
 	item it; it.clear();
-	it.create(pe);
+	it.create(pe, count);
+	it.createpower(0);
+	it.createmagical();
+	add_statistic(it);
 	if(pe->is(Coins))
 		it.setcount(xrand(3, 18));
 	player->additem(it);
+	if(it) {
+		if(player->ispresent())
+			it.drop(player->getposition());
+	}
 }
 
 static void visualize_activity(point m) {
@@ -1116,17 +1122,11 @@ template<> void ftscript<shapei>(int value, int counter) {
 template<> void ftscript<itemi>(int value, int counter) {
 	auto count = script_count(counter, 1);
 	switch(modifier) {
-	case InPlayerBackpack:
-		for(auto i = 0; i < count; i++)
-			place_item(bsdata<itemi>::elements + value);
-		break;
-	case InPosition:
-		for(auto i = 0; i < count; i++)
-			place_item(last_index, bsdata<itemi>::elements + value);
-		break;
+	case InPlayerBackpack: add_item(bsdata<itemi>::elements + value, count); break;
+	case InPosition: add_item(last_index, bsdata<itemi>::elements + value, count); break;
 	default:
 		for(auto i = 0; i < count; i++)
-			place_item(randomft(last_rect), bsdata<itemi>::elements + value);
+			add_item(randomft(last_rect), bsdata<itemi>::elements + value);
 		break;
 	}
 }
@@ -1162,16 +1162,16 @@ template<> void ftscript<needni>(int value, int counter) {
 template<> bool fttest<abilityi>(int value, int counter) {
 	last_ability = (ability_s)value;
 	if(counter < 0)
-		return player->basic.abilities[value] >= -counter;
+		return (counter + player->basic.abilities[value]) >= 0;
 	return true;
 }
 template<> void ftscript<abilityi>(int value, int counter) {
 	last_ability = (ability_s)value;
 	counter += player->basic.abilities[value];
 	if(counter < 0)
-		counter = 0;
+		counter = 0; // Minimum value of any non special ability
 	else if(counter > 100)
-		counter = 100;
+		counter = 100; // Maximum value of any ability
 	player->basic.abilities[value] = counter;
 }
 
@@ -2429,10 +2429,6 @@ static void add_anger(int bonus) {
 		player->abilities[Mood] -= bonus;
 }
 
-static bool is_npc(int bonus) {
-	return player->is(Local) != 0;
-}
-
 static bool have_object(variant v) {
 	if(v.iskind<itemi>())
 		return player->useitem(bsdata<itemi>::begin() + v.value, false);
@@ -2662,22 +2658,6 @@ static void select_craft_items(crafti* craft, unsigned allowed_items) {
 	}
 }
 
-static item create_item(const itemi* pi, magicn magic, int count) {
-	item it;
-	it.create(pi, count);
-	it.set(magic);
-	switch(magic) {
-	case Blessed:
-	case Cursed:
-		it.createpower(0);
-		break;
-	case Artifact:
-		it.createpower(100);
-		break;
-	}
-	return it;
-}
-
 static void add_drop_item(item it) {
 	player->additem(it);
 	if(it)
@@ -2701,13 +2681,13 @@ static void use_craft(int bonus) {
 		return;
 	if(!consume_ingridients(get_ingridient_list(pi), true))
 		return;
-	auto magic = Mundane;
 	auto skill_value = player->get(craft->skill);
+	auto magic = Mundane;
 	if(skill_value < 30) {
-		if(!player->roll(craft->skill, 30))
+		if(!player->roll(craft->skill, 50))
 			magic = Cursed;
 	} else {
-		if(player->roll(craft->skill, -20)) {
+		if(player->roll(craft->skill, -30)) {
 			magic = Blessed;
 			if(skill_value > 90) {
 				if(player->roll(craft->skill, -90))
@@ -2715,9 +2695,7 @@ static void use_craft(int bonus) {
 			}
 		}
 	}
-	auto it = create_item(pi, magic, 1);
-	it.setidentified(1);
-	add_drop_item(it);
+	add_drop_item(craft_item(pi, magic));
 }
 
 static int find_craft_index(variant v) {
@@ -2813,7 +2791,6 @@ BSDATA(script) = {
 	{"MoveUp", move_up},
 	{"MoveUpRight", move_up_right},
 	{"MoveUpLeft", move_up_left},
-	{"NPC", empthy_script, is_npc},
 	{"Offset", set_offset},
 	{"OpenNearestDoor", open_nearest_door},
 	{"Opponent", opponent_next},

@@ -1,5 +1,7 @@
 #Spell
 
+BurningHands mana(5)
+ use SelectEnemies FilterClose ForEachCreature FireHarm+4
 CureWounds mana(10)
  use SelectAllies FilterClose FilterWounded ChooseTarget ForEachCreature Heal+5
 Entaglement mana(6)

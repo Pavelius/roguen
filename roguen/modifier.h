@@ -1,5 +1,5 @@
 #pragma once
 
 enum modifiern : unsigned char {
-	NoModifier, InPlayerBackpack, InPosition, CraftReceipt,
+	NoModifier, InPlayerBackpack, InPosition,
 };

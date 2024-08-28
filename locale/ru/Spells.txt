@@ -1,3 +1,4 @@
+BurningHands: Сжигающие руки
 CureWounds: Лечение легких ранений
 Entaglement: Рост колючек
 Gate: Врата

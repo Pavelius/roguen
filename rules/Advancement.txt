@@ -27,13 +27,11 @@ Human -1 AdditionalSkills
 HightElf 1 Ability
  elements Strenght+25 Dexterity+25 Hits+15 Wits+25 Mana+15
 HightElf 1 Skills
- elements WeaponSkill+15 BalisticSkill+20 Dodge+10 Literacy+20 Alchemy+20
+ elements WeaponSkill+15 BalisticSkill+20 Dodge+10 Literacy+20
 HightElf 1 Spells
- elements LightSpell
+ elements LightSpell BurningHands
 HightElf 1 Equipment
  elements Staff
-HightElf 1 Craft
- elements AlchemyCraft AddCraft AddCraft+1
 HightElf -2 AdditionalHits
  elements Hits+1
 HightElf -1 AdditionalMana

@@ -53,9 +53,9 @@ void wearable::equip(item& v) {
 		additem(v);
 }
 
-void wearable::equipi(short unsigned type, int count) {
+void wearable::equip(const itemi* pi, int count) {
 	item it;
-	it.create(bsdata<itemi>::elements + type, count);
+	it.create(pi, count);
 	it.createpower(0);
 	equip(it);
 }

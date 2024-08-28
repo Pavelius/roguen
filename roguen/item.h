@@ -59,10 +59,9 @@ public:
 	bool			canequip(wear_s v) const;
 	int				chance_consume() const;
 	void			clear() { type = count = stats = 0; }
-	void			create(const char* id, int count = 1) { create(bsdata<itemi>::find(id), count); }
 	void			create(const itemi* pi, int count = 1);
 	void			createpower(int chance_power = 0);
-	int				ischarge() const { return !iscountable() && (broken < 7); }
+	void			createmagical(int magical = 15, int cursed = 10, int artifact = 2);
 	void			damage(int value = 1);
 	void			drop(point m);
 	int				getavatar() const { return geti().wear_index; }
