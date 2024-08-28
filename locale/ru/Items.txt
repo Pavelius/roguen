@@ -89,6 +89,7 @@ BluePotion: Синее зелье
 BrownPotion: Коричневое зелье
 HealingPotion: Зелье лечения
 ManaPotion: Зелье маны
+PotionOfPoison: Зелье отравы
 PotionOfStrenght: Зелье силы
 PotionOfWits: Зелье разума
 PotionOfWisdow: Зелье мудрости

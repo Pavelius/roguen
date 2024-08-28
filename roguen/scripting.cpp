@@ -2662,8 +2662,23 @@ static void select_craft_items(crafti* craft, unsigned allowed_items) {
 	}
 }
 
-static void add_drop_item(const itemi* pi, int count) {
-	item it; it.create(pi);
+static item create_item(const itemi* pi, magicn magic, int count) {
+	item it;
+	it.create(pi, count);
+	it.set(magic);
+	switch(magic) {
+	case Blessed:
+	case Cursed:
+		it.createpower(0);
+		break;
+	case Artifact:
+		it.createpower(100);
+		break;
+	}
+	return it;
+}
+
+static void add_drop_item(item it) {
 	player->additem(it);
 	if(it)
 		it.drop(player->getposition());
@@ -2686,7 +2701,23 @@ static void use_craft(int bonus) {
 		return;
 	if(!consume_ingridients(get_ingridient_list(pi), true))
 		return;
-	add_drop_item(pi, 1);
+	auto magic = Mundane;
+	auto skill_value = player->get(craft->skill);
+	if(skill_value < 30) {
+		if(!player->roll(craft->skill, 30))
+			magic = Cursed;
+	} else {
+		if(player->roll(craft->skill, -20)) {
+			magic = Blessed;
+			if(skill_value > 90) {
+				if(player->roll(craft->skill, -90))
+					magic = Artifact;
+			}
+		}
+	}
+	auto it = create_item(pi, magic, 1);
+	it.setidentified(1);
+	add_drop_item(it);
 }
 
 static int find_craft_index(variant v) {
