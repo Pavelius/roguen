@@ -1156,13 +1156,16 @@ template<> void ftscript<shapei>(int value, int counter) {
 }
 
 template<> void ftscript<itemi>(int value, int counter) {
-	auto count = script_count(counter, 1);
-	if(count < 1)
+	auto count_base = script_count(counter, 0);
+	auto count = count_base;
+	if(count < 0)
 		return;
+	else if(!count)
+		count = 1;
 	switch(modifier) {
 	case InPlayerBackpack: add_item(bsdata<itemi>::elements + value, count); break;
 	case InPosition: add_item(last_index, bsdata<itemi>::elements + value, count); break;
-	case InRoomToBuy: add_room_item(bsdata<itemi>::elements + value, count); break;
+	case InRoomToBuy: add_room_item(bsdata<itemi>::elements + value, count_base); break;
 	default:
 		for(auto i = 0; i < count; i++)
 			add_item(randomft(last_rect), bsdata<itemi>::elements + value);
@@ -2780,9 +2783,12 @@ static void add_items_for_sale(int bonus) {
 	if(!room)
 		return;
 	auto index = room->getsellitems();
+	auto index_special = room->getspecialsellitems();
 	auto format = getnm("AskBuyItem");
 	for(auto& e : area->items) {
 		if(e.position == index)
+			an.add(&e, format, e.getname(), e.getcost());
+		else if(e.position==index_special)
 			an.add(&e, format, e.getname(), e.getcost());
 	}
 }

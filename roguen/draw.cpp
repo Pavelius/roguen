@@ -194,6 +194,24 @@ static void set32h(unsigned char* d, int height) {
 	}
 }
 
+//static void raw832(unsigned char* d, unsigned char* s, int width) {
+//	const int cbd = sizeof(color);
+//	auto se = s + width;
+//	while(s < se) {
+//		*((color*)d) = palt[*s++];
+//		d += cbd;
+//	}
+//}
+//
+//static void raw832m(unsigned char* d, unsigned char* s, int width) {
+//	const int cbd = sizeof(color);
+//	auto se = s + width;
+//	while(s < se) {
+//		*((color*)d) = palt[*s++];
+//		d -= cbd;
+//	}
+//}
+
 static void raw832(unsigned char* d, int d_scan, unsigned char* s, int s_scan, int width, int height, const color* pallette) {
 	const int cbd = 4;
 	while(height-- > 0) {

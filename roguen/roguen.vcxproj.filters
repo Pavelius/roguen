@@ -751,7 +751,7 @@
     <Text Include="..\locale\ru\Feats.txt">
       <Filter>Locale</Filter>
     </Text>
-    <Text Include="..\talk\ru\Shopkeeper.txt">
+    <Text Include="..\talk\ru\GeneralStore.txt">
       <Filter>Talk</Filter>
     </Text>
   </ItemGroup>
