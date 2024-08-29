@@ -191,6 +191,12 @@ void roomi::getrumor(stringbuilder& sb) const {
 	area->set(rc, &areamap::setflag, Explored);
 }
 
+void item_weight(stringbuilder& sb, int value, bool add_unit) {
+	sb.add("%1i.%2i%3i", value / 100, (value / 10) % 10, value % 10);
+	if(add_unit)
+		sb.add(" %Kg");
+}
+
 static const char* visualize_progress(int score) {
 	if(score == 0)
 		return "NoAnyProgress";
@@ -216,6 +222,13 @@ static void print_reputation(stringbuilder& sb) {
 		sb.add(getnm(str("ReputationM%1i", -v)));
 	else
 		sb.add(getnm(str("Reputation%1i", v)));
+}
+
+static void total_item_weight(stringbuilder& sb) {
+	if(!player)
+		return;
+	auto v = player->wearstotal(&item::getweight);
+	item_weight(sb, v, false);
 }
 
 static void list_of_feats(stringbuilder& sb) {
@@ -250,5 +263,6 @@ BSDATA(textscript) = {
 	{"ListOfSkills", list_of_skills},
 	{"NeedHelpIntro", need_help_info},
 	{"Reputation", print_reputation},
+	{"TotalItemWeight", total_item_weight},
 };
 BSDATAF(textscript)

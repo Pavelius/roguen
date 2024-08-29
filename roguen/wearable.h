@@ -4,6 +4,7 @@
 #pragma once
 
 struct wearable : movable {
+	typedef int (item::*fnitemget)() const;
 	item			wears[Legs + 1];
 	int				money;
 	void			addcoins(int v);
@@ -20,6 +21,7 @@ struct wearable : movable {
 	const item*		getwear(const void* data) const;
 	bool			useitem(const itemi* pi, bool run);
 	slice<item>		weapons() { return slice<item>(wears + MeleeWeapon, wears + RangedWeapon + 1); }
+	int				wearstotal(fnitemget proc) const;
 };
 extern wear_s last_player_used_wear;
 

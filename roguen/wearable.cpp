@@ -84,3 +84,13 @@ bool wearable::useitem(const itemi* pi, bool run) {
 	}
 	return false;
 }
+
+int	wearable::wearstotal(fnitemget proc) const {
+	auto result = 0;
+	for(auto& v : wears) {
+		if(!v)
+			continue;
+		result += (v.*proc)();
+	}
+	return result;
+}

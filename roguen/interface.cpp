@@ -681,17 +681,6 @@ bool button(unsigned key, int format_width) {
 	return result;
 }
 
-//static bool button(unsigned key, const char* format) {
-//	auto push_fore = fore;
-//	auto result = button(key, -1);
-//	caret.x -= metrics::padding / 2;
-//	fore = colors::border;
-//	textrp(format);
-//	caret.x += metrics::padding;
-//	fore = push_fore;
-//	return result;
-//}
-
 static void player_info() {
 	char temp[1024]; stringbuilder sb(temp); sb.clear();
 	player->getinfo(sb);
@@ -1035,6 +1024,10 @@ void* answers::choose() const {
 
 static void answer_after_paint() {
 	auto push_caret = caret;
+	caret.x += 2; width -= 2;
+	caret.y += 2; height -= 2;
+	if(answers::footer)
+		textf(answers::footer);
 	caret = answer_end;
 	auto push_width = width; width = -1;
 	if(answers::cancel_text) {

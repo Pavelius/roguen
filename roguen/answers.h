@@ -25,6 +25,7 @@ public:
 	static const char*	prompt;
 	static const char*	prompa;
 	static const char*	resid;
+	static const char*	footer;
 	static const char*	cancel_text;
 	static bool			show_tips;
 	static bool			choosing;

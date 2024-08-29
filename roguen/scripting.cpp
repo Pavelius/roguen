@@ -1191,8 +1191,8 @@ template<> bool fttest<abilityi>(int value, int counter) {
 template<> void ftscript<abilityi>(int value, int counter) {
 	last_ability = (ability_s)value;
 	counter += player->basic.abilities[value];
-	if(counter < 0)
-		counter = 0; // Minimum value of any non special ability
+	if(counter < -100)
+		counter = -100; // Minimum value of any non special ability
 	else if(counter > 100)
 		counter = 100; // Maximum value of any ability
 	player->basic.abilities[value] = counter;
@@ -1375,8 +1375,14 @@ static const char* item_weight(const void* object, stringbuilder& sb) {
 	if(!(*p))
 		return "";
 	auto w = p->getweight();
-	sb.add("%1i.%2i%3i %Kg", w / 100, (w / 10) % 10, w % 10);
+	item_weight(sb, w, true);
 	return sb.begin();
+}
+
+static const char* items_footer() {
+	static char temp[260]; stringbuilder sb(temp);
+	sb.add(getnm("EncumbranceTotal"));
+	return temp;
 }
 
 static item* choose_wear() {
@@ -1391,6 +1397,7 @@ static item* choose_wear() {
 			an.add(&e, "-");
 	}
 	pushvalue push_columns(current_columns, columns);
+	pushvalue push_footer(answers::footer, items_footer());
 	return (item*)choose_answers(getnm("Inventory"), getnm("Cancel"));
 }
 
@@ -1399,6 +1406,7 @@ static item* choose_items(itema& items, const char* header, bool autochoose = fa
 		{"Weight", 60, item_weight, true},
 		{}};
 	pushvalue push_columns(current_columns, columns);
+	pushvalue push_footer(answers::footer, items_footer());
 	return (item*)items.choose(header, getnm("Cancel"), autochoose);
 }
 
@@ -1424,6 +1432,7 @@ static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible 
 	sb.clear();
 	sb.add(header_format);
 	pushvalue push_columns(current_columns, columns);
+	pushvalue push_footer(answers::footer, items_footer());
 	return (item*)choose_answers(temp, getnm("Cancel"));
 }
 

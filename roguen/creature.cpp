@@ -1761,6 +1761,7 @@ creature* player_create(point m, variant kind, bool female) {
 		advance_value(kind, 0);
 		player_levelup();
 	}
+	player->abilities[Reputation] = player->basic.abilities[Reputation];
 	player->place(m);
 	player->finish();
 	if(player->get(Reputation)<=-40)

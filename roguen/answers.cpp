@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "rand.h"
 
+const char* answers::footer;
 const char* answers::header;
 const char* answers::prompt;
 const char* answers::prompa;

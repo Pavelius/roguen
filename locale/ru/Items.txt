@@ -137,3 +137,5 @@ WandOfDiggingChoose: Копать в каком направлении?
 Scroll: Свиток
 
 AlchemyCraft: Создание зельев
+
+EncumbranceTotal: Вес всех ваших вещей [%TotalItemWeight] %Kg. Вы можете переносить [100.00] кг.
