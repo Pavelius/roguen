@@ -1825,10 +1825,6 @@ int	creature::getmaximum(ability_s v) const {
 	}
 }
 
-bool ispresent(const void* p) {
-	return ((creature*)p)->ispresent();
-}
-
 int get_maximum_faith(creature* p) {
 	return p->get(Religion) / 4;
 }

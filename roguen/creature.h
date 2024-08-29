@@ -108,7 +108,6 @@ void cast_spell(const spelli& e, int mana, bool silent);
 void cast_spell(const spelli& e);
 void damage_backpack_item(wear_s type, int chance, int count = 1);
 void dialog_message(const char* format);
-bool ispresent(const void* p);
 void make_move();
 void move_step(direction_s v);
 void pay_action();
