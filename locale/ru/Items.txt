@@ -138,4 +138,5 @@ Scroll: Свиток
 
 AlchemyCraft: Создание зельев
 
+AskBuyItem: Купить %1 за %2i золотых.
 EncumbranceTotal: Вес всех ваших вещей [%TotalItemWeight] %Kg. Вы можете переносить [%MaximumCarryCapacity] %Kg.

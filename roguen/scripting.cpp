@@ -61,7 +61,6 @@ static point		last_door;
 locationi*			last_location;
 quest*				last_quest;
 rect				last_rect;
-roomi*				last_room;
 const sitei*		last_site;
 int					last_value;
 listi*				last_craft_list;
@@ -400,7 +399,7 @@ static bool allow_corridor(point index, direction_s dir, bool linkable = false) 
 		return false;
 	index = to(index, dir);
 	if(linkable) {
-		auto pr = roomi::find(index);
+		auto pr = find_room(index);
 		if(pr)
 			return true;
 	}
@@ -522,7 +521,7 @@ static int add_possible_doors(const rect& rc, bool run) {
 }
 
 static void create_doors(const rect& rc, int floor, int wall) {
-	pushvalue push_room(last_room, roomi::find(center(rc)));
+	pushvalue push_room(last_room, find_room(center(rc)));
 	pushvalue push_site(last_site, last_room ? &last_room->geti() : 0);
 	auto door_count = get_doors_count();
 	auto chance_hidden_doors = get_chance_hidden_doors();
@@ -551,10 +550,11 @@ static void create_doors(int floor, int wall) {
 }
 
 static roomi* add_room(const sitei* ps, const rect& rc) {
-	auto p = roomi::add();
+	auto p = add_room();
 	p->clear();
 	p->set(ps);
 	p->rc = rc;
+	p->param = rand();
 	return p;
 }
 
@@ -1044,6 +1044,22 @@ static void add_item(point index, const itemi* pe, int count = 1, int chance_pow
 	it.drop(index);
 }
 
+static void add_room_item(const itemi* pe, int count = 1, int chance_power = 0) {
+	auto room_id = area->rooms.indexof(last_room);
+	if(room_id == -1)
+		return;
+	item it; it.clear();
+	it.create(pe, count);
+	if(area->level)
+		chance_power += iabs(area->level) * 5;
+	if(!count)
+		it.setpersonal(1);
+	it.createpower(chance_power);
+	it.createmagical();
+	add_statistic(it);
+	it.drop({PlacementRoom, (short)room_id});
+}
+
 static void add_item(item it) {
 	player->additem(it);
 }
@@ -1096,7 +1112,7 @@ template<> void ftscript<widget>(int value, int counter) {
 
 template<> void ftscript<speechi>(int value, int counter) {
 	if(player)
-		player->say(speech_get(value, -1));
+		player->say(speech_get(value));
 }
 
 template<> void ftscript<featurei>(int value, int counter) {
@@ -1140,9 +1156,12 @@ template<> void ftscript<shapei>(int value, int counter) {
 
 template<> void ftscript<itemi>(int value, int counter) {
 	auto count = script_count(counter, 1);
+	if(count < 1)
+		return;
 	switch(modifier) {
 	case InPlayerBackpack: add_item(bsdata<itemi>::elements + value, count); break;
 	case InPosition: add_item(last_index, bsdata<itemi>::elements + value, count); break;
+	case InRoom: add_room_item(bsdata<itemi>::elements + value, count); break;
 	default:
 		for(auto i = 0; i < count; i++)
 			add_item(randomft(last_rect), bsdata<itemi>::elements + value);
@@ -1153,9 +1172,10 @@ template<> void ftscript<itemi>(int value, int counter) {
 template<> void ftscript<sitei>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	pushvalue push_site(last_site);
+	pushvalue push_room(last_room);
 	last_site = bsdata<sitei>::elements + value;
 	apply_script(get_local_method(), 0);
-	add_room(last_site, last_rect);
+	last_room = add_room(last_site, last_rect);
 	script_run(bsdata<sitei>::elements[value].landscape);
 }
 
@@ -1776,6 +1796,8 @@ static void detect_all_items(int bonus) {
 	for(auto& e : area->items) {
 		if(!e)
 			continue;
+		if(!area->isvalid(e.position))
+			continue; // Special room items
 		area->setflag(e.position, Explored);
 		area->setflag(e.position, Visible);
 	}
@@ -1784,6 +1806,8 @@ static void detect_all_items(int bonus) {
 static void detect_items(wear_s v) {
 	for(auto& e : area->items) {
 		if(!e || !e.is(v))
+			continue;
+		if(!area->isvalid(e.position))
 			continue;
 		area->setflag(e.position, Explored);
 		area->setflag(e.position, Visible);
@@ -2748,6 +2772,20 @@ static void use_craft(int bonus) {
 	add_item(craft_item(pi, magic));
 }
 
+static void add_items_for_sale(int bonus) {
+	if(!opponent)
+		return;
+	auto room = opponent->getroom();
+	if(!room)
+		return;
+	auto index = room->getitems();
+	auto format = getnm("AskBuyItem");
+	for(auto& e : area->items) {
+		if(e.position == index)
+			an.add(&e, format, e.getname(), e.getcost());
+	}
+}
+
 static int find_craft_index(variant v) {
 	auto index = 0;
 	for(auto e : bsdata<crafti>::elements[last_craft].elements) {
@@ -2780,6 +2818,7 @@ BSDATA(script) = {
 	{"AddNeedAnswers", add_need_answers},
 	{"AddReputation", add_reputation},
 	{"AddMana", add_mana},
+	{"AddItemsForSale", add_items_for_sale},
 	{"ApplyAction", apply_action},
 	{"AnimalInt", empthy_script, is_animal},
 	{"Anger", add_anger},

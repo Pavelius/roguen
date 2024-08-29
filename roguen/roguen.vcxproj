@@ -222,7 +222,6 @@
     <ClCompile Include="randomizer.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="resource_static.cpp" />
-    <ClCompile Include="room.cpp" />
     <ClCompile Include="scale2x.cpp" />
     <ClCompile Include="screenshoot.cpp" />
     <ClCompile Include="script.cpp" />
@@ -389,6 +388,7 @@
     <Text Include="..\talk\ru\AncientRaceProgress.txt" />
     <Text Include="..\talk\ru\NeedTalk.txt" />
     <Text Include="..\talk\ru\NPCHouses.txt" />
+    <Text Include="..\talk\ru\Shopkeeper.txt" />
     <Text Include="..\talk\ru\VillageElder.txt" />
   </ItemGroup>
   <ItemGroup>

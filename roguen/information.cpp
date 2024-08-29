@@ -3,6 +3,7 @@
 #include "game.h"
 #include "greatneed.h"
 #include "race.h"
+#include "site.h"
 #include "textscript.h"
 
 static const char* getnameshort(const char* id) {

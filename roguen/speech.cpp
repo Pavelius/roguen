@@ -23,6 +23,13 @@ BSMETA(speechi) = {
 	BSREQ(id),
 	{}};
 
+int speech_random;
+
+static int rand_number() {
+	speech_random = speech_random * 1103515245 + 12345;
+	return (unsigned int)(speech_random / 65536) % 32768;
+}
+
 void speech_read(const char* url) {
 	auto p = log::read(url);
 	if(!p)
@@ -51,22 +58,25 @@ void speech_read(const char* url) {
 	log::close();
 }
 
-const char* speech_getid(int index) {
+const char* speech_get_id(int index) {
 	return bsdata<speechi>::elements[index].id;
 }
 
-const char* speech_get(int index, int random) {
+const char* speech_get(int index) {
 	auto p = bsdata<speechi>::elements + index;
-	if(random==-1)
-		random = rand() % p->source.size();
-	return p->source.begin()[random].name;
+	auto n = p->source.size();
+	if(!n)
+		return 0;
+	return p->source.begin()[rand_number() % n].name;
 }
 
 const char* speech_get(const char* id) {
 	auto p = bsdata<speechi>::find(id);
 	if(!p || !p->source)
 		return 0;
-	auto n = rand() % p->source.size();
+	if(!speech_random)
+		speech_random = rand();
+	auto n = rand_number() % p->source.size();
 	return p->source.begin()[n].name;
 }
 

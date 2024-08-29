@@ -48,14 +48,15 @@ struct areaheadi : geoposition {
 class roomi : public ownerable {
 	short unsigned	site_id;
 public:
+	unsigned		param;
 	rect			rc;
-	static roomi*	add();
 	point			center() const { return {(short)(rc.x1 + rc.width() / 2), (short)(rc.y1 + rc.height() / 2)}; }
 	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
-	static roomi*	find(point pt);
 	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
+	point			getitems() const;
 	void			getrumor(stringbuilder& sb) const;
-	const char*		getname() const { return geti().getname(); }
+	const char*		getname() const;
+	int				getseed() const;
 	static const char* getname(const void* p) { return ((roomi*)p)->getname(); }
 	bool			is(feat_s v) const { return geti().feats.is(v); }
 	bool			isexplored() const;
@@ -63,5 +64,10 @@ public:
 	bool			isnotable() const { return is(Notable); }
 	void			set(const sitei* p) { bsset(site_id, p); }
 };
+extern roomi* last_room;
 typedef collection<roomi> rooma;
 extern rooma rooms;
+
+roomi* add_room();
+roomi* find_room(point pt);
+int room_index(const roomi* p);

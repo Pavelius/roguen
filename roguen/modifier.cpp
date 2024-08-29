@@ -5,5 +5,6 @@ BSDATA(modifieri) = {
 	{"NoModifier"},
 	{"InPlayerBackpack"},
 	{"InPosition"},
+	{"InRoom"},
 };
-assert_enum(modifieri, InPosition)
+assert_enum(modifieri, InRoom)

@@ -127,9 +127,9 @@ static void paint_items() {
 	for(auto& e : area->items) {
 		if(!e)
 			continue;
-		if(!area->is(e.position, Explored))
-			continue;
 		if(!e.position.in(rc))
+			continue;
+		if(!area->is(e.position, Explored))
 			continue;
 		auto& ei = area->getfeature(e.position);
 		if(ei.is(Container))
@@ -1073,6 +1073,8 @@ static void paint_minimap_items(point origin, int z) {
 		if(!e)
 			continue;
 		auto i = e.position;
+		if(!area->isvalid(i))
+			continue;
 		if(!area->is(i, Explored))
 			continue;
 		caret.x = origin.x + i.x * width;

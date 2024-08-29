@@ -170,8 +170,6 @@ bool item::is(feat_s v) const {
 }
 
 void item::drop(point m) {
-	if(!area->isvalid(m))
-		return;
 	for(auto& e : area->items) {
 		if(e && e.position == m) {
 			e.add(*this);

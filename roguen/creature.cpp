@@ -663,7 +663,7 @@ static bool check_leave_area(point m) {
 
 static bool check_place_owner(point m) {
 	if(player->is(PlaceOwner)) {
-		auto pr = roomi::find(m);
+		auto pr = find_room(m);
 		if(player->getroom() != pr) {
 			pay_action();
 			return false;
@@ -928,7 +928,7 @@ bool isfreecrfly(point m) {
 }
 
 static void update_room(creature* player) {
-	auto pn = roomi::find(player->getposition());
+	auto pn = find_room(player->getposition());
 	if(pn) {
 		auto pb = player->getroom();
 		auto room_changed = false;

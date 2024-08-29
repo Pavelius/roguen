@@ -89,6 +89,7 @@ public:
 	bool			iscursed() const { return is(Cursed); }
 	bool			isidentified() const { return identified != 0; }
 	bool			ismagical() const;
+	bool			ispersonal() const { return personal != 0; }
 	bool			isranged() const { return geti().wear == RangedWeapon; }
 	bool			isusable() const { return geti().use.size() != 0; }
 	bool			isdamaged() const { return iscountable() && broken > 0; }
@@ -97,6 +98,7 @@ public:
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v, const char* interactive = 0);
 	void			setidentified(int v) { identified = v; }
+	void			setpersonal(int v) { personal = v; }
 	void			use();
 };
 struct itemground : item {

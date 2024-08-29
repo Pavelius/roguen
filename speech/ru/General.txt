@@ -70,3 +70,13 @@
 #KnockDoorCastingSpeech
 Сизам откройся!
 Великий Гонд убери замок!
+
+#GeneralStoreTypes
+разнообразных товаров
+вкусной еды
+шпилек и гвоздей
+
+#GeneralStore
+Лавка %1
+Магазин %GeneralStoreTypes
+Товары %$1
