@@ -14,6 +14,9 @@ void wearable::addcoins(int v) {
 }
 
 void wearable::additem(item& v) {
+	if(!v)
+		return;
+	// Coins have special case
 	if(v.is(Coins)) {
 		addcoins(v.getcostall());
 		v.clear();
@@ -37,27 +40,6 @@ void wearable::additem(item& v) {
 			}
 		}
 	}
-}
-
-void wearable::equip(item& v) {
-	for(auto i = MeleeWeapon; i <= Legs; i = (wear_s)(i + 1)) {
-		if(wears[i])
-			continue;
-		if(!v.canequip(i))
-			continue;
-		wears[i] = v;
-		v.clear();
-		break;
-	}
-	if(v)
-		additem(v);
-}
-
-void wearable::equip(const itemi* pi, int count) {
-	item it;
-	it.create(pi, count);
-	it.createpower(0);
-	equip(it);
 }
 
 const item*	wearable::getwear(const void* data) const {

@@ -224,6 +224,13 @@ static void print_reputation(stringbuilder& sb) {
 		sb.add(getnm(str("Reputation%1i", v)));
 }
 
+static void maximum_carry_capacity(stringbuilder& sb) {
+	if(!player)
+		return;
+	auto v = player->getcarry();
+	item_weight(sb, v, false);
+}
+
 static void total_item_weight(stringbuilder& sb) {
 	if(!player)
 		return;
@@ -264,5 +271,6 @@ BSDATA(textscript) = {
 	{"NeedHelpIntro", need_help_info},
 	{"Reputation", print_reputation},
 	{"TotalItemWeight", total_item_weight},
+	{"MaximumCarryCapacity", maximum_carry_capacity},
 };
 BSDATAF(textscript)

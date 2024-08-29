@@ -10,7 +10,11 @@ Fly: Полет
 LightSource: Источник света
 PoisonResistance: Сопротивление яду
 
+ElfBlood: Эльфийская кровь
+Encumbered: Перегружен
+
 CutWoods: Рубит деревья
+SlowMove: Медленно двигается
 FastMove: Быстрое движение
 Retaliate: Ответный удар
 SlowUse: Медленно

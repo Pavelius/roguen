@@ -310,7 +310,7 @@ static void create_road(const rect& rc) {
 			last_rect.y2 = area->mps - 1;
 	}
 	area->set(last_rect, &areamap::settile, road.value);
-	script_run("RandomCommoner");
+	script_run(ids(last_site->id, "Population"));
 }
 
 static void create_city_level(const rect& rc, int level) {
@@ -1046,10 +1046,6 @@ static void add_item(point index, const itemi* pe, int count = 1, int chance_pow
 
 static void add_item(item it) {
 	player->additem(it);
-	if(it) {
-		if(player->ispresent())
-			it.drop(player->getposition());
-	}
 }
 
 static void add_item(const itemi* pe, int count = 1) {
@@ -1724,6 +1720,7 @@ static void pickup(int bonus) {
 		}
 		player->act("PickupItem", 0, p->getfullname());
 		player->additem(*p);
+		player->update();
 	}
 }
 
@@ -1738,6 +1735,7 @@ static void pickup_all(int bonus) {
 		player->act("PickupItem", 0, p->getfullname());
 		player->additem(*p);
 	}
+	player->update();
 }
 
 static void drop_down(int bonus) {
@@ -1756,6 +1754,7 @@ static void drop_down(int bonus) {
 		}
 		player->act("DropdownItem", 0, p->getfullname());
 		p->drop(player->getposition());
+		player->update();
 	}
 }
 

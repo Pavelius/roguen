@@ -26,16 +26,20 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	bool			act(const char* action, const char* id = 0, ...) const;
 	bool			actp(const char* action, const char* id = 0, ...) const;
+	void			additem(item& v);
 	void			apply(const featable& v) { feats.add(v); }
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
 	bool			canspeak() const { return abilities[Wits] >= 5; }
 	void			clear();
 	void			equipi(short unsigned type, int count);
+	void			equip(item& v);
+	void			equip(const itemi* pi, int count);
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
 	int				get(ability_s v) const { return abilities[v]; }
+	int				getcarry() const;
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;

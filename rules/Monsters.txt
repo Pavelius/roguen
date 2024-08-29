@@ -129,7 +129,7 @@ RandomBogMonsters
  chance GiantLizard+2 ShamblingMound
 RandomCaveMonster
  chance Bear GiantLizard DireWolf
-RandomCommoner
+StartVillagePopulation
  chance Farmer+2 FarmerFemale+2 SmallBoy SmallGirl Theif
 RandomRescueObject
  chance Farmer+2 FarmerFemale+2 SmallBoy SmallGirl

@@ -9,7 +9,7 @@ enum feat_s : unsigned char {
 	AcidDamage, FireDamage, ColdDamage, IllnessDamage,
 	IgnoreWeb, Fly, LightSource, Regeneration, ManaRegeneration,
 	ElfBlood, DwarfBlood, OrkBlood,
-	FastMove, SlowMove, FastAttack, SlowAttack, FastAction, SlowAction,
+	FastMove, SlowMove, FastAttack, SlowAttack, FastAction, SlowAction, Encumbered,
 	WeakPoison, StrongPoison, DeathPoison, PoisonResistance, PoisonImmunity,
 	AcidResistance, AcidImmunity, ColdResistance, ColdImmunity, DeathResistance, DeathImmunity,
 	DiseaseResist, DiseaseImmunity, FireResistance, FireImmunity, StunResistance, StunImmunity,

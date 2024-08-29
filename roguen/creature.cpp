@@ -455,7 +455,7 @@ static int additional_skill_points(int v) {
 
 static void advance_value(variant v) {
 	if(v.iskind<itemi>())
-		player->wearable::equip(bsdata<itemi>::elements + v.value, v.counter);
+		player->equip(bsdata<itemi>::elements + v.value, v.counter);
 	else if(v.iskind<feati>())
 		ftscript<feati>(v.value, v.counter);
 	else if(v.iskind<modifieri>())
@@ -1385,6 +1385,38 @@ bool creature::isfollowmaster() const {
 	return true;
 }
 
+void creature::equip(const itemi* pi, int count) {
+	item it;
+	it.create(pi, count);
+	it.createpower(0);
+	equip(it);
+}
+
+void creature::equip(item& v) {
+	if(!v)
+		return;
+	for(auto i = MeleeWeapon; i <= Legs; i = (wear_s)(i + 1)) {
+		if(wears[i])
+			continue;
+		if(!v.canequip(i)) // Slot is free?
+			continue;
+		if(!isallow(v)) // Skills requipments?
+			continue;
+		wears[i] = v;
+		v.clear();
+		break;
+	}
+	additem(v);
+}
+
+void creature::additem(item& v) {
+	wearable::additem(v);
+	if(v) {
+		if(ispresent())
+			v.drop(getposition());
+	}
+}
+
 static const sitei* get_site(creature* p) {
 	return p->getroom() ? &p->getroom()->geti() : 0;
 }
@@ -1500,6 +1532,29 @@ static void update_wears() {
 	}
 }
 
+static void update_encumbrance() {
+	auto item_weight = player->wearstotal(&item::getweight);
+	auto item_max_carry = player->getcarry();
+	if(item_weight <= item_max_carry)
+		player->feats_active.remove(Encumbered);
+	else {
+		player->feats_active.set(Encumbered);
+		if(player->feats_active.is(FastMove))
+			player->feats_active.remove(FastMove);
+		else
+			player->feats_active.set(SlowMove);
+		auto item_carry_increment = item_max_carry / 10;
+		if(item_carry_increment) {
+			auto index = (item_weight - item_max_carry) / item_carry_increment;
+			if(index > 40)
+				index = 40;
+			player->abilities[Dodge] -= index;
+			player->abilities[WeaponSkill] -= index;
+			player->abilities[BalisticSkill] -= index;
+		}
+	}
+}
+
 static void update_room_abilities() {
 	auto p = player->getroom();
 	if(!p)
@@ -1520,6 +1575,7 @@ void creature::update() {
 	update_basic(abilities, basic.abilities);
 	update_boost(feats_active, this);
 	update_wears();
+	update_encumbrance();
 	update_room_abilities();
 	update_abilities();
 	update_negative_skills();
@@ -1764,7 +1820,7 @@ creature* player_create(point m, variant kind, bool female) {
 	player->abilities[Reputation] = player->basic.abilities[Reputation];
 	player->place(m);
 	player->finish();
-	if(player->get(Reputation)<=-40)
+	if(player->get(Reputation) <= -40)
 		player->set(Enemy);
 	if(player->is(PlaceOwner)) {
 		auto pr = player->getroom();
@@ -1823,4 +1879,11 @@ int	creature::getmaximum(ability_s v) const {
 
 int get_maximum_faith(creature* p) {
 	return p->get(Religion) / 4;
+}
+
+int	creature::getcarry() const {
+	auto v = get(Strenght) * 200 + get(CarryCapacity) * 200;
+	if(v < 500)
+		v = 500;
+	return v;
 }

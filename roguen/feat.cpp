@@ -31,6 +31,7 @@ BSDATA(feati) = {
 	{"SlowAttack"},
 	{"FastAction"},
 	{"SlowAction"},
+	{"Encumbered"},
 	{"WeakPoison"},
 	{"StrongPoison"},
 	{"DeathPoison"},
