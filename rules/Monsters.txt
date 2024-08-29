@@ -2,49 +2,28 @@
 
 Bear avatar(360) friendly(-10) rest(Meat)
  abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) Hits(40) Level(3)
- use Bite
+ use Bite Reputation-40
 Boar avatar(376) friendly(-20) rest(Meat)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
- use Bite
-ChaosHydra avatar(339) friendly(-20) rest(DeadBody)
- abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50) Level(5)
- use Bite Regeneration
-CityGuard avatar(543) rest(DeadBody)
- abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10) Level(2)
- use Spear ChainArmor SomeCoins+3
+ use Bite Reputation-40
 DireBoar avatar(377) friendly(-20) rest(Meat)
  abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(35) Hits(40) Armor(1) Level(4)
- use Bite
+ use Bite Reputation-40
 DireWolf avatar(52) friendly(-20) rest(DeadBody)
  abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(35) Hits(30) Armor(1) Level(3)
- use Bite
+ use Bite Reputation-40
 Dog avatar(292) rest(DeadBody)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) Hits(4)
- use Bite Female
+ use Bite Female Reputation-20
 GiantBat avatar(155) friendly(-10) rest(DeadBody)
  abilities Strenght(10) Dexterity(30) Wits(2) WeaponSkill(20) Hits(4)
- use Bite
+ use Bite Reputation-40
 GiantLizard avatar(220) friendly(-20) rest(DeadBody)
  abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4) Level(3)
- use Bite
+ use Bite Reputation-40
 GiantSpider avatar(591) friendly(-20) rest(DeadBody)
  abilities Strenght(35) Dexterity(20) Wits(6) WeaponSkill(30) Hits(20) Level(5)
- use Bite StrongPoison IgnoreWeb Web+4
-Ghoul avatar(305) friendly(-20) rest(DeadBody)
- abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
- use Claws Undead PoisonImmunity
-Goblin avatar(0) friendly(-30) rest(DeadBody)
- abilities Strenght(20) Dexterity(40) Wits(14) WeaponSkill(25) Hits(5)
- use Dagger SomeCoins-20
-GoblinFemale avatar(1) parent(Goblin) friendly(-30) rest(DeadBody)
- abilities Strenght(15) Dexterity(40) Wits(15) WeaponSkill(20) Hits(4)
- use Dagger Female SomeCoins-10
-OrcWarrior avatar(2) friendly(-30) rest(DeadBody)
- abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(25) Hits(10) Level(2)
- use BruteSword LeatherArmor Darkvision SomeCoins
-Outsider avatar(121) friendly(-20) rest(DeadBody)
- use Tentacle
- abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(3) Level(3)
+ use Bite StrongPoison IgnoreWeb Web+4 Reputation-40
 Rabbit avatar(7) rest(DeadBody) rest(Meat)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
  use Bite
@@ -53,19 +32,72 @@ RabbitFemale avatar(8) parent(Rabbit) rest(Meat)
  use Bite
 Rat avatar(293) friendly(-10) rest(DeadBody)
  abilities Strenght(5) Dexterity(30) Wits(3) WeaponSkill(15) Hits(2)
- use Bite
-ShamblingMound avatar(9) friendly(-20) rest(DeadBody)
- abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(30) Hits(30) Level(4)
- use Bite
-Skeleton avatar(574) friendly(-20) rest(Bones)
- abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(20) Hits(8) Armor(1) Level(1)
- use Spear Darkvision Undead PoisonImmunity
-Zombie avatar(101) friendly(-20) rest(DeadBody)
- abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(15) Hits(16) Level(2)
- use Dagger Darkvision Undead PoisonImmunity
+ use Bite Reputation-20
 Wolf avatar(20) friendly(-10) rest(DeadBody)
  abilities Strenght(20) Dexterity(30) Wits(3) WeaponSkill(25) Hits(9) Level(1)
- use Bite
+ use Bite Reputation-40
+
+Ghoul avatar(305) friendly(-20) rest(DeadBody)
+ abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
+ use Claws Undead PoisonImmunity Reputation-80
+Skeleton avatar(574) friendly(-20) rest(Bones)
+ abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(20) Hits(8) Armor(1) Level(1)
+ use Spear Darkvision Undead PoisonImmunity Reputation-80
+Zombie avatar(101) friendly(-20) rest(DeadBody)
+ abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(15) Hits(16) Level(2)
+ use Dagger Darkvision Undead PoisonImmunity Reputation-80
+
+ChaosHydra avatar(339) friendly(-20) rest(DeadBody)
+ abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50) Level(5)
+ use Bite Regeneration Reputation-60
+Goblin avatar(0) friendly(-30) rest(DeadBody)
+ abilities Strenght(20) Dexterity(40) Wits(14) WeaponSkill(25) Hits(5)
+ use Dagger SomeCoins-20 OrkBlood+1 Reputation-60
+GoblinFemale avatar(1) parent(Goblin) friendly(-30) rest(DeadBody)
+ abilities Strenght(15) Dexterity(40) Wits(15) WeaponSkill(20) Hits(4)
+ use Dagger Female SomeCoins-10 OrkBlood+1 Reputation-60
+OrcWarrior avatar(2) friendly(-30) rest(DeadBody)
+ abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(25) Hits(10) Level(2)
+ use BruteSword LeatherArmor Darkvision SomeCoins OrkBlood+1 Reputation-60
+Outsider avatar(121) friendly(-20) rest(DeadBody)
+ abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(3) Level(3)
+ use Tentacle Reputation-60
+ShamblingMound avatar(9) friendly(-20) rest(DeadBody)
+ abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(30) Hits(30) Level(4)
+ use Bite Reputation-60
+
+Bartender avatar(51) unique(1) rest(DeadBody)
+ abilities Strenght(30) Dexterity(15) Wits(25) WeaponSkill(25) Hits(10)
+ use PlaceOwner KnowRumor SomeCoins+5
+CityGuard avatar(543) rest(DeadBody)
+ abilities Strenght(30) Dexterity(30) Wits(30) WeaponSkill(40) Hits(10) Level(2)
+ use Spear ChainArmor SomeCoins+3 Reputation+20
+Shopkeeper avatar(581) unique(1) rest(DeadBody)
+ abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(20) Hits(5)
+ use PlaceOwner GP+50 SomeCoins+30
+Theif avatar(313) rest(DeadBody)
+ abilities Strenght(30) Dexterity(40) Wits(30) WeaponSkill(30) Hits(12) Thievery(15)
+ use SomeCoins+2 Reputation-5
+TheifFemale avatar(314) rest(DeadBody)
+ abilities Strenght(26) Dexterity(40) Wits(32) WeaponSkill(30) Hits(10)
+ use Female SomeCoins+2 Reputation-5
+Farmer avatar(273) rest(DeadBody)
+ abilities Strenght(30) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
+ use KnowLocation SomeCoins
+FarmerFemale avatar(276) rest(DeadBody)
+ abilities Strenght(26) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
+ use Female KnowLocation SomeCoins
+PriestOfTheOne avatar(118) unique(1) rest(DeadBody)
+ abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(30) Hits(8)
+ use PlaceOwner SomeCoins+20 Reputation+40
+SmallBoy avatar(274) rest(DeadBody)
+ abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
+SmallGirl avatar(275) parent(SmallBoy) rest(DeadBody)
+ abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
+ use Female
+VillageElder avatar(302) rest(DeadBody)
+ abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(20) Hits(8)
+ use Reputation+20
 
 #RandomTable
 
@@ -90,35 +122,6 @@ Necromant avatar(43) friendly(-20) minions(UndeadHorde) rest(DeadBody)
 Minotaur avatar(580) friendly(-20) minions(GoblinoidTribe) rest(DeadBody)
  abilities Strenght(60) Dexterity(30) Wits(11) WeaponSkill(40) Hits(25) Level(6)
  use Sword
-
-Bartender avatar(51) unique(1) rest(DeadBody)
- abilities Strenght(30) Dexterity(15) Wits(25) WeaponSkill(25) Hits(10)
- use PlaceOwner KnowRumor SomeCoins+5
-Shopkeeper avatar(581) unique(1) rest(DeadBody)
- abilities Strenght(15) Dexterity(20) Wits(25) WeaponSkill(20) Hits(5)
- use PlaceOwner GP+50 SomeCoins+30
-Theif avatar(313) rest(DeadBody)
- abilities Strenght(30) Dexterity(40) Wits(30) WeaponSkill(30) Hits(12) Thievery(15)
- use SomeCoins+2
-TheifFemale avatar(314) rest(DeadBody)
- abilities Strenght(26) Dexterity(40) Wits(32) WeaponSkill(30) Hits(10)
- use Female SomeCoins+2
-Farmer avatar(273) rest(DeadBody)
- abilities Strenght(30) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
- use KnowLocation SomeCoins
-FarmerFemale avatar(276) rest(DeadBody)
- abilities Strenght(26) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
- use Female KnowLocation SomeCoins
-PriestOfTheOne avatar(118) unique(1) rest(DeadBody)
- abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(30) Hits(8)
- use PlaceOwner SomeCoins+20
-SmallBoy avatar(274) rest(DeadBody)
- abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
-SmallGirl avatar(275) parent(SmallBoy) rest(DeadBody)
- abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
- use Female
-VillageElder avatar(302) rest(DeadBody)
- abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(20) Hits(8)
 
 #RandomTable
 
