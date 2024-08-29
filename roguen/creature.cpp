@@ -981,7 +981,11 @@ bool creature::ishuman() const {
 }
 
 static bool is_enemy(const creature* p1, const creature* p2) {
+	if(p1 == p2)
+		return false;
 	if(p1->getenemy() == p2)
+		return true;
+	if(p1->is(DwarfBlood) && p2->is(OrkBlood))
 		return true;
 	auto r = p1->getreputation();
 	if(r < 0)

@@ -1,6 +1,6 @@
 #include "bsreq.h"
 #include "draw.h"
-#include "dialog.h"
+//#include "dialog.h"
 #include "hotkey.h"
 #include "keyname.h"
 #include "log.h"

@@ -1,7 +1,6 @@
 #include "answers.h"
 #include "areapiece.h"
 #include "bsreq.h"
-#include "dialog.h"
 #include "draw.h"
 #include "draw_object.h"
 #include "game.h"
@@ -22,6 +21,7 @@
 #include "textscript.h"
 #include "timer.h"
 #include "visualeffect.h"
+#include "widget.h"
 
 using namespace draw;
 
@@ -819,10 +819,28 @@ static void afterpaint() {
 		paint_actions();
 }
 
+static void pause_keys() {
+	if(hot.key == KeySpace || hot.key == KeyEscape)
+		execute(buttoncancel);
+}
+
+int choose_dialog(fnevent proc) {
+	while(ismodal()) {
+		paintstart();
+		fillform();
+		setoffset(metrics::padding, metrics::padding);
+		proc();
+		pause_keys();
+		paintfinish();
+		domodal();
+	}
+	return getresult();
+}
+
 static void execute_hotkey() {
 	auto pn = (hotkey*)hot.object;
-	if(pn->data.iskind<dialogi>())
-		bsdata<dialogi>::elements[pn->data.value].open();
+	if(pn->data.iskind<widget>())
+		choose_dialog(bsdata<widget>::elements[pn->data.value].proc);
 	else if(pn->data.iskind<script>())
 		bsdata<script>::elements[pn->data.value].proc(pn->data.counter);
 }
@@ -1157,11 +1175,6 @@ static void small_header(const char* format) {
 	fore = push_fore;
 }
 
-static void pause_keys() {
-	if(hot.key == KeySpace || hot.key == KeyEscape)
-		execute(buttoncancel);
-}
-
 static void paint_legends(point origin, int z) {
 	auto push_caret = caret;
 	auto push_fore = fore;
@@ -1433,8 +1446,8 @@ int start_application(fnevent proc) {
 	return 0;
 }
 
-BSDATA(dialogi) = {
+BSDATA(widget) = {
 	{"ShowMinimap", show_area},
 	{"ShowCharsheet", show_charsheet},
 };
-BSDATAF(dialogi)
+BSDATAF(widget)

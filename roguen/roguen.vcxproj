@@ -165,7 +165,6 @@
     <ClCompile Include="array.cpp" />
     <ClCompile Include="locale.cpp" />
     <ClCompile Include="dataset.cpp" />
-    <ClCompile Include="dialog.cpp" />
     <ClCompile Include="dice.cpp" />
     <ClCompile Include="direction.cpp" />
     <ClCompile Include="direction_req.cpp" />
@@ -273,7 +272,6 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="colori.h" />
     <ClInclude Include="craft.h" />
-    <ClInclude Include="dialog.h" />
     <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="filter.h" />

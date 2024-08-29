@@ -291,9 +291,6 @@
     <ClCompile Include="wearable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="dialog.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="monster.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -559,9 +556,6 @@
     </ClInclude>
     <ClInclude Include="wearable.h">
       <Filter>Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="dialog.h">
-      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="monster.h">
       <Filter>Logic</Filter>

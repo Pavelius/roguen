@@ -1,7 +1,6 @@
 #include "areapiece.h"
 #include "bsreq.h"
 #include "craft.h"
-#include "dialog.h"
 #include "filter.h"
 #include "hotkey.h"
 #include "global.h"
@@ -18,7 +17,6 @@
 #include "visualeffect.h"
 #include "widget.h"
 
-NOBSDATA(buttoni)
 NOBSDATA(color)
 NOBSDATA(dice)
 NOBSDATA(framerange)
@@ -53,10 +51,6 @@ BSMETA(areapiece) = {
 BSMETA(areafi) = {
 	BSREQ(id),
 	{}};
-BSMETA(buttoni) = {
-	BSREQ(id),
-	BSREQ(key),
-	{}};
 BSMETA(crafti) = {
 	BSREQ(id),
 	BSREQ(elements),
@@ -66,9 +60,6 @@ BSMETA(creature) = {
 	{}};
 BSMETA(color) = {
 	BSREQ(r), BSREQ(g), BSREQ(b), BSREQ(a),
-	{}};
-BSMETA(dialogi) = {
-	BSREQ(id),
 	{}};
 BSMETA(dice) = {
 	BSREQ(min),
@@ -170,6 +161,9 @@ BSMETA(visualeffect) = {
 BSMETA(weari) = {
 	BSREQ(id),
 	{}};
+BSMETA(widget) = {
+	BSREQ(id),
+	{}};
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Ability", VAR(abilityi), 1, 0, ftscript<abilityi>, fttest<abilityi>},
@@ -178,7 +172,6 @@ BSDATA(varianti) = {
 	{"Craft", VAR(crafti), 1, 0, ftscript<crafti>},
 	{"Creature", VAR(creature), 0},
 	{"Charname", VAR(charname), 2, 0, 0, 0, read_charname},
-	{"Dialog", VAR(dialogi), 1, 0, ftscript<dialogi>},
 	{"Feat", VAR(feati), 1, 0, ftscript<feati>, fttest<feati>},
 	{"Feature", VAR(featurei), 1, 0, ftscript<featurei>},
 	{"Filter", VAR(filteri), 1, 0, ftscript<filteri>, fttest<filteri>},
@@ -206,5 +199,6 @@ BSDATA(varianti) = {
 	{"Trigger", VAR(trigger), 3},
 	{"Variant", VAR(varianti), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
+	{"Widget", VAR(widget), 1, 0, ftscript<widget>},
 };
 BSDATAF(varianti)

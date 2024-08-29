@@ -3,7 +3,6 @@
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
-#include "dialog.h"
 #include "filter.h"
 #include "functor.h"
 #include "hotkey.h"
@@ -29,6 +28,7 @@
 #include "triggern.h"
 #include "indexa.h"
 #include "zcopy.h"
+#include "widget.h"
 
 struct speechi;
 
@@ -45,6 +45,7 @@ void open_manual(const char* manual_header, const char* manual_content);
 void visualize_images(res pid, point size, point offset);
 
 int choose_indecies(const indexa& source, const char* header, bool cancel);
+int choose_dialog(fnevent proc);
 
 const char* getlog();
 
@@ -1093,8 +1094,8 @@ static void placement(rect rc, areamap::fnset proc, int v, int random_count) {
 	}
 }
 
-template<> void ftscript<dialogi>(int value, int counter) {
-	bsdata<dialogi>::elements[value].open();
+template<> void ftscript<widget>(int value, int counter) {
+	choose_dialog(bsdata<widget>::elements[value].proc);
 }
 
 template<> void ftscript<speechi>(int value, int counter) {
