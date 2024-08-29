@@ -1019,6 +1019,7 @@ void* answers::choose() const {
 	}
 	screen.restore();
 	::console.clear();
+	last_tick_message = getcputime();
 	return (void*)getresult();
 }
 

@@ -1057,7 +1057,7 @@ static void add_room_item(const itemi* pe, int count = 1, int chance_power = 0) 
 	it.createpower(chance_power);
 	it.createmagical();
 	add_statistic(it);
-	it.drop({PlacementRoom, (short)room_id});
+	it.drop({PlacementRoomForBuy, (short)room_id});
 }
 
 static void add_item(item it) {
@@ -1651,12 +1651,12 @@ static void chatting() {
 	if(player->ishuman()) {
 		auto monster = opponent->getmonster();
 		if(monster) {
-			if(talk_opponent(monster->id, 0))
+			if(talk_opponent(monster->id))
 				return;
 		}
 		auto room = opponent->getroom();
 		if(room) {
-			if(talk_opponent(room->geti().id, 0))
+			if(talk_opponent(room->geti().id))
 				return;
 		}
 		if(speech_need())
@@ -1688,7 +1688,7 @@ static void test_rumor(int bonus) {
 	player->speechrumor();
 }
 
-static bool payment(creature* player, creature* keeper, const char* object, int coins) {
+bool payment(creature* player, creature* keeper, const char* object, int coins) {
 	if(player->ishuman()) {
 		if(answers::console)
 			answers::console->clear();

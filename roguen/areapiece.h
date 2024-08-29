@@ -7,7 +7,7 @@
 #pragma once
 
 enum special_placementn : short {
-	PlacementRoom = -1000,
+	PlacementRoomForBuy = -1000,
 };
 
 struct areapiece : areaheadi, areamap, timemanage {

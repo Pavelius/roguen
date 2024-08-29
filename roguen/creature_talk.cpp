@@ -78,7 +78,9 @@ static void talk_entry(const phrasei* p) {
 	}
 }
 
-bool talk_opponent(const char* id, fncommand proc) {
+void talk_apply_answer(void* object);
+
+bool talk_opponent(const char* id) {
 	if(!opponent || !player)
 		return false;
 	if(!opponent->ishuman() && !player->ishuman())
@@ -86,7 +88,10 @@ bool talk_opponent(const char* id, fncommand proc) {
 	auto current_talk = bsdata<talki>::find(id);
 	if(!current_talk)
 		return false;
-	pushvalue push_proc(talk_proc, proc);
+	auto push_proc = talk_proc;
+	if(!talk_proc)
+		talk_proc = talk_apply_answer;
 	talk_entry(current_talk->find(1));
+	talk_proc = push_proc;
 	return true;
 }

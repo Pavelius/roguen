@@ -41,7 +41,7 @@ int	roomi::getseed() const {
 }
 
 point roomi::getitems() const {
-	return {PlacementRoom, (short)area->rooms.indexof(this)};
+	return {PlacementRoomForBuy, (short)area->rooms.indexof(this)};
 }
 
 const char* roomi::getname() const {

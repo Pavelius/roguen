@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "creature.h"
 #include "functor.h"
 #include "game.h"
@@ -101,29 +102,40 @@ static void say_need(const char* suffix, ...) {
 	pause();
 }
 
-static void apply_answer(void* pv) {
-	if(!last_need)
-		return;
-	if(player->iswear(pv)) {
+bool payment(creature* player, creature* keeper, const char* object, int coins);
+
+void talk_apply_answer(void* pv) {
+	if(area->items.have(pv)) {
+		auto pi = (itemground*)pv;
+		if(pi->position.x == PlacementRoomForBuy) {
+			auto cost = pi->getcostall();
+			if(payment(player, opponent, pi->getfullname(0), cost)) {
+				item it = *pi;
+				player->additem(it);
+			}
+		}
+	} else if(player->iswear(pv)) {
 		auto pi = (item*)pv;
 		auto count = pi->getcount();
-		auto need_count = getneedcount(*pi, last_need->geti().need);
-		auto rest_count = getrestcount(last_need->score, need_count);
-		if(count > rest_count)
-			count = rest_count;
-		if(count > 0) {
-			auto last_percent = getprogress(count, need_count);
-			last_need->score += last_percent;
-			if(last_need->score >= 100)
-				last_need->set(NeedCompleted);
-			const char* item_name = pi->getname();
-			player->logs(getnm("YouGiveItemTo"), item_name, opponent->getname(), count);
-			pi->setcount(pi->getcount() - count);
-			last_coins = last_need->geti().coins * last_percent / 100;
-			player->addcoins(last_coins);
-			say_thank_you(item_name, count, last_coins);
-			if(last_need->is(NeedCompleted))
-				say_need("Completed");
+		if(last_need) {
+			auto need_count = getneedcount(*pi, last_need->geti().need);
+			auto rest_count = getrestcount(last_need->score, need_count);
+			if(count > rest_count)
+				count = rest_count;
+			if(count > 0) {
+				auto last_percent = getprogress(count, need_count);
+				last_need->score += last_percent;
+				if(last_need->score >= 100)
+					last_need->set(NeedCompleted);
+				const char* item_name = pi->getname();
+				player->logs(getnm("YouGiveItemTo"), item_name, opponent->getname(), count);
+				pi->setcount(pi->getcount() - count);
+				last_coins = last_need->geti().coins * last_percent / 100;
+				player->addcoins(last_coins);
+				say_thank_you(item_name, count, last_coins);
+				if(last_need->is(NeedCompleted))
+					say_need("Completed");
+			}
 		}
 	}
 }
@@ -174,5 +186,5 @@ bool speech_need() {
 	last_need = find_need(opponent);
 	if(!last_need)
 		return false;
-	return talk_opponent("NeedTalk", apply_answer);
+	return talk_opponent("NeedTalk");
 }
