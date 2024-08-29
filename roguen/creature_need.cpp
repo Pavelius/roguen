@@ -1,6 +1,7 @@
 #include "areapiece.h"
 #include "creature.h"
 #include "functor.h"
+#include "modifier.h"
 #include "game.h"
 #include "greatneed.h"
 #include "pushvalue.h"
@@ -107,11 +108,20 @@ bool payment(creature* player, creature* keeper, const char* object, int coins);
 void talk_apply_answer(void* pv) {
 	if(area->items.have(pv)) {
 		auto pi = (itemground*)pv;
-		if(pi->position.x == PlacementRoomForBuy) {
+		if(pi->position.x == get_token(InRoomToBuy)) {
 			auto cost = pi->getcostall();
 			if(payment(player, opponent, pi->getfullname(0), cost)) {
 				item it = *pi;
 				player->additem(it);
+			}
+		} else if(pi->position.x == get_token(InRoomToBuySpecial)) {
+			auto cost = pi->getcost();
+			if(payment(player, opponent, pi->getname(), cost)) {
+				item it = *pi;
+				it.setcount(1);
+				player->additem(it);
+				if(!it)
+					pi->setcount(pi->getcount() - 1);
 			}
 		}
 	} else if(player->iswear(pv)) {

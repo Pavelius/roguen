@@ -7,7 +7,7 @@ StealCoinsFail
 
 #SiteSkill
 
-GatherInformation skill(Wits) keyid("C")
+ChatSomeone skill(Wits) keyid("C")
  effect SelectNeutralCreatures FilterClose ChooseTarget ForEachOpponent Chatting
 OpenDoorLock skill(Thievery) tool(Lockpick)
  effect SelectFeatures Filter LockedDoor ForEachFeature RollAction Activate GainExperience+1

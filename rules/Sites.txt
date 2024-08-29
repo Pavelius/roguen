@@ -47,7 +47,7 @@ MysteryHouse walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Webbed+4 Blooded+3 Bones+4 MonsterSkull+1
  feats Notable
 GeneralStore walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape Shopkeeper+1 InRoom Ration LoafOfBread Sausage
+ landscape Shopkeeper+1 InRoomToBuy Ration LoafOfBread Sausage+3
  feats Notable
 Tavern walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Bartender+1 CreateHero+2

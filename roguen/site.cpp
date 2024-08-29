@@ -2,6 +2,7 @@
 #include "areapiece.h"
 #include "creature.h"
 #include "game.h"
+#include "modifier.h"
 #include "site.h"
 #include "speech.h"
 
@@ -40,8 +41,12 @@ int	roomi::getseed() const {
 	return rc.x1 * 1 + rc.y1 * 2 + rc.x2 * 3 + rc.y2 * 4;
 }
 
-point roomi::getitems() const {
-	return {PlacementRoomForBuy, (short)area->rooms.indexof(this)};
+point roomi::getsellitems() const {
+	return {get_token(InRoomToBuy), (short)area->rooms.indexof(this)};
+}
+
+point roomi::getspecialsellitems() const {
+	return {get_token(InRoomToBuySpecial), (short)area->rooms.indexof(this)};
 }
 
 const char* roomi::getname() const {

@@ -1052,12 +1052,13 @@ static void add_room_item(const itemi* pe, int count = 1, int chance_power = 0) 
 	it.create(pe, count);
 	if(area->level)
 		chance_power += iabs(area->level) * 5;
+	auto m = InRoomToBuySpecial;
 	if(!count)
-		it.setpersonal(1);
+		m = InRoomToBuy;
 	it.createpower(chance_power);
 	it.createmagical();
 	add_statistic(it);
-	it.drop({PlacementRoomForBuy, (short)room_id});
+	it.drop({get_token(m), (short)room_id});
 }
 
 static void add_item(item it) {
@@ -1161,7 +1162,7 @@ template<> void ftscript<itemi>(int value, int counter) {
 	switch(modifier) {
 	case InPlayerBackpack: add_item(bsdata<itemi>::elements + value, count); break;
 	case InPosition: add_item(last_index, bsdata<itemi>::elements + value, count); break;
-	case InRoom: add_room_item(bsdata<itemi>::elements + value, count); break;
+	case InRoomToBuy: add_room_item(bsdata<itemi>::elements + value, count); break;
 	default:
 		for(auto i = 0; i < count; i++)
 			add_item(randomft(last_rect), bsdata<itemi>::elements + value);
@@ -2778,7 +2779,7 @@ static void add_items_for_sale(int bonus) {
 	auto room = opponent->getroom();
 	if(!room)
 		return;
-	auto index = room->getitems();
+	auto index = room->getsellitems();
 	auto format = getnm("AskBuyItem");
 	for(auto& e : area->items) {
 		if(e.position == index)

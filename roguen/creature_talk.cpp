@@ -1,3 +1,4 @@
+#include "areapiece.h"
 #include "creature.h"
 #include "pushvalue.h"
 #include "script.h"
@@ -78,7 +79,9 @@ static void talk_entry(const phrasei* p) {
 	}
 }
 
-void talk_apply_answer(void* object);
+bool payment(creature* player, creature* keeper, const char* object, int coins);
+
+void talk_apply_answer(void* pv);
 
 bool talk_opponent(const char* id) {
 	if(!opponent || !player)

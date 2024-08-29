@@ -53,7 +53,8 @@ public:
 	point			center() const { return {(short)(rc.x1 + rc.width() / 2), (short)(rc.y1 + rc.height() / 2)}; }
 	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
 	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
-	point			getitems() const;
+	point			getsellitems() const;
+	point			getspecialsellitems() const;
 	void			getrumor(stringbuilder& sb) const;
 	const char*		getname() const;
 	int				getseed() const;
