@@ -42,6 +42,7 @@ struct array {
 	void setup(size_t size);
 	void swap(int i1, int i2);
 	void reserve(unsigned count);
+	void repack(unsigned& start, unsigned count);
 private:
 	void grow(unsigned offset, size_t delta);
 	void shrink(unsigned offset, size_t delta);

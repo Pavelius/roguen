@@ -317,3 +317,13 @@ const char* array::addus(const char* element, unsigned count) {
 	this->count += count + 1;
 	return pr;
 }
+
+void array::repack(unsigned& start, unsigned count) {
+	if(!count || (start + count != this->count))
+		return;
+	auto i = indexof(findu(ptr(start), count * element_size));
+	if(i==-1 || (unsigned)i>=start)
+		return;
+	start = i;
+	this->count = start + count;
+}
