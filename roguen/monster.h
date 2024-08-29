@@ -9,13 +9,13 @@ struct itemi;
 
 struct monsteri : nameable, statable {
 	unsigned short	avatar;
-	char			friendly;
 	bool			unique;
 	variants		use;
 	monsteri*		parent;
 	randomizeri*	minions;
 	itemi*			rest;
 	monsteri*		ally() const;
+	bool			islower(ability_s v, int value) const;
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
-	static bool		isboss(const void* p) { return ((monsteri*)p)->minions != 0; }
 };
+bool is_boss(const void* p);

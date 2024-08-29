@@ -23,7 +23,7 @@ BSDATAC(quest, 256)
 
 static monsteri* random_boss() {
 	collection<monsteri> source;
-	source.select(monsteri::isboss);
+	source.select(is_boss);
 	return source.random();
 }
 

@@ -15,7 +15,7 @@
 #include "wearable.h"
 
 class creature : public wearable, public statable, public spellable, public ownerable, public receipti {
-	unsigned short	room_id, enemy_id;
+	unsigned short	room_id;
 	void			update_abilities();
 public:
 	int				experience, wait_seconds;
@@ -36,7 +36,6 @@ public:
 	void			finish();
 	void			fixappear();
 	int				get(ability_s v) const { return abilities[v]; }
-	creature*		getenemy() const;
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;

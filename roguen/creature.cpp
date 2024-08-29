@@ -983,8 +983,6 @@ bool creature::ishuman() const {
 static bool is_enemy(const creature* p1, const creature* p2) {
 	if(p1 == p2)
 		return false;
-	if(p1->getenemy() == p2)
-		return true;
 	if(p1->is(DwarfBlood) && p2->is(OrkBlood))
 		return true;
 	auto r = p1->getreputation();
@@ -1770,10 +1768,8 @@ creature* player_create(point m, variant kind, bool female) {
 	}
 	player->place(m);
 	player->finish();
-	if(pm) {
-		if(pm->friendly <= -10)
-			player->set(Enemy);
-	}
+	if(player->get(Reputation)<=-40)
+		player->set(Enemy);
 	if(player->is(PlaceOwner)) {
 		auto pr = player->getroom();
 		if(pr)
@@ -1835,8 +1831,4 @@ bool ispresent(const void* p) {
 
 int get_maximum_faith(creature* p) {
 	return p->get(Religion) / 4;
-}
-
-creature* creature::getenemy() const {
-	return (enemy_id != 0xFFFF) ? bsdata<creature>::elements + enemy_id : 0;
 }

@@ -113,7 +113,6 @@ BSMETA(monsteri) = {
 	BSREQ(unique),
 	BSREQ(use),
 	BSREQ(avatar),
-	BSREQ(friendly),
 	BSREQ(parent),
 	BSREQ(minions),
 	BSREQ(rest),

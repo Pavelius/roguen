@@ -1821,7 +1821,7 @@ static void test_arena(int bonus) {
 	an.clear();
 	auto count = 0;
 	for(auto& e : bsdata<monsteri>()) {
-		if(e.friendly <= -5)
+		if(e.islower(Reputation, -30))
 			an.add(&e, e.getname());
 	}
 	pushvalue push_column(answers::column_count);
