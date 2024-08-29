@@ -116,10 +116,6 @@ static unsigned char getfow(point m) {
 	return r;
 }
 
-void update_console_time() {
-	// last_tick_message = getcputime();
-}
-
 void next_phase(fnevent proc) {
 	setnext(proc);
 }
@@ -802,13 +798,20 @@ static void paint_message() {
 }
 
 static void reset_message() {
+	static unsigned last_console_size;
 	auto current_tick = getcputime();
-	if(!last_tick_message)
+	auto size = console.size();
+	if(!size)
+		return;
+	if(!last_tick_message || last_console_size < size) {
 		last_tick_message = current_tick;
+		last_console_size = size;
+	}
 	auto delay = (current_tick - last_tick_message);
 	if(delay >= 4000) {
-		last_tick_message = current_tick;
 		console.clear();
+		last_tick_message = current_tick;
+		last_console_size = 0;
 	}
 }
 

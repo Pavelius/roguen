@@ -26,7 +26,6 @@ bool last_roll_successed;
 bool allow_targets(const variants& conditions);
 bool apply_targets(const variants& conditions);
 void damage_item(item& it);
-void update_console_time();
 int getfloor();
 
 static void copy(statable& v1, const statable& v2) {
@@ -74,7 +73,6 @@ bool creature::speak(const char* action, const char* id, ...) const {
 	if(!format)
 		return false;
 	pushvalue push_player(player, const_cast<creature*>(this));
-	update_console_time();
 	sayv(console, format, xva_start(action));
 	return true;
 }
@@ -1573,7 +1571,6 @@ void creature::unlink() {
 bool creature::act(const char* action, const char* id, ...) const {
 	if(!ishuman() && !is(Visible))
 		return true;
-	update_console_time();
 	pushvalue push_player(player, const_cast<creature*>(this));
 	return actn(console, id, action, xva_start(id), ' ');
 }
@@ -1581,17 +1578,15 @@ bool creature::act(const char* action, const char* id, ...) const {
 bool creature::actp(const char* action, const char* id, ...) const {
 	if(!ishuman())
 		return true;
-	update_console_time();
 	pushvalue push_player(player, const_cast<creature*>(this));
 	return actn(console, id, action, xva_start(id), ' ');
 }
 
 void creature::say(const char* format, ...) const {
-	if(ishuman() || is(Visible)) {
-		update_console_time();
-		pushvalue push_player(player, const_cast<creature*>(this));
-		sayv(console, format, xva_start(format));
-	}
+	if(!ishuman() && !is(Visible))
+		return;
+	pushvalue push_player(player, const_cast<creature*>(this));
+	sayv(console, format, xva_start(format));
 }
 
 int	creature::getlos() const {

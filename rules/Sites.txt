@@ -142,7 +142,7 @@ AncientSite
  landscape Webbed+4 Bones+2
  loot RandomArtifact
 DarkSite
- sites DarkestRoom DarkestRoom-60 DarkestRoom-40
+ sites DarkestRoom DarkestRoom-50 DarkestRoom-30
 EvilSite
  sites UnholyPlace+2 UnholyPlace-60 UnholyPlace-40 UnholyAltarRoom-70
  loot Bones Stones+2

@@ -50,7 +50,6 @@ public:
 	const char*		end() const { return pe; }
 	char*			get() const { return p; }
 	static int		getgender(const char* s);
-	unsigned		getlenght() const { return p - pb; }
 	unsigned		getmaximum() const { return pe - pb - 1; }
 	bool			isempthy() const { return !pb || pb[0] == 0; }
 	bool			isfull() const { return p >= pe; }
@@ -61,6 +60,7 @@ public:
 	const char*		psstr(const char* p, char end_symbol);
 	const char*		psstrlf(const char* p);
 	void			set(char* v) { p = v; p[0] = 0; }
+	size_t			size() const { return p - pb; }
 	void			trimr();
 	void			upper();
 };
