@@ -129,6 +129,11 @@ static bool filter_cursed(const void* object) {
 	return p->iscursed();
 }
 
+static bool filter_human(const void* object) {
+	auto p = (creature*)object;
+	return p->ishuman();
+}
+
 static bool filter_blessed(const void* object) {
 	auto p = (item*)object;
 	return p->is(Blessed);
@@ -245,6 +250,7 @@ BSDATA(filteri) = {
 	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterIdentified", filter_identified, filter_items},
 	{"FilterFeature", filter_feature, match_targets},
+	{"FilterHuman", filter_human, match_targets},
 	{"FilterNotable", filter_notable, match_rooms},
 	{"FilterRoomMarked", filter_room_marked, match_rooms},
 	{"FilterThisRoom", filter_this_room, match_rooms},

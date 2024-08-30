@@ -8,7 +8,7 @@ StealCoinsFail
 #SiteSkill
 
 ChatSomeone skill(Wits) keyid("C")
- effect SelectNeutralCreatures FilterClose ChooseTarget ForEachOpponent Chatting
+ effect SelectNeutralCreatures FilterClose FilterHuman-1 ChooseTarget ForEachOpponent Chatting
 BuyItemsSomeone skill(Wits) keyid("H")
  effect MakeTrade
 OpenDoorLock skill(Thievery) tool(Lockpick)

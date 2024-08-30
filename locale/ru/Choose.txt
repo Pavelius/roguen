@@ -15,6 +15,7 @@ ChooseElbows: Выбирайте браслеты
 ChooseLegs: Выбирайте обувь
 
 ChooseAction: Выбирайте особое действие
+ChooseChatSomeone: С кем именно поговорить?
 ChooseImageSet: Выбирайте набор изображений
 ChooseMonsterToFight: Выбирайте монстра с которым хотите подраться
 ChooseSpell: Выбирайте заклинание

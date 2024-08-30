@@ -28,5 +28,5 @@ struct abilityi : nameable {
 extern ability_s last_ability;
 struct statable {
 	char		abilities[Drunk + 1];
-	void		add(ability_s i, int v = 1) { abilities[i] += v; }
+	void		add(ability_s i, int v, int minimal = -120, int maximal = 120);
 };

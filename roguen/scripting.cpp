@@ -97,24 +97,6 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
-static void add_safe(char& v, int bonus, int minimum = -100, int maximum = 100) {
-	bonus += v;
-	if(bonus < minimum)
-		bonus = minimum;
-	else if(bonus > maximum)
-		bonus = maximum;
-	v = bonus;
-}
-
-static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
-	bonus += player->abilities[v];
-	if(bonus < minimum)
-		bonus = minimum;
-	else if(bonus > maximum)
-		bonus = maximum;
-	player->abilities[v] = bonus;
-}
-
 static void fix_yellow(const char* format, int value) {
 	if(!value)
 		return;
@@ -129,6 +111,11 @@ static void fix_green(const char* format, int value) {
 
 static void fix_green(int value) {
 	player->fixvalue(value, ColorGreen, ColorRed);
+}
+
+static void clear_console() {
+	if(player && player->ishuman())
+		console.clear();
 }
 
 static int add_green(int current, int bonus, const char* format, int minimum = 0, int maximum = 120) {
@@ -1210,12 +1197,7 @@ template<> bool fttest<abilityi>(int value, int counter) {
 }
 template<> void ftscript<abilityi>(int value, int counter) {
 	last_ability = (ability_s)value;
-	counter += player->basic.abilities[value];
-	if(counter < -100)
-		counter = -100; // Minimum value of any non special ability
-	else if(counter > 100)
-		counter = 100; // Maximum value of any ability
-	player->basic.abilities[value] = counter;
+	player->basic.add((ability_s)value, counter);
 }
 
 template<> bool fttest<feati>(int value, int counter) {
@@ -1660,7 +1642,7 @@ static void chatting() {
 	}
 	if(opponent->istired()) {
 		opponent->speak("IAmTired");
-		add_safe(opponent->abilities[Mood], -1);
+		opponent->add(Mood, -1);
 		return;
 	}
 	if(player->ishuman()) {
@@ -1679,18 +1661,18 @@ static void chatting() {
 	}
 	if(opponent->is(KnowRumor) && d100() < 70) {
 		if(opponent->speechrumor()) {
-			add_safe(opponent->abilities[Mood], -xrand(2, 5));
+			opponent->add(Mood, -xrand(2, 5));
 			return;
 		}
 	}
 	if(player->ishuman() && opponent->is(KnowLocation) && d100() < 30) {
 		if(opponent->speechlocation()) {
-			add_safe(opponent->abilities[Mood], -xrand(2, 5));
+			opponent->add(Mood, -xrand(2, 5));
 			return;
 		}
 	}
 	opponent->speak("HowYouAre");
-	add_safe(opponent->abilities[Mood], -xrand(2, 4));
+	opponent->add(Mood, -xrand(2, 4));
 }
 
 static void chatting(int bonus) {
@@ -1705,7 +1687,7 @@ static void test_rumor(int bonus) {
 
 static bool payment(creature* player, creature* keeper, const char* object_name, int coins, const char* confirm = 0) {
 	if(confirm && player->ishuman()) {
-		console.clear();
+		clear_console();
 		player->actp(confirm, 0, object_name, coins);
 		if(!yesno(0))
 			return false;
@@ -1723,7 +1705,7 @@ static bool payment(creature* player, creature* keeper, const char* object_name,
 
 static bool selling(creature* player, creature* opponent, const char* object, int coins, const char* confirm = 0) {
 	if(confirm && player->ishuman()) {
-		console.clear();
+		clear_console();
 		player->actp(confirm, 0, object, coins);
 		if(!yesno(0))
 			return false;
@@ -1892,11 +1874,11 @@ static void show_logs(int bonus) {
 
 static void show_images(int bonus) {
 	static res source[] = {res::Monsters, res::Items};
-	answers an;
+	an.clear();
 	for(auto id : source)
 		an.add((void*)id, bsdata<resource>::elements[(int)id].name);
-	console.clear();
-	player->act("ChooseImageSet");
+	clear_console();
+	player->actp("ChooseImageSet");
 	auto id = (res)(int)an.choose();
 	switch(id) {
 	case res::Items:
@@ -2524,7 +2506,7 @@ static void add_anger(int bonus) {
 		bonus = 1;
 	if(bonus > 0)
 		bonus = xrand(bonus, bonus * 3);
-	add_safe(Mood, -bonus);
+	player->add(Mood, -bonus);
 }
 
 static bool have_object(variant v) {
@@ -2661,6 +2643,8 @@ static void make_alarm(feat_s feat, int range) {
 	for(auto& e : bsdata<creature>()) {
 		if(!e || !e.ispresent() || e.moveorder.x >= 0)
 			continue;
+		if(e.ishuman())
+			continue;
 		if(!e.is(feat))
 			continue;
 		if(start.range(e.getposition()) > range)
@@ -2687,11 +2671,11 @@ static void steal_opponent_coins(int bonus) {
 }
 
 static void add_reputation(int bonus) {
-	add_safe(Reputation, bonus);
+	player->add(Reputation, bonus);
 }
 
 static void add_mana(int bonus) {
-	add_safe(Mana, bonus, 0, player->basic.abilities[Mana]);
+	player->add(Mana, bonus, 0, player->basic.abilities[Mana]);
 }
 
 static void create_hero(int bonus) {
@@ -2848,7 +2832,7 @@ static void make_trade(int bonus) {
 	auto index = room->getsellitems();
 	auto index_special = room->getspecialsellitems();
 	auto payment_cost = player->getpaymentcost();
-	console.clear(); an.clear();
+	an.clear();
 	auto format = getnm("AskBuyItem");
 	for(auto& e : area->items) {
 		if(!e)
@@ -2862,6 +2846,7 @@ static void make_trade(int bonus) {
 		opponent->speak("NoBuyItem");
 		return;
 	}
+	clear_console();
 	opponent->speak("BuyItem");
 	an.add(0, getnm("NoWantTrade"));
 	auto pv = choose_answers();
@@ -2905,7 +2890,7 @@ static void make_selling(int bonus) {
 	add_items(items_unlimined, room->getsellitems());
 	add_items(items, room->getspecialsellitems());
 	auto payment_cost = player->getsellingcost();
-	console.clear(); an.clear();
+	an.clear();
 	auto format = getnm("AskSellItem");
 	for(auto& e : player->backpack()) {
 		if(!e)
@@ -2922,6 +2907,7 @@ static void make_selling(int bonus) {
 		opponent->speak("NoSellItem");
 		return;
 	}
+	clear_console();
 	opponent->speak("SellItem");
 	an.add(0, getnm("NoWantTrade"));
 	auto pv = choose_answers();
@@ -2951,13 +2937,13 @@ static int find_craft_index(variant v) {
 }
 
 static void add_drunk(int bonus) {
-	if(player->is(PoisonImmunity))
-		return;
 	if(bonus > 0) {
+		if(player->is(PoisonImmunity))
+			return;
 		if(player->is(PoisonResistance))
 			bonus = bonus / 2;
 	}
-	add_safe(Drunk, bonus, 0);
+	player->add(Drunk, bonus, 0);
 }
 
 static void add_craft(int bonus) {
@@ -2981,9 +2967,9 @@ static bool prohibited_action_effect(const char* id) {
 			continue;
 		if(!p->is(Ally) && !p->is(Enemy))
 			continue;
-		if(p == player)
+		if(p == player || p->ishuman())
 			continue;
-		add_safe(p->abilities[Mood], -xrand(3, 6));
+		p->add(Mood, -xrand(3, 6));
 		if(p->abilities[Mood] < 0 && d100() < -p->abilities[Mood] * 2)
 			make_hostile(p, player);
 		else {

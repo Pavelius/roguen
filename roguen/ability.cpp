@@ -52,6 +52,15 @@ ability_s abilityi::getindex() const {
 	return (ability_s)(this - bsdata<abilityi>::elements);
 }
 
+void statable::add(ability_s v, int bonus, int minimum, int maximum) {
+	bonus += abilities[v];
+	if(bonus < minimum)
+		bonus = minimum;
+	else if(bonus > maximum)
+		bonus = maximum;
+	abilities[v] = bonus;
+}
+
 //color_s negative_color(ability_s v) {
 //	switch(v) {
 //	case Hits: return ColorRed;
