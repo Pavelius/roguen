@@ -1781,7 +1781,13 @@ static void use_item(int bonus) {
 }
 
 static void view_stuff(int bonus) {
-	choose_stuff(Backpack);
+	auto pi = choose_stuff(Backpack);
+	if(!pi)
+		return;
+	char temp[1024]; stringbuilder sb(temp);
+	pi->getexamine(sb);
+	if(sb)
+		player->say(temp);
 }
 
 static void explore_area(int bonus) {
@@ -1843,6 +1849,13 @@ static void some_coins(int bonus) {
 	if(bonus <= 0)
 		return;
 	player->money += xrand(bonus * 50, bonus * 100);
+}
+
+static void test_enemy_change(int bonus) {
+	if(!opponent)
+		player->actp("YouDontSeeAnyEnemy");
+	game.setowner(opponent);
+	player->wait();
 }
 
 static void test_arena(int bonus) {
@@ -3091,6 +3104,7 @@ BSDATA(script) = {
 	{"StealOpponentCoins", steal_opponent_coins},
 	{"TransferCoins", transfer_coins, is_transfer_coins},
 	{"TestArena", test_arena},
+	{"TestEnemyChange", test_enemy_change},
 	{"TestRumor", test_rumor},
 	{"TestManual", test_manual},
 	{"ThrownAttack", attack_thrown},

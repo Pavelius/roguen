@@ -72,6 +72,7 @@ public:
 	int				geteffect() const;
 	const char*		getfullname(int price_percent = 0, bool uppercase = true) const;
 	const itemi&	geti() const { return bsdata<itemi>::elements[type]; }
+	void			getexamine(stringbuilder& sb) const;
 	void			getinfo(stringbuilder& sb) const;
 	short unsigned	getkind() const { return type; }
 	magicn			getmagic() const { return magic; }

@@ -1864,6 +1864,7 @@ creature* player_create(point m, variant kind, bool female) {
 	monsteri* pm = kind;
 	if(pm) {
 		copy(player->basic, *pm);
+		update_basic(player->abilities, player->basic.abilities);
 		advance_value(pm->use);
 		player->basic.abilities[LineOfSight] += 4;
 		random_name();

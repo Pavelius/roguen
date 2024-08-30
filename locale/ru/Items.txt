@@ -1,4 +1,5 @@
 ﻿Fist: Кулаки
+Bite: Укус
 
 CP: Медная монета
 SP: Серебрянная монета
@@ -61,6 +62,7 @@ RingOfColdResistance: Кольцо сопротивления холоду
 RingOfDefence: Кольцо защиты
 RingOfFireResistance: Кольцо сопротивления огню
 RingOfLevitation: Кольцо левитации
+RingOfLevitationInfo: Одев его на палец можно парить над землей и [водой].
 RingOfPoisonResistance: Кольцо сопротивления яду
 RingOfProtection: Кольцо защиты
 RingOfRegeneration: Кольцо регенерации
@@ -70,6 +72,7 @@ Arrow: Стрела
 LongBow: Длинный лук
 
 Bandage: Бандаж
+BandageInfo: Используется для остановки кровотечения в бою.
 Lockpick: Отмычка
 Lags: Древесина
 SmallLags: Маленькая ветка
@@ -93,9 +96,13 @@ BluePotion: Синее зелье
 BrownPotion: Коричневое зелье
 HealingPotion: Зелье лечения
 ManaPotion: Зелье маны
+PotionOfDexterity: Зелье ловкость
+PotionOfDexterityInfo: Навсегда повышает ловкость на [3] единицы.
 PotionOfPoison: Зелье отравы
 PotionOfStrenght: Зелье силы
+PotionOfStrenghtInfo: Навсегда повышает силу на [3] единицы.
 PotionOfWits: Зелье разума
+PotionOfWitsInfo: Навсегда повышает интеллект на [3] единицы.
 PotionOfWisdow: Зелье мудрости
 PotionOfLearning: Зелье обучения
 RedPotion: Красное зелье

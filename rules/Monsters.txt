@@ -39,13 +39,13 @@ Wolf avatar(20) rest(DeadBody)
 
 Ghoul avatar(305) rest(DeadBody)
  abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
- use Claws Undead PoisonImmunity Reputation-80
+ use Claws Undead PoisonImmunity DiseaseImmunity Reputation-80
 Skeleton avatar(574) rest(Bones)
- abilities Strenght(20) Dexterity(20) Wits(2) WeaponSkill(20) Hits(8) Armor(1) Level(1)
- use Spear Darkvision Undead PoisonImmunity Reputation-80
+ abilities Strenght(15) Dexterity(25) Wits(2) WeaponSkill(20) Hits(7) Armor(1) Level(1)
+ use Spear Darkvision Undead PoisonImmunity DiseaseImmunity Reputation-80
 Zombie avatar(101) rest(DeadBody)
  abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(15) Hits(16) Level(2)
- use Dagger Darkvision Undead PoisonImmunity Reputation-80
+ use Dagger Darkvision Undead PoisonImmunity DiseaseImmunity Reputation-80
 
 ChaosHydra avatar(339) rest(DeadBody)
  abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50) Level(5)
@@ -57,7 +57,7 @@ GoblinFemale avatar(1) parent(Goblin) rest(DeadBody)
  abilities Strenght(15) Dexterity(40) Wits(15) WeaponSkill(20) Hits(4)
  use Dagger Female SomeCoins-10 OrkBlood+1 Reputation-60
 OrcWarrior avatar(2) rest(DeadBody)
- abilities Strenght(35) Dexterity(25) Wits(18) WeaponSkill(25) Hits(10) Level(2)
+ abilities Strenght(40) Dexterity(20) Wits(18) WeaponSkill(25) Hits(10) Level(3)
  use BruteSword LeatherArmor Darkvision SomeCoins OrkBlood+1 Reputation-60
 Outsider avatar(121) rest(DeadBody)
  abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(3) Level(3)
@@ -70,7 +70,7 @@ Bartender avatar(51) unique(1) rest(DeadBody)
  abilities Strenght(30) Dexterity(15) Wits(35) WeaponSkill(25) Hits(10)
  use PlaceOwner KnowRumor SomeCoins+5
 CityGuard avatar(543) rest(DeadBody)
- abilities Strenght(30) Dexterity(20) Wits(30) WeaponSkill(40) Hits(15) Level(4)
+ abilities Strenght(40) Dexterity(25) Wits(30) WeaponSkill(40) Hits(15) Level(4)
  use Spear ChainArmor SomeCoins+3 Reputation+20 Ally
 Shopkeeper avatar(581) unique(1) rest(DeadBody)
  abilities Strenght(15) Dexterity(20) Wits(40) WeaponSkill(20) Hits(5)

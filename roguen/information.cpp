@@ -24,11 +24,18 @@ static void addv(stringbuilder& sb, const dice& value) {
 		sb.adds("%1i", value.min);
 }
 
+static void adds(stringbuilder& sb, const char* id, const char* suffix) {
+	auto p = getnme(ids(id, suffix));
+	if(!p)
+		return;
+	sb.adds(p);
+}
+
 static void addv(stringbuilder& sb, const char* id, int value, const char* format = 0) {
 	if(!value)
 		return;
 	if(!format) {
-		if(value!=0)
+		if(value != 0)
 			format = "[~%-1%+2i]";
 		else
 			format = "[~%-1]";
@@ -272,6 +279,44 @@ static void need_help_info(stringbuilder& sb) {
 	if(!pn)
 		return;
 	sb.add(pn, time_left(last_need->deadline));
+}
+
+static void add_require(stringbuilder& sb, const item& it) {
+	auto& ei = it.geti();
+	auto result = 0;
+	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
+		if(ei.required[i - Strenght] > 0)
+			result++;
+	if(!result)
+		return;
+	sb.adds("%RequireForUse");
+	auto result_posted = 0;
+	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
+		if(ei.required[i - Strenght] <= 0)
+			continue;
+		if(result_posted > 0 && result_posted == (result - 1))
+			sb.adds("%-And");
+		sb.adds("%-1 [%2i]", bsdata<abilityi>::elements[i].getname(), ei.required[i - Strenght]);
+		result_posted++;
+	}
+	sb.add(".");
+}
+
+void item::getexamine(stringbuilder& sb) const {
+	auto& ei = geti();
+	sb.adds("%ThisIs %-1.", getname());
+	add_require(sb, *this);
+	adds(sb, ei.id, "Info");
+	adds(sb, ei.id, "History");
+	if(isidentified()) {
+		switch(magic) {
+		case Blessed: sb.adds(getnm("BlessedItemState")); break;
+		case Cursed: sb.adds(getnm("CursedItemState")); break;
+		case Artifact: sb.adds(getnm("AtrifactItemState")); break;
+		default: break;
+		}
+	} else
+		sb.adds(getnm("NotIdentifiedItemState"));
 }
 
 BSDATA(textscript) = {

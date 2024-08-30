@@ -19,3 +19,4 @@ struct monsteri : nameable, statable {
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 };
 bool is_boss(const void* p);
+void check_monsters();

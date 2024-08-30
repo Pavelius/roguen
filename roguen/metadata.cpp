@@ -180,7 +180,7 @@ BSDATA(varianti) = {
 	{"List", VAR(listi), 1, 0, ftscript<listi>, fttest<listi>},
 	{"Location", VAR(locationi), 1, 0, ftscript<locationi>},
 	{"Modifier", VAR(modifieri), 1, 0, ftscript<modifieri>, fttest<modifieri>},
-	{"Monster", VAR(monsteri), 1, 0, ftscript<monsteri>, fttest<monsteri>},
+	{"Monster", VAR(monsteri), 1, 0, ftscript<monsteri>, fttest<monsteri>, 0, check_monsters},
 	{"Need", VAR(greatneedi), 1, 0, 0, 0, 0, check_need_objects},
 	{"NeedFlag", VAR(needni), 1, 0, ftscript<needni>, fttest<needni>},
 	{"Quest", VAR(quest), 0},
