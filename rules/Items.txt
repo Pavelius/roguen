@@ -132,8 +132,8 @@ Shield cost(10) weight(200) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) p
  wearing Block+2
 
 BottleOfBeer weight(50) cost(10) unidentified(YellowPotion) wear(Potion) avatar(523) cursed(PotionOfPoison)
- use Heal+1 AddDrunk+2
-BottleOfWine weight(50) cost(30) unidentified(YellowPotion) wear(Potion) avatar(522) cursed(PotionOfPoison)
+ use Heal+1 AddDrunk+1
+BottleOfWine weight(50) cost(30) unidentified(RedPotion) wear(Potion) avatar(522) cursed(PotionOfPoison)
  use Heal+3 AddDrunk+2
 
 HealingPotion cost(100) weight(25) unidentified(RedPotion) wear(Potion) avatar(164) cursed(PotionOfPoison)

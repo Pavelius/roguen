@@ -825,7 +825,6 @@ int choose_dialog(fnevent proc) {
 	while(ismodal()) {
 		paintstart();
 		fillform();
-		setoffset(metrics::padding, metrics::padding);
 		proc();
 		pause_keys();
 		paintfinish();
@@ -1292,8 +1291,8 @@ static void right_border() {
 	rectpush push;
 	pushvalue push_fore(draw::fore, colors::border);
 	caret.x += width - 1;
-	//caret.y -= metrics::padding;
-	line(caret.x, caret.y + height);
+	caret.y -= metrics::padding;
+	line(caret.x, caret.y + height + metrics::padding * 2);
 }
 
 static void show_block(const char* format, ...) {
