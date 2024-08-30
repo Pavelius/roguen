@@ -125,11 +125,11 @@ Tentacle wear(MeleeWeapon)
 LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) powers(LightArmorPowers)
  wearing Armor+1
 ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) powers(HeavyArmorPowers) required(40)
- wearing Armor+2 Dodge-20
+ wearing Armor+2 Dodge-20 ChanceFailSpell+20
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(HeavyArmorPowers) required(60)
- wearing Armor+4 Dodge-40
+ wearing Armor+4 Dodge-40 ChanceFailSpell+40
 Shield cost(10) weight(200) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
- wearing Block+2
+ wearing Block+2 ChanceFailSpell+10
 
 BottleOfBeer weight(50) cost(10) unidentified(YellowPotion) wear(Potion) avatar(523) cursed(PotionOfPoison)
  use Heal+1 AddDrunk+1
@@ -185,7 +185,7 @@ RingOfWarrior cost(2000) weight(1) wear(FingerRight) avatar(655) unidentified(Go
 LeatherBoots weight(20) wear(Legs) avatar(192)
  wearing Dodge+5
 IronBoots weight(20) wear(Legs) avatar(192)
- wearing Dodge-5 Block+1
+ wearing Dodge-5 Block+1 ChanceFailSpell+5
 BootsOfSneakiness weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)
  wearing Dexterity+5
 BootsOfLevitation weight(15) wear(Legs) avatar(224) unidentified(LeatherBoots)
@@ -196,7 +196,7 @@ BootsOfLongStride weight(20) wear(Legs) avatar(226) unidentified(LeatherBoots)
 LeatherBracers weight(50) wear(Elbows) avatar(59)
  wearing Dodge+5
 IronBracers weight(250) wear(Elbows) avatar(48)
- wearing Dodge-5 Block+1
+ wearing Dodge-5 Block+1 ChanceFailSpell+10
 BracersOfStrenght weight(250) wear(Elbows) avatar(219)
  wearing Dodge-5 Block+1 Strenght+15
 

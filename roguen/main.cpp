@@ -41,6 +41,7 @@ static void main_start() {
 	add_item("TomeOfLight", 1, true);
 	add_item("RodOfBurning", 1, true);
 	add_item("ScrollOfGoldDetection", 1, true);
+	add_item("IronBoots", 1, true);
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);
 	game.setowner(player);

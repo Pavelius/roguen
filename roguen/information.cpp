@@ -253,6 +253,8 @@ static void list_of_effects(stringbuilder& sb) {
 		if(player->is(i))
 			sb.addn(bsdata<abilityi>::elements[i].getname());
 	}
+	if(player->get(ChanceFailSpell) > 0)
+		sb.addn(getnm("ChanceFailSpellStat"), player->get(ChanceFailSpell));
 }
 
 static void list_of_skills(stringbuilder& sb) {

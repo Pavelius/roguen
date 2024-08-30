@@ -49,6 +49,7 @@ LeatherGirdle: Кожанный пояс
 IronGirdle: Железный пояс
 
 LeatherBoots: Кожанные сапоги
+IronBoots: Железные сапоги
 
 IronBracers: Железные браслеты
 LeatherBracers: Кожанные браслеты

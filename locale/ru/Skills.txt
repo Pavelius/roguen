@@ -2,7 +2,7 @@ Skills: Навыки
 
 Alertness: Бдительность
 Gemcutting: Ювелирное дело
-Herbalism: Травознавство
+History: История
 Literacy: Грамотность
 Mining: Шахтерское дело
 Religion: Религия

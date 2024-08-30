@@ -64,6 +64,7 @@ rect				last_rect;
 const sitei*		last_site;
 int					last_value;
 listi*				last_craft_list;
+static const spelli* last_spell_cast;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
@@ -1985,8 +1986,19 @@ static const spelli* choose_spell(int bonus) {
 static void cast_spell(int bonus) {
 	pushvalue push(last_spell);
 	last_spell = choose_spell(bonus);
+	last_spell_cast = last_spell;
 	if(last_spell)
 		cast_spell(*last_spell);
+}
+
+static void cast_last_spell(int bonus) {
+	if(!last_spell_cast)
+		return;
+	if(!allowed_spells.have((void*)last_spell_cast)) {
+		last_spell_cast = 0;
+		return;
+	}
+	cast_spell(*last_spell_cast);
 }
 
 static void heal_player(int bonus) {
@@ -2959,6 +2971,7 @@ BSDATA(script) = {
 	{"AnimalInt", empthy_script, is_animal},
 	{"Anger", add_anger},
 	{"CastSpell", cast_spell},
+	{"CastLastSpell", cast_last_spell},
 	{"Chance", random_chance},
 	{"Chatting", chatting},
 	{"ChooseTarget", choose_target, is_full},

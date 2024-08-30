@@ -240,6 +240,17 @@ static void summon_minions(point m, variant v) {
 	player = push_player;
 }
 
+static bool chance_fail_spell() {
+	auto chance = player->get(ChanceFailSpell);
+	if(chance <= 0)
+		return false;
+	if(d100() < chance) {
+		player->act("SpellCastFailed", 0);
+		return true;
+	}
+	return false;
+}
+
 void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
 		player->actp("NotEnoughtMana");
@@ -252,6 +263,10 @@ void cast_spell(const spelli& e, int mana, bool silent) {
 	if(!silent) {
 		if(!player->speak("Casting", e.id))
 			player->act("Casting", e.id);
+	}
+	if(chance_fail_spell()) {
+		player->add(Mana, -mana);
+		return;
 	}
 	if(e.use)
 		apply_targets(e.use);

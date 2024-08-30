@@ -12,6 +12,7 @@ RandomRace
 
 #Hotkey
 
+"A" CastLastSpell
 "S" RaiseSkills
 "D" DropDown
 "I" Inventory

@@ -116,6 +116,8 @@ BalisticSkill: Меткость
 Dodge: Уклонение
 WeaponSkill: Оружие
 Drunk: Опьянение
+ChanceFailSpell: провал заклинания
+ChanceFailSpellStat: Провалить заклинание %1i%%
 
 CarryCapacity: Грузоподъемность
 Damage: Урон

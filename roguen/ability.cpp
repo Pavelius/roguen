@@ -18,6 +18,7 @@ BSDATA(abilityi) = {
 	{"Block"},
 	{"BlockRanged"},
 	{"EnemyAttacks"},
+	{"ChanceFailSpell"},
 	{"Alertness", Wits, 3},
 	{"Gemcutting", Dexterity},
 	{"Alchemy", Wits},
