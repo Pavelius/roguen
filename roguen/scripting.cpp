@@ -1640,6 +1640,10 @@ static void chatting() {
 		opponent->speak("DoNotSpeakEvil");
 		return;
 	}
+	if(opponent->getowner() == player) {
+		opponent->speak("HelloBoss");
+		return;
+	}
 	if(opponent->istired()) {
 		opponent->speak("IAmTired");
 		opponent->add(Mood, -1);

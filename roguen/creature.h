@@ -15,7 +15,7 @@
 #include "wearable.h"
 
 class creature : public wearable, public statable, public spellable, public ownerable, public receipti {
-	unsigned short	room_id, enemy_id;
+	unsigned short	room_id, enemy_id, charmer_id;
 	void			cleanup();
 	void			update_abilities();
 public:
@@ -41,6 +41,7 @@ public:
 	void			fixappear();
 	int				get(ability_s v) const { return abilities[v]; }
 	int				getcarry() const;
+	creature*		getcharmer() const;
 	creature*		getenemy() const;
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
@@ -48,6 +49,7 @@ public:
 	int				getmaximum(ability_s v) const;
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
+	creature*		getowner() const;
 	int				getpaymentcost() const;
 	int				getreputation() const { return abilities[Reputation] / 20; }
 	roomi*			getroom() const;
@@ -82,6 +84,7 @@ public:
 	void			say(const char* format, ...) const;
 	void			set(feat_s v) { feats.set(v); }
 	void			set(ability_s i, int v) { abilities[i] = v; }
+	void			setcharmer(const creature* v);
 	void			setenemy(const creature* v);
 	void			setroom(const roomi* v);
 	void			slowdown(int seconds) { wait_seconds += seconds; }

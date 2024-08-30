@@ -2,7 +2,7 @@
 
 class creature;
 
-class ownerable {
+struct ownerable {
 	short unsigned	owner_id;
 public:
 	creature*	getowner() const;

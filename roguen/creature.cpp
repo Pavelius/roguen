@@ -66,7 +66,9 @@ bool creature::speak(const char* action, const char* id, ...) const {
 	if(pm) {
 		speech_get(format, id, action, pm->getid());
 		if(pm->parent)
-			speech_get(format, id, action, pm->parent->getid());
+			speech_get(format, id, action, pm->parent->id);
+		if(get(Wits) <= 12)
+			speech_get(format, "LowInt", action, pm->id);
 	} else
 		speech_get(format, id, action, getkind().getid());
 	speech_get(format, id, action, 0);
@@ -930,6 +932,7 @@ void creature::clear() {
 	setroom(0);
 	setowner(0);
 	setenemy(0);
+	setcharmer(0);
 	if(game.getowner() == this)
 		game.setowner(0);
 }
@@ -1039,6 +1042,20 @@ creature* creature::getenemy() const {
 
 void creature::setenemy(const creature* v) {
 	enemy_id = bsid(v);
+}
+
+creature* creature::getowner() const {
+	if(charmer_id != 0xFFFF)
+		return bsdata<creature>::elements + charmer_id;
+	return ownerable::getowner();
+}
+
+creature* creature::getcharmer() const {
+	return bsdata<creature>::ptr(charmer_id);
+}
+
+void creature::setcharmer(const creature* v) {
+	charmer_id = bsid(v);
 }
 
 bool creature::isenemy(const creature& opponent) const {
@@ -1178,6 +1195,10 @@ void creature::cleanup() {
 	for(auto& e : bsdata<creature>()) {
 		if(e.enemy_id == i)
 			e.enemy_id = 0xFFFF;
+		if(e.charmer_id == i)
+			e.charmer_id = 0xFFFF;
+		if(e.getowner() == this)
+			e.setowner(0);
 	}
 }
 

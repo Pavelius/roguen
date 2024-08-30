@@ -77,8 +77,10 @@ void pausenc(const char* title, ...) {
 }
 
 bool yesno(const char* title, ...) {
-	if(title)
+	if(title) {
+		console.addsep(' ');
 		console.addv(title, xva_start(title));
+	}
 	answers an;
 	an.add((void*)1, getnm("Yes"));
 	an.add((void*)0, getnm("No"));

@@ -51,13 +51,13 @@ ChaosHydra avatar(339) rest(DeadBody)
  abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50) Level(5)
  use Bite Regeneration Reputation-60
 Goblin avatar(0) rest(DeadBody)
- abilities Strenght(20) Dexterity(40) Wits(14) WeaponSkill(25) Hits(5)
+ abilities Strenght(20) Dexterity(40) Wits(11) WeaponSkill(25) Hits(5)
  use Dagger SomeCoins-20 OrkBlood+1 Reputation-60
 GoblinFemale avatar(1) parent(Goblin) rest(DeadBody)
- abilities Strenght(15) Dexterity(40) Wits(15) WeaponSkill(20) Hits(4)
+ abilities Strenght(15) Dexterity(40) Wits(11) WeaponSkill(20) Hits(4)
  use Dagger Female SomeCoins-10 OrkBlood+1 Reputation-60
 OrcWarrior avatar(2) rest(DeadBody)
- abilities Strenght(40) Dexterity(20) Wits(18) WeaponSkill(25) Hits(10) Level(3)
+ abilities Strenght(40) Dexterity(20) Wits(10) WeaponSkill(25) Hits(10) Level(3)
  use BruteSword LeatherArmor Darkvision SomeCoins OrkBlood+1 Reputation-60
 Outsider avatar(121) rest(DeadBody)
  abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(3) Level(3)
@@ -71,7 +71,7 @@ Bartender avatar(51) unique(1) rest(DeadBody)
  use PlaceOwner KnowRumor SomeCoins+5
 CityGuard avatar(543) rest(DeadBody)
  abilities Strenght(40) Dexterity(25) Wits(30) WeaponSkill(40) Hits(15) Level(4)
- use Spear ChainArmor SomeCoins+3 Reputation+20 Ally
+ use Spear ChainArmor SomeCoins+3 Reputation+20
 Shopkeeper avatar(581) unique(1) rest(DeadBody)
  abilities Strenght(15) Dexterity(20) Wits(40) WeaponSkill(20) Hits(5)
  use PlaceOwner GP+50 SomeCoins+30
