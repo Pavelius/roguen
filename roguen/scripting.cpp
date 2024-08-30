@@ -1430,10 +1430,16 @@ static item* choose_items(itema& items, const char* header, bool autochoose = fa
 	return (item*)items.choose(header, getnm("Cancel"), autochoose);
 }
 
-static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible proc = 0) {
+static item* choose_item(const char* header_format = 0) {
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},
 		{}};
+	pushvalue push_columns(current_columns, columns);
+	pushvalue push_footer(answers::footer, items_footer());
+	return (item*)choose_answers(header_format, getnm("Cancel"));
+}
+
+static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible proc = 0) {
 	if(!header_format)
 		header_format = getnm(ids("Choose", bsdata<weari>::elements[wear].id));
 	an.clear();
@@ -1451,9 +1457,7 @@ static item* choose_stuff(wear_s wear, const char* header_format = 0, fnvisible 
 	}
 	sb.clear();
 	sb.add(header_format);
-	pushvalue push_columns(current_columns, columns);
-	pushvalue push_footer(answers::footer, items_footer());
-	return (item*)choose_answers(temp, getnm("Cancel"));
+	return choose_item(temp);
 }
 
 static listi* get_ingridient_list(const itemi* pi) {
@@ -2828,6 +2832,65 @@ static void make_trade(int bonus) {
 	last_value = 1;
 }
 
+static void add_items(collectiona& result, point index) {
+	for(auto& e : area->items) {
+		if(!e || e.position != index)
+			continue;
+		result.add((void*)&e.geti());
+	}
+}
+
+static void make_selling(int bonus) {
+	if(!opponent)
+		return;
+	auto room = opponent->getroom();
+	if(!room)
+		return;
+	collectiona items_unlimined, items;
+	add_items(items_unlimined, room->getsellitems());
+	add_items(items, room->getspecialsellitems());
+	opponent->speak("SellItems");
+	auto payment_cost = player->getsellingcost();
+	while(true) {
+		an.clear();
+		auto format = getnm("AskSellItem");
+		for(auto& e : player->backpack()) {
+			if(!e)
+				continue;
+			auto pi = (void*)& e.geti();
+			if(items_unlimined.find(pi) == -1 && items.find(pi) == -1)
+				continue;
+			auto cost = e.getcost(payment_cost);
+			if(!cost)
+				continue;
+			an.add(&e, format, e.getname(), cost);
+		}
+		if(!an) {
+			console.clear();
+			opponent->speak("NoItemsForBuy");
+			break;
+		}
+		opponent->speak("ItemsForBuy");
+		an.add(0, getnm("NoWantSell"));
+		auto pv = an.choose();
+		if(!pv)
+			break;
+		if(player->iswear(pv)) {
+			auto pi = (item*)pv;
+			auto cost = pi->getcost(payment_cost);
+			if(selling(player, opponent, pi->getname(), cost, "WantSellItem")) {
+				if(items.find((void*)&pi->geti()) != -1) {
+					item it = *pi; it.setcount(1);
+					it.drop(room->getspecialsellitems());
+				}
+				pi->setcount(pi->getcount() - 1);
+			}
+		}
+		if(!console)
+			opponent->speak("SellItems");
+	}
+}
+
 static void add_items_for_sale(int bonus) {
 	if(!opponent)
 		return;
@@ -2932,6 +2995,7 @@ BSDATA(script) = {
 	{"LockAllDoors", lock_all_doors},
 	{"MakeScreenshoot", make_screenshoot},
 	{"MakeTrade", make_trade},
+	{"MakeSelling", make_selling},
 	{"MarkRoom", mark_room},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
@@ -2978,4 +3042,4 @@ BSDATA(script) = {
 	{"UseItem", use_item},
 	{"UseCraft", use_craft},
 };
-BSDATAF(script)
+BSDATAF(script);

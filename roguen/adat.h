@@ -7,7 +7,7 @@ struct adat {
 	typedef T data_type;
 	size_t count;
 	T data[count_max];
-	constexpr adat() : count(0) {}
+	adat() : count(0) {}
 	constexpr const T& operator[](unsigned index) const { return data[index]; }
 	constexpr T& operator[](unsigned index) { return data[index]; }
 	explicit operator bool() const { return count != 0; }

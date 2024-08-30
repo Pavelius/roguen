@@ -138,6 +138,11 @@ Scroll: Свиток
 
 AlchemyCraft: Создание зельев
 
-AskBuyItem: Купить %-1 за [%2i] золотых.
-NoWantBuy: Пожалуй на этом все.
 EncumbranceTotal: Вес всех ваших вещей [%TotalItemWeight] %Kg. Вы можете переносить [%MaximumCarryCapacity] %Kg.
+
+AskBuyItem: Купить %-1 за [%2i] монет.
+AskSellItem: Продать %-1 за [%2i] монет.
+NoWantBuy: Пожалуй на этом все.
+NoWantSell: Пока все.
+WantBuyItem: Вы действительно хотите купить %1 за [%2i] монет?
+WantSellItem: Хотите продать %1 за [%2i] монет?
