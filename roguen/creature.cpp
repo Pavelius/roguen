@@ -1070,6 +1070,8 @@ static bool is_enemy(const creature* player, const creature* opponent) {
 
 static bool is_enemy(const void* object) {
 	auto opponent = (creature*)object;
+	if(player == opponent)
+		return false;
 	if(is_enemy(player, opponent))
 		return true;
 	auto owner = player->getowner();
@@ -1085,6 +1087,8 @@ bool is_ally(const void* object) {
 	auto opponent = (creature*)object;
 	if(!opponent)
 		return false;
+	if(player == opponent)
+		return true;
 	if(player->getowner() == opponent)
 		return true;
 	if(opponent->getowner() == player)

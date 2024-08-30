@@ -948,8 +948,11 @@ static void update_ui() {
 static void set_party_position(geoposition ogp, geoposition ngp, point m) {
 	if(!area->isvalid(m))
 		return;
+	pushvalue push(player, game.getowner());
+	if(!player)
+		return;
 	for(auto& e : bsdata<creature>()) {
-		if(e.worldpos == ogp && e.is(Ally)) {
+		if(e.worldpos == ogp && is_ally(&e)) {
 			e.place(m);
 			e.worldpos = ngp;
 		}
