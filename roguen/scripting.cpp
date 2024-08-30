@@ -2950,17 +2950,6 @@ static void add_craft(int bonus) {
 	player->receipts[last_craft] |= (1 << bonus);
 }
 
-static void make_hostile(creature* player, creature* opponent) {
-	player->speak("MakeHostile");
-	if(opponent->is(Enemy)) {
-		player->remove(Enemy);
-		player->set(Ally);
-	} else {
-		player->remove(Ally);
-		player->set(Enemy);
-	}
-}
-
 static bool prohibited_action_effect(const char* id) {
 	for(auto p : creatures) {
 		if(!(*p))
@@ -2969,11 +2958,13 @@ static bool prohibited_action_effect(const char* id) {
 			continue;
 		if(p == player || p->ishuman())
 			continue;
+		if(p->getenemy())
+			continue;
 		p->add(Mood, -xrand(3, 6));
 		if(p->abilities[Mood] < 0 && d100() < -p->abilities[Mood] * 2)
 			make_hostile(p, player);
 		else {
-			if(!p->speak(id))
+			if(!p->speak(id, "ProhibitedAction"))
 				p->speak("ProhibitedAction");
 		}
 		return true;

@@ -1042,6 +1042,8 @@ void creature::setenemy(const creature* v) {
 }
 
 bool creature::isenemy(const creature& opponent) const {
+	if(opponent.getenemy() == this || getenemy() == &opponent)
+		return true;
 	return opponent.is(is(Enemy) ? Ally : Enemy);
 }
 
@@ -1169,6 +1171,16 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 		weapon.damage();
 }
 
+void creature::cleanup() {
+	auto i = bsid(this);
+	if(i == 0xFFFF)
+		return;
+	for(auto& e : bsdata<creature>()) {
+		if(e.enemy_id == i)
+			e.enemy_id = 0xFFFF;
+	}
+}
+
 void creature::kill() {
 	if(d100() < 40)
 		area->setflag(getposition(), Blooded);
@@ -1181,6 +1193,7 @@ void creature::kill() {
 	if(opponent == this && player)
 		player->experience += get_experience_reward(opponent);
 	fire_trigger(WhenCreatureP1Dead, getkind());
+	cleanup();
 	clear();
 	if(human_killed)
 		end_game();
@@ -1377,6 +1390,9 @@ static void look_creatures() {
 		enemies.match(Ally, true);
 	} else
 		enemies.clear();
+	auto enemy = player->getenemy();
+	if(enemy && creatures.have(enemy))
+		enemies.addu(enemy);
 }
 
 static void ready_enemy() {
@@ -1926,4 +1942,26 @@ int	creature::getcarry() const {
 	if(v < 500)
 		v = 500;
 	return v;
+}
+
+void calling_help_attack(creature* player, const creature* opponent) {
+	auto pm = player->getmonster();
+	if(!pm)
+		return;
+	for(auto p : creatures) {
+		if(p->getenemy())
+			continue;
+		if(p->getmonster() == pm)
+			p->setenemy(opponent);
+	}
+}
+
+bool make_hostile(creature* player, const creature* opponent) {
+	auto enemy = player->getenemy();
+	if(enemy)
+		return false;
+	player->speak("MakeHostile");
+	player->setenemy(opponent);
+	calling_help_attack(player, opponent);
+	return true;
 }

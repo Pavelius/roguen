@@ -524,7 +524,7 @@ static void paint_bars(const creature* player) {
 void creature::paintbarsall() const {
 	if(!area->is(getposition(), Visible))
 		return;
-	if(game.getowner() == this || is(Enemy))
+	if(ishuman() || is(Enemy) || getenemy() == game.getowner())
 		paint_bars(this);
 }
 
@@ -786,10 +786,6 @@ static void paint_message() {
 	paint_message(console.begin());
 }
 
-static void clear_console() {
-	console.clear();
-}
-
 static void reset_message() {
 	static unsigned last_console_size;
 	auto current_tick = getcputime();
@@ -801,12 +797,11 @@ static void reset_message() {
 		last_console_size = size;
 	}
 	auto delay = (current_tick - last_tick_message);
-	if(delay >= 4000) {
+	if(delay >= 4000 || (hot.key == KeyEscape)) {
 		console.clear();
 		last_tick_message = current_tick;
 		last_console_size = 0;
-	} else if(hot.key == KeyEscape)
-		execute(clear_console);
+	}
 }
 
 static void afterpaint() {
