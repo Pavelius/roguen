@@ -93,6 +93,13 @@ static bool filter_neutral(const void* object) {
 	return !p->is(Ally) && !p->is(Enemy);
 }
 
+static bool filter_ally_neutral(const void* object) {
+	auto p = (creature*)object;
+	if(player->is(Enemy))
+		return !p->is(Ally);
+	return !p->is(Enemy);
+}
+
 static bool filter_feature(const void* object) {
 	auto p = (creature*)object;
 	return area->features[p->getposition()] != 0;
@@ -247,7 +254,7 @@ BSDATA(filteri) = {
 	{"SelectCreatures", 0, select_creatures},
 	{"SelectEnemies", 0, select_enemies},
 	{"SelectFeatures", 0, select_features},
-	{"SelectNeutralCreatures", filter_neutral, select_custom_creatures},
+	{"SelectNeutralCreatures", filter_ally_neutral, select_custom_creatures},
 	{"SelectNextFeatures", 0, select_next_features},
 	{"SelectRooms", 0, select_rooms},
 	{"SelectWalls", 0, select_walls},

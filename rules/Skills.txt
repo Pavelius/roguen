@@ -3,7 +3,7 @@
 RoomsWhereGemsCanBe
  elements DefaultDungeonEntrance DefaultCaveEntrance DefaultMineEntrance SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
 StealCoinsFail
- elements AddReputation-1 Opponent Anger+1 Opponent StealCoinsAngry
+ elements MakeNoise+2 AddReputation-1 Opponent Anger+1 Opponent StealCoinsAngry
 
 #SiteSkill
 
@@ -12,9 +12,9 @@ ChatSomeone skill(Wits) keyid("C")
 BuyItemsSomeone skill(Wits) keyid("H")
  effect MakeTrade
 OpenDoorLock skill(Thievery) tool(Lockpick)
- effect SelectFeatures Filter LockedDoor ForEachFeature RollAction Activate GainExperience+1
+ effect ProhibitedAction SelectFeatures Filter LockedDoor ForEachFeature RollAction Activate GainExperience+1
 OpenChestLock skill(Thievery) tool(Lockpick)
- effect SelectFeatures Filter LockedChest ForEachFeature RollAction Activate GainExperience+1
+ effect ProhibitedAction SelectFeatures Filter LockedChest ForEachFeature RollAction Activate GainExperience+1
 SacrificeEvilAltar skill(Religion)
  effect SelectFeatures Filter AltarEvil ForEachFeature RollAction GainExperience+1
 SellItemsSomeone skill(Wits) keyid("J")
@@ -22,6 +22,6 @@ SellItemsSomeone skill(Wits) keyid("J")
 SearchRoomForGems skill(Gemcutting)
  effect HaveNext-1 Local SelectYourRoom Filter RoomsWhereGemsCanBe FilterRoomMarked-1 ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)
- effect SelectNeutralCreatures FilterClose ForEachOpponent RollAction StealOpponentCoins
+ effect ProhibitedAction SelectNeutralCreatures FilterClose ForEachOpponent RollAction StealOpponentCoins
 CreatePotions skill(Alchemy)
  effect AlchemyCraft UseCraft

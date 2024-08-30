@@ -22,7 +22,7 @@ static void add_item(const char* id, int count = 1, bool identified = false) {
 }
 
 static void main_start() {
-	player = player_create({5, 5}, "HightElf", true);
+	player = player_create({5, 5}, "DarkElf", true);
 	player->set(Ally);
 	player->experience += 600;
 	player->money += 500;

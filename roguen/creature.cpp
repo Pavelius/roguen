@@ -929,6 +929,7 @@ void creature::clear() {
 	guardorder = {-1000, -1000};
 	setroom(0);
 	setowner(0);
+	setenemy(0);
 	if(game.getowner() == this)
 		game.setowner(0);
 }
@@ -1030,6 +1031,14 @@ static bool is_enemy(const void* object) {
 			return true;
 	}
 	return false;
+}
+
+creature* creature::getenemy() const {
+	return bsdata<creature>::ptr(enemy_id);
+}
+
+void creature::setenemy(const creature* v) {
+	enemy_id = bsid(v);
 }
 
 bool creature::isenemy(const creature& opponent) const {

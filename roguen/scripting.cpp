@@ -97,6 +97,15 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
+static void add_safe(char& v, int bonus, int minimum = -100, int maximum = 100) {
+	bonus += v;
+	if(bonus < minimum)
+		bonus = minimum;
+	else if(bonus > maximum)
+		bonus = maximum;
+	v = bonus;
+}
+
 static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
 	bonus += player->abilities[v];
 	if(bonus < minimum)
@@ -104,17 +113,6 @@ static void add_safe(ability_s v, int bonus, int minimum = -100, int maximum = 1
 	else if(bonus > maximum)
 		bonus = maximum;
 	player->abilities[v] = bonus;
-}
-
-static void add_opponent_safe(ability_s v, int bonus, int minimum = -100, int maximum = 100) {
-	if(!opponent)
-		return;
-	bonus += opponent->abilities[v];
-	if(bonus < minimum)
-		bonus = minimum;
-	else if(bonus > maximum)
-		bonus = maximum;
-	opponent->abilities[v] = bonus;
 }
 
 static void fix_yellow(const char* format, int value) {
@@ -1662,7 +1660,7 @@ static void chatting() {
 	}
 	if(opponent->istired()) {
 		opponent->speak("IAmTired");
-		add_opponent_safe(Mood, -1);
+		add_safe(opponent->abilities[Mood], -1);
 		return;
 	}
 	if(player->ishuman()) {
@@ -1681,18 +1679,18 @@ static void chatting() {
 	}
 	if(opponent->is(KnowRumor) && d100() < 70) {
 		if(opponent->speechrumor()) {
-			add_opponent_safe(Mood, -xrand(2, 5));
+			add_safe(opponent->abilities[Mood], -xrand(2, 5));
 			return;
 		}
 	}
 	if(player->ishuman() && opponent->is(KnowLocation) && d100() < 30) {
 		if(opponent->speechlocation()) {
-			add_opponent_safe(Mood, -xrand(2, 5));
+			add_safe(opponent->abilities[Mood], -xrand(2, 5));
 			return;
 		}
 	}
 	opponent->speak("HowYouAre");
-	add_opponent_safe(Mood, -xrand(2, 4), -100, 100);
+	add_safe(opponent->abilities[Mood], -xrand(2, 4));
 }
 
 static void chatting(int bonus) {
@@ -2658,6 +2656,24 @@ static void enchant_days(int bonus) {
 	enchant_minutes(script_count(bonus), 24 * 60, "Day");
 }
 
+static void make_alarm(feat_s feat, int range) {
+	auto start = player->getposition();
+	for(auto& e : bsdata<creature>()) {
+		if(!e || !e.ispresent() || e.moveorder.x >= 0)
+			continue;
+		if(!e.is(feat))
+			continue;
+		if(start.range(e.getposition()) > range)
+			continue;
+		e.moveorder = start;
+	}
+}
+
+static void make_noise(int bonus) {
+	make_alarm(Ally, 1000);
+	make_alarm(Enemy, 1000);
+}
+
 static void steal_opponent_coins(int bonus) {
 	auto coins = opponent->money;
 	if(!coins)
@@ -2865,7 +2881,7 @@ static void make_trade(int bonus) {
 				item it = *pi; // Make copy. Original don't change.
 				player->additem(it);
 			}
-		} 
+		}
 	}
 }
 
@@ -2894,7 +2910,7 @@ static void make_selling(int bonus) {
 	for(auto& e : player->backpack()) {
 		if(!e)
 			continue;
-		auto pi = (void*)& e.geti();
+		auto pi = (void*)&e.geti();
 		if(items_unlimined.find(pi) == -1 && items.find(pi) == -1)
 			continue;
 		auto cost = e.getcost(payment_cost);
@@ -2948,6 +2964,44 @@ static void add_craft(int bonus) {
 	player->receipts[last_craft] |= (1 << bonus);
 }
 
+static void make_hostile(creature* player, creature* opponent) {
+	player->speak("MakeHostile");
+	if(opponent->is(Enemy)) {
+		player->remove(Enemy);
+		player->set(Ally);
+	} else {
+		player->remove(Ally);
+		player->set(Enemy);
+	}
+}
+
+static bool prohibited_action_effect(const char* id) {
+	for(auto p : creatures) {
+		if(!(*p))
+			continue;
+		if(!p->is(Ally) && !p->is(Enemy))
+			continue;
+		if(p == player)
+			continue;
+		add_safe(p->abilities[Mood], -xrand(3, 6));
+		if(p->abilities[Mood] < 0 && d100() < -p->abilities[Mood] * 2)
+			make_hostile(p, player);
+		else {
+			if(!p->speak(id))
+				p->speak("ProhibitedAction");
+		}
+		return true;
+	}
+	return false;
+}
+
+static void prohibited_action(int bonus) {
+	if(!last_action)
+		return;
+	if(prohibited_action_effect(last_action->id))
+		script_stop();
+}
+
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -2991,6 +3045,7 @@ BSDATA(script) = {
 	{"EnchantHours", enchant_hours, empthy_next_condition},
 	{"EnchantDays", enchant_days, empthy_next_condition},
 	{"ExploreArea", explore_area},
+	{"ProhibitedAction", prohibited_action},
 	{"FireHarm", fire_harm},
 	{"ForEachCreature", for_each_creature, is_targets},
 	{"ForEachFeature", for_each_feature, is_features},
@@ -3020,9 +3075,10 @@ BSDATA(script) = {
 	{"JumpToSite", jump_to_site},
 	{"LoseGame", lose_game},
 	{"LockAllDoors", lock_all_doors},
+	{"MakeNoise", make_noise},
 	{"MakeScreenshoot", make_screenshoot},
-	{"MakeTrade", make_trade, is_trade_items},
 	{"MakeSelling", make_selling, is_trade_items},
+	{"MakeTrade", make_trade, is_trade_items},
 	{"MarkRoom", mark_room},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},

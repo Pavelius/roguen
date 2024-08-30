@@ -50,7 +50,7 @@ GeneralStore walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Shopkeeper+1 InRoomToBuy Ration LoafOfBread Sausage+3
  feats Notable
 Tavern walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape Bartender+1 CreateHero+2 InRoomToBuy BottleOfBeer BottleOfWine
+ landscape Bartender+1 CreateHero+2 CityGuard+1 InRoomToBuy BottleOfBeer BottleOfWine
  feats Notable
 TheifGuildTreasure walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape LockAllDoors StolenTreasures
@@ -58,7 +58,7 @@ TheifGuildTreasure walls(WallBuilding) floors(WoodenFloor) local(GenerateBuildin
 NPCHouses walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  feats Notable
 VillageElderHouse walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
- landscape VillageElder+1
+ landscape VillageElder+1 CityGuard+2
  feats Notable
 
 AltarRoom
