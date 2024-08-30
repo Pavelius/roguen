@@ -115,6 +115,7 @@ Wits: Интеллект
 BalisticSkill: Меткость
 Dodge: Уклонение
 WeaponSkill: Оружие
+Drunk: Опьянение
 
 CarryCapacity: Грузоподъемность
 Damage: Урон

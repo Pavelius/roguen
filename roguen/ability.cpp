@@ -37,15 +37,15 @@ BSDATA(abilityi) = {
 	{"Faith"},
 	{"Mood"},
 	{"Reputation"},
-	{"Drunk"},
 	{"SkillPoints"},
 	{"Poison"},
 	{"Illness"},
 	{"Corrosion"},
 	{"Burning"},
 	{"Freezing"},
+	{"Drunk"},
 };
-assert_enum(abilityi, Freezing)
+assert_enum(abilityi, Drunk)
 
 ability_s abilityi::getindex() const {
 	return (ability_s)(this - bsdata<abilityi>::elements);

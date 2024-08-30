@@ -1308,7 +1308,7 @@ static void show_charsheet() {
 	rectpush push;
 	width = 150;
 	right_border();
-	show_block("%ListOfFeats\n%Reputation");
+	show_block("%ListOfFeats%ListOfEffects\n%Reputation");
 	caret.y = push.caret.y;
 	caret.x += width + metrics::padding * 2;
 	right_border();

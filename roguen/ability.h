@@ -11,8 +11,8 @@ enum ability_s : unsigned char {
 	Alertness, Gemcutting, Alchemy, Thievery, Literacy, Mining,
 	Stealth, Survival, Haggling, History, Religion, Woodcutting,
 	CarryCapacity, Level,
-	Hits, Mana, Faith, Mood, Reputation, Drunk, SkillPoints,
-	Poison, Illness, Corrosion, Burning, Freezing,
+	Hits, Mana, Faith, Mood, Reputation, SkillPoints,
+	Poison, Illness, Corrosion, Burning, Freezing, Drunk,
 	FirstSkill = Alertness, LastSkill = Woodcutting,
 };
 enum color_s : unsigned char {
@@ -27,6 +27,6 @@ struct abilityi : nameable {
 };
 extern ability_s last_ability;
 struct statable {
-	char		abilities[Freezing + 1];
+	char		abilities[Drunk + 1];
 	void		add(ability_s i, int v = 1) { abilities[i] += v; }
 };

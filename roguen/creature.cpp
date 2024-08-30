@@ -950,6 +950,10 @@ static void update_room(creature* player) {
 }
 
 void creature::update_abilities() {
+	if(is(Drunk)) {
+		abilities[Strenght] += 3;
+		abilities[Wits] -= 3;
+	}
 	abilities[DamageMelee] += get(Strenght) / 15;
 	abilities[DamageRanged] += get(Dexterity) / 10;
 	abilities[Armor] += get(Strenght) / 15;
@@ -1252,9 +1256,6 @@ static bool isfreeplace(creature* player, point ni) {
 }
 
 static void move_step(point ni) {
-	if(player->is(Drunk)) {
-		auto n = player->getposition();
-	}
 	if(!check_leave_area(ni))
 		return;
 	if(!check_place_owner(ni))
@@ -1292,6 +1293,11 @@ void move_step(direction_s v) {
 			player->act("IcedSlice");
 			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
 			pay_action();
+		}
+	} else if(player->is(Drunk)) {
+		if(d100() < 40 && !player->roll(Dexterity)) {
+			player->speak("IAmDrunk");
+			v = round(v, (d100() < 50) ? NorthWest : NorthEast);
 		}
 	}
 	player->setdirection(v);

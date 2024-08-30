@@ -248,6 +248,13 @@ static void list_of_feats(stringbuilder& sb) {
 	}
 }
 
+static void list_of_effects(stringbuilder& sb) {
+	for(auto i = (ability_s)Burning; i <= Drunk; i = (ability_s)(i + 1)) {
+		if(player->is(i))
+			sb.addn(bsdata<abilityi>::elements[i].getname());
+	}
+}
+
 static void list_of_skills(stringbuilder& sb) {
 	for(auto i = FirstSkill; i <= LastSkill; i = (ability_s)(i + 1)) {
 		auto v = player->get(i);
@@ -267,6 +274,7 @@ static void need_help_info(stringbuilder& sb) {
 
 BSDATA(textscript) = {
 	{"ActualNeedState", actual_need_state},
+	{"ListOfEffects", list_of_effects},
 	{"ListOfFeats", list_of_feats},
 	{"ListOfSkills", list_of_skills},
 	{"NeedHelpIntro", need_help_info},

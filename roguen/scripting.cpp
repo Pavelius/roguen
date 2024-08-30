@@ -2922,6 +2922,16 @@ static int find_craft_index(variant v) {
 	return -1;
 }
 
+static void add_drunk(int bonus) {
+	if(player->is(PoisonImmunity))
+		return;
+	if(bonus > 0) {
+		if(player->is(PoisonResistance))
+			bonus = bonus / 2;
+	}
+	add_safe(Drunk, bonus, 0);
+}
+
 static void add_craft(int bonus) {
 	player->receipts[last_craft] |= (1 << bonus);
 }
@@ -2939,6 +2949,7 @@ BSDATA(script) = {
 	{"AcidHarm", acid_harm},
 	{"Activate", activate_feature},
 	{"AddCraft", add_craft},
+	{"AddDrunk", add_drunk},
 	{"AddDungeonRumor", add_dungeon_rumor},
 	{"AddNeed", add_need},
 	{"AddNeedAnswers", add_need_answers},
