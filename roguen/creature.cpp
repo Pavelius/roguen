@@ -1007,35 +1007,6 @@ bool creature::ishuman() const {
 	return game.getowner() == this;
 }
 
-static bool is_enemy(const creature* p1, const creature* p2) {
-	if(p1 == p2)
-		return false;
-	if(p1->is(DwarfBlood) && p2->is(OrkBlood))
-		return true;
-	auto r = p1->getreputation();
-	if(r < 0)
-		return p2->getreputation() >= 0;
-	else if(r > 0)
-		return p2->getreputation() < 0;
-	return false;
-}
-
-static bool is_enemy(const void* object) {
-	auto opponent = (creature*)object;
-	if(is_enemy(player, opponent))
-		return true;
-	if(is_enemy(opponent, player))
-		return true;
-	opponent = opponent->getowner();
-	if(opponent) {
-		if(is_enemy(player, opponent))
-			return true;
-		if(is_enemy(opponent, player))
-			return true;
-	}
-	return false;
-}
-
 creature* creature::getenemy() const {
 	return bsdata<creature>::ptr(enemy_id);
 }
@@ -1058,10 +1029,42 @@ void creature::setcharmer(const creature* v) {
 	charmer_id = bsid(v);
 }
 
-bool creature::isenemy(const creature& opponent) const {
-	if(opponent.getenemy() == this || getenemy() == &opponent)
+static inline bool is_enemy_ex(const creature* player, const creature* opponent) {
+	if(player->getenemy() == opponent)
 		return true;
-	return opponent.is(is(Enemy) ? Ally : Enemy);
+	if(player->is(OrkBlood) && opponent->is(DwarfBlood))
+		return true;
+	if(player->is(Ally))
+		return opponent->is(Enemy);
+	else if(player->is(Enemy))
+		return opponent->is(Ally);
+	return false;
+}
+
+static bool is_enemy(const creature* player, const creature* opponent) {
+	if(!player || !opponent)
+		return false;
+	if(is_enemy_ex(player, opponent))
+		return true;
+	return is_enemy_ex(opponent, player);
+}
+
+static bool is_enemy(const void* object) {
+	auto opponent = (creature*)object;
+	if(is_enemy(player, opponent))
+		return true;
+	auto owner = player->getowner();
+	if(is_enemy(owner, opponent))
+		return true;
+	auto opponent_owner = opponent->getowner();
+	if(is_enemy(player, opponent_owner))
+		return true;
+	return is_enemy(owner, opponent_owner);
+}
+
+bool creature::isenemy(const creature& opponent) const {
+	pushvalue push(player, const_cast<creature*>(this));
+	return is_enemy(&opponent);
 }
 
 bool creature::is(areaf v) const {
@@ -1403,17 +1406,11 @@ void adventure_mode();
 
 static void look_creatures() {
 	creatures.select(player->getposition(), player->getlos(), player->ishuman(), player);
-	if(player->is(Ally)) {
+	if(player->is(Enemy) || player->is(Ally)) {
 		enemies = creatures;
-		enemies.match(Enemy, true);
-	} else if(player->is(Enemy)) {
-		enemies = creatures;
-		enemies.match(Ally, true);
+		enemies.collectiona::match(is_enemy, true);
 	} else
 		enemies.clear();
-	auto enemy = player->getenemy();
-	if(enemy && creatures.have(enemy))
-		enemies.addu(enemy);
 }
 
 static void ready_enemy() {

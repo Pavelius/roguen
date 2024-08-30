@@ -2996,6 +2996,10 @@ static void prohibited_action(int bonus) {
 		script_stop();
 }
 
+static void charm_opponent(int bonus) {
+	opponent->setcharmer(player);
+}
+
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -3021,6 +3025,7 @@ BSDATA(script) = {
 	{"CastSpell", cast_spell},
 	{"CastLastSpell", cast_last_spell},
 	{"Chance", random_chance},
+	{"CharmOpponent", charm_opponent},
 	{"Chatting", chatting},
 	{"ChooseTarget", choose_target, is_full},
 	{"ChooseRandom", choose_random, is_full},
