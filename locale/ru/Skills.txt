@@ -19,6 +19,7 @@ YouDamageItem: %герой повредил%а %-$1.
 YouMakeRoll: %герой сделал%а бросок %1 (%2i<=%3i).
 YouFailRoll: %герой [-не сделал%а] бросок %1 (%2i>%3i). 
 
+BuyItemsSomeone: Купить
 ChatSomeone: Поговорить
 CreatePotions: Создать зелья
 BindWounds: Перевязать раны
@@ -29,4 +30,5 @@ OpenChestLock: Взломать сундук
 OpenDoorLock: Взломать замок
 SearchRoom: Обыскать комнату
 SearchRoomForGems: Искать драгоценности
+SellItemsSomeone: Продать
 StealCoins: Украсть монеты

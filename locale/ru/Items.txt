@@ -85,6 +85,9 @@ RoundKey: Круглый ключ
 TriangularKey: Треугольный ключ
 RectangularKey: Квадратный ключ
 
+BottleOfBeer: Пиво
+BottleOfWine: Вино
+
 BluePotion: Синее зелье
 BrownPotion: Коричневое зелье
 HealingPotion: Зелье лечения
@@ -142,7 +145,6 @@ EncumbranceTotal: Вес всех ваших вещей [%TotalItemWeight] %Kg. 
 
 AskBuyItem: Купить %-1 за [%2i] монет.
 AskSellItem: Продать %-1 за [%2i] монет.
-NoWantBuy: Пожалуй на этом все.
-NoWantSell: Пока все.
+NoWantTrade: Я передумал. Ничего не надо.
 WantBuyItem: Вы действительно хотите купить %1 за [%2i] монет?
 WantSellItem: Хотите продать %1 за [%2i] монет?

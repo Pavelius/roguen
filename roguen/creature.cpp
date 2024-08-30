@@ -505,6 +505,13 @@ static void check_levelup() {
 		player_levelup();
 }
 
+static void check_drunken_recover() {
+	if(player->is(Drunk)) {
+		if(player->roll(Strenght))
+			player->add(Drunk, -1);
+	}
+}
+
 static void check_burning() {
 	if(player->is(Burning)) {
 		if(!player->resist(FireResistance, FireImmunity))
@@ -1245,6 +1252,9 @@ static bool isfreeplace(creature* player, point ni) {
 }
 
 static void move_step(point ni) {
+	if(player->is(Drunk)) {
+		auto n = player->getposition();
+	}
 	if(!check_leave_area(ni))
 		return;
 	if(!check_place_owner(ni))
@@ -1744,6 +1754,7 @@ void creature_every_minute() {
 void creature_every_10_minutes() {
 	restore(Hits, Strenght);
 	check_illness_effect();
+	check_drunken_recover();
 	normalize_ability(Mood);
 }
 

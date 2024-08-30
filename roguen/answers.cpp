@@ -38,7 +38,7 @@ void answers::modal(const char* title, const char* cancel) const {
 		proc();
 }
 
-void* answers::param() const {
+void* answers::random() const {
 	if(!elements.count)
 		return 0;
 	return (void*)elements.data[rand() % elements.count].value;
