@@ -529,6 +529,17 @@ static void check_drunken_recover() {
 	}
 }
 
+static void check_charm_recover() {
+	auto charmer = player->getcharmer();
+	if(!charmer)
+		return;
+	if(player->roll(Wits, charmer->get(Wits) / 3)) {
+		player->setcharmer(0);
+		if(player->roll(Wits))
+			player->setenemy(charmer);
+	}
+}
+
 static void check_burning() {
 	if(player->is(Burning)) {
 		if(!player->resist(FireResistance, FireImmunity))
@@ -1068,6 +1079,17 @@ static bool is_enemy(const void* object) {
 	if(is_enemy(player, opponent_owner))
 		return true;
 	return is_enemy(owner, opponent_owner);
+}
+
+bool is_ally(const void* object) {
+	auto opponent = (creature*)object;
+	if(!opponent)
+		return false;
+	if(player->getowner() == opponent)
+		return true;
+	if(opponent->getowner() == player)
+		return true;
+	return false;
 }
 
 bool creature::isenemy(const creature& opponent) const {
@@ -1833,6 +1855,7 @@ void creature_every_10_minutes() {
 
 void creature_every_day_part() {
 	check_illness_cure();
+	check_charm_recover();
 }
 
 bool creature::ispresent() const {

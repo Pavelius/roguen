@@ -20,15 +20,17 @@ YouMakeRoll: %герой сделал%а бросок %1 (%2i<=%3i).
 YouFailRoll: %герой [-не сделал%а] бросок %1 (%2i>%3i). 
 
 BuyItemsSomeone: Купить
+BuyItemsSomeoneChoose: У кого именно купить?
 ChatSomeone: Поговорить
+ChatSomeoneChoose: С кем именно поговорить?
 CreatePotions: Создать зелья
 BindWounds: Перевязать раны
-GatherInformation: Узнать слухи
-GatherMellowHerbs: Собрать спелые травы
-GatherSemiMellowHerbs: Собрать травы
 OpenChestLock: Взломать сундук
+OpenChestLockChoose: Взломать какой замок?
 OpenDoorLock: Взломать замок
+OpenDoorLockChoose: Взломать какой замок?
 SearchRoom: Обыскать комнату
 SearchRoomForGems: Искать драгоценности
 SellItemsSomeone: Продать
+SellItemsSomeoneChoose: Продать кому именно?
 StealCoins: Украсть монеты

@@ -5,7 +5,7 @@ BurningHands mana(5)
 CureWounds mana(10)
  use SelectAllies FilterClose FilterWounded ChooseTarget ForEachCreature Heal+5
 CharmPerson mana(20)
- use SelectNeutralCreatures FilterClose ChooseTarget ForEachOpponent CharmOpponent
+ use SelectNeutralCreatures ChooseTarget ForEachOpponent CharmOpponent
 Entaglement mana(6)
  use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature ThornBush
 IceSpear mana(6)

@@ -95,9 +95,7 @@ static bool filter_neutral(const void* object) {
 
 static bool filter_ally_neutral(const void* object) {
 	auto p = (creature*)object;
-	if(player->is(Enemy))
-		return !p->is(Ally);
-	return !p->is(Enemy);
+	return !player->isenemy(*p);
 }
 
 static bool filter_feature(const void* object) {
@@ -168,10 +166,7 @@ static void filter_items(fnvisible proc, int counter) {
 
 static void select_allies(fnvisible proc, int counter) {
 	targets = creatures;
-	if(player->is(Ally))
-		targets.match(Enemy, false);
-	else if(player->is(Enemy))
-		targets.match(Ally, false);
+	targets.collectiona::match(is_ally, true);
 }
 
 static void select_creatures(fnvisible proc, int counter) {

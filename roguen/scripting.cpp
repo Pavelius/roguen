@@ -1305,7 +1305,7 @@ static bool choose_indecies(creaturea& source, const char* header, int offset) {
 static bool choose_target_interactive(const char* id, int offset = 0) {
 	if(!id)
 		return true;
-	auto pn = getnme(str("%1Choose", id));
+	auto pn = getnme(ids(id, "Choose"));
 	if(!pn)
 		return true;
 	pushvalue push_width(window_width, 300);

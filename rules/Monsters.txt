@@ -76,10 +76,10 @@ Shopkeeper avatar(581) unique(1) rest(DeadBody)
  abilities Strenght(15) Dexterity(20) Wits(40) WeaponSkill(20) Hits(5)
  use PlaceOwner GP+50 SomeCoins+30
 Theif avatar(313) rest(DeadBody)
- abilities Strenght(25) Dexterity(40) Wits(25) WeaponSkill(30) Hits(12) Level(1) Thievery(15)
+ abilities Strenght(25) Dexterity(40) Wits(25) WeaponSkill(30) Hits(12) Level(1) Thievery(40)
  use SomeCoins+2 Reputation-5
 TheifFemale avatar(314) rest(DeadBody)
- abilities Strenght(21) Dexterity(40) Wits(30) WeaponSkill(30) Hits(10)
+ abilities Strenght(21) Dexterity(40) Wits(30) WeaponSkill(30) Hits(10) Level(1) Thievery(40)
  use Female SomeCoins+2 Reputation-5
 Farmer avatar(273) rest(DeadBody)
  abilities Strenght(30) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
