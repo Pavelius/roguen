@@ -925,6 +925,7 @@ static bool	spell_isnotcombat(const void* object) {
 }
 
 void creature::clear() {
+	cleanup();
 	memset(this, 0, sizeof(*this));
 	worldpos = {-1000, -1000};
 	moveorder = {-1000, -1000};
@@ -933,8 +934,7 @@ void creature::clear() {
 	setowner(0);
 	setenemy(0);
 	setcharmer(0);
-	if(game.getowner() == this)
-		game.setowner(0);
+	setfear(0);
 }
 
 bool isfreecr(point m) {
@@ -1027,6 +1027,14 @@ creature* creature::getcharmer() const {
 
 void creature::setcharmer(const creature* v) {
 	charmer_id = bsid(v);
+}
+
+creature* creature::getfear() const {
+	return bsdata<creature>::ptr(fear_id);
+}
+
+void creature::setfear(const creature* v) {
+	fear_id = bsid(v);
 }
 
 static inline bool is_enemy_ex(const creature* player, const creature* opponent) {
@@ -1203,6 +1211,8 @@ void creature::cleanup() {
 		if(e.getowner() == this)
 			e.setowner(0);
 	}
+	if(game.getowner() == this)
+		game.setowner(0);
 }
 
 void creature::kill() {
@@ -1217,7 +1227,6 @@ void creature::kill() {
 	if(opponent == this && player)
 		player->experience += get_experience_reward(opponent);
 	fire_trigger(WhenCreatureP1Dead, getkind());
-	cleanup();
 	clear();
 	if(human_killed)
 		end_game();

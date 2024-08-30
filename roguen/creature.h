@@ -15,7 +15,7 @@
 #include "wearable.h"
 
 class creature : public wearable, public statable, public spellable, public ownerable, public receipti {
-	unsigned short	room_id, enemy_id, charmer_id;
+	unsigned short	room_id, enemy_id, charmer_id, fear_id;
 	void			cleanup();
 	void			update_abilities();
 public:
@@ -43,6 +43,7 @@ public:
 	int				getcarry() const;
 	creature*		getcharmer() const;
 	creature*		getenemy() const;
+	creature*		getfear() const;
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
@@ -86,6 +87,7 @@ public:
 	void			set(ability_s i, int v) { abilities[i] = v; }
 	void			setcharmer(const creature* v);
 	void			setenemy(const creature* v);
+	void			setfear(const creature* v);
 	void			setroom(const roomi* v);
 	void			slowdown(int seconds) { wait_seconds += seconds; }
 	bool			speechrumor() const;
