@@ -20,7 +20,6 @@ public:
 	static fnpaint		paintcell;
 	static bool			interactive;
 	static int			column_count;
-	static stringbuilder* console;
 	static const char*	header;
 	static const char*	prompt;
 	static const char*	prompa;

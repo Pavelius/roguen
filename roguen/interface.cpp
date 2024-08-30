@@ -1023,7 +1023,7 @@ void* answers::choose() const {
 		domodal();
 	}
 	screen.restore();
-	::console.clear();
+	console.clear();
 	last_tick_message = getcputime();
 	return (void*)getresult();
 }

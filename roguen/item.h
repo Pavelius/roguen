@@ -66,6 +66,7 @@ public:
 	void			drop(point m);
 	int				getavatar() const { return geti().wear_index; }
 	int				getcost() const;
+	int				getcost(int payment_cost) const;
 	int				getcostall() const;
 	int				getcount() const;
 	int				geteffect() const;

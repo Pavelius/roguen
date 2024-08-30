@@ -25,6 +25,7 @@ static void main_start() {
 	player = player_create({5, 5}, "HightElf", true);
 	player->set(Ally);
 	player->experience += 600;
+	player->money += 500;
 	add_item("LongBow");
 	add_item("Arrow");
 	add_item("Torch");
@@ -51,7 +52,6 @@ int start_application(fnevent proc);
 int main(int argc, char *argv[]) {
 	auto seed = getcputime();
 	initialize_strings();
-	answers::console = &console;
 	logv(str("Seed is %1i", seed));
 	srand(seed);
 	return start_application(main_start);

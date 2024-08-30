@@ -1655,12 +1655,12 @@ static void chatting() {
 	if(player->ishuman()) {
 		auto monster = opponent->getmonster();
 		if(monster) {
-			if(talk_opponent(monster->id))
+			if(talk_opponent(monster->id, 0))
 				return;
 		}
 		auto room = opponent->getroom();
 		if(room) {
-			if(talk_opponent(room->geti().id))
+			if(talk_opponent(room->geti().id, 0))
 				return;
 		}
 		if(speech_need())
@@ -1692,11 +1692,10 @@ static void test_rumor(int bonus) {
 	player->speechrumor();
 }
 
-bool payment(creature* player, creature* keeper, const char* object, int coins) {
-	if(player->ishuman()) {
-		if(answers::console)
-			answers::console->clear();
-		player->actp("WantBuyItem", 0, object, coins);
+static bool payment(creature* player, creature* keeper, const char* object_name, int coins, const char* confirm = 0) {
+	if(confirm && player->ishuman()) {
+		console.clear();
+		player->actp(confirm, 0, object_name, coins);
 		if(!yesno(0))
 			return false;
 	}
@@ -1707,14 +1706,14 @@ bool payment(creature* player, creature* keeper, const char* object, int coins) 
 	}
 	keeper->addcoins(coins);
 	player->addcoins(-coins);
+	keeper->speak("BuyExplicitItem", 0, coins, object_name);
 	return true;
 }
 
-static bool selling(creature* player, creature* opponent, const char* object, int coins) {
-	if(player->ishuman()) {
-		if(answers::console)
-			answers::console->clear();
-		player->actp("WantSellItem", 0, object, coins);
+static bool selling(creature* player, creature* opponent, const char* object, int coins, const char* confirm = 0) {
+	if(confirm && player->ishuman()) {
+		console.clear();
+		player->actp(confirm, 0, object, coins);
 		if(!yesno(0))
 			return false;
 	}
@@ -1735,13 +1734,13 @@ static void pickup(int bonus) {
 		return;
 	auto p = choose_items(items, getnm("PickItem"), true);
 	if(p) {
-		auto payment_cost = player->getpaymentcost();
-		if(payment_cost) {
-			auto item_cost = p->getcostall() * payment_cost / 100;
-			auto keeper = player->getroom()->getowner();
-			if(!payment(player, keeper, p->getfullname(), item_cost))
-				return;
-		}
+		//auto payment_cost = player->getpaymentcost();
+		//if(payment_cost) {
+		//	auto item_cost = p->getcostall() * payment_cost / 100;
+		//	auto keeper = player->getroom()->getowner();
+		//	if(!payment(player, keeper, p->getfullname(), item_cost))
+		//		return;
+		//}
 		player->act("PickupItem", 0, p->getfullname());
 		player->additem(*p);
 		player->update();
@@ -1749,10 +1748,10 @@ static void pickup(int bonus) {
 }
 
 static void pickup_all(int bonus) {
-	if(player->getpaymentcost()) {
-		player->actp("YouCantPickUpAllForCost");
-		return;
-	}
+	//if(player->getpaymentcost()) {
+	//	player->actp("YouCantPickUpAllForCost");
+	//	return;
+	//}
 	itema items;
 	items.select(player->getposition());
 	for(auto p : items) {
@@ -2776,6 +2775,59 @@ static void use_craft(int bonus) {
 	add_item(craft_item(pi, magic));
 }
 
+static void make_trade(int bonus) {
+	if(!opponent)
+		return;
+	auto room = opponent->getroom();
+	if(!room)
+		return;
+	auto index = room->getsellitems();
+	auto index_special = room->getspecialsellitems();
+	opponent->speak("BuyItems");
+	auto payment_cost = player->getpaymentcost();
+	while(true) {
+		an.clear();
+		auto format = getnm("AskBuyItem");
+		for(auto& e : area->items) {
+			if(!e)
+				continue;
+			if(e.position == index)
+				an.add(&e, format, e.getname(), e.getcost(payment_cost));
+			else if(e.position == index_special)
+				an.add(&e, format, e.getname(), e.getcost(payment_cost));
+		}
+		if(!an) {
+			console.clear();
+			opponent->speak("NoItemsForSale");
+			break;
+		}
+		opponent->speak("ItemsForSale");
+		an.add(0, getnm("NoWantBuy"));
+		auto pv = an.choose();
+		if(!pv)
+			break;
+		if(area->items.have(pv)) {
+			auto pi = (itemground*)pv;
+			auto cost = pi->getcost(payment_cost);
+			if(payment(player, opponent, pi->getname(), cost)) {
+				if(pi->position.x == get_token(InRoomToBuySpecial)) {
+					item it = *pi;
+					it.setcount(1);
+					player->additem(it);
+					if(!it)
+						pi->setcount(pi->getcount() - 1);
+				} else {
+					item it = *pi; // Make copy. Original don't change.
+					player->additem(it);
+				}
+			} 
+		}
+		if(!console)
+			opponent->speak("BuyItems");
+	}
+	last_value = 1;
+}
+
 static void add_items_for_sale(int bonus) {
 	if(!opponent)
 		return;
@@ -2784,7 +2836,7 @@ static void add_items_for_sale(int bonus) {
 		return;
 	auto index = room->getsellitems();
 	auto index_special = room->getspecialsellitems();
-	auto format = getnm("AskBuyItem");
+	auto format = getnm("AiaddskBuyItem");
 	for(auto& e : area->items) {
 		if(e.position == index)
 			an.add(&e, format, e.getname(), e.getcost());
@@ -2879,6 +2931,7 @@ BSDATA(script) = {
 	{"LoseGame", lose_game},
 	{"LockAllDoors", lock_all_doors},
 	{"MakeScreenshoot", make_screenshoot},
+	{"MakeTrade", make_trade},
 	{"MarkRoom", mark_room},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},

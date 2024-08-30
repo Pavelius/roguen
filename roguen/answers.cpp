@@ -11,7 +11,6 @@ bool answers::show_tips = true;
 bool answers::choosing = false;
 bool answers::interactive = true;
 int answers::column_count = 1;
-stringbuilder* answers::console;
 fnevent answers::beforepaint;
 fnevent answers::afterpaint;
 answers::fnpaint answers::paintcell;
@@ -63,15 +62,12 @@ void pause() {
 }
 
 void pause(const char* title, ...) {
-	if(answers::console) {
-		if(!(*answers::console))
-			return;
-	}
+	if(!(console))
+		return;
 	answers an;
 	an.addv((void*)1, title, xva_start(title));
 	an.choose();
-	if(answers::console)
-		answers::console->clear();
+	console.clear();
 }
 
 void pausenc(const char* title, ...) {
@@ -81,10 +77,8 @@ void pausenc(const char* title, ...) {
 }
 
 bool yesno(const char* title, ...) {
-	if(!answers::console)
-		return false;
 	if(title)
-		answers::console->addv(title, xva_start(title));
+		console.addv(title, xva_start(title));
 	answers an;
 	an.add((void*)1, getnm("Yes"));
 	an.add((void*)0, getnm("No"));
@@ -92,25 +86,19 @@ bool yesno(const char* title, ...) {
 }
 
 void information(const char* format, ...) {
-	if(!answers::console)
-		return;
-	answers::console->addn("[+");
-	answers::console->addv(format, xva_start(format));
-	answers::console->add("]");
+	console.addn("[+");
+	console.addv(format, xva_start(format));
+	console.add("]");
 }
 
 void warning(const char* format, ...) {
-	if(!answers::console)
-		return;
-	answers::console->addn("[-");
-	answers::console->addv(format, xva_start(format));
-	answers::console->add("]");
+	console.addn("[-");
+	console.addv(format, xva_start(format));
+	console.add("]");
 }
 
 void output(const char* format, ...) {
-	if(!answers::console)
-		return;
-	answers::console->addx("\n", format, xva_start(format));
+	console.addx("\n", format, xva_start(format));
 }
 
 static const char* find_separator(const char* pb) {

@@ -25,6 +25,10 @@ int item::getcost() const {
 	return geti().cost;
 }
 
+int item::getcost(int payment_cost) const {
+	return geti().cost * payment_cost / 100;
+}
+
 int item::getcostall() const {
 	auto& ei = geti();
 	auto c = getcount();

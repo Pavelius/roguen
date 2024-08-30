@@ -73,7 +73,7 @@ bool creature::speak(const char* action, const char* id, ...) const {
 	if(!format)
 		return false;
 	pushvalue push_player(player, const_cast<creature*>(this));
-	sayv(console, format, xva_start(action));
+	sayv(console, format, xva_start(id));
 	return true;
 }
 
@@ -847,7 +847,6 @@ static void look_items(creature* player, point m) {
 		auto index = 0;
 		char temp[4096]; stringbuilder sb(temp);
 		auto count = items.getcount();
-		auto payment_cost = player->getpaymentcost();
 		sb.add(getnm("ThereIsLying"));
 		for(auto p : items) {
 			if(index > 0) {
@@ -856,7 +855,7 @@ static void look_items(creature* player, point m) {
 				else
 					sb.add(",");
 			}
-			sb.adds("%-1", p->getfullname(payment_cost));
+			sb.adds("%-1", p->getfullname(0));
 			index++;
 		}
 		sb.add(".");
@@ -1764,7 +1763,7 @@ int	creature::getpaymentcost() const {
 	if(!keeper)
 		return 0;
 	auto skill_delta = keeper->get(Wits) - get(Wits);
-	return 200 + skill_delta;
+	return 250 + skill_delta;
 }
 
 int	creature::getsellingcost() const {
