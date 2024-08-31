@@ -12,7 +12,7 @@ struct crafti : nameable {
 	ability_s	skill;
 	variants	elements;
 };
-struct receipti {
+struct crafta {
 	unsigned	receipts[BlacksmithCraft + 1];
 	unsigned	iscraft(craftn i, int v) const { return (receipts[i] & (1<<v))!=0; }
 	void		setcraft(craftn i, int v) { receipts[i] |= (1<<v); }

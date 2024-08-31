@@ -98,35 +98,9 @@ static void show_debug_minimap() {
 	script_run("ShowMinimap");
 }
 
-static void fix_yellow(const char* format, int value) {
-	if(!value)
-		return;
-	player->fixvalue(str(format, value), value >= 0 ? ColorYellow : ColorRed);
-}
-
-static void fix_green(const char* format, int value) {
-	if(!value)
-		return;
-	player->fixvalue(str(format, value), value >= 0 ? ColorGreen : ColorRed);
-}
-
-static void fix_green(int value) {
-	player->fixvalue(value, ColorGreen, ColorRed);
-}
-
 static void clear_console() {
 	if(player && player->ishuman())
 		console.clear();
-}
-
-static int add_green(int current, int bonus, const char* format, int minimum = 0, int maximum = 120) {
-	auto i = current + bonus;
-	if(i < minimum)
-		i = minimum;
-	if(i > maximum)
-		i = maximum;
-	fix_green(format, i - current);
-	return i;
 }
 
 void damage_item(item& it) {
@@ -2003,7 +1977,8 @@ static void cast_last_spell(int bonus) {
 }
 
 static void heal_player(int bonus) {
-	player->abilities[Hits] = add_green(player->get(Hits), bonus, "%Heal%+1i", 0, player->getmaximum(Hits));
+	player->add(Hits, bonus, 0, player->getmaximum(Hits));
+	player->fixvalue(getnm("Heal"), bonus >= 0 ? ColorGreen : ColorRed);
 	if(!(*player))
 		player->kill();
 }
@@ -2145,8 +2120,8 @@ static void roll_action(int bonus) {
 
 static void gain_experience(int bonus) {
 	auto value = bonus * 100;
-	fix_yellow("%Experience%+1i", value);
 	player->experience += value;
+	player->fixvalue(getnm("Experience"), value >= 0 ? ColorYellow : ColorRed);
 }
 
 static bool learn_value(variant v, const char* action) {
@@ -2323,13 +2298,8 @@ static void apply_filter(collectiona& source, variant v, void** filter_object) {
 	source.count = pb - source.begin();
 }
 
-static bool is_wounded(int bonus) {
-	auto n = player->get(Hits);
-	auto m = player->basic.abilities[Hits];
-	return n > 0 && n < m;
-}
-
-static void standart_filter(int bonus) {
+static void fix_ability(int bonus) {
+	player->fixability(last_ability, bonus);
 }
 
 static void acid_harm(int bonus) {
@@ -2494,8 +2464,8 @@ static void for_each_room(int bonus) {
 
 static void gain_coins(int bonus) {
 	auto value = bonus * 10;
-	fix_yellow("%1i %Coins", value);
 	player->money += value;
+	player->fixvalue(getnm("Coins"), value >= 0 ? ColorYellow : ColorRed);
 }
 
 static void empthy_script(int bonus) {
@@ -2699,10 +2669,12 @@ static void steal_opponent_coins(int bonus) {
 
 static void add_reputation(int bonus) {
 	player->add(Reputation, bonus);
+	player->fixability(Reputation, bonus);
 }
 
 static void add_mana(int bonus) {
 	player->add(Mana, bonus, 0, player->basic.abilities[Mana]);
+	player->fixability(Mana, bonus);
 }
 
 static void create_hero(int bonus) {
@@ -2971,6 +2943,7 @@ static void add_drunk(int bonus) {
 			bonus = bonus / 2;
 	}
 	player->add(Drunk, bonus, 0);
+	player->fixability(Drunk, -bonus);
 }
 
 static void add_craft(int bonus) {
@@ -3059,6 +3032,7 @@ BSDATA(script) = {
 	{"ExploreArea", explore_area},
 	{"ProhibitedAction", prohibited_action},
 	{"FireHarm", fire_harm},
+	{"FixAbility", fix_ability},
 	{"ForEachCreature", for_each_creature, is_targets},
 	{"ForEachFeature", for_each_feature, is_features},
 	{"ForEachItem", for_each_item, is_items},
@@ -3135,7 +3109,6 @@ BSDATA(script) = {
 	{"ViewStuff", view_stuff},
 	{"WaitHour", wait_hour},
 	{"WinGame", win_game},
-	{"Wounded", standart_filter, is_wounded},
 	{"UseItem", use_item},
 	{"UseCraft", use_craft},
 };

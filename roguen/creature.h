@@ -14,7 +14,7 @@
 #include "spell.h"
 #include "wearable.h"
 
-class creature : public wearable, public statable, public spellable, public ownerable, public receipti {
+class creature : public wearable, public statable, public spellable, public ownerable, public crafta {
 	unsigned short	room_id, enemy_id, charmer_id, fear_id;
 	void			cleanup();
 	void			update_abilities();

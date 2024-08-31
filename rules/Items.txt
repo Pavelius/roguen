@@ -141,23 +141,23 @@ HealingPotion cost(100) weight(25) unidentified(RedPotion) wear(Potion) avatar(1
 ManaPotion cost(80) weight(25) unidentified(BluePotion) wear(Potion) avatar(436) cursed(PotionOfPoison)
  use AddMana+15
 PotionOfStrenght cost(10000) weight(25) unidentified(RedPotion) wear(Potion) avatar(162) cursed(PotionOfWeakness)
- use Strenght+3
+ use Strenght+3 FixAbility
 PotionOfDexterity cost(8000) weight(25) unidentified(BrownPotion) wear(Potion) avatar(165) cursed(PotionOfWeakness)
- use Dexterity+3
+ use Dexterity+3 FixAbility
 PotionOfWits cost(8000) weight(25) unidentified(BluePotion) wear(Potion) avatar(433) cursed(PotionOfDumbness)
- use Wits+3
+ use Wits+3 FixAbility
 PotionOfAbilityRaise cost(8000) weight(25) unidentified(BluePotion) wear(Potion) avatar(435) cursed(PotionOfWeakness)
- use RandomAbility+1
+ use RandomAbility+1 FixAbility
 PotionOfHealth cost(5000) weight(25) unidentified(RedPotion) wear(Potion) avatar(169) cursed(PotionOfPoison)
- use Hits+1
+ use Hits+1 FixAbility
 PotionOfEnergy cost(4000) weight(25) unidentified(RedPotion) wear(Potion) avatar(169) cursed(PotionOfDumbness)
- use Mana+1
+ use Mana+1 FixAbility
 PotionOfWisdow cost(1000) weight(25) unidentified(YellowPotion) wear(Potion) avatar(169) cursed(PotionOfDumbness)
  use GainExperience+10
 PotionOfCurePoison cost(800) weight(25) unidentified(YellowPotion) wear(Potion) avatar(169) cursed(PotionOfPoison)
- use Poison-20
+ use Poison-20 FixAbility
 PotionOfLearning cost(3000) weight(25) unidentified(BluePotion) wear(Potion) avatar(167) cursed(PotionOfDumbness)
- use SkillPoints+5
+ use SkillPoints+5 FixAbility
 
 BrassRing cost(100) weight(1) wear(FingerRight) avatar(75)
 IronRing cost(300) weight(1) wear(FingerRight) avatar(74)

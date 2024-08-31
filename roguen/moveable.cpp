@@ -86,16 +86,12 @@ void movable::fixremove() const {
 		po->clear();
 }
 
-static point apply_same_position(point pt, fnevent proc) {
-	while(findobject(pt, proc))
-		pt.y -= texth();
-	return pt;
-}
-
 void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
 	if(!area->is(position, Visible))
 		return;
-	auto pt = getsposition(); pt.y -= tsy; pt = apply_same_position(pt, fproc);
+	auto pt = getsposition(); pt.y -= tsy;
+	if(findobject(pt, fproc))
+		return; // Same object do not show
 	auto pa = addobject(pt, fproc, data, format_color, 20);
 	auto po = pa->add(mst, 0, true);
 	pt.y -= tsy;
@@ -145,9 +141,9 @@ void movable::fixeffect(const char* id) const {
 void movable::fixability(ability_s i, int v) const {
 	if(!area->is(position, Visible))
 		return;
-	char temp[260]; stringbuilder sb(temp);
-	sb.add("%1%+2i", bsdata<abilityi>::elements[i].getname(), v);
-	fixvalue(temp, v > 0 ? ColorGreen : ColorRed);
+	if(!v)
+		return;
+	fixvalue(bsdata<abilityi>::elements[i].getname(), v > 0 ? ColorGreen : ColorRed);
 }
 
 void movable::fixmovement() const {
