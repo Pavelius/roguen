@@ -853,6 +853,36 @@ static bool issame(point m, direction_s d, tilef f) {
 	return true;
 }
 
+static void crush_wall(point m) {
+	const int chance_stones = 25;
+	if(!area->isvalid(m))
+		return;
+	auto floor = bsdata<tilei>::elements[area->tiles[m]].tile;
+	area->settile(m, floor);
+	if(d100() < chance_stones)
+		drop_item(m, "MiningOre");
+	if(player->is(Gemcutting)) {
+		if(player->roll(Gemcutting, -3000))
+			drop_item(m, "MiningGem");
+	}
+	if(area->iswall(m, North) && area->iswall(m, East)) {
+		if(!area->iswall(m, NorthEast))
+			crush_wall(to(m, North));
+	}
+	if(area->iswall(m, South) && area->iswall(m, East)) {
+		if(!area->iswall(m, SouthEast))
+			crush_wall(to(m, East));
+	}
+	if(area->iswall(m, South) && area->iswall(m, West)) {
+		if(!area->iswall(m, SouthWest)) 
+			crush_wall(to(m, South));
+	}
+	if(area->iswall(m, North) && area->iswall(m, West)) {
+		if(!area->iswall(m, NorthWest))
+			crush_wall(to(m, West));
+	}
+}
+
 static bool check_mining(creature* player, point m) {
 	if(!player->wears[MeleeWeapon].geti().is(CutMines))
 		return false;
@@ -863,15 +893,9 @@ static bool check_mining(creature* player, point m) {
 		player->actp("YouCantMineHere");
 		return false;
 	}
-	if(player->roll(Mining)) {
+	if(player->roll(Mining, 20)) {
 		player->act("YouCrashWall", 0, getnm(bsdata<tilei>::elements[area->tiles[m]].id));
-		area->setfeature(m, 0);
-		area->settile(m, getfloor());
-		if(d100() < 25) {
-			drop_item(m, "MiningOre");
-			if(player->roll(Gemcutting, -2000))
-				drop_item(m, "MiningGem");
-		}
+		crush_wall(m);
 		return true;
 	} else if(d100() < 10)
 		damage_item(player->wears[MeleeWeapon]);
@@ -1447,9 +1471,6 @@ bool creature::roll(ability_s v, int bonus) const {
 		if(base_value > value)
 			value = base_value;
 	}
-	if(value <= 0)
-		return false;
-	last_roll_result = d100();
 	if(bonus == -2000) {
 		value = value / 2;
 		bonus = 0;
@@ -1457,13 +1478,17 @@ bool creature::roll(ability_s v, int bonus) const {
 		value = value / 3;
 		bonus = 0;
 	}
+	value += bonus;
+	if(value <= 0)
+		return false;
+	last_roll_result = d100();
 	last_value = (value - last_roll_result) / 10;
 	if(last_roll_result <= 5)
 		last_roll_successed = true;
 	else if(last_roll_result >= 95)
 		last_roll_successed = false;
 	else
-		last_roll_successed = last_roll_result <= (value + bonus);
+		last_roll_successed = (last_roll_result <= value);
 	return last_roll_successed;
 }
 

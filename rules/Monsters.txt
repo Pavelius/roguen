@@ -81,6 +81,9 @@ Bartender avatar(51) unique(1) rest(DeadBody)
 CityGuard avatar(543) rest(DeadBody)
  abilities Strenght(40) Dexterity(25) Wits(30) WeaponSkill(40) Hits(15) Level(4)
  use Spear ChainArmor SomeCoins+3 Reputation+20
+DwarfMiner avatar(503) rest(DeadBody)
+ abilities Strenght(35) Dexterity(15) Wits(20) WeaponSkill(30) Hits(13) Level(2) Mining(40)
+ use HandPick LeatherArmor
 Shopkeeper avatar(581) unique(1) rest(DeadBody)
  abilities Strenght(15) Dexterity(20) Wits(40) WeaponSkill(20) Hits(5)
  use PlaceOwner GP+50 SomeCoins+30

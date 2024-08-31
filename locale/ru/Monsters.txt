@@ -6,6 +6,7 @@ CityGuard: Городской охранник
 DireBoar: Ужасный кабан
 DireWolf: Ужасный волк
 Dog: Собака
+DwarfMiner: Гном-шахтер
 Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка

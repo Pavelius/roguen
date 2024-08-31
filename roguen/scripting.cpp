@@ -912,6 +912,17 @@ static void ready_area(geoposition geo) {
 	check_time_passed();
 }
 
+//static void crush_wall(point m) {
+//	point source[256];
+//	unsigned char ib = 0;
+//	unsigned char ie = 0;
+//	source[ib++] = m;
+//	while(ie != ib) {
+//		auto n = source[ie++];
+//		auto d = check_wall(n);
+//	}
+//}
+
 static void update_ui() {
 	draw::removeobjects(bsdata<creature>::source);
 	for(auto& e : bsdata<creature>()) {

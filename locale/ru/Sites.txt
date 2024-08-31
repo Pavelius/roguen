@@ -3,6 +3,7 @@ AncientLabRoom: Древняя лабортория
 ArtifactStatueRoom: Статуя
 AshenLand: Земли пепла
 BossRoom: Логово
+CaveMiningGround: Пещера с жилой
 CaveMonsterLair: Зверинное логово
 CaveStairsUpRoom: Проход наверх
 ChurchOneBuilding: Церковь единого
