@@ -1,28 +1,37 @@
+///////////////////////////////////////////////////////////
+// Wits values
+// 1 - Insects
+// 2 - Reptilies, Snakes
+// 3 - Herd animals
+// 4 - Predator animals
+// 5 - Humanoid, but mindless
+// 6+ Humanoid that can speak
+
 #Monster
 
 Bear avatar(360) rest(Meat)
- abilities Strenght(50) Dexterity(20) Wits(3) WeaponSkill(40) Hits(40) Level(3)
+ abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(40) Hits(40) Level(3)
  use Bite Reputation-40
 Boar avatar(376) rest(Meat)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
  use Bite Reputation-40
 DireBoar avatar(377) rest(Meat)
- abilities Strenght(45) Dexterity(25) Wits(5) WeaponSkill(35) Hits(40) Armor(1) Level(4)
+ abilities Strenght(45) Dexterity(25) Wits(3) WeaponSkill(35) Hits(40) Armor(1) Level(4)
  use Bite Reputation-40
 DireWolf avatar(52) rest(DeadBody)
- abilities Strenght(35) Dexterity(30) Wits(5) WeaponSkill(35) Hits(30) Armor(1) Level(3)
+ abilities Strenght(35) Dexterity(30) Wits(4) WeaponSkill(35) Hits(30) Armor(1) Level(3)
  use Bite Reputation-40
 Dog avatar(292) rest(DeadBody)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) Hits(4)
  use Bite Female Reputation-5
 GiantBat avatar(155) rest(DeadBody)
- abilities Strenght(10) Dexterity(30) Wits(2) WeaponSkill(20) Hits(4)
+ abilities Strenght(10) Dexterity(30) Wits(3) WeaponSkill(20) Hits(4)
  use Bite Reputation-40
 GiantLizard avatar(220) rest(DeadBody)
- abilities Strenght(40) Dexterity(20) Wits(4) WeaponSkill(30) Hits(20) Armor(4) Level(3)
+ abilities Strenght(40) Dexterity(20) Wits(2) WeaponSkill(30) Hits(20) Armor(4) Level(3)
  use Bite Reputation-40
 GiantSpider avatar(591) rest(DeadBody)
- abilities Strenght(35) Dexterity(20) Wits(6) WeaponSkill(30) Hits(20) Level(5)
+ abilities Strenght(35) Dexterity(20) Wits(1) WeaponSkill(30) Hits(20) Level(5)
  use Bite StrongPoison IgnoreWeb Web+4 Reputation-40
 Rabbit avatar(7) rest(DeadBody) rest(Meat)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
@@ -34,21 +43,21 @@ Rat avatar(293) rest(DeadBody)
  abilities Strenght(5) Dexterity(30) Wits(3) WeaponSkill(15) Hits(2)
  use Bite Reputation-20
 Wolf avatar(20) rest(DeadBody)
- abilities Strenght(20) Dexterity(30) Wits(3) WeaponSkill(25) Hits(9) Level(1)
+ abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(25) Hits(9) Level(1)
  use Bite Reputation-40
 
 Ghoul avatar(305) rest(DeadBody)
- abilities Strenght(40) Dexterity(30) Wits(10) WeaponSkill(30) Hits(14) Armor(1) Level(2)
+ abilities Strenght(40) Dexterity(30) Wits(6) WeaponSkill(30) Hits(14) Armor(1) Level(2)
  use Claws Undead PoisonImmunity DiseaseImmunity Reputation-80
 Skeleton avatar(574) rest(Bones)
- abilities Strenght(15) Dexterity(25) Wits(2) WeaponSkill(20) Hits(7) Armor(1) Level(1)
+ abilities Strenght(15) Dexterity(25) Wits(5) WeaponSkill(20) Hits(7) Armor(1) Level(1)
  use Spear Darkvision Undead PoisonImmunity DiseaseImmunity Reputation-80
 Zombie avatar(101) rest(DeadBody)
- abilities Strenght(30) Dexterity(10) Wits(2) WeaponSkill(15) Hits(16) Level(2)
+ abilities Strenght(30) Dexterity(10) Wits(5) WeaponSkill(15) Hits(16) Level(2)
  use Dagger Darkvision Undead PoisonImmunity DiseaseImmunity Reputation-80
 
 ChaosHydra avatar(339) rest(DeadBody)
- abilities Strenght(65) Dexterity(10) Wits(5) WeaponSkill(40) Hits(50) Level(5)
+ abilities Strenght(65) Dexterity(10) Wits(4) WeaponSkill(40) Hits(50) Level(5)
  use Bite Regeneration Reputation-60
 Goblin avatar(0) rest(DeadBody)
  abilities Strenght(20) Dexterity(40) Wits(11) WeaponSkill(25) Hits(5)
@@ -60,10 +69,10 @@ OrcWarrior avatar(2) rest(DeadBody)
  abilities Strenght(40) Dexterity(20) Wits(10) WeaponSkill(25) Hits(10) Level(3)
  use BruteSword LeatherArmor Darkvision SomeCoins OrkBlood+1 Reputation-60
 Outsider avatar(121) rest(DeadBody)
- abilities Strenght(30) Dexterity(20) Wits(10) WeaponSkill(30) Hits(10) Armor(3) Level(3)
+ abilities Strenght(30) Dexterity(20) Wits(5) WeaponSkill(30) Hits(10) Armor(3) Level(3)
  use Tentacle Reputation-60
 ShamblingMound avatar(9) rest(DeadBody)
- abilities Strenght(45) Dexterity(15) Wits(2) WeaponSkill(30) Hits(30) Level(4)
+ abilities Strenght(45) Dexterity(15) Wits(5) WeaponSkill(30) Hits(30) Level(4)
  use Bite Reputation-60
 
 Bartender avatar(51) unique(1) rest(DeadBody)

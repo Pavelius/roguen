@@ -31,7 +31,7 @@ public:
 	void			apply(const featable& v) { feats.add(v); }
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
-	bool			canspeak() const { return abilities[Wits] >= 5; }
+	bool			canspeak() const { return abilities[Wits] >= 6; }
 	void			clear();
 	void			equipi(short unsigned type, int count);
 	void			equip(item& v);
@@ -63,11 +63,10 @@ public:
 	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
 	bool			is(feat_s v, const item& i) const { return feats.is(v) || i.is(v); }
 	bool			isallow(const item& it) const;
-	bool			isenemy(const creature& opponent) const;
 	bool			isexpert(ability_s v) const { return get(v) >= 30; }
-	bool			isevil() const { return abilities[Reputation] < -30; }
+	bool			isevil() const { return abilities[Reputation] <= -20; }
 	bool			isfollowmaster() const;
-	bool			isgood() const { return abilities[Reputation] >= 0; }
+	bool			isgood() const { return abilities[Reputation] >= 20; }
 	bool			ishuman() const;
 	bool			ismaster(ability_s v) const { return get(v) >= 60; }
 	bool			ispresent() const;

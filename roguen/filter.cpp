@@ -88,11 +88,6 @@ static bool filter_close(const void* object) {
 	return (area->getrange(p->getposition(), last_index) <= 1);
 }
 
-static bool filter_ally_neutral(const void* object) {
-	auto p = (creature*)object;
-	return !player->isenemy(*p);
-}
-
 static bool filter_feature(const void* object) {
 	auto p = (creature*)object;
 	return area->features[p->getposition()] != 0;
@@ -127,6 +122,11 @@ static bool filter_human(const void* object) {
 	return p->ishuman();
 }
 
+static bool filter_charmed(const void* object) {
+	auto p = (creature*)object;
+	return p->getcharmer() != 0;
+}
+
 static bool filter_blessed(const void* object) {
 	auto p = (item*)object;
 	return p->is(Blessed);
@@ -145,7 +145,7 @@ static bool filter_undead(const void* object) {
 static bool filter_animal(const void* object) {
 	auto p = (creature*)object;
 	auto v = p->get(Wits);
-	return v >= 1 && v <= 4;
+	return v == 3 && v == 4;
 }
 
 static void match_targets(fnvisible proc, int counter) {
@@ -178,6 +178,12 @@ static void select_allies(fnvisible proc, int counter) {
 static void select_creatures(fnvisible proc, int counter) {
 	clear_all_collections();
 	targets = creatures;
+}
+
+static void select_neutral_creatures(fnvisible proc, int counter) {
+	clear_all_collections();
+	targets = creatures;
+	targets.match(is_enemy, false);
 }
 
 static void select_enemies(fnvisible proc, int counter) {
@@ -218,16 +224,6 @@ static void select_next_features(fnvisible proc, int counter) {
 	last_variant = push;
 }
 
-static void select_custom_creatures(fnvisible proc, int counter) {
-	clear_all_collections();
-	auto keep = counter >= 0;
-	for(auto p : creatures) {
-		if(proc(p) != keep)
-			continue;
-		targets.add(p);
-	}
-}
-
 static void select_rooms(fnvisible proc, int counter) {
 	clear_all_collections();
 	rooms.collectiona::select(area->rooms);
@@ -246,6 +242,7 @@ BSDATA(filteri) = {
 	{"Filter", 0, filter_next},
 	{"FilterAnimal", filter_animal, match_targets},
 	{"FilterBlessed", filter_blessed, filter_items},
+	{"FilterCharmed", filter_charmed, match_targets},
 	{"FilterClose", filter_close, match_targets},
 	{"FilterCursed", filter_cursed, filter_items},
 	{"FilterDamaged", filter_damaged, filter_items},
@@ -263,7 +260,7 @@ BSDATA(filteri) = {
 	{"SelectCreatures", 0, select_creatures},
 	{"SelectEnemies", 0, select_enemies},
 	{"SelectFeatures", 0, select_features},
-	{"SelectNeutralCreatures", filter_ally_neutral, select_custom_creatures},
+	{"SelectNeutralCreatures", 0, select_neutral_creatures},
 	{"SelectNextFeatures", 0, select_next_features},
 	{"SelectRooms", 0, select_rooms},
 	{"SelectWalls", 0, select_walls},

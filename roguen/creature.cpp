@@ -1047,12 +1047,12 @@ creature* creature::getleader() const {
 
 static bool is_possible_enemy(const void* object) {
 	auto opponent = (creature*)object;
-	if(player->is(OrkBlood) && opponent->is(DwarfBlood))
+	if(player->is(DwarfBlood) && opponent->is(OrkBlood))
 		return true;
-	if(player->get(Reputation) <= -20)
-		return opponent->get(Reputation) >= 0;
-	else if(player->get(Reputation) >= 20)
-		return opponent->get(Reputation) <= -20;
+	if(player->isevil())
+		return !opponent->isevil();
+	else if(player->isgood())
+		return opponent->isevil();
 	return false;
 }
 
@@ -1099,11 +1099,6 @@ static void check_possible_enemy() {
 	}
 }
 
-bool creature::isenemy(const creature& opponent) const {
-	pushvalue push(player, const_cast<creature*>(this));
-	return is_enemy(&opponent);
-}
-
 bool creature::is(areaf v) const {
 	if(!area)
 		return false;
@@ -1111,7 +1106,7 @@ bool creature::is(areaf v) const {
 }
 
 static void opponent_interaction() {
-	if(opponent->isenemy(*player))
+	if(is_enemy(opponent))
 		attack_melee(0);
 	else if(!player->ishuman())
 		pay_movement();

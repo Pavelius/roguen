@@ -2988,7 +2988,10 @@ static void prohibited_action(int bonus) {
 }
 
 static void charm_opponent(int bonus) {
-	opponent->setcharmer(player);
+	if(bonus>=0)
+		opponent->setcharmer(player);
+	else
+		opponent->setcharmer(0);
 }
 
 BSDATA(triggerni) = {
