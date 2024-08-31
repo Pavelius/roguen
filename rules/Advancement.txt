@@ -29,7 +29,7 @@ HightElf 1 Ability
 HightElf 1 Skills
  elements WeaponSkill+15 BalisticSkill+20 Dodge+10 Literacy+10 History+10
 HightElf 1 Spells
- elements LightSpell IceSpear HorrorScare
+ elements LightSpell IceSpear
 HightElf 1 Equipment
  elements Staff
 HightElf -2 AdditionalHits
@@ -44,7 +44,7 @@ Dwarf 1 Ability
 Dwarf 1 Skills
  elements WeaponSkill+20 BalisticSkill+10 Mining+15 Gemcutting+10
 Dwarf 1 Equipment
- elements HandPick HandAxe LeatherArmor
+ elements HandAxe HandPick LeatherArmor
 Dwarf -1 AdditionalHits
  elements Hits+2
 Dwarf -1 AdditionalSkills

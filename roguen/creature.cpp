@@ -823,12 +823,13 @@ static int chance_cut_wood(const item& weapon) {
 
 static bool check_cut_wood(creature* player, point m, const featurei& ei) {
 	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
-		if(player->roll(Woodcutting)) {
+		if(player->roll(Woodcutting, 10)) {
 			player->act("YouCutWood", 0, getnm(ei.id));
 			area->setfeature(m, 0);
 			drop_item(m, "WoodenLagsTable");
 			return true;
-		}
+		} else if(d100() < 5)
+			damage_item(player->wears[MeleeWeapon]);
 	}
 	return false;
 }
@@ -861,10 +862,8 @@ static void crush_wall(point m) {
 	area->settile(m, floor);
 	if(d100() < chance_stones)
 		drop_item(m, "MiningOre");
-	if(player->is(Gemcutting)) {
-		if(player->roll(Gemcutting, -3000))
-			drop_item(m, "MiningGem");
-	}
+	if(player->roll(Gemcutting, -3000))
+		drop_item(m, "MiningGem");
 	if(area->iswall(m, North) && area->iswall(m, East)) {
 		if(!area->iswall(m, NorthEast))
 			crush_wall(to(m, North));
@@ -874,7 +873,7 @@ static void crush_wall(point m) {
 			crush_wall(to(m, East));
 	}
 	if(area->iswall(m, South) && area->iswall(m, West)) {
-		if(!area->iswall(m, SouthWest)) 
+		if(!area->iswall(m, SouthWest))
 			crush_wall(to(m, South));
 	}
 	if(area->iswall(m, North) && area->iswall(m, West)) {
@@ -1100,8 +1099,8 @@ static bool is_possible_enemy(const void* object) {
 	auto opponent = (creature*)object;
 	if(player->is(DwarfBlood) && opponent->is(OrkBlood))
 		return true;
-	if(player->isevil())
-		return !opponent->isevil();
+	if(player->get(Reputation) < 0)
+		return (opponent->get(Reputation) - player->get(Reputation)) >= 10; // Attack those who is `weak`
 	else if(player->isgood())
 		return opponent->isevil();
 	return false;
@@ -1143,7 +1142,7 @@ static void check_possible_enemy() {
 	if(player->getenemy() && !player->get(Mood))
 		player->setenemy(0);
 	// If we good we don't aggressive.
-	if(!player->isevil())
+	if(!player->badtemper())
 		return;
 	// Find someone to kill
 	enemies = creatures;
@@ -1277,6 +1276,13 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 	}
 	if(roll_result >= 95 && d100() < 30)
 		weapon.damage();
+}
+
+bool creature::badtemper() const {
+	auto v = get(Reputation);
+	if(v >= 0)
+		return false;
+	return d100() < -v;
 }
 
 void creature::cleanup() {

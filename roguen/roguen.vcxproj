@@ -350,6 +350,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\errors.txt" />
+    <Text Include="..\locale\ru\Abilities.txt" />
     <Text Include="..\locale\ru\Choose.txt" />
     <Text Include="..\locale\ru\Directions.txt" />
     <Text Include="..\locale\ru\Effects.txt" />

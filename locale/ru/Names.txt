@@ -109,25 +109,8 @@ CursedCharisma: Уродство
 CursedDexterity: Неуклюжесть
 CursedWits: Слабоумие
 
-Strenght: Сила
-Charisma: Харизма
-Dexterity: Ловкость
-Wits: Интеллект
-
-BalisticSkill: Меткость
-Dodge: Уклонение
-WeaponSkill: Оружие
-Drunk: Опьянение
 ChanceFailSpell: провал заклинания
 ChanceFailSpellStat: Провалить заклинание %1i%%
-
-CarryCapacity: Грузоподъемность
-Damage: Урон
-DamageMelee: Урон
-DamageReduciton: Броня
-Hits: Хиты
-Mana: Мана
-Money: Деньги
 
 VisualizeProgress: Мы c тобой %-1. При этом осталось примерно %-2.
 NoAnyProgress: Еще даже не начинали

@@ -29,6 +29,7 @@ public:
 	bool			actp(const char* action, const char* id = 0, ...) const;
 	void			additem(item& v);
 	void			apply(const featable& v) { feats.add(v); }
+	bool			badtemper() const;
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
 	bool			canspeak() const { return abilities[Wits] >= 6; }

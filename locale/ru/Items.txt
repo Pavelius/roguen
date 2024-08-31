@@ -79,6 +79,7 @@ SmallLags: Маленькая ветка
 Torch: Факел
 
 LoafOfBread: Кусок хлеба
+Meat: Мясо
 Ration: Сухпаек
 Sausage: Колбаса
 

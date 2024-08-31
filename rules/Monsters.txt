@@ -11,28 +11,28 @@
 
 Bear avatar(360) rest(Meat)
  abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(40) Hits(40) Level(3)
- use Bite Reputation-40
+ use Bite Reputation-10
 Boar avatar(376) rest(Meat)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
- use Bite Reputation-40
+ use Bite Reputation-35
 DireBoar avatar(377) rest(Meat)
  abilities Strenght(45) Dexterity(25) Wits(3) WeaponSkill(35) Hits(40) Armor(1) Level(4)
  use Bite Reputation-40
 DireWolf avatar(52) rest(DeadBody)
  abilities Strenght(35) Dexterity(30) Wits(4) WeaponSkill(35) Hits(30) Armor(1) Level(3)
- use Bite Reputation-40
+ use Bite Reputation-30
 Dog avatar(292) rest(DeadBody)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(20) Hits(4)
  use Bite Female Reputation-5
 GiantBat avatar(155) rest(DeadBody)
  abilities Strenght(10) Dexterity(30) Wits(3) WeaponSkill(20) Hits(4)
- use Bite Reputation-40
+ use Bite Reputation-10
 GiantLizard avatar(220) rest(DeadBody)
- abilities Strenght(40) Dexterity(20) Wits(2) WeaponSkill(30) Hits(20) Armor(4) Level(3)
- use Bite Reputation-40
+ abilities Strenght(40) Dexterity(20) Wits(2) WeaponSkill(30) Hits(20) Armor(3) Level(4)
+ use Bite Reputation-10
 GiantSpider avatar(591) rest(DeadBody)
  abilities Strenght(35) Dexterity(20) Wits(1) WeaponSkill(30) Hits(20) Level(5)
- use Bite StrongPoison IgnoreWeb Web+4 Reputation-40
+ use Bite StrongPoison IgnoreWeb Web+4 Reputation-20
 Rabbit avatar(7) rest(DeadBody) rest(Meat)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
  use Bite
@@ -41,10 +41,10 @@ RabbitFemale avatar(8) parent(Rabbit) rest(Meat)
  use Bite
 Rat avatar(293) rest(DeadBody)
  abilities Strenght(5) Dexterity(30) Wits(3) WeaponSkill(15) Hits(2)
- use Bite Reputation-20
+ use Bite Reputation-10
 Wolf avatar(20) rest(DeadBody)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(25) Hits(9) Level(1)
- use Bite Reputation-40
+ use Bite Reputation-20
 
 Ghoul avatar(305) rest(DeadBody)
  abilities Strenght(40) Dexterity(30) Wits(6) WeaponSkill(30) Hits(14) Armor(1) Level(2)
@@ -61,19 +61,19 @@ ChaosHydra avatar(339) rest(DeadBody)
  use Bite Regeneration Reputation-60
 Goblin avatar(0) rest(DeadBody)
  abilities Strenght(20) Dexterity(40) Wits(11) WeaponSkill(25) Hits(5)
- use Dagger SomeCoins-20 OrkBlood+1 Reputation-60
+ use Dagger SomeCoins-20 OrkBlood+1 Reputation-30
 GoblinFemale avatar(1) parent(Goblin) rest(DeadBody)
  abilities Strenght(15) Dexterity(40) Wits(11) WeaponSkill(20) Hits(4)
- use Dagger Female SomeCoins-10 OrkBlood+1 Reputation-60
+ use Dagger Female SomeCoins-10 OrkBlood+1 Reputation-30
 OrcWarrior avatar(2) rest(DeadBody)
  abilities Strenght(40) Dexterity(20) Wits(10) WeaponSkill(25) Hits(10) Level(3)
- use BruteSword LeatherArmor Darkvision SomeCoins OrkBlood+1 Reputation-60
+ use BruteSword LeatherArmor Darkvision SomeCoins OrkBlood+1 Reputation-30
 Outsider avatar(121) rest(DeadBody)
  abilities Strenght(30) Dexterity(20) Wits(5) WeaponSkill(30) Hits(10) Armor(3) Level(3)
- use Tentacle Reputation-60
+ use Tentacle Reputation-40
 ShamblingMound avatar(9) rest(DeadBody)
  abilities Strenght(45) Dexterity(15) Wits(5) WeaponSkill(30) Hits(30) Level(4)
- use Bite Reputation-60
+ use Bite Reputation-30
 
 Bartender avatar(51) unique(1) rest(DeadBody)
  abilities Strenght(30) Dexterity(15) Wits(35) WeaponSkill(25) Hits(10)

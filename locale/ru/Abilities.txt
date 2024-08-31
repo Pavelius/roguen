@@ -1,0 +1,18 @@
+﻿Strenght: Сила
+Dexterity: Ловкость
+Wits: Интеллект
+
+BalisticSkill: Меткость
+WeaponSkill: Оружие
+Dodge: Уклонение
+
+CarryCapacity: Грузоподъемность
+Damage: Урон
+DamageMelee: Урон
+DamageReduciton: Броня
+
+Drunk: Опьянение
+Hits: Хиты
+Mana: Мана
+Money: Деньги
+Reputation: Репутация
