@@ -243,6 +243,28 @@ static bool chance_fail_spell() {
 	return false;
 }
 
+static bool check_counterspell(const spelli& e) {
+	auto spell = e.counterspell;
+	if(!spell)
+		return false;
+	auto i = bsdata<spelli>::source.indexof(spell);
+	if(i == -1)
+		return false;
+	auto mana_cost = spell->mana / 2;
+	auto difficulty = -player->get(Wits) / 3;
+	for(auto p : enemies) {
+		if(p->known_spell(i) && p->get(Mana) >= mana_cost) {
+			if(!p->roll(Wits, -difficulty))
+				continue;
+			if(!p->act("CounterSpell", e.id))
+				p->act("CounterSpell", 0);
+			p->add(Mana, -mana_cost);
+			return true;
+		}
+	}
+	return false;
+}
+
 void cast_spell(const spelli& e, int mana, bool silent) {
 	if(player->get(Mana) < mana) {
 		player->actp("NotEnoughtMana");
@@ -256,15 +278,20 @@ void cast_spell(const spelli& e, int mana, bool silent) {
 		if(!player->speak("Casting", e.id))
 			player->act("Casting", e.id);
 	}
+	player->add(Mana, -mana);
 	if(chance_fail_spell()) {
-		player->add(Mana, -mana);
+		if(!player->act("CastFail", e.id))
+			player->act("CastFail", 0);
 		return;
+	}
+	if(e.counterspell) {
+		if(check_counterspell(e))
+			return;
 	}
 	if(e.use)
 		apply_targets(e.use);
 	if(e.summon)
 		summon_minions(player->getposition(), e.summon);
-	player->add(Mana, -mana);
 	player->update();
 }
 

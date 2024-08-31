@@ -10,6 +10,7 @@ struct spelli : nameable {
 	variants		use;
 	variant			summon;
 	bool			adventure;
+	spelli*			counterspell;
 	int				getmana() const;
 };
 struct spellable {
