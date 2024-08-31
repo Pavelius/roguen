@@ -14,7 +14,7 @@ enum feat_s : unsigned char {
 	AcidResistance, AcidImmunity, ColdResistance, ColdImmunity, DeathResistance, DeathImmunity,
 	DiseaseResist, DiseaseImmunity, FireResistance, FireImmunity, StunResistance, StunImmunity,
 	Coins, Notable, Natural, KnowRumor, KnowLocation,
-	Female, PlaceOwner, Undead, Summoned, Local, Ally, Enemy,
+	Female, PlaceOwner, Undead, Summoned, Local,
 	Stun, Blooding,
 };
 struct featable : flagable<8> {};

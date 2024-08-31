@@ -88,11 +88,6 @@ static bool filter_close(const void* object) {
 	return (area->getrange(p->getposition(), last_index) <= 1);
 }
 
-static bool filter_neutral(const void* object) {
-	auto p = (creature*)object;
-	return !p->is(Ally) && !p->is(Enemy);
-}
-
 static bool filter_ally_neutral(const void* object) {
 	auto p = (creature*)object;
 	return !player->isenemy(*p);

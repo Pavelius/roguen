@@ -248,7 +248,7 @@ static void total_item_weight(stringbuilder& sb) {
 
 static void list_of_feats(stringbuilder& sb) {
 	for(auto i = (feat_s)0; i <= Blooding; i = (feat_s)(i + 1)) {
-		if(i == Female || i == Ally)
+		if(i == Female)
 			continue;
 		if(player->is(i))
 			sb.addn(bsdata<feati>::elements[i].getname());

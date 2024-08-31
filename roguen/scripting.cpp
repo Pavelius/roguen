@@ -599,7 +599,7 @@ static void place_creature(variant v, int count) {
 	for(auto i = 0; i < count; i++) {
 		auto p = player_create(area->get(last_rect), v, false);
 		p->set(Local);
-		if(p->is(Enemy))
+		if(p->isevil())
 			area->total.monsters++;
 	}
 }
@@ -1879,7 +1879,7 @@ static void test_arena(int bonus) {
 		return;
 	auto m = player->getposition();
 	auto p = player_create(m.to(3, 0), pm, false);
-	p->set(Enemy);
+	make_hostile(p, player);
 	p->wait();
 	pay_action();
 }
@@ -2302,17 +2302,6 @@ static void random_ability(int bonus) {
 	ftscript<abilityi>(maprnd(source), bonus);
 }
 
-static void filter_allies(int bonus) {
-	if(player->is(Ally))
-		targets.match(Ally, true);
-	else if(player->is(Enemy))
-		targets.match(Enemy, true);
-	else {
-		targets.match(Enemy, false);
-		targets.match(Ally, false);
-	}
-}
-
 static void apply_filter(collectiona& source, variant v, void** filter_object) {
 	auto pb = source.begin();
 	auto push = *filter_object;
@@ -2658,14 +2647,14 @@ static void enchant_days(int bonus) {
 	enchant_minutes(script_count(bonus), 24 * 60, "Day");
 }
 
-static void make_alarm(feat_s feat, int range) {
+static void make_alarm(int range) {
 	auto start = player->getposition();
 	for(auto& e : bsdata<creature>()) {
 		if(!e || !e.ispresent() || e.moveorder.x >= 0)
 			continue;
 		if(e.ishuman())
 			continue;
-		if(!e.is(feat))
+		if(!e.isevil() && !e.isgood())
 			continue;
 		if(start.range(e.getposition()) > range)
 			continue;
@@ -2674,8 +2663,7 @@ static void make_alarm(feat_s feat, int range) {
 }
 
 static void make_noise(int bonus) {
-	make_alarm(Ally, 1000);
-	make_alarm(Enemy, 1000);
+	make_alarm(1000);
 }
 
 static void steal_opponent_coins(int bonus) {
@@ -2974,7 +2962,7 @@ static bool prohibited_action_effect(const char* id) {
 	for(auto p : creatures) {
 		if(!(*p))
 			continue;
-		if(!p->is(Ally) && !p->is(Enemy))
+		if(!p->isevil() && !p->isgood())
 			continue;
 		if(p == player || p->ishuman())
 			continue;

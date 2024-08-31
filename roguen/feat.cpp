@@ -59,8 +59,6 @@ BSDATA(feati) = {
 	{"Undead"},
 	{"Summoned"},
 	{"Local"},
-	{"Ally"},
-	{"Enemy"},
 	{"Stun"},
 	{"Blooding"},
 };

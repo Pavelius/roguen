@@ -524,7 +524,10 @@ static void paint_bars(const creature* player) {
 void creature::paintbarsall() const {
 	if(!area->is(getposition(), Visible))
 		return;
-	if(ishuman() || is(Enemy) || getenemy() == game.getowner())
+	auto push_player = player; player = const_cast<creature*>(this);
+	auto enemy = is_enemy(game.getowner());
+	player = push_player;
+	if(ishuman() || enemy)
 		paint_bars(this);
 }
 
@@ -1097,9 +1100,9 @@ static void paint_minimap_creatures(point origin, int z, bool use_hearing) {
 			continue;
 		caret.x = origin.x + i.x * width;
 		caret.y = origin.y + i.y * height;
-		if(e.is(Enemy))
+		if(e.get(Reputation) <= -20)
 			fillfade(color(255, 0, 0), 192);
-		else if(e.is(Ally))
+		else if(e.get(Reputation) >= 20)
 			fillfade(color(0, 255, 0), 192);
 		else
 			fillfade(color(255, 255, 255), 192);

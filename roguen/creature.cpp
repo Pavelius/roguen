@@ -222,20 +222,10 @@ void damage_equipment(int bonus, bool allow_save) {
 
 static void summon_minions(point m, variant v) {
 	auto push_player = player;
-	auto isenemy = player->is(Enemy);
-	auto isally = player->is(Ally);
 	auto count = script_count(v.counter);
 	auto leader = player;
 	for(auto i = 0; i < count; i++) {
 		auto p = player_create(m, v, false);
-		if(isenemy)
-			p->set(Enemy);
-		else
-			p->remove(Enemy);
-		if(isally)
-			p->set(Ally);
-		else
-			p->remove(Ally);
 		p->set(Summoned);
 		p->setowner(leader);
 	}
@@ -439,7 +429,6 @@ static void nullify_elements() {
 	nullify_elements(FastAction, SlowAction);
 	nullify_elements(FastAttack, SlowAttack);
 	nullify_elements(FastMove, SlowMove);
-	nullify_elements(Enemy, Ally);
 }
 
 static int get_next_level_experience(int level) {
@@ -535,8 +524,9 @@ static void check_charm_recover() {
 		return;
 	if(player->roll(Wits, charmer->get(Wits) / 3)) {
 		player->setcharmer(0);
+		player->setenemy(0);
 		if(player->roll(Wits))
-			player->setenemy(charmer);
+			make_hostile(player, charmer);
 	}
 }
 
@@ -1048,16 +1038,11 @@ void creature::setfear(const creature* v) {
 	fear_id = bsid(v);
 }
 
-static inline bool is_enemy_ex(const creature* player, const creature* opponent) {
-	if(player->getenemy() == opponent)
-		return true;
-	if(player->is(OrkBlood) && opponent->is(DwarfBlood))
-		return true;
-	if(player->is(Ally))
-		return opponent->is(Enemy);
-	else if(player->is(Enemy))
-		return opponent->is(Ally);
-	return false;
+creature* creature::getleader() const {
+	auto p = getowner();
+	if(p)
+		return p;
+	return const_cast<creature*>(this);
 }
 
 static bool is_possible_enemy(const void* object) {
@@ -1074,24 +1059,19 @@ static bool is_possible_enemy(const void* object) {
 static bool is_enemy(const creature* player, const creature* opponent) {
 	if(!player || !opponent)
 		return false;
-	if(is_enemy_ex(player, opponent))
+	if(player->getenemy() == opponent)
 		return true;
-	return is_enemy_ex(opponent, player);
+	return opponent->getenemy() == player;
 }
 
-static bool is_enemy(const void* object) {
+bool is_enemy(const void* object) {
 	auto opponent = (creature*)object;
-	if(player == opponent)
+	if(player == opponent || !opponent)
 		return false;
+	opponent = opponent->getleader();
 	if(is_enemy(player, opponent))
 		return true;
-	auto owner = player->getowner();
-	if(is_enemy(owner, opponent))
-		return true;
-	auto opponent_owner = opponent->getowner();
-	if(is_enemy(player, opponent_owner))
-		return true;
-	return is_enemy(owner, opponent_owner);
+	return is_enemy(player->getowner(), opponent);
 }
 
 bool is_ally(const void* object) {
@@ -1107,16 +1087,16 @@ bool is_ally(const void* object) {
 	return false;
 }
 
-static bool check_possible_enemy() {
+static void check_possible_enemy() {
 	if(player->get(Reputation) > -20 && d100() < 60)
-		return false;
-	auto targets = creatures;
-	targets.match(is_possible_enemy, true);
-	if(!targets)
-		return false;
-	targets.sort(player->getposition());
-	make_hostile(player, targets[0]);
-	return true;
+		return;
+	enemies = creatures;
+	enemies.match(is_possible_enemy, true);
+	if(enemies) {
+		enemies.sort(player->getposition());
+		opponent = enemies[0];
+		make_hostile(player, opponent);
+	}
 }
 
 bool creature::isenemy(const creature& opponent) const {
@@ -1464,11 +1444,8 @@ void adventure_mode();
 
 static void look_creatures() {
 	creatures.select(player->getposition(), player->getlos(), player->ishuman(), player);
-	if(player->is(Enemy) || player->is(Ally)) {
-		enemies = creatures;
-		enemies.collectiona::match(is_enemy, true);
-	} else
-		enemies.clear();
+	enemies = creatures;
+	enemies.collectiona::match(is_enemy, true);
 }
 
 static void ready_enemy() {
@@ -1476,7 +1453,8 @@ static void ready_enemy() {
 	if(enemies) {
 		enemies.sort(player->getposition());
 		opponent = enemies[0];
-	}
+	} else
+		check_possible_enemy();
 }
 
 static void ready_actions() {
@@ -1606,8 +1584,6 @@ void make_move() {
 		else
 			player->moveto(opponent->getposition());
 	} else {
-		if(check_possible_enemy())
-			return;
 		allowed_spells.match(spell_isnotcombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);
@@ -1956,8 +1932,6 @@ creature* player_create(point m, variant kind, bool female) {
 	player->abilities[Reputation] = player->basic.abilities[Reputation];
 	player->place(m);
 	player->finish();
-	if(player->get(Reputation) <= -40)
-		player->set(Enemy);
 	if(player->is(PlaceOwner)) {
 		auto pr = player->getroom();
 		if(pr)
@@ -2026,22 +2000,25 @@ int	creature::getcarry() const {
 
 void calling_help_attack(creature* player, const creature* opponent) {
 	auto pm = player->getmonster();
-	if(!pm)
-		return;
-	for(auto p : creatures) {
-		if(p->getenemy())
-			continue;
-		if(p->getmonster() == pm)
-			p->setenemy(opponent);
+	if(pm) {
+		for(auto p : creatures) {
+			if(p->getenemy())
+				continue;
+			if(p->getmonster() == pm)
+				p->setenemy(opponent);
+		}
 	}
 }
 
 bool make_hostile(creature* player, const creature* opponent) {
+	if(!opponent)
+		return false;
 	auto enemy = player->getenemy();
 	if(enemy)
 		return false;
+	auto leader = opponent->getleader();
 	player->speak("MakeHostile");
-	player->setenemy(opponent);
-	calling_help_attack(player, opponent);
+	player->setenemy(leader);
+	calling_help_attack(player, leader);
 	return true;
 }
