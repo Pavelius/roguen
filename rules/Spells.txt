@@ -5,7 +5,7 @@ BurningHands mana(5)
 CureWounds mana(10)
  use SelectAllies FilterClose FilterWounded ChooseTarget ForEachCreature Heal+5
 CharmPerson mana(20)
- use SelectNeutralCreatures FilterUndead-1 FilterMindless-1 FilterCharmed-1 ChooseTarget ForEachOpponent CharmOpponent
+ use SelectNotEnemies FilterUndead-1 FilterMindless-1 FilterCharmed-1 ChooseTarget ForEachOpponent CharmOpponent
 Entaglement mana(6)
  use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature ThornBush
 IceSpear mana(6)
@@ -15,6 +15,8 @@ LightSpell mana(5) adventure(1)
  use EnchantMinutes+20 LightSource
 Mending mana(10) adventure(1)
  use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-1
+RemoveCharm mana(5)
+ use SelectNotEnemies FilterCharmed ChooseTarget ForEachItem CharmOpponent-1
 Sleep mana(5)
  use SelectEnemies AnimalInt-1
 SummonUndead mana(15) summon(Skeleton+4)

@@ -185,7 +185,7 @@ static void select_creatures(fnvisible proc, int counter) {
 	targets = creatures;
 }
 
-static void select_neutral_creatures(fnvisible proc, int counter) {
+static void select_not_enemies(fnvisible proc, int counter) {
 	clear_all_collections();
 	targets = creatures;
 	targets.match(is_enemy, false);
@@ -266,8 +266,8 @@ BSDATA(filteri) = {
 	{"SelectCreatures", 0, select_creatures},
 	{"SelectEnemies", 0, select_enemies},
 	{"SelectFeatures", 0, select_features},
-	{"SelectNeutralCreatures", 0, select_neutral_creatures},
 	{"SelectNextFeatures", 0, select_next_features},
+	{"SelectNotEnemies", 0, select_not_enemies},
 	{"SelectRooms", 0, select_rooms},
 	{"SelectWalls", 0, select_walls},
 	{"SelectWallsMines", 0, select_walls_mines},
