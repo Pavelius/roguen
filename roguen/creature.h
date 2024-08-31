@@ -100,6 +100,7 @@ public:
 };
 struct creaturea : collection<creature> {
 	void			match(feat_s v, bool keep);
+	void			match(fnvisible proc, bool keep) { collectiona::match(proc, keep); }
 	void			matchrange(point start, int v, bool keep);
 	void			remove(const creature* v);
 	void			select(point m, int los, bool visible, const creature* exclude);

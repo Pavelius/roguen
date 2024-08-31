@@ -142,6 +142,17 @@ static bool filter_identified(const void* object) {
 	return p->isidentified();
 }
 
+static bool filter_undead(const void* object) {
+	auto p = (creature*)object;
+	return p->is(Undead);
+}
+
+static bool filter_animal(const void* object) {
+	auto p = (creature*)object;
+	auto v = p->get(Wits);
+	return v >= 1 && v <= 4;
+}
+
 static void match_targets(fnvisible proc, int counter) {
 	targets.collection<creature>::match(proc, counter >= 0);
 }
@@ -238,18 +249,20 @@ static void select_your_room(fnvisible proc, int counter) {
 
 BSDATA(filteri) = {
 	{"Filter", 0, filter_next},
+	{"FilterAnimal", filter_animal, match_targets},
 	{"FilterBlessed", filter_blessed, filter_items},
 	{"FilterClose", filter_close, match_targets},
 	{"FilterCursed", filter_cursed, filter_items},
 	{"FilterDamaged", filter_damaged, filter_items},
 	{"FilterExplored", filter_explored_room, match_rooms},
-	{"FilterIdentified", filter_identified, filter_items},
 	{"FilterFeature", filter_feature, match_targets},
 	{"FilterHuman", filter_human, match_targets},
+	{"FilterIdentified", filter_identified, filter_items},
 	{"FilterNotable", filter_notable, match_rooms},
 	{"FilterRoomMarked", filter_room_marked, match_rooms},
 	{"FilterThisRoom", filter_this_room, match_rooms},
 	{"FilterUnaware", filter_unaware, match_targets},
+	{"FilterUndead", filter_undead, match_targets},
 	{"FilterWounded", filter_wounded, match_targets},
 	{"SelectAllies", 0, select_allies},
 	{"SelectCreatures", 0, select_creatures},

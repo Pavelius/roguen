@@ -1060,6 +1060,17 @@ static inline bool is_enemy_ex(const creature* player, const creature* opponent)
 	return false;
 }
 
+static bool is_possible_enemy(const void* object) {
+	auto opponent = (creature*)object;
+	if(player->is(OrkBlood) && opponent->is(DwarfBlood))
+		return true;
+	if(player->get(Reputation) <= -20)
+		return opponent->get(Reputation) >= 0;
+	else if(player->get(Reputation) >= 20)
+		return opponent->get(Reputation) <= -20;
+	return false;
+}
+
 static bool is_enemy(const creature* player, const creature* opponent) {
 	if(!player || !opponent)
 		return false;
@@ -1094,6 +1105,18 @@ bool is_ally(const void* object) {
 	if(opponent->getowner() == player)
 		return true;
 	return false;
+}
+
+static bool check_possible_enemy() {
+	if(player->get(Reputation) > -20 && d100() < 60)
+		return false;
+	auto targets = creatures;
+	targets.match(is_possible_enemy, true);
+	if(!targets)
+		return false;
+	targets.sort(player->getposition());
+	make_hostile(player, targets[0]);
+	return true;
 }
 
 bool creature::isenemy(const creature& opponent) const {
@@ -1583,6 +1606,8 @@ void make_move() {
 		else
 			player->moveto(opponent->getposition());
 	} else {
+		if(check_possible_enemy())
+			return;
 		allowed_spells.match(spell_isnotcombat, true);
 		allowed_spells.match(spell_allowmana, true);
 		allowed_spells.match(spell_allowuse, true);

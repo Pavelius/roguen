@@ -7,7 +7,7 @@ BSDATA(abilityi) = {
 	{"LineOfSight"},
 	{"Strenght"},
 	{"Dexterity"},
-	{"Wits"},
+	{"Wits"}, // 1 - Insects, 2 - Snakes, 3 - HerdAnimals, 4 - PredatorAnimals,
 	{"WeaponSkill"},
 	{"BalisticSkill"},
 	{"Dodge", Dexterity},
