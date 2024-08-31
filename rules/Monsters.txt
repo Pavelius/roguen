@@ -4,7 +4,7 @@
 // 2 - Reptilies, Snakes
 // 3 - Herd animals
 // 4 - Predator animals
-// 5 - Humanoid, but mindless
+// 5 - Mindless humanoid
 // 6+ Humanoid that can speak
 
 #Monster

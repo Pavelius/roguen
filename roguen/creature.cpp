@@ -1088,7 +1088,7 @@ bool is_ally(const void* object) {
 }
 
 static void check_possible_enemy() {
-	if(player->get(Reputation) > -20 && d100() < 60)
+	if(!player->isevil())
 		return;
 	enemies = creatures;
 	enemies.match(is_possible_enemy, true);

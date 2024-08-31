@@ -127,6 +127,11 @@ static bool filter_charmed(const void* object) {
 	return p->getcharmer() != 0;
 }
 
+static bool filter_mindless(const void* object) {
+	auto p = (creature*)object;
+	return p->get(Wits) <= 5;
+}
+
 static bool filter_blessed(const void* object) {
 	auto p = (item*)object;
 	return p->is(Blessed);
@@ -250,6 +255,7 @@ BSDATA(filteri) = {
 	{"FilterFeature", filter_feature, match_targets},
 	{"FilterHuman", filter_human, match_targets},
 	{"FilterIdentified", filter_identified, filter_items},
+	{"FilterMindless", filter_mindless, match_targets},
 	{"FilterNotable", filter_notable, match_rooms},
 	{"FilterRoomMarked", filter_room_marked, match_rooms},
 	{"FilterThisRoom", filter_this_room, match_rooms},

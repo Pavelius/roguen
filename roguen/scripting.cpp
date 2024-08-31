@@ -68,6 +68,7 @@ static const spelli* last_spell_cast;
 extern bool			show_floor_rect;
 static fntestvariant last_allow_proc;
 static int			effect_level;
+static void*		specific_target;
 
 static adat<rect, 64> locations;
 static adat<point, 512> points;
@@ -1310,7 +1311,7 @@ static bool choose_target_interactive(const char* id, int offset = 0) {
 		return true;
 	auto pn = getnme(ids(id, "Choose"));
 	if(!pn)
-		return true;
+		return true; // Get random target
 	pushvalue push_width(window_width, 300);
 	if(targets.getcount() > 1) {
 		if(!choose_indecies(targets, pn, offset))
@@ -2591,9 +2592,32 @@ static void choose_limit(int counter) {
 		indecies.count = counter;
 }
 
+static bool choose_specific_target() {
+	if(!specific_target)
+		return false;
+	auto i = targets.find(specific_target);
+	if(i != -1) {
+		iswap(targets.data[0], targets.data[i]);
+		return true;
+	}
+	i = rooms.find(specific_target);
+	if(i != -1) {
+		iswap(rooms.data[0], rooms.data[i]);
+		return true;
+	}
+	i = items.find(specific_target);
+	if(i != -1) {
+		iswap(items.data[0], items.data[i]);
+		return true;
+	}
+	return false;
+}
+
 static void choose_target(int bonus) {
-	if(player->ishuman())
-		choose_target_interactive(get_header_id());
+	if(!choose_specific_target()) {
+		if(player->ishuman())
+			choose_target_interactive(get_header_id());
+	}
 	choose_limit(1);
 	check_script_targets();
 }
@@ -2607,16 +2631,6 @@ static void choose_random(int bonus) {
 		targets.shuffle();
 	if(indecies)
 		indecies.shuffle();
-	choose_limit(bonus);
-}
-
-static void choose_creature(int bonus) {
-	normalize_bonus(bonus);
-	if(targets.getcount() >= 2) {
-		if(player->ishuman())
-			choose_target_interactive(get_header_id());
-	}
-	check_script_targets();
 	choose_limit(bonus);
 }
 
