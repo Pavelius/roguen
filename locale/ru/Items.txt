@@ -73,6 +73,7 @@ LongBow: Длинный лук
 
 Bandage: Бандаж
 BandageInfo: Используется для остановки кровотечения в бою.
+GrindStone: Точильный камень
 Lockpick: Отмычка
 Lags: Древесина
 SmallLags: Маленькая ветка

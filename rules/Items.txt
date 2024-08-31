@@ -6,6 +6,10 @@ HiddenDoor
 LockedDoor
 OpenedDoor
 
+#RandomTable
+
+RandomSwords
+
 #List
 
 PierceWeapons
@@ -59,6 +63,8 @@ GemStones cost(1000) avatar(704)
 Bandage cost(10) avatar(516)
  use HealWounded+100 Heal+1
 Lockpick cost(5) avatar(294) 
+GrindStone cost(20) weight(50) avatar(66) count(3)
+ use SelectYourItems FilterDamaged Filter RandomSwords ChooseTarget ForEachItem DamageItem-2
 Lags cost(10) avatar(395) 
 SmallLags cost(10) avatar(411) 
 
@@ -328,7 +334,7 @@ RandomArtifact
 RandomCoins
  chance SP+6 GP+3 PP
 RandomGear
- chance Torch+8 Lockpick
+ chance Torch+4 Lockpick Bandage HandPick GrindStone
 RandomGem
  chance OrnamentalStones+25 SemiPreciousStones+16 FancyStones+8 PreciousStones+4 GemStones
 RandomAmulet
@@ -353,6 +359,8 @@ RandomGirdle
  chance LeatherGirdle+4 IronGirdle+2 GirdleOfMight GirdleOfGiantStrenght GirdleOfCarring
 RandomTome
  chance TomeOfLight TomeOfNecromancy
+RandomSwords
+ chance BruteSword Sword StrangeSword Dagger
 RandomWand
  chance WandOfAcid WandOfFrost RodOfBurning WandOfDigging
 RandomUncommonLoot

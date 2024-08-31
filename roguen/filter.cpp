@@ -49,6 +49,29 @@ static bool match_list_room(const void* object) {
 	return match_list_value(&((roomi*)object)->geti() - bsdata<sitei>::elements);
 }
 
+static bool match_item_variant(const item* p, variant v) {
+	if(v.iskind<feati>())
+		return p->is((feat_s)v.value);
+	else if(v.iskind<itemi>())
+		return p->is(bsdata<itemi>::elements + v.value);
+	else if(last_variant.iskind<listi>()) {
+		for(auto e : bsdata<listi>::elements[v.value].elements) {
+			if(match_item_variant(p, e))
+				return true;
+		}
+	} else if(last_variant.iskind<randomizeri>()) {
+		for(auto e : bsdata<randomizeri>::elements[v.value].chance) {
+			if(match_item_variant(p, e))
+				return true;
+		}
+	}
+	return false;
+}
+
+static bool match_item_variant(const void* object) {
+	return match_item_variant((item*)object, last_variant);
+}
+
 static bool match_wall(point m) {
 	return bsdata<tilei>::elements[area->tiles[m]].iswall();
 }
@@ -168,6 +191,8 @@ static void filter_next(fnvisible proc, int counter) {
 		indecies.match(match_list_feature, counter >= 0);
 	else if(rooms)
 		rooms.match(match_list_room, counter >= 0);
+	else if(items)
+		items.match(match_item_variant, counter >= 0);
 	last_variant = push;
 }
 
