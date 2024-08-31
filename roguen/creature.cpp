@@ -2045,6 +2045,8 @@ creature* player_create(point m, variant kind, bool female) {
 
 bool creature::isallow(const item& it) const {
 	auto& ei = it.geti();
+	if(it.isbroken())
+		return false;
 	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
 		auto v = ei.required[i - Strenght];
 		if(v && get(i) < v)

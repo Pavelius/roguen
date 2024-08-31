@@ -160,6 +160,12 @@ void item::getinfo(stringbuilder& sb) const {
 	if(is(TwoHanded))
 		addf(sb, "TwoHanded");
 	wearing(sb, ei.wearing);
+	if(isbroken())
+		addf(sb, "Broken");
+	else if(isheavydamaged())
+		addf(sb, "HeavyDamaged");
+	else if(isdamaged())
+		addf(sb, "Damaged");
 }
 
 void creature::getrumor(quest& e, stringbuilder& sb) const {
@@ -308,6 +314,12 @@ void item::getexamine(stringbuilder& sb) const {
 	add_require(sb, *this);
 	adds(sb, ei.id, "Info");
 	adds(sb, ei.id, "History");
+	if(isbroken())
+		sb.adds(getnm("BrokenItemState"));
+	else if(isheavydamaged())
+		sb.adds(getnm("HeavyDamagedItemState"));
+	else if(isdamaged())
+		sb.adds(getnm("DamagedItemState"));
 	if(isidentified()) {
 		switch(magic) {
 		case Blessed: sb.adds(getnm("BlessedItemState")); break;

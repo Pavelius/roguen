@@ -62,7 +62,7 @@ public:
 	void			create(const itemi* pi, int count = 1);
 	void			createpower(int chance_power = 0);
 	void			createmagical(int magical = 15, int cursed = 10, int artifact = 2);
-	void			damage(int value = 1);
+	bool			damage();
 	void			drop(point m);
 	int				getavatar() const { return geti().wear_index; }
 	int				getcost() const;
@@ -87,6 +87,7 @@ public:
 	bool			is(const itemi& v) const { return v == geti(); }
 	bool			is(const itemi* p) const { return p == &geti(); }
 	bool			is(const item& v) const { return type == v.type; }
+	bool			isbroken() const { return !iscountable() && broken >= 7; }
 	bool			iscountable() const { return !geti().powers; }
 	bool			iscursed() const { return is(Cursed); }
 	bool			isidentified() const { return identified != 0; }
@@ -94,8 +95,9 @@ public:
 	bool			ispersonal() const { return personal != 0; }
 	bool			isranged() const { return geti().wear == RangedWeapon; }
 	bool			isusable() const { return geti().use.size() != 0; }
-	bool			isdamaged() const { return iscountable() && broken > 0; }
-	bool			isheavydamaged() const { return iscountable() && broken >= 5; }
+	bool			isdamaged() const { return !iscountable() && broken > 0; }
+	bool			isheavydamaged() const { return !iscountable() && broken >= 5; }
+	void			repair(int value);
 	void			set(magicn v) { magic = v; }
 	void			setborken(int v) { if(!iscountable()) broken = v; }
 	void			setcount(int v, const char* interactive = 0);

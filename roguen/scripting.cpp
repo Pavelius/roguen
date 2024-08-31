@@ -105,10 +105,17 @@ static void clear_console() {
 
 void damage_item(item& it) {
 	auto name = it.getname();
-	it.damage();
-	if(it)
-		player->act("YouDamageItem", 0, name);
-	else
+	if(!it.damage())
+		return; // Artifact, natural, blessed, cursed
+	if(it) {
+		if(it.isbroken()) {
+			player->act("YouBrokeItem", 0, name);
+			auto slot = player->getwearslot(&it);
+			if(slot >= MeleeWeapon && slot <= Legs)
+				player->additem(it);
+		} else
+			player->act("YouDamageItem", 0, name);
+	} else
 		player->act("YouBrokeItem", 0, name);
 }
 
@@ -1478,9 +1485,12 @@ static void inventory(int bonus) {
 		} else {
 			auto ni = choose_stuff(owner->getwearslot(pi));
 			if(ni) {
-				if(!player->isallow(*ni))
-					console.addn(getnm("YouCantWearItem"), ni->getname());
-				else {
+				if(!player->isallow(*ni)) {
+					if(ni->isbroken())
+						console.addn(getnm("YouCantWearBrokenItem"), ni->getname());
+					else
+						console.addn(getnm("YouCantWearItem"), ni->getname());
+				} else {
 					iswap(*ni, *pi);
 					player->update();
 				}
@@ -2051,15 +2061,6 @@ static void add_dungeon_rumor(int bonus) {
 	quest::add(KillBossQuest, game.position);
 }
 
-static void repair_item(int bonus) {
-	if(!last_item)
-		return;
-	if(bonus > 0)
-		last_item->setborken(0);
-	else if(bonus < 0)
-		last_item->setborken(3);
-}
-
 static void apply_action(int bonus) {
 	if(!last_action)
 		return;
@@ -2281,7 +2282,10 @@ static void curse_item(int bonus) {
 }
 
 static void damage_item(int bonus) {
-	last_item->damage(bonus);
+	if(bonus >= 0)
+		last_item->damage();
+	else
+		last_item->repair(-bonus);
 }
 
 static void random_ability(int bonus) {
@@ -2997,6 +3001,15 @@ static void charm_opponent(int bonus) {
 		opponent->setcharmer(0);
 }
 
+static void set_broken(int bonus) {
+	bonus = script_count(bonus);
+	if(bonus < 0)
+		return;
+	if(bonus >= 7)
+		bonus = 7;
+	last_item->setborken(bonus);
+}
+
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
@@ -3097,13 +3110,13 @@ BSDATA(script) = {
 	{"RaiseSkills", raise_skills},
 	{"RandomAbility", random_ability},
 	{"RangeAttack", attack_range},
-	{"RepairItem", repair_item},
 	{"RemoveFeature", remove_feature},
 	{"RepeatUseItem", repeat_use_item},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
 	{"RollHorror", roll_horror},
 	{"RollLearning", roll_learning},
+	{"SetBroken", set_broken},
 	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},
 	{"SiteFloor", site_floor},

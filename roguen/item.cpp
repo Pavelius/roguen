@@ -149,24 +149,39 @@ bool item::is(wear_s v) const {
 	}
 }
 
-void item::damage(int bonus) {
+void item::repair(int value) {
+	if(iscountable() || value < 0)
+		return;
+	if(value > broken)
+		value = broken;
+	broken -= value;
+}
+
+bool item::damage() {
 	if(is(Natural))
-		return;
-	if(getmagic() == Artifact)
-		return;
-	if(iscountable())
-		setcount(getcount() - 1); // Countable items break always
-	else if(bonus >= 0) {
-		// Damage item state
-		if(broken >= 7)
-			setcount(getcount() - 1);
-		else
-			broken++;
-	} else {
-		// Repair items
-		if(broken > 0)
-			broken--;
+		return false; // Natual item can't be broken.
+	switch(getmagic()) {
+	case Artifact:
+		if(d100() <= 90)
+			return false;
+		break;
+	case Blessed:
+		if(d100() <= 30)
+			return false;
+		break;
+	case Cursed:
+		if(d100() <= 10)
+			return false;
+		break;
 	}
+	if(iscountable()) {
+		setcount(getcount() - 1); // Countable items break always
+		return true;
+	} else if(broken < 7) {
+		broken++;
+		return true;
+	}
+	return false;
 }
 
 bool item::is(feat_s v) const {

@@ -20,3 +20,7 @@ FastMove: Быстрое движение
 Retaliate: Ответный удар
 SlowUse: Медленно
 TwoHanded: Две руки
+
+Broken: Сломан
+Damaged: Поцарапан
+HeavyDamaged: Поврежден
