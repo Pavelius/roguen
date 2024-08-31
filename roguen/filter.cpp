@@ -177,7 +177,7 @@ static void filter_items(fnvisible proc, int counter) {
 
 static void select_allies(fnvisible proc, int counter) {
 	targets = creatures;
-	targets.collectiona::match(is_ally, true);
+	targets.collectiona::match(is_ally, counter >= 0);
 }
 
 static void select_creatures(fnvisible proc, int counter) {
@@ -189,6 +189,12 @@ static void select_not_enemies(fnvisible proc, int counter) {
 	clear_all_collections();
 	targets = creatures;
 	targets.match(is_enemy, false);
+}
+
+static void select_not_ally(fnvisible proc, int counter) {
+	clear_all_collections();
+	targets = creatures;
+	targets.match(is_ally, false);
 }
 
 static void select_enemies(fnvisible proc, int counter) {

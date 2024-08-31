@@ -33,6 +33,7 @@ struct areamap {
 	int				getindex(point m, int e) const;
 	direction_s		getmost(const rect& rc) const;
 	static point	getnext(point start, point goal);
+	static point	getnextgreater(point start);
 	static unsigned getpath(point start, point goal, point* result, unsigned maximum);
 	static point	getpoint(const rect& rc, direction_s dir);
 	static point	getpoint(const rect& rc, const rect& bound, direction_s dir);

@@ -129,6 +129,22 @@ point areamap::getnext(point start, point goal) {
 	return stack[n - 1];
 }
 
+point areamap::getnextgreater(point start) {
+	auto cost = 0;
+	point next = {-1000, -1000};
+	for(auto d : all_directions) {
+		auto i1 = start + d;
+		if(!isvalid(i1))
+			continue;
+		auto c1 = movement_rate[i1];
+		if(c1 >= NotCalculatedMovement || c1 <= cost)
+			continue;
+		next = i1;
+		cost = c1;
+	}
+	return next;
+}
+
 unsigned areamap::getpath(point start, point goal, point* result, unsigned maximum) {
 	auto pb = result;
 	auto pe = result + maximum;

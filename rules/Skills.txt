@@ -3,7 +3,7 @@
 RoomsWhereGemsCanBe
  elements DefaultDungeonEntrance DefaultCaveEntrance DefaultMineEntrance SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
 StealCoinsFail
- elements MakeNoise+2 AddReputation-1 Opponent Anger+1 Opponent StealCoinsAngry
+ elements MakeNoise AddReputation-1 Opponent Anger+1 Opponent CryStealCoins
 
 #SiteSkill
 
@@ -22,6 +22,6 @@ SellItemsSomeone skill(Wits) keyid("J")
 SearchRoomForGems skill(Gemcutting)
  effect HaveNext-1 Local SelectYourRoom Filter RoomsWhereGemsCanBe FilterRoomMarked-1 ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)
- effect ProhibitedAction SelectNotEnemies FilterClose ForEachOpponent RollAction StealOpponentCoins
+ effect ProhibitedAction SelectAllies-1 FilterClose ForEachOpponent RollAction StealOpponentCoins
 CreatePotions skill(Alchemy)
  effect AlchemyCraft UseCraft

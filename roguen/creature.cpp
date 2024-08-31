@@ -67,8 +67,8 @@ bool creature::speak(const char* action, const char* id, ...) const {
 		speech_get(format, id, action, pm->getid());
 		if(pm->parent)
 			speech_get(format, id, action, pm->parent->id);
-		if(get(Wits) <= 12)
-			speech_get(format, "LowInt", action, pm->id);
+		if(get(Wits) <= 11)
+			speech_get(format, 0, action, "LowInt");
 	} else
 		speech_get(format, id, action, getkind().getid());
 	speech_get(format, id, action, 0);
@@ -607,7 +607,7 @@ static void normalize_ability(ability_s v) {
 	if(player->abilities[v] > player->basic.abilities[v])
 		player->abilities[v]--;
 	else if(player->abilities[v] < player->basic.abilities[v])
-		player->abilities[Mood]++;
+		player->abilities[v]++;
 }
 
 static void random_walk() {
@@ -1115,8 +1115,13 @@ bool is_ally(const void* object) {
 }
 
 static void check_possible_enemy() {
+	// If no enemy in sight and we calm down, forget enemy.
+	if(player->getenemy() && !player->get(Mood))
+		player->setenemy(0);
+	// If we good we don't aggressive.
 	if(!player->isevil())
 		return;
+	// Find someone to kill
 	enemies = creatures;
 	enemies.match(is_possible_enemy, true);
 	if(enemies) {
@@ -1565,6 +1570,30 @@ static void use_spells() {
 	allowed_spells.select(player);
 }
 
+static void check_horror() {
+	auto horror = player->getfear();
+	if(!horror)
+		return;
+	if(creatures.find(horror) != -1)
+		return;
+	// You don't see your horror
+	if(player->isnormalmood())
+		player->setfear(0);
+}
+
+void roll_horror(int bonus) {
+	if(!player)
+		return;
+	bonus -= player->get(Wits) / 3;
+	if(opponent->roll(Wits, bonus)) {
+		opponent->add(Mood, xrand(2, 4));
+	} else {
+		opponent->setfear(player);
+		opponent->add(Mood, -xrand(2, 4));
+		opponent->speak("CryHorror");
+	}
+}
+
 void make_move() {
 	// Recoil form action
 	if(player->wait_seconds > 0) {
@@ -1588,10 +1617,14 @@ void make_move() {
 		return; // Dead from blooding, burning, cold or other bad
 	check_levelup();
 	ready_actions();
+	check_horror();
 	if(player->ishuman()) {
 		ready_skills();
 		last_actions.sort(compare_actions);
 		adventure_mode();
+	} else if(player->getfear()) {
+		if(!player->moveaway(player->getfear()->getposition()))
+			pay_action();
 	} else if(opponent) {
 		allowed_spells.select(player);
 		allowed_spells.match(spell_iscombat, true);
@@ -1747,6 +1780,23 @@ bool creature::moveto(point ni) {
 	return true;
 }
 
+bool creature::moveaway(point ni) {
+	area->clearpath();
+	if(!is(Fly))
+		block_swimable();
+	area->blockwalls();
+	area->blockfeatures();
+	block_creatures(this);
+	area->makewave(ni);
+	area->blockzero();
+	auto m0 = getposition();
+	auto m1 = area->getnextgreater(m0);
+	if(!area->isvalid(m1))
+		return false;
+	move_step(area->getdirection(m0, m1));
+	return true;
+}
+
 void creature::unlink() {
 	remove_boost(this);
 	for(auto& e : bsdata<creature>()) {
@@ -1871,13 +1921,13 @@ void creature_every_minute() {
 	restore(Mana, Wits);
 	check_stun();
 	posion_recovery(Poison);
+	normalize_ability(Mood);
 }
 
 void creature_every_10_minutes() {
 	restore(Hits, Strenght);
 	check_illness_effect();
 	check_drunken_recover();
-	normalize_ability(Mood);
 }
 
 void creature_every_day_part() {

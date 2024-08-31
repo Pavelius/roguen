@@ -2670,6 +2670,11 @@ static void make_alarm(int range) {
 			continue;
 		if(!e.isevil() && !e.isgood())
 			continue;
+		if(e.is(PlaceOwner))
+			continue;
+		auto owner = e.getowner();
+		if(owner && owner->is(PlaceOwner))
+			continue;
 		if(start.range(e.getposition()) > range)
 			continue;
 		e.moveorder = start;
@@ -3112,6 +3117,7 @@ BSDATA(script) = {
 	{"RepeatUseItem", repeat_use_item},
 	{"Roll", roll_value},
 	{"RollAction", roll_action},
+	{"RollHorror", roll_horror},
 	{"RollLearning", roll_learning},
 	{"ShowImages", show_images},
 	{"ShowLogs", show_logs},

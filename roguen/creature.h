@@ -69,12 +69,14 @@ public:
 	bool			isgood() const { return abilities[Reputation] >= 20; }
 	bool			ishuman() const;
 	bool			ismaster(ability_s v) const { return get(v) >= 60; }
+	bool			isnormalmood() const { return abilities[Mood] == basic.abilities[Mood]; }
 	bool			ispresent() const;
 	bool			istired() const { return abilities[Mood] <= -10; }
 	bool			isunaware() const { return wait_seconds >= 25 * 4 * 6; }
 	bool			isvalid() const;
 	void			kill();
 	void			logs(const char* format, ...) const;
+	bool			moveaway(point m);
 	bool			moveto(point m);
 	void			paint() const;
 	void			paintbarsall() const;
@@ -127,6 +129,7 @@ bool make_hostile(creature* player, const creature* opponent);
 void make_move();
 void move_step(direction_s v);
 void pay_action();
+void roll_horror(int bonus);
 void use_item(item& v);
 
 creature* player_create(point m, variant kind, bool female);

@@ -4,6 +4,7 @@ CharmPersonChoose: Кого хотите очаровать?
 CureWounds: Лечение легких ранений
 Entaglement: Рост колючек
 Gate: Врата
+HorrorScare: Ужас
 IceSpear: Ледяное копье
 KnockDoor: Вскрыть замки
 LightSpell: Свет
