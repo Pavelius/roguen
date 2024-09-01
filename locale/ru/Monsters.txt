@@ -30,7 +30,9 @@ Shopkeeper: Владелец магазина
 Skeleton: Скелет
 SmallBoy: Мальчик
 SmallGirl: Девочка
+StagBeelte: Рогатый жук
 Theif: Вор
+TheifFemale: Вориха
 Wolf: Волк
 Zombie: Зомби
 

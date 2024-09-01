@@ -119,13 +119,13 @@ LongBow cost(40) weight(30) wear(RangedWeapon) avatar(611) wear_index(5) powers(
  feats TwoHanded
 
 Bite wear(MeleeWeapon)
- weapon damage(6)
+ weapon damage(4)
  feats Natural
 Claws wear(MeleeWeapon)
- weapon damage(3) pierce(2)
+ weapon damage(2) pierce(1)
  feats Natural
 Tentacle wear(MeleeWeapon)
- weapon damage(4)
+ weapon damage(3)
  feats Natural
 
 LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) powers(LightArmorPowers)
@@ -247,8 +247,9 @@ StrangeRedSphere cost(100) weight(50) avatar(231)
 StrangeGreenSphere cost(100) weight(50) avatar(232)
 StrangeRod cost(50) weight(10) avatar(80)
 
-DeadBody cost(1) weight(200) avatar(8) rotting(30)
+DeadBody cost(1) weight(300) avatar(8) rotting(30)
  use Heal+2 Chance+20 Illness+1
+BeetleShell cost(20) weight(150) avatar(179)
 Bones cost(2) weight(3) avatar(899)
 Meat cost(10) weight(5) avatar(137) rotting(20)
  use Heal+2

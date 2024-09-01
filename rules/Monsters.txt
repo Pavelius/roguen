@@ -14,7 +14,7 @@ Bear avatar(360) rest(Meat)
  use Bite Reputation-10
 Boar avatar(376) rest(Meat)
  abilities Strenght(30) Dexterity(25) Wits(3) WeaponSkill(30) Hits(20) Level(2)
- use Bite Reputation-35
+ use Bite Reputation-15
 DireBoar avatar(377) rest(Meat)
  abilities Strenght(45) Dexterity(25) Wits(3) WeaponSkill(35) Hits(40) Armor(1) Level(4)
  use Bite Reputation-40
@@ -31,7 +31,7 @@ GiantLizard avatar(220) rest(DeadBody)
  abilities Strenght(40) Dexterity(20) Wits(2) WeaponSkill(30) Hits(20) Armor(3) Level(4)
  use Bite Reputation-10
 GiantSpider avatar(591) rest(DeadBody)
- abilities Strenght(35) Dexterity(20) Wits(1) WeaponSkill(30) Hits(20) Level(5)
+ abilities Strenght(35) Dexterity(20) Wits(1) WeaponSkill(30) Hits(16) Level(5)
  use Bite StrongPoison IgnoreWeb Web+4 Reputation-20
 Rabbit avatar(7) rest(DeadBody) rest(Meat)
  abilities Strenght(6) Dexterity(20) Wits(3) WeaponSkill(10) Hits(2)
@@ -42,6 +42,9 @@ RabbitFemale avatar(8) parent(Rabbit) rest(Meat)
 Rat avatar(293) rest(DeadBody)
  abilities Strenght(5) Dexterity(30) Wits(3) WeaponSkill(15) Hits(2)
  use Bite Reputation-10
+StagBeelte avatar(355) rest(BeetleShell)
+ abilities Strenght(30) Dexterity(15) Wits(1) WeaponSkill(25) Armor(2) Hits(15) Level(3)
+ use Bite StunningHit Reputation-10
 Wolf avatar(20) rest(DeadBody)
  abilities Strenght(20) Dexterity(30) Wits(4) WeaponSkill(25) Hits(9) Level(1)
  use Bite Reputation-20
@@ -143,7 +146,9 @@ RandomCaveMonster
  chance Bear GiantLizard DireWolf
 RandomRescueObject
  chance Farmer+2 FarmerFemale+2 SmallBoy SmallGirl
+RandomHerdAnimals
+ chance Rabbit RabbitFemale Boar Dog
 RandomWildAnimals
- chance Rabbit RabbitFemale Wolf+6 Boar+9 Bear+6 DireBoar+2
+ chance Wolf Bear DireBoar
 StartVillagePopulation
  chance Farmer+2 FarmerFemale+2 CityGuard+2 SmallBoy SmallGirl Theif

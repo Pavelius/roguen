@@ -131,6 +131,7 @@ StrangeRedSphere: Красная сфера
 StrangeRod: Прутик
 
 DeadBody: Труп
+BeetleShell: Панцырь жука
 Bones: Кости
 MonsterSkull: Череп монстра
 Stones: Камни

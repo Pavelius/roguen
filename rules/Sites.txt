@@ -11,7 +11,7 @@ MonstersLair
 ArtifactStatue
  landscape Statue+1
 AnimalsGround
- landscape RandomWildAnimals
+ landscape RandomHerdAnimals
  feats Notable
 DeepAncientPlace
  landscape Webbed-30
@@ -191,7 +191,7 @@ Plains minimap(60 176 67) floors(Grass) walls(WallCave) doors(Door) global(Gener
  sites Graveyard
 LightForest minimap(70 109 29) floors(Grass) walls(WallCave) doors(Door) global(GenerateOutdoor)
  landscape Tree-8 RandomHerbs+30 FootMud+12 FootHill+40
- sites AnimalsGround+2 ArtifactStatue-10 Graveyard-20 DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush
+ sites AnimalsGround+2 AnimalsGround-50 ArtifactStatue-10 Graveyard-20 DeepLake-60 RockyMountains-40 SwampyArea-60 LightBush-60 LightBush
 DeepForest minimap(35 79 31) floors(Grass) walls(WallCave) doors(Door) global(GenerateOutdoor)
  landscape Tree-16 RandomHerbs+40 FootMud+12 FootHill+20
  sites AnimalsGround+2 SpiderNest-10 GoblinScouts-15 Graveyard-30 ArtifactStatue-10 MonstersLair-5 DefaultDungeonEntrance-5\

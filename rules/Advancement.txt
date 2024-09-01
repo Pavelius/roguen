@@ -1,7 +1,7 @@
 #Advancement
 
 DarkElf 1 Ability
- elements Strenght+25 Dexterity+30 Wits+20 Hits+15 Mana+5 Darkvision ElfBlood
+ elements Strenght+25 Dexterity+30 Wits+20 Hits+20 Mana+5 Darkvision ElfBlood
 DarkElf 1 Skills
  elements WeaponSkill+20 BalisticSkill+25 Thievery+15
 DarkElf 1 Spells
@@ -17,6 +17,8 @@ DarkElf -1 AdditionalSkills
 
 Human 1 Ability
  elements Strenght+30 Dexterity+20 Wits+20 Hits+20 WeaponSkill+20 BalisticSkill+20 Religion+20
+Human 1 Skills
+ elements WeaponSkill+20 BalisticSkill+20 Religion+20
 Human 1 Equipment
  elements Staff
 Human -1 AdditionalHits
@@ -25,9 +27,9 @@ Human -1 AdditionalSkills
  elements SkillPoints+11
 
 HightElf 1 Ability
- elements Strenght+20 Dexterity+25 Wits+30 Hits+15 Mana+20 ElfBlood
+ elements Strenght+25 Dexterity+25 Wits+30 Hits+20 Mana+20 ElfBlood
 HightElf 1 Skills
- elements WeaponSkill+15 BalisticSkill+20 Dodge+10 Literacy+10 History+10
+ elements WeaponSkill+20 BalisticSkill+20 Dodge+10 Literacy+10 History+10
 HightElf 1 Spells
  elements LightSpell IceSpear
 HightElf 1 Equipment

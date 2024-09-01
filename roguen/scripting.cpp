@@ -1846,9 +1846,10 @@ static void test_arena(int bonus) {
 	an.clear();
 	auto count = 0;
 	for(auto& e : bsdata<monsteri>()) {
-		if(e.islower(Reputation, -30))
+		if(e.islower(Reputation, -5))
 			an.add(&e, e.getname());
 	}
+	an.sort();
 	pushvalue push_column(answers::column_count);
 	answers::column_count = 3;
 	auto pm = (monsteri*)choose_answers(getnm("ChooseMonsterToFight"), getnm("Cancel"));
