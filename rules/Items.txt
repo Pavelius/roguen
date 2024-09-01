@@ -235,7 +235,7 @@ LoafOfBread cost(20) weight(40) avatar(160) rotting(5)
 Sausage cost(40) weight(20) avatar(157) rotting(10)
  use Heal+10 Chance+3 Strenght+1
  feats SlowAction
-Ration cost(50) weight(50) avatar(126) 
+Ration cost(50) weight(70) avatar(126) 
  use Heal+10
  feats SlowAction
 Torch cost(10) avatar(207) weight(30) count(3)

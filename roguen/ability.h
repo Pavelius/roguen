@@ -21,6 +21,7 @@ enum color_s : unsigned char {
 };
 struct abilityi : nameable {
 	char		minimal;
+	char		raise, raise_cost;
 	ability_s	base;
 	int			skill_divider;
 	ability_s	getindex() const;

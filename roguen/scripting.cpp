@@ -139,7 +139,6 @@ static void apply_script(const script* p, int bonus) {
 }
 
 int getfloor() {
-	// TODO: If site is rocky mountain, then floor is rock. When you digging, you may dig passable floor.
 	if(last_site && last_site->floors)
 		return last_site->floors;
 	if(last_location && last_location->floors)
@@ -1514,29 +1513,13 @@ static int free_objects_count() {
 }
 
 static int get_rate(ability_s a, int v) {
-	switch(a) {
-	case Strenght:
-		if(v >= 80)
-			return 6;
-		else if(v >= 50)
-			return 5;
-		return 4;
-	case Wits:
-	case Dexterity:
-		if(v >= 80)
-			return 5;
-		else if(v >= 50)
-			return 4;
-		return 3;
-	default:
-		if(v >= 90)
-			return 4;
-		else if(v >= 60)
-			return 3;
-		else if(v >= 30)
-			return 2;
-		return 1;
+	if(v > 0 && v < 100) {
+		auto rate = bsdata<abilityi>::elements[a].raise;
+		auto cost = bsdata<abilityi>::elements[a].raise_cost;
+		if(rate)
+			return cost + (v / rate);
 	}
+	return 0;
 }
 
 static void add_raise(ability_s a) {
@@ -1579,9 +1562,7 @@ static const char* skill_raise_cost(const void* object, stringbuilder& sb) {
 static abilityi* choose_skill(listcolumn* columns, const char* header, int dialog_width) {
 	an.clear();
 	for(auto i = Strenght; i <= LastSkill; i = (ability_s)(i + 1)) {
-		if(i >= DamageMelee && i <= EnemyAttacks)
-			continue;
-		if(!player->basic.abilities[i])
+		if(!get_rate(i, player->basic.abilities[i]))
 			continue;
 		an.add(bsdata<abilityi>::elements + i, bsdata<abilityi>::elements[i].getname());
 	}
@@ -2995,7 +2976,7 @@ static void prohibited_action(int bonus) {
 }
 
 static void charm_opponent(int bonus) {
-	if(bonus>=0)
+	if(bonus >= 0)
 		opponent->setcharmer(player);
 	else
 		opponent->setcharmer(0);

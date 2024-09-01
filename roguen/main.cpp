@@ -22,7 +22,7 @@ static void add_item(const char* id, int count = 1, bool identified = false) {
 }
 
 static void main_start() {
-	player = player_create({5, 5}, "Dwarf", true);
+	player = player_create({5, 5}, "HightElf", true);
 	player->experience += 600;
 	player->money += 500;
 	add_item("LongBow");
@@ -32,9 +32,6 @@ static void main_start() {
 	add_item("GrindStone", 1, true);
 	add_item("HealingPotion", 5, true);
 	add_item("PotionOfStrenght", 2, true);
-	add_item("RingOfLevitation", 1, true);
-	add_item("Stomafillia", 5, true);
-	add_item("Stomacemptia", 5, true);
 	add_item("HandPick");
 	add_item("Bandage", 3, true);
 	add_item("TomeOfLight", 1, true);

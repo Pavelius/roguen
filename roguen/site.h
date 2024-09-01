@@ -12,11 +12,9 @@
 struct script;
 struct sitei : nameable {
 	variants		landscape, loot;
-	unsigned char	walls, floors;
+	unsigned char	walls, floors, doors;
 	featable		feats;
-	unsigned char	doors;
 	char			chance_hidden_doors, chance_stuck_doors, chance_locked_doors, doors_count;
-	const shapei*	shape;
 	const script*	local;
 	variants		getloot() const;
 };
