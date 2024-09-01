@@ -569,8 +569,8 @@ int get_deafault_count(const monsteri& e, int area_level) {
 	if(e.unique)
 		return 1;
 	auto level_creature = e.abilities[Level];
-	if(area_level <= 1)
-		area_level = 1;
+	if(area_level < 1)
+		area_level = 4;
 	auto n = 4 + (level_creature - area_level);
 	auto d = maptbl(source, n);
 	return d.roll();

@@ -1,5 +1,6 @@
 AltarRoom: Алтарь
 AncientLabRoom: Древняя лабортория
+AnimalsGround: Угодья животных
 ArtifactStatueRoom: Статуя
 AshenLand: Земли пепла
 BossRoom: Логово
@@ -28,7 +29,7 @@ GoblinScouts: Гоблинские разведчики
 Hills: Холмы
 InscribedRoom: Надписи на стенах
 InscribedRoomLook: На стенах виднелись странные какие-то странные иероглифы.
-sLightForest: Лес
+LightForest: Лес
 MinionsRoom: Монстры
 MysteryHouse: Странный дом
 MysteryHouseLook: Внутри ощущалось присутствие чего-то странного. Слегка покалывало на спине и в пояснице.
