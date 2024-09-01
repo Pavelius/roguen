@@ -225,4 +225,4 @@ RandomDungeonModifier
 RandomDungeonTreasure
  chance StolenTreasures
 RandomDungeonType
- chance DefaultMine // DefaultDungeon DefaultCave
+ chance DefaultDungeon DefaultCave

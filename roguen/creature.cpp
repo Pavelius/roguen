@@ -19,6 +19,8 @@
 #include "trigger.h"
 #include "triggern.h"
 
+static areamap::fntest crush_wall_action_proc;
+
 extern collection<roomi> rooms;
 int last_roll_result;
 bool last_roll_successed;
@@ -856,16 +858,22 @@ static bool issame(point m, direction_s d, tilef f) {
 	return true;
 }
 
-static void crush_wall(point m) {
+static bool crush_wall_mining(point m) {
 	const int chance_stones = 25;
-	if(!area->isvalid(m))
-		return;
-	auto floor = bsdata<tilei>::elements[area->tiles[m]].tile;
-	area->settile(m, floor);
 	if(d100() < chance_stones)
 		drop_item(m, "MiningOre");
 	if(player->roll(Gemcutting, -3000))
 		drop_item(m, "MiningGem");
+	return true;
+}
+
+static void crush_wall(point m) {
+	if(!area->isvalid(m))
+		return;
+	auto floor = bsdata<tilei>::elements[area->tiles[m]].tile;
+	area->settile(m, floor);
+	if(crush_wall_action_proc)
+		crush_wall_action_proc(m);
 	if(area->iswall(m, North) && area->iswall(m, East)) {
 		if(!area->iswall(m, NorthEast))
 			crush_wall(to(m, North));
@@ -896,7 +904,10 @@ static bool check_mining(creature* player, point m) {
 	}
 	if(player->roll(Mining, 20)) {
 		player->act("YouCrashWall", 0, getnm(bsdata<tilei>::elements[area->tiles[m]].id));
+		auto push_proc = crush_wall_action_proc;
+		crush_wall_action_proc = crush_wall_mining;
 		crush_wall(m);
+		crush_wall_action_proc = push_proc;
 		return true;
 	} else if(d100() < 10)
 		damage_item(player->wears[MeleeWeapon]);
@@ -1021,31 +1032,35 @@ static void update_room(creature* player) {
 		player->setroom(0);
 }
 
-void creature::update_abilities() {
-	if(is(Drunk)) {
-		abilities[Strenght] += 3;
-		abilities[Wits] -= 3;
+static void update_abilities() {
+	if(player->is(Drunk)) {
+		player->add(Strenght, 3);
+		player->add(Wits, -3);
 	}
-	abilities[DamageMelee] += get(Strenght) / 15;
-	abilities[DamageRanged] += get(Dexterity) / 10;
-	abilities[Armor] += get(Strenght) / 15;
-	if(is(Stun)) {
-		abilities[WeaponSkill] /= 2;
-		abilities[BalisticSkill] /= 2;
-		abilities[Dodge] -= 40;
+	player->add(DamageMelee, player->get(Strenght) / 15);
+	player->add(DamageRanged, player->get(Dexterity) / 10);
+	player->add(Armor, player->get(Strenght) / 15);
+	if(player->is(Stun)) {
+		player->abilities[WeaponSkill] /= 2;
+		player->abilities[BalisticSkill] /= 2;
+		player->add(Dodge, -40);
 	}
-	if(is(LightSource))
-		abilities[LineOfSight] += 3;
-	if(is(Freezing))
-		abilities[Armor] += 2;
-	if(is(Burning))
-		abilities[Dodge] -= 20;
-	if(ispresent()) {
-		if(!is(IgnoreWeb) && is(Webbed)) {
-			abilities[WeaponSkill] -= 10;
-			abilities[Dodge] -= 20;
+	if(player->is(LightSource))
+		player->add(LineOfSight, 3);
+	if(player->is(Freezing))
+		player->add(Armor, 2);
+	if(player->is(Burning))
+		player->add(Dodge, -20);
+	if(player->ispresent()) {
+		if(!player->is(IgnoreWeb) && player->is(Webbed)) {
+			player->add(WeaponSkill, -10);
+			player->add(Dodge, -20);
 		}
 	}
+}
+
+void creature::add(ability_s a, int v) {
+	statable::add(a, v, bsdata<abilityi>::elements[a].minimal, getmaximum(a));
 }
 
 void creature::place(point m) {
@@ -2090,7 +2105,7 @@ int	creature::getmaximum(ability_s v) const {
 	case Hits: case Mana:
 		return basic.abilities[v];
 	default:
-		return 0;
+		return 120;
 	}
 }
 

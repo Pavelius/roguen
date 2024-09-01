@@ -1193,7 +1193,7 @@ template<> bool fttest<abilityi>(int value, int counter) {
 }
 template<> void ftscript<abilityi>(int value, int counter) {
 	last_ability = (ability_s)value;
-	player->basic.add((ability_s)value, counter);
+	player->basic.add((ability_s)value, counter, bsdata<abilityi>::elements[value].minimal);
 }
 
 template<> bool fttest<feati>(int value, int counter) {
@@ -1998,7 +1998,7 @@ static void cast_last_spell(int bonus) {
 }
 
 static void heal_player(int bonus) {
-	player->add(Hits, bonus, 0, player->getmaximum(Hits));
+	player->add(Hits, bonus);
 	player->fixvalue(getnm("Heal"), bonus >= 0 ? ColorGreen : ColorRed);
 	if(!(*player))
 		player->kill();
@@ -2688,7 +2688,7 @@ static void add_reputation(int bonus) {
 }
 
 static void add_mana(int bonus) {
-	player->add(Mana, bonus, 0, player->basic.abilities[Mana]);
+	player->add(Mana, bonus);
 	player->fixability(Mana, bonus);
 }
 
@@ -2957,7 +2957,7 @@ static void add_drunk(int bonus) {
 		if(player->is(PoisonResistance))
 			bonus = bonus / 2;
 	}
-	player->add(Drunk, bonus, 0);
+	player->add(Drunk, bonus);
 	player->fixability(Drunk, -bonus);
 }
 

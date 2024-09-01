@@ -17,7 +17,6 @@
 class creature : public wearable, public statable, public spellable, public ownerable, public crafta {
 	unsigned short	room_id, enemy_id, charmer_id, fear_id;
 	void			cleanup();
-	void			update_abilities();
 public:
 	int				experience, wait_seconds;
 	statable		basic;
@@ -27,6 +26,7 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	bool			act(const char* action, const char* id = 0, ...) const;
 	bool			actp(const char* action, const char* id = 0, ...) const;
+	void			add(ability_s a, int v);
 	void			additem(item& v);
 	void			apply(const featable& v) { feats.add(v); }
 	bool			badtemper() const;
