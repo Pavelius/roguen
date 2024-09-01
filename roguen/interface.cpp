@@ -7,6 +7,7 @@
 #include "hotkey.h"
 #include "keyname.h"
 #include "indexa.h"
+#include "io_stream.h"
 #include "listcolumn.h"
 #include "log.h"
 #include "creature.h"
@@ -1355,13 +1356,69 @@ int choose_indecies(const indexa& source, const char* header, bool cancel) {
 	return getresult();
 }
 
+static void paint_center() {
+	auto push_caret = caret;
+	auto push_fore = fore;
+	fore = colors::red;
+	line(caret.x - 4, caret.y);
+	caret = push_caret;
+	line(caret.x, caret.y - 4);
+	fore = push_fore;
+	caret = push_caret;
+}
+
+static void paint_info(const sprite* p, int frame) {
+	auto push_caret = caret;
+	auto push_fore = fore;
+	caret.x = 4;
+	caret.y = draw::getheight() - texth() - 4;
+	fore = colors::gray;
+	auto& f = p->get(frame);
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("ox=%1i, oy=%2i", f.ox, f.oy);
+	text(temp);
+	fore = push_fore;
+	caret = push_caret;
+}
+
+static void paint_border(point size) {
+	rectpush push;
+	auto push_fore = fore; 	fore = colors::gray;
+	width = size.x;
+	height = size.y;
+	caret.x -= size.x / 2;
+	caret.y -= size.y / 2;
+	rectb();
+	fore = push_fore;
+}
+
+static void change_sprite(const sprite* p, int frame, int dx, int dy) {
+	auto& f = p->get(frame);
+	auto pf = const_cast<sprite::frame*>(&f);
+	pf->ox += dx;
+	pf->oy += dy;
+}
+
+static void sprite_write(const sprite* p, res pid) {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("art/%1.pma", bsdata<resource>::elements[(int)pid].name);
+	io::file file(temp, StreamWrite);
+	if(!file)
+		return;
+	file.write(p, p->size);
+	pma trail = {0};
+	file.write(&trail, sizeof(trail));
+}
+
 void visualize_images(res pid, point size, point offset) {
 	auto p = gres(pid);
 	auto origin = 0;
+	auto current = 0;
 	point d = {(short)(getwidth() / size.x), (short)(getheight() / size.y)};
 	auto per_screen = d.x * d.y;
 	auto maximum_origin = p->count - per_screen;
 	auto show_index = true;
+	auto show_center = false;
 	if(maximum_origin < 0)
 		maximum_origin = 0;
 	while(ismodal()) {
@@ -1370,25 +1427,46 @@ void visualize_images(res pid, point size, point offset) {
 			origin = 0;
 		if(origin > maximum_origin)
 			origin = maximum_origin;
+		if(current < origin)
+			current = origin;
+		if(current > origin + per_screen)
+			current = origin + per_screen - 1;
+		if(current > p->count - 1)
+			current = p->count - 1;
 		for(auto y = 0; y < d.y; y++) {
 			for(auto x = 0; x < d.x; x++) {
 				auto i = origin + y * d.x + x;
 				caret.x = size.x * x;
 				caret.y = size.x * y;
 				caret = caret + offset;
+				if(i == current)
+					paint_border(size);
 				image(p, i, 0);
+				if(show_center)
+					paint_center();
 				if(show_index)
 					textcn(str("%1i", i));
 			}
 		}
+		paint_info(p, current);
 		paintfinish();
 		domodal();
 		switch(hot.key) {
-		case KeyUp: origin -= d.x; break;
+		case KeyRight: current++; break;
+		case KeyLeft: current--; break;
+		case KeyUp: current -= d.x; break;
+		case KeyDown: current += d.x; break;
+		//case KeyUp: origin -= d.x; break;
+		//case KeyDown: origin += d.x; break;
 		case KeyPageUp: origin -= per_screen; break;
-		case KeyDown: origin += d.x; break;
 		case KeyPageDown: origin += per_screen; break;
 		case 'I': show_index = !show_index; break;
+		case 'C': show_center = !show_center; break;
+		case 'W': change_sprite(p, current, 0, 1); break;
+		case 'Z': change_sprite(p, current, 0, -1); break;
+		case 'A': change_sprite(p, current, 1, 0); break;
+		case 'S': change_sprite(p, current, -1, 0); break;
+		case Ctrl+'S': sprite_write(p, pid); break;
 		case KeyEscape: breakmodal(0); break;
 		}
 	}

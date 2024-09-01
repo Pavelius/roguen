@@ -196,6 +196,38 @@ static void remove_flags(areaf v, int chance) {
 	}
 }
 
+static int current_monsters_count() {
+	auto result = 0;
+	for(auto& e : bsdata<creature>()) {
+		if(!e || !e.ispresent())
+			continue;
+		if(e.getleader() == game.getowner())
+			continue;
+		result++;
+	}
+	return result;
+}
+
+static void monsters_spawning() {
+	if(area->total.monsters <= 0)
+		return;
+	auto count = current_monsters_count();
+	if(count >= area->total.monsters)
+		return;
+	auto player = game.getowner();
+	if(!player)
+		return;
+	rooma rooms;
+	for(auto& e : area->rooms) {
+		if(player->getposition().in(e.rc))
+			continue;
+		rooms.add(&e);
+	}
+	auto room = rooms.random();
+	if(!room)
+		return;
+}
+
 static void pass_minute() {
 	game.minutes++;
 	update_all_boost(game.getminutes());
@@ -206,6 +238,7 @@ static void pass_minute() {
 	}
 	while(game.restore_turn < game.minutes) {
 		all(creature_every_10_minutes);
+		monsters_spawning();
 		game.restore_turn += 10;
 	}
 	while(game.restore_hour < game.minutes) {
