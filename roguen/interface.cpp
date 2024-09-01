@@ -1381,13 +1381,14 @@ static void paint_info(const sprite* p, int frame) {
 	caret = push_caret;
 }
 
-static void paint_border(point size) {
+static void paint_border(point size, int border_dy) {
 	rectpush push;
 	auto push_fore = fore; 	fore = colors::gray;
 	width = size.x;
 	height = size.y;
 	caret.x -= size.x / 2;
 	caret.y -= size.y / 2;
+	caret.y += border_dy;
 	rectb();
 	fore = push_fore;
 }
@@ -1410,7 +1411,7 @@ static void sprite_write(const sprite* p, res pid) {
 	file.write(&trail, sizeof(trail));
 }
 
-void visualize_images(res pid, point size, point offset) {
+void visualize_images(res pid, point size, point offset, int border_dy) {
 	auto p = gres(pid);
 	auto origin = 0;
 	auto current = 0;
@@ -1440,7 +1441,7 @@ void visualize_images(res pid, point size, point offset) {
 				caret.y = size.x * y;
 				caret = caret + offset;
 				if(i == current)
-					paint_border(size);
+					paint_border(size, border_dy);
 				image(p, i, 0);
 				if(show_center)
 					paint_center();

@@ -331,7 +331,7 @@ static void special_attack(item& weapon, creature* opponent, int& pierce, int& d
 	if(player->is(StunningHit, weapon))
 		attack_effect_stun(opponent);
 	if(player->is(PierceHit, weapon))
-		pierce += 4;
+		pierce += 3;
 	if(player->is(MightyHit, weapon))
 		damage += 2;
 	if(player->is(ColdDamage, weapon)) {

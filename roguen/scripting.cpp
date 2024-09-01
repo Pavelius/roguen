@@ -42,7 +42,7 @@ bool isfreeltsv(point m);
 bool isfreecr(point m);
 void make_game_map_screenshoot();
 void open_manual(const char* manual_header, const char* manual_content);
-void visualize_images(res pid, point size, point offset);
+void visualize_images(res pid, point size, point offset, int border_dy);
 
 int choose_indecies(const indexa& source, const char* header, bool cancel);
 int choose_dialog(fnevent proc);
@@ -570,7 +570,7 @@ int get_deafault_count(const monsteri& e, int area_level) {
 		return 1;
 	auto level_creature = e.abilities[Level];
 	if(area_level < 1)
-		area_level = 4;
+		area_level = 1;
 	auto n = 4 + (level_creature - area_level);
 	auto d = maptbl(source, n);
 	return d.roll();
@@ -1880,10 +1880,10 @@ static void show_images(int bonus) {
 	auto id = (res)(int)an.choose();
 	switch(id) {
 	case res::Items:
-		visualize_images(id, {64, 64}, {64 / 2, 64 / 2});
+		visualize_images(id, {64, 64}, {64 / 2, 64 / 2}, 0);
 		break;
 	default:
-		visualize_images(id, {80, 90}, {80 / 2, 90});
+		visualize_images(id, {80, 90}, {80 / 2, 90}, -30);
 		break;
 	}
 }

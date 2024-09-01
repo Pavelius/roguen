@@ -11,14 +11,14 @@ MonstersLair
 ArtifactStatue
  landscape Statue+1
 AnimalsGround
- landscape RandomHerdAnimals
+ landscape RandomHerdAnimals RandomHerdAnimals RandomHerdAnimals RandomHerdAnimals
  feats Notable
 DeepAncientPlace
  landscape Webbed-30
 Graveyard
  landscape Grave+4
 SwampyArea
- landscape FootMud-40 Herbs+3
+ landscape FootMud-40 Herbs+3 GiantFrog-30
 RockyMountains walls(WallCave) floors(Cave)
  landscape SmallCircleRoom SmallCircleRoom+30 TinyCircleRoom TinyCircleRoom+50 TinyCircleRoom+10
 LightBush
