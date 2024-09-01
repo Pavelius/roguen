@@ -79,6 +79,8 @@ Lags: Древесина
 SmallLags: Маленькая ветка
 Torch: Факел
 
+Apple: Яблоко
+AppleGatherFromTree: С дерева упало большое яблоко.
 LoafOfBread: Кусок хлеба
 Meat: Мясо
 Ration: Сухпаек

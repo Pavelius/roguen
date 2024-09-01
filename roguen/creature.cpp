@@ -61,8 +61,11 @@ bool creature::speak(const char* action, const char* id, ...) const {
 		return true;
 	if(!canspeak())
 		return true;
-	auto pm = getmonster();
 	const char* format = 0;
+	auto room = getroom();
+	if(room)
+		speech_get(format, id, action, room->geti().id);
+	auto pm = getmonster();
 	if(pm) {
 		speech_get(format, id, action, pm->getid());
 		if(pm->parent)
@@ -767,6 +770,11 @@ static void drop_item(point m, const char* id) {
 	it.drop(m);
 }
 
+static void drop_item(point m, const char* id, const char* action) {
+	drop_item(m, id);
+	player->act(action, id);
+}
+
 static bool check_stuck_doors(creature* p, point m, const featurei& ei) {
 	if(!ei.is(StuckFeature))
 		return false;
@@ -811,25 +819,19 @@ bool check_activate(creature* player, point m, const featurei& ei) {
 	return true;
 }
 
-static int chance_cut_wood(const item& weapon) {
-	auto& ei = player->wears[MeleeWeapon].geti();
-	auto chance = player->get(Strenght) / 10 + ei.weapon.damage;
-	if(chance < 1)
-		chance = 1;
-	if(ei.is(TwoHanded))
-		chance *= 2;
-	return chance;
-}
-
 static bool check_cut_wood(creature* player, point m, const featurei& ei) {
-	if(ei.is(Woods) && player->wears[MeleeWeapon].geti().is(CutWoods)) {
-		if(player->roll(Woodcutting, 10)) {
-			player->act("YouCutWood", 0, getnm(ei.id));
-			area->setfeature(m, 0);
-			drop_item(m, "WoodenLagsTable");
-			return true;
-		} else if(d100() < 5)
-			damage_item(player->wears[MeleeWeapon]);
+	if(ei.is(Woods)) {
+		if(player->wears[MeleeWeapon].geti().is(CutWoods)) {
+			if(player->roll(Woodcutting, 10)) {
+				player->act("YouCutWood", 0, getnm(ei.id));
+				area->setfeature(m, 0);
+				drop_item(m, "WoodenLagsTable");
+				return true;
+			} else if(d100() < 5)
+				damage_item(player->wears[MeleeWeapon]);
+		}
+		if(d100() < 1)
+			drop_item(player->getposition(), "Apple", "GatherFromTree");
 	}
 	return false;
 }
