@@ -61,6 +61,7 @@ int start_application(fnevent proc);
 
 int main(int argc, char *argv[]) {
 	auto seed = getcputime();
+	//auto seed = 1386226015;
 	initialize_strings();
 	logv(str("Seed is %1i", seed));
 	srand(seed);

@@ -20,7 +20,8 @@ struct sitei : nameable {
 };
 extern const sitei*	last_site;
 struct locationi : sitei {
-	variants		sites, monsters;
+	variants		sites;
+	variant			monsters;
 	const script	*global, *global_finish;
 	char			darkness, chance_finale, offset, traps_count;
 	color			minimap;

@@ -59,7 +59,6 @@ int					last_coins;
 const char*			last_id;
 static point		last_door;
 locationi*			last_location;
-quest*				last_quest;
 rect				last_rect;
 const sitei*		last_site;
 int					last_value;
@@ -667,13 +666,13 @@ static rect bounding_locations() {
 	return rc;
 }
 
-static variant random_encounter_monster() {
+variant random_monster_encounter() {
 	variant result = "RandomMonsters";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
 	if(last_location && last_location->monsters && d100() < 40)
-		result = random_value(last_location->monsters);
+		result = last_location->monsters;
 	else if(quest_modifier && quest_modifier->monsters && d100() < 30)
-		result = random_value(quest_modifier->monsters);
+		result = quest_modifier->monsters;
 	return single(result);
 }
 
@@ -880,7 +879,7 @@ static void create_area(geoposition geo, variant tile) {
 
 static void create_random_area() {
 	variant rt;
-	last_quest = quest::find(area->position);
+	last_quest = find_quest(area->position);
 	if(area->level == 0) {
 		auto range = getrange(area->position, start_village);
 		if(range == 0)
@@ -920,6 +919,7 @@ static areapiece* find_areapiece(geoposition geo) {
 }
 
 static void ready_area(geoposition geo) {
+	last_quest = find_quest(geo.position);
 	area = find_areapiece(geo);
 	if(!area) {
 		area = bsdata<areapiece>::add();
@@ -2055,7 +2055,9 @@ static void lose_game(int bonus) {
 }
 
 static void add_dungeon_rumor(int bonus) {
-	quest::add(KillBossQuest, game.position);
+	auto push_quest = last_quest;
+	add_quest(KillBossQuest, game.position);
+	last_quest = push_quest;
 }
 
 static void apply_action(int bonus) {

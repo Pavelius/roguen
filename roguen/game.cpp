@@ -208,6 +208,8 @@ static int current_monsters_count() {
 	return result;
 }
 
+variant random_monster_encounter();
+
 static void monsters_spawning() {
 	if(area->total.monsters <= 0)
 		return;
@@ -333,14 +335,16 @@ static void initialize_globals() {
 }
 
 static void initialize_rumors(int count) {
-	point pt;
-	quest::add(KillBossQuest, start_village);
+	auto push_quest = last_quest;
+	add_quest(KillBossQuest, start_village);
 	const int r = 6;
 	for(auto i = 0; i < count; i++) {
+		point pt;
 		pt.x = xrand(start_village.x - r, start_village.x + r);
 		pt.y = xrand(start_village.x - r, start_village.x + r);
-		quest::add(KillBossQuest, pt);
+		add_quest(KillBossQuest, pt);
 	}
+	last_quest = push_quest;
 }
 
 static void random_world() {

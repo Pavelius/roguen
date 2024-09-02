@@ -15,9 +15,11 @@ struct quest {
 	variant			object, problem, reward, twist, level, final_level, modifier, entrance;
 	char			rumor;
 	constexpr operator bool() const { return problem.operator bool(); }
-	static quest*	add(questn type, point position);
-	static quest*	add(questn type, point position, variant modifier, variant level, variant reward);
 	void			clear();
-	static quest*	find(point v);
 };
 extern quest* last_quest;
+
+void add_quest(questn type, point position);
+void add_quest(questn type, point position, variant modifier, variant level, variant reward);
+
+quest* find_quest(point v);

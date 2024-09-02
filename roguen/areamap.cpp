@@ -426,12 +426,13 @@ point areamap::findfeature(unsigned char v) const {
 
 direction_s areamap::getmost(const rect& rc) const {
 	auto c = mps / 2;
-	auto x = (iabs(rc.x1 - c) < iabs(rc.x2 - c)) ? rc.x1 : rc.x2;
-	auto y = (iabs(rc.y1 - c) < iabs(rc.y2 - c)) ? rc.y1 : rc.y2;
-	if(iabs(x - c) < iabs(y - c))
-		return (x == rc.x1) ? West : East;
+	auto n = center(rc);
+	auto dx = iabs(n.x - c);
+	auto dy = iabs(n.y - c);
+	if(dx >= dy)
+		return (n.x < c) ? East : West;
 	else
-		return (y == rc.y1) ? North : South;
+		return (n.y < c) ? South : North;
 }
 
 rect areamap::get(const rect& rca, point offset, point minimum, point maximum) {

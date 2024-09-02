@@ -21,6 +21,8 @@ BSMETA(quest) = {
 	{}};
 BSDATAC(quest, 256)
 
+quest* last_quest;
+
 static monsteri* random_boss() {
 	collection<monsteri> source;
 	source.select(is_boss);
@@ -31,35 +33,34 @@ void quest::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-quest* quest::add(questn type, point position, variant modifier, variant level, variant reward) {
-	auto p = find(position);
-	if(p)
-		return p;
+void add_quest(questn type, point position, variant modifier, variant level, variant reward) {
+	last_quest = find_quest(position);
+	if(last_quest)
+		return;
 	if(!modifier || !level)
-		return 0;
+		return;
 	auto boss = random_boss();
 	if(!boss)
-		return 0;
-	p = bsdata<quest>::addz();
-	p->clear();
-	p->type = type;
-	p->position = position;
-	p->modifier = modifier;
-	p->level = level;
-	p->reward = reward;
-	p->problem = boss;
-	p->rumor = xrand(20, 70);
-	return p;
+		return;
+	last_quest = bsdata<quest>::addz();
+	last_quest->clear();
+	last_quest->type = type;
+	last_quest->position = position;
+	last_quest->modifier = modifier;
+	last_quest->level = level;
+	last_quest->reward = reward;
+	last_quest->problem = boss;
+	last_quest->rumor = xrand(20, 70);
 }
 
-quest* quest::add(questn type, point position) {
-	return add(type, position,
+void add_quest(questn type, point position) {
+	add_quest(type, position,
 		single("RandomDungeonModifier"),
 		single("RandomDungeonType"),
 		single("RandomDungeonTreasure"));
 }
 
-quest* quest::find(point v) {
+quest* find_quest(point v) {
 	for(auto& e : bsdata<quest>()) {
 		if(e.position == v)
 			return &e;
