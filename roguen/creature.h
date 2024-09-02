@@ -131,7 +131,7 @@ void make_move();
 void move_step(direction_s v);
 void pay_action();
 void roll_horror(int bonus);
-void use_item(item& v);
+bool use_item(item& v);
 
 creature* player_create(point m, variant kind, bool female);
 

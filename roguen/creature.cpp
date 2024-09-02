@@ -1642,6 +1642,21 @@ void roll_horror(int bonus) {
 	}
 }
 
+static bool filter_can_use(const void* object) {
+	auto p = (item*)object;
+	return true;
+}
+
+static bool use_items() {
+	for(auto& e : player->backpack()) {
+		if(!e)
+			continue;
+		if(use_item(e))
+			return true;
+	}
+	return false;
+}
+
 void make_move() {
 	// Recoil form action
 	if(player->wait_seconds > 0) {
@@ -1684,7 +1699,9 @@ void make_move() {
 			attack_range(0);
 		else if(can_thrown() && d100() < 60)
 			attack_thrown(0);
-		else
+		else if(d100() < 20 && use_items()) {
+			// Nothing to do
+		} else
 			player->moveto(opponent->getposition());
 	} else {
 		allowed_spells.match(spell_isnotcombat, true);
@@ -1704,6 +1721,8 @@ void make_move() {
 		} else if(area->isvalid(player->guardorder)) {
 			if(player->guardorder != player->getposition())
 				player->moveorder = player->guardorder;
+		} else if(d100() < 20 && use_items()) {
+			// Nothing to do
 		} else
 			random_walk();
 	}
@@ -1920,19 +1939,19 @@ bool creature::speechlocation() const {
 	return true;
 }
 
-void use_item(item& v) {
+bool use_item(item& v) {
 	if(!v)
-		return;
+		return false;
 	auto name = v.getname();
 	auto script = v.getuse();
 	if(!script) {
 		player->actp("ItemNotUsable", 0, name);
-		return;
+		return false;
 	}
 	auto slow_action = v.is(SlowAction);
 	if(slow_action && enemies) {
 		player->actp("NotUsableInCombat", 0, name);
-		return;
+		return false;
 	}
 	auto push_item = last_item;
 	auto push_state = script_fail; script_fail = false;
@@ -1941,9 +1960,13 @@ void use_item(item& v) {
 		last_player_used_wear = player->getwearslot(last_item);
 	last_item_fix_action("UseItem");
 	script_run(script);
-	if(script_fail)
+	auto result = true;
+	if(script_fail) {
 		player->actp("ItemFailScript", 0, name);
-	else {
+		result = false;
+		script_fail = push_state;
+		last_item = push_item;
+	} else {
 		auto chance_consume = last_item->chance_consume();
 		if(chance_consume) {
 			if(d100() < chance_consume) {
@@ -1952,13 +1975,14 @@ void use_item(item& v) {
 			}
 		} else
 			v.use();
+		script_fail = push_state;
+		last_item = push_item;
+		player->update();
+		pay_action();
+		if(slow_action)
+			player->wait(xrand(3, 8));
 	}
-	script_fail = push_state;
-	last_item = push_item;
-	player->update();
-	pay_action();
-	if(slow_action)
-		player->wait(xrand(3, 8));
+	return result;
 }
 
 void creature_every_minute() {
