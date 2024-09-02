@@ -667,6 +667,16 @@ static rect bounding_locations() {
 	return rc;
 }
 
+static variant random_encounter_monster() {
+	variant result = "RandomMonsters";
+	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;
+	if(last_location && last_location->monsters && d100() < 40)
+		result = random_value(last_location->monsters);
+	else if(quest_modifier && quest_modifier->monsters && d100() < 30)
+		result = random_value(quest_modifier->monsters);
+	return single(result);
+}
+
 static void create_corridor_loot(point i) {
 	variant treasure = "RandomLoot";
 	locationi* quest_modifier = (last_quest && last_quest->modifier) ? (locationi*)last_quest->modifier : 0;

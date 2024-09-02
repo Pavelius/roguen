@@ -96,7 +96,7 @@ BSMETA(locationi) = {
 	BSREQ(id),
 	BSREQ(global), BSREQ(global_finish),
 	BSREQ(local),
-	BSREQ(landscape), BSREQ(sites), BSREQ(loot),
+	BSREQ(landscape), BSREQ(sites), BSREQ(loot), BSREQ(monsters),
 	BSREQ(darkness), BSREQ(offset),
 	BSREQ(chance_hidden_doors), BSREQ(chance_locked_doors), BSREQ(chance_stuck_doors),
 	BSREQ(doors_count),
