@@ -538,6 +538,8 @@ static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol,
 }
 
 static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
+	if(m.x < -100 || m.y < -100)
+		return;
 	place_shape_ex(e, m, d, 'X', wall);
 	place_shape_ex(e, m, d, '.', floor);
 	place_shape_ex(e, m, d, '0', floor);
@@ -550,11 +552,14 @@ static void place_shape(const shapei& e, point m, int floor, int walls) {
 }
 
 static void place_shape(const shapei& e, rect rc, int floor, int walls) {
-	if(rc.width() >= 3 && rc.height() >= 3)
-		rc.offset(1);
-	else if(rc.width() >= 6 && rc.height() >= 6)
-		rc.offset(2);
-	place_shape(e, area->get(rc), floor, walls);
+	static direction_s direction[] = {North, South, West, East};
+	//if(rc.width() >= 3 && rc.height() >= 3)
+	//	rc.offset(1);
+	//else if(rc.width() >= 6 && rc.height() >= 6)
+	//	rc.offset(2);
+	auto d = maprnd(direction);
+	rc = e.bounding(rc, d);
+	place_shape(e, area->get(rc), d, floor, walls);
 }
 
 int get_deafault_count(const monsteri& e, int area_level) {

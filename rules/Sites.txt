@@ -138,7 +138,7 @@ DefaultDungeonEntrance
  landscape StairsDown AddDungeonRumor
  feats Notable
 
-TestArea
+TestArea walls(WallCave) floors(Cave)
  landscape RandomHerbs+3 LockedChest TreePalm+4
  feats Notable
 

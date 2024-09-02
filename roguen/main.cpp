@@ -21,6 +21,19 @@ static void add_item(const char* id, int count = 1, bool identified = false) {
 	player->equip(it);
 }
 
+static void test_shapes() {
+	static rect cv[] = {
+		{4, 2, 17, 19}, // North
+		{0, 3, 15, 18}, // East
+		{2, 1, 17, 16}, // South
+		{1, 0, 16, 15}, // West
+	};
+	auto p = bsdata<shapei>::find("SmallRoom");
+	auto d = West;
+	rect r = {0, 0, 20, 20};
+	auto n = p->bounding(r, d);
+}
+
 static void main_start() {
 	player = player_create({5, 5}, "Human", false);
 	player->experience += 600;
@@ -40,6 +53,7 @@ static void main_start() {
 	player->wears[MeleeWeapon].createpower(100);
 	player->wears[MeleeWeapon].setidentified(1);
 	game.setowner(player);
+	test_shapes();
 	new_game();
 }
 

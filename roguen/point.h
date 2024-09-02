@@ -7,6 +7,7 @@ struct point {
 	constexpr explicit operator bool() const { return x || y; }
 	constexpr bool	operator!=(const point pt) const { return pt.x != x || pt.y != y; }
 	constexpr bool	operator==(const point pt) const { return pt.x == x && pt.y == y; }
+	constexpr point	operator-() const { return{-x, -y}; }
 	constexpr point	operator-(const point pt) const { return{(short)(x - pt.x), (short)(y - pt.y)}; }
 	constexpr point	operator+(const point pt) const { return{(short)(x + pt.x), (short)(y + pt.y)}; }
 	constexpr void	clear() { x = y = 0; }

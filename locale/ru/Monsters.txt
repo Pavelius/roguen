@@ -11,8 +11,9 @@ Ettin: Эттин
 Farmer: Крестьянин
 FarmerFemale: Крестьянка
 GiantBat: Летучая мышь
-GiantLizard: Гиганская ящерица
-GiantSpider: Гиганский паук
+GiantFrog: Лягушка
+GiantLizard: Ящерица
+GiantSpider: Паук
 Ghoul: Упырь
 Goblin: Гоблин
 GoblinFemale: Гоблиниха
@@ -24,6 +25,7 @@ Outsider: Древний
 PriestOfTheOne: Священник Единого
 Rabbit: Кролик
 RabbitFemale: Крольчиха
+Racoon: Енот
 Rat: Крыса
 ShamblingMound: Ползущая насыпь
 Shopkeeper: Владелец магазина

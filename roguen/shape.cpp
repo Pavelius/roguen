@@ -33,8 +33,8 @@ point shapei::translate(point c, point v, direction_s d) const {
 }
 
 rect shapei::bounding(point c, direction_s d) const {
-	point ul = translate(c, origin, d);
-	point dr = translate(c, origin + size, d);
+	point ul = translate(c, {0, 0}, d);
+	point dr = translate(c, size, d);
 	auto x1 = imin(ul.x, dr.x);
 	auto x2 = imax(ul.x, dr.x);
 	auto y1 = imin(ul.y, dr.y);
