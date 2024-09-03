@@ -552,13 +552,29 @@ static void place_shape(const shapei& e, point m, int floor, int walls) {
 
 static void place_shape(const shapei& e, rect rc, int floor, int walls) {
 	static direction_s direction[] = {North, South, West, East};
-	//if(rc.width() >= 3 && rc.height() >= 3)
-	//	rc.offset(1);
-	//else if(rc.width() >= 6 && rc.height() >= 6)
-	//	rc.offset(2);
 	auto d = maprnd(direction);
 	rc = e.bounding(rc, d);
 	place_shape(e, area->get(rc), d, floor, walls);
+}
+
+static void place_shape(const shapei& e, rect rc, int floor, int walls, const variants& source) {
+	static direction_s direction[] = {North, South, West, East};
+	auto d = maprnd(direction);
+	rc = e.bounding(rc, d);
+	auto m = area->get(rc);
+	if(m.x < -100 || m.y < -100)
+		return;
+	place_shape_ex(e, m, d, 'X', walls);
+	place_shape_ex(e, m, d, '.', floor);
+	for(size_t i = 0; i < 10; i++) {
+		variant v = {};
+		if(i < source.size())
+			v = source.begin()[i];
+		if(v.iskind<tilei>())
+			place_shape_ex(e, m, d, '0' + (char)i, v.value);
+		else
+			place_shape_ex(e, m, d, '0' + (char)i, floor);
+	}
 }
 
 int get_deafault_count(const monsteri& e, int area_level) {
@@ -1177,7 +1193,11 @@ template<> void ftscript<sitei>(int value, int counter) {
 	last_site = bsdata<sitei>::elements + value;
 	apply_script(get_local_method(), 0);
 	last_room = add_room(last_site, last_rect);
-	script_run(bsdata<sitei>::elements[value].landscape);
+	if(bsdata<sitei>::elements[value].shape)
+		place_shape(*bsdata<sitei>::elements[value].shape, last_rect, getfloor(), getwall(),
+			bsdata<sitei>::elements[value].landscape);
+	else
+		script_run(bsdata<sitei>::elements[value].landscape);
 }
 
 template<> void ftscript<locationi>(int value, int counter) {
