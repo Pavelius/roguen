@@ -600,8 +600,6 @@ int get_deafault_count(const monsteri& e, int area_level) {
 		{1, 2},
 		{1},
 	};
-	if(e.unique)
-		return 1;
 	auto level_creature = e.abilities[Level];
 	if(area_level < 1)
 		area_level = 1;

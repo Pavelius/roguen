@@ -110,7 +110,7 @@ BSMETA(locationi) = {
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
-	BSREQ(unique),
+	BSREQ(appear),
 	BSREQ(use),
 	BSREQ(avatar),
 	BSREQ(parent),

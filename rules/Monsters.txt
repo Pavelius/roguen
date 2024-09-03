@@ -7,7 +7,7 @@
 // 5 - Mindless humanoid
 // 6+ Humanoid that can speak
 
-#Monster
+#Monster appear(2)
 
 Bear avatar(360) rest(Meat)
  abilities Strenght(50) Dexterity(20) Wits(4) WeaponSkill(40) Hits(40) Level(5)
@@ -84,7 +84,7 @@ ShamblingMound avatar(9) rest(DeadBody)
  abilities Strenght(45) Dexterity(15) Wits(5) WeaponSkill(30) Hits(30) Level(4)
  use Bite Reputation-30
 
-Bartender avatar(51) unique(1) rest(DeadBody)
+Bartender avatar(51) appear(1) rest(DeadBody)
  abilities Strenght(30) Dexterity(15) Wits(35) WeaponSkill(25) Hits(10)
  use PlaceOwner KnowRumor SomeCoins+5
 CityGuard avatar(543) rest(DeadBody)
@@ -93,7 +93,7 @@ CityGuard avatar(543) rest(DeadBody)
 DwarfMiner avatar(503) rest(DeadBody)
  abilities Strenght(35) Dexterity(15) Wits(20) WeaponSkill(30) Hits(13) Level(2) Mining(40)
  use HandPick LeatherArmor
-Shopkeeper avatar(581) unique(1) rest(DeadBody)
+Shopkeeper avatar(581) appear(1) rest(DeadBody)
  abilities Strenght(15) Dexterity(20) Wits(40) WeaponSkill(20) Hits(5)
  use PlaceOwner GP+50 SomeCoins+30
 Theif avatar(313) rest(DeadBody)
@@ -108,7 +108,7 @@ Farmer avatar(273) rest(DeadBody)
 FarmerFemale avatar(276) rest(DeadBody)
  abilities Strenght(26) Dexterity(40) Wits(25) WeaponSkill(30) Hits(5)
  use Female KnowLocation SomeCoins
-PriestOfTheOne avatar(118) unique(1) rest(DeadBody)
+PriestOfTheOne avatar(118) appear(1) rest(DeadBody)
  abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(30) Hits(8)
  use PlaceOwner SomeCoins+20 Reputation+40
 SmallBoy avatar(274) rest(DeadBody)
@@ -116,7 +116,7 @@ SmallBoy avatar(274) rest(DeadBody)
 SmallGirl avatar(275) parent(SmallBoy) rest(DeadBody)
  abilities Strenght(10) Dexterity(10) Wits(20) WeaponSkill(10) Hits(2)
  use Female
-VillageElder avatar(302) rest(DeadBody)
+VillageElder avatar(302) appear(1) rest(DeadBody)
  abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(20) Hits(8)
  use Reputation+20
 
@@ -129,7 +129,7 @@ GoblinoidTribe
 UndeadHorde
  chance Skeleton+2 Zombie Ghoul
 
-#Monster
+#Monster appear(1)
 
 Ettin avatar(516) minions(GoblinoidTribe) rest(DeadBody)
  abilities Strenght(70) Dexterity(25) Wits(15) WeaponSkill(35) Hits(70) Level(8)

@@ -9,7 +9,7 @@ struct itemi;
 
 struct monsteri : nameable, statable {
 	unsigned short	avatar;
-	bool			unique;
+	unsigned char	appear;
 	variants		use;
 	monsteri*		parent;
 	randomizeri*	minions;
