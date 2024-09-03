@@ -536,6 +536,18 @@ static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol,
 	}
 }
 
+static void place_feature(const shapei& e, point m, direction_s d, char symbol, int feature) {
+	auto c = m;
+	for(m.y = 0; m.y < e.size.y; m.y++) {
+		for(m.x = 0; m.x < e.size.x; m.x++) {
+			if(e[m] != symbol)
+				continue;
+			auto pm = e.translate(c, m, d);
+			area->setfeature(pm, feature);
+		}
+	}
+}
+
 static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
 	if(m.x < -100 || m.y < -100)
 		return;
@@ -572,6 +584,8 @@ static void place_shape(const shapei& e, rect rc, int floor, int walls, const va
 			v = source.begin()[i];
 		if(v.iskind<tilei>())
 			place_shape_ex(e, m, d, '0' + (char)i, v.value);
+		else if(v.iskind<featurei>())
+			place_feature(e, m, d, '0' + (char)i, v.value);
 		else
 			place_shape_ex(e, m, d, '0' + (char)i, floor);
 	}

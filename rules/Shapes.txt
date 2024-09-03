@@ -26,8 +26,8 @@ XXX...XXX
 #TinyCircleRoom
 
  XXX 
-XX.XX
- X0X 
+XX0XX
+ X.X 
 
 #PrisonCells
 

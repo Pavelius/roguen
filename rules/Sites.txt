@@ -131,8 +131,8 @@ UnholyPlace
 DefaultMineEntrance walls(WallBuilding) floors(WoodenFloor) local(GenerateBuilding)
  landscape Webbed+5 Blooded+1 StairsDown AddDungeonRumor
  feats Notable
-DefaultCaveEntrance
- landscape StairsDown AddDungeonRumor
+DefaultCaveEntrance shape(TinyCircleRoom) floors(Cave)
+ landscape StairsDown// AddDungeonRumor
  feats Notable
 DefaultDungeonEntrance
  landscape StairsDown AddDungeonRumor
