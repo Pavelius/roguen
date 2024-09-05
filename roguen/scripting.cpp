@@ -591,7 +591,7 @@ static void place_shape(const shapei& e, rect rc, int floor, int walls, const va
 	}
 }
 
-int get_deafault_count(const monsteri& e, int area_level) {
+static int get_deafault_count(const monsteri& e, int area_level) {
 	static dice source[] = {
 		{8, 16},
 		{6, 12},
@@ -602,8 +602,6 @@ int get_deafault_count(const monsteri& e, int area_level) {
 		{1},
 	};
 	auto level_creature = e.abilities[Level];
-	if(area_level < 1)
-		area_level = 1;
 	auto result = 3 + level_creature - area_level;
 	return maptbl(source, result).roll();
 }

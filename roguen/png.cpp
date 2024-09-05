@@ -477,7 +477,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 			delete ptemp;
 		}
 		postprocess_scanlines(output, output, image_width, image_height, bpp, interlace);
-		color::convert(output, image_width, image_height, output_bpp, 0, output, input_bpp, pallette, 0);
+		color_convert(output, image_width, image_height, output_bpp, 0, output, input_bpp, pallette, 0);
 		if(output_bpp == 32 && use_transparent)
 			apply_transparent((color*)output, image_width, image_height, transparent);
 		return true;

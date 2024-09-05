@@ -85,7 +85,7 @@ int color::find(const void* pallette, int count) const {
 	return result;
 }
 
-int	color::scanline(int width, int bpp) {
+int	color_scanline(int width, int bpp) {
 	switch(iabs(bpp)) {
 	case 1:
 		return ((width + 31) / 32) * 4;
@@ -109,7 +109,7 @@ int	color::scanline(int width, int bpp) {
 	}
 }
 
-void color::rgb2bgr(color* source, int count) {
+void color_rgb2bgr(color* source, int count) {
 	for(int i = 0; i < count; i++)
 		iswap(source[i].r, source[i].b);
 }
@@ -228,11 +228,11 @@ void color::write(void* p1, int x, int bpp, const void* pallette, int color_coun
 	}
 }
 
-void color::convert(void* output, int width, int height, int output_bpp, const void* output_pallette, const void* input, int input_bpp, const void* input_pallette, int input_scanline) {
+void color_convert(void* output, int width, int height, int output_bpp, const void* output_pallette, const void* input, int input_bpp, const void* input_pallette, int input_scanline) {
 	if(output_bpp == input_bpp)
 		return;
-	int isc = (input_scanline == 0) ? scanline(width, input_bpp) : input_scanline;
-	int osc = scanline(width, output_bpp);
+	int isc = (input_scanline == 0) ? color_scanline(width, input_bpp) : input_scanline;
+	int osc = color_scanline(width, output_bpp);
 	const void* input_static = 0;
 	auto abs_output_bpp = iabs(output_bpp);
 	auto abs_input_bpp = iabs(input_bpp);
@@ -257,7 +257,7 @@ void color::convert(void* output, int width, int height, int output_bpp, const v
 		delete (char*)input;
 }
 
-void color::flipv(unsigned char* bits, unsigned scanline, int height) {
+void color_flip(unsigned char* bits, unsigned scanline, int height) {
 	if(height < 2)
 		return;
 	auto p1 = bits;

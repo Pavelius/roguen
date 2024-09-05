@@ -42,7 +42,6 @@ public:
 	int					getcount() const { return elements.getcount(); }
 	const char*			getname(void* v);
 	int					indexof(const void* v) const { return elements.indexof(v); }
-	static void			message(const char* format);
 	void				modal(const char* title, const char* cancel) const;
 	void				paintanswers(int columns, const char* cancel_text) const;
 	void*				random() const;

@@ -54,8 +54,8 @@ void draw::write(const char* url, unsigned char* bits, int width, int height, in
 		break;
 	}
 	if(!scanline)
-		scanline = color::scanline(bmi.width, bmi.bpp);
-	int wscn = color::scanline(bmi.width, bmi.bpp);
+		scanline = color_scanline(bmi.width, bmi.bpp);
+	int wscn = color_scanline(bmi.width, bmi.bpp);
 	io::file file(url, StreamWrite);
 	if(!file)
 		return;
@@ -120,8 +120,8 @@ static struct bmp_bitmap_plugin : public draw::surface::plugin {
 		auto pi = (bmp::info*)(input + sizeof(bmp::header));
 		unsigned char* ppal = (unsigned char*)pi + sizeof(bmp::info);
 		unsigned char* pb = (unsigned char*)input + ph->bits;
-		auto input_scanline = color::scanline(width, input_bpp);
-		auto output_scanline = color::scanline(width, output_bpp);
+		auto input_scanline = color_scanline(width, input_bpp);
+		auto output_scanline = color_scanline(width, output_bpp);
 		color e;
 		for(int y = 0; y < height; y++) {
 			unsigned char* d = output + y * output_scanline;
