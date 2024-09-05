@@ -49,6 +49,8 @@ StairsUp: Лестница вверх
 StairsUpRoom: Лестница вверх
 StairsUpRoomLook: Посредине комнаты вы увидели каменную лестницу, ведущую наверх.
 StartVillage: Деревня "Клюв грифона"
+StickyFloorRoom: Липкий пол
+StickyFloorRoomLook: Пол в этой комнате покрывает какая-то липкая жижа.
 StrangeFloraRoom: Дивная растительность
 TheifGuild: Гильдия воров
 TheifGuildTreasure: Сокровищница гильдии воров

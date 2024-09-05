@@ -116,6 +116,10 @@ StairsUpRoom
 StairsDownRoom
  landscape QuestLandscape Offset+2 StairsDown QuestMinion-80
  feats Notable
+StickyFloorRoom
+ landscape QuestLandscape QuestMinion-50
+ feats Notable
+ wearing SlowMove
 TreasureRoom chance_locked_doors(100)
  landscape RandomTreasure+3 RandomLoot+4 QuestMinion
  feats Notable
@@ -169,7 +173,7 @@ DefaultDungeon minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(
   global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom)\
   chance_stuck_doors(20) darkness(3) offset(10)
  sites StairsUpRoom StairsDownRoom FalseRoom+2\
-  TreasureRoom AltarRoom-50 ArtifactStatueRoom-30 AncientLabRoom-30 InscribedRoom-80 PortalRoom-10\
+  TreasureRoom AltarRoom-50 ArtifactStatueRoom-30 AncientLabRoom-30 StickyFloorRoom-20 InscribedRoom-80 PortalRoom-10\
   MinionsRoom+3 MinionsRoom-60\
   SarcaphagusRoom+16
 DefaultDungeonFinal minimap(60 176 67) floors(DungeonFloor) walls(WallDungeon) doors(Door) global(GenerateDungeon) global_finish(GenerateCorridors) local(GenerateRoom) darkness(3) offset(10)
