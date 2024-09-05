@@ -3042,7 +3042,6 @@ static void set_broken(int bonus) {
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},
-	{"WhenCreatureP1InSiteP2UpdateAbilities"},
 	{"EverySeveralDays"},
 	{"EverySeveralDaysForP1"},
 };

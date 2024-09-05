@@ -1037,14 +1037,14 @@ static void update_abilities() {
 		player->add(Strenght, 3);
 		player->add(Wits, -3);
 	}
-	player->add(DamageMelee, player->get(Strenght) / 15);
-	player->add(DamageRanged, player->get(Dexterity) / 10);
-	player->add(Armor, player->get(Strenght) / 15);
-	if(player->is(Stun)) {
+	if(player->getfear() || player->is(Stun)) {
 		player->abilities[WeaponSkill] /= 2;
 		player->abilities[BalisticSkill] /= 2;
 		player->add(Dodge, -40);
 	}
+	player->add(DamageMelee, player->get(Strenght) / 15);
+	player->add(DamageRanged, player->get(Dexterity) / 10);
+	player->add(Armor, player->get(Strenght) / 15);
 	if(player->is(LightSource))
 		player->add(LineOfSight, 3);
 	if(player->is(Freezing))
@@ -1790,7 +1790,9 @@ static void update_room_abilities() {
 	auto p = player->getroom();
 	if(!p)
 		return;
-	fire_trigger(WhenCreatureP1InSiteP2UpdateAbilities, player->getkind(), &p->geti());
+	// Apply room special effect
+	for(auto v : p->geti().wearing)
+		wearing(v, 1);
 }
 
 static void update_negative_skills() {

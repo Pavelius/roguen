@@ -92,7 +92,7 @@ GoblinScouts
  landscape QuestLandscape Goblin
  feats Notable
 InscribedRoom
- landscape QuestLandscape UndeadHorde-30 RandomArtifact-40 RandomArtifact-40 OtherworldCreature-40 RandomLoot+1
+ landscape QuestLandscape UndeadHorde-30 RandomArtifact-20 OtherworldCreature-40 RandomLoot+1
  feats Notable
 MinionsRoom
  landscape QuestLandscape Blooded+2 QuestMinion QuestMinion-30
@@ -107,8 +107,9 @@ SpiderNest
  landscape QuestLandscape Webbed-70 Bones+3 GiantSpider RandomLoot+1
  feats Notable
 StrangeFloraRoom
- landscape QuestLandscape Herbs+4 Plant+1
+ landscape QuestLandscape Herbs+3
  feats Notable
+ wearing Regeneration
 StairsUpRoom
  landscape QuestLandscape Offset+2 StairsUp QuestMinion-10
  feats Notable

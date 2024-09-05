@@ -11,7 +11,7 @@
 
 struct script;
 struct sitei : nameable {
-	variants		landscape, loot;
+	variants		landscape, loot, wearing;
 	unsigned char	walls, floors, doors;
 	featable		feats;
 	char			chance_hidden_doors, chance_stuck_doors, chance_locked_doors, doors_count;
