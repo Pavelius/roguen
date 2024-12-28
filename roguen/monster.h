@@ -16,6 +16,7 @@ struct monsteri : nameable, statable {
 	itemi*			rest;
 	monsteri*		ally() const;
 	bool			islower(ability_s v, int value) const;
+	bool			have(variant v) const;
 	const monsteri& getbase() const { return parent ? parent->getbase() : *this; }
 };
 bool is_boss(const void* p);

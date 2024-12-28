@@ -149,6 +149,7 @@ ScrollOfGoldDetection: Свиток обнаружения золота
 RodOfBurning: Прутик поджигания
 WandOfDigging: Палочка копания
 WandOfDiggingChoose: Копать в каком направлении?
+WandOfFrost: Палочка замораживания
 
 Scroll: Свиток
 

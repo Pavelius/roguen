@@ -601,6 +601,8 @@ static int get_deafault_count(const monsteri& e, int area_level) {
 		{1, 2},
 		{1},
 	};
+	if(e.have("PlaceOwner"))
+		return 1;
 	auto level_creature = e.abilities[Level];
 	auto result = 3 + level_creature - area_level;
 	return maptbl(source, result).roll();

@@ -42,7 +42,7 @@ BSMETA(abilityi) = {
 	BSREQ(id),
 	{}};
 BSMETA(advancement) = {
-	BSREQ(type), BSREQ(level), BSREQ(id),
+	BSREQ(type), BSREQ(id),
 	BSREQ(elements),
 	{}};
 BSMETA(areapiece) = {
@@ -167,7 +167,7 @@ BSMETA(widget) = {
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Ability", VAR(abilityi), 1, 0, ftscript<abilityi>, fttest<abilityi>},
-	{"Advancement", VAR(advancement), 3},
+	{"Advancement", VAR(advancement), 2},
 	{"AreaFlag", VAR(areafi), 1, 0, ftscript<areafi>},
 	{"Craft", VAR(crafti), 1, 0, ftscript<crafti>},
 	{"Creature", VAR(creature), 0},

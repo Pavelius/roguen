@@ -16,6 +16,14 @@ bool monsteri::islower(ability_s v, int value) const {
 	return false;
 }
 
+bool monsteri::have(variant v) const {
+	for(auto e : use) {
+		if(e == v)
+			return true;
+	}
+	return false;
+}
+
 bool is_boss(const void* p) {
 	return ((monsteri*)p)->minions != 0;
 }

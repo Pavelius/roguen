@@ -133,7 +133,7 @@ LeatherArmor cost(20) weight(800) wear(Torso) wear_index(1) avatar(4) powers(Lig
 ChainArmor cost(40) weight(1500) wear(Torso) wear_index(2) avatar(26) powers(HeavyArmorPowers) required(40)
  wearing Armor+2 Dodge-20 ChanceFailSpell+20
 PlateArmor cost(60) weight(3000) wear(Torso) wear_index(2) avatar(37) powers(HeavyArmorPowers) required(60)
- wearing Armor+4 Dodge-40 ChanceFailSpell+40
+ wearing Armor+3 Dodge-40 ChanceFailSpell+40
 Shield cost(10) weight(200) wear(MeleeWeaponOffhand) wear_index(15) avatar(81) powers(ShieldPowers)
  wearing Block+2 ChanceFailSpell+10
 

@@ -515,12 +515,12 @@ static void advance_value(variant kind, int level) {
 	for(auto& e : bsdata<advancement>()) {
 		if(e.type != kind)
 			continue;
-		if(e.level < 0) {
+		if(e.type.counter < 0) {
 			if(level <= 1)
 				continue;
-			if((level % -e.level) != 0)
+			if((level % -e.type.counter) != 0)
 				continue;
-		} else if(e.level != level)
+		} else if(e.type.counter != level)
 			continue;
 		advance_value(e.elements);
 		player->update();
