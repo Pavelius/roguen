@@ -1314,6 +1314,20 @@ static void show_charsheet() {
 	pause_keys();
 }
 
+static void show_font() {
+	auto push_fore = fore; fore = colors::white;
+	setoffset(metrics::padding, metrics::padding);
+	rectpush push; width = 32;
+	for(auto y = 0; y < 16; y++) {
+		for(auto x = 0; x < 16; x++) {
+			unsigned char sym = y * 16 + x;
+			image(caret.x + x * 16, caret.y + y * 16, font, sym, 0);
+		}
+	}
+	fore = push_fore;
+	pause_keys();
+}
+
 static void textcn(const char* format) {
 	auto push_caret = caret;
 	caret.x -= (textw(format) + 1) / 2;
@@ -1529,5 +1543,6 @@ int start_application(fnevent proc) {
 BSDATA(widget) = {
 	{"ShowMinimap", show_area},
 	{"ShowCharsheet", show_charsheet},
+	{"ShowFont", show_font},
 };
 BSDATAF(widget)

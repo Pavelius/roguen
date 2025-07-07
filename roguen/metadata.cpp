@@ -146,7 +146,6 @@ BSMETA(siteskilli) = {
 BSMETA(spelli) = {
 	BSREQ(id),
 	BSREQ(mana), BSREQ(adventure), BSREQ(counterspell),
-	BSFLG(feats, feati),
 	BSREQ(summon), BSREQ(use),
 	{}};
 BSMETA(talki) = {

@@ -118,7 +118,7 @@ SmallGirl avatar(275) parent(SmallBoy) rest(DeadBody)
  use Female
 VillageElder avatar(302) appear(1) rest(DeadBody)
  abilities Strenght(20) Dexterity(10) Wits(40) WeaponSkill(20) Hits(8)
- use Reputation+20
+ use PlaceOwner Reputation+20
 
 #RandomTable
 

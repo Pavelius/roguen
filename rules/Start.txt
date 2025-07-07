@@ -44,6 +44,7 @@ RandomRace
 "Ctrl+M" TestManual
 "Ctrl+X" TestEnemyChange
 "Ctrl+D" DebugMessage
+"Ctrl+F" ShowFont
 "Ctrl+E" ExploreArea
 "Ctrl+H" HealAll
 "Ctrl+I" ShowImages

@@ -137,7 +137,7 @@ DefaultMineEntrance walls(WallBuilding) floors(WoodenFloor) local(GenerateBuildi
  landscape Webbed+5 Blooded+1 StairsDown AddDungeonRumor
  feats Notable
 DefaultCaveEntrance shape(TinyCircleRoom) floors(Cave)
- landscape StairsDown// AddDungeonRumor
+ landscape StairsDown
  feats Notable
 DefaultDungeonEntrance
  landscape StairsDown AddDungeonRumor

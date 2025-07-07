@@ -6,7 +6,6 @@
 
 struct spelli : nameable {
 	int				mana;
-	featable		feats;
 	variants		use;
 	variant			summon;
 	bool			adventure;
