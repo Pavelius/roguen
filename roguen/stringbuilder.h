@@ -3,6 +3,7 @@
 #ifdef _MSC_VER
 #define xva_start(v) (((const char*)&v) + sizeof(v))
 #else
+#include "slice.h"
 #define xva_start(v) (((const char*)&v) + sizeof(v)*4)
 #endif
 

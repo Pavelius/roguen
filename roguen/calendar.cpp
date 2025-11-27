@@ -1,6 +1,8 @@
 #include "boost.h"
 #include "calendar.h"
 #include "creature.h"
+#include "draw.h"
+#include "functor.h"
 #include "pushvalue.h"
 #include "trigger.h"
 #include "triggern.h"

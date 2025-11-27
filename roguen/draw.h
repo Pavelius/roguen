@@ -177,7 +177,7 @@ extern fnbutton			pbutton;
 struct rectpush {
 	point				caret;
 	int					width, height;
-	constexpr rectpush() : caret(draw::caret), width(draw::width), height(draw::height) {}
+	rectpush() : caret(draw::caret), width(draw::width), height(draw::height) {}
 	~rectpush() { draw::caret = caret; draw::width = width; draw::height = height; }
 };
 int						aligned(int x, int width, unsigned state, int string_width);
