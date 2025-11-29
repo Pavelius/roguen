@@ -199,6 +199,7 @@
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="listcolumn.cpp" />
+    <ClCompile Include="script.cpp" />
     <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="logvalue.cpp" />
@@ -224,7 +225,9 @@
     <ClCompile Include="resource_static.cpp" />
     <ClCompile Include="scale2x.cpp" />
     <ClCompile Include="screenshoot.cpp" />
-    <ClCompile Include="script.cpp" />
+    <ClCompile Include="script_new.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="scripting.cpp" />
     <ClCompile Include="serial.cpp" />
     <ClCompile Include="shape.cpp" />
@@ -318,6 +321,9 @@
     <ClInclude Include="resid.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="screenshoot.h" />
+    <ClInclude Include="script_new.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="script.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="shortcut.h" />

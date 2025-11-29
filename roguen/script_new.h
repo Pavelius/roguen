@@ -2,31 +2,27 @@
 
 #pragma once
 
-enum modifiern : unsigned char;
+template<typename T> void fnscript(int index, int bonus);
+template<typename T> bool fntest(int index, int bonus);
 
-struct script {
-	typedef void(*fnrun)(int bonus);
-	typedef bool(*fntest)(int bonus);
-	const char*		id;
-	fnrun			proc;
-	fntest			test;
-};
+enum modifiern : unsigned char;
 struct modifieri {
 	const char*	id;
 };
 extern modifiern modifier;
+
+struct script {
+	typedef void(*fnrun)(int bonus);
+	const char*	id;
+	fnrun proc, method;
+};
 extern variant* script_begin;
 extern variant* script_end;
+extern script* last_script;
 extern fnevent script_run_proc;
 extern const char* last_id;
-extern bool script_fail;
 
-struct pushmodifier {
-	modifiern m;
-	pushmodifier() : m(modifier) {}
-	~pushmodifier() { modifier = m; }
-};
-struct pushscript : pushmodifier {
+struct pushscript {
 	variant* begin;
 	variant* end;
 	pushscript() : begin(script_begin), end(script_end) {}
@@ -41,20 +37,14 @@ struct pushscriptid {
 	~pushscriptid() { last_id = id; }
 };
 
-int script_count(int count, int minimal = 1);
-
-bool script_allow(variant v);
-bool script_allow(const variants& elements);
-void script_execute(const char* id, int bonus = 0);
-void script_stop();
-bool script_stopped();
-void script_run(variant v);
-void script_run(variant v, int counter);
-void script_run(const char* id, const variants& source);
-void script_run(const variants& elements);
+bool choosing_script(int bonus);
+bool script_isrun();
+void script_list(const char* id);
+void script_none(int bonus);
+void script_run(const variants& source);
 void script_run(const variants& source, fnevent proc);
+void script_run(const char* id, const variants& source);
+void script_run(const char* id, const variants& source, fnevent proc);
+void script_stop();
 
-variant next_script();
-
-template<typename T> void fnscript(int index, int bonus);
-template<typename T> bool fntest(int index, int bonus);
+const char* script_header();

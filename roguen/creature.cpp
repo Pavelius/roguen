@@ -495,11 +495,11 @@ static void advance_value(variant v) {
 	if(v.iskind<itemi>())
 		player->equip(bsdata<itemi>::elements + v.value, v.counter);
 	else if(v.iskind<feati>())
-		ftscript<feati>(v.value, v.counter);
+		fnscript<feati>(v.value, v.counter);
 	else if(v.iskind<modifieri>())
-		ftscript<modifieri>(v.value, v.counter);
+		fnscript<modifieri>(v.value, v.counter);
 	else if(v.iskind<abilityi>())
-		ftscript<abilityi>(v.value, v.counter);
+		fnscript<abilityi>(v.value, v.counter);
 	else if(v.iskind<spelli>())
 		player->learn_spell(v.value);
 	else if(v.iskind<script>())

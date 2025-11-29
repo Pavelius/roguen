@@ -81,12 +81,12 @@ static bool match_wall_mines(point m) {
 	return ei.iswall() && ei.is(Mines);
 }
 
-template<> void ftscript<filteri>(int value, int counter) {
+template<> void fnscript<filteri>(int value, int counter) {
 	auto& ei = bsdata<filteri>::elements[value];
 	ei.action(ei.proc, counter);
 }
-template<> bool fttest<filteri>(int value, int counter) {
-	ftscript<filteri>(value, counter);
+template<> bool fntest<filteri>(int value, int counter) {
+	fnscript<filteri>(value, counter);
 	return true;
 }
 

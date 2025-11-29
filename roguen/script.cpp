@@ -16,20 +16,31 @@ variant* script_end;
 modifiern modifier;
 bool script_fail;
 
-template<> void ftscript<modifieri>(int value, int counter) {
+const char* last_id;
+
+static void script_run_def() {
+	while(script_begin < script_end) {
+		auto v = *script_begin++;
+		bsdata<varianti>::elements[v.type].pscript(v.value, v.counter);
+	}
+}
+
+fnevent script_run_proc = script_run_def;
+
+template<> void fnscript<modifieri>(int value, int counter) {
 	modifier = (modifiern)value;
 }
-template<> bool fttest<modifieri>(int value, int counter) {
-	ftscript<modifieri>(value, counter);
+template<> bool fntest<modifieri>(int value, int counter) {
+	fnscript<modifieri>(value, counter);
 	return true;
 }
 
-template<> bool fttest<script>(int value, int counter) {
+template<> bool fntest<script>(int value, int counter) {
 	if(bsdata<script>::elements[value].test)
 		return bsdata<script>::elements[value].test(counter);
 	return true;
 }
-template<> void ftscript<script>(int value, int counter) {
+template<> void fnscript<script>(int value, int counter) {
 	bsdata<script>::elements[value].proc(counter);
 }
 
@@ -81,17 +92,20 @@ void script_run(variant v) {
 		proc(v.value, v.counter);
 }
 
-void script_run(const variants& elements) {
-	auto push_modifier = modifier;
-	auto push_begin = script_begin;
-	auto push_end = script_end;
-	script_begin = elements.begin();
-	script_end = elements.end();
-	while(script_begin < script_end)
-		script_run(*script_begin++);
-	script_begin = push_begin;
-	script_end = push_end;
-	modifier = push_modifier;
+void script_run(const variants& source) {
+	pushscript push(source);
+	script_run_proc();
+}
+
+void script_run(const variants& source, fnevent proc) {
+	auto push = script_run_proc; script_run_proc = proc;
+	script_run(source);
+	script_run_proc = push;
+}
+
+void script_run(const char* id, const variants& source) {
+	pushscriptid push(id);
+	script_run(source);
 }
 
 void script_execute(const char* id, int bonus) {

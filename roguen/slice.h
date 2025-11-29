@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef _MSC_VER
 typedef unsigned long size_t;
+#endif
 
 typedef int (*fncompare)(const void*, const void*);
 typedef void(*fnevent)(); // Callback function of any command executing
