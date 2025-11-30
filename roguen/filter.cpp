@@ -281,6 +281,12 @@ static bool filter_tile(const void* object, int param) {
 	return false;
 }
 
+static bool filter_spell(const void* object, int param) {
+	if(bsdata<creature>::have(object))
+		return ((creature*)object)->known_spell(param);
+	return false;
+}
+
 static bool filter_ability(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return ((creature*)object)->get(last_ability) >= param;
@@ -333,6 +339,8 @@ static void querry_filter() {
 			records.match(filter_feat, v.value, v.counter >= 0);
 		else if(v.iskind<itemi>())
 			records.match(filter_item, v.value, v.counter >= 0);
+		else if(v.iskind<spelli>())
+			records.match(filter_tile, v.value, v.counter >= 0);
 		else if(v.iskind<tilei>())
 			records.match(filter_tile, v.value, v.counter >= 0);
 		else {
@@ -359,7 +367,7 @@ template<> void fnscript<querryi>(int value, int counter) {
 }
 template<> bool fntest<querryi>(int value, int counter) {
 	fnscript<querryi>(value, counter);
-	return true;
+	return records.operator bool();
 }
 
 BSDATA(querryi) = {
