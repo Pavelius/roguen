@@ -7,7 +7,7 @@
 #include "wear.h"
 #include "variant.h"
 
-enum ability_s : unsigned char;
+enum abilityn : unsigned char;
 
 struct itemi;
 
@@ -32,7 +32,7 @@ struct itemi : nameable {
 	char			required[3]; // required Strenght, Dexterity or Wits to use this item
 	bool operator==(const itemi& v) const { return this == &v; }
 	int				getindex() const { return this - bsdata<itemi>::elements; }
-	bool			is(feat_s v) const { return feats.is(v); }
+	bool			is(featn v) const { return feats.is(v); }
 	bool			ismelee() const { return wear == MeleeWeapon || wear == MeleeWeaponOffhand; }
 	void			paint() const; // Exported paint function
 };
@@ -81,7 +81,7 @@ public:
 	variant			getpower() const;
 	variants		getuse() const;
 	int				getweight() const;
-	bool			is(feat_s v) const;
+	bool			is(featn v) const;
 	bool			is(magicn v) const { return magic == v; }
 	bool			is(wear_s v) const;
 	bool			is(const itemi& v) const { return v == geti(); }
@@ -91,6 +91,7 @@ public:
 	bool			iscountable() const { return !geti().powers; }
 	bool			iscursed() const { return is(Cursed); }
 	bool			isidentified() const { return identified != 0; }
+	bool			istype(int v) const { return type == v; }
 	bool			ismagical() const;
 	bool			ispersonal() const { return personal != 0; }
 	bool			isranged() const { return geti().wear == RangedWeapon; }

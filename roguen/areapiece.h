@@ -12,3 +12,5 @@ struct areapiece : areaheadi, areamap, timemanage {
 	void				clear();
 };
 extern areapiece* area;
+
+inline bool haveposition(const void* p) { return area->haveposition(p); }

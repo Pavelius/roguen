@@ -78,9 +78,6 @@
     <ClCompile Include="screenshoot.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="script_new.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="stringbuilder.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -387,9 +384,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="screenshoot.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="script_new.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="stringbuilder.h">

@@ -37,7 +37,7 @@ void creaturea::select(point pt, int los, bool isplayer, const creature* exclude
 	count = ps - data;
 }
 
-void creaturea::match(feat_s v, bool keep) {
+void creaturea::match(featn v, bool keep) {
 	auto ps = data;
 	for(auto e : *this) {
 		if(e->is(v) != keep)

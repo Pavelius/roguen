@@ -13,7 +13,7 @@ static const char* getnameshort(const char* id) {
 	return getnm(id);
 }
 
-static const char* getnameshort(ability_s i) {
+static const char* getnameshort(abilityn i) {
 	return getnameshort(bsdata<abilityi>::elements[i].id);
 }
 
@@ -51,7 +51,7 @@ static void addf(stringbuilder& sb, const char* id) {
 	sb.adds("[~%-1]", getnm(id));
 }
 
-static void addv(stringbuilder& sb, ability_s id, int value) {
+static void addv(stringbuilder& sb, abilityn id, int value) {
 	addv(sb, bsdata<abilityi>::elements[id].id, value, "%-1 [%2i]");
 }
 
@@ -62,7 +62,7 @@ static void addv(stringbuilder& sb, const featable& feats) {
 	}
 }
 
-static void addf(stringbuilder& sb, ability_s i, int value, int value_maximum = 0) {
+static void addf(stringbuilder& sb, abilityn i, int value, int value_maximum = 0) {
 	switch(i) {
 	case Armor:
 		sb.addn("[~%1]\t%2i", getnameshort(i), value);
@@ -134,10 +134,10 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn("%1i %-Level", get(Level));
 	sb.addn("$tab -50");
 	sb.addn("---");
-	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
+	for(auto i = Strenght; i <= Wits; i = (abilityn)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
-	for(auto i = WeaponSkill; i <= Dodge; i = (ability_s)(i + 1))
+	for(auto i = WeaponSkill; i <= Dodge; i = (abilityn)(i + 1))
 		addf(sb, i, abilities[i]);
 	sb.addn("---");
 	addf(sb, Armor, abilities[Armor], abilities[Block]);
@@ -253,7 +253,7 @@ static void total_item_weight(stringbuilder& sb) {
 }
 
 static void list_of_feats(stringbuilder& sb) {
-	for(auto i = (feat_s)0; i <= Blooding; i = (feat_s)(i + 1)) {
+	for(auto i = (featn)0; i <= Blooding; i = (featn)(i + 1)) {
 		if(i == Female)
 			continue;
 		if(player->is(i))
@@ -262,7 +262,7 @@ static void list_of_feats(stringbuilder& sb) {
 }
 
 static void list_of_effects(stringbuilder& sb) {
-	for(auto i = (ability_s)Burning; i <= Drunk; i = (ability_s)(i + 1)) {
+	for(auto i = (abilityn)Burning; i <= Drunk; i = (abilityn)(i + 1)) {
 		if(player->is(i))
 			sb.addn(bsdata<abilityi>::elements[i].getname());
 	}
@@ -271,7 +271,7 @@ static void list_of_effects(stringbuilder& sb) {
 }
 
 static void list_of_skills(stringbuilder& sb) {
-	for(auto i = FirstSkill; i <= LastSkill; i = (ability_s)(i + 1)) {
+	for(auto i = FirstSkill; i <= LastSkill; i = (abilityn)(i + 1)) {
 		auto v = player->get(i);
 		if(v)
 			sb.addn("%1\t%2i%%", bsdata<abilityi>::elements[i].getname(), v);
@@ -290,14 +290,14 @@ static void need_help_info(stringbuilder& sb) {
 static void add_require(stringbuilder& sb, const item& it) {
 	auto& ei = it.geti();
 	auto result = 0;
-	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1))
+	for(auto i = Strenght; i <= Wits; i = (abilityn)(i + 1))
 		if(ei.required[i - Strenght] > 0)
 			result++;
 	if(!result)
 		return;
 	sb.adds("%RequireForUse");
 	auto result_posted = 0;
-	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
+	for(auto i = Strenght; i <= Wits; i = (abilityn)(i + 1)) {
 		if(ei.required[i - Strenght] <= 0)
 			continue;
 		if(result_posted > 0 && result_posted == (result - 1))

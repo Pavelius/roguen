@@ -4,11 +4,11 @@
 
 #pragma once
 
-enum ability_s : unsigned char;
+enum abilityn : unsigned char;
 struct sitei;
 
 struct siteskilli : nameable {
-	ability_s		skill;
+	abilityn		skill;
 	char			bonus;
 	variants		effect;
 	unsigned		key;

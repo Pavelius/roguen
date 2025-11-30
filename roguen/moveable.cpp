@@ -138,7 +138,7 @@ void movable::fixeffect(const char* id) const {
 	fixeffect(pt, id);
 }
 
-void movable::fixability(ability_s i, int v) const {
+void movable::fixability(abilityn i, int v) const {
 	if(!area->is(position, Visible))
 		return;
 	if(!v)

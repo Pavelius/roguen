@@ -26,7 +26,7 @@ public:
 	operator bool() const { return abilities[Hits] > 0; }
 	bool			act(const char* action, const char* id = 0, ...) const;
 	bool			actp(const char* action, const char* id = 0, ...) const;
-	void			add(ability_s a, int v);
+	void			add(abilityn a, int v);
 	void			additem(item& v);
 	void			apply(const featable& v) { feats.add(v); }
 	bool			badtemper() const;
@@ -40,7 +40,7 @@ public:
 	void			damage(int v);
 	void			finish();
 	void			fixappear();
-	int				get(ability_s v) const { return abilities[v]; }
+	int				get(abilityn v) const { return abilities[v]; }
 	int				getcarry() const;
 	creature*		getcharmer() const;
 	creature*		getenemy() const;
@@ -49,7 +49,7 @@ public:
 	void			getinfo(stringbuilder& sb) const;
 	int				getloh() const;
 	int				getlos() const;
-	int				getmaximum(ability_s v) const;
+	int				getmaximum(abilityn v) const;
 	const char*		getname() const { return actable::getname(); }
 	static const char* getname(const void* p) { return ((creature*)p)->actable::getname(); }
 	creature*		getowner() const;
@@ -60,16 +60,16 @@ public:
 	int				getsellingcost() const;
 	int				getwait() const { return wait_seconds; }
 	bool			is(areaf v) const;
-	bool			is(ability_s v) const { return get(v) > 0; }
-	bool			is(feat_s v) const { return feats.is(v) || feats_active.is(v); }
-	bool			is(feat_s v, const item& i) const { return feats.is(v) || i.is(v); }
+	bool			is(abilityn v) const { return get(v) > 0; }
+	bool			is(featn v) const { return feats.is(v) || feats_active.is(v); }
+	bool			is(featn v, const item& i) const { return feats.is(v) || i.is(v); }
 	bool			isallow(const item& it) const;
-	bool			isexpert(ability_s v) const { return get(v) >= 30; }
+	bool			isexpert(abilityn v) const { return get(v) >= 30; }
 	bool			isevil() const { return abilities[Reputation] <= -20; }
 	bool			isfollowmaster() const;
 	bool			isgood() const { return abilities[Reputation] >= 20; }
 	bool			ishuman() const;
-	bool			ismaster(ability_s v) const { return get(v) >= 60; }
+	bool			ismaster(abilityn v) const { return get(v) >= 60; }
 	bool			isnormalmood() const { return abilities[Mood] == basic.abilities[Mood]; }
 	bool			ispresent() const;
 	bool			istired() const { return abilities[Mood] <= -10; }
@@ -82,12 +82,12 @@ public:
 	void			paint() const;
 	void			paintbarsall() const;
 	void			place(point m);
-	void			remove(feat_s v) { feats.remove(v); }
-	bool			resist(feat_s resist, feat_s immunity) const;
-	bool			roll(ability_s v, int bonus = 0) const;
+	void			remove(featn v) { feats.remove(v); }
+	bool			resist(featn resist, featn immunity) const;
+	bool			roll(abilityn v, int bonus = 0) const;
 	void			say(const char* format, ...) const;
-	void			set(feat_s v) { feats.set(v); }
-	void			set(ability_s i, int v) { abilities[i] = v; }
+	void			set(featn v) { feats.set(v); }
+	void			set(abilityn i, int v) { abilities[i] = v; }
 	void			setcharmer(const creature* v);
 	void			setenemy(const creature* v);
 	void			setfear(const creature* v);
@@ -102,7 +102,7 @@ public:
 	void			waitseconds(int value) { wait_seconds += value; }
 };
 struct creaturea : collection<creature> {
-	void			match(feat_s v, bool keep);
+	void			match(featn v, bool keep);
 	void			match(fnvisible proc, bool keep) { collectiona::match(proc, keep); }
 	void			matchrange(point start, int v, bool keep);
 	void			remove(const creature* v);

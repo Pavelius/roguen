@@ -3,7 +3,7 @@
 
 #pragma once
 
-enum ability_s : unsigned char;
+enum abilityn : unsigned char;
 enum color_s : unsigned char;
 enum direction_s : unsigned char;
 
@@ -24,7 +24,7 @@ class movable : public actable {
 public:
 	void			fixactivity() const;
 	void			fixappear(fnevent fpaint) const;
-	void			fixability(ability_s i, int v) const;
+	void			fixability(abilityn i, int v) const;
 	void			fixdisappear() const;
 	void			fixeffect(const char* id) const;
 	static void		fixeffect(point position, const char* id);

@@ -46,7 +46,7 @@ static int get_experience_reward(creature* p) {
 	return maptbl(levels, r);
 }
 
-static void add(creature* player, ability_s id, int value, int minimal = 0) {
+static void add(creature* player, abilityn id, int value, int minimal = 0) {
 	auto i = player->get(id) + value;
 	if(i < minimal)
 		i = minimal;
@@ -138,14 +138,14 @@ void pay_action() {
 	player->waitseconds(100 * percent / 100);
 }
 
-static ability_s damage_ability(ability_s v) {
+static abilityn damage_ability(abilityn v) {
 	switch(v) {
 	case BalisticSkill: return DamageRanged;
 	default: return DamageMelee;
 	}
 }
 
-bool creature::resist(feat_s resist, feat_s immunity) const {
+bool creature::resist(featn resist, featn immunity) const {
 	if(!resist)
 		return false;
 	if(is(immunity))
@@ -354,7 +354,7 @@ static void special_attack(item& weapon, creature* opponent, int& pierce, int& d
 	}
 }
 
-static void restore(ability_s a, ability_s test) {
+static void restore(abilityn a, abilityn test) {
 	if(player->is(Illness))
 		return;
 	auto v = player->get(a);
@@ -365,7 +365,7 @@ static void restore(ability_s a, ability_s test) {
 	}
 }
 
-static void magic_restore(ability_s a, int max) {
+static void magic_restore(abilityn a, int max) {
 	auto v = player->get(a);
 	auto mv = player->basic.abilities[a];
 	if(v < mv && max) {
@@ -376,7 +376,7 @@ static void magic_restore(ability_s a, int max) {
 	}
 }
 
-static void posion_recovery(ability_s v) {
+static void posion_recovery(abilityn v) {
 	if(player->get(v) > 0) {
 		add(player, v, -1);
 		if(player->is(PoisonResistance))
@@ -442,14 +442,14 @@ static void drop_throphy(creature* player, int chance) {
 	it.drop(pt);
 }
 
-static void nullify_elements(feat_s v1, feat_s v2) {
+static void nullify_elements(featn v1, featn v2) {
 	if(player->is(v1) && player->is(v2)) {
 		player->remove(v1);
 		player->remove(v2);
 	}
 }
 
-static void nullify_elements(ability_s v1, ability_s v2) {
+static void nullify_elements(abilityn v1, abilityn v2) {
 	if(player->is(v1) && player->is(v2)) {
 		player->set(v1, 0);
 		player->set(v2, 0);
@@ -608,7 +608,7 @@ static void check_stun() {
 	}
 }
 
-static void normalize_ability(ability_s v) {
+static void normalize_ability(abilityn v) {
 	if(player->abilities[v] > player->basic.abilities[v])
 		player->abilities[v]--;
 	else if(player->abilities[v] < player->basic.abilities[v])
@@ -1059,7 +1059,7 @@ static void update_abilities() {
 	}
 }
 
-void creature::add(ability_s a, int v) {
+void creature::add(abilityn a, int v) {
 	statable::add(a, v, bsdata<abilityi>::elements[a].minimal, getmaximum(a));
 }
 
@@ -1203,7 +1203,7 @@ static void opponent_interaction() {
 	}
 }
 
-static ability_s weapon_skill(const item& weapon) {
+static abilityn weapon_skill(const item& weapon) {
 	auto& ei = weapon.geti();
 	switch(ei.wear) {
 	case RangedWeapon: return BalisticSkill;
@@ -1211,7 +1211,7 @@ static ability_s weapon_skill(const item& weapon) {
 	}
 }
 
-static int add_bonus_damage(creature* enemy, item& weapon, feat_s feat, int value, feat_s resistance, feat_s immunity) {
+static int add_bonus_damage(creature* enemy, item& weapon, featn feat, int value, featn resistance, featn immunity) {
 	if(!player->is(feat, weapon))
 		return 0;
 	auto bonus_damage = value;
@@ -1484,7 +1484,7 @@ void creature::finish() {
 	fixappear();
 }
 
-bool creature::roll(ability_s v, int bonus) const {
+bool creature::roll(abilityn v, int bonus) const {
 	auto value = get(v);
 	auto base = bsdata<abilityi>::elements[v].base;
 	auto skill_divider = bsdata<abilityi>::elements[v].skill_divider;
@@ -1732,7 +1732,7 @@ static void wearing(variant v, int multiplier) {
 	if(v.iskind<abilityi>())
 		player->abilities[v.value] += v.counter * multiplier;
 	else if(v.iskind<feati>()) {
-		auto f = (feat_s)v.value;
+		auto f = (featn)v.value;
 		if(multiplier < 0) {
 			auto f1 = negative_feat(f);
 			if(f1) {
@@ -1796,7 +1796,7 @@ static void update_room_abilities() {
 }
 
 static void update_negative_skills() {
-	for(auto i = (ability_s)0; i < Hits; i = (ability_s)(i + 1)) {
+	for(auto i = (abilityn)0; i < Hits; i = (abilityn)(i + 1)) {
 		if(player->abilities[i] < 0)
 			player->abilities[i] = 0;
 	}
@@ -2090,7 +2090,7 @@ bool creature::isallow(const item& it) const {
 	auto& ei = it.geti();
 	if(it.isbroken())
 		return false;
-	for(auto i = Strenght; i <= Wits; i = (ability_s)(i + 1)) {
+	for(auto i = Strenght; i <= Wits; i = (abilityn)(i + 1)) {
 		auto v = ei.required[i - Strenght];
 		if(v && get(i) < v)
 			return false;
@@ -2126,7 +2126,7 @@ void creature::setroom(const roomi* v) {
 	room_id = (v == 0) ? 0xFFFF : area->rooms.indexof(v);
 }
 
-int	creature::getmaximum(ability_s v) const {
+int	creature::getmaximum(abilityn v) const {
 	switch(v) {
 	case Hits: case Mana:
 		return basic.abilities[v];

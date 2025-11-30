@@ -9,7 +9,7 @@ enum craftn : unsigned char {
 };
 extern craftn last_craft;
 struct crafti : nameable {
-	ability_s	skill;
+	abilityn	skill;
 	variants	elements;
 };
 struct crafta {

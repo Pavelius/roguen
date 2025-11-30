@@ -2,7 +2,7 @@
 
 #pragma once
 
-enum ability_s : unsigned char {
+enum abilityn : unsigned char {
 	LineOfSight,
 	Strenght, Dexterity, Wits,
 	WeaponSkill, BalisticSkill, Dodge,
@@ -22,13 +22,13 @@ enum color_s : unsigned char {
 struct abilityi : nameable {
 	char		minimal;
 	char		raise, raise_cost;
-	ability_s	base;
+	abilityn	base;
 	int			skill_divider;
-	ability_s	getindex() const;
+	abilityn	getindex() const;
 	bool		isskill() const { return !base; }
 };
-extern ability_s last_ability;
+extern abilityn last_ability;
 struct statable {
 	char		abilities[Drunk + 1];
-	void		add(ability_s i, int v, int minimal = -120, int maximal = 120);
+	void		add(abilityn i, int v, int minimal = -120, int maximal = 120);
 };

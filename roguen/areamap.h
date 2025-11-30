@@ -38,6 +38,7 @@ struct areamap {
 	static point	getpoint(const rect& rc, direction_s dir);
 	static point	getpoint(const rect& rc, const rect& bound, direction_s dir);
 	static int		getrange(point start, point target);
+	bool			haveposition(const void* p) const { return p >= this && p < (char*)this + sizeof(*this); }
 	void			horz(int x1, int y1, int x2, fnset proc, int v);
 	bool			is(point m, areaf v) const { return (feats[m] & (1 << v)) != 0; }
 	bool			isb(point m, areaf v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }

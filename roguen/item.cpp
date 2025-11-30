@@ -184,7 +184,7 @@ bool item::damage() {
 	return false;
 }
 
-bool item::is(feat_s v) const {
+bool item::is(featn v) const {
 	return geti().feats.is(v);
 }
 

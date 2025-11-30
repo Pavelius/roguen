@@ -59,7 +59,7 @@ public:
 	const char*		getname() const;
 	int				getseed() const;
 	static const char* getname(const void* p) { return ((roomi*)p)->getname(); }
-	bool			is(feat_s v) const { return geti().feats.is(v); }
+	bool			is(featn v) const { return geti().feats.is(v); }
 	bool			isexplored() const;
 	bool			ismarkable() const;
 	bool			isnotable() const { return is(Notable); }

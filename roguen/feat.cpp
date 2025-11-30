@@ -64,7 +64,7 @@ BSDATA(feati) = {
 };
 assert_enum(feati, Blooding)
 
-feat_s negative_feat(feat_s v) {
+featn negative_feat(featn v) {
 	switch(v) {
 	case FastAction: return SlowAction;
 	case FastAttack: return SlowAttack;

@@ -4,9 +4,9 @@ RemoveCharm mana(5)
  use SelectNotEnemies FilterCharmed ChooseTarget ForEachItem CharmOpponent-1
 
 BurningHands mana(5)
- use SelectEnemies FilterClose ForEachCreature FireHarm+4
+ use SelectEnemies IfClose ForEachCreature FireHarm+4
 CureWounds mana(10)
- use SelectAllies FilterClose FilterWounded ChooseTarget ForEachCreature Heal+5
+ use SelectAllies IfClose FilterWounded ChooseTarget ForEachCreature Heal+5
 CharmPerson mana(20) counterspell(RemoveCharm)
  use SelectNotEnemies FilterUndead-1 FilterMindless-1 FilterCharmed-1 ChooseTarget ForEachOpponent CharmOpponent
 Entaglement mana(6)

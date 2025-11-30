@@ -8,7 +8,7 @@ StealCoinsFail
 #SiteSkill
 
 ChatSomeone skill(Wits) keyid("C")
- effect SelectNotEnemies FilterClose FilterHuman-1 ChooseTarget ForEachOpponent Chatting
+ effect SelectNotEnemies IfClose IfHuman-1 ChooseTarget ForEachOpponent Chatting
 BuyItemsSomeone skill(Wits) keyid("H")
  effect MakeTrade
 OpenDoorLock skill(Thievery) tool(Lockpick)
@@ -22,6 +22,6 @@ SellItemsSomeone skill(Wits) keyid("J")
 SearchRoomForGems skill(Gemcutting)
  effect HaveNext-1 Local SelectYourRoom Filter RoomsWhereGemsCanBe FilterRoomMarked-1 ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)
- effect ProhibitedAction SelectAllies-1 FilterClose ForEachOpponent RollAction StealOpponentCoins
+ effect ProhibitedAction SelectAllies-1 IfClose ForEachOpponent RollAction StealOpponentCoins
 CreatePotions skill(Alchemy)
  effect AlchemyCraft UseCraft

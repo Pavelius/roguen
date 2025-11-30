@@ -1,7 +1,7 @@
 #include "ability.h"
 #include "bsdata.h"
 
-ability_s last_ability;
+abilityn last_ability;
 
 BSDATA(abilityi) = {
 	{"LineOfSight", 0},
@@ -48,11 +48,11 @@ BSDATA(abilityi) = {
 };
 assert_enum(abilityi, Drunk)
 
-ability_s abilityi::getindex() const {
-	return (ability_s)(this - bsdata<abilityi>::elements);
+abilityn abilityi::getindex() const {
+	return (abilityn)(this - bsdata<abilityi>::elements);
 }
 
-void statable::add(ability_s v, int bonus, int minimum, int maximum) {
+void statable::add(abilityn v, int bonus, int minimum, int maximum) {
 	bonus += abilities[v];
 	if(bonus < minimum)
 		bonus = minimum;
@@ -61,14 +61,14 @@ void statable::add(ability_s v, int bonus, int minimum, int maximum) {
 	abilities[v] = bonus;
 }
 
-//color_s negative_color(ability_s v) {
+//color_s negative_color(abilityn v) {
 //	switch(v) {
 //	case Hits: return ColorRed;
 //	default: return ColorNone;
 //	}
 //}
 //
-//color_s positive_color(ability_s v) {
+//color_s positive_color(abilityn v) {
 //	switch(v) {
 //	case Hits: return ColorGreen;
 //	case Mana: return ColorBlue;

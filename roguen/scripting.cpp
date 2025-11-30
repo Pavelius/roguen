@@ -1231,19 +1231,19 @@ template<> void fnscript<needni>(int value, int counter) {
 }
 
 template<> bool fntest<abilityi>(int value, int counter) {
-	last_ability = (ability_s)value;
+	last_ability = (abilityn)value;
 	if(counter < 0)
 		return (counter + player->basic.abilities[value]) >= 0;
 	return true;
 }
 template<> void fnscript<abilityi>(int value, int counter) {
-	last_ability = (ability_s)value;
-	player->basic.add((ability_s)value, counter, bsdata<abilityi>::elements[value].minimal);
+	last_ability = (abilityn)value;
+	player->basic.add((abilityn)value, counter, bsdata<abilityi>::elements[value].minimal);
 }
 
 template<> bool fntest<feati>(int value, int counter) {
 	if(counter <= 0)
-		return player->is((feat_s)value);
+		return player->is((featn)value);
 	return true;
 }
 template<> void fnscript<feati>(int value, int counter) {
@@ -1499,7 +1499,7 @@ static listi* get_ingridient_list(const itemi* pi) {
 	return p;
 }
 
-static listi* get_ability_craft(ability_s v) {
+static listi* get_ability_craft(abilityn v) {
 	static listi* alchemy = bsdata<listi>::find("AlchemyCraft");
 	switch(v) {
 	case Alchemy: return alchemy;
@@ -1558,7 +1558,7 @@ static int free_objects_count() {
 	return result;
 }
 
-static int get_rate(ability_s a, int v) {
+static int get_rate(abilityn a, int v) {
 	if(v > 0 && v < 100) {
 		auto rate = bsdata<abilityi>::elements[a].raise;
 		auto cost = bsdata<abilityi>::elements[a].raise_cost;
@@ -1568,7 +1568,7 @@ static int get_rate(ability_s a, int v) {
 	return 0;
 }
 
-static void add_raise(ability_s a) {
+static void add_raise(abilityn a) {
 	auto pb = bsdata<abilityi>::begin() + a;
 	auto v = player->basic.abilities[a];
 	if(!v)
@@ -1579,7 +1579,7 @@ static void add_raise(ability_s a) {
 	an.add(pb, getnm("RaiseSkill"), pb->getname(), v + 1, r);
 }
 
-static void raise_ability_by_skill(ability_s a) {
+static void raise_ability_by_skill(abilityn a) {
 	auto v = player->basic.abilities[a];
 	auto r = get_rate(a, v);
 	if(player->basic.abilities[SkillPoints] < r)
@@ -1590,7 +1590,7 @@ static void raise_ability_by_skill(ability_s a) {
 }
 
 static const char* skill_value(const void* object, stringbuilder& sb) {
-	auto i = (ability_s)bsdata<abilityi>::source.indexof(object);
+	auto i = (abilityn)bsdata<abilityi>::source.indexof(object);
 	auto v = player->basic.abilities[i];
 	sb.add("%1i%%", v);
 	return sb.begin();
@@ -1598,7 +1598,7 @@ static const char* skill_value(const void* object, stringbuilder& sb) {
 
 static const char* skill_raise_cost(const void* object, stringbuilder& sb) {
 	auto p = (abilityi*)object;
-	auto i = (ability_s)bsdata<abilityi>::source.indexof(object);
+	auto i = (abilityn)bsdata<abilityi>::source.indexof(object);
 	auto v = player->basic.abilities[i];
 	auto r = get_rate(i, v);
 	sb.add(getnm("RaiseSkill"), p->getname(), v + 1, r);
@@ -1607,7 +1607,7 @@ static const char* skill_raise_cost(const void* object, stringbuilder& sb) {
 
 static abilityi* choose_skill(listcolumn* columns, const char* header, int dialog_width) {
 	an.clear();
-	for(auto i = Strenght; i <= LastSkill; i = (ability_s)(i + 1)) {
+	for(auto i = Strenght; i <= LastSkill; i = (abilityn)(i + 1)) {
 		if(!get_rate(i, player->basic.abilities[i]))
 			continue;
 		an.add(bsdata<abilityi>::elements + i, bsdata<abilityi>::elements[i].getname());
@@ -1634,7 +1634,7 @@ static void raise_skills(int bonus) {
 			auto p = choose_skill(columns, "RaiseSkillChoose", 280);
 			if(!p)
 				break;
-			auto a = (ability_s)(p - bsdata<abilityi>::elements);
+			auto a = (abilityn)(p - bsdata<abilityi>::elements);
 			raise_ability_by_skill(a);
 		}
 	}
@@ -1846,7 +1846,7 @@ static void detect_items(wear_s v) {
 	}
 }
 
-static void detect_items(feat_s v) {
+static void detect_items(featn v) {
 	for(auto& e : area->items) {
 		if(!e || !e.is(v))
 			continue;
@@ -1859,7 +1859,7 @@ static void detect_area_items(variant v) {
 	if(v.iskind<weari>())
 		detect_items((wear_s)v.value);
 	else if(v.iskind<feati>())
-		detect_items((feat_s)v.value);
+		detect_items((featn)v.value);
 	else if(v.iskind<listi>()) {
 		for(auto ev : bsdata<listi>::elements[v.value].elements)
 			detect_area_items(ev);
@@ -2319,7 +2319,7 @@ static void damage_item(int bonus) {
 }
 
 static void random_ability(int bonus) {
-	static ability_s source[] = {Strenght, Dexterity, Wits};
+	static abilityn source[] = {Strenght, Dexterity, Wits};
 	fnscript<abilityi>(maprnd(source), bonus);
 }
 
@@ -2540,7 +2540,7 @@ static bool have_object(variant v) {
 	else if(v.iskind<abilityi>())
 		return player->abilities[v.value] >= v.counter;
 	else if(v.iskind<feati>())
-		return player->is((feat_s)v.value);
+		return player->is((featn)v.value);
 	else if(v.iskind<listi>()) {
 		for(auto v : bsdata<listi>::elements[v.value].elements) {
 			if(have_object(v))

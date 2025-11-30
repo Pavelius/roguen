@@ -11,6 +11,7 @@
 #include "script.h"
 
 static variant last_variant;
+static collectiona records;
 
 static void clear_all_collections() {
 	rooms.clear();
@@ -51,7 +52,7 @@ static bool match_list_room(const void* object) {
 
 static bool match_item_variant(const item* p, variant v) {
 	if(v.iskind<feati>())
-		return p->is((feat_s)v.value);
+		return p->is((featn)v.value);
 	else if(v.iskind<itemi>())
 		return p->is(bsdata<itemi>::elements + v.value);
 	else if(last_variant.iskind<listi>()) {
@@ -106,7 +107,7 @@ static bool filter_unaware(const void* object) {
 	return p->isunaware();
 }
 
-static bool filter_close(const void* object) {
+static bool if_close(const void* object) {
 	auto p = (creature*)object;
 	return (area->getrange(p->getposition(), last_index) <= 1);
 }
@@ -140,7 +141,7 @@ static bool filter_cursed(const void* object) {
 	return p->iscursed();
 }
 
-static bool filter_human(const void* object) {
+static bool if_human(const void* object) {
 	auto p = (creature*)object;
 	return p->ishuman();
 }
@@ -173,11 +174,11 @@ static bool filter_undead(const void* object) {
 static bool filter_animal(const void* object) {
 	auto p = (creature*)object;
 	auto v = p->get(Wits);
-	return v == 3 && v == 4;
+	return v == 3 || v == 4;
 }
 
 static void match_targets(fnvisible proc, int counter) {
-	targets.collection<creature>::match(proc, counter >= 0);
+	targets.match(proc, counter >= 0);
 }
 
 static void match_rooms(fnvisible proc, int counter) {
@@ -274,17 +275,107 @@ static void select_your_room(fnvisible proc, int counter) {
 	}
 }
 
+static bool filter_tile(const void* object, int param) {
+	if(bsdata<creature>::have(object))
+		return area->tiles[((creature*)object)->getposition()] == param;
+	return false;
+}
+
+static bool filter_ability(const void* object, int param) {
+	if(bsdata<creature>::have(object))
+		return ((creature*)object)->get(last_ability) >= param;
+	return false;
+}
+
+static bool filter_feat(const void* object, int param) {
+	if(bsdata<creature>::have(object))
+		return ((creature*)object)->is((featn)param);
+	return false;
+}
+
+static bool filter_item(const void* object, int param) {
+	if(bsdata<creature>::have(object))
+		return ((creature*)object)->haveitem(param);
+	if(bsdata<itemi>::have(object))
+		return ((item*)object)->istype(param);
+	return false;
+}
+
+static bool filter_feature(const void* object, int param) {
+	if(haveposition(object)) {
+		auto m = *((point*)object);
+		return area->features[m] == param;
+	}
+	return false;
+}
+
+static void querry_filter();
+
+static void querry_list(const variants& source, int counter) {
+	pushscript push(source);
+	querry_filter();
+}
+
+static void querry_filter() {
+	while(script_begin < script_end) {
+		auto v = *script_begin++;
+		if(v.iskind<filteri>())
+			records.match(bsdata<filteri>::elements[v.value].proc, v.counter >= 0);
+		else if(v.iskind<listi>())
+			querry_list(bsdata<listi>::elements[v.value].elements, v.counter);
+		else if(v.iskind<randomizeri>())
+			querry_list(bsdata<randomizeri>::elements[v.value].chance, v.counter);
+		else if(v.iskind<querryi>()) // Grouping data (other querry overlaps)
+			bsdata<querryi>::elements[v.value].proc();
+		else if(v.iskind<abilityi>())
+			records.match(filter_ability, iabs(v.counter), v.counter >= 0);
+		else if(v.iskind<feati>())
+			records.match(filter_feat, v.value, v.counter >= 0);
+		else if(v.iskind<itemi>())
+			records.match(filter_item, v.value, v.counter >= 0);
+		else if(v.iskind<tilei>())
+			records.match(filter_tile, v.value, v.counter >= 0);
+		else {
+			script_begin--; // Not handle
+			break;
+		}
+	}
+}
+
+static void select_creatures() {
+	records = creatures;
+	querry_filter();
+}
+
+static void select_enemies() {
+	records = enemies;
+	querry_filter();
+}
+
+template<> void fnscript<querryi>(int value, int counter) {
+	bsdata<querryi>::elements[value].proc();
+	if(!records)
+		script_stop();
+}
+template<> bool fntest<querryi>(int value, int counter) {
+	fnscript<querryi>(value, counter);
+	return true;
+}
+
+BSDATA(querryi) = {
+	{"SelectCreatures", select_creatures},
+	{"SelectEnemies", select_enemies},
+};
+BSDATAF(querryi)
 BSDATA(filteri) = {
 	{"Filter", 0, filter_next},
 	{"FilterAnimal", filter_animal, match_targets},
 	{"FilterBlessed", filter_blessed, filter_items},
 	{"FilterCharmed", filter_charmed, match_targets},
-	{"FilterClose", filter_close, match_targets},
 	{"FilterCursed", filter_cursed, filter_items},
 	{"FilterDamaged", filter_damaged, filter_items},
 	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterFeature", filter_feature, match_targets},
-	{"FilterHuman", filter_human, match_targets},
 	{"FilterIdentified", filter_identified, filter_items},
 	{"FilterMindless", filter_mindless, match_targets},
 	{"FilterNotable", filter_notable, match_rooms},
@@ -293,6 +384,8 @@ BSDATA(filteri) = {
 	{"FilterUnaware", filter_unaware, match_targets},
 	{"FilterUndead", filter_undead, match_targets},
 	{"FilterWounded", filter_wounded, match_targets},
+	{"IfClose", if_close, match_targets},
+	{"IfHuman", if_human, match_targets},
 	{"SelectAllies", 0, select_allies},
 	{"SelectCreatures", 0, select_creatures},
 	{"SelectEnemies", 0, select_enemies},

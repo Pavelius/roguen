@@ -3,7 +3,7 @@
 
 #pragma once
 
-enum feat_s : unsigned char {
+enum featn : unsigned char {
 	Darkvision, TwoHanded, CutWoods, CutMines, Retaliate, Thrown,
 	BleedingHit, StunningHit, PierceHit, MightyHit, Vorpal,
 	AcidDamage, FireDamage, ColdDamage, IllnessDamage,
@@ -19,8 +19,8 @@ enum feat_s : unsigned char {
 };
 struct featable : flagable<8> {};
 struct feati : nameable {
-	feat_s		immunity;
+	featn		immunity;
 };
 
-feat_s negative_feat(feat_s v);
+featn negative_feat(featn v);
 
