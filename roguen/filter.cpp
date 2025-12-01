@@ -6,12 +6,13 @@
 #include "math.h"
 #include "markuse.h"
 #include "pushvalue.h"
+#include "race.h"
 #include "site.h"
 #include "siteskill.h"
 #include "script.h"
 
 static variant last_variant;
-static collectiona records;
+collectiona records;
 
 static void clear_all_collections() {
 	rooms.clear();
@@ -315,6 +316,16 @@ static bool filter_feature(const void* object, int param) {
 	return false;
 }
 
+static bool filter_race(const void* object, int param) {
+	variant v = object;
+	if(bsdata<creature>::have(object)) {
+		variant v = ((creature*)object)->getkind();
+		if(v.iskind<racei>())
+			return v.value == param;
+	}
+	return false;
+}
+
 static void querry_filter();
 
 static void querry_list(const variants& source, int counter) {
@@ -339,6 +350,8 @@ static void querry_filter() {
 			records.match(filter_feat, v.value, v.counter >= 0);
 		else if(v.iskind<itemi>())
 			records.match(filter_item, v.value, v.counter >= 0);
+		else if(v.iskind<racei>())
+			records.match(filter_race, v.value, v.counter >= 0);
 		else if(v.iskind<spelli>())
 			records.match(filter_tile, v.value, v.counter >= 0);
 		else if(v.iskind<tilei>())
@@ -360,6 +373,18 @@ static void select_enemies() {
 	querry_filter();
 }
 
+static void group_position() {
+	auto ps = records.begin();
+	for(auto p : records) {
+		if(bsdata<creature>::have(p))
+			*ps++ = &area->tiles[((creature*)p)->getposition()];
+		else if(haveitem(p))
+			*ps++ = &area->tiles[((itemground*)p)->position];
+	}
+	records.count = ps - records.begin();
+	records.distinct();
+}
+
 template<> void fnscript<querryi>(int value, int counter) {
 	bsdata<querryi>::elements[value].proc();
 	if(!records)
@@ -371,8 +396,9 @@ template<> bool fntest<querryi>(int value, int counter) {
 }
 
 BSDATA(querryi) = {
-	{"SelectCreatures", select_creatures},
-	{"SelectEnemies", select_enemies},
+	{"GroupPosition", group_position},
+	{"SelectCreaturesNew", select_creatures},
+	{"SelectEnemiesNew", select_enemies},
 };
 BSDATAF(querryi)
 BSDATA(filteri) = {

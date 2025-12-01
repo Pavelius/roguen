@@ -50,6 +50,7 @@ int choose_dialog(fnevent proc);
 const char* getlog();
 
 extern point		start_village;
+extern collectiona	records;
 
 itema				items;
 indexa				indecies;
@@ -1505,6 +1506,10 @@ static listi* get_ability_craft(abilityn v) {
 	case Alchemy: return alchemy;
 	default: return 0;
 	}
+}
+
+static void* choose_record(const char* header, const char* cancel, bool autochoose) {
+	return records.choose(item::getname, header, cancel, autochoose);
 }
 
 static creature* getowner(const item* pi) {
