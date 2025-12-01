@@ -24,7 +24,7 @@ spelli*	spella::choose(const char* title, const char* cancel, const spellable* c
 		{}};
 	pushvalue push_context(current_spellable, context);
 	pushvalue push_columns(current_columns, columns);
-	return collection<spelli>::choose(title, cancel, false);
+	return (spelli*)collectiona::choose(spelli::getname, title, cancel, false);
 }
 
 void spella::select(const spellable* p) {

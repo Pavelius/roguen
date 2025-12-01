@@ -6,11 +6,11 @@
 typedef bool(*fnallow)(const void* object, int index); // Callback function of status probing. Return true if `object` allow `index` status.
 typedef const char*(*fngetname)(const void* object); // Callback function of get object name
 typedef bool(*fnvisible)(const void* object); // Callback function of checking some functionality of `object`
+typedef void* fngroup(const void* object);
 
 struct collectiona : adat<void*, 256> {
-	typedef void* fngroup(const void* object);
 	void*	choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const;
-	bool	chooseu(fngetname proc, const char* title, const char* cancel, int offset);
+	bool	chooseu(fngetname proc, const char* title, const char* cancel) const;
 	void	distinct();
 	void	group(fngroup proc);
 	void	match(fnvisible proc, bool keep);
@@ -28,11 +28,7 @@ struct collectiona : adat<void*, 256> {
 template<typename T>
 struct collection : collectiona {
 	constexpr T* operator[](unsigned i) const { return (T*)data[i]; }
-	T**		begin() const { return (T**)data; }
-	T*		choose(const char* title, const char* cancel = 0, bool autochoose = true) const {
-		return (T*)collectiona::choose(T::getname, title, cancel, autochoose);
-	}
-	bool	chooseu(const char* title, const char* cancel = 0, int offset = 0) { return collectiona::chooseu(T::getname, title, cancel, offset); }
+	T**		begin() { return (T**)data; }
 	T**		end() const { return (T**)data + count; }
 	T*		pick() { return (T*)collectiona::pick(); }
 	T*		random() const { return (T*)collectiona::random(); }

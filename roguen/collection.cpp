@@ -1,7 +1,7 @@
-#include "answers.h"
 #include "collection.h"
 #include "math.h"
 #include "rand.h"
+#include "answers.h"
 
 static fngetname sort_proc;
 
@@ -101,26 +101,6 @@ void* collectiona::random() const {
 	if(!count)
 		return 0;
 	return data[rand() % count];
-}
-
-void* collectiona::choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const {
-	if(autochoose && count == 1)
-		return data[0];
-	answers an;
-	for(auto p : *this)
-		an.add(p, proc(p));
-	return an.choose(title, cancel);
-}
-
-bool collectiona::chooseu(fngetname proc, const char* title, const char* cancel, int offset) {
-	answers an;
-	for(auto& e : middle(offset, count - offset))
-		an.add(&e, proc(e));
-	auto p = (void**)an.choose(title, cancel);
-	if(!p)
-		return false;
-	iswap(const_cast<void**>(data + offset)[0], *p);
-	return true;
 }
 
 void collectiona::sort(fngetname proc) {

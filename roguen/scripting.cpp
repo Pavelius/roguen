@@ -90,6 +90,26 @@ static void normalize_bonus(int& bonus) {
 		bonus = -last_value;
 }
 
+void* collectiona::choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const {
+	if(autochoose && count == 1)
+		return data[0];
+	answers an;
+	for(auto p : *this)
+		an.add(p, proc(p));
+	return an.choose(title, cancel);
+}
+
+bool collectiona::chooseu(fngetname proc, const char* title, const char* cancel) const {
+	answers an;
+	for(auto& e : *this)
+		an.add(&e, proc(e));
+	auto p = (void**)an.choose(title, cancel);
+	if(!p)
+		return false;
+	iswap(const_cast<void**>(data)[0], *p);
+	return true;
+}
+
 static void show_debug_minimap() {
 	auto pt = center(last_rect);
 	draw::setcamera(m2s(pt));
@@ -1344,7 +1364,7 @@ static bool choose_indecies(creaturea& source, const char* header, int offset) {
 	return true;
 }
 
-static bool choose_target_interactive(const char* id, int offset = 0) {
+static bool choose_target_interactive(const char* id) {
 	if(!id)
 		return true;
 	auto pn = getnme(ids(id, "Choose"));
@@ -1352,15 +1372,15 @@ static bool choose_target_interactive(const char* id, int offset = 0) {
 		return true; // Get random target
 	pushvalue push_width(window_width, 300);
 	if(targets.getcount() > 1) {
-		if(!choose_indecies(targets, pn, offset))
+		if(!choose_indecies(targets, pn, 0))
 			return false;
 	}
 	if(rooms.getcount() > 1) {
-		if(!rooms.chooseu(pn, getnm("Cancel"), offset))
+		if(!rooms.chooseu(roomi::getname, pn, getnm("Cancel")))
 			return false;
 	}
 	if(items.getcount() > 1) {
-		if(!items.chooseu(pn, getnm("Cancel"), offset))
+		if(!items.chooseu(item::getname, pn, getnm("Cancel")))
 			return false;
 	}
 	if(indecies.getcount() > 1) {
@@ -1458,7 +1478,7 @@ static item* choose_items(itema& items, const char* header, bool autochoose = fa
 		{}};
 	pushvalue push_columns(current_columns, columns);
 	pushvalue push_footer(answers::footer, items_footer());
-	return (item*)items.choose(header, getnm("Cancel"), autochoose);
+	return (item*)items.choose(item::getname, header, getnm("Cancel"), autochoose);
 }
 
 static item* choose_item(const char* header_format = 0) {
