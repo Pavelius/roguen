@@ -1245,6 +1245,20 @@ template<> bool fnfilter<sitei>(const void* object, int param) {
 		return false;
 }
 
+template<> bool fnfilter<weari>(const void* object, int param) {
+	if(area) {
+		if(area->items.have(object))
+			return ((itemground*)object)->geti().wear == param;
+	}
+	if(bsdata<creature>::have(object)) {
+		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(object);
+		auto pw = p->getwear(object);
+		if(pw)
+			return pw->geti().wear == param;
+	}
+	return false;
+}
+
 template<> void fnscript<locationi>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	script_run(bsdata<locationi>::elements[value].landscape);
