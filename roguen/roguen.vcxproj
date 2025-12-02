@@ -199,6 +199,7 @@
     <ClCompile Include="keyname.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="listcolumn.cpp" />
+    <ClCompile Include="querry.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="pointl.h" />
     <ClInclude Include="price.h" />
     <ClInclude Include="pushvalue.h" />
+    <ClInclude Include="querry.h" />
     <ClInclude Include="quest.h" />
     <ClInclude Include="race.h" />
     <ClInclude Include="rand.h" />

@@ -8,6 +8,3 @@ struct filteri : nameable {
 	fnvisible	proc;
 	fnaction	action;
 };
-struct querryi : nameable {
-	fnevent	proc, prepare;
-};

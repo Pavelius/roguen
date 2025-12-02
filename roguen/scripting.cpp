@@ -99,7 +99,7 @@ void* collectiona::choose(fngetname proc, const char* title, const char* cancel,
 	return an.choose(title, cancel);
 }
 
-bool collectiona::chooseu(fngetname proc, const char* title, const char* cancel) const {
+bool collectiona::choose(fngetname proc, const char* title, const char* cancel) const {
 	answers an;
 	for(auto& e : *this)
 		an.add(&e, proc(e));
@@ -1231,6 +1231,19 @@ template<> void fnscript<sitei>(int value, int counter) {
 	else
 		script_run(bsdata<sitei>::elements[value].landscape);
 }
+template<> bool fnfilter<sitei>(const void* object, int param) {
+	if(area) {
+		if(area->rooms.have(object))
+			return ((roomi*)object)->getsite() == param;
+	}
+	if(bsdata<creature>::have(object)) {
+		auto p = ((creature*)object)->getroom();
+		if(!p)
+			return false;
+		return p->getsite() == param;
+	} else
+		return false;
+}
 
 template<> void fnscript<locationi>(int value, int counter) {
 	pushvalue push_rect(last_rect);
@@ -1376,11 +1389,11 @@ static bool choose_target_interactive(const char* id) {
 			return false;
 	}
 	if(rooms.getcount() > 1) {
-		if(!rooms.chooseu(roomi::getname, pn, getnm("Cancel")))
+		if(!rooms.choose(roomi::getname, pn, getnm("Cancel")))
 			return false;
 	}
 	if(items.getcount() > 1) {
-		if(!items.chooseu(item::getname, pn, getnm("Cancel")))
+		if(!items.choose(item::getname, pn, getnm("Cancel")))
 			return false;
 	}
 	if(indecies.getcount() > 1) {
@@ -2346,26 +2359,6 @@ static void damage_item(int bonus) {
 static void random_ability(int bonus) {
 	static abilityn source[] = {Strenght, Dexterity, Wits};
 	fnscript<abilityi>(maprnd(source), bonus);
-}
-
-static void apply_filter(collectiona& source, variant v, void** filter_object) {
-	auto pb = source.begin();
-	auto push = *filter_object;
-	if(v.counter >= 0) {
-		for(auto p : source) {
-			*filter_object = p;
-			if(script_allow(v))
-				*pb++ = p;
-		}
-	} else {
-		for(auto p : source) {
-			*filter_object = p;
-			if(!script_allow(v))
-				*pb++ = p;
-		}
-	}
-	*filter_object = push;
-	source.count = pb - source.begin();
 }
 
 static void fix_ability(int bonus) {

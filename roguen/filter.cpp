@@ -6,13 +6,14 @@
 #include "math.h"
 #include "markuse.h"
 #include "pushvalue.h"
+#include "querry.h"
 #include "race.h"
 #include "site.h"
 #include "siteskill.h"
 #include "script.h"
+#include "variant.h"
 
 static variant last_variant;
-collectiona records;
 
 static void clear_all_collections() {
 	rooms.clear();
@@ -276,31 +277,31 @@ static void select_your_room(fnvisible proc, int counter) {
 	}
 }
 
-static bool filter_tile(const void* object, int param) {
+template<> bool fnfilter<tilei>(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return area->tiles[((creature*)object)->getposition()] == param;
 	return false;
 }
 
-static bool filter_spell(const void* object, int param) {
+template<> bool fnfilter<spelli>(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return ((creature*)object)->known_spell(param);
 	return false;
 }
 
-static bool filter_ability(const void* object, int param) {
+template<> bool fnfilter<abilityi>(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return ((creature*)object)->get(last_ability) >= param;
 	return false;
 }
 
-static bool filter_feat(const void* object, int param) {
+template<> bool fnfilter<feati>(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return ((creature*)object)->is((featn)param);
 	return false;
 }
 
-static bool filter_item(const void* object, int param) {
+template<> bool fnfilter<itemi>(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return ((creature*)object)->haveitem(param);
 	if(bsdata<itemi>::have(object))
@@ -308,7 +309,7 @@ static bool filter_item(const void* object, int param) {
 	return false;
 }
 
-static bool filter_feature(const void* object, int param) {
+template<> bool fnfilter<featurei>(const void* object, int param) {
 	if(haveposition(object)) {
 		auto m = *((point*)object);
 		return area->features[m] == param;
@@ -316,7 +317,7 @@ static bool filter_feature(const void* object, int param) {
 	return false;
 }
 
-static bool filter_race(const void* object, int param) {
+template<> bool fnfilter<racei>(const void* object, int param) {
 	variant v = object;
 	if(bsdata<creature>::have(object)) {
 		variant v = ((creature*)object)->getkind();
@@ -326,79 +327,30 @@ static bool filter_race(const void* object, int param) {
 	return false;
 }
 
-static void querry_filter();
-
-static void querry_list(const variants& source, int counter) {
-	pushscript push(source);
-	querry_filter();
-}
-
-static void querry_filter() {
-	while(script_begin < script_end) {
-		auto v = *script_begin++;
-		if(v.iskind<filteri>())
-			records.match(bsdata<filteri>::elements[v.value].proc, v.counter >= 0);
-		else if(v.iskind<listi>())
-			querry_list(bsdata<listi>::elements[v.value].elements, v.counter);
-		else if(v.iskind<randomizeri>())
-			querry_list(bsdata<randomizeri>::elements[v.value].chance, v.counter);
-		else if(v.iskind<querryi>()) // Grouping data (other querry overlaps)
-			bsdata<querryi>::elements[v.value].proc();
-		else if(v.iskind<abilityi>())
-			records.match(filter_ability, iabs(v.counter), v.counter >= 0);
-		else if(v.iskind<feati>())
-			records.match(filter_feat, v.value, v.counter >= 0);
-		else if(v.iskind<itemi>())
-			records.match(filter_item, v.value, v.counter >= 0);
-		else if(v.iskind<racei>())
-			records.match(filter_race, v.value, v.counter >= 0);
-		else if(v.iskind<spelli>())
-			records.match(filter_tile, v.value, v.counter >= 0);
-		else if(v.iskind<tilei>())
-			records.match(filter_tile, v.value, v.counter >= 0);
-		else {
-			script_begin--; // Not handle
-			break;
-		}
-	}
-}
-
 static void select_creatures() {
 	records = creatures;
-	querry_filter();
 }
 
 static void select_enemies() {
 	records = enemies;
-	querry_filter();
+}
+
+static void* group_position(const void* object) {
+	if(bsdata<creature>::have(object))
+		return &area->tiles[((creature*)object)->getposition()];
+	else if(haveitem(object))
+		return &area->tiles[((itemground*)object)->position];
+	return 0;
 }
 
 static void group_position() {
-	auto ps = records.begin();
-	for(auto p : records) {
-		if(bsdata<creature>::have(p))
-			*ps++ = &area->tiles[((creature*)p)->getposition()];
-		else if(haveitem(p))
-			*ps++ = &area->tiles[((itemground*)p)->position];
-	}
-	records.count = ps - records.begin();
-	records.distinct();
-}
-
-template<> void fnscript<querryi>(int value, int counter) {
-	bsdata<querryi>::elements[value].proc();
-	if(!records)
-		script_stop();
-}
-template<> bool fntest<querryi>(int value, int counter) {
-	fnscript<querryi>(value, counter);
-	return records.operator bool();
+	records.group(group_position);
 }
 
 BSDATA(querryi) = {
 	{"GroupPosition", group_position},
-	{"SelectCreaturesNew", select_creatures},
-	{"SelectEnemiesNew", select_enemies},
+	{"SelectCreaturesNW", select_creatures},
+	{"SelectEnemiesNW", select_enemies},
 };
 BSDATAF(querryi)
 BSDATA(filteri) = {

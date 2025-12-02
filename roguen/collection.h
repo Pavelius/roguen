@@ -9,29 +9,28 @@ typedef bool(*fnvisible)(const void* object); // Callback function of checking s
 typedef void* fngroup(const void* object);
 
 struct collectiona : adat<void*, 256> {
-	void*	choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const;
-	bool	chooseu(fngetname proc, const char* title, const char* cancel) const;
-	void	distinct();
-	void	group(fngroup proc);
-	void	match(fnvisible proc, bool keep);
-	void	match(fnallow proc, int param, bool keep);
-	void	match(const collectiona& source, bool keep);
-	void*	random() const;
-	slice<void*> middle(int offset, int count) { return slice<void*>(data + offset, count); }
-	void*	pick();
-	void	select(array& source);
-	void	select(array& source, fnvisible proc);
-	void	shuffle();
-	void	sort(fngetname proc);
-	void	sort(fncompare proc);
+	void* choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const;
+	void* pick();
+	void* random() const;
+	bool choose(fngetname proc, const char* title, const char* cancel) const;
+	void distinct();
+	void group(fngroup proc);
+	void match(fnvisible proc, bool keep);
+	void match(fnallow proc, int param, bool keep);
+	void match(const collectiona& source, bool keep);
+	void select(array& source);
+	void select(array& source, fnvisible proc);
+	void shuffle();
+	void sort(fngetname proc);
+	void sort(fncompare proc);
 };
 template<typename T>
 struct collection : collectiona {
 	constexpr T* operator[](unsigned i) const { return (T*)data[i]; }
-	T**		begin() { return (T**)data; }
-	T**		end() const { return (T**)data + count; }
-	T*		pick() { return (T*)collectiona::pick(); }
-	T*		random() const { return (T*)collectiona::random(); }
-	void	select() { collectiona::select(bsdata<T>::source); }
-	void	select(fnvisible proc) { collectiona::select(bsdata<T>::source, proc); }
+	T** begin() { return (T**)data; }
+	T** end() const { return (T**)data + count; }
+	T* pick() { return (T*)collectiona::pick(); }
+	T* random() const { return (T*)collectiona::random(); }
+	void select() { collectiona::select(bsdata<T>::source); }
+	void select(fnvisible proc) { collectiona::select(bsdata<T>::source, proc); }
 };

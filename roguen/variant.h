@@ -6,11 +6,13 @@
 #define VAR(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 
 struct bsreq;
+union variant;
 
 struct varianti {
 	typedef void(*fnscript)(int index, int bonus);
 	typedef void(*fnread)(const char* url);
 	typedef bool(*fntest)(int index, int bonus);
+	typedef bool(*fnfilter)(const void* object, int value);
 	const char*		id;
 	const bsreq*	metadata;
 	array*			source;
@@ -20,6 +22,7 @@ struct varianti {
 	fntest			ptest;
 	fnread			pread;
 	fnevent			pinitialize;
+	fnfilter		pfilter;
 	static const varianti* getsource(const char* id);
 	const char*		getid(const void* object) const;
 	const char*		getname(const void* object) const;
@@ -53,6 +56,12 @@ union variant {
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);
 
+template<class T> bool fnfilter(const void* object, int value);
+
 typedef sliceu<variant> variants;
 typedef void (*fnvariant)(variant v);
 typedef bool (*fntestvariant)(variant v);
+
+const varianti* find_metadata(const void* object);
+
+bool list_compare(const void* object, variants source, bool condition_and);

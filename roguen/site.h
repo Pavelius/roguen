@@ -54,6 +54,7 @@ public:
 	void			clear() { memset(this, 0, sizeof(*this)); setowner(0); }
 	const sitei&	geti() const { return bsdata<sitei>::elements[site_id]; }
 	point			getsellitems() const;
+	int				getsite() const { return site_id; }
 	point			getspecialsellitems() const;
 	void			getrumor(stringbuilder& sb) const;
 	const char*		getname() const;
