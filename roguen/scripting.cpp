@@ -1499,13 +1499,13 @@ static item* choose_wear() {
 	return (item*)choose_answers(getnm("Inventory"), getnm("Cancel"));
 }
 
-static item* choose_items(itema& items, const char* header, bool autochoose = false) {
+static item* choose_items(collectiona& source, const char* header, bool autochoose = false) {
 	static listcolumn columns[] = {
 		{"Weight", 60, item_weight, true},
 		{}};
 	pushvalue push_columns(current_columns, columns);
 	pushvalue push_footer(answers::footer, items_footer());
-	return (item*)items.choose(item::getname, header, getnm("Cancel"), autochoose);
+	return (item*)source.choose(item::getname, header, getnm("Cancel"), autochoose);
 }
 
 static item* choose_item(const char* header_format = 0) {
@@ -1809,13 +1809,6 @@ static void pickup(int bonus) {
 		return;
 	auto p = choose_items(items, getnm("PickItem"), true);
 	if(p) {
-		//auto payment_cost = player->getpaymentcost();
-		//if(payment_cost) {
-		//	auto item_cost = p->getcostall() * payment_cost / 100;
-		//	auto keeper = player->getroom()->getowner();
-		//	if(!payment(player, keeper, p->getfullname(), item_cost))
-		//		return;
-		//}
 		player->act("PickupItem", 0, p->getfullname());
 		player->additem(*p);
 		player->update();
@@ -1823,10 +1816,6 @@ static void pickup(int bonus) {
 }
 
 static void pickup_all(int bonus) {
-	//if(player->getpaymentcost()) {
-	//	player->actp("YouCantPickUpAllForCost");
-	//	return;
-	//}
 	itema items;
 	items.select(player->getposition());
 	for(auto p : items) {
