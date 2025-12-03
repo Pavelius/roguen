@@ -297,7 +297,7 @@ bool areamap::iswall(point m, direction_s d) const {
 	return bsdata<tilei>::elements[tiles[m1]].iswall();
 }
 
-bool areamap::linelos(int x0, int y0, int x1, int y1, fntest test) const {
+bool areamap::linelos(int x0, int y0, int x1, int y1, fitest test) const {
 	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
 	int err = (dx > dy ? dx : -dy) / 2, e2;
@@ -321,7 +321,7 @@ bool areamap::linelos(int x0, int y0, int x1, int y1, fntest test) const {
 	}
 }
 
-void areamap::setlos(point m, int r, fntest test) {
+void areamap::setlos(point m, int r, fitest test) {
 	for(auto x = m.x - r; x <= m.x + r; x++) {
 		linelos(m.x, m.y, x, m.y - r, test);
 		linelos(m.x, m.y, x, m.y + r, test);
@@ -377,7 +377,7 @@ void areamap::vert(int x1, int y1, int y2, fnset proc, int v) {
 	}
 }
 
-point areamap::getfree(point m, short maximum, fntest test) {
+point areamap::getfree(point m, short maximum, fitest test) {
 	if(!test)
 		return {-1000, -1000};
 	if(test(m))

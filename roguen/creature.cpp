@@ -19,7 +19,7 @@
 #include "trigger.h"
 #include "triggern.h"
 
-static areamap::fntest crush_wall_action_proc;
+static areamap::fitest crush_wall_action_proc;
 
 extern collection<roomi> rooms;
 int last_roll_result;
@@ -495,11 +495,11 @@ static void advance_value(variant v) {
 	if(v.iskind<itemi>())
 		player->equip(bsdata<itemi>::elements + v.value, v.counter);
 	else if(v.iskind<feati>())
-		fnscript<feati>(v.value, v.counter);
+		fiscript<feati>(v.value, v.counter);
 	else if(v.iskind<modifieri>())
-		fnscript<modifieri>(v.value, v.counter);
+		fiscript<modifieri>(v.value, v.counter);
 	else if(v.iskind<abilityi>())
-		fnscript<abilityi>(v.value, v.counter);
+		fiscript<abilityi>(v.value, v.counter);
 	else if(v.iskind<spelli>())
 		player->learn_spell(v.value);
 	else if(v.iskind<script>())

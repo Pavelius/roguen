@@ -10,7 +10,7 @@ struct areamap {
 	static const auto mps = 64;
 	typedef anymap<unsigned char, mps> arrayt;
 	typedef void(areamap::*fnset)(point m, int v);
-	typedef bool (*fntest)(point m);
+	typedef bool (*fitest)(point m);
 	arrayt			tiles;
 	arrayt			features;
 	arrayt			param;
@@ -29,7 +29,7 @@ struct areamap {
 	static point	get(const rect& rc);
 	static rect		get(const rect& rc, point offset, point minimum, point maximum);
 	const featurei&	getfeature(point m) const { return bsdata<featurei>::elements[isvalid(m) ? features[m] : 0]; }
-	static point	getfree(point m, short maximum, fntest test);
+	static point	getfree(point m, short maximum, fitest test);
 	int				getindex(point m, int e) const;
 	direction_s		getmost(const rect& rc) const;
 	static point	getnext(point start, point goal);
@@ -47,7 +47,7 @@ struct areamap {
 	static bool		isvalid(point m) { return ((unsigned short)m.x) < ((unsigned short)mps) && ((unsigned short)m.y) < ((unsigned short)mps); }
 	bool			iswall(point m) const { return bsdata<tilei>::elements[tiles[m]].iswall(); }
 	bool			iswall(point m, direction_s d) const;
-	bool			linelos(int x0, int y0, int x1, int y1, fntest test) const;
+	bool			linelos(int x0, int y0, int x1, int y1, fitest test) const;
 	static void		makewave(point start_index);
 	static void		makewavex();
 	void			remove(point m, int v) { feats[m] &= ~(1 << v); }
@@ -57,7 +57,7 @@ struct areamap {
 	static void		setblock(point m, unsigned short v);
 	void			setfeature(point m, int v) { if(isvalid(m)) features[m] = (unsigned char)v; }
 	void			setflag(point m, int v) { if(isvalid(m)) feats[m] |= (1 << v); }
-	void			setlos(point m, int radius, fntest test);
+	void			setlos(point m, int radius, fitest test);
 	void			settile(point m, int v);
 	void			setreveal(point m, int floor);
 	void			vert(int x1, int y1, int y2, fnset proc, int v);

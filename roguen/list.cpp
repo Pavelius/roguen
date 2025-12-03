@@ -15,10 +15,10 @@ variant	listi::random() const {
 	return elements.begin()[rand() % elements.count];
 }
 
-template<> bool fntest<listi>(int value, int counter) {
+template<> bool fitest<listi>(int value, int counter) {
 	return script_allow(bsdata<listi>::elements[value].elements);
 }
-template<> void fnscript<listi>(int value, int counter) {
+template<> void fiscript<listi>(int value, int counter) {
 	auto p = bsdata<listi>::elements + value;
 	script_run(p->id, p->elements);
 }

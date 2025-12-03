@@ -9,17 +9,17 @@ struct bsreq;
 union variant;
 
 struct varianti {
-	typedef void(*fnscript)(int index, int bonus);
+	typedef void(*fiscript)(int index, int bonus);
 	typedef void(*fnread)(const char* url);
-	typedef bool(*fntest)(int index, int bonus);
+	typedef bool(*fitest)(int index, int bonus);
 	typedef bool(*fnfilter)(const void* object, int value);
 	const char*		id;
 	const bsreq*	metadata;
 	array*			source;
 	int             key_count;
 	fnstatus		pgetinfo;
-	fnscript		pscript;
-	fntest			ptest;
+	fiscript		pscript;
+	fitest			ptest;
 	fnread			pread;
 	fnevent			pinitialize;
 	fnfilter		pfilter;

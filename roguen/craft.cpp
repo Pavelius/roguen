@@ -9,6 +9,6 @@ BSDATA(crafti) = {
 };
 assert_enum(crafti, BlacksmithCraft)
 
-template<> void fnscript<crafti>(int index, int bonus) {
+template<> void fiscript<crafti>(int index, int bonus) {
 	last_craft = (craftn)index;
 }

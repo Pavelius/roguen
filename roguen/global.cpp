@@ -9,7 +9,7 @@ template<> void archive::set<globali>(globali& e) {
 	set(e.current);
 }
 
-template<> void fnscript<globali>(int value, int counter) {
+template<> void fiscript<globali>(int value, int counter) {
 	last_global = bsdata<globali>::elements + value;
 	last_value = last_global->current;
 	last_global->set(last_value + counter);

@@ -27,20 +27,20 @@ static void script_run_def() {
 
 fnevent script_run_proc = script_run_def;
 
-template<> void fnscript<modifieri>(int value, int counter) {
+template<> void fiscript<modifieri>(int value, int counter) {
 	modifier = (modifiern)value;
 }
-template<> bool fntest<modifieri>(int value, int counter) {
-	fnscript<modifieri>(value, counter);
+template<> bool fitest<modifieri>(int value, int counter) {
+	fiscript<modifieri>(value, counter);
 	return true;
 }
 
-template<> bool fntest<script>(int value, int counter) {
+template<> bool fitest<script>(int value, int counter) {
 	if(bsdata<script>::elements[value].test)
 		return bsdata<script>::elements[value].test(counter);
 	return true;
 }
-template<> void fnscript<script>(int value, int counter) {
+template<> void fiscript<script>(int value, int counter) {
 	bsdata<script>::elements[value].proc(counter);
 }
 

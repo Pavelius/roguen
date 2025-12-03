@@ -52,13 +52,13 @@ static void querry_filter() {
 	}
 }
 
-template<> void fnscript<querryi>(int value, int counter) {
+template<> void fiscript<querryi>(int value, int counter) {
 	bsdata<querryi>::elements[value].proc();
 	querry_filter();
 	if(!records)
 		script_stop();
 }
-template<> bool fntest<querryi>(int value, int counter) {
-	fnscript<querryi>(value, counter);
+template<> bool fitest<querryi>(int value, int counter) {
+	fiscript<querryi>(value, counter);
 	return records.operator bool();
 }

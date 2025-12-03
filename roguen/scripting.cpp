@@ -1152,33 +1152,33 @@ static void placement(rect rc, areamap::fnset proc, int v, int random_count) {
 	}
 }
 
-template<> void fnscript<widget>(int value, int counter) {
+template<> void fiscript<widget>(int value, int counter) {
 	choose_dialog(bsdata<widget>::elements[value].proc);
 }
 
-template<> void fnscript<speechi>(int value, int counter) {
+template<> void fiscript<speechi>(int value, int counter) {
 	if(player)
 		player->say(speech_get(value));
 }
 
-template<> void fnscript<featurei>(int value, int counter) {
+template<> void fiscript<featurei>(int value, int counter) {
 	placement(last_rect, &areamap::setfeature, value, counter);
 }
 
-template<> void fnscript<tilei>(int value, int counter) {
+template<> void fiscript<tilei>(int value, int counter) {
 	area->set(last_rect, &areamap::settile, value, counter);
 }
 
-template<> void fnscript<areafi>(int value, int counter) {
+template<> void fiscript<areafi>(int value, int counter) {
 	area->set(last_rect, &areamap::setflag, value, counter);
 }
 
-template<> bool fntest<monsteri>(int value, int counter) {
+template<> bool fitest<monsteri>(int value, int counter) {
 	if(!counter)
 		return player->iskind(bsdata<monsteri>::elements + value);
 	return true;
 }
-template<> void fnscript<monsteri>(int value, int counter) {
+template<> void fiscript<monsteri>(int value, int counter) {
 	auto count = script_count(counter, 0);
 	if(count < 0)
 		return;
@@ -1187,20 +1187,20 @@ template<> void fnscript<monsteri>(int value, int counter) {
 	place_creature(bsdata<monsteri>::elements + value, count);
 }
 
-template<> void fnscript<racei>(int value, int counter) {
+template<> void fiscript<racei>(int value, int counter) {
 	auto count = script_count(counter, 1);
 	if(count <= 0)
 		return;
 	place_creature(bsdata<racei>::elements + value, count);
 }
 
-template<> void fnscript<shapei>(int value, int counter) {
+template<> void fiscript<shapei>(int value, int counter) {
 	auto count = script_count(counter, 1);
 	for(auto i = 0; i < count; i++)
 		place_shape(bsdata<shapei>::elements[value], last_rect, getfloor(), getwall());
 }
 
-template<> void fnscript<itemi>(int value, int counter) {
+template<> void fiscript<itemi>(int value, int counter) {
 	auto count_base = script_count(counter, 0);
 	auto count = count_base;
 	if(count < 0)
@@ -1218,7 +1218,7 @@ template<> void fnscript<itemi>(int value, int counter) {
 	}
 }
 
-template<> void fnscript<sitei>(int value, int counter) {
+template<> void fiscript<sitei>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	pushvalue push_site(last_site);
 	pushvalue push_room(last_room);
@@ -1259,17 +1259,17 @@ template<> bool fnfilter<weari>(const void* object, int param) {
 	return false;
 }
 
-template<> void fnscript<locationi>(int value, int counter) {
+template<> void fiscript<locationi>(int value, int counter) {
 	pushvalue push_rect(last_rect);
 	script_run(bsdata<locationi>::elements[value].landscape);
 }
 
-template<> bool fntest<needni>(int value, int counter) {
+template<> bool fitest<needni>(int value, int counter) {
 	if(counter <= 0)
 		return last_need && last_need->is((needn)value);
 	return true;
 }
-template<> void fnscript<needni>(int value, int counter) {
+template<> void fiscript<needni>(int value, int counter) {
 	if(!last_need)
 		return;
 	if(counter >= 0)
@@ -1278,23 +1278,23 @@ template<> void fnscript<needni>(int value, int counter) {
 		last_need->remove((needn)value);
 }
 
-template<> bool fntest<abilityi>(int value, int counter) {
+template<> bool fitest<abilityi>(int value, int counter) {
 	last_ability = (abilityn)value;
 	if(counter < 0)
 		return (counter + player->basic.abilities[value]) >= 0;
 	return true;
 }
-template<> void fnscript<abilityi>(int value, int counter) {
+template<> void fiscript<abilityi>(int value, int counter) {
 	last_ability = (abilityn)value;
 	player->basic.add((abilityn)value, counter, bsdata<abilityi>::elements[value].minimal);
 }
 
-template<> bool fntest<feati>(int value, int counter) {
+template<> bool fitest<feati>(int value, int counter) {
 	if(counter <= 0)
 		return player->is((featn)value);
 	return true;
 }
-template<> void fnscript<feati>(int value, int counter) {
+template<> void fiscript<feati>(int value, int counter) {
 	if(counter >= 0)
 		player->feats.set(value);
 	else
@@ -1424,7 +1424,7 @@ static int get_target_count() {
 		+ indecies.getcount();
 }
 
-template<> void fnscript<spelli>(int index, int value) {
+template<> void fiscript<spelli>(int index, int value) {
 	cast_spell(bsdata<spelli>::elements[index], 0, true);
 }
 
@@ -2223,11 +2223,11 @@ static bool learn_value(variant v, const char* action) {
 	} else if(v.iskind<abilityi>()) {
 		if(v.counter >= 0) {
 			if(player->basic.abilities[v.value] + v.counter < 100)
-				fnscript<abilityi>(v.value, v.counter);
+				fiscript<abilityi>(v.value, v.counter);
 			else
 				return false;
 		} else
-			fnscript<abilityi>(v.value, v.counter);
+			fiscript<abilityi>(v.value, v.counter);
 	} else if(v.iskind<spelli>()) {
 		auto p = bsdata<spelli>::elements + v.value;
 		if(v.counter >= 0) {
@@ -2361,7 +2361,7 @@ static void damage_item(int bonus) {
 
 static void random_ability(int bonus) {
 	static abilityn source[] = {Strenght, Dexterity, Wits};
-	fnscript<abilityi>(maprnd(source), bonus);
+	fiscript<abilityi>(maprnd(source), bonus);
 }
 
 static void fix_ability(int bonus) {
