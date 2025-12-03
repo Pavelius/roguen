@@ -23,7 +23,7 @@ struct collectiona : adat<void*, 256> {
 	void shuffle();
 	void sort(fngetname proc);
 	void sort(fncompare proc);
-	template<typename T> slice<T> records() const { return slice<T>((T*)data, count); }
+	template<typename N> slice<N> records() const { return slice<N>((N*)data, count); }
 };
 template<typename T>
 struct collection : collectiona {

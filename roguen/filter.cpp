@@ -13,66 +13,11 @@
 #include "script.h"
 #include "variant.h"
 
-static variant last_variant;
-
 static void clear_all_collections() {
 	rooms.clear();
 	targets.clear();
 	indecies.clear();
 	records.clear();
-}
-
-static bool match_list_value(int value) {
-	if(last_variant.iskind<listi>()) {
-		pushvalue push(last_variant);
-		auto& source = bsdata<listi>::elements[last_variant.value].elements;
-		for(auto v : source) {
-			last_variant = v;
-			if(match_list_value(value))
-				return true;
-		}
-	} else if(last_variant.iskind<randomizeri>()) {
-		pushvalue push(last_variant);
-		auto& source = bsdata<randomizeri>::elements[last_variant.value].chance;
-		for(auto v : source) {
-			last_variant = v;
-			if(match_list_value(value))
-				return true;
-		}
-	} else if(last_variant.value == value)
-		return true;
-	return false;
-}
-
-static bool match_list_feature(point m) {
-	return match_list_value(area->features[m]);
-}
-
-static bool match_list_room(const void* object) {
-	return match_list_value(&((roomi*)object)->geti() - bsdata<sitei>::elements);
-}
-
-static bool match_item_variant(const item* p, variant v) {
-	if(v.iskind<feati>())
-		return p->is((featn)v.value);
-	else if(v.iskind<itemi>())
-		return p->is(bsdata<itemi>::elements + v.value);
-	else if(last_variant.iskind<listi>()) {
-		for(auto e : bsdata<listi>::elements[v.value].elements) {
-			if(match_item_variant(p, e))
-				return true;
-		}
-	} else if(last_variant.iskind<randomizeri>()) {
-		for(auto e : bsdata<randomizeri>::elements[v.value].chance) {
-			if(match_item_variant(p, e))
-				return true;
-		}
-	}
-	return false;
-}
-
-static bool match_item_variant(const void* object) {
-	return match_item_variant((item*)object, last_variant);
 }
 
 static bool match_wall(point m) {
@@ -82,15 +27,6 @@ static bool match_wall(point m) {
 static bool match_wall_mines(point m) {
 	auto& ei = bsdata<tilei>::elements[area->tiles[m]];
 	return ei.iswall() && ei.is(Mines);
-}
-
-template<> void fiscript<filteri>(int value, int counter) {
-	auto& ei = bsdata<filteri>::elements[value];
-	ei.action(ei.proc, counter);
-}
-template<> bool fitest<filteri>(int value, int counter) {
-	fiscript<filteri>(value, counter);
-	return true;
 }
 
 static bool filter_wounded(const void* object) {
@@ -239,34 +175,24 @@ static void select_features() {
 	indecies.select(player->getposition(), true);
 }
 
-static void select_walls(fnvisible proc, int counter) {
-	clear_all_collections();
-	indecies.select(match_wall, true, player->getposition(), imax(1, counter));
+static void select_walls() {
+	indecies.select(match_wall, true, player->getposition(), 1);
 }
 
-static void select_walls_mines(fnvisible proc, int counter) {
-	clear_all_collections();
-	indecies.select(match_wall_mines, true, player->getposition(), imax(1, counter));
-}
-
-static void select_next_features(fnvisible proc, int counter) {
-	clear_all_collections();
-	auto push = last_variant;
-	last_variant = next_script();
-	indecies.select(match_list_feature, counter >= 0, 0);
-	last_variant = push;
+static void select_walls_mines() {
+	indecies.select(match_wall_mines, true, player->getposition(), 1);
 }
 
 static void select_rooms() {
 	records.select(area->rooms);
 }
 
-static void select_your_room(fnvisible proc, int counter) {
-	clear_all_collections();
+static void select_your_room() {
+	records.clear();
 	if(player) {
 		auto p = player->getroom();
 		if(p)
-			rooms.add(p);
+			records.add(p);
 	}
 }
 
@@ -347,29 +273,28 @@ BSDATA(querryi) = {
 	{"SelectRooms", select_rooms, querry_select},
 	{"SelectYou", select_you, querry_select},
 	{"SelectYourItems", select_your_items, querry_select},
+	{"SelectYourRoom", select_your_room, querry_select},
+	{"SelectWalls", select_walls, querry_select},
+	{"SelectWallsMines", select_walls_mines, querry_select},
 };
 BSDATAF(querryi)
 BSDATA(filteri) = {
-	{"FilterAnimal", filter_animal, match_targets},
+	{"FilterAnimal", filter_animal},
 	{"FilterBlessed", filter_blessed},
-	{"FilterCharmed", filter_charmed, match_targets},
+	{"FilterCharmed", filter_charmed},
 	{"FilterCursed", filter_cursed},
 	{"FilterDamaged", filter_damaged},
-	{"FilterExplored", filter_explored_room, match_rooms},
-	{"FilterFeature", filter_feature, match_targets},
+	{"FilterExplored", filter_explored_room},
+	{"FilterFeature", filter_feature},
 	{"FilterIdentified", filter_identified},
-	{"FilterMindless", filter_mindless, match_targets},
-	{"FilterNotable", filter_notable, match_rooms},
-	{"FilterRoomMarked", filter_room_marked, match_rooms},
-	{"FilterThisRoom", filter_this_room, match_rooms},
-	{"FilterUnaware", filter_unaware, match_targets},
-	{"FilterUndead", filter_undead, match_targets},
-	{"FilterWounded", filter_wounded, match_targets},
-	{"IfClose", if_close, match_targets},
-	{"IfHuman", if_human, match_targets},
-	{"SelectNextFeatures", 0, select_next_features},
-	{"SelectWalls", 0, select_walls},
-	{"SelectWallsMines", 0, select_walls_mines},
-	{"SelectYourRoom", 0, select_your_room},
+	{"FilterMindless", filter_mindless},
+	{"FilterNotable", filter_notable},
+	{"FilterRoomMarked", filter_room_marked},
+	{"FilterThisRoom", filter_this_room},
+	{"FilterUnaware", filter_unaware},
+	{"FilterUndead", filter_undead},
+	{"FilterWounded", filter_wounded},
+	{"IfClose", if_close},
+	{"IfHuman", if_human},
 };
 BSDATAF(filteri)

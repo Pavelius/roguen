@@ -177,7 +177,7 @@ BSDATA(varianti) = {
 	{"Charname", VAR(charname), 2, 0, 0, 0, read_charname},
 	{"Feat", VAR(feati), 1, 0, fiscript<feati>, fitest<feati>},
 	{"Feature", VAR(featurei), 1, 0, fiscript<featurei>, 0, 0, 0, fnfilter<featurei>},
-	{"Filter", VAR(filteri), 1, 0, fiscript<filteri>, fitest<filteri>},
+	{"Filter", VAR(filteri), 1},
 	{"Global", VAR(globali), 1, 0, fiscript<globali>},
 	{"Hotkey", VAR(hotkey), 2, 0, 0, 0, 0, check_hotkeys},
 	{"Item", VAR(itemi), 1, 0, fiscript<itemi>},
