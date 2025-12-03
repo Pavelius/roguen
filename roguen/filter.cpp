@@ -192,35 +192,29 @@ static void match_rooms(fnvisible proc, int counter) {
 
 static void select_allies() {
 	records = creatures;
-	querry_filter();
 }
 
 static void select_creatures() {
 	records = creatures;
-	querry_filter();
 }
 
 static void select_not_enemies() {
 	records = creatures;
 	records.match(is_enemy, false);
-	querry_filter();
 }
 
 static void select_not_ally() {
 	records = creatures;
 	records.match(is_ally, false);
-	querry_filter();
 }
 
 static void select_enemies() {
 	records = enemies;
-	querry_filter();
 }
 
 static void select_you() {
 	records.clear();
 	records.add(player);
-	querry_filter();
 }
 
 static void select_items(collectiona& records, creature* p) {
@@ -239,12 +233,10 @@ static void select_items(collectiona& records, creature* p) {
 
 static void select_your_items() {
 	select_items(records, player);
-	querry_filter();
 }
 
 static void select_features() {
 	indecies.select(player->getposition(), true);
-	querry_filter();
 }
 
 static void select_walls(fnvisible proc, int counter) {
@@ -340,21 +332,21 @@ static void group_position() {
 	records.group(group_position);
 }
 
-static void if_player() {
-	querry_allow_all(player);
+static bool querry_filter_player() {
+	return querry_allow(player);
 }
 
 BSDATA(querryi) = {
-	{"GroupPosition", group_position},
-	{"IfPlayer", if_player},
-	{"SelectAllies", select_allies},
-	{"SelectCreatures", select_creatures},
-	{"SelectEnemies", select_enemies},
-	{"SelectFeatures", select_features},
-	{"SelectNotEnemies", select_not_enemies},
-	{"SelectRooms", select_rooms},
-	{"SelectYou", select_you},
-	{"SelectYourItems", select_your_items},
+	{"GroupPosition", group_position, querry_nobody},
+	{"IfPlayer", script_empty, querry_filter_player},
+	{"SelectAllies", select_allies, querry_select},
+	{"SelectCreatures", select_creatures, querry_select},
+	{"SelectEnemies", select_enemies, querry_select},
+	{"SelectFeatures", select_features, querry_select},
+	{"SelectNotEnemies", select_not_enemies, querry_select},
+	{"SelectRooms", select_rooms, querry_select},
+	{"SelectYou", select_you, querry_select},
+	{"SelectYourItems", select_your_items, querry_select},
 };
 BSDATAF(querryi)
 BSDATA(filteri) = {

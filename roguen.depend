@@ -14,11 +14,11 @@
 1764142320 /home/user-331/projects/roguen/roguen/direction.h
 	"point.h"
 
-1764142320 source:/home/user-331/projects/roguen/roguen/ability.cpp
+1764674552 source:/home/user-331/projects/roguen/roguen/ability.cpp
 	"ability.h"
 	"bsdata.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/ability.h
+1764674552 /home/user-331/projects/roguen/roguen/ability.h
 	"nameable.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/nameable.h
@@ -29,7 +29,7 @@
 1764142320 /home/user-331/projects/roguen/roguen/array.h
 	"slice.h"
 
-1764148234 /home/user-331/projects/roguen/roguen/slice.h
+1764674552 /home/user-331/projects/roguen/roguen/slice.h
 
 1764142320 source:/home/user-331/projects/roguen/roguen/actable.cpp
 	"creature.h"
@@ -39,7 +39,7 @@
 	"pushvalue.h"
 	"textscript.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/creature.h
+1764674552 /home/user-331/projects/roguen/roguen/creature.h
 	"ability.h"
 	"advancement.h"
 	"answers.h"
@@ -57,7 +57,7 @@
 1764142320 /home/user-331/projects/roguen/roguen/advancement.h
 	"variant.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/variant.h
+1764745581 /home/user-331/projects/roguen/roguen/variant.h
 	"sliceu.h"
 	"stringbuilder.h"
 
@@ -71,7 +71,7 @@
 	"adat.h"
 	"stringbuilder.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/adat.h
+1764745634 /home/user-331/projects/roguen/roguen/adat.h
 	"slice.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/areaf.h
@@ -79,7 +79,7 @@
 
 1764142320 /home/user-331/projects/roguen/roguen/framerange.h
 
-1764142320 /home/user-331/projects/roguen/roguen/areamap.h
+1764745581 /home/user-331/projects/roguen/roguen/areamap.h
 	"anymap.h"
 	"feature.h"
 
@@ -94,21 +94,21 @@
 
 1764142320 /home/user-331/projects/roguen/roguen/color.h
 
-1764142320 /home/user-331/projects/roguen/roguen/craft.h
+1764674552 /home/user-331/projects/roguen/roguen/craft.h
 	"ability.h"
 	"nameable.h"
 	"variant.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/dice.h
 
-1764142320 /home/user-331/projects/roguen/roguen/moveable.h
+1764674552 /home/user-331/projects/roguen/roguen/moveable.h
 	"actable.h"
 	"point.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/actable.h
 	"variant.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/monster.h
+1764674552 /home/user-331/projects/roguen/roguen/monster.h
 	"ability.h"
 	"nameable.h"
 	"randomizer.h"
@@ -123,7 +123,7 @@
 	"point.h"
 	"variant.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/site.h
+1764745581 /home/user-331/projects/roguen/roguen/site.h
 	"collection.h"
 	"color.h"
 	"geoposition.h"
@@ -133,14 +133,14 @@
 	"shape.h"
 	"variant.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/collection.h
+1764745581 /home/user-331/projects/roguen/roguen/collection.h
 	"adat.h"
 	"bsdata.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/geoposition.h
 	"point.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/feat.h
+1764674552 /home/user-331/projects/roguen/roguen/feat.h
 	"flagable.h"
 	"nameable.h"
 
@@ -156,11 +156,11 @@
 	"feat.h"
 	"variant.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/wearable.h
+1764674552 /home/user-331/projects/roguen/roguen/wearable.h
 	"item.h"
 	"moveable.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/item.h
+1764674552 /home/user-331/projects/roguen/roguen/item.h
 	"feat.h"
 	"point.h"
 	"list.h"
@@ -214,7 +214,7 @@
 	"sliceu.h"
 	"vector.h"
 
-1764142320 source:/home/user-331/projects/roguen/roguen/areamap.cpp
+1764745581 source:/home/user-331/projects/roguen/roguen/areamap.cpp
 	"areamap.h"
 	"direction.h"
 	"math.h"
@@ -225,7 +225,7 @@
 1764142320 source:/home/user-331/projects/roguen/roguen/areapiece.cpp
 	"areapiece.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/areapiece.h
+1764674552 /home/user-331/projects/roguen/roguen/areapiece.h
 	"areamap.h"
 	"site.h"
 	"item.h"
@@ -263,22 +263,22 @@
 
 1764142320 /home/user-331/projects/roguen/roguen/log.h
 
-1764142320 source:/home/user-331/projects/roguen/roguen/collection.cpp
-	"answers.h"
+1764674552 source:/home/user-331/projects/roguen/roguen/collection.cpp
 	"collection.h"
 	"math.h"
 	"rand.h"
+	"answers.h"
 
 1764142320 source:/home/user-331/projects/roguen/roguen/color.cpp
 	"color.h"
 	"math.h"
 	"slice.h"
 
-1764142320 source:/home/user-331/projects/roguen/roguen/craft.cpp
+1764745581 source:/home/user-331/projects/roguen/roguen/craft.cpp
 	"craft.h"
 	"script.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/script.h
+1764746307 /home/user-331/projects/roguen/roguen/script.h
 	"variant.h"
 
 1764142320 source:/home/user-331/projects/roguen/roguen/creature_talk.cpp
@@ -293,7 +293,7 @@
 	"flagable.h"
 	"variant.h"
 
-1764142320 source:/home/user-331/projects/roguen/roguen/creaturea.cpp
+1764674552 source:/home/user-331/projects/roguen/roguen/creaturea.cpp
 	"areapiece.h"
 	"creature.h"
 
@@ -347,5 +347,28 @@
 
 1764142320 /home/user-331/projects/roguen/roguen/screenshoot.h
 	"point.h"
+	"draw.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/draw_object.cpp
+	"bsdata.h"
+	"draw_object.h"
+	"screenshoot.h"
+	"timer.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/draw_object.h
+	"color.h"
+	"adat.h"
+	"point.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/timer.h
+
+1764142320 source:/home/user-331/projects/roguen/roguen/draw_text.cpp
+	"draw.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/draw_textf.cpp
+	"draw.h"
+	"slice.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/draw_theme.cpp
 	"draw.h"
 

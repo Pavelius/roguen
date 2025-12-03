@@ -26,7 +26,7 @@ struct adat {
 	size_t getmaximum() const { return count_max; }
 	int	indexof(const void* e) const { if(e >= data && e < data + count) return (T*)e - data; return -1; }
 	bool have(const T t) const { for(auto& e : *this) if(e == t) return true; return false; }
-	template<class T> slice<T> records() const { return slice<T>((T*)data, count); }
+	template<class N> slice<N> records() const { return slice<N>((T*)data, count); }
 	void remove(int index, int remove_count = 1) { if(index < 0) return; if(index<int(count - 1)) memcpy(data + index, data + index + 1, sizeof(data[0]) * (count - index - 1)); count--; }
 	void remove(const T t) { remove(find(t), 1); }
 	void top(size_t v) { if(count > v) count = v; }

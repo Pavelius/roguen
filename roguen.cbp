@@ -166,6 +166,8 @@
 		<Unit filename="roguen/price.cpp" />
 		<Unit filename="roguen/price.h" />
 		<Unit filename="roguen/pushvalue.h" />
+		<Unit filename="roguen/querry.cpp" />
+		<Unit filename="roguen/querry.h" />
 		<Unit filename="roguen/quest.cpp" />
 		<Unit filename="roguen/quest.h" />
 		<Unit filename="roguen/race.cpp" />

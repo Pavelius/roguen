@@ -73,12 +73,23 @@ void querry_filter() {
 	}
 }
 
+bool querry_select() {
+	querry_filter();
+	return records.count>0;
+}
+
+bool querry_nobody() {
+	return records.count>0;
+}
+
 template<> void fiscript<querryi>(int value, int counter) {
-	bsdata<querryi>::elements[value].proc();
-	if(!records)
+	auto& e = bsdata<querryi>::elements[value];
+	e.proc();
+	if(!e.condition())
 		script_stop();
 }
 template<> bool fitest<querryi>(int value, int counter) {
-	fiscript<querryi>(value, counter);
-	return records.operator bool();
+	auto& e = bsdata<querryi>::elements[value];
+	e.proc();
+	return e.condition();
 }
