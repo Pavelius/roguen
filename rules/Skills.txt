@@ -12,16 +12,16 @@ ChatSomeone skill(Wits) keyid("C")
 BuyItemsSomeone skill(Wits) keyid("H")
  effect MakeTrade
 OpenDoorLock skill(Thievery) tool(Lockpick)
- effect ProhibitedAction SelectFeatures Filter LockedDoor ForEachFeature RollAction Activate GainExperience+1
+ effect SelectFeatures LockedDoor ForEachFeature RollAction Activate GainExperience+1
 OpenChestLock skill(Thievery) tool(Lockpick)
- effect ProhibitedAction SelectFeatures Filter LockedChest ForEachFeature RollAction Activate GainExperience+1
+ effect SelectFeatures LockedChest ForEachFeature RollAction Activate GainExperience+1
 SacrificeEvilAltar skill(Religion)
- effect SelectFeatures Filter AltarEvil ForEachFeature RollAction GainExperience+1
+ effect SelectFeatures AltarEvil ForEachFeature RollAction GainExperience+1
 SellItemsSomeone skill(Wits) keyid("J")
  effect MakeSelling
 SearchRoomForGems skill(Gemcutting)
- effect HaveNext-1 Local SelectYourRoom Filter RoomsWhereGemsCanBe FilterRoomMarked-1 ForEachRoom MarkRoom RollAction RandomGem
+ effect IfPlayer Local-1 SelectYourRoom RoomsWhereGemsCanBe FilterRoomMarked-1 ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)
- effect ProhibitedAction SelectAllies-1 IfClose ForEachOpponent RollAction StealOpponentCoins
+ effect SelectAllies IfClose ForEachOpponent RollAction StealOpponentCoins
 CreatePotions skill(Alchemy)
  effect AlchemyCraft UseCraft

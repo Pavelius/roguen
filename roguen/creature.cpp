@@ -927,6 +927,7 @@ static void check_interaction(creature* player, point m) {
 }
 
 static void look_items(creature* player, point m) {
+	static itema items;
 	items.clear();
 	items.select(m);
 	if(!items)

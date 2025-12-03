@@ -29,6 +29,7 @@ OpenChestLock: Взломать сундук
 OpenChestLockChoose: Взломать какой замок?
 OpenDoorLock: Взломать замок
 OpenDoorLockChoose: Взломать какой замок?
+SacrificeEvilAltar: Жертвоприношение
 SearchRoom: Обыскать комнату
 SearchRoomForGems: Искать драгоценности
 SellItemsSomeone: Продать

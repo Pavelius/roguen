@@ -19,7 +19,7 @@ static void clear_all_collections() {
 	rooms.clear();
 	targets.clear();
 	indecies.clear();
-	items.clear();
+	records.clear();
 }
 
 static bool match_list_value(int value) {
@@ -174,9 +174,12 @@ static bool filter_undead(const void* object) {
 }
 
 static bool filter_animal(const void* object) {
-	auto p = (creature*)object;
-	auto v = p->get(Wits);
-	return v == 3 || v == 4;
+	if(bsdata<creature>::have(object)) {
+		auto p = (creature*)object;
+		auto v = p->get(Wits);
+		return v == 3 || v == 4;
+	}
+	return false;
 }
 
 static void match_targets(fnvisible proc, int counter) {
@@ -187,62 +190,61 @@ static void match_rooms(fnvisible proc, int counter) {
 	rooms.match(proc, counter >= 0);
 }
 
-static void filter_next(fnvisible proc, int counter) {
-	auto push = last_variant;
-	last_variant = *script_begin++;
-	if(indecies)
-		indecies.match(match_list_feature, counter >= 0);
-	else if(rooms)
-		rooms.match(match_list_room, counter >= 0);
-	else if(items)
-		items.match(match_item_variant, counter >= 0);
-	last_variant = push;
+static void select_allies() {
+	records = creatures;
+	querry_filter();
 }
 
-static void filter_items(fnvisible proc, int counter) {
-	items.match(proc, counter >= 0);
+static void select_creatures() {
+	records = creatures;
+	querry_filter();
 }
 
-static void select_allies(fnvisible proc, int counter) {
-	targets = creatures;
-	targets.collectiona::match(is_ally, counter >= 0);
+static void select_not_enemies() {
+	records = creatures;
+	records.match(is_enemy, false);
+	querry_filter();
 }
 
-static void select_creatures(fnvisible proc, int counter) {
-	clear_all_collections();
-	targets = creatures;
+static void select_not_ally() {
+	records = creatures;
+	records.match(is_ally, false);
+	querry_filter();
 }
 
-static void select_not_enemies(fnvisible proc, int counter) {
-	clear_all_collections();
-	targets = creatures;
-	targets.match(is_enemy, false);
+static void select_enemies() {
+	records = enemies;
+	querry_filter();
 }
 
-static void select_not_ally(fnvisible proc, int counter) {
-	clear_all_collections();
-	targets = creatures;
-	targets.match(is_ally, false);
+static void select_you() {
+	records.clear();
+	records.add(player);
+	querry_filter();
 }
 
-static void select_enemies(fnvisible proc, int counter) {
-	clear_all_collections();
-	targets = enemies;
+static void select_items(collectiona& records, creature* p) {
+	auto pb = records.data;
+	auto pe = records.endof();
+	if(!p)
+		return;
+	for(auto& e : p->wears) {
+		if(!e)
+			continue;
+		if(pb < pe)
+			*pb++ = &e;
+	}
+	records.count = pb - records.data;
 }
 
-static void select_you(fnvisible proc, int counter) {
-	clear_all_collections();
-	targets.add(player);
+static void select_your_items() {
+	select_items(records, player);
+	querry_filter();
 }
 
-static void select_your_items(fnvisible proc, int counter) {
-	clear_all_collections();
-	items.select(player);
-}
-
-static void select_features(fnvisible proc, int counter) {
-	clear_all_collections();
-	indecies.select(player->getposition(), counter ? counter : 1);
+static void select_features() {
+	indecies.select(player->getposition(), true);
+	querry_filter();
 }
 
 static void select_walls(fnvisible proc, int counter) {
@@ -263,9 +265,8 @@ static void select_next_features(fnvisible proc, int counter) {
 	last_variant = push;
 }
 
-static void select_rooms(fnvisible proc, int counter) {
-	clear_all_collections();
-	rooms.collectiona::select(area->rooms);
+static void select_rooms() {
+	records.select(area->rooms);
 }
 
 static void select_your_room(fnvisible proc, int counter) {
@@ -327,14 +328,6 @@ template<> bool fnfilter<racei>(const void* object, int param) {
 	return false;
 }
 
-static void select_creatures() {
-	records = creatures;
-}
-
-static void select_enemies() {
-	records = enemies;
-}
-
 static void* group_position(const void* object) {
 	if(bsdata<creature>::have(object))
 		return &area->tiles[((creature*)object)->getposition()];
@@ -347,22 +340,32 @@ static void group_position() {
 	records.group(group_position);
 }
 
+static void if_player() {
+	querry_allow_all(player);
+}
+
 BSDATA(querryi) = {
 	{"GroupPosition", group_position},
-	{"SelectCreaturesNW", select_creatures},
-	{"SelectEnemiesNW", select_enemies},
+	{"IfPlayer", if_player},
+	{"SelectAllies", select_allies},
+	{"SelectCreatures", select_creatures},
+	{"SelectEnemies", select_enemies},
+	{"SelectFeatures", select_features},
+	{"SelectNotEnemies", select_not_enemies},
+	{"SelectRooms", select_rooms},
+	{"SelectYou", select_you},
+	{"SelectYourItems", select_your_items},
 };
 BSDATAF(querryi)
 BSDATA(filteri) = {
-	{"Filter", 0, filter_next},
 	{"FilterAnimal", filter_animal, match_targets},
-	{"FilterBlessed", filter_blessed, filter_items},
+	{"FilterBlessed", filter_blessed},
 	{"FilterCharmed", filter_charmed, match_targets},
-	{"FilterCursed", filter_cursed, filter_items},
-	{"FilterDamaged", filter_damaged, filter_items},
+	{"FilterCursed", filter_cursed},
+	{"FilterDamaged", filter_damaged},
 	{"FilterExplored", filter_explored_room, match_rooms},
 	{"FilterFeature", filter_feature, match_targets},
-	{"FilterIdentified", filter_identified, filter_items},
+	{"FilterIdentified", filter_identified},
 	{"FilterMindless", filter_mindless, match_targets},
 	{"FilterNotable", filter_notable, match_rooms},
 	{"FilterRoomMarked", filter_room_marked, match_rooms},
@@ -372,17 +375,9 @@ BSDATA(filteri) = {
 	{"FilterWounded", filter_wounded, match_targets},
 	{"IfClose", if_close, match_targets},
 	{"IfHuman", if_human, match_targets},
-	{"SelectAllies", 0, select_allies},
-	{"SelectCreatures", 0, select_creatures},
-	{"SelectEnemies", 0, select_enemies},
-	{"SelectFeatures", 0, select_features},
 	{"SelectNextFeatures", 0, select_next_features},
-	{"SelectNotEnemies", 0, select_not_enemies},
-	{"SelectRooms", 0, select_rooms},
 	{"SelectWalls", 0, select_walls},
 	{"SelectWallsMines", 0, select_walls_mines},
-	{"SelectYou", 0, select_you},
-	{"SelectYourItems", 0, select_your_items},
 	{"SelectYourRoom", 0, select_your_room},
 };
 BSDATAF(filteri)

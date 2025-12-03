@@ -8,6 +8,7 @@
 #include "charname.h"
 #include "creature.h"
 #include "modifier.h"
+#include "querry.h"
 #include "race.h"
 #include "script.h"
 #include "siteskill.h"
@@ -120,6 +121,9 @@ BSMETA(monsteri) = {
 BSMETA(point) = {
 	BSREQ(x), BSREQ(y),
 	{}};
+BSMETA(querryi) = {
+	BSREQ(id),
+	{}};
 BSMETA(shapei) = {
 	BSREQ(id),
 	{}};
@@ -172,7 +176,7 @@ BSDATA(varianti) = {
 	{"Creature", VAR(creature), 0},
 	{"Charname", VAR(charname), 2, 0, 0, 0, read_charname},
 	{"Feat", VAR(feati), 1, 0, fiscript<feati>, fitest<feati>},
-	{"Feature", VAR(featurei), 1, 0, fiscript<featurei>},
+	{"Feature", VAR(featurei), 1, 0, fiscript<featurei>, 0, 0, 0, fnfilter<featurei>},
 	{"Filter", VAR(filteri), 1, 0, fiscript<filteri>, fitest<filteri>},
 	{"Global", VAR(globali), 1, 0, fiscript<globali>},
 	{"Hotkey", VAR(hotkey), 2, 0, 0, 0, 0, check_hotkeys},
@@ -183,6 +187,7 @@ BSDATA(varianti) = {
 	{"Monster", VAR(monsteri), 1, 0, fiscript<monsteri>, fitest<monsteri>, 0, check_monsters},
 	{"Need", VAR(greatneedi), 1, 0, 0, 0, 0, check_need_objects},
 	{"NeedFlag", VAR(needni), 1, 0, fiscript<needni>, fitest<needni>},
+	{"Querry", VAR(querryi), 1, 0, fiscript<querryi>, fitest<querryi>},
 	{"Quest", VAR(quest), 0},
 	{"Race", VAR(racei), 1, 0, fiscript<racei>},
 	{"RandomTable", VAR(randomizeri), 1, 0, fiscript<randomizeri>},

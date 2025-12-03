@@ -11,4 +11,4 @@ struct itema : collection<item> {
 	void selectbackpack(creature* p);
 	void matchf(wear_s kind, bool keep);
 };
-extern itema items;
+// extern itema items;

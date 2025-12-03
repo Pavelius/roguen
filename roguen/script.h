@@ -32,7 +32,8 @@ struct pushscript : pushmodifier {
 	pushscript() : begin(script_begin), end(script_end) {}
 	pushscript(variant* vbegin, variant* vend) : pushscript() { script_begin = vbegin, script_end = vend; }
 	pushscript(const variants& v) : pushscript() { script_begin = v.begin(), script_end = v.end(); }
-	~pushscript() { script_begin = begin; script_end = end; }
+	~pushscript() { restore(); }
+	void restore() const { script_begin = begin; script_end = end; }
 };
 struct pushscriptid {
 	const char* id;

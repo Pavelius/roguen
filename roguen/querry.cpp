@@ -32,7 +32,28 @@ bool querry_allow(const void* object) {
 	return false;
 }
 
-static void querry_filter() {
+bool querry_allow_all(const void* object) {
+	while(script_begin < script_end) {
+		auto v = *script_begin++;
+		auto keep = v.counter >= 0;
+		if(v.iskind<listi>()) {
+			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) != keep)
+				return false;
+		} else {
+			auto pf = bsdata<varianti>::elements[v.type].pfilter;
+			if(pf) {
+				if(pf(object, v.value) != keep)
+					return false;
+			} else {
+				script_begin--; // Not handle
+				break;
+			}
+		}
+	}
+	return true;
+}
+
+void querry_filter() {
 	while(script_begin < script_end) {
 		auto v = *script_begin++;
 		if(v.iskind<listi>()) {
@@ -54,7 +75,6 @@ static void querry_filter() {
 
 template<> void fiscript<querryi>(int value, int counter) {
 	bsdata<querryi>::elements[value].proc();
-	querry_filter();
 	if(!records)
 		script_stop();
 }

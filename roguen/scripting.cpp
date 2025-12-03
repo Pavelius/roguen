@@ -52,7 +52,7 @@ const char* getlog();
 extern point		start_village;
 extern collectiona	records;
 
-itema				items;
+//itema				items;
 indexa				indecies;
 spella				allowed_spells;
 creature			*player, *opponent;
@@ -1347,14 +1347,14 @@ static void* choose_answers() {
 static bool have_targets() {
 	return targets.getcount() != 0
 		|| rooms.getcount() != 0
-		|| items.getcount() != 0
+		|| records.getcount() != 0
 		|| indecies.getcount() != 0;
 }
 
 bool apply_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
-	items.clear();
+	records.clear();
 	rooms.clear();
 	targets.clear();
 	script_run(conditions);
@@ -1364,7 +1364,7 @@ bool apply_targets(const variants& conditions) {
 bool allow_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
-	items.clear();
+	records.clear();
 	rooms.clear();
 	targets.clear();
 	return script_allow(conditions);
@@ -1391,36 +1391,10 @@ static bool choose_indecies(creaturea& source, const char* header, int offset) {
 	return true;
 }
 
-static bool choose_target_interactive(const char* id) {
-	if(!id)
-		return true;
-	auto pn = getnme(ids(id, "Choose"));
-	if(!pn)
-		return true; // Get random target
-	pushvalue push_width(window_width, 300);
-	if(targets.getcount() > 1) {
-		if(!choose_indecies(targets, pn, 0))
-			return false;
-	}
-	if(rooms.getcount() > 1) {
-		if(!rooms.choose(roomi::getname, pn, getnm("Cancel")))
-			return false;
-	}
-	if(items.getcount() > 1) {
-		if(!items.choose(item::getname, pn, getnm("Cancel")))
-			return false;
-	}
-	if(indecies.getcount() > 1) {
-		if(!choose_indecies(indecies, pn))
-			return false;
-	}
-	return true;
-}
-
 static int get_target_count() {
 	return targets.getcount()
 		+ rooms.getcount()
-		+ items.getcount()
+		+ records.getcount()
 		+ indecies.getcount();
 }
 
@@ -1553,6 +1527,46 @@ static listi* get_ability_craft(abilityn v) {
 	case Alchemy: return alchemy;
 	default: return 0;
 	}
+}
+
+static bool is_item(const void* object) {
+	if(bsdata<creature>::have(object)) {
+		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(object);
+		return p->iswear(object);
+	}
+	if(area) {
+		if(area->items.have(object))
+			return true;
+	}
+	return false;
+}
+
+static bool choose_target_interactive(const char* id) {
+	if(!id)
+		return true;
+	auto pn = getnme(ids(id, "Choose"));
+	if(!pn)
+		return true; // Get random target
+	pushvalue push_width(window_width, 300);
+	if(targets.getcount() > 1) {
+		if(!choose_indecies(targets, pn, 0))
+			return false;
+	}
+	if(rooms.getcount() > 1) {
+		if(!rooms.choose(roomi::getname, pn, getnm("Cancel")))
+			return false;
+	}
+	if(records.getcount() > 1) {
+		if(is_item(records.data[0])) {
+			if(!choose_items(records, pn, getnm("Cancel")))
+				return false;
+		}
+	}
+	if(indecies.getcount() > 1) {
+		if(!choose_indecies(indecies, pn))
+			return false;
+	}
+	return true;
 }
 
 static void* choose_record(const char* header, const char* cancel, bool autochoose) {
@@ -2456,17 +2470,13 @@ static void for_each_creature(int bonus) {
 }
 
 static void for_each_item(int bonus) {
-	if(!items) {
-		script_fail = true;
-		script_stop();
-		return;
-	}
 	pushvalue push(last_item);
-	variants commands; commands.set(script_begin, script_end - script_begin);
-	itema source(items);
-	for(auto p : source) {
+	pushscript commands;
+	collectiona source(records);
+	for(auto p : source.records<item*>()) {
 		last_item = p;
-		script_run(commands);
+		commands.restore();
+		script_run_proc();
 	}
 	script_stop();
 }
@@ -2478,7 +2488,7 @@ static bool is_features(int bonus) {
 
 static bool is_items(int bonus) {
 	script_stop();
-	return items.getcount() > 0;
+	return records.getcount() > 0;
 }
 
 static void for_each_feature(int bonus) {
@@ -2620,8 +2630,8 @@ static void choose_limit(int counter) {
 		return;
 	if(targets.getcount() > (size_t)counter)
 		targets.count = counter;
-	if(items.getcount() > (size_t)counter)
-		items.count = counter;
+	if(records.getcount() > (size_t)counter)
+		records.count = counter;
 	if(rooms.getcount() > (size_t)counter)
 		rooms.count = counter;
 	if(indecies.getcount() > (size_t)counter)
@@ -2641,9 +2651,9 @@ static bool choose_specific_target() {
 		iswap(rooms.data[0], rooms.data[i]);
 		return true;
 	}
-	i = items.find(specific_target);
+	i = records.find(specific_target);
 	if(i != -1) {
-		iswap(items.data[0], items.data[i]);
+		iswap(records.data[0], records.data[i]);
 		return true;
 	}
 	return false;
@@ -2659,8 +2669,8 @@ static void choose_target(int bonus) {
 }
 
 static void choose_random(int bonus) {
-	if(items)
-		items.shuffle();
+	if(records)
+		records.shuffle();
 	if(rooms)
 		rooms.shuffle();
 	if(targets)

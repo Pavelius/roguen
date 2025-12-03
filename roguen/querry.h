@@ -11,3 +11,5 @@ struct querryi : nameable {
 extern collectiona records;
 
 bool querry_allow(const void* object);
+bool querry_allow_all(const void* object);
+void querry_filter();
