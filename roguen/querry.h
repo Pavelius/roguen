@@ -4,11 +4,11 @@
 #include "nameable.h"
 
 typedef void(*fnevent)();
-typedef bool(*fnvisible)();
+typedef bool(*fncondition)();
 
 struct querryi : nameable {
 	fnevent	proc;
-	fnvisible condition;
+	fncondition condition;
 };
 extern collectiona records;
 
