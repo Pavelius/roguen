@@ -18,6 +18,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	unsigned short	room_id, enemy_id, charmer_id, fear_id;
 	void			cleanup();
 public:
+	typedef void (creature::*fncommand)(); // typical object command
 	int				experience, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
@@ -69,9 +70,11 @@ public:
 	bool			isfollowmaster() const;
 	bool			isgood() const { return abilities[Reputation] >= 20; }
 	bool			ishuman() const;
+	static bool		ishuman(const void* p) { return ((creature*)p)->ishuman(); }
 	bool			ismaster(abilityn v) const { return get(v) >= 60; }
 	bool			isnormalmood() const { return abilities[Mood] == basic.abilities[Mood]; }
 	bool			ispresent() const;
+	static bool		ispresent(const void* object) { return ((creature*)object)->ispresent(); }
 	bool			istired() const { return abilities[Mood] <= -10; }
 	bool			isunaware() const { return wait_seconds >= 25 * 4 * 6; }
 	bool			isvalid() const;

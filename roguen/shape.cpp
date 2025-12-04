@@ -43,7 +43,7 @@ rect shapei::bounding(point c, direction_s d) const {
 }
 
 rect shapei::bounding(rect rc, direction_s d) const {
-	auto r1 = bounding(point(0, 0), d);
+	auto r1 = bounding(point{0,0}, d);
 	rc.x1 -= r1.x1;
 	rc.y1 -= r1.y1;
 	rc.x2 -= r1.x2;

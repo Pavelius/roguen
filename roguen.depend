@@ -39,7 +39,7 @@
 	"pushvalue.h"
 	"textscript.h"
 
-1764674552 /home/user-331/projects/roguen/roguen/creature.h
+1764847668 /home/user-331/projects/roguen/roguen/creature.h
 	"ability.h"
 	"advancement.h"
 	"answers.h"
@@ -105,7 +105,7 @@
 	"actable.h"
 	"point.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/actable.h
+1764847518 /home/user-331/projects/roguen/roguen/actable.h
 	"variant.h"
 
 1764674552 /home/user-331/projects/roguen/roguen/monster.h
@@ -133,7 +133,7 @@
 	"shape.h"
 	"variant.h"
 
-1764833102 /home/user-331/projects/roguen/roguen/collection.h
+1764846729 /home/user-331/projects/roguen/roguen/collection.h
 	"adat.h"
 	"bsdata.h"
 
@@ -222,7 +222,7 @@
 
 1764142320 /home/user-331/projects/roguen/roguen/math.h
 
-1764142320 source:/home/user-331/projects/roguen/roguen/areapiece.cpp
+1764846774 source:/home/user-331/projects/roguen/roguen/areapiece.cpp
 	"areapiece.h"
 
 1764674552 /home/user-331/projects/roguen/roguen/areapiece.h
@@ -410,8 +410,7 @@
 	"point.h"
 	"variant.h"
 
-1764834150 /home/user-331/projects/roguen/roguen/querry.h
-	"collection.h"
+1764846764 /home/user-331/projects/roguen/roguen/querry.h
 	"nameable.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/race.h
@@ -674,7 +673,8 @@
 1764142320 /home/user-331/projects/roguen/roguen/price.h
 	"nameable.h"
 
-1764834198 source:/home/user-331/projects/roguen/roguen/querry.cpp
+1764846966 source:/home/user-331/projects/roguen/roguen/querry.cpp
+	"collection.h"
 	"list.h"
 	"math.h"
 	"querry.h"
@@ -795,4 +795,74 @@
 	"log.h"
 	"script.h"
 	"talk.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/textscript.cpp
+	"creature.h"
+	"textscript.h"
+	"speech.h"
+
+1764845808 source:/home/user-331/projects/roguen/roguen/condition.cpp
+	"bsreq.h"
+	"condition.h"
+	"script.h"
+
+1764845735 /home/user-331/projects/roguen/roguen/condition.h
+	"nameable.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/tile.cpp
+	"bsreq.h"
+	"tile.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/trigger.cpp
+	"bsreq.h"
+	"pushvalue.h"
+	"trigger.h"
+	"script.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/variant.cpp
+	"variant.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/variantc.cpp
+	"variantc.h"
+	"rand.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/variantc.h
+	"adat.h"
+	"variant.h"
+
+1764847025 source:/home/user-331/projects/roguen/roguen/shape.cpp
+	"bsdata.h"
+	"direction.h"
+	"shape.h"
+	"stringbuilder.h"
+	"math.h"
+	"log.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/visualeffect.cpp
+	"bsreq.h"
+	"draw.h"
+	"draw_object.h"
+	"visualeffect.h"
+	"resid.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/wear.cpp
+	"bsdata.h"
+	"wear.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/wearable.cpp
+	"wearable.h"
+	"math.h"
+
+1764847899 source:/home/user-331/projects/roguen/roguen/creature_need.cpp
+	"areapiece.h"
+	"creature.h"
+	"modifier.h"
+	"game.h"
+	"greatneed.h"
+	"pushvalue.h"
+	"rand.h"
+	"script.h"
+	"speech.h"
+	"talk.h"
+	"textscript.h"
 

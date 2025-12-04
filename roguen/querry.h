@@ -1,6 +1,5 @@
 #pragma once
 
-#include "collection.h"
 #include "nameable.h"
 
 typedef void(*fnevent)();
@@ -10,13 +9,10 @@ typedef bool(*fnvisible)(const void* object);
 struct filteri : nameable {
 	fnvisible proc;
 };
-
 struct querryi : nameable {
 	fnevent	proc;
 	fncondition condition;
 };
-
-extern collectiona records;
 
 bool querry_allow(const void* object);
 bool querry_allow_all(const void* object);

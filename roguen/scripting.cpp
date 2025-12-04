@@ -1,5 +1,6 @@
 #include "areapiece.h"
 #include "boost.h"
+#include "condition.h"
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
@@ -49,7 +50,6 @@ int choose_dialog(fnevent proc);
 const char* getlog();
 
 extern point		start_village;
-extern collectiona	records;
 
 //itema				items;
 indexa				indecies;

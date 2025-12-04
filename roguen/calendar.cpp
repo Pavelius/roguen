@@ -2,20 +2,19 @@
 #include "calendar.h"
 #include "creature.h"
 #include "draw.h"
-#include "functor.h"
 #include "pushvalue.h"
 #include "trigger.h"
 #include "triggern.h"
 #include "script.h"
 
-static void all(funct<creature>::command proc) {
+static void all(creature::fncommand proc) {
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid())
 			(e.*proc)();
 	}
 }
 
-static void allnext(funct<creature>::command proc) {
+static void allnext(creature::fncommand proc) {
 	if(draw::isnext())
 		return;
 	for(auto& e : bsdata<creature>()) {

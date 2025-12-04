@@ -1,3 +1,4 @@
+#include "collection.h"
 #include "list.h"
 #include "math.h"
 #include "querry.h"

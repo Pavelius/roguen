@@ -63,8 +63,6 @@
 		<Unit filename="roguen/bsreq.h" />
 		<Unit filename="roguen/bstream.cpp" />
 		<Unit filename="roguen/bstream.h" />
-		<Unit filename="roguen/calendar.cpp" />
-		<Unit filename="roguen/calendar.h" />
 		<Unit filename="roguen/charname.cpp" />
 		<Unit filename="roguen/charname.h" />
 		<Unit filename="roguen/collection.cpp" />
@@ -109,7 +107,6 @@
 		<Unit filename="roguen/filter.h" />
 		<Unit filename="roguen/flagable.h" />
 		<Unit filename="roguen/framerange.h" />
-		<Unit filename="roguen/functor.h" />
 		<Unit filename="roguen/game.cpp" />
 		<Unit filename="roguen/game.h" />
 		<Unit filename="roguen/geoposition.h" />

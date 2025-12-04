@@ -25,6 +25,7 @@ struct collectiona : adat<void*, 256> {
 	void sort(fncompare proc);
 	template<typename N> slice<N> records() const { return slice<N>((N*)data, count); }
 };
+extern collectiona records;
 template<typename T>
 struct collection : collectiona {
 	constexpr T* operator[](unsigned i) const { return (T*)data[i]; }

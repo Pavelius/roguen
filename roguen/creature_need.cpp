@@ -1,6 +1,5 @@
 #include "areapiece.h"
 #include "creature.h"
-#include "functor.h"
 #include "modifier.h"
 #include "game.h"
 #include "greatneed.h"
@@ -22,10 +21,10 @@ static bool isneed(const void* object) {
 
 static creature* random_target(const greatneedi* p) {
 	collection<creature> source;
-	source.select(fntis<creature, &creature::ispresent>);
-	source.match(fntis<actable, &actable::isnamed>, true);
+	source.select(creature::ispresent);
+	source.match(actable::isnamed, true);
 	source.match(isneed, false);
-	source.match(fntis<creature, &creature::ishuman>, false);
+	source.match(creature::ishuman, false);
 	return source.random();
 }
 

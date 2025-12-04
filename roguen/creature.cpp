@@ -4,7 +4,6 @@
 #include "charname.h"
 #include "creature.h"
 #include "direction.h"
-#include "functor.h"
 #include "math.h"
 #include "indexa.h"
 #include "itema.h"
@@ -985,7 +984,7 @@ static bool	spell_isnotcombat(const void* object) {
 
 void creature::clear() {
 	cleanup();
-	memset(this, 0, sizeof(*this));
+	memset((void*)this, 0, sizeof(*this));
 	worldpos = {-1000, -1000};
 	moveorder = {-1000, -1000};
 	guardorder = {-1000, -1000};

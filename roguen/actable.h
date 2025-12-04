@@ -12,6 +12,7 @@ public:
 	bool			ischaracter() const;
 	bool			iskind(variant v) const;
 	bool			isnamed() const { return name_id != 0xFFFF; }
+	static bool		isnamed(const void* p) { return ((actable*)p)->name_id != 0xFFFF; }
 	void			setkind(variant v) { kind = v; }
 	void			setnoname() { name_id = 0xFFFF; }
 	void			setname(unsigned short v) { name_id = v; }
