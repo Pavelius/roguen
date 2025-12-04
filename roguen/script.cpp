@@ -110,9 +110,3 @@ void script_execute(const char* id, int bonus) {
 	if(p)
 		p->proc(bonus);
 }
-
-variant next_script() {
-	if(script_begin < script_end)
-		return *script_begin++;
-	return variant();
-}

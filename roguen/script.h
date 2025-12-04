@@ -56,8 +56,6 @@ void script_run(const char* id, const variants& source);
 void script_run(const variants& elements);
 void script_run(const variants& source, fnevent proc);
 
-variant next_script();
-
 template<typename T> bool fnfilter(const void* object, int value);
 template<typename T> void fiscript(int index, int bonus);
 template<typename T> bool fitest(int index, int bonus);

@@ -1895,28 +1895,30 @@ static void detect_items(featn v) {
 	for(auto& e : area->items) {
 		if(!e || !e.is(v))
 			continue;
+		if(!area->isvalid(e.position))
+			continue;
 		area->setflag(e.position, Explored);
 		area->setflag(e.position, Visible);
 	}
 }
 
-static void detect_area_items(variant v) {
-	if(v.iskind<weari>())
-		detect_items((wear_s)v.value);
-	else if(v.iskind<feati>())
-		detect_items((featn)v.value);
-	else if(v.iskind<listi>()) {
-		for(auto ev : bsdata<listi>::elements[v.value].elements)
-			detect_area_items(ev);
-	} else if(v.iskind<randomizeri>()) {
-		for(auto ev : bsdata<randomizeri>::elements[v.value].chance)
-			detect_area_items(ev);
-	}
-}
-
 static void detect_items(int bonus) {
-	auto v = next_script();
-	detect_area_items(v);
+	while(script_begin < script_end) {
+		auto v = *script_begin++;
+		if(v.iskind<weari>())
+			detect_items((wear_s)v.value);
+		else if(v.iskind<feati>())
+			detect_items((featn)v.value);
+		else if(v.iskind<listi>()) {
+			pushscript push;
+			for(auto ev : bsdata<listi>::elements[v.value].elements)
+				detect_items(bonus);
+		} else if(v.iskind<randomizeri>()) {
+			pushscript push;
+			for(auto ev : bsdata<randomizeri>::elements[v.value].chance)
+				detect_items(bonus);
+		}
+	}
 }
 
 static void some_coins(int bonus) {
@@ -2449,7 +2451,8 @@ static void for_each_creature(int bonus) {
 		commands.restore();
 		script_run_proc();
 	}
-	script_stop();
+	records = source;
+	commands.stop();
 }
 
 static void for_each_item(int bonus) {
@@ -2461,7 +2464,8 @@ static void for_each_item(int bonus) {
 		commands.restore();
 		script_run_proc();
 	}
-	script_stop();
+	records = source;
+	commands.stop();
 }
 
 static bool is_features(int bonus) {
@@ -2483,16 +2487,17 @@ static void for_each_feature(int bonus) {
 	auto push_source(indecies);
 	auto push_rect = last_rect;
 	auto push_index = last_index;
-	variants commands; commands.set(script_begin, script_end - script_begin);
+	pushscript commands;
 	for(auto p : indecies) {
 		last_rect = {p.x, p.y, p.x, p.y};
 		last_index = p;
-		script_run(commands);
+		commands.restore();
+		script_run_proc();
 	}
-	script_stop();
 	last_index = push_index;
 	last_rect = push_rect;
 	indecies = push_source;
+	commands.stop();
 }
 
 static void for_each_room(int bonus) {
@@ -2513,7 +2518,7 @@ static void for_each_room(int bonus) {
 		commands.restore();
 		script_run_proc();
 	}
-	script_stop();
+	commands.stop();
 }
 
 static void gain_coins(int bonus) {
