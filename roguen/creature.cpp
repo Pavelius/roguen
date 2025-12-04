@@ -388,7 +388,7 @@ static void normalize_reputation() {
 		player->abilities[Reputation]--;
 }
 
-static direction_s move_direction(point m) {
+static directionn move_direction(point m) {
 	if(m.x < 0)
 		return West;
 	else if(m.y < 0)
@@ -612,7 +612,7 @@ static void random_walk() {
 	if(d100() < 60)
 		pay_action();
 	else {
-		static direction_s allaround[] = {North, South, East, West};
+		static directionn allaround[] = {North, South, East, West};
 		move_step(maprnd(allaround));
 	}
 }
@@ -837,7 +837,7 @@ static bool issame(point m, tilef f) {
 	return bsdata<tilei>::elements[area->tiles[m]].is(f);
 }
 
-static bool issame(point m, direction_s d, tilef f) {
+static bool issame(point m, directionn d, tilef f) {
 	if(!issame(m, f))
 		return false;
 	auto m1 = to(m, round(d, East));
@@ -1454,7 +1454,7 @@ static void move_step(point ni) {
 	check_trap(player->getposition());
 }
 
-void move_step(direction_s v) {
+void move_step(directionn v) {
 	if(player->is(Iced)) {
 		if(!player->roll(Dexterity, 30)) {
 			player->act("IcedSlice");

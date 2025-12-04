@@ -1,7 +1,7 @@
 #include "anymap.h"
 #include "direction.h"
 
-point to(point m, direction_s v, unsigned char mps) {
+point to(point m, directionn v, unsigned char mps) {
 	static const point error = {short(-1), short(-1)};
 	if(m.x < 0)
 		return error;

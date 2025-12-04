@@ -162,7 +162,7 @@ static void paint_overlapped(point i, int tile) {
 	}
 }
 
-static bool iswall(point i, direction_s d) {
+static bool iswall(point i, directionn d) {
 	auto i1 = to(i, d);
 	if(!area->isvalid(i1))
 		return true;

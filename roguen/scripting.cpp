@@ -69,7 +69,7 @@ static void*		specific_target;
 static adat<rect, 64> locations;
 static adat<point, 512> points;
 static rect			correct_conncetors;
-static direction_s	last_direction;
+static directionn	last_direction;
 static adat<variant, 32> sites;
 
 static int random_value(int value) {
@@ -214,17 +214,17 @@ static point randomft(const rect& rc) {
 	return area->getfree(randomr(rc), 10, isfreeft);
 }
 
-static bool iswall(point i, direction_s d1, direction_s d2) {
+static bool iswall(point i, directionn d1, directionn d2) {
 	return area->iswall(i, d1)
 		&& area->iswall(i, d2);
 }
 
-static bool isonewall(point i, direction_s d1, direction_s d2) {
+static bool isonewall(point i, directionn d1, directionn d2) {
 	return area->iswall(i, d1)
 		|| area->iswall(i, d2);
 }
 
-static bool isoneofdoor(point i, direction_s d1, direction_s d2) {
+static bool isoneofdoor(point i, directionn d1, directionn d2) {
 	if(area->getfeature(to(i, d1)).is(BetweenWalls))
 		return true;
 	if(area->getfeature(to(i, d2)).is(BetweenWalls))
@@ -348,7 +348,7 @@ static void create_city_level(const rect& rc, int level) {
 	}
 }
 
-static bool allow_connector(point index, direction_s dir, bool deadend = false) {
+static bool allow_connector(point index, directionn dir, bool deadend = false) {
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
@@ -370,7 +370,7 @@ static bool allow_connector(point index, direction_s dir, bool deadend = false) 
 	return true;
 }
 
-static bool allow_corridor(point index, direction_s dir, bool linkable = false) {
+static bool allow_corridor(point index, directionn dir, bool linkable = false) {
 	index = to(index, dir); // Forward
 	if(!index.in(correct_conncetors))
 		return false;
@@ -446,7 +446,7 @@ static void create_door(point m, int floor, int wall, bool hidden, bool locked, 
 	area->total.doors++;
 }
 
-static void create_connector(point index, direction_s dir, int wall, int floor, int& count, bool linkable) {
+static void create_connector(point index, directionn dir, int wall, int floor, int& count, bool linkable) {
 	const auto chance_line_corridor = 60;
 	const auto minimum_corridor_lenght = 4;
 	count = 0;
@@ -466,7 +466,7 @@ static void create_connector(point index, direction_s dir, int wall, int floor, 
 			break;
 		count++;
 	}
-	direction_s rnd[] = {West, East, North};
+	directionn rnd[] = {West, East, North};
 	zshuffle(rnd, 3);
 	auto next_count = 0;
 	for(auto d : rnd)
@@ -475,7 +475,7 @@ static void create_connector(point index, direction_s dir, int wall, int floor, 
 		points.add(index);
 }
 
-static void create_corridor(const rect& rc, direction_s dir, int wall, int floor) {
+static void create_corridor(const rect& rc, directionn dir, int wall, int floor) {
 	points.clear();
 	auto index = area->getpoint(rc, correct_conncetors, dir);
 	auto count = 0;
@@ -541,7 +541,7 @@ static roomi* add_room(const sitei* ps, const rect& rc) {
 	return p;
 }
 
-static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol, int wall) {
+static void place_shape_ex(const shapei& e, point m, directionn d, char symbol, int wall) {
 	auto c = m;
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
@@ -553,7 +553,7 @@ static void place_shape_ex(const shapei& e, point m, direction_s d, char symbol,
 	}
 }
 
-static void place_feature(const shapei& e, point m, direction_s d, char symbol, int feature) {
+static void place_feature(const shapei& e, point m, directionn d, char symbol, int feature) {
 	auto c = m;
 	for(m.y = 0; m.y < e.size.y; m.y++) {
 		for(m.x = 0; m.x < e.size.x; m.x++) {
@@ -565,7 +565,7 @@ static void place_feature(const shapei& e, point m, direction_s d, char symbol, 
 	}
 }
 
-static void place_shape(const shapei& e, point m, direction_s d, int floor, int wall) {
+static void place_shape(const shapei& e, point m, directionn d, int floor, int wall) {
 	if(m.x < -100 || m.y < -100)
 		return;
 	place_shape_ex(e, m, d, 'X', wall);
@@ -575,19 +575,19 @@ static void place_shape(const shapei& e, point m, direction_s d, int floor, int 
 }
 
 static void place_shape(const shapei& e, point m, int floor, int walls) {
-	static direction_s direction[] = {North, South, West, East};
+	static directionn direction[] = {North, South, West, East};
 	place_shape(e, m, maprnd(direction), floor, walls);
 }
 
 static void place_shape(const shapei& e, rect rc, int floor, int walls) {
-	static direction_s direction[] = {North, South, West, East};
+	static directionn direction[] = {North, South, West, East};
 	auto d = maprnd(direction);
 	rc = e.bounding(rc, d);
 	place_shape(e, area->get(rc), d, floor, walls);
 }
 
 static void place_shape(const shapei& e, rect rc, int floor, int walls, const variants& source) {
-	static direction_s direction[] = {North, South, West, East};
+	static directionn direction[] = {North, South, West, East};
 	auto d = maprnd(direction);
 	rc = e.bounding(rc, d);
 	auto m = area->get(rc);
@@ -800,7 +800,7 @@ static void fillwalls() {
 }
 
 static void generate_building(int bonus) {
-	static direction_s rdir[] = {North, South, West, East};
+	static directionn rdir[] = {North, South, West, East};
 	auto door = getdoor();
 	fillfloor();
 	fillwalls();
@@ -1022,7 +1022,7 @@ static void remove_summoned(geoposition geo) {
 	}
 }
 
-void enter_area(point m, int level, const featurei* feature, direction_s appear_side) {
+void enter_area(point m, int level, const featurei* feature, directionn appear_side) {
 	if(area)
 		zcopy<timemanage>(*area, game);
 	save_game("autosave");
@@ -2525,16 +2525,6 @@ static void gain_coins(int bonus) {
 static void empthy_script(int bonus) {
 }
 
-static void opponent_next(int bonus) {
-	auto push_player = player;
-	auto push_opponent = opponent;
-	iswap(player, opponent);
-	auto v = next_script();
-	script_run(v);
-	opponent = push_opponent;
-	player = push_player;
-}
-
 static void add_anger(int bonus) {
 	if(!bonus)
 		bonus = 1;
@@ -2834,6 +2824,10 @@ static void use_craft(int bonus) {
 	add_item(craft_item(pi, magic));
 }
 
+static bool if_safe() {
+	return enemies.count == 0;
+}
+
 static bool if_trade() {
 	auto room = player->getroom();
 	if(!room)
@@ -3022,6 +3016,15 @@ static void charm_opponent(int bonus) {
 		opponent->setcharmer(0);
 }
 
+static void switch_opponent(int bonus) {
+	auto push_player = player;
+	auto push_opponent = opponent;
+	iswap(player, opponent);
+	script_run_proc();
+	opponent = push_opponent;
+	player = push_player;
+}
+
 static void set_broken(int bonus) {
 	bonus = script_count(bonus);
 	if(bonus < 0)
@@ -3033,6 +3036,7 @@ static void set_broken(int bonus) {
 
 BSDATA(conditioni) = {
 	{"IfTrade", if_trade},
+	{"IfSafe", if_safe},
 };
 BSDATAF(conditioni)
 BSDATA(triggerni) = {
@@ -3124,7 +3128,7 @@ BSDATA(script) = {
 	{"MoveUpLeft", move_up_left},
 	{"Offset", set_offset},
 	{"OpenNearestDoor", open_nearest_door},
-	{"Opponent", opponent_next},
+	{"Opponent", switch_opponent},
 	{"PickUp", pickup},
 	{"PickUpAll", pickup_all},
 	{"QuestGuardian", quest_guardian},

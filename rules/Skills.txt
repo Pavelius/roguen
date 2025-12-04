@@ -3,7 +3,7 @@
 RoomsWhereGemsCanBe
  elements DefaultDungeonEntrance DefaultCaveEntrance DefaultMineEntrance SpiderNest TreasureRoom UnholyAltarRoom UnholyPlace SarcaphagusRoom PortalRoom
 StealCoinsFail
- elements MakeNoise AddReputation-1 Opponent Anger+1 Opponent CryStealCoins
+ elements MakeNoise AddReputation-1 Opponent Anger+1 CryStealCoins
 
 #SiteSkill
 

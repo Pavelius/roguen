@@ -16,7 +16,7 @@ static anymap<short unsigned, areamap::mps> movement_rate;
 static point straight_directions[] = {
 	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
 };
-static const direction_s orientations_7b7[49] = {
+static const directionn orientations_7b7[49] = {
 	NorthWest, NorthWest, North, North, North, NorthEast, NorthEast,
 	NorthWest, NorthWest, NorthWest, North, NorthEast, NorthEast, NorthEast,
 	West, West, NorthWest, North, NorthEast, East, East,
@@ -265,7 +265,7 @@ int	areamap::getrange(point m1, point m2) {
 	return (dx > dy) ? dx : dy;
 }
 
-direction_s	areamap::getdirection(point s, point d) {
+directionn	areamap::getdirection(point s, point d) {
 	const int osize = 7;
 	int dx = d.x - s.x;
 	int dy = d.y - s.y;
@@ -290,7 +290,7 @@ int areamap::getindex(point m, int tile) const {
 	return r;
 }
 
-bool areamap::iswall(point m, direction_s d) const {
+bool areamap::iswall(point m, directionn d) const {
 	auto m1 = to(m, d);
 	if(!isvalid(m1))
 		return false;
@@ -332,7 +332,7 @@ void areamap::setlos(point m, int r, fitest test) {
 	}
 }
 
-point areamap::getpoint(const rect& rc, direction_s dir) {
+point areamap::getpoint(const rect& rc, directionn dir) {
 	switch(dir) {
 	case West: return {short(rc.x1), short(xrand(rc.y1 + 1, rc.y2 - 1))};
 	case East: return {short(rc.x2), short(xrand(rc.y1 + 1, rc.y2 - 1))};
@@ -341,7 +341,7 @@ point areamap::getpoint(const rect& rc, direction_s dir) {
 	}
 }
 
-point areamap::getpoint(const rect& rco, const rect& bound, direction_s dir) {
+point areamap::getpoint(const rect& rco, const rect& bound, directionn dir) {
 	rect rc = rco;
 	if(rc.x1 < bound.x1)
 		rc.x1 = bound.x1;
@@ -404,7 +404,7 @@ point areamap::getfree(point m, short maximum, fitest test) {
 	return {-1000, -1000};
 }
 
-point areamap::bordered(direction_s d) {
+point areamap::bordered(directionn d) {
 	switch(d) {
 	case North: return {mps / 2, 0};
 	case South: return {mps / 2, mps - 1};
@@ -424,7 +424,7 @@ point areamap::findfeature(unsigned char v) const {
 	return {-1000, -1000};
 }
 
-direction_s areamap::getmost(const rect& rc) const {
+directionn areamap::getmost(const rect& rc) const {
 	auto c = mps / 2;
 	auto n = center(rc);
 	auto dx = iabs(n.x - c);

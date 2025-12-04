@@ -131,7 +131,7 @@ bool is_ally(const void* object);
 bool is_enemy(const void* object);
 bool make_hostile(creature* player, const creature* opponent);
 void make_move();
-void move_step(direction_s v);
+void move_step(directionn v);
 void pay_action();
 void roll_horror(int bonus);
 bool use_item(item& v);

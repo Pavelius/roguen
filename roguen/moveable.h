@@ -5,7 +5,7 @@
 
 enum abilityn : unsigned char;
 enum color_s : unsigned char;
-enum direction_s : unsigned char;
+enum directionn : unsigned char;
 
 const int tsx = 64;
 const int tsy = 48;
@@ -18,7 +18,7 @@ typedef void(*fnevent)(); // Callback function of any command executing
 
 class movable : public actable {
 	point			position;
-	direction_s		direction;
+	directionn		direction;
 	bool			mirror;
 	void			fixvalue(void* data, fnevent proc, color_s color) const;
 public:
@@ -41,6 +41,6 @@ public:
 	bool			ismirror() const { return mirror; }
 	point			getposition() const { return position; }
 	point			getsposition() const { return m2s(position); }
-	void			setdirection(direction_s v);
+	void			setdirection(directionn v);
 	void			setposition(point m) { position = m; }
 };

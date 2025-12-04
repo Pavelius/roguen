@@ -20,7 +20,7 @@ static color getcolor(color_s format_color) {
 	}
 }
 
-static point to(point pt, direction_s d, int sx, int sy) {
+static point to(point pt, directionn d, int sx, int sy) {
 	if(d == North || d == NorthEast || d == NorthWest)
 		pt.y -= sy;
 	if(d == South || d == SouthEast || d == SouthWest)
@@ -53,7 +53,7 @@ static void paint_visual_effect() {
 	((visualeffect*)draw::last_object->data)->paint(draw::last_object->param);
 }
 
-void movable::setdirection(direction_s v) {
+void movable::setdirection(directionn v) {
 	direction = v;
 	switch(v) {
 	case West: case NorthWest: case SouthWest: mirror = true; break;
@@ -163,7 +163,7 @@ void movable::fixdisappear() const {
 		po->disappear(mst);
 }
 
-const char* missilename(direction_s v) {
+const char* missilename(directionn v) {
 	switch(v) {
 	case North: return "MissileNorth";
 	case South: return "MissileSouth";

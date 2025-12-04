@@ -4,7 +4,7 @@
 #pragma once
 
 enum areaf : unsigned char;
-enum direction_s : unsigned char;
+enum directionn : unsigned char;
 
 struct areamap {
 	static const auto mps = 64;
@@ -20,23 +20,23 @@ struct areamap {
 	void			blocktiles(int v) const;
 	void			blockwalls() const;
 	static void		blockzero();
-	static point	bordered(direction_s d);
+	static point	bordered(directionn d);
 	void			change(int t1, int t2);
 	void			clear();
 	static void		clearpath();
 	point			findfeature(unsigned char v) const;
-	static direction_s getdirection(point s, point d);
+	static directionn getdirection(point s, point d);
 	static point	get(const rect& rc);
 	static rect		get(const rect& rc, point offset, point minimum, point maximum);
 	const featurei&	getfeature(point m) const { return bsdata<featurei>::elements[isvalid(m) ? features[m] : 0]; }
 	static point	getfree(point m, short maximum, fitest test);
 	int				getindex(point m, int e) const;
-	direction_s		getmost(const rect& rc) const;
+	directionn		getmost(const rect& rc) const;
 	static point	getnext(point start, point goal);
 	static point	getnextgreater(point start);
 	static unsigned getpath(point start, point goal, point* result, unsigned maximum);
-	static point	getpoint(const rect& rc, direction_s dir);
-	static point	getpoint(const rect& rc, const rect& bound, direction_s dir);
+	static point	getpoint(const rect& rc, directionn dir);
+	static point	getpoint(const rect& rc, const rect& bound, directionn dir);
 	static int		getrange(point start, point target);
 	bool			haveposition(const void* p) const { return p >= this && p < (char*)this + sizeof(*this); }
 	void			horz(int x1, int y1, int x2, fnset proc, int v);
@@ -46,7 +46,7 @@ struct areamap {
 	bool			isfree(point m) const;
 	static bool		isvalid(point m) { return ((unsigned short)m.x) < ((unsigned short)mps) && ((unsigned short)m.y) < ((unsigned short)mps); }
 	bool			iswall(point m) const { return bsdata<tilei>::elements[tiles[m]].iswall(); }
-	bool			iswall(point m, direction_s d) const;
+	bool			iswall(point m, directionn d) const;
 	bool			linelos(int x0, int y0, int x1, int y1, fitest test) const;
 	static void		makewave(point start_index);
 	static void		makewavex();

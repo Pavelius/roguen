@@ -22,7 +22,7 @@ point shapei::find(char sym) const {
 	return {-1000, -1000};
 }
 
-point shapei::translate(point c, point v, direction_s d) const {
+point shapei::translate(point c, point v, directionn d) const {
 	switch(d) {
 	case North: return c.to(origin.x + v.x, origin.y + v.y);
 	case South: return c.to(origin.x + v.x, -origin.y - v.y);
@@ -32,7 +32,7 @@ point shapei::translate(point c, point v, direction_s d) const {
 	}
 }
 
-rect shapei::bounding(point c, direction_s d) const {
+rect shapei::bounding(point c, directionn d) const {
 	point ul = translate(c, {0, 0}, d);
 	point dr = translate(c, size, d);
 	auto x1 = imin(ul.x, dr.x);
@@ -42,7 +42,7 @@ rect shapei::bounding(point c, direction_s d) const {
 	return {x1, y1, x2, y2};
 }
 
-rect shapei::bounding(rect rc, direction_s d) const {
+rect shapei::bounding(rect rc, directionn d) const {
 	auto r1 = bounding(point{0,0}, d);
 	rc.x1 -= r1.x1;
 	rc.y1 -= r1.y1;

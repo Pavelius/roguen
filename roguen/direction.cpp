@@ -5,7 +5,7 @@ point all_directions[] = {
 	{1, -1}, {1, 1}, {-1, 1}, {-1, -1},
 };
 
-direction_s round(direction_s d, direction_s v) {
+directionn round(directionn d, directionn v) {
 	switch(v) {
 	case NorthEast:
 		switch(d) {
@@ -65,6 +65,6 @@ direction_s round(direction_s d, direction_s v) {
 	}
 }
 
-point to (point m, direction_s d) {
+point to (point m, directionn d) {
 	return m + all_directions[d];
 }

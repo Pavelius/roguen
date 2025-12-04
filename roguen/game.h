@@ -15,7 +15,7 @@ extern gamei game;
 
 void check_time_passed();
 void end_game();
-void enter_area(point m, int level, const featurei* entry, direction_s appear_side);
+void enter_area(point m, int level, const featurei* entry, directionn appear_side);
 void main_menu();
 void next_phase(fnevent proc);
 void new_game();
