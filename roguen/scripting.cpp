@@ -51,7 +51,6 @@ const char* getlog();
 
 extern point		start_village;
 
-//itema				items;
 indexa				indecies;
 spella				allowed_spells;
 creature			*player, *opponent;
