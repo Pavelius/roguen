@@ -1542,7 +1542,7 @@ static int compare_actions(const void* v1, const void* v2) {
 }
 
 static void ready_skills() {
-	last_actions.select(fntis<siteskilli, &siteskilli::isusable>);
+	last_actions.select(siteskilli::isusable);
 }
 
 int creature::getloh() const {
@@ -1924,8 +1924,8 @@ bool creature::speechrumor() const {
 
 bool creature::speechlocation() const {
 	collectiona source;
-	source.select(area->rooms, fntis<roomi, &roomi::isnotable>);
-	source.match(fntis<roomi, &roomi::isexplored>, false);
+	source.select(area->rooms, roomi::isnotable);
+	source.match(roomi::isexplored, false);
 	auto p = (roomi*)source.random();
 	if(!p)
 		return false;

@@ -96,6 +96,7 @@ public:
 	bool			ispersonal() const { return personal != 0; }
 	bool			isranged() const { return geti().wear == RangedWeapon; }
 	bool			isusable() const { return geti().use.size() != 0; }
+	static bool		isusable(const void* p) { return ((item*)p)->isusable(); }
 	bool			isdamaged() const { return !iscountable() && broken > 0; }
 	bool			isheavydamaged() const { return !iscountable() && broken >= 5; }
 	void			repair(int value);

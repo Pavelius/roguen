@@ -114,7 +114,7 @@ struct creaturea : collection<creature> {
 };
 
 extern creature *player, *opponent;
-extern creaturea creatures, enemies, targets;
+extern creaturea creatures, enemies;
 extern int last_value, last_roll_result;
 extern bool last_roll_successed;
 extern rect last_rect;

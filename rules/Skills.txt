@@ -10,7 +10,7 @@ StealCoinsFail
 ChatSomeone skill(Wits) keyid("C")
  effect SelectNotEnemies IfClose IfHuman-1 ChooseTarget ForEachOpponent Chatting
 BuyItemsSomeone skill(Wits) keyid("H")
- effect MakeTrade
+ effect IfTrade MakeTrade
 OpenDoorLock skill(Thievery) tool(Lockpick)
  effect SelectFeatures LockedDoor ForEachFeature RollAction Activate GainExperience+1
 OpenChestLock skill(Thievery) tool(Lockpick)
@@ -18,7 +18,7 @@ OpenChestLock skill(Thievery) tool(Lockpick)
 SacrificeEvilAltar skill(Religion)
  effect SelectFeatures AltarEvil ForEachFeature RollAction GainExperience+1
 SellItemsSomeone skill(Wits) keyid("J")
- effect MakeSelling
+ effect IfTrade MakeSelling
 SearchRoomForGems skill(Gemcutting)
  effect IfPlayer Local-1 SelectYourRoom FilterRoomMarked-1 RoomsWhereGemsCanBe ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)

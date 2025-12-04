@@ -62,8 +62,10 @@ public:
 	static const char* getname(const void* p) { return ((roomi*)p)->getname(); }
 	bool			is(featn v) const { return geti().feats.is(v); }
 	bool			isexplored() const;
+	static bool		isexplored(const void* p) { return ((roomi*)p)->isexplored(); }
 	bool			ismarkable() const;
 	bool			isnotable() const { return is(Notable); }
+	static bool		isnotable(const void* p) { return ((roomi*)p)->isnotable(); }
 	void			set(const sitei* p) { bsset(site_id, p); }
 };
 extern roomi* last_room;

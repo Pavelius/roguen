@@ -339,6 +339,9 @@
     <ClCompile Include="querry.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="condition.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="answers.h">
@@ -633,6 +636,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="querry.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="condition.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

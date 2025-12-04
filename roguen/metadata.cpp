@@ -1,5 +1,6 @@
 #include "areapiece.h"
 #include "bsreq.h"
+#include "condition.h"
 #include "craft.h"
 #include "hotkey.h"
 #include "global.h"
@@ -171,6 +172,7 @@ BSDATA(varianti) = {
 	{"Ability", VAR(abilityi), 1, 0, fiscript<abilityi>, fitest<abilityi>},
 	{"Advancement", VAR(advancement), 2},
 	{"AreaFlag", VAR(areafi), 1, 0, fiscript<areafi>},
+	{"Condition", VAR(conditioni), 1, 0, fiscript<conditioni>, fitest<conditioni>},
 	{"Craft", VAR(crafti), 1, 0, fiscript<crafti>},
 	{"Creature", VAR(creature), 0},
 	{"Charname", VAR(charname), 2, 0, 0, 0, read_charname},

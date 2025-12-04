@@ -10,7 +10,6 @@ BSMETA(modifieri) = {
 	BSREQ(id),
 	{}};
 
-variant	param1, param2;
 variant* script_begin;
 variant* script_end;
 modifiern modifier;

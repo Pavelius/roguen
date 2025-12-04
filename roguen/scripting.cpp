@@ -4,7 +4,6 @@
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
-#include "functor.h"
 #include "hotkey.h"
 #include "game.h"
 #include "math.h"
@@ -1343,8 +1342,7 @@ static void* choose_answers() {
 }
 
 static bool have_targets() {
-	return targets.getcount() != 0
-		|| records.getcount() != 0
+	return records.getcount() != 0
 		|| indecies.getcount() != 0;
 }
 
@@ -1352,7 +1350,6 @@ bool apply_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	records.clear();
-	targets.clear();
 	script_run(conditions);
 	return have_targets();
 }
@@ -1361,7 +1358,6 @@ bool allow_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	records.clear();
-	targets.clear();
 	return script_allow(conditions);
 }
 
@@ -1373,7 +1369,7 @@ static bool choose_indecies(indexa& indecies, const char* header) {
 	return true;
 }
 
-static bool choose_indecies(creaturea& source, const char* header, int offset) {
+static bool choose_indecies(collectiona& source, const char* header, int offset) {
 	indexa indecies;
 	for(size_t i = offset; i < source.getcount(); i++)
 		indecies.add(((creature*)source.data[i])->getposition());
@@ -1387,8 +1383,7 @@ static bool choose_indecies(creaturea& source, const char* header, int offset) {
 }
 
 static int get_target_count() {
-	return targets.getcount()
-		+ records.getcount()
+	return records.getcount()
 		+ indecies.getcount();
 }
 
@@ -1545,16 +1540,15 @@ static bool choose_target_interactive(const char* id) {
 	if(!pn)
 		return true; // Get random target
 	pushvalue push_width(window_width, 300);
-	if(targets.getcount() > 1) {
-		if(!choose_indecies(targets, pn, 0))
-			return false;
-	}
 	if(records.getcount() > 1) {
 		if(is_item(records.data[0])) {
 			if(!choose_items(records, pn, getnm("Cancel")))
 				return false;
 		} else if(is_room(records.data[0])) {
 			if(!records.choose(roomi::getname, pn, getnm("Cancel")))
+				return false;
+		} else if(bsdata<creature>::have(records.data[0])) {
+			if(!choose_indecies(records, pn, 0))
 				return false;
 		}
 	}
@@ -1856,7 +1850,7 @@ static void drop_down(int bonus) {
 }
 
 static void use_item(int bonus) {
-	auto p = choose_stuff(Backpack, "%UseItem", fntis<item, &item::isusable>);
+	auto p = choose_stuff(Backpack, "%UseItem", item::isusable);
 	if(p)
 		use_item(*p);
 }
@@ -2414,7 +2408,7 @@ static void cold_harm(int bonus) {
 }
 
 static void for_each_opponent(int bonus) {
-	if(!targets) {
+	if(!records) {
 		script_fail = true;
 		script_stop();
 		return;
@@ -2422,20 +2416,22 @@ static void for_each_opponent(int bonus) {
 	pushvalue push(opponent);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
-	variants commands; commands.set(script_begin, script_end - script_begin);
-	creaturea source(targets);
+	pushscript commands;
+	collectiona source(records);
 	for(auto p : source) {
-		opponent = p;
-		auto pt = p->getposition();
+		opponent = (creature*)p;
+		auto pt = opponent->getposition();
 		last_rect = pt.rectangle();
 		last_index = pt;
-		script_run(commands);
+		commands.restore();
+		script_run_proc();
 	}
-	script_stop();
+	records = source;
+	commands.stop();
 }
 
 static void for_each_creature(int bonus) {
-	if(!targets) {
+	if(!records) {
 		script_fail = true;
 		script_stop();
 		return;
@@ -2443,14 +2439,15 @@ static void for_each_creature(int bonus) {
 	pushvalue push(player);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
-	variants commands; commands.set(script_begin, script_end - script_begin);
-	creaturea source(targets);
+	pushscript commands;
+	collectiona source(records);
 	for(auto p : source) {
-		player = p;
-		auto pt = p->getposition();
-		last_rect = {pt.x, pt.y, pt.x, pt.y};
+		player = (creature*)p;
+		auto pt = player->getposition();
+		last_rect = pt.rectangle();
 		last_index = pt;
-		script_run(commands);
+		commands.restore();
+		script_run_proc();
 	}
 	script_stop();
 }
@@ -2609,8 +2606,6 @@ static void choose_limit(int counter) {
 	counter = script_count(counter, 1);
 	if(counter <= 0)
 		return;
-	if(targets.getcount() > (size_t)counter)
-		targets.count = counter;
 	if(records.getcount() > (size_t)counter)
 		records.count = counter;
 	if(indecies.getcount() > (size_t)counter)
@@ -2620,12 +2615,7 @@ static void choose_limit(int counter) {
 static bool choose_specific_target() {
 	if(!specific_target)
 		return false;
-	auto i = targets.find(specific_target);
-	if(i != -1) {
-		iswap(targets.data[0], targets.data[i]);
-		return true;
-	}
-	i = records.find(specific_target);
+	auto i = records.find(specific_target);
 	if(i != -1) {
 		iswap(records.data[0], records.data[i]);
 		return true;
@@ -2645,8 +2635,6 @@ static void choose_target(int bonus) {
 static void choose_random(int bonus) {
 	if(records)
 		records.shuffle();
-	if(targets)
-		targets.shuffle();
 	if(indecies)
 		indecies.shuffle();
 	choose_limit(bonus);
@@ -2846,7 +2834,7 @@ static void use_craft(int bonus) {
 	add_item(craft_item(pi, magic));
 }
 
-static bool is_trade_items(int bonus) {
+static bool if_trade() {
 	auto room = player->getroom();
 	if(!room)
 		return false;
@@ -3043,6 +3031,10 @@ static void set_broken(int bonus) {
 	last_item->setborken(bonus);
 }
 
+BSDATA(conditioni) = {
+	{"IfTrade", if_trade},
+};
+BSDATAF(conditioni)
 BSDATA(triggerni) = {
 	{"WhenCreatureP1EnterSiteP2"},
 	{"WhenCreatureP1Dead"},

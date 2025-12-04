@@ -15,6 +15,7 @@ struct siteskilli : nameable {
 	const char*		keyid;
 	variant			tool;
 	bool			isusable() const;
+	static bool		isusable(const void* p) { return ((siteskilli*)p)->isusable(); }
 	bool			ishotkeypresent() const;
 	void			usetool();
 };
