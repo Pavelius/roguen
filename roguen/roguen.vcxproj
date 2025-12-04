@@ -276,7 +276,6 @@
     <ClInclude Include="craft.h" />
     <ClInclude Include="feat.h" />
     <ClInclude Include="feature.h" />
-    <ClInclude Include="filter.h" />
     <ClInclude Include="framerange.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="functor.h" />

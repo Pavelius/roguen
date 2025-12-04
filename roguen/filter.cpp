@@ -101,10 +101,10 @@ static bool filter_identified(const void* object) {
 	return p->isidentified();
 }
 
-static bool filter_undead(const void* object) {
-	auto p = (creature*)object;
-	return p->is(Undead);
-}
+//static bool filter_undead(const void* object) {
+//	auto p = (creature*)object;
+//	return p->is(Undead);
+//}
 
 static bool filter_animal(const void* object) {
 	if(bsdata<creature>::have(object)) {
@@ -281,7 +281,6 @@ BSDATA(filteri) = {
 	{"FilterRoomMarked", filter_room_marked},
 	{"FilterThisRoom", filter_this_room},
 	{"FilterUnaware", filter_unaware},
-	{"FilterUndead", filter_undead},
 	{"FilterWounded", filter_wounded},
 	{"IfClose", if_close},
 	{"IfHuman", if_human},

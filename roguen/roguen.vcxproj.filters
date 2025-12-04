@@ -569,9 +569,6 @@
     <ClInclude Include="magic.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="filter.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="spell.h">
       <Filter>Logic</Filter>
     </ClInclude>

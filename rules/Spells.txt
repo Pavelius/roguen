@@ -8,11 +8,11 @@ BurningHands mana(5)
 CureWounds mana(10)
  use SelectAllies IfClose FilterWounded ChooseTarget ForEachCreature Heal+5
 CharmPerson mana(20) counterspell(RemoveCharm)
- use SelectNotEnemies FilterUndead-1 FilterMindless-1 FilterCharmed-1 ChooseTarget ForEachOpponent CharmOpponent
+ use SelectNotEnemies Undead-1 FilterMindless-1 FilterCharmed-1 ChooseTarget ForEachOpponent CharmOpponent
 Entaglement mana(6)
  use SelectEnemies FilterFeature-1 ChooseTarget ForEachCreature ThornBush
 HorrorScare mana(10)
- use SelectAllies-1 FilterUndead-1 FilterMindless-1 ForEachOpponent RollHorror
+ use SelectAllies-1 Undead-1 FilterMindless-1 ForEachOpponent RollHorror
 IceSpear mana(6)
  use SelectEnemies ChooseLimit+1 ForEachCreature ColdHarm+5
 Gate mana(40) adventure(1)
