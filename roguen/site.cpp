@@ -6,7 +6,6 @@
 #include "site.h"
 #include "speech.h"
 
-rooma rooms;
 roomi* last_room;
 
 void areaheadi::clear() {

@@ -1,5 +1,6 @@
 #include "list.h"
 #include "math.h"
+#include "filter.h"
 #include "querry.h"
 #include "script.h"
 #include "variant.h"
@@ -17,6 +18,9 @@ bool querry_allow(const void* object) {
 		auto keep = v.counter >= 0;
 		if(v.iskind<listi>()) {
 			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) == keep)
+				return true;
+		} else if(v.iskind<filteri>()) {
+			if(bsdata<filteri>::elements[v.value].proc(object) == keep)
 				return true;
 		} else {
 			auto pf = bsdata<varianti>::elements[v.type].pfilter;
@@ -38,6 +42,9 @@ bool querry_allow_all(const void* object) {
 		auto keep = v.counter >= 0;
 		if(v.iskind<listi>()) {
 			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) != keep)
+				return false;
+		} else if(v.iskind<filteri>()) {
+			if(bsdata<filteri>::elements[v.value].proc(object) != keep)
 				return false;
 		} else {
 			auto pf = bsdata<varianti>::elements[v.type].pfilter;
@@ -61,6 +68,8 @@ void querry_filter() {
 			records.match(querry_allow, v.counter >= 0);
 		} else if(v.iskind<querryi>())
 			bsdata<querryi>::elements[v.value].proc(); // Grouping data (other querry overlaps)
+		else if(v.iskind<filteri>())
+			records.match(bsdata<filteri>::elements[v.value].proc, v.counter >= 0);
 		else {
 			auto pf = bsdata<varianti>::elements[v.type].pfilter;
 			if(pf)
@@ -83,13 +92,11 @@ bool querry_nobody() {
 }
 
 template<> void fiscript<querryi>(int value, int counter) {
-	auto& e = bsdata<querryi>::elements[value];
-	e.proc();
-	if(!e.condition())
+	bsdata<querryi>::elements[value].proc();
+	if(!bsdata<querryi>::elements[value].condition())
 		script_stop();
 }
 template<> bool fitest<querryi>(int value, int counter) {
-	auto& e = bsdata<querryi>::elements[value];
-	e.proc();
-	return e.condition();
+	bsdata<querryi>::elements[value].proc();
+	return bsdata<querryi>::elements[value].condition();
 }

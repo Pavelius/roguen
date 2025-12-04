@@ -14,7 +14,6 @@
 #include "variant.h"
 
 static void clear_all_collections() {
-	rooms.clear();
 	targets.clear();
 	indecies.clear();
 	records.clear();
@@ -120,10 +119,6 @@ static bool filter_animal(const void* object) {
 
 static void match_targets(fnvisible proc, int counter) {
 	targets.match(proc, counter >= 0);
-}
-
-static void match_rooms(fnvisible proc, int counter) {
-	rooms.match(proc, counter >= 0);
 }
 
 static void select_allies() {

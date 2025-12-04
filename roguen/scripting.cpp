@@ -1346,7 +1346,6 @@ static void* choose_answers() {
 
 static bool have_targets() {
 	return targets.getcount() != 0
-		|| rooms.getcount() != 0
 		|| records.getcount() != 0
 		|| indecies.getcount() != 0;
 }
@@ -1355,7 +1354,6 @@ bool apply_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	records.clear();
-	rooms.clear();
 	targets.clear();
 	script_run(conditions);
 	return have_targets();
@@ -1365,7 +1363,6 @@ bool allow_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	indecies.clear();
 	records.clear();
-	rooms.clear();
 	targets.clear();
 	return script_allow(conditions);
 }
@@ -1393,7 +1390,6 @@ static bool choose_indecies(creaturea& source, const char* header, int offset) {
 
 static int get_target_count() {
 	return targets.getcount()
-		+ rooms.getcount()
 		+ records.getcount()
 		+ indecies.getcount();
 }
@@ -1541,6 +1537,14 @@ static bool is_item(const void* object) {
 	return false;
 }
 
+static bool is_room(const void* object) {
+	if(area) {
+		if(area->rooms.have(object))
+			return true;
+	}
+	return false;
+}
+
 static bool choose_target_interactive(const char* id) {
 	if(!id)
 		return true;
@@ -1552,13 +1556,12 @@ static bool choose_target_interactive(const char* id) {
 		if(!choose_indecies(targets, pn, 0))
 			return false;
 	}
-	if(rooms.getcount() > 1) {
-		if(!rooms.choose(roomi::getname, pn, getnm("Cancel")))
-			return false;
-	}
 	if(records.getcount() > 1) {
 		if(is_item(records.data[0])) {
 			if(!choose_items(records, pn, getnm("Cancel")))
+				return false;
+		} else if(is_room(records.data[0])) {
+			if(!records.choose(roomi::getname, pn, getnm("Cancel")))
 				return false;
 		}
 	}
@@ -2470,8 +2473,8 @@ static void for_each_creature(int bonus) {
 }
 
 static void for_each_item(int bonus) {
-	pushvalue push(last_item);
 	pushscript commands;
+	pushvalue push(last_item);
 	collectiona source(records);
 	for(auto p : source.records<item*>()) {
 		last_item = p;
@@ -2512,30 +2515,25 @@ static void for_each_feature(int bonus) {
 	indecies = push_source;
 }
 
-static bool is_room(int bonus) {
-	script_stop();
-	return rooms.getcount() > 0;
-}
-
 static void for_each_room(int bonus) {
-	if(!rooms) {
+	if(!records) {
 		script_fail = true;
 		script_stop();
 		return;
 	}
-	rooma push_source(rooms);
+	pushscript commands;
 	pushvalue push(last_room);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
-	variants commands; commands.set(script_begin, script_end - script_begin);
-	for(auto p : rooms) {
+	collectiona source(records);
+	for(auto p : source.records<roomi*>()) {
 		last_room = p;
 		last_rect = p->rc;
 		last_index = center(last_rect);
-		script_run(commands);
+		commands.restore();
+		script_run_proc();
 	}
 	script_stop();
-	rooms = push_source;
 }
 
 static void gain_coins(int bonus) {
@@ -2632,8 +2630,6 @@ static void choose_limit(int counter) {
 		targets.count = counter;
 	if(records.getcount() > (size_t)counter)
 		records.count = counter;
-	if(rooms.getcount() > (size_t)counter)
-		rooms.count = counter;
 	if(indecies.getcount() > (size_t)counter)
 		indecies.count = counter;
 }
@@ -2644,11 +2640,6 @@ static bool choose_specific_target() {
 	auto i = targets.find(specific_target);
 	if(i != -1) {
 		iswap(targets.data[0], targets.data[i]);
-		return true;
-	}
-	i = rooms.find(specific_target);
-	if(i != -1) {
-		iswap(rooms.data[0], rooms.data[i]);
 		return true;
 	}
 	i = records.find(specific_target);
@@ -2671,8 +2662,6 @@ static void choose_target(int bonus) {
 static void choose_random(int bonus) {
 	if(records)
 		records.shuffle();
-	if(rooms)
-		rooms.shuffle();
 	if(targets)
 		targets.shuffle();
 	if(indecies)
@@ -3121,7 +3110,7 @@ BSDATA(script) = {
 	{"ForEachFeature", for_each_feature, is_features},
 	{"ForEachItem", for_each_item, is_items},
 	{"ForEachOpponent", for_each_opponent, is_targets},
-	{"ForEachRoom", for_each_room, is_room},
+	{"ForEachRoom", for_each_room},
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
 	{"GenerateBuilding", generate_building},

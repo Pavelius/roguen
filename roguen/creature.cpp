@@ -1930,10 +1930,10 @@ bool creature::speechrumor() const {
 }
 
 bool creature::speechlocation() const {
-	rooma source;
-	source.collectiona::select(area->rooms, fntis<roomi, &roomi::isnotable>);
+	collectiona source;
+	source.select(area->rooms, fntis<roomi, &roomi::isnotable>);
 	source.match(fntis<roomi, &roomi::isexplored>, false);
-	auto p = source.random();
+	auto p = (roomi*)source.random();
 	if(!p)
 		return false;
 	char temp[1024]; stringbuilder sb(temp);

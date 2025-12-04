@@ -191,7 +191,7 @@ BSDATA(varianti) = {
 	{"Quest", VAR(quest), 0},
 	{"Race", VAR(racei), 1, 0, fiscript<racei>},
 	{"RandomTable", VAR(randomizeri), 1, 0, fiscript<randomizeri>},
-	{"Script", VAR(script), 1, 0, fiscript<script>, fitest<script>},
+	{"Script", VAR(script), 1, 0, fiscript<script>},
 	{"Shape", VAR(shapei), 1, 0, fiscript<shapei>, 0, shapei::read},
 	{"Site", VAR(sitei), 1, 0, fiscript<sitei>},
 	{"SiteSkill", VAR(siteskilli), 1, 0, 0, 0, 0, check_site_skills},

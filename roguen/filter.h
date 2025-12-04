@@ -1,7 +1,8 @@
 #pragma once
 
-#include "collection.h"
 #include "nameable.h"
+
+typedef bool(*fnvisible)(const void* object);
 
 struct filteri : nameable {
 	fnvisible proc;

@@ -65,21 +65,21 @@ bool script_stopped() {
 	return script_begin == script_end;
 }
 
-bool script_allow(variant v) {
-	auto proc = bsdata<varianti>::elements[v.type].ptest;
-	if(proc)
-		return proc(v.value, v.counter);
+static bool script_allow() {
+	while(script_begin < script_end) {
+		auto v = *script_begin++;
+		auto proc = bsdata<varianti>::elements[v.type].ptest;
+		if(!proc)
+			break;
+		if(!proc(v.value, v.counter))
+			return false;
+	}
 	return true;
 }
 
 bool script_allow(const variants& elements) {
-	pushvalue push_begin(script_begin, elements.begin());
-	pushvalue push_end(script_end, elements.end());
-	while(script_begin < script_end) {
-		if(!script_allow(*script_begin++))
-			return false;
-	}
-	return true;
+	pushscript push(elements);
+	return script_allow();
 }
 
 void script_run(variant v, int bonus) {

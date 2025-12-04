@@ -67,8 +67,6 @@ public:
 	void			set(const sitei* p) { bsset(site_id, p); }
 };
 extern roomi* last_room;
-typedef collection<roomi> rooma;
-extern rooma rooms;
 
 roomi* add_room();
 roomi* find_room(point pt);

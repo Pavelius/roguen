@@ -219,13 +219,13 @@ static void monsters_spawning() {
 	auto player = game.getowner();
 	if(!player)
 		return;
-	rooma rooms;
+	collectiona rooms;
 	for(auto& e : area->rooms) {
 		if(player->getposition().in(e.rc))
 			continue;
 		rooms.add(&e);
 	}
-	auto room = rooms.random();
+	auto room = (roomi*)rooms.random();
 	if(!room)
 		return;
 }
