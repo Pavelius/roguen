@@ -1,6 +1,5 @@
 #include "areapiece.h"
 #include "creature.h"
-#include "filter.h"
 #include "indexa.h"
 #include "itema.h"
 #include "math.h"

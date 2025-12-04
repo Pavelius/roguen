@@ -34,12 +34,6 @@ static void copy(statable& v1, const statable& v2) {
 	v1 = v2;
 }
 
-static int get_counter(int counter) {
-	if(counter > 100)
-		return xrand(1, counter - 100);
-	return counter;
-}
-
 static int get_experience_reward(creature* p) {
 	static int levels[] = {15, 35, 65, 120, 175, 270, 420, 650, 975, 1400, 2000, 3000};
 	auto r = p->get(Level);
@@ -1234,8 +1228,8 @@ static void apply_pierce(int& armor, int pierce) {
 }
 
 static void make_attack(item& weapon, int attack_skill, int damage_percent) {
-	auto enemy_name = opponent->getname();
-	auto attacker_name = player->getname();
+//	auto enemy_name = opponent->getname();
+//	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto weapon_damage = (int)weapon.geti().weapon.damage;
 	auto damage = weapon_damage;

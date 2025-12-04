@@ -30,7 +30,11 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++17" />
 		</Compiler>
+		<Linker>
+			<Add option="-static" />
+		</Linker>
 		<Unit filename="roguen/ability.cpp" />
 		<Unit filename="roguen/ability.h" />
 		<Unit filename="roguen/actable.cpp" />
@@ -68,6 +72,8 @@
 		<Unit filename="roguen/color.cpp" />
 		<Unit filename="roguen/color.h" />
 		<Unit filename="roguen/colori.h" />
+		<Unit filename="roguen/condition.cpp" />
+		<Unit filename="roguen/condition.h" />
 		<Unit filename="roguen/cpp.hint" />
 		<Unit filename="roguen/craft.cpp" />
 		<Unit filename="roguen/craft.h" />
@@ -87,7 +93,6 @@
 		<Unit filename="roguen/draw.cpp" />
 		<Unit filename="roguen/draw.h" />
 		<Unit filename="roguen/draw_answers.cpp" />
-		<Unit filename="roguen/draw_form.cpp" />
 		<Unit filename="roguen/draw_manual.cpp" />
 		<Unit filename="roguen/draw_message.cpp" />
 		<Unit filename="roguen/draw_object.cpp" />
@@ -103,7 +108,6 @@
 		<Unit filename="roguen/filter.cpp" />
 		<Unit filename="roguen/filter.h" />
 		<Unit filename="roguen/flagable.h" />
-		<Unit filename="roguen/font_util_old.cpp" />
 		<Unit filename="roguen/framerange.h" />
 		<Unit filename="roguen/functor.h" />
 		<Unit filename="roguen/game.cpp" />
@@ -204,7 +208,6 @@
 		<Unit filename="roguen/spell.h" />
 		<Unit filename="roguen/stringbuilder.cpp" />
 		<Unit filename="roguen/stringbuilder.h" />
-		<Unit filename="roguen/stringbuilder_old.cpp" />
 		<Unit filename="roguen/surface_serial.cpp" />
 		<Unit filename="roguen/szdup.cpp" />
 		<Unit filename="roguen/talk.cpp" />

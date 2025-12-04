@@ -7,7 +7,7 @@ struct boosti {
 	variant		effect;
 	unsigned	stamp;
 	constexpr explicit operator bool() const { return parent.operator bool(); }
-	void		clear() { memset(this, 0, sizeof(*this)); }
+	void		clear() { memset((void*)this, 0, sizeof(*this)); }
 };
 
 void add_boost(variant parent, variant effect, unsigned stop_time);

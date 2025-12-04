@@ -120,11 +120,11 @@ static void all_features(triggern type) {
 	}
 }
 
-static bool isfreelt(point m) {
-	if(area->is(m, Darkened))
-		return false;
-	return area->isfree(m);
-}
+//static bool isfreelt(point m) {
+//	if(area->is(m, Darkened))
+//		return false;
+//	return area->isfree(m);
+//}
 
 bool isfreeltsv(point m) {
 	area->setflag(m, Visible);

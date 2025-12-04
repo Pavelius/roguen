@@ -1,6 +1,5 @@
 #include "list.h"
 #include "math.h"
-#include "filter.h"
 #include "querry.h"
 #include "script.h"
 #include "variant.h"

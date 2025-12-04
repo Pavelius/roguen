@@ -6,7 +6,7 @@
 1764142320 /home/user-331/projects/roguen/roguen/anymap.h
 	"point.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/point.h
+1764833294 /home/user-331/projects/roguen/roguen/point.h
 	"rect.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/rect.h
@@ -14,7 +14,7 @@
 1764142320 /home/user-331/projects/roguen/roguen/direction.h
 	"point.h"
 
-1764674552 source:/home/user-331/projects/roguen/roguen/ability.cpp
+1764833950 source:/home/user-331/projects/roguen/roguen/ability.cpp
 	"ability.h"
 	"bsdata.h"
 
@@ -26,7 +26,7 @@
 1764142320 /home/user-331/projects/roguen/roguen/bsdata.h
 	"array.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/array.h
+1764833194 /home/user-331/projects/roguen/roguen/array.h
 	"slice.h"
 
 1764674552 /home/user-331/projects/roguen/roguen/slice.h
@@ -57,7 +57,7 @@
 1764142320 /home/user-331/projects/roguen/roguen/advancement.h
 	"variant.h"
 
-1764745581 /home/user-331/projects/roguen/roguen/variant.h
+1764833259 /home/user-331/projects/roguen/roguen/variant.h
 	"sliceu.h"
 	"stringbuilder.h"
 
@@ -71,7 +71,7 @@
 	"adat.h"
 	"stringbuilder.h"
 
-1764745634 /home/user-331/projects/roguen/roguen/adat.h
+1764833102 /home/user-331/projects/roguen/roguen/adat.h
 	"slice.h"
 
 1764142320 /home/user-331/projects/roguen/roguen/areaf.h
@@ -123,7 +123,7 @@
 	"point.h"
 	"variant.h"
 
-1764745581 /home/user-331/projects/roguen/roguen/site.h
+1764833102 /home/user-331/projects/roguen/roguen/site.h
 	"collection.h"
 	"color.h"
 	"geoposition.h"
@@ -133,7 +133,7 @@
 	"shape.h"
 	"variant.h"
 
-1764745581 /home/user-331/projects/roguen/roguen/collection.h
+1764833102 /home/user-331/projects/roguen/roguen/collection.h
 	"adat.h"
 	"bsdata.h"
 
@@ -242,7 +242,7 @@
 1764142320 source:/home/user-331/projects/roguen/roguen/boost.cpp
 	"boost.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/boost.h
+1764833351 /home/user-331/projects/roguen/roguen/boost.h
 	"variant.h"
 
 1764142320 source:/home/user-331/projects/roguen/roguen/bsreq.cpp
@@ -278,7 +278,7 @@
 	"craft.h"
 	"script.h"
 
-1764746307 /home/user-331/projects/roguen/roguen/script.h
+1764833102 /home/user-331/projects/roguen/roguen/script.h
 	"variant.h"
 
 1764142320 source:/home/user-331/projects/roguen/roguen/creature_talk.cpp
@@ -288,7 +288,7 @@
 	"script.h"
 	"talk.h"
 
-1764142320 /home/user-331/projects/roguen/roguen/talk.h
+1764833407 /home/user-331/projects/roguen/roguen/talk.h
 	"nameable.h"
 	"flagable.h"
 	"variant.h"
@@ -371,4 +371,428 @@
 
 1764142320 source:/home/user-331/projects/roguen/roguen/draw_theme.cpp
 	"draw.h"
+
+1764674552 source:/home/user-331/projects/roguen/roguen/feat.cpp
+	"bsdata.h"
+	"feat.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/feature.cpp
+	"bsreq.h"
+	"feature.h"
+
+1764834185 source:/home/user-331/projects/roguen/roguen/filter.cpp
+	"areapiece.h"
+	"creature.h"
+	"indexa.h"
+	"itema.h"
+	"math.h"
+	"markuse.h"
+	"pushvalue.h"
+	"querry.h"
+	"race.h"
+	"site.h"
+	"siteskill.h"
+	"script.h"
+	"variant.h"
+
+1764834160 /home/user-331/projects/roguen/roguen/filter.h
+	"nameable.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/indexa.h
+	"areaf.h"
+	"point.h"
+
+1764745581 /home/user-331/projects/roguen/roguen/itema.h
+	"collection.h"
+	"item.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/markuse.h
+	"point.h"
+	"variant.h"
+
+1764834150 /home/user-331/projects/roguen/roguen/querry.h
+	"collection.h"
+	"nameable.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/race.h
+	"nameable.h"
+
+1764674552 /home/user-331/projects/roguen/roguen/siteskill.h
+	"collection.h"
+	"nameable.h"
+	"variant.h"
+
+1764745581 source:/home/user-331/projects/roguen/roguen/global.cpp
+	"archive.h"
+	"global.h"
+	"script.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/global.h
+	"nameable.h"
+	"variant.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/global_req.cpp
+	"bsreq.h"
+	"global.h"
+
+1764833448 source:/home/user-331/projects/roguen/roguen/game.cpp
+	"areapiece.h"
+	"boost.h"
+	"greatneed.h"
+	"global.h"
+	"game.h"
+	"pushvalue.h"
+	"rand.h"
+	"script.h"
+	"trigger.h"
+	"triggern.h"
+	"creature.h"
+	"zcopy.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/greatneed.h
+	"dice.h"
+	"nameable.h"
+	"variant.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/game.h
+	"direction.h"
+	"feature.h"
+	"geoposition.h"
+	"ownerable.h"
+	"timemanage.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/trigger.h
+	"nameable.h"
+	"variant.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/triggern.h
+
+1764142320 /home/user-331/projects/roguen/roguen/zcopy.h
+
+1764142320 source:/home/user-331/projects/roguen/roguen/greatneed.cpp
+	"bsreq.h"
+	"greatneed.h"
+	"log.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/hotkey.cpp
+	"bsreq.h"
+	"draw.h"
+	"hotkey.h"
+	"keyname.h"
+	"log.h"
+	"script.h"
+	"stringbuilder.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/hotkey.h
+	"variant.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/keyname.h
+
+1764142320 source:/home/user-331/projects/roguen/roguen/indexa.cpp
+	"areaf.h"
+	"areapiece.h"
+	"indexa.h"
+	"rand.h"
+
+1764674552 source:/home/user-331/projects/roguen/roguen/information.cpp
+	"areapiece.h"
+	"creature.h"
+	"game.h"
+	"greatneed.h"
+	"race.h"
+	"site.h"
+	"textscript.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/interface.cpp
+	"answers.h"
+	"areapiece.h"
+	"bsreq.h"
+	"draw.h"
+	"draw_object.h"
+	"game.h"
+	"hotkey.h"
+	"keyname.h"
+	"indexa.h"
+	"io_stream.h"
+	"listcolumn.h"
+	"log.h"
+	"creature.h"
+	"pushvalue.h"
+	"race.h"
+	"resource.h"
+	"resid.h"
+	"script.h"
+	"screenshoot.h"
+	"siteskill.h"
+	"shortcut.h"
+	"textscript.h"
+	"timer.h"
+	"visualeffect.h"
+	"widget.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/listcolumn.h
+	"stringbuilder.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/resource.h
+
+1764142320 /home/user-331/projects/roguen/roguen/resid.h
+
+1764142320 /home/user-331/projects/roguen/roguen/visualeffect.h
+	"nameable.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/widget.h
+
+1764142320 source:/home/user-331/projects/roguen/roguen/io_bsreq.cpp
+	"bsreq.h"
+	"log.h"
+	"logvalue.h"
+	"pushvalue.h"
+	"stringbuilder.h"
+	"variant.h"
+
+1764833604 /home/user-331/projects/roguen/roguen/logvalue.h
+	"variant.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/io_memory.cpp
+	"io_memory.h"
+	"slice.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/io_memory.h
+	"io_stream.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/io_stream.cpp
+	"io_stream.h"
+	"stringbuilder.h"
+	"slice.h"
+
+1764674552 source:/home/user-331/projects/roguen/roguen/item.cpp
+	"areapiece.h"
+	"math.h"
+	"item.h"
+	"magic.h"
+	"rand.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/itema.cpp
+	"areapiece.h"
+	"itema.h"
+	"creature.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/keyname.cpp
+	"draw.h"
+
+1764745581 source:/home/user-331/projects/roguen/roguen/list.cpp
+	"bsreq.h"
+	"list.h"
+	"rand.h"
+	"script.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/listcolumn.cpp
+	"listcolumn.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/locale.cpp
+	"array.h"
+	"io_stream.h"
+	"log.h"
+	"stringbuilder.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/log.cpp
+	"io_stream.h"
+	"log.h"
+	"slice.h"
+	"stringbuilder.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/logvalue.cpp
+	"logvalue.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/magic.cpp
+	"bsdata.h"
+	"magic.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/markuse.cpp
+	"markuse.h"
+
+1764834189 source:/home/user-331/projects/roguen/roguen/metadata.cpp
+	"areapiece.h"
+	"bsreq.h"
+	"craft.h"
+	"hotkey.h"
+	"global.h"
+	"greatneed.h"
+	"charname.h"
+	"creature.h"
+	"modifier.h"
+	"querry.h"
+	"race.h"
+	"script.h"
+	"siteskill.h"
+	"speech.h"
+	"talk.h"
+	"trigger.h"
+	"visualeffect.h"
+	"widget.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/modifier.h
+
+1764142320 /home/user-331/projects/roguen/roguen/speech.h
+
+1764142320 source:/home/user-331/projects/roguen/roguen/modifier.cpp
+	"modifier.h"
+	"script.h"
+
+1764674552 source:/home/user-331/projects/roguen/roguen/monster.cpp
+	"monster.h"
+	"item.h"
+	"log.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/nameable.cpp
+	"nameable.h"
+	"stringbuilder.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/ownerable.cpp
+	"bsdata.h"
+	"ownerable.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/paramable.cpp
+	"paramable.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/paramable.h
+	"nameable.h"
+	"variant.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/png.cpp
+	"draw.h"
+	"slice.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/point.cpp
+	"math.h"
+	"point.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/price.cpp
+	"bsreq.h"
+	"price.h"
+
+1764142320 /home/user-331/projects/roguen/roguen/price.h
+	"nameable.h"
+
+1764834198 source:/home/user-331/projects/roguen/roguen/querry.cpp
+	"list.h"
+	"math.h"
+	"querry.h"
+	"script.h"
+	"variant.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/quest.cpp
+	"bsreq.h"
+	"collection.h"
+	"quest.h"
+	"rand.h"
+	"monster.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/race.cpp
+	"bsreq.h"
+	"race.h"
+
+1764833768 source:/home/user-331/projects/roguen/roguen/moveable.cpp
+	"ability.h"
+	"areaf.h"
+	"areapiece.h"
+	"direction.h"
+	"draw.h"
+	"draw_object.h"
+	"moveable.h"
+	"screenshoot.h"
+	"visualeffect.h"
+
+1764745581 source:/home/user-331/projects/roguen/roguen/randomizer.cpp
+	"bsreq.h"
+	"list.h"
+	"rand.h"
+	"randomizer.h"
+	"script.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/resource.cpp
+	"bsdata.h"
+	"resid.h"
+	"resource.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/resource_static.cpp
+	"bsdata.h"
+	"draw.h"
+	"io_stream.h"
+	"resource.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/scale2x.cpp
+
+1764142320 source:/home/user-331/projects/roguen/roguen/screenshoot.cpp
+	"timer.h"
+
+1764833102 source:/home/user-331/projects/roguen/roguen/script.cpp
+	"bsreq.h"
+	"pushvalue.h"
+	"rand.h"
+	"script.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/serial.cpp
+	"archive.h"
+	"areapiece.h"
+	"boost.h"
+	"draw.h"
+	"draw_object.h"
+	"game.h"
+	"greatneed.h"
+	"creature.h"
+	"io_memory.h"
+	"textscript.h"
+
+1764833102 source:/home/user-331/projects/roguen/roguen/site.cpp
+	"areaf.h"
+	"areapiece.h"
+	"creature.h"
+	"game.h"
+	"modifier.h"
+	"site.h"
+	"speech.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/siteskill.cpp
+	"ability.h"
+	"areapiece.h"
+	"bsreq.h"
+	"creature.h"
+	"feature.h"
+	"game.h"
+	"hotkey.h"
+	"indexa.h"
+	"pushvalue.h"
+	"script.h"
+	"siteskill.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/speech.cpp
+	"bsreq.h"
+	"log.h"
+	"nameable.h"
+	"rand.h"
+	"speech.h"
+	"stringbuilder.h"
+
+1764674552 source:/home/user-331/projects/roguen/roguen/spell.cpp
+	"boost.h"
+	"listcolumn.h"
+	"pushvalue.h"
+	"spell.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/stringbuilder.cpp
+	"stringbuilder.h"
+	"slice.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/surface_serial.cpp
+	"draw.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/szdup.cpp
+	"stringbuilder.h"
+
+1764142320 source:/home/user-331/projects/roguen/roguen/talk.cpp
+	"io_stream.h"
+	"log.h"
+	"script.h"
+	"talk.h"
 

@@ -45,7 +45,7 @@ static void paint_color_text() {
 
 static void paint_color_number() {
 	char temp[32]; stringbuilder sb(temp);
-	sb.add("%1i", (int)last_object->data);
+	sb.add("%1i", (long)last_object->data);
 	paint_color_text(temp, (color_s)last_object->param);
 }
 

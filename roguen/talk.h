@@ -10,7 +10,7 @@ struct phrasei {
 	short			index, next;
 	variants		elements;
 	const char*		text;
-	void			clear() { memset(this, 0, sizeof(*this)); }
+	void			clear() { memset((void*)this, 0, sizeof(*this)); }
 	const phrasei*	nextanswer() const;
 	bool			isanswer() const { return next != -1; }
 };
@@ -18,7 +18,7 @@ extern const phrasei* last_phrase;
 struct talki : nameable {
 	sliceu<phrasei>	elements;
 	flagable<16>	visited;
-	void			clear() { memset(this, 0, sizeof(*this)); }
+	void			clear() { memset((void*)this, 0, sizeof(*this)); }
 	bool			isvisited(short v) const { return visited.is(v); }
 	phrasei*		find(short v) const;
 	void			setvisit(short v) { visited.set(v); }

@@ -1,7 +1,6 @@
 #include "areapiece.h"
 #include "bsreq.h"
 #include "craft.h"
-#include "filter.h"
 #include "hotkey.h"
 #include "global.h"
 #include "greatneed.h"

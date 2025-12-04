@@ -5,11 +5,17 @@
 
 typedef void(*fnevent)();
 typedef bool(*fncondition)();
+typedef bool(*fnvisible)(const void* object);
+
+struct filteri : nameable {
+	fnvisible proc;
+};
 
 struct querryi : nameable {
 	fnevent	proc;
 	fncondition condition;
 };
+
 extern collectiona records;
 
 bool querry_allow(const void* object);

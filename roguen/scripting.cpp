@@ -3,7 +3,6 @@
 #include "creature.h"
 #include "draw.h"
 #include "draw_object.h"
-#include "filter.h"
 #include "functor.h"
 #include "hotkey.h"
 #include "game.h"
