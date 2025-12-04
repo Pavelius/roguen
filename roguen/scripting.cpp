@@ -1423,11 +1423,6 @@ static featurei* herbs_base(featurei* p) {
 	return p;
 }
 
-static bool empthy_next_condition(int bonus) {
-	next_script();
-	return true;
-}
-
 static bool iskind(variant v, const char* id) {
 	auto pi = bsdata<listi>::find(id);
 	if(pi)
@@ -2420,16 +2415,6 @@ static void cold_harm(int bonus) {
 	damage_backpack_item(Potion, 20);
 }
 
-static bool is_full(int bonus) {
-	script_stop();
-	return have_targets();
-}
-
-static bool is_targets(int bonus) {
-	script_stop();
-	return targets.getcount() > 0;
-}
-
 static void for_each_opponent(int bonus) {
 	if(!targets) {
 		script_fail = true;
@@ -3079,16 +3064,16 @@ BSDATA(script) = {
 	{"AddReputation", add_reputation},
 	{"AddMana", add_mana},
 	{"ApplyAction", apply_action},
-	{"AnimalInt", empthy_script, is_animal},
+	{"AnimalInt", empthy_script},
 	{"Anger", add_anger},
 	{"CastSpell", cast_spell},
 	{"CastLastSpell", cast_last_spell},
 	{"Chance", random_chance},
 	{"CharmOpponent", charm_opponent},
 	{"Chatting", chatting},
-	{"ChooseTarget", choose_target, is_full},
-	{"ChooseRandom", choose_random, is_full},
-	{"ChooseLimit", choose_limit, is_full},
+	{"ChooseTarget", choose_target},
+	{"ChooseRandom", choose_random},
+	{"ChooseLimit", choose_limit},
 	{"ColdHarm", cold_harm},
 	{"CreateHero", create_hero},
 	{"CurseItem", curse_item},
@@ -3097,19 +3082,19 @@ BSDATA(script) = {
 	{"DebugMessage", debug_message},
 	{"DestroyFeature", destroy_feature},
 	{"DestroyWall", destroy_wall},
-	{"DetectItems", detect_items, empthy_next_condition},
+	{"DetectItems", detect_items},
 	{"DropDown", drop_down},
-	{"EnchantMinutes", enchant_minutes, empthy_next_condition},
-	{"EnchantHours", enchant_hours, empthy_next_condition},
-	{"EnchantDays", enchant_days, empthy_next_condition},
+	{"EnchantMinutes", enchant_minutes},
+	{"EnchantHours", enchant_hours},
+	{"EnchantDays", enchant_days},
 	{"ExploreArea", explore_area},
 	{"ProhibitedAction", prohibited_action},
 	{"FireHarm", fire_harm},
 	{"FixAbility", fix_ability},
-	{"ForEachCreature", for_each_creature, is_targets},
-	{"ForEachFeature", for_each_feature, is_features},
-	{"ForEachItem", for_each_item, is_items},
-	{"ForEachOpponent", for_each_opponent, is_targets},
+	{"ForEachCreature", for_each_creature},
+	{"ForEachFeature", for_each_feature},
+	{"ForEachItem", for_each_item},
+	{"ForEachOpponent", for_each_opponent},
 	{"ForEachRoom", for_each_room},
 	{"GainCoins", gain_coins},
 	{"GainExperience", gain_experience},
@@ -3124,11 +3109,11 @@ BSDATA(script) = {
 	{"GenerateWalls", generate_walls},
 	{"GenerateVillage", generate_cityscape},
 	{"Harm", harm_player},
-	{"HaveNext", have_next, is_have_next},
+	{"HaveNext", have_next},
 	{"Heal", heal_player},
 	{"HealAll", heal_all},
-	{"HealPoison", heal_poison, is_heal_poison},
-	{"HealWounded", heal_wounded, is_heal_wounded},
+	{"HealPoison", heal_poison},
+	{"HealWounded", heal_wounded},
 	{"IdentifyItem", identify_item},
 	{"Inventory", inventory},
 	{"JumpToSite", jump_to_site},
@@ -3136,8 +3121,8 @@ BSDATA(script) = {
 	{"LockAllDoors", lock_all_doors},
 	{"MakeNoise", make_noise},
 	{"MakeScreenshoot", make_screenshoot},
-	{"MakeSelling", make_selling, is_trade_items},
-	{"MakeTrade", make_trade, is_trade_items},
+	{"MakeSelling", make_selling},
+	{"MakeTrade", make_trade},
 	{"MarkRoom", mark_room},
 	{"MoveDown", move_down},
 	{"MoveDownLeft", move_down_left},
@@ -3172,7 +3157,7 @@ BSDATA(script) = {
 	{"SiteWall", site_wall},
 	{"SomeCoins", some_coins},
 	{"StealOpponentCoins", steal_opponent_coins},
-	{"TransferCoins", transfer_coins, is_transfer_coins},
+	{"TransferCoins", transfer_coins},
 	{"TestArena", test_arena},
 	{"TestEnemyChange", test_enemy_change},
 	{"TestRumor", test_rumor},

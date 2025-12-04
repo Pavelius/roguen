@@ -7,9 +7,8 @@ enum modifiern : unsigned char;
 struct script {
 	typedef void(*fnrun)(int bonus);
 	typedef bool(*fitest)(int bonus);
-	const char*		id;
-	fnrun			proc;
-	fitest			test;
+	const char*	id;
+	fnrun proc;
 };
 struct modifieri {
 	const char*	id;

@@ -35,11 +35,6 @@ template<> bool fitest<modifieri>(int value, int counter) {
 	return true;
 }
 
-template<> bool fitest<script>(int value, int counter) {
-	if(bsdata<script>::elements[value].test)
-		return bsdata<script>::elements[value].test(counter);
-	return true;
-}
 template<> void fiscript<script>(int value, int counter) {
 	bsdata<script>::elements[value].proc(counter);
 }
