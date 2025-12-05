@@ -88,4 +88,4 @@ RandomTraps
 #Trigger
 
 EverySeveralDays 0 0
- effect SelectFeatures RandomHerbs ChooseRandom+106 InPosition ForEachFeature GrassHerbs
+ effect SelectAllFeatures RandomHerbs ChooseRandom+106 InPosition ForEachFeature GrassHerbs

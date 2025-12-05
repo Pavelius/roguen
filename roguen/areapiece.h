@@ -13,5 +13,5 @@ struct areapiece : areaheadi, areamap, timemanage {
 };
 extern areapiece* area;
 
-inline bool haveposition(const void* p) { return area->haveposition(p); }
+inline bool haveposition(const void* p) { return area && area->tiles.have(p); }
 inline bool haveitem(const void* p) { return area && area->items.have(p); }

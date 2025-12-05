@@ -12,8 +12,9 @@
 #include "script.h"
 #include "variant.h"
 
+typedef bool(*fnallowposition)(point v);
+
 static void clear_all_collections() {
-	indecies.clear();
 	records.clear();
 }
 
@@ -48,8 +49,13 @@ static bool if_close(const void* object) {
 }
 
 static bool filter_feature(const void* object) {
-	auto p = (creature*)object;
-	return area->features[p->getposition()] != 0;
+	if(bsdata<creature>::have(object)) {
+		auto p = (creature*)object;
+		return area->features[p->getposition()] != 0;
+	} else if(haveposition(object))
+		return area->features[area->tiles.indexof(object)] != 0;
+	else
+		return false;
 }
 
 static bool filter_room_marked(const void* object) {
@@ -101,11 +107,6 @@ static bool filter_identified(const void* object) {
 	return p->isidentified();
 }
 
-//static bool filter_undead(const void* object) {
-//	auto p = (creature*)object;
-//	return p->is(Undead);
-//}
-
 static bool filter_animal(const void* object) {
 	if(bsdata<creature>::have(object)) {
 		auto p = (creature*)object;
@@ -156,20 +157,60 @@ static void select_items(collectiona& records, creature* p) {
 	records.count = pb - records.data;
 }
 
+static void select_area(collectiona& records, fnallowposition allow, point pt) {
+	auto pb = records.data;
+	auto pe = records.endof();
+	point m;
+	for(m.y = 0; m.y < area->mps; m.y++) {
+		for(m.x = 0; m.x < area->mps; m.x++) {
+			if(!allow(m))
+				continue;
+			if(pb < pe)
+				*pb++ = area->ptr(m);
+		}
+	}
+	records.count = pb - records.data;
+}
+
+static void select_area(collectiona& records, fnallowposition allow, point pt, int range) {
+	auto pb = records.data;
+	auto pe = records.endof();
+	point m;
+	for(m.y = pt.y - range; m.y <= pt.y + range; m.y++) {
+		for(m.x = pt.x - range; m.x <= pt.x + range; m.x++) {
+			if(!area->isvalid(m))
+				continue;
+			if(!allow(m))
+				continue;
+			if(pb < pe)
+				*pb++ = area->ptr(m);
+		}
+	}
+	records.count = pb - records.data;
+}
+
+static bool match_feature(point m) {
+	return area->features[m] != 0;
+}
+
 static void select_your_items() {
 	select_items(records, player);
 }
 
 static void select_features() {
-	indecies.select(player->getposition(), true);
+	select_area(records, match_feature, player->getposition());
+}
+
+static void select_features_near() {
+	select_area(records, match_feature, player->getposition(), 3);
 }
 
 static void select_walls() {
-	indecies.select(match_wall, true, player->getposition(), 1);
+	select_area(records, match_wall, player->getposition(), 2);
 }
 
 static void select_walls_mines() {
-	indecies.select(match_wall_mines, true, player->getposition(), 1);
+	select_area(records, match_wall_mines, player->getposition(), 1);
 }
 
 static void select_rooms() {
@@ -257,7 +298,8 @@ BSDATA(querryi) = {
 	{"SelectAllies", select_allies, querry_select},
 	{"SelectCreatures", select_creatures, querry_select},
 	{"SelectEnemies", select_enemies, querry_select},
-	{"SelectFeatures", select_features, querry_select},
+	{"SelectAllFeatures", select_features, querry_select},
+	{"SelectFeatures", select_features_near, querry_select},
 	{"SelectNotEnemies", select_not_enemies, querry_select},
 	{"SelectRooms", select_rooms, querry_select},
 	{"SelectYou", select_you, querry_select},

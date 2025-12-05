@@ -50,7 +50,6 @@ const char* getlog();
 
 extern point		start_village;
 
-indexa				indecies;
 spella				allowed_spells;
 creature			*player, *opponent;
 int					last_coins;
@@ -1342,13 +1341,11 @@ static void* choose_answers() {
 }
 
 static bool have_targets() {
-	return records.getcount() != 0
-		|| indecies.getcount() != 0;
+	return records.getcount() != 0;
 }
 
 bool apply_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
-	indecies.clear();
 	records.clear();
 	script_run(conditions);
 	return have_targets();
@@ -1356,7 +1353,6 @@ bool apply_targets(const variants& conditions) {
 
 bool allow_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
-	indecies.clear();
 	records.clear();
 	return script_allow(conditions);
 }
@@ -1383,8 +1379,7 @@ static bool choose_indecies(collectiona& source, const char* header, int offset)
 }
 
 static int get_target_count() {
-	return records.getcount()
-		+ indecies.getcount();
+	return records.getcount();
 }
 
 template<> void fiscript<spelli>(int index, int value) {
@@ -1533,6 +1528,14 @@ static bool is_room(const void* object) {
 	return false;
 }
 
+static bool is_position(const void* object) {
+	if(area) {
+		if(area->tiles.have(object))
+			return true;
+	}
+	return false;
+}
+
 static bool choose_target_interactive(const char* id) {
 	if(!id)
 		return true;
@@ -1541,7 +1544,10 @@ static bool choose_target_interactive(const char* id) {
 		return true; // Get random target
 	pushvalue push_width(window_width, 300);
 	if(records.getcount() > 1) {
-		if(is_item(records.data[0])) {
+		if(is_position(records.data[0])) {
+			if(!choose_indecies(records, pn, 0))
+				return false;
+		} else if(is_item(records.data[0])) {
 			if(!choose_items(records, pn, getnm("Cancel")))
 				return false;
 		} else if(is_room(records.data[0])) {
@@ -1551,10 +1557,6 @@ static bool choose_target_interactive(const char* id) {
 			if(!choose_indecies(records, pn, 0))
 				return false;
 		}
-	}
-	if(indecies.getcount() > 1) {
-		if(!choose_indecies(indecies, pn))
-			return false;
 	}
 	return true;
 }
@@ -2468,27 +2470,25 @@ static void for_each_item(int bonus) {
 	commands.stop();
 }
 
-static bool is_features(int bonus) {
-	script_stop();
-	return indecies.getcount() > 0;
-}
-
 static bool is_items(int bonus) {
 	script_stop();
 	return records.getcount() > 0;
 }
 
 static void for_each_feature(int bonus) {
-	if(!indecies) {
+	if(!records) {
 		script_fail = true;
 		script_stop();
 		return;
 	}
-	auto push_source(indecies);
+	collectiona source(records);
 	auto push_rect = last_rect;
 	auto push_index = last_index;
 	pushscript commands;
-	for(auto p : indecies) {
+	for(auto pm : source) {
+		auto p = area->tiles.indexof(pm);
+		if(!area->isvalid(p))
+			continue;
 		last_rect = {p.x, p.y, p.x, p.y};
 		last_index = p;
 		commands.restore();
@@ -2496,7 +2496,7 @@ static void for_each_feature(int bonus) {
 	}
 	last_index = push_index;
 	last_rect = push_rect;
-	indecies = push_source;
+	records = source;
 	commands.stop();
 }
 
@@ -2603,8 +2603,6 @@ static void choose_limit(int counter) {
 		return;
 	if(records.getcount() > (size_t)counter)
 		records.count = counter;
-	if(indecies.getcount() > (size_t)counter)
-		indecies.count = counter;
 }
 
 static bool choose_specific_target() {
@@ -2630,8 +2628,6 @@ static void choose_target(int bonus) {
 static void choose_random(int bonus) {
 	if(records)
 		records.shuffle();
-	if(indecies)
-		indecies.shuffle();
 	choose_limit(bonus);
 }
 

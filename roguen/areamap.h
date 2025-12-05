@@ -38,7 +38,6 @@ struct areamap {
 	static point	getpoint(const rect& rc, directionn dir);
 	static point	getpoint(const rect& rc, const rect& bound, directionn dir);
 	static int		getrange(point start, point target);
-	bool			haveposition(const void* p) const { return p >= this && p < (char*)this + sizeof(*this); }
 	void			horz(int x1, int y1, int x2, fnset proc, int v);
 	bool			is(point m, areaf v) const { return (feats[m] & (1 << v)) != 0; }
 	bool			isb(point m, areaf v) const { return !isvalid(m) || (feats[m] & (1 << v)) != 0; }
@@ -50,6 +49,7 @@ struct areamap {
 	bool			linelos(int x0, int y0, int x1, int y1, fitest test) const;
 	static void		makewave(point start_index);
 	static void		makewavex();
+	unsigned char*	ptr(point m) { return isvalid(m) ? &tiles[m] : 0; }
 	void			remove(point m, int v) { feats[m] &= ~(1 << v); }
 	void			set(rect rc, fnset proc, int v);
 	void			set(rect rc, fnset proc, int v, int random_count);
