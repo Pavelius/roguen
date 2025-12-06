@@ -3,16 +3,18 @@
 NoFeature priority(10)
 
 Tree priority(10) features(7 4) overlay(11 3) minimap(35 79 31 192)
- flags Impassable Woods
+ flags Impassable Woods MinorFeature
 TreePalm priority(10) features(100 6) minimap(35 79 31 192)
- flags Impassable Woods
+ flags Impassable Woods MinorFeature
 DeadTree priority(10) features(45 4) overlay(49 3)
  flags Impassable Woods
 ThornBush priority(10) features(97 3) movedifficult(200)
  flags DangerousFeature Woods
 
 FootMud priority(5) features(14 1) movedifficult(300)
+ flags MinorFeature
 FootHill priority(5) features(15 1) movedifficult(200)
+ flags MinorFeature
 Grave priority(10) features(16 2)
 Statue priority(10) features(43 2)
  flags Impassable
@@ -62,7 +64,6 @@ StairsDown leadto(StairsUp) minimap(128 128 128 192)
 
 Door activateto(OpenedDoor)
 GatePortal activateto(OpenedGatePortal)
-HerbsFull activateto(Herbs)
 Chest activateto(ChestOpen)
 
 #List

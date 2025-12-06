@@ -24,6 +24,7 @@ BSDATA(tilefi) = {
 	{"Undeground"},
 	{"StuckFeature"},
 	{"TrappedFeature"},
+	{"MinorFeature"},
 	{"Woods"},
 	{"Mines"},
 	{"Container"},

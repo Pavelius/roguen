@@ -3253,12 +3253,17 @@ static bool match_feature(point m) {
 	return area->features[m] != 0;
 }
 
+static bool match_major_feature(point m) {
+	auto n = area->features[m];
+	return n != 0 && !bsdata<featurei>::elements[n].is(MinorFeature);
+}
+
 static void select_your_items() {
 	select_items(records, player);
 }
 
 static void select_features() {
-	select_area(records, match_feature, player->getposition());
+	select_area(records, match_major_feature, player->getposition()); // Only 256 features match
 }
 
 static void select_features_near() {

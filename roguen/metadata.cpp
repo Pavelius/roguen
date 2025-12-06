@@ -202,7 +202,6 @@ BSDATA(varianti) = {
 	{"Tile", VAR(tilei), 1, 0, fiscript<tilei>, 0, 0, 0, fiallow<tilei>},
 	{"TileFlag", VAR(tilefi), 1},
 	{"Trigger", VAR(trigger), 3},
-	{"Variant", VAR(varianti), 1},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1, 0, fiscript<widget>},
 };
