@@ -1488,14 +1488,12 @@ bool creature::roll(abilityn v, int bonus) const {
 		if(base_value > value)
 			value = base_value;
 	}
-	if(bonus == -2000) {
+	if(bonus == -2000)
 		value = value / 2;
-		bonus = 0;
-	} else if(bonus == -3000) {
+	else if(bonus == -3000)
 		value = value / 3;
-		bonus = 0;
-	}
-	value += bonus;
+	else
+		value += bonus;
 	if(value <= 0)
 		return false;
 	last_roll_result = d100();

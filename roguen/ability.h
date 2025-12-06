@@ -32,3 +32,9 @@ struct statable {
 	char		abilities[Drunk + 1];
 	void		add(abilityn i, int v, int minimal = -120, int maximal = 120);
 };
+struct pushability {
+	abilityn	value;
+	pushability() : value(last_ability) {}
+	pushability(abilityn v) : value(last_ability) { last_ability = v; }
+	~pushability() { last_ability = value; }
+};

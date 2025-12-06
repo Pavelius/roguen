@@ -2341,7 +2341,16 @@ static const listi* chance_ill(const item* pi) {
 
 static void roll_for_effect(int bonus) {
 	roll_value(0);
-	if(script_stopped()) {
+	if(last_roll_successed) {
+		auto number_effects = script_end - script_begin;
+		if(number_effects) {
+			auto value = script_begin[rand() % number_effects];
+			if(!learn_value(value, "Learn")) {
+				gain_experience(xrand(4, 10));
+				player->act("GainExperienceLearn");
+			}
+		}
+	} else {
 		auto ill_effect = chance_ill(last_item);
 		if(ill_effect) {
 			auto number_effects = ill_effect->elements.size();
@@ -2352,24 +2361,13 @@ static void roll_for_effect(int bonus) {
 			}
 		}
 		player->act("FailLearn");
-	} else {
-		auto number_effects = script_end - script_begin;
-		if(number_effects) {
-			auto value = script_begin[rand() % number_effects];
-			if(!learn_value(value, "Learn")) {
-				gain_experience(xrand(4, 10));
-				player->act("GainExperienceLearn");
-			}
-		}
 	}
 }
 
 static void roll_learning(int bonus) {
-	auto push_ability = last_ability;
-	last_ability = Literacy;
+	pushability push(Literacy);
 	roll_for_effect(bonus);
 	player->wait(xrand(600, 1200));
-	last_ability = push_ability;
 }
 
 static void random_chance(int bonus) {
