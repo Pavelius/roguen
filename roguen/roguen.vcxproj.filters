@@ -300,9 +300,6 @@
     <ClCompile Include="magic.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="filter.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="spell.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -357,9 +354,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="functor.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="datamap.h">

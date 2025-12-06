@@ -7,13 +7,13 @@ typedef unsigned long size_t;
 typedef int (*fncompare)(const void*, const void*);
 typedef void(*fnevent)(); // Callback function of any command executing
 
-extern "C" void* bsearch(const void* key, const void* base, unsigned num, size_t size, fncompare proc);
-extern "C" void* memchr(const void* ptr, int value, long unsigned num);
+extern "C" void* bsearch(const void* key, const void* base, unsigned num, size_t size, fncompare proc) noexcept(true);
+extern "C" void* memchr(const void* ptr, int value, long unsigned num) noexcept(true);
 extern "C" void* memcpy(void* destination, const void* source, long unsigned size) noexcept(true);
 extern "C" int memcmp(const void* p1, const void* p2, size_t size) noexcept(true);
 extern "C" void* memmove(void* destination, const void* source, size_t size) noexcept(true);
 extern "C" void* memset(void* destination, int value, long unsigned size) noexcept(true);
-extern "C" void	qsort(void* base, unsigned num, long unsigned size, fncompare proc);
+extern "C" void	qsort(void* base, unsigned num, long unsigned size, fncompare proc) noexcept(true);
 
 template<class T> class slice {
 	T* data;
@@ -29,3 +29,7 @@ public:
 	constexpr T* end() const { return data + count; }
 	constexpr unsigned size() const { return count; }
 };
+
+template<typename T> bool fiallow(const void* object, int value);
+template<typename T> void fiscript(int index, int bonus);
+template<typename T> bool fitest(int index, int bonus);

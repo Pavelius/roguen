@@ -182,7 +182,6 @@
     <ClCompile Include="draw_theme.cpp" />
     <ClCompile Include="feat.cpp" />
     <ClCompile Include="feature.cpp" />
-    <ClCompile Include="filter.cpp" />
     <ClCompile Include="font_util.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="global.cpp" />
@@ -278,7 +277,6 @@
     <ClInclude Include="feature.h" />
     <ClInclude Include="framerange.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="functor.h" />
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="dice.h" />

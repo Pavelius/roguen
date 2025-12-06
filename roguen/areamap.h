@@ -6,6 +6,8 @@
 enum areaf : unsigned char;
 enum directionn : unsigned char;
 
+typedef bool(*fnallowposition)(point v);
+
 struct areamap {
 	static const auto mps = 64;
 	typedef anymap<unsigned char, mps> arrayt;

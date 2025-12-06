@@ -56,8 +56,6 @@ union variant {
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);
 
-template<class T> bool fnfilter(const void* object, int value);
-
 typedef sliceu<variant> variants;
 typedef void (*fnvariant)(variant v);
 typedef bool (*fntestvariant)(variant v);
