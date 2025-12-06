@@ -1,7 +1,16 @@
 #Spell
 
+BloodRage
+BurningHands
+CharmPerson
 CureWounds
+Entaglement
+Gate
+HorrorScare
+IceSpear
 LightSpell
+MageArmor
+MageShield
 SummonUndead
 Web
 

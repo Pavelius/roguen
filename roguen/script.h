@@ -46,6 +46,7 @@ int script_count(int count, int minimal = 1);
 bool script_allow(variant v);
 bool script_allow(const variants& elements);
 void script_empty();
+void script_empty(int bonus);
 void script_execute(const char* id, int bonus = 0);
 void script_stop();
 bool script_stopped();

@@ -305,6 +305,9 @@ TomeOfLight weight(10) avatar(650) unidentified(OldTome) wear(Tome) chance_consu
 TomeOfNecromancy weight(10) avatar(649) unidentified(OldTome) wear(Tome) chance_consume(30) chance_ill(50) cursed(TomeIllEffect)
  use RollLearning SummonUndead Mana+1
  feats SlowAction
+TomeOfBody weight(10) avatar(649) unidentified(OldTome) wear(Tome) chance_consume(30) chance_ill(50) cursed(TomeIllEffect)
+ use RollLearning MageArmor MageShield BloodRage Hits+1
+ feats SlowAction
 
 RodOfBurning weight(2) avatar(488) wear(Rod) chance_consume(20)
  use SelectEnemies ChooseLimit+1 ForEachCreature FireHarm+4

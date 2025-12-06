@@ -39,6 +39,9 @@ int script_count(int count, int minimal) {
 void script_empty() {
 }
 
+void script_empty(int bonus) {
+}
+
 void script_stop() {
 	script_begin = script_end;
 }
