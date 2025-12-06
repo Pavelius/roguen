@@ -2,6 +2,7 @@
 #include "list.h"
 #include "math.h"
 #include "querry.h"
+#include "randomizer.h"
 #include "script.h"
 #include "variant.h"
 
@@ -18,6 +19,9 @@ bool querry_allow(const void* object) {
 		auto keep = v.counter >= 0;
 		if(v.iskind<listi>()) {
 			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) == keep)
+				return true;
+		} else if(v.iskind<randomizeri>()) {
+			if(querry_allow(object, bsdata<randomizeri>::elements[v.value].chance) == keep)
 				return true;
 		} else if(v.iskind<filteri>()) {
 			if(bsdata<filteri>::elements[v.value].proc(object) == keep)
@@ -42,6 +46,9 @@ bool querry_allow_all(const void* object) {
 		auto keep = v.counter >= 0;
 		if(v.iskind<listi>()) {
 			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) != keep)
+				return false;
+		} else if(v.iskind<randomizeri>()) {
+			if(querry_allow(object, bsdata<randomizeri>::elements[v.value].chance) != keep)
 				return false;
 		} else if(v.iskind<filteri>()) {
 			if(bsdata<filteri>::elements[v.value].proc(object) != keep)

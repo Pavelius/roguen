@@ -20,7 +20,7 @@ SacrificeEvilAltar skill(Religion)
 SellItemsSomeone skill(Wits) keyid("J")
  effect IfTrade MakeSelling
 SearchRoomForGems skill(Gemcutting)
- effect IfPlayer Local-1 SelectYourRoom FilterRoomMarked-1 RoomsWhereGemsCanBe ForEachRoom MarkRoom RollAction RandomGem
+ effect IfPlayer Local-1 SelectYourRoom IfMarked-1 RoomsWhereGemsCanBe ForEachRoom MarkRoom RollAction RandomGem
 StealCoins skill(Thievery)
  effect SelectNotEnemies IfClose ChooseTarget ForEachOpponent RollAction StealOpponentCoins
 CreatePotions skill(Alchemy)

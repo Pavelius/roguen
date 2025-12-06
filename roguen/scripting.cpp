@@ -85,19 +85,11 @@ static bool is_item(const void* object) {
 }
 
 static bool is_room(const void* object) {
-	if(area) {
-		if(area->rooms.have(object))
-			return true;
-	}
-	return false;
+	return area && area->rooms.have(object);
 }
 
 static bool is_position(const void* object) {
-	if(area) {
-		if(area->tiles.have(object))
-			return true;
-	}
-	return false;
+	return area && area->tiles.have(object);
 }
 
 static int random_value(int value) {
@@ -1271,7 +1263,7 @@ template<> bool fiallow<spelli>(const void* object, int param) {
 }
 
 template<> bool fiallow<featurei>(const void* object, int param) {
-	if(haveposition(object)) {
+	if(is_position(object)) {
 		auto m = *((point*)object);
 		return area->features[m] == param;
 	}
@@ -1375,6 +1367,18 @@ template<> bool fiallow<feati>(const void* object, int param) {
 		return ((creature*)object)->is((featn)param);
 	else if(is_room(object))
 		return ((roomi*)object)->is((featn)param);
+	return false;
+}
+
+template<> void fiscript<magici>(int value, int counter) {
+	if(counter >= 0)
+		last_item->set((magicn)value);
+	else if(last_item->is((magicn)value))
+		last_item->set(Mundane);
+}
+template<> bool fiallow<magici>(const void* object, int param) {
+	if(is_item(object))
+		return ((item*)object)->is((magicn)param);
 	return false;
 }
 
@@ -2621,10 +2625,6 @@ static void have_next(int bonus) {
 		script_stop();
 }
 
-static bool is_animal(int bonus) {
-	return !player->canspeak();
-}
-
 static const char* get_header_id() {
 	if(last_action)
 		return last_action->getid();
@@ -3103,12 +3103,13 @@ static bool if_wounded(const void* object) {
 	return n > 0 && n < p->basic.abilities[Hits];
 }
 
-static bool filter_damaged(const void* object) {
-	auto p = (item*)object;
-	return p->isdamaged();
+static bool if_damaged(const void* object) {
+	if(is_item(object))
+		return ((item*)object)->isdamaged();
+	return false;
 }
 
-static bool filter_unaware(const void* object) {
+static bool if_unaware(const void* object) {
 	auto p = (creature*)object;
 	return p->isunaware();
 }
@@ -3118,33 +3119,34 @@ static bool if_close(const void* object) {
 	return (area->getrange(p->getposition(), last_index) <= 1);
 }
 
-static bool filter_feature(const void* object) {
+static bool if_feature(const void* object) {
 	if(bsdata<creature>::have(object)) {
 		auto p = (creature*)object;
 		return area->features[p->getposition()] != 0;
-	} else if(haveposition(object))
+	} else if(is_position(object))
 		return area->features[area->tiles.indexof(object)] != 0;
 	else
 		return false;
 }
 
-static bool filter_room_marked(const void* object) {
-	auto p = (roomi*)object;
-	return markused(last_action, center(p->rc), bsid(player));
+static bool if_marked(const void* object) {
+	if(is_room(object)) {
+		auto p = (roomi*)object;
+		return markused(last_action, center(p->rc), bsid(player));
+	}
+	return false;
 }
 
-static bool filter_explored_room(const void* object) {
-	auto p = (roomi*)object;
-	return area->is(p->center(), Explored);
+static bool if_explored(const void* object) {
+	if(is_room(object)) {
+		auto p = (roomi*)object;
+		return area->is(p->center(), Explored);
+	}
+	return false;
 }
 
-static bool filter_this_room(const void* object) {
+static bool this_room(const void* object) {
 	return player->getroom() == (roomi*)object;
-}
-
-static bool filter_cursed(const void* object) {
-	auto p = (item*)object;
-	return p->iscursed();
 }
 
 static bool if_human(const void* object) {
@@ -3152,7 +3154,7 @@ static bool if_human(const void* object) {
 	return p->ishuman();
 }
 
-static bool filter_charmed(const void* object) {
+static bool if_charmed(const void* object) {
 	auto p = (creature*)object;
 	return p->getcharmer() != 0;
 }
@@ -3162,12 +3164,7 @@ static bool if_mindless(const void* object) {
 	return p->get(Wits) <= 5;
 }
 
-static bool filter_blessed(const void* object) {
-	auto p = (item*)object;
-	return p->is(Blessed);
-}
-
-static bool filter_identified(const void* object) {
+static bool if_identified(const void* object) {
 	auto p = (item*)object;
 	return p->isidentified();
 }
@@ -3331,20 +3328,18 @@ BSDATA(querryi) = {
 BSDATAF(querryi)
 BSDATA(filteri) = {
 	{"FilterAnimal", filter_animal},
-	{"FilterBlessed", filter_blessed},
-	{"FilterCharmed", filter_charmed},
-	{"FilterCursed", filter_cursed},
-	{"FilterDamaged", filter_damaged},
-	{"FilterExplored", filter_explored_room},
-	{"FilterFeature", filter_feature},
-	{"FilterIdentified", filter_identified},
-	{"IfMindless", if_mindless},
-	{"FilterRoomMarked", filter_room_marked},
-	{"FilterThisRoom", filter_this_room},
-	{"FilterUnaware", filter_unaware},
-	{"IfWounded", if_wounded},
+	{"IfCharmed", if_charmed},
 	{"IfClose", if_close},
+	{"IfDamaged", if_damaged},
+	{"IfExplored", if_explored},
+	{"IfFeature", if_feature},
 	{"IfHuman", if_human},
+	{"IfIdentified", if_identified},
+	{"IfMindless", if_mindless},
+	{"IfMarked", if_marked},
+	{"IfUnaware", if_unaware},
+	{"IfWounded", if_wounded},
+	{"ThisRoom", this_room},
 };
 BSDATAF(filteri)
 BSDATA(conditioni) = {

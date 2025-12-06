@@ -38,6 +38,12 @@ HerbOfPoison
  elements Poison+15
 HerbOfWeakness
  elements Strenght-1
+ScrollOfCursing
+ elements SelectYourItems Mundane ChooseLimit+1 ForEachItem Cursed
+ScrollOfBlessingBlessed
+ elements SelectYourItems Mundane ForEachItem Blessed
+ScrollOfIdentifyBlessed
+ elements SelectYourItems IfIdentified-1 ForEachItem IdentifyItem
 
 TomeIllEffect
  elements LightSpell-1 Hits-1 Mana-1 Dodge-1 WeaponSkill-1 BalisticSkill-1
@@ -64,7 +70,7 @@ Bandage cost(10) avatar(516)
  use HealWounded+100 Heal+1
 Lockpick cost(5) avatar(294) 
 GrindStone cost(20) weight(50) avatar(66) count(3)
- use SelectYourItems FilterDamaged RandomSwords ChooseTarget ForEachItem DamageItem-2
+ use SelectYourItems IfDamaged RandomSwords ChooseTarget ForEachItem DamageItem-2
 Lags cost(10) avatar(395) 
 SmallLags cost(10) avatar(411) 
 
@@ -309,18 +315,20 @@ WandOfFrost weight(2) avatar(297) wear(Rod) chance_consume(20)
 WandOfDigging weight(2) avatar(299) wear(Rod) chance_consume(20)
  use SelectWallsMines ChooseTarget ForEachFeature DestroyWall
 
-ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll) wear(Scroll)
- use SelectYourItems FilterIdentified-1 ChooseTarget ForEachItem IdentifyItem
-ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll) wear(Scroll)
- use SelectYourItems FilterIdentified FilterCursed ChooseTarget ForEachItem CurseItem-1
+ScrollOfBlessing avatar(454) weight(2) unidentified(Scroll) wear(Scroll) cursed(ScrollOfCursing)
+ use SelectYourItems IfIdentified Mundane ChooseTarget ForEachItem Blessed
+ScrollOfGoldDetection avatar(455) weight(2) unidentified(Scroll) wear(Scroll) cursed(ScrollOfCursing)
+ use DetectItems Coins
+ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll) wear(Scroll) cursed(ScrollOfCursing)
+ use SelectYourItems IfIdentified-1 ChooseTarget ForEachItem IdentifyItem
+ScrollOfMagicMap avatar(454) weight(2) unidentified(Scroll) wear(Scroll)
+ use ExploreArea
+ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll) wear(Scroll) cursed(ScrollOfCursing)
+ use SelectYourItems IfIdentified Cursed ChooseTarget ForEachItem CurseItem-1
 ScrollOfRepair avatar(440) weight(2) unidentified(Scroll) wear(Scroll)
- use SelectYourItems FilterDamaged ChooseTarget ForEachItem DamageItem-1
+ use SelectYourItems IfDamaged ChooseTarget ForEachItem DamageItem-1
 ScrollOfOpening avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectFeatures LockedDoor ChooseTarget ForEachFeature OpenedDoor
-ScrollOfMagicMap avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
- use ExploreArea
-ScrollOfGoldDetection avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
- use DetectItems Coins
 
 #RandomTable
 

@@ -108,6 +108,9 @@ BSMETA(locationi) = {
 	BSENM(doors, featurei),
 	BSREQ(minimap),
 	{}};
+BSMETA(magici) = {
+	BSREQ(id),
+	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSDST(abilities, abilityi),
@@ -184,6 +187,7 @@ BSDATA(varianti) = {
 	{"Item", VAR(itemi), 1, 0, fiscript<itemi>, 0, 0, 0, fiallow<itemi>},
 	{"List", VAR(listi), 1, 0, fiscript<listi>, fitest<listi>},
 	{"Location", VAR(locationi), 1, 0, fiscript<locationi>},
+	{"Magic", VAR(magici), 1, 0, 0, 0, 0, 0, fiallow<magici>},
 	{"Modifier", VAR(modifieri), 1, 0, fiscript<modifieri>, fitest<modifieri>},
 	{"Monster", VAR(monsteri), 1, 0, fiscript<monsteri>, fitest<monsteri>, 0, check_monsters},
 	{"Need", VAR(greatneedi), 1, 0, 0, 0, 0, check_need_objects},

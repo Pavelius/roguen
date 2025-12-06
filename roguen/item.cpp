@@ -241,6 +241,11 @@ variants item::getuse() const {
 	auto& ei = geti();
 	if(iscursed() && ei.cursed)
 		return ei.cursed->elements;
+	if(is(Blessed)) {
+		auto p = bsdata<listi>::find(ids(ei.id, "Blessed"));
+		if(p)
+			return p->elements;
+	}
 	return geti().use;
 }
 
