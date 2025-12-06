@@ -1264,8 +1264,9 @@ template<> bool fiallow<spelli>(const void* object, int param) {
 
 template<> bool fiallow<featurei>(const void* object, int param) {
 	if(is_position(object)) {
-		auto m = *((point*)object);
-		return area->features[m] == param;
+		auto m = area->tiles.indexof(object);
+		auto n = area->features[m];
+		return n == param;
 	}
 	return false;
 }
@@ -3313,9 +3314,9 @@ BSDATA(querryi) = {
 	{"GroupPosition", group_position, querry_nobody},
 	{"IfPlayer", script_empty, querry_filter_player},
 	{"SelectAllies", select_allies, querry_select},
+	{"SelectAreaFeatures", select_features, querry_select},
 	{"SelectCreatures", select_creatures, querry_select},
 	{"SelectEnemies", select_enemies, querry_select},
-	{"SelectAllFeatures", select_features, querry_select},
 	{"SelectFeatures", select_features_near, querry_select},
 	{"SelectNotEnemies", select_not_enemies, querry_select},
 	{"SelectRooms", select_rooms, querry_select},
@@ -3348,12 +3349,11 @@ BSDATA(conditioni) = {
 };
 BSDATAF(conditioni)
 BSDATA(triggerni) = {
-	{"WhenCreatureP1EnterSiteP2"},
-	{"WhenCreatureP1Dead"},
+	{"WhenPlayerEnterRoom"},
+	{"WhenPlayerDead"},
 	{"EverySeveralDays"},
-	{"EverySeveralDaysForP1"},
 };
-assert_enum(triggerni, EverySeveralDaysForP1)
+assert_enum(triggerni, EverySeveralDays)
 BSDATA(script) = {
 	{"AbilityExchange", ability_exchange},
 	{"AcidHarm", acid_harm},

@@ -67,12 +67,20 @@ bool querry_allow_all(const void* object) {
 	return true;
 }
 
+static bool querry_allow_push(const void* object) {
+	pushscript push;
+	return querry_allow(object);
+}
+
 void querry_filter() {
 	while(script_begin < script_end) {
 		auto v = *script_begin++;
 		if(v.iskind<listi>()) {
 			pushscript push(bsdata<listi>::elements[v.value].elements);
-			records.match(querry_allow, v.counter >= 0);
+			records.match(querry_allow_push, v.counter >= 0);
+		} else if(v.iskind<randomizeri>()) {
+			pushscript push(bsdata<randomizeri>::elements[v.value].chance);
+			records.match(querry_allow_push, v.counter >= 0);
 		} else if(v.iskind<querryi>())
 			bsdata<querryi>::elements[v.value].proc(); // Grouping data (other querry overlaps)
 		else if(v.iskind<filteri>())

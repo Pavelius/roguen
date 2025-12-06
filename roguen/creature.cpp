@@ -1021,7 +1021,7 @@ static void update_room(creature* player) {
 		}
 		player->setroom(pn);
 		if(room_changed)
-			fire_trigger(WhenCreatureP1EnterSiteP2, player->getkind(), &pn->geti());
+			fire_trigger(WhenPlayerEnterRoom);
 	} else
 		player->setroom(0);
 }
@@ -1323,7 +1323,7 @@ void creature::kill() {
 	drop_throphy(this, 30);
 	if(opponent == this && player)
 		player->experience += get_experience_reward(opponent);
-	fire_trigger(WhenCreatureP1Dead, getkind());
+	fire_trigger(WhenPlayerDead);
 	clear();
 	if(human_killed)
 		end_game();

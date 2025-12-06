@@ -205,7 +205,7 @@ BSDATA(varianti) = {
 	{"Talk", VAR(talki), 1, 0, 0, 0, read_talk},
 	{"Tile", VAR(tilei), 1, 0, fiscript<tilei>, 0, 0, 0, fiallow<tilei>},
 	{"TileFlag", VAR(tilefi), 1},
-	{"Trigger", VAR(trigger), 3},
+	{"Trigger", VAR(trigger), 2},
 	{"VisualEffect", VAR(visualeffect), 1},
 	{"Widget", VAR(widget), 1, 0, fiscript<widget>},
 };

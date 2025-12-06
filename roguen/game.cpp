@@ -59,65 +59,12 @@ static bool istriggertype(const void* object, int param) {
 	return p->type == param;
 }
 
-static bool iscreature(const void* object) {
-	auto p = (trigger*)object;
-	if(p->p1.iskind<variant>()) {
-		auto pv = bsdata<varianti>::elements + p->p1.value;
-		return pv == varianti::getsource("Creature");
-	}
-	return p->p1.iskind<creature>();
-}
-
-static bool isfeature(const void* object) {
-	auto p = (trigger*)object;
-	if(p->p1.iskind<varianti>()) {
-		auto pv = bsdata<varianti>::elements + p->p1.value;
-		return pv == varianti::getsource("Feature");
-	}
-	return p->p1.iskind<featurei>();
-}
-
 static collection<trigger>& get_triggers(triggern type, fnvisible proc) {
 	static collection<trigger> source;
 	source.select();
 	source.match(istriggertype, type, true);
 	source.match(proc, true);
 	return source;
-}
-
-static void all_creatures(triggern type) {
-	auto push_player = player;
-	auto& source = get_triggers(type, iscreature);
-	for(auto& e : bsdata<creature>()) {
-		if(!e.isvalid())
-			continue;
-		for(auto p : source) {
-			if(!p->match(&e, {}))
-				continue;
-			player = &e;
-			script_run(p->effect);
-		}
-	}
-	player = push_player;
-}
-
-static void all_features(triggern type) {
-	point m;
-	pushvalue push_point(last_rect);
-	auto& source = get_triggers(type, isfeature);
-	for(m.y = 0; m.y < area->mps; m.y++) {
-		for(m.x = 0; m.x < area->mps; m.x++) {
-			if(area->features[m] == 0)
-				continue;
-			auto v1 = bsdata<featurei>::elements + (int)area->features[m];
-			for(auto p : source) {
-				if(!p->match(v1, {}))
-					continue;
-				last_rect = m.rectangle();
-				script_run(p->effect);
-			}
-		}
-	}
 }
 
 //static bool isfreelt(point m) {
@@ -257,8 +204,6 @@ static void pass_minute() {
 		game.restore_day = (game.restore_day / (60 * 24) + 1) * (60 * 24) + rand() % (60 * 24);
 	}
 	while(game.restore_several_days < game.minutes) {
-		all_creatures(EverySeveralDaysForP1);
-		all_features(EverySeveralDaysForP1);
 		fire_trigger(EverySeveralDays);
 		game.restore_several_days += xrand(60 * 24 * 2, 60 * 24 * 6);
 	}
