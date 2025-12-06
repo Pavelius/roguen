@@ -17,7 +17,6 @@ extern variant* script_begin;
 extern variant* script_end;
 extern fnevent script_run_proc;
 extern const char* last_id;
-extern bool script_fail;
 
 struct pushmodifier {
 	modifiern m;

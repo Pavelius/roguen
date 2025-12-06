@@ -13,6 +13,7 @@ struct querryi : nameable {
 	fnevent	proc;
 	fncondition condition;
 };
+extern bool querry_fail;
 
 bool querry_allow(const void* object);
 bool querry_allow_all(const void* object);

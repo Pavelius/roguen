@@ -13,7 +13,6 @@ BSMETA(modifieri) = {
 variant* script_begin;
 variant* script_end;
 modifiern modifier;
-bool script_fail;
 
 const char* last_id;
 

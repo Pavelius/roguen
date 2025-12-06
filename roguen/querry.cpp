@@ -7,6 +7,7 @@
 #include "variant.h"
 
 collectiona records;
+bool querry_fail;
 
 static bool querry_allow(const void* object, const variants& source) {
 	pushscript push(source);
@@ -99,16 +100,17 @@ void querry_filter() {
 
 bool querry_select() {
 	querry_filter();
-	return records.count>0;
+	return records.count > 0;
 }
 
 bool querry_nobody() {
-	return records.count>0;
+	return records.count > 0;
 }
 
 template<> void fiscript<querryi>(int value, int counter) {
 	bsdata<querryi>::elements[value].proc();
-	if(!bsdata<querryi>::elements[value].condition())
+	querry_fail = !bsdata<querryi>::elements[value].condition();
+	if(querry_fail)
 		script_stop();
 }
 template<> bool fitest<querryi>(int value, int counter) {

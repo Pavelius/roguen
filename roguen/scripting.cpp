@@ -51,25 +51,24 @@ const char* getlog();
 
 extern point		start_village;
 
-spella				allowed_spells;
-creature			*player, *opponent;
-int					last_coins;
-static point		last_door;
-locationi*			last_location;
-rect				last_rect;
-const sitei*		last_site;
-int					last_value;
-listi*				last_craft_list;
+spella allowed_spells;
+creature *player, *opponent;
+int last_coins;
+int	last_value;
+static point last_door;
+locationi* last_location;
+rect last_rect;
+const sitei* last_site;
+listi* last_craft_list;
 static const spelli* last_spell_cast;
-extern bool			show_floor_rect;
+extern bool	show_floor_rect;
 static fntestvariant last_allow_proc;
-static int			effect_level;
-static void*		specific_target;
+static int effect_level;
 
 static adat<rect, 64> locations;
 static adat<point, 512> points;
-static rect			correct_conncetors;
-static directionn	last_direction;
+static rect	correct_conncetors;
+static directionn last_direction;
 static adat<variant, 32> sites;
 
 static bool is_item(const void* object) {
@@ -2409,13 +2408,6 @@ static void identify_item(int bonus) {
 	last_item->setidentified(bonus);
 }
 
-static void curse_item(int bonus) {
-	if(bonus >= 0)
-		last_item->set(Cursed);
-	else if(last_item->getmagic() == Cursed)
-		last_item->set(Mundane);
-}
-
 static void damage_item(int bonus) {
 	if(bonus >= 0)
 		last_item->damage();
@@ -2468,11 +2460,6 @@ static void cold_harm(int bonus) {
 }
 
 static void for_each_opponent(int bonus) {
-	if(!records) {
-		script_fail = true;
-		script_stop();
-		return;
-	}
 	pushvalue push(opponent);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
@@ -2491,11 +2478,6 @@ static void for_each_opponent(int bonus) {
 }
 
 static void for_each_creature(int bonus) {
-	if(!records) {
-		script_fail = true;
-		script_stop();
-		return;
-	}
 	pushvalue push(player);
 	pushvalue push_rect(last_rect);
 	pushvalue push_index(last_index);
@@ -2526,17 +2508,7 @@ static void for_each_item(int bonus) {
 	commands.stop();
 }
 
-static bool is_items(int bonus) {
-	script_stop();
-	return records.getcount() > 0;
-}
-
 static void for_each_feature(int bonus) {
-	if(!records) {
-		script_fail = true;
-		script_stop();
-		return;
-	}
 	collectiona source(records);
 	auto push_rect = last_rect;
 	auto push_index = last_index;
@@ -2557,11 +2529,6 @@ static void for_each_feature(int bonus) {
 }
 
 static void for_each_room(int bonus) {
-	if(!records) {
-		script_fail = true;
-		script_stop();
-		return;
-	}
 	pushscript commands;
 	pushvalue push(last_room);
 	pushvalue push_rect(last_rect);
@@ -2574,6 +2541,7 @@ static void for_each_room(int bonus) {
 		commands.restore();
 		script_run_proc();
 	}
+	records = source;
 	commands.stop();
 }
 
@@ -2657,22 +2625,9 @@ static void choose_limit(int counter) {
 		records.count = counter;
 }
 
-static bool choose_specific_target() {
-	if(!specific_target)
-		return false;
-	auto i = records.find(specific_target);
-	if(i != -1) {
-		iswap(records.data[0], records.data[i]);
-		return true;
-	}
-	return false;
-}
-
 static void choose_target(int bonus) {
-	if(!choose_specific_target()) {
-		if(player->ishuman())
-			choose_target_interactive(get_header_id());
-	}
+	if(player->ishuman())
+		choose_target_interactive(get_header_id());
 	choose_limit(1);
 	check_script_targets();
 }
@@ -2852,7 +2807,7 @@ static void use_craft(int bonus) {
 			player->actp("NoCraftItems", craft->id);
 		else
 			player->actp("NoIngridients", craft->id);
-		script_fail = true;
+		querry_fail = true;
 		return;
 	}
 	auto pi = (itemi*)choose_answers(getnm(craft->id), getnm("Cancel"));
@@ -3376,7 +3331,6 @@ BSDATA(script) = {
 	{"ChooseLimit", choose_limit},
 	{"ColdHarm", cold_harm},
 	{"CreateHero", create_hero},
-	{"CurseItem", curse_item},
 	{"Damage", damage_all},
 	{"DamageItem", damage_item},
 	{"DebugMessage", debug_message},

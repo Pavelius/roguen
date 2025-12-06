@@ -10,6 +10,7 @@
 #include "modifier.h"
 #include "game.h"
 #include "pushvalue.h"
+#include "querry.h"
 #include "rand.h"
 #include "script.h"
 #include "siteskill.h"
@@ -21,6 +22,7 @@
 static areamap::fitest crush_wall_action_proc;
 
 extern collection<roomi> rooms;
+
 int last_roll_result;
 bool last_roll_successed;
 
@@ -1948,17 +1950,16 @@ bool use_item(item& v) {
 		return false;
 	}
 	auto push_item = last_item;
-	auto push_state = script_fail; script_fail = false;
+	querry_fail = false;
 	last_item = &v;
 	if(player->ishuman())
 		last_player_used_wear = player->getwearslot(last_item);
 	last_item_fix_action("UseItem");
 	script_run(script);
 	auto result = true;
-	if(script_fail) {
+	if(querry_fail) {
 		player->actp("ItemFailScript", 0, name);
 		result = false;
-		script_fail = push_state;
 		last_item = push_item;
 	} else {
 		auto chance_consume = last_item->chance_consume();
@@ -1969,7 +1970,6 @@ bool use_item(item& v) {
 			}
 		} else
 			v.use();
-		script_fail = push_state;
 		last_item = push_item;
 		player->update();
 		pay_action();

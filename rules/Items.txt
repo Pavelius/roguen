@@ -327,7 +327,7 @@ ScrollOfIdentify avatar(438) weight(2) unidentified(Scroll) wear(Scroll) cursed(
 ScrollOfMagicMap avatar(454) weight(2) unidentified(Scroll) wear(Scroll)
  use ExploreArea
 ScrollOfRemoveCurse avatar(439) weight(2) unidentified(Scroll) wear(Scroll) cursed(ScrollOfCursing)
- use SelectYourItems IfIdentified Cursed ChooseTarget ForEachItem CurseItem-1
+ use SelectYourItems IfIdentified Cursed ChooseTarget ForEachItem Cursed-1
 ScrollOfRepair avatar(440) weight(2) unidentified(Scroll) wear(Scroll)
  use SelectYourItems IfDamaged ChooseTarget ForEachItem DamageItem-1
 ScrollOfOpening avatar(441) weight(2) unidentified(Scroll) wear(Scroll)
