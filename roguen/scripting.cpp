@@ -72,6 +72,34 @@ static rect			correct_conncetors;
 static directionn	last_direction;
 static adat<variant, 32> sites;
 
+static bool is_item(const void* object) {
+	if(bsdata<creature>::have(object)) {
+		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(object);
+		return p->iswear(object);
+	}
+	if(area) {
+		if(area->items.have(object))
+			return true;
+	}
+	return false;
+}
+
+static bool is_room(const void* object) {
+	if(area) {
+		if(area->rooms.have(object))
+			return true;
+	}
+	return false;
+}
+
+static bool is_position(const void* object) {
+	if(area) {
+		if(area->tiles.have(object))
+			return true;
+	}
+	return false;
+}
+
 static int random_value(int value) {
 	if(!value)
 		return 0;
@@ -1153,6 +1181,14 @@ template<> void fiscript<widget>(int value, int counter) {
 	choose_dialog(bsdata<widget>::elements[value].proc);
 }
 
+template<> bool fitest<filteri>(int value, int counter) {
+	return bsdata<filteri>::elements[value].proc(player);
+}
+template<> void fiscript<filteri>(int value, int counter) {
+	if(!fitest<filteri>(value, counter))
+		script_stop();
+}
+
 template<> void fiscript<speechi>(int value, int counter) {
 	if(player)
 		player->say(speech_get(value));
@@ -1337,6 +1373,8 @@ template<> void fiscript<feati>(int value, int counter) {
 template<> bool fiallow<feati>(const void* object, int param) {
 	if(bsdata<creature>::have(object))
 		return ((creature*)object)->is((featn)param);
+	else if(is_room(object))
+		return ((roomi*)object)->is((featn)param);
 	return false;
 }
 
@@ -1549,34 +1587,6 @@ static listi* get_ability_craft(abilityn v) {
 	case Alchemy: return alchemy;
 	default: return 0;
 	}
-}
-
-static bool is_item(const void* object) {
-	if(bsdata<creature>::have(object)) {
-		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(object);
-		return p->iswear(object);
-	}
-	if(area) {
-		if(area->items.have(object))
-			return true;
-	}
-	return false;
-}
-
-static bool is_room(const void* object) {
-	if(area) {
-		if(area->rooms.have(object))
-			return true;
-	}
-	return false;
-}
-
-static bool is_position(const void* object) {
-	if(area) {
-		if(area->tiles.have(object))
-			return true;
-	}
-	return false;
 }
 
 static bool choose_target_interactive(const char* id) {
@@ -3087,7 +3097,7 @@ static bool match_wall_mines(point m) {
 	return ei.iswall() && ei.is(Mines);
 }
 
-static bool filter_wounded(const void* object) {
+static bool if_wounded(const void* object) {
 	auto p = (creature*)object;
 	auto n = p->abilities[Hits];
 	return n > 0 && n < p->basic.abilities[Hits];
@@ -3123,11 +3133,6 @@ static bool filter_room_marked(const void* object) {
 	return markused(last_action, center(p->rc), bsid(player));
 }
 
-static bool filter_notable(const void* object) {
-	auto p = (roomi*)object;
-	return p->is(Notable);
-}
-
 static bool filter_explored_room(const void* object) {
 	auto p = (roomi*)object;
 	return area->is(p->center(), Explored);
@@ -3152,7 +3157,7 @@ static bool filter_charmed(const void* object) {
 	return p->getcharmer() != 0;
 }
 
-static bool filter_mindless(const void* object) {
+static bool if_mindless(const void* object) {
 	auto p = (creature*)object;
 	return p->get(Wits) <= 5;
 }
@@ -3333,12 +3338,11 @@ BSDATA(filteri) = {
 	{"FilterExplored", filter_explored_room},
 	{"FilterFeature", filter_feature},
 	{"FilterIdentified", filter_identified},
-	{"FilterMindless", filter_mindless},
-	{"FilterNotable", filter_notable},
+	{"IfMindless", if_mindless},
 	{"FilterRoomMarked", filter_room_marked},
 	{"FilterThisRoom", filter_this_room},
 	{"FilterUnaware", filter_unaware},
-	{"FilterWounded", filter_wounded},
+	{"IfWounded", if_wounded},
 	{"IfClose", if_close},
 	{"IfHuman", if_human},
 };
