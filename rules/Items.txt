@@ -359,7 +359,7 @@ RandomPotion
 RandomRing
  chance BrassRing+5 IronRing+4 RingOfAcidResistance RingOfColdResistance SilverRing+4 RingOfFireResistance GoldenRing RingOfPoisonResistance RingOfDefence RingOfProtection RingOfWarrior
 RandomScroll
- chance ScrollOfIdentify ScrollOfRemoveCurse ScrollOfRepair ScrollOfOpening ScrollOfMagicMap ScrollOfGoldDetection+2
+ chance ScrollOfBlessing ScrollOfIdentify ScrollOfRemoveCurse ScrollOfRepair ScrollOfOpening ScrollOfMagicMap ScrollOfGoldDetection+2
 RandomBoots
  chance LeatherBoots+4 BootsOfLevitation BootsOfSneakiness BootsOfLongStride
 RandomBracers

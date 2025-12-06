@@ -26,18 +26,6 @@ static void script_run_def() {
 
 fnevent script_run_proc = script_run_def;
 
-template<> void fiscript<modifieri>(int value, int counter) {
-	modifier = (modifiern)value;
-}
-template<> bool fitest<modifieri>(int value, int counter) {
-	fiscript<modifieri>(value, counter);
-	return true;
-}
-
-template<> void fiscript<script>(int value, int counter) {
-	bsdata<script>::elements[value].proc(counter);
-}
-
 int script_count(int count, int minimal) {
 	if(count < 0 && d100() >= -count)
 		return -1;
@@ -109,4 +97,16 @@ void script_execute(const char* id, int bonus) {
 	auto p = bsdata<script>::find(id);
 	if(p)
 		p->proc(bonus);
+}
+
+template<> void fiscript<modifieri>(int value, int counter) {
+	modifier = (modifiern)value;
+}
+template<> bool fitest<modifieri>(int value, int counter) {
+	fiscript<modifieri>(value, counter); // In test mode modifier setup as also.
+	return true;
+}
+
+template<> void fiscript<script>(int value, int counter) {
+	bsdata<script>::elements[value].proc(counter);
 }
