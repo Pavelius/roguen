@@ -667,7 +667,7 @@ static void paint_button(const char* format, bool pressed) {
 	caret.x += (width - textw(format) + 1) / 2;
 	if(pressed)
 		caret.y += 1;
-	text(format);
+	text(format, -1, TextBold);
 	caret = push_caret;
 }
 
@@ -1314,18 +1314,44 @@ static void show_charsheet() {
 	pause_keys();
 }
 
+static void navigate_index_keys(int& current, int page) {
+	switch(hot.key) {
+	case KeyRight: execute(cbsetint, current + 1, 0, &current); break;
+	case KeyLeft: execute(cbsetint, current - 1, 0, &current); break;
+	case KeyUp: execute(cbsetint, current - page, 0, &current); break;
+	case KeyDown: execute(cbsetint, current + page, 0, &current);; break;
+	}
+}
+
 static void show_font() {
+	static int current;
+	const int glyph_start = 32;
 	auto push_fore = fore; fore = colors::white;
 	setoffset(metrics::padding, metrics::padding);
-	rectpush push; width = 32;
-	for(auto y = 0; y < 16; y++) {
+	rectpush push; width = 16; height = 16;
+	point origin = caret;
+	for(auto y = 0; y < 12; y++) {
 		for(auto x = 0; x < 16; x++) {
-			unsigned char sym = y * 16 + x;
-			image(caret.x + x * 16, caret.y + y * 16, font, sym, 0);
+			unsigned char sym = y * 16 + x + glyph_start;
+			caret.x = origin.x + x * 16;
+			caret.y = origin.y + y * 16;
+			glyph(sym, TextBold | TextItalic);
+			if(current == sym) {
+				caret.x -= 3; caret.y -= 2;
+				fore = colors::yellow;
+				rectb();
+				fore = push_fore;
+			}
 		}
 	}
+	caret.x = 16; caret.y = 15 * 16;
+	text("Приклад тексту де можна побачити її вживу та єнергію отримати.");
+	caret.y += texth();
+	text("Приклад тексту де можна побачити її вживу та єнергію отримати.", -1, TextBold);
+	caret.y += texth();
+	text("Приклад тексту де можна побачити її вживу та єнергію отримати.", -1, TextBold | TextItalic);
 	fore = push_fore;
-	pause_keys();
+	navigate_index_keys(current, 16);
 }
 
 static void textcn(const char* format) {
@@ -1471,8 +1497,8 @@ void visualize_images(res pid, point size, point offset, int border_dy) {
 		case KeyLeft: current--; break;
 		case KeyUp: current -= d.x; break;
 		case KeyDown: current += d.x; break;
-		//case KeyUp: origin -= d.x; break;
-		//case KeyDown: origin += d.x; break;
+			//case KeyUp: origin -= d.x; break;
+			//case KeyDown: origin += d.x; break;
 		case KeyPageUp: origin -= per_screen; break;
 		case KeyPageDown: origin += per_screen; break;
 		case 'I': show_index = !show_index; break;
@@ -1481,7 +1507,7 @@ void visualize_images(res pid, point size, point offset, int border_dy) {
 		case 'Z': change_sprite(p, current, 0, -1); break;
 		case 'A': change_sprite(p, current, 1, 0); break;
 		case 'S': change_sprite(p, current, -1, 0); break;
-		case Ctrl+'S': sprite_write(p, pid); break;
+		case Ctrl + 'S': sprite_write(p, pid); break;
 		case KeyEscape: breakmodal(0); break;
 		}
 	}
