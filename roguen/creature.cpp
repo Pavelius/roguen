@@ -48,9 +48,9 @@ static void add(creature* player, abilityn id, int value, int minimal = 0) {
 	player->set(id, i);
 }
 
-void creature::logs(const char* format, ...) const {
+void creature::logs(const char* id, ...) const {
 	pushvalue push(player, const_cast<creature*>(this));
-	logv(format, xva_start(format));
+	logv(getnm(id), xva_start(id));
 }
 
 bool creature::speak(const char* action, const char* id, ...) const {
@@ -1229,8 +1229,6 @@ static void apply_pierce(int& armor, int pierce) {
 }
 
 static void make_attack(item& weapon, int attack_skill, int damage_percent) {
-//	auto enemy_name = opponent->getname();
-//	auto attacker_name = player->getname();
 	auto weapon_ability = weapon_skill(weapon);
 	auto weapon_damage = (int)weapon.geti().weapon.damage;
 	auto damage = weapon_damage;
@@ -1244,15 +1242,16 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 			damage += 2; // Artifact weapon do more damage
 	}
 	attack_skill += player->get(weapon_ability);
+	// Roll how match damage make
 	auto roll_result = d100();
 	if(roll_result <= attack_skill)
-		damage += xrand(0, 2);
+		damage += xrand(0, 2); // Hit, gain random damage increment
 	else
-		damage -= xrand(1, 3);
+		damage -= xrand(1, 4); // Miss gain great damage reduction
 	if(roll_result <= attack_skill - 30)
-		damage += weapon_damage;
+		damage += xrand(weapon_damage / 2, weapon_damage);
 	if(roll_result <= attack_skill - 60)
-		damage += weapon_damage;
+		damage += xrand(weapon_damage / 2, weapon_damage);
 	if(damage_percent)
 		damage = damage * damage_percent / 100;
 	auto pierce = (int)weapon.geti().weapon.pierce;
@@ -1260,26 +1259,27 @@ static void make_attack(item& weapon, int attack_skill, int damage_percent) {
 		special_attack(weapon, opponent, pierce, damage); // If hit critical
 	auto armor = opponent->get(Armor);
 	apply_pierce(armor, pierce);
-	auto damage_result = damage - armor;
-	if(damage_result > 0 && weapon.is(Cursed) && (d100() < 50)) // Cursed weapon miss half time
-		damage_result = 0;
-	if(damage_result <= 0) {
-		player->logs(getnm("AttackMiss"), damage_result, opponent->getname(), roll_result, damage, -armor);
-		return;
-	}
 	auto block_damage = opponent->get(Block);
-	if(block_damage > 0) {
-		damage_result -= xrand(0, block_damage);
-		if(damage_result <= 0) {
+	if(block_damage > 0 && armor < damage) {
+		armor += xrand(0, block_damage);
+		if(armor >= damage) {
+			player->logs("AttackBlocked", damage - armor, opponent->getname(), roll_result, damage, -armor);
 			opponent->fixvalue(getnm("Block"), ColorGreen);
 			return;
 		}
 	}
+	auto damage_result = damage - armor;
+	if(damage_result > 0 && weapon.is(Cursed) && (d100() < 50)) // Cursed weapon miss half time
+		damage_result = 0;
+	if(damage_result <= 0) {
+		player->logs("AttackMiss", damage_result, opponent->getname(), roll_result, damage, -armor);
+		return;
+	}
 	if(opponent->roll(Dodge)) {
-		player->logs(getnm("AttackHitButEnemyDodge"), opponent->getname());
+		player->logs("AttackHitButEnemyDodge", opponent->getname());
 		opponent->fixvalue(getnm("Dodge"), ColorGreen);
 	} else {
-		player->logs(getnm("AttackHit"), damage_result, opponent->getname(), roll_result, damage, -armor);
+		player->logs("AttackHit", damage_result, opponent->getname(), roll_result, damage, -armor);
 		opponent->damage(damage_result);
 		poison_attack(weapon);
 		if(opponent->is(Retaliate, opponent->wears[MeleeWeapon])) {
@@ -1317,7 +1317,7 @@ void creature::cleanup() {
 void creature::kill() {
 	if(d100() < 40)
 		area->setflag(getposition(), Blooded);
-	logs(getnm("ApplyKill"));
+	logs("ApplyKill");
 	auto human_killed = ishuman();
 	fixeffect("HitVisual");
 	fixremove();

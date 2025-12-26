@@ -119,7 +119,7 @@ static void talk_apply_answer(void* pv) {
 				if(last_need->score >= 100)
 					last_need->set(NeedCompleted);
 				const char* item_name = pi->getname();
-				player->logs(getnm("YouGiveItemTo"), item_name, opponent->getname(), count);
+				player->logs("YouGiveItemTo", item_name, opponent->getname(), count);
 				pi->setcount(pi->getcount() - count);
 				last_coins = last_need->geti().coins * last_percent / 100;
 				player->addcoins(last_coins);

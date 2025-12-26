@@ -79,7 +79,7 @@ public:
 	bool			isunaware() const { return wait_seconds >= 25 * 4 * 6; }
 	bool			isvalid() const;
 	void			kill();
-	void			logs(const char* format, ...) const;
+	void			logs(const char* id, ...) const;
 	bool			moveaway(point m);
 	bool			moveto(point m);
 	void			paint() const;

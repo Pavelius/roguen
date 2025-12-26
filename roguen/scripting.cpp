@@ -2241,13 +2241,13 @@ static void roll_value(int bonus) {
 	auto p = bsdata<abilityi>::elements + last_ability;
 	if(!player->roll(last_ability, bonus)) {
 #ifdef _DEBUG
-		player->logs(getnm("YouFailRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
+		player->logs("YouFailRoll", p->getname(), last_roll_result, player->get(last_ability) + bonus);
 #endif // _DEBUG
 		script_stop();
 		apply_fail_roll();
 	} else {
 #ifdef _DEBUG
-		player->logs(getnm("YouMakeRoll"), p->getname(), last_roll_result, player->get(last_ability) + bonus);
+		player->logs("YouMakeRoll", p->getname(), last_roll_result, player->get(last_ability) + bonus);
 #endif // _DEBUG
 	}
 }
