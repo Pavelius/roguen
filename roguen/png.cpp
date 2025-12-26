@@ -433,7 +433,7 @@ static void apply_transparent(color* p, int w, int h, color transparent) {
 	}
 }
 
-static struct png_bitmap_plugin : public draw::surface::plugin {
+static struct png_bitmap_plugin : public surface::plugin {
 
 	png_bitmap_plugin() : plugin("png", "PNG images\0*.png\0") {}
 

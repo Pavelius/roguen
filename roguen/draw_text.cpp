@@ -3,7 +3,7 @@
 const int glyph_start = 32;
 const int glyph_count = 256 - glyph_start;
 
-void draw::glyph(int n, unsigned flags) {
+void glyph(int n, unsigned flags) {
 	if(n <= glyph_start)
 		return;
 	auto push_fore = fore;
@@ -19,14 +19,14 @@ void draw::glyph(int n, unsigned flags) {
 	fore = push_fore;
 }
 
-int draw::textw(int n) {
+int textw(int n) {
 	if(n <= glyph_start)
 		n = 'l';
 	auto widths = (short int*)font->ptr(font->size - glyph_count * sizeof(short int));
 	return widths[n - glyph_start];
 }
 
-int draw::texth() {
+int texth() {
 	if(!font)
 		return 0;
 	return font->height;

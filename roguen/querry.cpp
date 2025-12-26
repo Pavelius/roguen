@@ -9,28 +9,28 @@
 collectiona records;
 bool querry_fail;
 
-static bool querry_allow(const void* object, const variants& source) {
+static bool querry_allow(const void* drawobject, const variants& source) {
 	pushscript push(source);
-	return querry_allow(object);
+	return querry_allow(drawobject);
 }
 
-bool querry_allow(const void* object) {
+bool querry_allow(const void* drawobject) {
 	while(script_begin < script_end) {
 		auto v = *script_begin++;
 		auto keep = v.counter >= 0;
 		if(v.iskind<listi>()) {
-			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) == keep)
+			if(querry_allow(drawobject, bsdata<listi>::elements[v.value].elements) == keep)
 				return true;
 		} else if(v.iskind<randomizeri>()) {
-			if(querry_allow(object, bsdata<randomizeri>::elements[v.value].chance) == keep)
+			if(querry_allow(drawobject, bsdata<randomizeri>::elements[v.value].chance) == keep)
 				return true;
 		} else if(v.iskind<filteri>()) {
-			if(bsdata<filteri>::elements[v.value].proc(object) == keep)
+			if(bsdata<filteri>::elements[v.value].proc(drawobject) == keep)
 				return true;
 		} else {
 			auto pf = bsdata<varianti>::elements[v.type].pfilter;
 			if(pf) {
-				if(pf(object, v.value) == keep)
+				if(pf(drawobject, v.value) == keep)
 					return true;
 			} else {
 				script_begin--; // Not handle
@@ -41,23 +41,23 @@ bool querry_allow(const void* object) {
 	return false;
 }
 
-bool querry_allow_all(const void* object) {
+bool querry_allow_all(const void* drawobject) {
 	while(script_begin < script_end) {
 		auto v = *script_begin++;
 		auto keep = v.counter >= 0;
 		if(v.iskind<listi>()) {
-			if(querry_allow(object, bsdata<listi>::elements[v.value].elements) != keep)
+			if(querry_allow(drawobject, bsdata<listi>::elements[v.value].elements) != keep)
 				return false;
 		} else if(v.iskind<randomizeri>()) {
-			if(querry_allow(object, bsdata<randomizeri>::elements[v.value].chance) != keep)
+			if(querry_allow(drawobject, bsdata<randomizeri>::elements[v.value].chance) != keep)
 				return false;
 		} else if(v.iskind<filteri>()) {
-			if(bsdata<filteri>::elements[v.value].proc(object) != keep)
+			if(bsdata<filteri>::elements[v.value].proc(drawobject) != keep)
 				return false;
 		} else {
 			auto pf = bsdata<varianti>::elements[v.type].pfilter;
 			if(pf) {
-				if(pf(object, v.value) != keep)
+				if(pf(drawobject, v.value) != keep)
 					return false;
 			} else {
 				script_begin--; // Not handle
@@ -68,9 +68,9 @@ bool querry_allow_all(const void* object) {
 	return true;
 }
 
-static bool querry_allow_push(const void* object) {
+static bool querry_allow_push(const void* drawobject) {
 	pushscript push;
-	return querry_allow(object);
+	return querry_allow(drawobject);
 }
 
 void querry_filter() {

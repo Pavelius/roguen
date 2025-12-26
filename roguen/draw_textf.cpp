@@ -9,7 +9,7 @@
 
 using namespace draw;
 
-int draw::tab_pixels = 0;
+int tab_pixels = 0;
 static const char* text_start_string;
 static int text_start_horiz;
 static point maxcaret;
@@ -228,7 +228,7 @@ static const char* textspc(const char* p, int x1) {
 		switch(p[0]) {
 		case ' ':
 			p++;
-			caret.x += draw::textw(' ');
+			caret.x += textw(' ');
 			continue;
 		case '\t':
 			p++;
@@ -259,10 +259,10 @@ static const char* word(const char* text) {
 }
 
 static const char* citate(const char* p, int x1, int x2, color new_fore, const sprite* new_font) {
-	auto push_fore = draw::fore;
-	auto push_font = draw::font;
-	draw::fore = new_fore;
-	draw::font = new_font;
+	auto push_fore = fore;
+	auto push_font = font;
+	fore = new_fore;
+	font = new_font;
 	caret.x = x1;
 	while(p[0]) {
 		if(p[0] == '-' && p[1] == '#' && p[2] == '-' && (p[3] == 13 || p[3] == 10 || p[3] == 0)) {
@@ -276,8 +276,8 @@ static const char* citate(const char* p, int x1, int x2, color new_fore, const s
 		apply_line_feed(x1, texth());
 	}
 	apply_line_feed(caret.x, 0);
-	draw::fore = push_fore;
-	draw::font = push_font;
+	fore = push_fore;
+	font = push_font;
 	return p;
 }
 
@@ -409,7 +409,7 @@ static const char* bullet_list(const char* p, int x2) {
 	return p;
 }
 
-void draw::textf(const char* p) {
+void textf(const char* p) {
 	auto push_width = width;
 	auto push_height = height;
 	auto push_tab = tab_pixels;
@@ -448,8 +448,8 @@ void draw::textf(const char* p) {
 	height = push_height;
 }
 
-void draw::textf(const char* string, int& origin, int& maximum, int& cashe_origin, int& cashe_string) {
-	rectpush push;
+void textf(const char* string, int& origin, int& maximum, int& cashe_origin, int& cashe_string) {
+	pushrect push;
 	if(!maximum) {
 		textfs(string);
 		maximum = height;
@@ -475,7 +475,7 @@ void draw::textf(const char* string, int& origin, int& maximum, int& cashe_origi
 	}
 }
 
-void draw::textfs(const char* string) {
+void textfs(const char* string) {
 	auto push_caret = caret;
 	auto push_clipping = clipping;
 	auto push_maxcaret = maxcaret;

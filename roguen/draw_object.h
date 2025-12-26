@@ -4,8 +4,8 @@
 
 #pragma once
 
-namespace draw {
-struct object;
+struct drawobject;
+
 struct drawable {
 	point			position;
 	unsigned char	alpha, priority, param, flags;
@@ -25,7 +25,7 @@ struct draworder : drawable {
 	void			update();
 	void			wait();
 };
-struct object : drawable {
+struct drawobject : drawable {
 	const void*		data;
 	fnevent			proc;
 	static fnevent	correctcamera, beforepaint, afterpaint;
@@ -35,24 +35,29 @@ struct object : drawable {
 	void			move(point goal, int speed, int correct = 0);
 	void			paint() const;
 };
-extern object* last_object;
+extern drawobject* last_object;
 extern rect last_screen, last_area;
-extern adat<object*, 512> objects;
-object*				addobject(point pt, fnevent proc, void* data, unsigned char param, unsigned char priority = 10, unsigned char alpha = 0xFF, unsigned char flags = 0);
-bool				cameravisible(point goal, int border = 48);
+extern adat<drawobject*, 512> objects;
+
+drawobject*	addobject(point pt, fnevent proc, void* data, unsigned char param, unsigned char priority = 10, unsigned char alpha = 0xFF, unsigned char flags = 0);
+
 void*				chooseobject();
-void				shrink();
-void				clearobjects();
-void				focusing(point goal);
-object*				findobject(const void* p);
-object*				findobject(point pt, fnevent proc);
-void				paintobjects();
-void				removeobjects(const array& source);
-unsigned long		getobjectstamp();
-void				setcamera(point v);
-void				slidecamera(point v, int step = 16);
-void				splashscreen(unsigned milliseconds);
-void				showobjects();
-void				waitall();
+
+drawobject*	findobject(const void* p);
+drawobject*	findobject(point pt, fnevent proc);
+
+unsigned long getobjectstamp();
+
+bool cameravisible(point goal, int border = 48);
+void clearobjects();
+void focusing(point goal);
+void paintobjects();
+void removeobjects(const array& source);
+void shrink();
+void setcamera(point v);
+void slidecamera(point v, int step = 16);
+void splashscreen(unsigned milliseconds);
+void showobjects();
+void waitall();
+
 template<typename T> void ftpaint() { ((T*)last_object->data)->paint(); }
-}

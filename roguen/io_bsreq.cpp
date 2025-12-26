@@ -169,9 +169,9 @@ static void* find_object(array* source, const bsreq* type, valuei* keys, int key
 	return 0;
 }
 
-static void clear_object(void* object, const bsreq* type) {
+static void clear_object(void* drawobject, const bsreq* type) {
 	for(auto req = type; *req; req++) {
-		auto p = req->ptr(object);
+		auto p = req->ptr(drawobject);
 		memset(p, 0, req->lenght);
 	}
 }
@@ -227,12 +227,12 @@ static void read_value(valuei& e, const bsreq* req) {
 	next();
 }
 
-static void write_value(void* object, const bsreq* req, int index, const valuei& v) {
+static void write_value(void* drawobject, const bsreq* req, int index, const valuei& v) {
 	if(!req)
 		return;
-	auto p1 = req->ptr(object, index);
+	auto p1 = req->ptr(drawobject, index);
 	if(req->is(KindSlice)) {
-		auto ps = (sliceu<int>*)req->ptr(object);
+		auto ps = (sliceu<int>*)req->ptr(drawobject);
 		if(req->source == bsdata<variant>::source_ptr) {
 			auto ci = req->source->getcount();
 			req->source->add();
@@ -247,9 +247,9 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 	else if(req->is(KindText))
 		req->set(p1, (long)szdup(v.text));
 	else if(req->is(KindScalar))
-		write_value(req->ptr(object), req->type + index, 0, v);
+		write_value(req->ptr(drawobject), req->type + index, 0, v);
 	else if(req->is(KindADat)) {
-		auto p2 = (char*)req->ptr(object);
+		auto p2 = (char*)req->ptr(drawobject);
 		auto pc = (int*)(p2 + FO(adat<char>, count));
 		auto pd = p2 + FO(adat<char>, data);
 		if(index > (int)req->count)
@@ -260,7 +260,7 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 	} else if(req->is(KindDSet))
 		req->set(p1, v.number);
 	else if(req->is(KindFlags)) {
-		auto data = (unsigned char*)req->ptr(object);
+		auto data = (unsigned char*)req->ptr(drawobject);
 		data[v.number / 8] |= 1 << (v.number % 8);
 	} else if(req->is(KindReference))
 		req->set(p1, (long)v.data);
@@ -268,12 +268,12 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 		errorp(p, "Unknown type in requisit `%1`", req->id);
 }
 
-static void fill_object(void* object, const bsreq* type, const valuei* keys, int key_count) {
+static void fill_object(void* drawobject, const bsreq* type, const valuei* keys, int key_count) {
 	for(int i = 0; i < key_count; i++)
-		write_value(object, type + i, 0, keys[i]);
+		write_value(drawobject, type + i, 0, keys[i]);
 }
 
-static void read_dset(void* object, const bsreq* req) {
+static void read_dset(void* drawobject, const bsreq* req) {
 	auto index = 0;
 	while(allowparse && isvalue()) {
 		valuei v;
@@ -287,23 +287,23 @@ static void read_dset(void* object, const bsreq* req) {
 		read_value(v, req);
 		skip(")");
 		next();
-		write_value(object, req, index++, v);
+		write_value(drawobject, req, index++, v);
 	}
 }
 
-static void read_element(void* object, const bsreq* type, int level) {
+static void read_element(void* drawobject, const bsreq* type, int level) {
 	valuei v;
 	auto req = type;
 	while(allowparse && isvalue()) {
 		v.clear();
 		read_value(v, req);
-		write_value(object, req, 0, v);
+		write_value(drawobject, req, 0, v);
 		req++;
 	}
 }
 
-static void read_slice(void* object, const bsreq* req, int level) {
-	auto ps = (sliceu<int>*)req->ptr(object);
+static void read_slice(void* drawobject, const bsreq* req, int level) {
+	auto ps = (sliceu<int>*)req->ptr(drawobject);
 	if(!ps->count)
 		ps->start = req->source->getcount();
 	while(allowparse && isvalue()) {
@@ -315,21 +315,21 @@ static void read_slice(void* object, const bsreq* req, int level) {
 	// TODO: After reading slice, check if we have same records
 }
 
-static void read_array(void* object, const bsreq* req) {
+static void read_array(void* drawobject, const bsreq* req) {
 	auto index = 0;
 	while(allowparse && isvalue()) {
 		valuei v;
 		read_value(v, req);
-		write_value(object, req, index++, v);
+		write_value(drawobject, req, index++, v);
 	}
 }
 
-static void read_dictionary(void* object, const bsreq* type, int level, bool need_linefeed = true) {
+static void read_dictionary(void* drawobject, const bsreq* type, int level, bool need_linefeed = true) {
 	while(allowparse && ischa(*p)) {
 		readid();
 		auto req = find_requisit(type, temp);
 		skip("(");
-		read_array(object, req);
+		read_array(drawobject, req);
 		skip(")");
 		next();
 	}
@@ -344,16 +344,16 @@ static void read_dictionary(void* object, const bsreq* type, int level, bool nee
 					errorp(p, "Not found requisit `%1`", temp);
 					allowparse = false;
 				} else if(req->is(KindDSet))
-					read_dset(object, req);
+					read_dset(drawobject, req);
 				else if(req->is(KindSlice)) {
 					if(req->source == bsdata<variant>::source_ptr)
-						read_array(object, req);
+						read_array(drawobject, req);
 					else
-						read_slice(object, req, level + 1);
+						read_slice(drawobject, req, level + 1);
 				} else if(req->is(KindScalar) && req->count > 0)
-					read_dictionary(req->ptr(object, index), req->type, level + 1, false);
+					read_dictionary(req->ptr(drawobject, index), req->type, level + 1, false);
 				else
-					read_array(object, req);
+					read_array(drawobject, req);
 				index++;
 			}
 			skiplinefeed();
@@ -367,24 +367,24 @@ static void* read_object(const bsreq* type, array* source, int key_count, int le
 		allowparse = false;
 	}
 	valuei keys[8] = {};
-	void* object = 0;
+	void* drawobject = 0;
 	if(key_count) {
 		for(auto i = 0; i < key_count; i++)
 			read_value(keys[i], type + i);
-		object = find_object(source, type, keys, key_count);
+		drawobject = find_object(source, type, keys, key_count);
 	}
-	if(!object) {
-		object = source->add();
-		clear_object(object, type);
-		fill_object(object, type, keys, key_count);
+	if(!drawobject) {
+		drawobject = source->add();
+		clear_object(drawobject, type);
+		fill_object(drawobject, type, keys, key_count);
 		if(common_initialize) {
 			auto push_p = p; p = common_initialize;
-			read_dictionary(object, type + key_count, level);
+			read_dictionary(drawobject, type + key_count, level);
 			p = push_p;
 		}
 	}
-	read_dictionary(object, type + key_count, level);
-	return object;
+	read_dictionary(drawobject, type + key_count, level);
+	return drawobject;
 }
 
 static const char* read_string(bool required = false) {

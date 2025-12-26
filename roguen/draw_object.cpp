@@ -5,16 +5,16 @@
 
 using namespace draw;
 
-BSDATAC(object, 512)
+BSDATAC(drawobject, 512)
 BSDATAC(draworder, 512)
 
-object* draw::last_object;
-fnevent	draw::object::correctcamera;
-fnevent	draw::object::beforepaint;
-fnevent	draw::object::afterpaint;
+drawobject* last_object;
+fnevent	drawobject::correctcamera;
+fnevent	drawobject::beforepaint;
+fnevent	drawobject::afterpaint;
 
-adat<object*, 512> draw::objects;
-rect draw::last_screen, draw::last_area;
+adat<drawobject*, 512> objects;
+rect last_screen, last_area;
 
 static unsigned long timestamp, timestamp_last;
 
@@ -36,7 +36,7 @@ static void remove_depends(draworder* p) {
 	}
 }
 
-unsigned long draw::getobjectstamp() {
+unsigned long getobjectstamp() {
 	return timestamp;
 }
 
@@ -79,8 +79,8 @@ static void update_all_orders() {
 	}
 }
 
-void draw::removeobjects(const array& source) {
-	for(auto& e : bsdata<object>()) {
+void removeobjects(const array& source) {
+	for(auto& e : bsdata<drawobject>()) {
 		if(source.have(e.data))
 			e.clear();
 	}
@@ -122,7 +122,7 @@ draworder* draworder::add(int milliseconds, bool cleanup) {
 	return p;
 }
 
-draworder* object::add(int milliseconds, draworder* depend, bool cleanup) {
+draworder* drawobject::add(int milliseconds, draworder* depend, bool cleanup) {
 	auto p = bsdata<draworder>::addz();
 	if(depend) {
 		copy(*p, *depend);
@@ -140,11 +140,11 @@ draworder* object::add(int milliseconds, draworder* depend, bool cleanup) {
 	return p;
 }
 
-void object::clear() {
+void drawobject::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-void object::disappear(int milliseconds) {
+void drawobject::disappear(int milliseconds) {
 	auto pr = add(milliseconds);
 	pr->alpha = 0;
 }
@@ -165,7 +165,7 @@ static void raw_beforemodal() {
 	hot.hilite.clear();
 }
 
-void draw::splashscreen(unsigned milliseconds) {
+void splashscreen(unsigned milliseconds) {
 	screenshoot push;
 	raw_beforemodal();
 	paintstart();
@@ -174,23 +174,23 @@ void draw::splashscreen(unsigned milliseconds) {
 	push.blend(another, milliseconds);
 }
 
-void object::paint() const {
+void drawobject::paint() const {
 	auto push_object = last_object;
-	auto push_fore = draw::fore;
-	auto push_alpha = draw::alpha;
-	last_object = const_cast<object*>(this);
-	draw::fore = fore;
-	draw::alpha = alpha;
+	auto push_fore = fore;
+	auto push_alpha = alpha;
+	last_object = const_cast<drawobject*>(this);
+	::fore = fore;
+	::alpha = alpha;
 	proc();
-	draw::alpha = push_alpha;
-	draw::fore = push_fore;
+	::alpha = push_alpha;
+	::fore = push_fore;
 	last_object = push_object;
 }
 
 static void select_objects() {
 	auto ps = objects.data;
 	auto pe = objects.endof();
-	for(auto& e : bsdata<object>()) {
+	for(auto& e : bsdata<drawobject>()) {
 		if(!e || !e.position.in(last_area))
 			continue;
 		if(ps < pe)
@@ -200,8 +200,8 @@ static void select_objects() {
 }
 
 static int compare(const void* v1, const void* v2) {
-	auto p1 = *((object**)v1);
-	auto p2 = *((object**)v2);
+	auto p1 = *((drawobject**)v1);
+	auto p2 = *((drawobject**)v2);
 	auto r1 = p1->priority / 5;
 	auto r2 = p2->priority / 5;
 	if(r1 != r2)
@@ -221,30 +221,30 @@ static void sort_objects() {
 
 static void paint_visible_objects() {
 	for(auto p : objects) {
-		draw::caret = p->position - draw::camera;
+		caret = p->position - camera;
 		p->paint();
 	}
 }
 
-void draw::paintobjects() {
-	rectpush push;
+void paintobjects() {
+	pushrect push;
 	auto push_clip = clipping;
 	last_screen = {caret.x, caret.y, caret.x + width, caret.y + height};
 	setclip(last_screen);
-	if(object::beforepaint)
-		object::beforepaint();
+	if(drawobject::beforepaint)
+		drawobject::beforepaint();
 	last_area = last_screen; last_area.move(camera.x, camera.y);
 	last_area.offset(-128, -128);
 	select_objects();
 	sort_objects();
 	paint_visible_objects();
-	if(object::afterpaint)
-		object::afterpaint();
+	if(drawobject::afterpaint)
+		drawobject::afterpaint();
 	shrink();
 	clipping = push_clip;
 }
 
-void* draw::chooseobject() {
+void* chooseobject() {
 	scene(paintobjects);
 	return (void*)getresult();
 }
@@ -257,12 +257,12 @@ static void paintobjectsshowmode() {
 		execute(buttoncancel);
 }
 
-void draw::showobjects() {
+void showobjects() {
 	scene(paintobjectsshowmode);
 }
 
-object*	draw::addobject(point pt, fnevent proc, void* data, unsigned char param, unsigned char priority, unsigned char alpha, unsigned char flags) {
-	auto p = bsdata<object>::addz();
+drawobject*	addobject(point pt, fnevent proc, void* data, unsigned char param, unsigned char priority, unsigned char alpha, unsigned char flags) {
+	auto p = bsdata<drawobject>::addz();
 	p->position = pt;
 	p->alpha = alpha;
 	p->priority = priority;
@@ -273,45 +273,45 @@ object*	draw::addobject(point pt, fnevent proc, void* data, unsigned char param,
 	return p;
 }
 
-object* draw::findobject(const void* p) {
-	for(auto& e : bsdata<object>()) {
+drawobject* findobject(const void* p) {
+	for(auto& e : bsdata<drawobject>()) {
 		if(e.data == p)
 			return &e;
 	}
 	return 0;
 }
 
-object* draw::findobject(point pt, fnevent proc) {
-	for(auto& e : bsdata<object>()) {
+drawobject* findobject(point pt, fnevent proc) {
+	for(auto& e : bsdata<drawobject>()) {
 		if(e.position==pt && e.proc == proc)
 			return &e;
 	}
 	return 0;
 }
 
-void draw::clearobjects() {
-	bsdata<object>::source.clear();
+void clearobjects() {
+	bsdata<drawobject>::source.clear();
 }
 
 static void normalize_objects() {
-	auto pe = bsdata<object>::begin();
-	for(auto& e : bsdata<object>()) {
+	auto pe = bsdata<drawobject>::begin();
+	for(auto& e : bsdata<drawobject>()) {
 		if(!e)
 			continue;
 		*pe++ = e;
 	}
-	bsdata<object>::source.count = pe - bsdata<object>::elements;
+	bsdata<drawobject>::source.count = pe - bsdata<drawobject>::elements;
 }
 
-void draw::shrink() {
-	auto pb = bsdata<object>::begin();
-	auto pe = bsdata<object>::end();
+void shrink() {
+	auto pb = bsdata<drawobject>::begin();
+	auto pe = bsdata<drawobject>::end();
 	while(pe > pb) {
 		if(pe[-1])
 			break;
 		pe--;
 	}
-	bsdata<object>::source.count = pe - bsdata<object>::elements;
+	bsdata<drawobject>::source.count = pe - bsdata<drawobject>::elements;
 }
 
 static rect getcorrectarea(int offs) {
@@ -356,11 +356,11 @@ static void moving(point& result, point goal, int step, int corrent) {
 	result = goal;
 }
 
-void object::move(point goal, int speed, int correct) {
+void drawobject::move(point goal, int speed, int correct) {
 	moving(position, goal, speed, correct);
 }
 
-void draw::setcamera(point v) {
+void setcamera(point v) {
 	auto w = last_screen.width();
 	if(!w)
 		w = getwidth();
@@ -370,17 +370,17 @@ void draw::setcamera(point v) {
 	v.x -= w / 2;
 	v.y -= h / 2;
 	camera = v;
-	if(object::correctcamera)
-		object::correctcamera();
+	if(drawobject::correctcamera)
+		drawobject::correctcamera();
 }
 
-bool draw::cameravisible(point goal, int border) {
+bool cameravisible(point goal, int border) {
 	rect rc = {camera.x, camera.y, camera.x + last_screen.width(), camera.y + last_screen.height()};
 	rc.offset(-border);
 	return goal.in(rc);
 }
 
-void draw::slidecamera(point goal, int step) {
+void slidecamera(point goal, int step) {
 	auto push_camera = camera;
 	setcamera(goal);
 	goal = camera;
@@ -403,12 +403,12 @@ void draw::slidecamera(point goal, int step) {
 	}
 }
 
-void draw::focusing(point goal) {
+void focusing(point goal) {
 	if(!cameravisible(goal))
 		slidecamera(goal);
 }
 
-void draw::waitall() {
+void waitall() {
 	start_timer();
 	while(bsdata<draworder>::source.count > 0 && ismodal()) {
 		update_timestamp();
@@ -424,7 +424,7 @@ void draw::waitall() {
 		normalize_objects();
 }
 
-void draw::draworder::wait() {
+void draworder::wait() {
 	if(!(*this))
 		return;
 	start_timer();

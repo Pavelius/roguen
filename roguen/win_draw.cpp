@@ -191,7 +191,7 @@ static const char* register_class(const char* class_name) {
 	return class_name;
 }
 
-void draw::updatewindow() {
+void updatewindow() {
 	if(!hwnd || !canvas)
 		return;
 	if(video_buffer.height != canvas->height
@@ -206,7 +206,7 @@ void draw::updatewindow() {
 	UpdateWindow(hwnd);
 }
 
-void draw::syscursor(bool enable) {
+void syscursor(bool enable) {
 	ShowCursor(enable ? 1 : 0);
 }
 
@@ -222,8 +222,8 @@ void create_platform_window() {
 	auto y = (GetSystemMetrics(SM_CYFULLSCREEN) - window_height) / 2;
 	minimum.x = client_width;
 	minimum.y = client_height;
-	if(draw::canvas)
-		draw::canvas->resize(width, height, 32, true);
+	if(canvas)
+		canvas->resize(width, height, 32, true);
 	setclip();
 	// Create The Window
 	hwnd = CreateWindowExA(0, register_class("LWUIWindow"), 0, dwStyle,
@@ -268,7 +268,7 @@ void doredraw() {
 	}
 }
 
-int draw::rawinput() {
+int rawinput() {
 	MSG	msg;
 	updatewindow();
 	if(!hwnd)
@@ -287,11 +287,11 @@ int draw::rawinput() {
 	return 0;
 }
 
-void draw::setcaption(const char* string) {
+void setcaption(const char* string) {
 	SetWindowTextA(hwnd, string);
 }
 
-void draw::settimer(unsigned milleseconds) {
+void settimer(unsigned milleseconds) {
 	if(milleseconds)
 		SetTimer(hwnd, InputTimer, milleseconds, 0);
 	else

@@ -14,8 +14,8 @@ extern greatneed* last_need;
 static collection<greatneedi> needs;
 extern int last_coins;
 
-static bool isneed(const void* object) {
-	auto p = (creature*)object;
+static bool isneed(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	return find_need(p) != 0;
 }
 
@@ -102,7 +102,7 @@ static void say_need(const char* suffix, ...) {
 	pause();
 }
 
-bool payment(creature* player, creature* keeper, const char* object, int coins);
+bool payment(creature* player, creature* keeper, const char* drawobject, int coins);
 
 static void talk_apply_answer(void* pv) {
 	if(player->iswear(pv)) {

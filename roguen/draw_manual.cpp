@@ -27,7 +27,7 @@ static void paint_canter(const char* format, fnoutput proc) {
 }
 
 static void bottom_border() {
-	pushvalue push_fore(draw::fore, colors::border);
+	pushvalue push_fore(fore, colors::border);
 	auto push_caret = caret;
 	caret.y += metrics::padding;
 	caret.x -= metrics::padding;
@@ -83,15 +83,14 @@ static void button(unsigned key, fnevent proc) {
 }
 
 static void button_line(const slice<shortcuti>& source) {
-	auto push_caret = draw::caret;
-	draw::caret.y = getheight() - texth() - metrics::padding;
+	pushrect push;
+	caret.y = getheight() - texth() - metrics::padding;
 	for(auto& e : source) {
 		if(e.visible && !e.visible())
 			continue;
 		button(e.key, e.proc);
 	}
-	draw::caret = push_caret;
-	height = getheight() - texth() - metrics::padding * 2 - push_caret.y;
+	height = getheight() - texth() - metrics::padding * 2 - push.caret.y;
 }
 
 static void clipped_string(const char* format, int& origin, int& cash_text_offset, int& maximum) {

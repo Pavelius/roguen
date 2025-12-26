@@ -79,7 +79,7 @@ static void talk_entry(const phrasei* p) {
 	}
 }
 
-bool payment(creature* player, creature* keeper, const char* object, int coins);
+bool payment(creature* player, creature* keeper, const char* drawobject, int coins);
 
 bool talk_opponent(const char* id, fncommand proc) {
 	if(!opponent || !player)

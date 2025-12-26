@@ -21,7 +21,7 @@ static void center_bitmap(const surface& bm) {
 }
 
 static void dialog_scene() {
-	rectpush push;
+	pushrect push;
 	caret.clear();
 	width = getwidth();
 	height = getheight();

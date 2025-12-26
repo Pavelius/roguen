@@ -40,7 +40,7 @@ bool					show_floor_rect;
 int						window_width = 480;
 int						window_height = 280;
 
-typedef unsigned (*fnactionkey)(const void* object, int index);
+typedef unsigned (*fnactionkey)(const void* drawobject, int index);
 
 static point straight_directions[] = {
 	{0, -1}, {0, 1}, {-1, 0}, {1, 0},
@@ -63,7 +63,7 @@ static point down(point v) {
 }
 
 static void strokedown() {
-	rectpush push;
+	pushrect push;
 	auto push_fore = fore;
 	fore = push_fore.mix(colors::text, 216);
 	line(caret.x, caret.y + height - 1);
@@ -75,7 +75,7 @@ static void strokedown() {
 }
 
 static void strokeup() {
-	rectpush push;
+	pushrect push;
 	auto push_fore = fore;
 	fore = push_fore.mix(colors::window, 128);
 	line(caret.x, caret.y + height - 1);
@@ -87,7 +87,7 @@ static void strokeup() {
 }
 
 static void remove_temp_objects() {
-	for(auto& e : bsdata<object>()) {
+	for(auto& e : bsdata<drawobject>()) {
 		if(!e.data)
 			e.clear();
 	}
@@ -172,7 +172,7 @@ static bool iswall(point i, directionn d) {
 }
 
 static void fillwalls() {
-	rectpush push;
+	pushrect push;
 	pushvalue push_fore(fore);
 	caret.x -= tsx / 2; caret.y -= tsy / 2;
 	width = tsx; height = tsy;
@@ -181,7 +181,7 @@ static void fillwalls() {
 }
 
 static void filllos() {
-	rectpush push;
+	pushrect push;
 	pushvalue push_fore(fore);
 	pushvalue push_alpha(alpha, (unsigned char)64);
 	caret.x -= tsx / 2; caret.y -= tsy / 2;
@@ -191,7 +191,7 @@ static void filllos() {
 }
 
 static void fillfow() {
-	rectpush push;
+	pushrect push;
 	pushvalue push_fore(fore);
 	caret.x -= tsx / 2; caret.y -= tsy / 2;
 	width = tsx; height = tsy;
@@ -273,7 +273,7 @@ static void paint_wall(point p0, point i, unsigned char r, const tilei& ei) {
 }
 
 static void floorrect() {
-	rectpush push;
+	pushrect push;
 	caret.x -= tsx / 2 - 1;
 	caret.y -= tsx / 2 - 1;
 	width = tsx - 2;
@@ -344,7 +344,7 @@ static void paint_floor() {
 }
 
 static void paint_fow() {
-	rectpush push;
+	pushrect push;
 	height = tsy; width = tsx;
 	auto pi = gres(res::Fow);
 	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
@@ -388,7 +388,7 @@ static void paint_fow() {
 }
 
 static void paint_los() {
-	rectpush push;
+	pushrect push;
 	height = tsy; width = tsx;
 	auto pi = gres(res::Los);
 	auto x1 = camera.x / tsx, x2 = (camera.x + getwidth() + tsx / 2) / tsx;
@@ -453,7 +453,7 @@ static int getavatar(int race, bool female, int armor) {
 }
 
 static void fillbar(int value) {
-	rectpush push;
+	pushrect push;
 	if(value > 0) {
 		auto push_width = width;
 		width = value;
@@ -475,7 +475,7 @@ static void bar(int value, int maximum, color m) {
 }
 
 static void fillbarnd(int value) {
-	rectpush push;
+	pushrect push;
 	if(value > 0) {
 		setoffset(1, 1);
 		auto push_width = width;
@@ -512,7 +512,7 @@ static point get_top_position(variant v) {
 
 static void paint_bars(const creature* player) {
 	const int dy = 4;
-	rectpush push;
+	pushrect push;
 	caret.y += get_top_position(player->getkind()).y;
 	caret.x -= tsx / 4;
 	width = tsx / 2; height = 4;
@@ -605,7 +605,7 @@ void visualeffect::paint(unsigned char param) const {
 
 static void paint_health_bar() {
 	for(auto p : objects) {
-		draw::caret = p->position - draw::camera;
+		caret = p->position - camera;
 		if(bsdata<creature>::have(p->data))
 			((creature*)p->data)->paintbarsall();
 	}
@@ -680,7 +680,7 @@ bool button(unsigned key, int format_width) {
 	if(format_width == -1)
 		format_width = textw(temp) + metrics::padding * 2;
 	width = format_width;
-	auto result = button(temp, key, draw::pbutton, false);
+	auto result = button(temp, key, pbutton, false);
 	width = push_width;
 	return result;
 }
@@ -704,7 +704,7 @@ static unsigned answer_key(int index) {
 
 static void execute_action() {
 	auto push_action = last_action;
-	last_action = (siteskilli*)hot.object;
+	last_action = (siteskilli*)hot.drawobject;
 	script_execute("ApplyAction", 0);
 	last_action = push_action;
 }
@@ -754,7 +754,7 @@ static void paint_collection(const collectiona& source, fnactionkey pkey, fneven
 	if(!source)
 		return;
 	const int dy = texth() + 1;
-	rectpush push;
+	pushrect push;
 	width = metrics::padding + get_maximum_width(source) + 32;
 	height = last_actions.getcount() * dy;
 	set_ld_position();
@@ -776,7 +776,7 @@ static void paint_actions() {
 static void paint_message(const char* format) {
 	if(!format || !format[0])
 		return;
-	rectpush push;
+	pushrect push;
 	width = window_width;
 	textfs(format);
 	caret.y = metrics::padding * 2;
@@ -833,7 +833,7 @@ int choose_dialog(fnevent proc) {
 }
 
 static void execute_hotkey() {
-	auto pn = (hotkey*)hot.object;
+	auto pn = (hotkey*)hot.drawobject;
 	if(pn->data.iskind<widget>())
 		choose_dialog(bsdata<widget>::elements[pn->data.value].proc);
 	else if(pn->data.iskind<script>())
@@ -986,7 +986,7 @@ static void paint_message(const answers& source, int window_width) {
 	auto p = console.begin();
 	if(!p || !p[0])
 		return;
-	rectpush push;
+	pushrect push;
 	width = window_width;
 	caret.y = metrics::padding * 2;
 	caret.x = (getwidth() - window_width - panel_width) / 2;
@@ -998,7 +998,7 @@ static void paint_message(const answers& source, int window_width) {
 }
 
 static void update_scene() {
-	rectpush push;
+	pushrect push;
 	ismodal();
 	paintstart();
 	paintobjects();
@@ -1006,7 +1006,7 @@ static void update_scene() {
 
 void* answers::choose() const {
 	update_scene();
-	rectpush push;
+	pushrect push;
 	screenshoot screen;
 	pushvalue push_choose(choosing, true);
 	while(ismodal()) {
@@ -1035,7 +1035,7 @@ static void answer_after_paint() {
 	caret = answer_end;
 	auto push_width = width; width = -1;
 	if(answers::cancel_text) {
-		if(button(answers::cancel_text, KeyEscape, draw::pbutton, false))
+		if(button(answers::cancel_text, KeyEscape, pbutton, false))
 			execute(buttoncancel);
 	}
 	width = push_width;
@@ -1071,7 +1071,7 @@ static point m2a(point m, int z) {
 }
 
 static void paint_minimap_items(point origin, int z) {
-	rectpush push;
+	pushrect push;
 	height = width = z;
 	for(auto& e : area->items) {
 		if(!e)
@@ -1088,7 +1088,7 @@ static void paint_minimap_items(point origin, int z) {
 }
 
 static void paint_minimap_creatures(point origin, int z, bool use_hearing) {
-	rectpush push;
+	pushrect push;
 	height = width = z;
 	for(auto& e : bsdata<creature>()) {
 		if(e.worldpos != game)
@@ -1111,7 +1111,7 @@ static void paint_minimap_creatures(point origin, int z, bool use_hearing) {
 }
 
 static void paint_area(point origin, int z) {
-	rectpush push;
+	pushrect push;
 	pushvalue push_fore(fore);
 	height = width = z;
 	point i;
@@ -1139,12 +1139,12 @@ static void paint_area_screen(point origin, int z) {
 		return;
 	auto pc = player->getposition();
 	auto s1 = s2m(camera);
-	rectpush push;
+	pushrect push;
 	pushvalue push_fore(fore);
 	caret.x = origin.x + s1.x * z;
 	caret.y = origin.y + s1.y * z;
-	width = ((draw::getwidth() - panel_width) / tsx + 2) * z;
-	height = (draw::getheight() / tsy + 1) * z;
+	width = ((getwidth() - panel_width) / tsx + 2) * z;
+	height = (getheight() / tsy + 1) * z;
 	fore = colors::white;
 	rectb();
 }
@@ -1268,7 +1268,7 @@ static void paint_status() {
 	if(player)
 		player_info();
 	caret.x = getwidth() - panel_width + 1;
-	caret.y = draw::getheight() - 128 - 1;
+	caret.y = getheight() - 128 - 1;
 	paint_minimap();
 	caret = push_caret;
 	height = push_height;
@@ -1280,22 +1280,22 @@ static void beforepaint() {
 }
 
 static void window_back() {
-	rectpush push;
-	pushvalue push_fore(draw::fore, colors::form);
+	pushrect push;
+	pushvalue push_fore(fore, colors::form);
 	setoffset(-metrics::padding + 1, -metrics::padding + 1);
 	rectf();
 }
 
 static void right_border() {
-	rectpush push;
-	pushvalue push_fore(draw::fore, colors::border);
+	pushrect push;
+	pushvalue push_fore(fore, colors::border);
 	caret.x += width - 1;
 	caret.y -= metrics::padding;
 	line(caret.x, caret.y + height + metrics::padding * 2);
 }
 
 static void show_block(const char* format, ...) {
-	pushvalue push_tab(draw::tab_pixels, width - 26);
+	pushvalue push_tab(tab_pixels, width - 26);
 	char temp[2048]; stringbuilder sb(temp);
 	sb.addv(format, xva_start(format));
 	textf(temp);
@@ -1303,7 +1303,7 @@ static void show_block(const char* format, ...) {
 
 static void show_charsheet() {
 	setoffset(metrics::padding, metrics::padding);
-	rectpush push;
+	pushrect push;
 	width = 150;
 	right_border();
 	show_block("%ListOfFeats%ListOfEffects\n%Reputation");
@@ -1328,7 +1328,7 @@ static void show_font() {
 	const int glyph_start = 32;
 	auto push_fore = fore; fore = colors::white;
 	setoffset(metrics::padding, metrics::padding);
-	rectpush push; width = 16; height = 16;
+	pushrect push; width = 16; height = 16;
 	point origin = caret;
 	for(auto y = 0; y < 14; y++) {
 		for(auto x = 0; x < 16; x++) {
@@ -1412,7 +1412,7 @@ static void paint_info(const sprite* p, int frame) {
 	auto push_caret = caret;
 	auto push_fore = fore;
 	caret.x = 4;
-	caret.y = draw::getheight() - texth() - 4;
+	caret.y = getheight() - texth() - 4;
 	fore = colors::gray;
 	auto& f = p->get(frame);
 	char temp[260]; stringbuilder sb(temp);
@@ -1423,7 +1423,7 @@ static void paint_info(const sprite* p, int frame) {
 }
 
 static void paint_border(point size, int border_dy) {
-	rectpush push;
+	pushrect push;
 	auto push_fore = fore; 	fore = colors::gray;
 	width = size.x;
 	height = size.y;
@@ -1553,14 +1553,14 @@ int start_application(fnevent proc) {
 	pbutton = paint_button;
 	pbackground = beforepaint;
 	pfinish = afterpaint;
-	object::beforepaint = object_beforepaint;
-	object::afterpaint = object_afterpaint;
-	object::correctcamera = correct_camera;
+	drawobject::beforepaint = object_beforepaint;
+	drawobject::afterpaint = object_afterpaint;
+	drawobject::correctcamera = correct_camera;
 	answers::paintcell = answer_paint_cell;
 	answers::beforepaint = answer_before_paint;
 	answers::afterpaint = answer_after_paint;
-	draw::width = 640;
-	draw::height = 360;
+	width = 640;
+	height = 360;
 	initialize(getnm("AppTitle"));
 	setnext(proc);
 	start_scene();

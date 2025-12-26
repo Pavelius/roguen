@@ -30,6 +30,6 @@ public:
 	constexpr unsigned size() const { return count; }
 };
 
-template<typename T> bool fiallow(const void* object, int value);
+template<typename T> bool fiallow(const void* drawobject, int value);
 template<typename T> void fiscript(int index, int bonus);
 template<typename T> bool fitest(int index, int bonus);

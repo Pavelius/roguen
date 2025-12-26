@@ -18,6 +18,6 @@ const sprite* resource::get() {
 	return data;
 }
 
-const sprite* draw::gres(res id) {
+const sprite* gres(res id) {
 	return bsdata<resource>::elements[(int)id].get();
 }

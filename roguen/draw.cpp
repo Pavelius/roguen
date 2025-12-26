@@ -29,29 +29,29 @@ color				colors::special;
 color				colors::tips::text;
 color				colors::tips::back;
 // Color context and font context
-fnevent				draw::domodal, draw::pbackground, draw::pfinish, draw::ptips;
-fnevent				draw::pbeforemodal, draw::pleavemodal, draw::psetfocus;
-unsigned char       draw::alpha = 255;
-color				draw::fore;
-color				draw::fore_stroke;
-int					draw::width, draw::height, draw::dialog_width = 500;
-extern int			draw::fsize = 32;
-bool				draw::text_clipped, draw::control_hilited;
-const sprite*		draw::font;
-color*				draw::palt;
-rect				draw::clipping;
-hoti				draw::hot;
-const void*			draw::hilite_object;
-point				draw::hilite_position;
-int					draw::hilite_size;
-fnbutton			draw::pbutton;
+fnevent				domodal, pbackground, pfinish, ptips;
+fnevent				pbeforemodal, pleavemodal, psetfocus;
+unsigned char       alpha = 255;
+color				fore;
+color				fore_stroke;
+int					width, height, dialog_width = 500;
+extern int			fsize = 32;
+bool				text_clipped, control_hilited;
+const sprite*		font;
+color*				palt;
+rect				clipping;
+hoti				hot;
+const void*			hilite_object;
+point				hilite_position;
+int					hilite_size;
+fnbutton			pbutton;
 // Locale draw variables
-static draw::surface default_surface;
-draw::surface*		draw::canvas = &default_surface;
-point				draw::caret, draw::camera, draw::tips_caret, draw::tips_size;
+static surface default_surface;
+surface*		canvas = &default_surface;
+point				caret, camera, tips_caret, tips_size;
 // Drag
 static const void*	drag_object;
-point				draw::dragmouse;
+point				dragmouse;
 // Metrics
 sprite*				metrics::font = (sprite*)loadb("art/font.pma");
 sprite*				metrics::h1 = (sprite*)loadb("art/h1.pma");
@@ -66,7 +66,7 @@ static long			break_result;
 static fnevent		next_proc;
 extern rect			sys_static_area;
 static char			tips_text[4096];
-stringbuilder		draw::tips_sb(tips_text);
+stringbuilder		tips_sb(tips_text);
 
 int isqrt(int num) {
 	int res = 0;
@@ -151,9 +151,9 @@ static void set32(color* p, unsigned count) {
 	default:
 		p2 = p + count;
 		while(p < p2) {
-			p->r = (p->r * (255 - draw::alpha) + fore.r * draw::alpha) >> 8;
-			p->g = (p->g * (255 - draw::alpha) + fore.g * draw::alpha) >> 8;
-			p->b = (p->b * (255 - draw::alpha) + fore.b * draw::alpha) >> 8;
+			p->r = (p->r * (255 - alpha) + fore.r * alpha) >> 8;
+			p->g = (p->g * (255 - alpha) + fore.g * alpha) >> 8;
+			p->b = (p->b * (255 - alpha) + fore.b * alpha) >> 8;
 			p++;
 		}
 		break;
@@ -173,9 +173,9 @@ static void set32(color* p) {
 		p->b = (p->b + fore.b) >> 1;
 		break;
 	default:
-		p->r = (p->r * (255 - draw::alpha) + fore.r * draw::alpha) >> 8;
-		p->g = (p->g * (255 - draw::alpha) + fore.g * draw::alpha) >> 8;
-		p->b = (p->b * (255 - draw::alpha) + fore.b * draw::alpha) >> 8;
+		p->r = (p->r * (255 - alpha) + fore.r * alpha) >> 8;
+		p->g = (p->g * (255 - alpha) + fore.g * alpha) >> 8;
+		p->b = (p->b * (255 - alpha) + fore.b * alpha) >> 8;
 		break;
 	}
 }
@@ -253,7 +253,7 @@ static void raw1(int x, int y, unsigned char* s, int width, int y2) {
 				if(x1 < clipping.x1 || x1 >= clipping.x2)
 					continue;
 				if((s[(x1 - x) / 8] & (0x80 >> ((x1 - x) % 8))) != 0)
-					*((color*)draw::canvas->ptr(x1, y)) = fore;
+					*((color*)canvas->ptr(x1, y)) = fore;
 			}
 		}
 		y++; s += sn;
@@ -951,7 +951,7 @@ static bool correctb(int& x1, int& y1, int& w, int& h, int& ox) {
 	int x11 = x1;
 	int x2 = x1 + w;
 	int y2 = y1 + h;
-	if(!correct(x1, y1, x2, y2, draw::clipping))
+	if(!correct(x1, y1, x2, y2, clipping))
 		return false;
 	ox = x1 - x11;
 	w = x2 - x1;
@@ -1043,16 +1043,16 @@ static void cpy32t(unsigned char* d, int d_scan, unsigned char* s, int s_scan, i
 	} while(--height);
 }
 
-void draw::dragbegin(const void* p) {
+void dragbegin(const void* p) {
 	drag_object = p;
 	dragmouse = hot.mouse;
 }
 
-bool draw::dragactive() {
+bool dragactive() {
 	return drag_object != 0;
 }
 
-bool draw::dragactive(const void* p) {
+bool dragactive(const void* p) {
 	if(drag_object == p) {
 		if(!hot.pressed || hot.key == KeyEscape) {
 			drag_object = 0;
@@ -1065,28 +1065,28 @@ bool draw::dragactive(const void* p) {
 	return false;
 }
 
-int draw::getbpp() {
+int getbpp() {
 	return canvas ? canvas->bpp : 1;
 }
 
-int draw::getwidth() {
+int getwidth() {
 	return canvas ? canvas->width : 0;
 }
 
-int draw::getheight() {
+int getheight() {
 	return canvas ? canvas->height : 0;
 }
 
-unsigned char* draw::ptr(int x, int y) {
+unsigned char* ptr(int x, int y) {
 	return canvas ? (canvas->bits + y * canvas->scanline + x * canvas->bpp / 8) : 0;
 }
 
-void draw::pixel(int x, int y) {
+void pixel(int x, int y) {
 	if(x >= clipping.x1 && x < clipping.x2 && y >= clipping.y1 && y < clipping.y2)
 		*((color*)((char*)canvas->bits + y * canvas->scanline + x * 4)) = fore;
 }
 
-void draw::pixel(int x, int y, unsigned char a) {
+void pixel(int x, int y, unsigned char a) {
 	if(x < clipping.x1 || x >= clipping.x2 || y < clipping.y1 || y >= clipping.y2 || a == 0xFF)
 		return;
 	color* p = (color*)ptr(x, y);
@@ -1100,7 +1100,7 @@ void draw::pixel(int x, int y, unsigned char a) {
 	}
 }
 
-void draw::line(int xt, int yt) {
+void line(int xt, int yt) {
 	int x0 = caret.x, y0 = caret.y, x1 = xt, y1 = yt;
 	if(caret.x == x1) {
 		if(correct(x0, y0, x1, y1, clipping, false))
@@ -1137,7 +1137,7 @@ void draw::line(int xt, int yt) {
 	caret.y = yt;
 }
 
-void draw::linet(int x1, int y1) {
+void linet(int x1, int y1) {
 	int x0 = caret.x, y0 = caret.y;
 	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = -iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
@@ -1154,33 +1154,15 @@ void draw::linet(int x1, int y1) {
 	caret.y = y1;
 }
 
-void draw::rectb() {
+void rectb() {
 	line(caret.x + width, caret.y);
 	line(caret.x, caret.y + height);
 	line(caret.x - width, caret.y);
 	line(caret.x, caret.y - height);
 }
 
-void draw::rectb3d() {
-	auto push_caret = caret;
-	auto push_alpha = alpha;
-	line(caret.x + width, caret.y);
-	line(caret.x, caret.y + height);
-	line(caret.x - width, caret.y);
-	line(caret.x, caret.y - height);
-	setoffset(1, 1);
-	alpha = alpha / 2;
-	line(caret.x + width, caret.y);
-	line(caret.x, caret.y + height);
-	alpha = alpha / 2;
-	line(caret.x - width, caret.y);
-	line(caret.x, caret.y - height);
-	alpha = push_alpha;
-	caret = push_caret;
-}
-
-void draw::rectf() {
-	rectpush push;
+void rectf() {
+	pushrect push;
 	int x1 = caret.x, y1 = caret.y, x2 = caret.x + width, y2 = caret.y + height;
 	if(correct(x1, y1, x2, y2, clipping))
 		set32x(ptr(x1, y1), canvas->scanline, x2 - x1, y2 - y1);
@@ -1210,7 +1192,7 @@ static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r) {
 	} while(x < 0);
 }
 
-void draw::rectfe(rect rc, int r) {
+void rectfe(rect rc, int r) {
 	rectfpt(rc.x1, rc.y1, rc.x2, rc.y2, r);
 	//rectf({rc.x1 + r, rc.y1, rc.x2 - r, rc.y1 + r});
 	//rectf({rc.x1, rc.y1 + r + 1, rc.x1 + r, rc.y2 - r});
@@ -1219,37 +1201,37 @@ void draw::rectfe(rect rc, int r) {
 	//rectf({rc.x1 + r, rc.y1 + r, rc.x2 - r, rc.y2 - r});
 }
 
-void draw::setpos(int x, int y) {
+void setpos(int x, int y) {
 	caret.x = x;
 	caret.y = y;
 }
 
-void draw::setpos(int x, int y, int w, int h) {
+void setpos(int x, int y, int w, int h) {
 	caret.x = x;
 	caret.y = y;
 	width = w;
 	height = h;
 }
 
-void draw::setoffset(int x, int y) {
+void setoffset(int x, int y) {
 	caret.x += x; width -= x * 2;
 	caret.y += y; height -= y * 2;
 }
 
-void draw::rectx() {
+void rectx() {
 	linet(caret.x, caret.y + height);
 	linet(caret.x + width, caret.y);
 	linet(caret.x, caret.y - height);
 	linet(caret.x - width, caret.y);
 }
 
-void draw::rectfocus() {
-	rectpush push;
+void rectfocus() {
+	pushrect push;
 	setoffset(1, 1);
 	rectx();
 }
 
-void draw::gradv(const color c1, const color c2, int skip) {
+void gradv(const color c1, const color c2, int skip) {
 	if(!canvas)
 		return;
 	if(skip > height)
@@ -1273,7 +1255,7 @@ void draw::gradv(const color c1, const color c2, int skip) {
 	fore = pf;
 }
 
-void draw::gradh(const color c1, const color c2, int skip) {
+void gradh(const color c1, const color c2, int skip) {
 	if(!canvas)
 		return;
 	if(skip > width)
@@ -1310,7 +1292,7 @@ static void set32fl(int x, int y, int w) {
 		set32((color*)canvas->ptr(x, y), w);
 }
 
-void draw::circlef(int r) {
+void circlef(int r) {
 	int xm = caret.x, ym = caret.y;
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
@@ -1330,7 +1312,7 @@ void draw::circlef(int r) {
 	} while(x < 0);
 }
 
-void draw::circle(int r) {
+void circle(int r) {
 	int xm = caret.x, ym = caret.y;
 	int x = r, y = 0; // II. quadrant from bottom left to top right
 	int x2, e2, err = 2 - 2 * r; // error of 1.step
@@ -1367,7 +1349,7 @@ void draw::circle(int r) {
 	}
 }
 
-void draw::fhexagon() {
+void fhexagon() {
 	const double cos_30 = 0.86602540378;
 	point points[6] = {
 		{(short)(caret.x + fsize), caret.y},
@@ -1385,7 +1367,7 @@ void draw::fhexagon() {
 	caret = push_caret;
 }
 
-void draw::hexagon() {
+void hexagon() {
 	const double cos_30 = 0.86602540378;
 	point points[6] = {
 		{(short)(caret.x + fsize * cos_30), (short)(caret.y - fsize / 2)},
@@ -1403,8 +1385,8 @@ void draw::hexagon() {
 	caret = push_caret;
 }
 
-void draw::setclip(rect rcn) {
-	rect rc = draw::clipping;
+void setclip(rect rcn) {
+	rect rc = clipping;
 	if(rc.x1 < rcn.x1)
 		rc.x1 = rcn.x1;
 	if(rc.y1 < rcn.y1)
@@ -1413,7 +1395,7 @@ void draw::setclip(rect rcn) {
 		rc.x2 = rcn.x2;
 	if(rc.y2 > rcn.y2)
 		rc.y2 = rcn.y2;
-	draw::clipping = rc;
+	clipping = rc;
 }
 
 static void intersect_rect(rect& r1, const rect& r2) {
@@ -1440,7 +1422,7 @@ static void intersect_rect(rect& r1, const rect& r2) {
 	}
 }
 
-bool draw::ishilite(const rect& rc) {
+bool ishilite(const rect& rc) {
 	if(hot.key == InputNoUpdate)
 		return false;
 	if(dragactive())
@@ -1454,7 +1436,7 @@ bool draw::ishilite(const rect& rc) {
 	return false;
 }
 
-int	draw::aligned(int x, int width, unsigned flags, int dx) {
+int	aligned(int x, int width, unsigned flags, int dx) {
 	switch(flags & AlignMask) {
 	case AlignRightBottom:
 	case AlignRightCenter:
@@ -1473,48 +1455,48 @@ static int alignedh1(const char* string, unsigned state) {
 	case AlignRightCenter:
 	case AlignLeftCenter:
 		if(state & TextSingleLine)
-			ty = draw::texth();
+			ty = texth();
 		else
-			ty = draw::texth(string, width);
+			ty = texth(string, width);
 		return (height - ty) / 2;
 	case AlignCenterBottom:
 	case AlignRightBottom:
 	case AlignLeftBottom:
 		if(state & TextSingleLine)
-			ty = draw::texth();
+			ty = texth();
 		else
-			ty = draw::texth(string, width);
+			ty = texth(string, width);
 		return height - ty;
 	default:
 		return 0;
 	}
 }
 
-int draw::alignedh(const rect& rc, const char* string, unsigned state) {
+int alignedh(const rect& rc, const char* string, unsigned state) {
 	int ty;
 	switch(state & AlignMask) {
 	case AlignCenterCenter:
 	case AlignRightCenter:
 	case AlignLeftCenter:
 		if(state & TextSingleLine)
-			ty = draw::texth();
+			ty = texth();
 		else
-			ty = draw::texth(string, rc.width());
+			ty = texth(string, rc.width());
 		return (rc.height() - ty) / 2;
 	case AlignCenterBottom:
 	case AlignRightBottom:
 	case AlignLeftBottom:
 		if(state & TextSingleLine)
-			ty = draw::texth();
+			ty = texth();
 		else
-			ty = draw::texth(string, rc.width());
+			ty = texth(string, rc.width());
 		return rc.y2 - ty;
 	default:
 		return 0;
 	}
 }
 
-const char* draw::skiptr(const char* string) {
+const char* skiptr(const char* string) {
 	// skiping trail symbols
 	for(; *string && *string == 0x20; string++);
 	if(*string == 13) {
@@ -1529,7 +1511,7 @@ const char* draw::skiptr(const char* string) {
 	return string;
 }
 
-int draw::textw(rect& rc, const char* string) {
+int textw(rect& rc, const char* string) {
 	int w1 = rc.width();
 	rc.y2 = rc.y1;
 	rc.x2 = rc.x1;
@@ -1546,7 +1528,7 @@ int draw::textw(rect& rc, const char* string) {
 	return rc.height();
 }
 
-void draw::textas(const char* string) {
+void textas(const char* string) {
 	int mx = 0, my = 0;
 	while(string[0]) {
 		int c = textbc(string, width);
@@ -1562,7 +1544,7 @@ void draw::textas(const char* string) {
 	height = my;
 }
 
-int draw::texth(const char* string, int width) {
+int texth(const char* string, int width) {
 	int dy = texth();
 	int y1 = 0;
 	while(*string) {
@@ -1575,7 +1557,7 @@ int draw::texth(const char* string, int width) {
 	return y1;
 }
 
-int draw::textw(const char* string, int count) {
+int textw(const char* string, int count) {
 	if(!font)
 		return 0;
 	int x1 = 0;
@@ -1595,7 +1577,7 @@ int draw::textw(const char* string, int count) {
 	return x1;
 }
 
-void draw::text(const char* string, int count, unsigned flags) {
+void text(const char* string, int count, unsigned flags) {
 	if(!font)
 		return;
 	auto dy = texth();
@@ -1616,14 +1598,14 @@ void draw::text(const char* string, int count, unsigned flags) {
 	caret = push_caret;
 }
 
-void draw::textcj(const char* string) {
+void textcj(const char* string) {
 	auto push_caret = caret;
 	caret.x -= textw(string) / 2;
 	text(string);
 	caret = push_caret;
 }
 
-int draw::textbc(const char* string, int width) {
+int textbc(const char* string, int width) {
 	if(!font)
 		return 0;
 	int p = -1;
@@ -1649,7 +1631,7 @@ int draw::textbc(const char* string, int width) {
 	return p;
 }
 
-int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
+int	text(rect rc, const char* string, unsigned state, int* max_width) {
 	if(!string || string[0] == 0)
 		return 0;
 	auto push_caret = caret;
@@ -1660,7 +1642,7 @@ int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 		*max_width = 0;
 	if(state & TextSingleLine) {
 		auto push_clip = clipping; setclip(rc);
-		caret.x = aligned(caret.x, rc.width(), state, draw::textw(string));
+		caret.x = aligned(caret.x, rc.width(), state, textw(string));
 		text(string, -1, state);
 		clipping = push_clip;
 		caret = push_caret;
@@ -1684,7 +1666,7 @@ int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 	return dy;
 }
 
-void draw::texta(const char* string, unsigned state) {
+void texta(const char* string, unsigned state) {
 	if(!string || string[0] == 0)
 		return;
 	auto push_caret = caret;
@@ -1693,7 +1675,7 @@ void draw::texta(const char* string, unsigned state) {
 	auto y1 = caret.y;
 	if(state & TextSingleLine) {
 		auto push_clip = clipping; setclip(getrect());
-		caret.x = aligned(caret.x, width, state, draw::textw(string));
+		caret.x = aligned(caret.x, width, state, textw(string));
 		text(string, -1, state);
 		clipping = push_clip;
 		caret.y += texth();
@@ -1714,32 +1696,32 @@ void draw::texta(const char* string, unsigned state) {
 }
 
 static void hilite_text_line(int x, int y, int width, int height, const char* string, int count, unsigned state, int i1, int i2) {
-	int w = draw::textw(string, count);
+	int w = textw(string, count);
 	auto push_caret = caret;
-	caret.x = draw::aligned(x, width, state, w);
+	caret.x = aligned(x, width, state, w);
 	caret.y = y;
 	if(i1 != i2 && ((i1 >= 0 && i1 < count) || (i2 >= 0 && i2 < count) || (i1 < 0 && i2 >= count))) {
 		int rx1 = caret.x + 1;
 		int rx2 = caret.x + w + 1;
 		if(i1 >= 0 && i1 <= count)
-			rx1 = caret.x + 1 + draw::textw(string, i1);
+			rx1 = caret.x + 1 + textw(string, i1);
 		if(i2 >= 0 && i2 <= count)
-			rx2 = caret.x + 1 + draw::textw(string, i2);
+			rx2 = caret.x + 1 + textw(string, i2);
 		auto push_fore = fore;
 		fore = colors::button;
-		//draw::rectf({rx1, y, rx2, y + height});
+		//rectf({rx1, y, rx2, y + height});
 		fore = push_fore;
 	}
 	text(string, count);
 	if(i1 >= 0 && i1 == i2
 		&& (i1 < count || (i1 == count && string[count] == 0))) {
-		int rx1 = caret.x + draw::textw(string, i1);
-		//draw::line(rx1, y, rx1, y + height);
+		int rx1 = caret.x + textw(string, i1);
+		//line(rx1, y, rx1, y + height);
 	}
 	caret = push_caret;
 }
 
-int	draw::texte(rect rc, const char* string, unsigned state, int p1, int p2) {
+int	texte(rect rc, const char* string, unsigned state, int p1, int p2) {
 	auto i1 = p1;
 	auto i2 = p2;
 	if(i2 != -1 && i1 > i2)
@@ -1771,13 +1753,13 @@ int	draw::texte(rect rc, const char* string, unsigned state, int p1, int p2) {
 	return y1 - rc.y1;
 }
 
-int draw::hittest(int x, int hit_x, const char* p, int lenght) {
+int hittest(int x, int hit_x, const char* p, int lenght) {
 	if(hit_x < x)
 		return -2;
 	int index = 0;
 	int syw = 0;
 	while(index < lenght) {
-		syw = draw::textw(*((unsigned char*)p)); p++;
+		syw = textw(*((unsigned char*)p)); p++;
 		if(hit_x <= x + 1 + syw / 2)
 			break;
 		x += syw;
@@ -1790,11 +1772,11 @@ int draw::hittest(int x, int hit_x, const char* p, int lenght) {
 	return index;
 }
 
-int draw::hittest(rect rc, const char* string, unsigned state, point pt) {
+int hittest(rect rc, const char* string, unsigned state, point pt) {
 	int w1 = rc.width();
 	int dy = texth();
 	int x1 = rc.x1;
-	int y1 = rc.y1 + draw::alignedh(rc, string, state);
+	int y1 = rc.y1 + alignedh(rc, string, state);
 	auto p = (const char*)string;
 	if(state & TextSingleLine) {
 		auto c = zlen(string);
@@ -1810,19 +1792,19 @@ int draw::hittest(rect rc, const char* string, unsigned state, point pt) {
 			auto x0 = aligned(x1, w1, state, w);
 			if(pt.y >= y1 && pt.y < y1 + dy) {
 				if(pt.x >= x0 && pt.x < x0 + w)
-					return p - string + draw::hittest(x0, pt.x, p, c);
+					return p - string + hittest(x0, pt.x, p, c);
 				if(pt.x < x0)
 					return -2;
 				return -3;
 			}
 			y1 += dy;
-			p = draw::skiptr(p + c);
+			p = skiptr(p + c);
 		}
 	}
 	return -1;
 }
 
-void draw::image(int x, int y, const sprite* e, int id, int flags) {
+void image(int x, int y, const sprite* e, int id, int flags) {
 	int x2, y2;
 	color* pal;
 	if(!e)
@@ -1928,7 +1910,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 		if(x >= x2)
 			return;
 		if(!f.pallette || (flags & ImagePallette))
-			pal = draw::palt;
+			pal = palt;
 		else
 			pal = (color*)e->ptr(f.pallette);
 		if(!pal)
@@ -1943,7 +1925,7 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 		break;
 	case sprite::RLE8:
 		if(!f.pallette || (flags & ImagePallette))
-			pal = draw::palt;
+			pal = palt;
 		else
 			pal = (color*)e->ptr(f.pallette);
 		if(!pal)
@@ -2007,22 +1989,22 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	}
 }
 
-void draw::image(const sprite* e, int id, int flags, color* pal) {
-	auto pal_push = draw::palt;
-	draw::palt = pal;
+void image(const sprite* e, int id, int flags, color* pal) {
+	auto pal_push = palt;
+	palt = pal;
 	image(caret.x, caret.y, e, id, flags | ImagePallette);
-	draw::palt = pal_push;
+	palt = pal_push;
 }
 
 static void rectfall() {
-	rectpush push;
+	pushrect push;
 	caret.x = caret.y = 0;
 	width = getwidth();
 	height = getheight();
 	rectf();
 }
 
-void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin, unsigned char* koeff) {
+void stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin, unsigned char* koeff) {
 	color tr;
 	tr.a = 0;
 	tr.r = 255;
@@ -2053,9 +2035,9 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 				auto py = rc.y1 + y1 - 1;
 				for(auto n = 0; n < thin; n++, px--) {
 					if(koeff)
-						draw::pixel(px, py, koeff[n]);
+						pixel(px, py, koeff[n]);
 					else
-						draw::pixel(px, py);
+						pixel(px, py);
 				}
 				inside = true;
 			} else {
@@ -2065,9 +2047,9 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 				auto py = rc.y1 + y1 - 1;
 				for(auto n = 0; n < thin; n++, px++) {
 					if(koeff)
-						draw::pixel(px, py, koeff[n]);
+						pixel(px, py, koeff[n]);
 					else
-						draw::pixel(px, py);
+						pixel(px, py);
 				}
 				inside = false;
 			}
@@ -2084,9 +2066,9 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 				auto py = rc.y1 + y1 - 1;
 				for(auto n = 0; n < thin; n++, py--) {
 					if(koeff)
-						draw::pixel(px, py, koeff[n]);
+						pixel(px, py, koeff[n]);
 					else
-						draw::pixel(px, py);
+						pixel(px, py);
 				}
 				inside = true;
 			} else {
@@ -2096,9 +2078,9 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 				auto py = rc.y1 + y1 - 2;
 				for(auto n = 0; n < thin; n++, py++) {
 					if(koeff)
-						draw::pixel(px, py, koeff[n]);
+						pixel(px, py, koeff[n]);
 					else
-						draw::pixel(px, py);
+						pixel(px, py);
 				}
 				inside = false;
 			}
@@ -2149,7 +2131,7 @@ static void raw32cr(int x, int y, int width, int x0, int y0, unsigned char* s, u
 	}
 }
 
-void draw::imager(int xm, int ym, const sprite* e, int id, int r) {
+void imager(int xm, int ym, const sprite* e, int id, int r) {
 	if(!e)
 		return;
 	auto& f = e->get(id);
@@ -2401,7 +2383,7 @@ void surface::rotate() {
 	scanline = color_scanline(width, bpp);
 }
 
-void draw::key2str(stringbuilder& sb, int key) {
+void key2str(stringbuilder& sb, int key) {
 	if(key & Ctrl)
 		sb.add("Ctrl+");
 	if(key & Alt)
@@ -2443,19 +2425,19 @@ void draw::key2str(stringbuilder& sb, int key) {
 	}
 }
 
-void draw::execute(fnevent proc, long value, long value2, const void* object) {
+void execute(fnevent proc, long value, long value2, const void* drawobject) {
 	domodal = proc;
 	hot.key = 0; // Это важно, так как мы никогда не обнуляем эту переменную при исполнении не стандартной команды. Если не делать, будет зацикливание.
 	hot.param = value;
 	hot.param2 = value2;
-	hot.object = object;
+	hot.drawobject = drawobject;
 }
 
 static void standart_domodal() {
-	if(draw::ptips)
-		draw::ptips();
-	draw::hot.key = draw::rawinput();
-	if(!draw::hot.key)
+	if(ptips)
+		ptips();
+	hot.key = rawinput();
+	if(!hot.key)
 		exit(0);
 }
 
@@ -2511,85 +2493,85 @@ long getresult() {
 }
 
 void cbsetint() {
-	auto p = (int*)hot.object;
+	auto p = (int*)hot.drawobject;
 	*p = hot.param;
 }
 
 void cbsetsht() {
-	auto p = (short*)hot.object;
+	auto p = (short*)hot.drawobject;
 	*p = (short)hot.param;
 }
 
 void cbsetptr() {
-	auto p = (void**)hot.object;
+	auto p = (void**)hot.drawobject;
 	*p = (void*)hot.param;
 }
 
-void draw::fillactive() {
+void fillactive() {
 	auto push_fore = fore;
 	fore = colors::active;
 	rectf();
 	fore = push_fore;
 }
 
-void draw::fillform() {
+void fillform() {
 	auto push_fore = fore;
 	fore = colors::form;
 	rectf();
 	fore = push_fore;
 }
 
-void draw::fillbutton() {
+void fillbutton() {
 	auto push_fore = fore;
 	fore = colors::button;
 	rectf();
 	fore = push_fore;
 }
 
-void draw::fillwindow() {
+void fillwindow() {
 	auto push_fore = fore;
 	fore = colors::window;
 	rectf();
 	fore = push_fore;
 }
 
-void draw::filldark() {
+void filldark() {
 	auto push_fore = fore;
 	fore = fore.mix(colors::black, 128);
 	rectf();
 	fore = push_fore;
 }
 
-void draw::strokeout(fnevent proc, int dx, int dy) {
-	rectpush push;
+void strokeout(fnevent proc, int dx, int dy) {
+	pushrect push;
 	caret.x -= dx; caret.y -= dy;
 	width += 2 * dx; height += 2 * dy;
 	proc();
 }
 
-void draw::strokeborder() {
+void strokeborder() {
 	auto push_fore = fore;
 	fore = colors::border;
 	rectb();
 	fore = push_fore;
 }
 
-void draw::strokeactive() {
+void strokeactive() {
 	auto push_fore = fore;
 	fore = colors::active;
 	rectb();
 	fore = push_fore;
 }
 
-void draw::strokeline() {
-	rectpush push;
+void strokeline() {
+	pushrect push;
 	auto push_fore = fore;
 	fore = colors::border;
 	line(caret.x + width, caret.y);
 	fore = push_fore;
 }
 
-void draw::vertical(fnevent proc) {
+void vertical(fnevent proc) {
 	auto push_caret = caret;
 	auto push_width = width;
 	auto push_height = height;
@@ -2630,12 +2612,12 @@ void initialize(const char* title) {
 	setcaption(title);
 }
 
-void draw::paintstart() {
+void paintstart() {
 	if(pbackground)
 		pbackground();
 }
 
-void draw::paintfinish() {
+void paintfinish() {
 	if(pfinish)
 		pfinish();
 }
@@ -2696,12 +2678,12 @@ bool button(const char* title, unsigned key, fnbutton proc, bool vertical, unsig
 	return need_execute;
 }
 
-void fire(bool run, fnevent proc, long value, long value2, const void* object) {
+void fire(bool run, fnevent proc, long value, long value2, const void* drawobject) {
 	if(proc && run)
-		execute(proc, value, value2, object);
+		execute(proc, value, value2, drawobject);
 }
 
-void draw::tipspos() {
+void tipspos() {
 	caret = tips_caret;
 	width = 320;
 	if(tips_size.y) {
@@ -2722,9 +2704,9 @@ void draw::tipspos() {
 	}
 }
 
-void draw::dropshadow() {
+void dropshadow() {
 	int size = 4;
-	rectpush push;
+	pushrect push;
 	auto push_fore = fore;
 	auto push_alpha = alpha;
 	fore = colors::form;
@@ -2737,16 +2719,16 @@ void draw::dropshadow() {
 	fore = push_fore;
 }
 
-void draw::setcaret(point v) {
+void setcaret(point v) {
 	caret = v - camera;
 }
 
-void draw::saveposition(rect& v) {
+void saveposition(rect& v) {
 	v.x1 = caret.x; v.y1 = caret.y;
 	v.x2 = v.x1 + width; v.y2 = v.y1 + height;
 }
 
-void draw::loadposition(rect& v) {
+void loadposition(rect& v) {
 	caret.x = v.x1; caret.y = v.y1;
 	width = v.width(); height = v.height();
 }

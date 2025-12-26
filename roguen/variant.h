@@ -12,7 +12,7 @@ struct varianti {
 	typedef void(*fiscript)(int index, int bonus);
 	typedef void(*fnread)(const char* url);
 	typedef bool(*fitest)(int index, int bonus);
-	typedef bool(*fnfilter)(const void* object, int value);
+	typedef bool(*fnfilter)(const void* drawobject, int value);
 	const char*		id;
 	const bsreq*	metadata;
 	array*			source;
@@ -24,8 +24,8 @@ struct varianti {
 	fnevent			pinitialize;
 	fnfilter		pfilter;
 	static const varianti* getsource(const char* id);
-	const char*		getid(const void* object) const;
-	const char*		getname(const void* object) const;
+	const char*		getid(const void* drawobject) const;
+	const char*		getname(const void* drawobject) const;
 	int				found(const char* id, size_t size) const;
 	constexpr bool	isnamed() const { return key_count == 1; }
 };
@@ -60,6 +60,6 @@ typedef sliceu<variant> variants;
 typedef void (*fnvariant)(variant v);
 typedef bool (*fntestvariant)(variant v);
 
-const varianti* find_metadata(const void* object);
+const varianti* find_metadata(const void* drawobject);
 
-bool list_compare(const void* object, variants source, bool condition_and);
+bool list_compare(const void* drawobject, variants source, bool condition_and);

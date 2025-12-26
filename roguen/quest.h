@@ -12,7 +12,7 @@ struct questni : nameable {};
 struct quest {
 	point			position;
 	questn			type;
-	variant			object, problem, reward, twist, level, final_level, modifier, entrance;
+	variant			drawobject, problem, reward, twist, level, final_level, modifier, entrance;
 	char			rumor;
 	constexpr operator bool() const { return problem.operator bool(); }
 	void			clear();

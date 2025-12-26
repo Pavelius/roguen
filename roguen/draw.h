@@ -109,18 +109,16 @@ extern sprite*			h3;
 extern sprite*			icons;
 extern int				border, padding;
 }
-namespace draw {
 struct hoti {
 	enum cursor			cursor; // set this mouse cursor
 	unsigned			key; // if pressed key or mouse this field has key
 	point				mouse; // current mouse coordinates
 	bool				pressed; // flag if any of mouse keys is pressed
 	long				param, param2; // command context or parameters
-	const void*			object; // command object
+	const void*			drawobject; // command drawobject
 	rect				hilite, focus;
 	explicit operator bool() const { return key != 0; }
 };
-extern hoti				hot;
 struct surface {
 	struct plugin {
 		const char*		name;
@@ -154,19 +152,19 @@ struct surface {
 	void				rotate();
 	void				write(const char* url, color* pallette);
 };
-extern surface*			canvas;
-extern rect				clipping; // Clipping area
-extern fnevent			domodal;
+extern hoti				hot;
 extern point			dragmouse, caret, camera, tips_caret, tips_size;
+extern int				width, height, fsize, dialog_width;
+extern rect				clipping; // Clipping area
+extern surface*			canvas;
+extern fnevent			domodal;
 extern color			fore, fore_stroke;
 extern const void*		hilite_object;
 extern point			hilite_position;
 extern int				hilite_size;
 extern unsigned char    alpha;
-extern int				width, height, fsize, dialog_width;
 extern bool				text_clipped, control_hilited;
 extern const sprite*	font; // Currently selected font
-extern double			linw;
 extern stringbuilder	tips_sb;
 extern long				text_params[16];
 extern color*			palt;
@@ -174,101 +172,99 @@ extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pfinish, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
 extern fnbutton			pbutton;
-struct rectpush {
+namespace draw {
+struct pushrect {
 	point				caret;
 	int					width, height;
-	rectpush() : caret(draw::caret), width(draw::width), height(draw::height) {}
-	~rectpush() { draw::caret = caret; draw::width = width; draw::height = height; }
+	pushrect() : caret(::caret), width(::width), height(::height) {}
+	~pushrect() { ::caret = caret; ::width = width; ::height = height; }
 };
-int						aligned(int x, int width, unsigned state, int string_width);
-int						alignedh(const rect& rc, const char* string, unsigned state);
-void					circle(int size);
-void					circlef(int size);
-bool					dragactive(const void* p);
-bool					dragactive();
-void					dragbegin(const void* p);
-void					dropshadow();
-void					execute(fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
-void					fhexagon();
-void					fillactive();
-void					fillbutton();
-void					filldark();
-void					fillform();
-void					fillwindow();
-int						getbpp();
-inline rect				getrect() { return {caret.x, caret.y, caret.x + width, caret.y + height}; }
-int						getheight();
-int						getwidth();
-void					glyph(int sym, unsigned feats);
-void					gradv(const color c1, const color c2, int skip = 0);
-void					gradh(const color c1, const color c2, int skip = 0);
-const sprite*			gres(res id);
-void					hexagon();
-int						hittest(int x, int test_x, const char* string, int lenght);
-int						hittest(rect rc, const char* string, unsigned state, point mouse);
-bool					ishilite(const rect& rc);
-inline bool				ishilite() { return ishilite(getrect()); }
-inline bool				ishilite(int size) { return ishilite({caret.x-size, caret.y - size, caret.x + size, caret.y + size}); }
-void					image(int x, int y, const sprite* e, int id, int feats);
-inline void				image(const sprite* e, int id, int feats) { image(caret.x, caret.y, e, id, feats); }
-void					image(const sprite* e, int id, int feats, color* pal);
-void					imager(int x, int y, const sprite* p, int id, int radius);
-void					key2str(stringbuilder& sb, int key);
-void					line(int x, int y); // Draw line
-void					linet(int x, int y);
-void					loadposition(rect& v);
-void					paintstart();
-void					paintfinish();
-void					pixel(int x, int y);
-void					pixel(int x, int y, unsigned char alpha);
-unsigned char*			ptr(int x, int y);
-int						rawinput();
-void					rectb(); // Draw rectangle border
-void					rectb3d(); // Draw rectangle border
-void					rectf(); // Draw rectangle area-> Right and bottom side is one pixel less.
-void					rectfe(rect rc, int radius);
-void					rectx();
-void					rectfocus();
-void					saveposition(rect& v);
-void					setcamera(point v);
-void					setcaret(point v);
-void					setcaption(const char* string);
-void					setclip(rect rc);
-inline void				setclip() { clipping.set(0, 0, getwidth(), getheight()); }
-inline void				setclipall() { setclip({caret.x, caret.y, caret.x + width, caret.y + height}); }
-void					setoffset(int x, int y);
-void					setpos(int x, int y);
-void					setpos(int x, int y, int width, int height);
-void					settimer(unsigned milleseconds);
-const char*				skiptr(const char* string);
-void					stroke(int x, int y, const sprite* e, int id, int feats, unsigned char thin = 1, unsigned char* koeff = 0);
-void					strokeactive();
-void					strokeborder();
-void					strokeline();
-void					strokeout(fnevent proc, int dx = 0, int dy = 0);
-void					syscursor(bool enable);
-void					text(const char* string, int count = -1, unsigned feats = 0);
-int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
-void					texta(const char* string, unsigned state = 0);
-void					textas(const char* string);
-void					textcj(const char* string);
-int						textbc(const char* string, int width);
-int						texte(rect rc, const char* string, unsigned feats, int i1, int i2);
-void					textf(const char* string);
-void					textf(const char* string, int& origin, int& maximum, int& cashe_origin, int& cashe_string);
-void					textfs(const char* string);
-int						texth();
-int						texth(const char* string, int width);
-int						textw(int sym);
-int						textw(const char* string, int count = -1);
-int						textw(rect& rc, const char* string);
-int						textw(const sprite* font);
-void					tipspos();
-inline void				tooltips(const char* format, ...) { tips_sb.addv(format, xva_start(format)); }
-void					updatewindow();
-void					write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
-void					vertical(fnevent proc);
 }
+
+const sprite* gres(res id);
+unsigned char* ptr(int x, int y);
+const char*	skiptr(const char* string);
+
+int	aligned(int x, int width, unsigned state, int string_width);
+int	alignedh(const rect& rc, const char* string, unsigned state);
+int	getbpp();
+int	getheight();
+int	getwidth();
+int	hittest(int x, int test_x, const char* string, int lenght);
+int	hittest(rect rc, const char* string, unsigned state, point mouse);
+int	rawinput();
+int	text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
+int	textbc(const char* string, int width);
+int	texte(rect rc, const char* string, unsigned feats, int i1, int i2);
+int	texth();
+int	texth(const char* string, int width);
+int	textw(int sym);
+int	textw(const char* string, int count = -1);
+int	textw(rect& rc, const char* string);
+int	textw(const sprite* font);
+
+void circle(int size);
+void circlef(int size);
+bool dragactive(const void* p);
+bool dragactive();
+void dragbegin(const void* p);
+void dropshadow();
+void execute(fnevent proc, long value = 0, long value2 = 0, const void* drawobject = 0);
+void fhexagon();
+void fillactive();
+void fillbutton();
+void filldark();
+void fillform();
+void fillwindow();
+void glyph(int sym, unsigned feats);
+void gradv(const color c1, const color c2, int skip = 0);
+void gradh(const color c1, const color c2, int skip = 0);
+void hexagon();
+void image(int x, int y, const sprite* e, int id, int feats);
+inline void image(const sprite* e, int id, int feats) { image(caret.x, caret.y, e, id, feats); }
+void image(const sprite* e, int id, int feats, color* pal);
+void imager(int x, int y, const sprite* p, int id, int radius);
+bool ishilite(const rect& rc);
+void key2str(stringbuilder& sb, int key);
+void line(int x, int y); // Draw line
+void linet(int x, int y);
+void loadposition(rect& v);
+void paintstart();
+void paintfinish();
+void pixel(int x, int y);
+void pixel(int x, int y, unsigned char alpha);
+void rectb(); // Draw rectangle border
+void rectf(); // Draw rectangle area-> Right and bottom side is one pixel less.
+void rectfe(rect rc, int radius);
+void rectx();
+void rectfocus();
+void saveposition(rect& v);
+void setcamera(point v);
+void setcaret(point v);
+void setcaption(const char* string);
+void setclip(rect rc);
+void setoffset(int x, int y);
+void setpos(int x, int y);
+void setpos(int x, int y, int width, int height);
+void settimer(unsigned milleseconds);
+void stroke(int x, int y, const sprite* e, int id, int feats, unsigned char thin = 1, unsigned char* koeff = 0);
+void strokeactive();
+void strokeborder();
+void strokeline();
+void strokeout(fnevent proc, int dx = 0, int dy = 0);
+void syscursor(bool enable);
+void text(const char* string, int count = -1, unsigned feats = 0);
+void texta(const char* string, unsigned state = 0);
+void textas(const char* string);
+void textcj(const char* string);
+void textf(const char* string);
+void textf(const char* string, int& origin, int& maximum, int& cashe_origin, int& cashe_string);
+void textfs(const char* string);
+void tipspos();
+void updatewindow();
+void writebmp(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
+void vertical(fnevent proc);
+
 void breakmodal(long result);
 bool button(const char* title, unsigned key, fnbutton proc, bool vertical = true, unsigned* keybinds = 0);
 void buttoncancel();
@@ -278,7 +274,7 @@ void cbsetsht();
 void cbsetint();
 void cbsetptr();
 void doredraw();
-void fire(bool run, fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
+void fire(bool run, fnevent proc, long value = 0, long value2 = 0, const void* drawobject = 0);
 long getresult();
 bool isnext();
 void initialize(const char* title);
@@ -288,3 +284,10 @@ void scene();
 void setneedupdate();
 void setnext(fnevent v);
 void start_scene();
+
+inline rect getrect() { return {caret.x, caret.y, caret.x + width, caret.y + height}; }
+inline bool	ishilite() { return ishilite(getrect()); }
+inline bool	ishilite(int size) { return ishilite({caret.x - size, caret.y - size, caret.x + size, caret.y + size}); }
+inline void	setclip() { clipping.set(0, 0, getwidth(), getheight()); }
+inline void	setclipall() { setclip({caret.x, caret.y, caret.x + width, caret.y + height}); }
+inline void	tooltips(const char* format, ...) { tips_sb.addv(format, xva_start(format)); }

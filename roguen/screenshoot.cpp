@@ -6,8 +6,8 @@ using namespace draw;
 screenshoot::screenshoot(rect rc, bool fade) : surface(rc.width(), rc.height(), getbpp()) {
 	x = rc.x1;
 	y = rc.y1;
-	if(draw::canvas) {
-		blit(0, 0, width, height, 0, *draw::canvas, x, y);
+	if(canvas) {
+		blit(0, 0, width, height, 0, *canvas, x, y);
 		if(fade) {
 			auto push_canvas = canvas;
 			auto push_clip = clipping;
@@ -34,8 +34,8 @@ screenshoot::~screenshoot() {
 
 void screenshoot::restore() const {
 	setclip();
-	if(draw::canvas)
-		draw::canvas->blit(x, y, width, height, 0, *this, 0, 0);
+	if(canvas)
+		canvas->blit(x, y, width, height, 0, *this, 0, 0);
 }
 
 void screenshoot::blend(const surface& destination, unsigned milliseconds) const {

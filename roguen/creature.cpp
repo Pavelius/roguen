@@ -961,27 +961,27 @@ static void update_basic(char* dest, const char* source) {
 	memcpy(dest, source, Hits * sizeof(statable::abilities[0]));
 }
 
-static bool spell_allowmana(const void* object) {
-	auto p = (spelli*)object;
+static bool spell_allowmana(const void* drawobject) {
+	auto p = (spelli*)drawobject;
 	return player->get(Mana) >= p->mana;
 }
 
-static bool spell_allowuse(const void* object) {
-	auto p = (spelli*)object;
+static bool spell_allowuse(const void* drawobject) {
+	auto p = (spelli*)drawobject;
 	if(p->summon)
 		return true;
 	return allow_targets(p->use);
 }
 
-static bool spell_iscombat(const void* object) {
-	auto p = (spelli*)object;
+static bool spell_iscombat(const void* drawobject) {
+	auto p = (spelli*)drawobject;
 	if(p->adventure)
 		return false;
 	return true;
 }
 
-static bool	spell_isnotcombat(const void* object) {
-	return !spell_iscombat(object);
+static bool	spell_isnotcombat(const void* drawobject) {
+	return !spell_iscombat(drawobject);
 }
 
 void creature::clear() {
@@ -1108,8 +1108,8 @@ creature* creature::getleader() const {
 	return const_cast<creature*>(this);
 }
 
-static bool is_possible_enemy(const void* object) {
-	auto opponent = (creature*)object;
+static bool is_possible_enemy(const void* drawobject) {
+	auto opponent = (creature*)drawobject;
 	if(player->is(DwarfBlood) && opponent->is(OrkBlood))
 		return true;
 	if(player->get(Reputation) < 0)
@@ -1127,8 +1127,8 @@ static bool is_enemy(const creature* player, const creature* opponent) {
 	return opponent->getenemy() == player;
 }
 
-bool is_enemy(const void* object) {
-	auto opponent = (creature*)object;
+bool is_enemy(const void* drawobject) {
+	auto opponent = (creature*)drawobject;
 	if(player == opponent || !opponent)
 		return false;
 	opponent = opponent->getleader();
@@ -1137,8 +1137,8 @@ bool is_enemy(const void* object) {
 	return is_enemy(player->getowner(), opponent);
 }
 
-bool is_ally(const void* object) {
-	auto opponent = (creature*)object;
+bool is_ally(const void* drawobject) {
+	auto opponent = (creature*)drawobject;
 	if(!opponent)
 		return false;
 	if(player == opponent)
@@ -1636,8 +1636,8 @@ void roll_horror(int bonus) {
 	}
 }
 
-static bool filter_can_use(const void* object) {
-	auto p = (item*)object;
+static bool filter_can_use(const void* drawobject) {
+	auto p = (item*)drawobject;
 	return true;
 }
 

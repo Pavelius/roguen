@@ -4,7 +4,7 @@
 #include "flagable.h"
 #include "variant.h"
 
-typedef void(*fncommand)(void* object); // Callback function of object command executing
+typedef void(*fncommand)(void* drawobject); // Callback function of drawobject command executing
 
 struct phrasei {
 	short			index, next;

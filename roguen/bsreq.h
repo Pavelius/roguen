@@ -29,7 +29,7 @@ enum bstype_s : unsigned char {
 // Metadata field descriptor
 struct bsreq {
 	const char*				id; // field identifier
-	unsigned				offset; // offset from begin of class or object
+	unsigned				offset; // offset from begin of class or drawobject
 	unsigned				size; // size of single element
 	unsigned				lenght; // total size in bytes of all field (array has size*count)
 	unsigned				count; // count of elements

@@ -4,7 +4,7 @@
 
 typedef void(*fnevent)();
 typedef bool(*fncondition)();
-typedef bool(*fnvisible)(const void* object);
+typedef bool(*fnvisible)(const void* drawobject);
 
 struct filteri : nameable {
 	fnvisible proc;
@@ -15,8 +15,8 @@ struct querryi : nameable {
 };
 extern bool querry_fail;
 
-bool querry_allow(const void* object);
-bool querry_allow_all(const void* object);
+bool querry_allow(const void* drawobject);
+bool querry_allow_all(const void* drawobject);
 void querry_filter();
 bool querry_nobody();
 bool querry_select();

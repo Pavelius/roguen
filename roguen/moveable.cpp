@@ -50,7 +50,7 @@ static void paint_color_number() {
 }
 
 static void paint_visual_effect() {
-	((visualeffect*)draw::last_object->data)->paint(draw::last_object->param);
+	((visualeffect*)last_object->data)->paint(last_object->param);
 }
 
 void movable::setdirection(directionn v) {
@@ -62,7 +62,7 @@ void movable::setdirection(directionn v) {
 }
 
 void movable::fixappear(fnevent fpaint) const {
-	auto po = draw::findobject(this);
+	auto po = findobject(this);
 	if(po)
 		return;
 	addobject(getsposition(), fpaint, const_cast<movable*>(this), 0, 11);
@@ -71,7 +71,7 @@ void movable::fixappear(fnevent fpaint) const {
 void movable::fixactivity() const {
 	if(!area->is(position, Visible))
 		return;
-	auto po = draw::findobject(this);
+	auto po = findobject(this);
 	if(!po)
 		return;
 	auto pr = po->add(mst / 2);
@@ -81,7 +81,7 @@ void movable::fixactivity() const {
 }
 
 void movable::fixremove() const {
-	auto po = draw::findobject(this);
+	auto po = findobject(this);
 	if(po)
 		po->clear();
 }
@@ -91,7 +91,7 @@ void movable::fixvalue(void* data, fnevent fproc, color_s format_color) const {
 		return;
 	auto pt = getsposition(); pt.y -= tsy;
 	if(findobject(pt, fproc))
-		return; // Same object do not show
+		return; // Same drawobject do not show
 	auto pa = addobject(pt, fproc, data, format_color, 20);
 	auto po = pa->add(mst, 0, true);
 	pt.y -= tsy;
@@ -127,7 +127,7 @@ void movable::fixeffect(point position, const char* id) {
 	if(!pv)
 		return;
 	position.y += pv->dy;
-	auto po = draw::addobject(position, paint_visual_effect, pv, 0, pv->priority);
+	auto po = addobject(position, paint_visual_effect, pv, 0, pv->priority);
 	po->add(mst);
 }
 
@@ -147,7 +147,7 @@ void movable::fixability(abilityn i, int v) const {
 }
 
 void movable::fixmovement() const {
-	auto po = draw::findobject(this);
+	auto po = findobject(this);
 	if(!po)
 		return;
 	auto pt = getsposition();
@@ -158,7 +158,7 @@ void movable::fixmovement() const {
 }
 
 void movable::fixdisappear() const {
-	auto po = draw::findobject(this);
+	auto po = findobject(this);
 	if(po)
 		po->disappear(mst);
 }
@@ -196,7 +196,7 @@ void movable::fixthrown(point target, const char* id, int frame) const {
 }
 
 static void paint_black_screen() {
-	rectpush push;
+	pushrect push;
 	width = getwidth();
 	height = getheight();
 	caret.clear();
@@ -204,13 +204,13 @@ static void paint_black_screen() {
 }
 
 static void paint_main_scene() {
-	rectpush push;
+	pushrect push;
 	paintstart();
 	paintobjects();
 }
 
 void movable::fixteleport(bool ishuman) const {
-	auto po = draw::findobject(this);
+	auto po = findobject(this);
 	if(po) {
 		if(ishuman) {
 			paint_main_scene();

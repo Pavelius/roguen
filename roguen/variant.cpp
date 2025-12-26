@@ -51,18 +51,18 @@ const varianti* varianti::getsource(const char* id) {
 	return 0;
 }
 
-const char* varianti::getname(const void* object) const {
+const char* varianti::getname(const void* drawobject) const {
 	if(isnamed()) {
-		auto id = *((const char**)object);
+		auto id = *((const char**)drawobject);
 		if(id)
 			return getnm(id);
 	}
 	return getnm("NoName");
 }
 
-const char* varianti::getid(const void* object) const {
+const char* varianti::getid(const void* drawobject) const {
 	if(isnamed())
-		return *((const char**)object);
+		return *((const char**)drawobject);
 	return "NoName";
 }
 

@@ -18,7 +18,7 @@ class creature : public wearable, public statable, public spellable, public owne
 	unsigned short	room_id, enemy_id, charmer_id, fear_id;
 	void			cleanup();
 public:
-	typedef void (creature::*fncommand)(); // typical object command
+	typedef void (creature::*fncommand)(); // typical drawobject command
 	int				experience, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
@@ -74,7 +74,7 @@ public:
 	bool			ismaster(abilityn v) const { return get(v) >= 60; }
 	bool			isnormalmood() const { return abilities[Mood] == basic.abilities[Mood]; }
 	bool			ispresent() const;
-	static bool		ispresent(const void* object) { return ((creature*)object)->ispresent(); }
+	static bool		ispresent(const void* drawobject) { return ((creature*)drawobject)->ispresent(); }
 	bool			istired() const { return abilities[Mood] <= -10; }
 	bool			isunaware() const { return wait_seconds >= 25 * 4 * 6; }
 	bool			isvalid() const;
@@ -127,8 +127,8 @@ void cast_spell(const spelli& e, int mana, bool silent);
 void cast_spell(const spelli& e);
 void damage_backpack_item(wear_s type, int chance, int count = 1);
 void dialog_message(const char* format);
-bool is_ally(const void* object);
-bool is_enemy(const void* object);
+bool is_ally(const void* drawobject);
+bool is_enemy(const void* drawobject);
 bool make_hostile(creature* player, const creature* opponent);
 void make_move();
 void move_step(directionn v);

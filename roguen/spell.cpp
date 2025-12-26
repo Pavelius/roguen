@@ -8,9 +8,9 @@ BSDATAC(spelli, spellable::maximum)
 static const spellable* current_spellable;
 const spelli* last_spell;
 
-static const char* object_mana(const void* object, stringbuilder& sb) {
-	auto i = bsdata<spelli>::source.indexof(object);
-	sb.add("[%1i] %-Mana", ((spelli*)object)->getmana());
+static const char* object_mana(const void* drawobject, stringbuilder& sb) {
+	auto i = bsdata<spelli>::source.indexof(drawobject);
+	sb.add("[%1i] %-Mana", ((spelli*)drawobject)->getmana());
 	return sb.begin();
 }
 

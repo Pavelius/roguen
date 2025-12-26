@@ -11,30 +11,30 @@
 
 static const char* save_folder = "save";
 
-static void capture_game_screen(draw::surface& dc) {
+static void capture_game_screen(surface& dc) {
 	dc.resize(640 - 130, 360, 32, true);
-	auto push_canvas = draw::canvas;
-	draw::canvas = &dc;
+	auto push_canvas = canvas;
+	canvas = &dc;
 	if(area)
-		draw::paintobjects();
+		paintobjects();
 	else
-		draw::rectf();
-	draw::canvas = push_canvas;
+		rectf();
+	canvas = push_canvas;
 }
 
-static void capture_game_screen_small(draw::surface& dc, int scale_x, int scale_y) {
-	draw::surface dc_copy; capture_game_screen(dc_copy);
+static void capture_game_screen_small(surface& dc, int scale_x, int scale_y) {
+	surface dc_copy; capture_game_screen(dc_copy);
 	dc.resize(dc_copy.width / 2, dc_copy.height / 2, dc_copy.bpp, true);
 	dc.blit(0, 0, dc.width, dc.height, false, dc_copy, 0, 0, dc_copy.width, dc_copy.height);
 }
 
 void make_game_map_screenshoot() {
-	draw::surface dc;
+	surface dc;
 	capture_game_screen_small(dc, 3, 3);
 	dc.write("images/screenshoots/00001.bmp", 0);
 }
 
-template<> void archive::set<draw::surface>(draw::surface& e) {
+template<> void archive::set<surface>(surface& e) {
 	if(writemode) {
 		set(e.width);
 		set(e.height);
@@ -55,7 +55,7 @@ template<> void archive::set<areapiece>(areapiece& e) {
 	setc<itemground>(e.items);
 }
 
-static bool serial_game(const char* url, bool write_mode, bool head_only, draw::surface& dc) {
+static bool serial_game(const char* url, bool write_mode, bool head_only, surface& dc) {
 	io::file file(url, write_mode ? StreamWrite : StreamRead);
 	if(!file)
 		return false;
@@ -81,7 +81,7 @@ static const char* game_url(const char* id) {
 	return temp;
 }
 
-static void serial_game_name(const char* id, bool write_mode, bool head_only, draw::surface& dc) {
+static void serial_game_name(const char* id, bool write_mode, bool head_only, surface& dc) {
 	serial_game(game_url(id), write_mode, head_only, dc);
 }
 
@@ -90,12 +90,12 @@ bool present_game(const char* name) {
 }
 
 void save_game(const char* name) {
-	draw::surface dc; capture_game_screen_small(dc, 3, 3);
+	surface dc; capture_game_screen_small(dc, 3, 3);
 	serial_game_name(name, true, false, dc);
 }
 
 void load_game(const char* name) {
-	draw::surface dc; capture_game_screen_small(dc, 3, 3);
+	surface dc; capture_game_screen_small(dc, 3, 3);
 	serial_game_name(name, false, false, dc);
 }
 

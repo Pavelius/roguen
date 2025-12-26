@@ -3,10 +3,10 @@
 #include "adat.h"
 #include "bsdata.h"
 
-typedef bool(*fnallow)(const void* object, int index); // Callback function of status probing. Return true if `object` allow `index` status.
-typedef const char*(*fngetname)(const void* object); // Callback function of get object name
-typedef bool(*fnvisible)(const void* object); // Callback function of checking some functionality of `object`
-typedef void* fngroup(const void* object);
+typedef bool(*fnallow)(const void* drawobject, int index); // Callback function of status probing. Return true if `object` allow `index` status.
+typedef const char*(*fngetname)(const void* drawobject); // Callback function of get drawobject name
+typedef bool(*fnvisible)(const void* drawobject); // Callback function of checking some functionality of `object`
+typedef void* fngroup(const void* drawobject);
 
 struct collectiona : adat<void*, 256> {
 	void* choose(fngetname proc, const char* title, const char* cancel, bool autochoose) const;

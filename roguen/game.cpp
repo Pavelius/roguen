@@ -50,8 +50,8 @@ static void allnext(fnevent proc) {
 	player = push_player;
 }
 
-static bool istriggertype(const void* object, int param) {
-	auto p = (trigger*)object;
+static bool istriggertype(const void* drawobject, int param) {
+	auto p = (trigger*)drawobject;
 	return p->type == param;
 }
 

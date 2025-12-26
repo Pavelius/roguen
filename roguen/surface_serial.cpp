@@ -28,7 +28,7 @@ struct info {
 }
 #pragma pack(pop)
 
-void draw::write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette) {
+void writebmp(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette) {
 	bmp::header bmf = {0};
 	bmp::info bmi = {0};
 	//
@@ -74,15 +74,15 @@ void draw::write(const char* url, unsigned char* bits, int width, int height, in
 	}
 }
 
-void draw::surface::write(const char* url, color* pallette) {
-	draw::write(url, bits, width, height, bpp, 0, pallette);
+void surface::write(const char* url, color* pallette) {
+	writebmp(url, bits, width, height, bpp, 0, pallette);
 }
 
-draw::surface::surface(const char* url, color* pallette) :surface() {
+surface::surface(const char* url, color* pallette) :surface() {
 	read(url, pallette);
 }
 
-bool draw::surface::read(const char* url, color* pallette, int need_bpp) {
+bool surface::read(const char* url, color* pallette, int need_bpp) {
 	unsigned size;
 	resize(0, 0, 0, true);
 	unsigned char* pin = (unsigned char*)loadb(url, (int*)&size);
@@ -105,7 +105,7 @@ bool draw::surface::read(const char* url, color* pallette, int need_bpp) {
 	return result;
 }
 
-static struct bmp_bitmap_plugin : public draw::surface::plugin {
+static struct bmp_bitmap_plugin : public surface::plugin {
 
 	bmp_bitmap_plugin() : plugin("bmp", "*.bmp") {
 	}

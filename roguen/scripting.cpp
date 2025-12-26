@@ -71,24 +71,24 @@ static rect	correct_conncetors;
 static directionn last_direction;
 static adat<variant, 32> sites;
 
-static bool is_item(const void* object) {
-	if(bsdata<creature>::have(object)) {
-		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(object);
-		return p->iswear(object);
+static bool is_item(const void* drawobject) {
+	if(bsdata<creature>::have(drawobject)) {
+		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(drawobject);
+		return p->iswear(drawobject);
 	}
 	if(area) {
-		if(area->items.have(object))
+		if(area->items.have(drawobject))
 			return true;
 	}
 	return false;
 }
 
-static bool is_room(const void* object) {
-	return area && area->rooms.have(object);
+static bool is_room(const void* drawobject) {
+	return area && area->rooms.have(drawobject);
 }
 
-static bool is_position(const void* object) {
-	return area && area->tiles.have(object);
+static bool is_position(const void* drawobject) {
+	return area && area->tiles.have(drawobject);
 }
 
 static int random_value(int value) {
@@ -128,7 +128,7 @@ bool collectiona::choose(fngetname proc, const char* title, const char* cancel) 
 
 static void show_debug_minimap() {
 	auto pt = center(last_rect);
-	draw::setcamera(m2s(pt));
+	setcamera(m2s(pt));
 	script_run("ExploreArea");
 	script_run("ShowMinimap");
 }
@@ -1009,7 +1009,7 @@ static void ready_area(geoposition geo) {
 //}
 
 static void update_ui() {
-	draw::removeobjects(bsdata<creature>::source);
+	removeobjects(bsdata<creature>::source);
 	for(auto& e : bsdata<creature>()) {
 		if(e.isvalid())
 			e.fixappear();
@@ -1241,39 +1241,39 @@ template<> void fiscript<itemi>(int value, int counter) {
 		break;
 	}
 }
-template<> bool fiallow<itemi>(const void* object, int param) {
-	if(bsdata<creature>::have(object))
-		return ((creature*)object)->haveitem(param);
-	if(bsdata<itemi>::have(object))
-		return bsdata<itemi>::source.indexof(object) == param;
+template<> bool fiallow<itemi>(const void* drawobject, int param) {
+	if(bsdata<creature>::have(drawobject))
+		return ((creature*)drawobject)->haveitem(param);
+	if(bsdata<itemi>::have(drawobject))
+		return bsdata<itemi>::source.indexof(drawobject) == param;
 	return false;
 }
 
-template<> bool fiallow<tilei>(const void* object, int param) {
-	if(bsdata<creature>::have(object))
-		return area->tiles[((creature*)object)->getposition()] == param;
+template<> bool fiallow<tilei>(const void* drawobject, int param) {
+	if(bsdata<creature>::have(drawobject))
+		return area->tiles[((creature*)drawobject)->getposition()] == param;
 	return false;
 }
 
-template<> bool fiallow<spelli>(const void* object, int param) {
-	if(bsdata<creature>::have(object))
-		return ((creature*)object)->known_spell(param);
+template<> bool fiallow<spelli>(const void* drawobject, int param) {
+	if(bsdata<creature>::have(drawobject))
+		return ((creature*)drawobject)->known_spell(param);
 	return false;
 }
 
-template<> bool fiallow<featurei>(const void* object, int param) {
-	if(is_position(object)) {
-		auto m = area->tiles.indexof(object);
+template<> bool fiallow<featurei>(const void* drawobject, int param) {
+	if(is_position(drawobject)) {
+		auto m = area->tiles.indexof(drawobject);
 		auto n = area->features[m];
 		return n == param;
 	}
 	return false;
 }
 
-template<> bool fiallow<racei>(const void* object, int param) {
-	variant v = object;
-	if(bsdata<creature>::have(object)) {
-		variant v = ((creature*)object)->getkind();
+template<> bool fiallow<racei>(const void* drawobject, int param) {
+	variant v = drawobject;
+	if(bsdata<creature>::have(drawobject)) {
+		variant v = ((creature*)drawobject)->getkind();
 		if(v.iskind<racei>())
 			return v.value == param;
 	}
@@ -1293,13 +1293,13 @@ template<> void fiscript<sitei>(int value, int counter) {
 	else
 		script_run(bsdata<sitei>::elements[value].landscape);
 }
-template<> bool fiallow<sitei>(const void* object, int param) {
+template<> bool fiallow<sitei>(const void* drawobject, int param) {
 	if(area) {
-		if(area->rooms.have(object))
-			return ((roomi*)object)->getsite() == param;
+		if(area->rooms.have(drawobject))
+			return ((roomi*)drawobject)->getsite() == param;
 	}
-	if(bsdata<creature>::have(object)) {
-		auto p = ((creature*)object)->getroom();
+	if(bsdata<creature>::have(drawobject)) {
+		auto p = ((creature*)drawobject)->getroom();
 		if(!p)
 			return false;
 		return p->getsite() == param;
@@ -1307,14 +1307,14 @@ template<> bool fiallow<sitei>(const void* object, int param) {
 		return false;
 }
 
-template<> bool fiallow<weari>(const void* object, int param) {
+template<> bool fiallow<weari>(const void* drawobject, int param) {
 	if(area) {
-		if(area->items.have(object))
-			return ((itemground*)object)->geti().wear == param;
+		if(area->items.have(drawobject))
+			return ((itemground*)drawobject)->geti().wear == param;
 	}
-	if(bsdata<creature>::have(object)) {
-		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(object);
-		auto pw = p->getwear(object);
+	if(bsdata<creature>::have(drawobject)) {
+		auto p = bsdata<creature>::elements + bsdata<creature>::source.indexof(drawobject);
+		auto pw = p->getwear(drawobject);
 		if(pw)
 			return pw->geti().wear == param;
 	}
@@ -1362,11 +1362,11 @@ template<> void fiscript<feati>(int value, int counter) {
 	else
 		player->feats.remove(value);
 }
-template<> bool fiallow<feati>(const void* object, int param) {
-	if(bsdata<creature>::have(object))
-		return ((creature*)object)->is((featn)param);
-	else if(is_room(object))
-		return ((roomi*)object)->is((featn)param);
+template<> bool fiallow<feati>(const void* drawobject, int param) {
+	if(bsdata<creature>::have(drawobject))
+		return ((creature*)drawobject)->is((featn)param);
+	else if(is_room(drawobject))
+		return ((roomi*)drawobject)->is((featn)param);
 	return false;
 }
 
@@ -1376,9 +1376,9 @@ template<> void fiscript<magici>(int value, int counter) {
 	else if(last_item->is((magicn)value))
 		last_item->set(Mundane);
 }
-template<> bool fiallow<magici>(const void* object, int param) {
-	if(is_item(object))
-		return ((item*)object)->is((magicn)param);
+template<> bool fiallow<magici>(const void* drawobject, int param) {
+	if(is_item(drawobject))
+		return ((item*)drawobject)->is((magicn)param);
 	return false;
 }
 
@@ -1506,8 +1506,8 @@ static bool iskind(variant v, const char* id) {
 	return true;
 }
 
-static const char* item_weight(const void* object, stringbuilder& sb) {
-	auto p = (item*)object;
+static const char* item_weight(const void* drawobject, stringbuilder& sb) {
+	auto p = (item*)drawobject;
 	if(!(*p))
 		return "";
 	auto w = p->getweight();
@@ -1665,7 +1665,7 @@ static void make_screenshoot(int bonus) {
 
 static int free_objects_count() {
 	auto result = 0;
-	for(auto& e : bsdata<draw::object>()) {
+	for(auto& e : bsdata<drawobject>()) {
 		if(!e)
 			continue;
 		result++;
@@ -1704,16 +1704,16 @@ static void raise_ability_by_skill(abilityn a) {
 	player->update();
 }
 
-static const char* skill_value(const void* object, stringbuilder& sb) {
-	auto i = (abilityn)bsdata<abilityi>::source.indexof(object);
+static const char* skill_value(const void* drawobject, stringbuilder& sb) {
+	auto i = (abilityn)bsdata<abilityi>::source.indexof(drawobject);
 	auto v = player->basic.abilities[i];
 	sb.add("%1i%%", v);
 	return sb.begin();
 }
 
-static const char* skill_raise_cost(const void* object, stringbuilder& sb) {
-	auto p = (abilityi*)object;
-	auto i = (abilityn)bsdata<abilityi>::source.indexof(object);
+static const char* skill_raise_cost(const void* drawobject, stringbuilder& sb) {
+	auto p = (abilityi*)drawobject;
+	auto i = (abilityn)bsdata<abilityi>::source.indexof(drawobject);
 	auto v = player->basic.abilities[i];
 	auto r = get_rate(i, v);
 	sb.add(getnm("RaiseSkill"), p->getname(), v + 1, r);
@@ -1756,7 +1756,7 @@ static void raise_skills(int bonus) {
 }
 
 static void debug_message(int bonus) {
-	//console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::object>::source.getcount());
+	//console.addn("Object count [%1i]/[%2i].", free_objects_count(), bsdata<draw::drawobject>::source.getcount());
 	//auto m = player->getposition();
 	//console.addn("Position %1i, %2i.", m.x, m.y);
 	//auto f = area->features[m];
@@ -1848,10 +1848,10 @@ static bool payment(creature* player, creature* keeper, const char* object_name,
 	return true;
 }
 
-static bool selling(creature* player, creature* opponent, const char* object, int coins, const char* confirm = 0) {
+static bool selling(creature* player, creature* opponent, const char* drawobject, int coins, const char* confirm = 0) {
 	if(confirm && player->ishuman()) {
 		clear_console();
-		player->actp(confirm, 0, object, coins);
+		player->actp(confirm, 0, drawobject, coins);
 		if(!yesno(0))
 			return false;
 	}
@@ -3051,81 +3051,81 @@ static bool match_wall_mines(point m) {
 	return ei.iswall() && ei.is(Mines);
 }
 
-static bool if_wounded(const void* object) {
-	auto p = (creature*)object;
+static bool if_wounded(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	auto n = p->abilities[Hits];
 	return n > 0 && n < p->basic.abilities[Hits];
 }
 
-static bool if_damaged(const void* object) {
-	if(is_item(object))
-		return ((item*)object)->isdamaged();
+static bool if_damaged(const void* drawobject) {
+	if(is_item(drawobject))
+		return ((item*)drawobject)->isdamaged();
 	return false;
 }
 
-static bool if_unaware(const void* object) {
-	auto p = (creature*)object;
+static bool if_unaware(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	return p->isunaware();
 }
 
-static bool if_close(const void* object) {
-	auto p = (creature*)object;
+static bool if_close(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	return (area->getrange(p->getposition(), last_index) <= 1);
 }
 
-static bool if_feature(const void* object) {
-	if(bsdata<creature>::have(object)) {
-		auto p = (creature*)object;
+static bool if_feature(const void* drawobject) {
+	if(bsdata<creature>::have(drawobject)) {
+		auto p = (creature*)drawobject;
 		return area->features[p->getposition()] != 0;
-	} else if(is_position(object))
-		return area->features[area->tiles.indexof(object)] != 0;
+	} else if(is_position(drawobject))
+		return area->features[area->tiles.indexof(drawobject)] != 0;
 	else
 		return false;
 }
 
-static bool if_marked(const void* object) {
-	if(is_room(object)) {
-		auto p = (roomi*)object;
+static bool if_marked(const void* drawobject) {
+	if(is_room(drawobject)) {
+		auto p = (roomi*)drawobject;
 		return markused(last_action, center(p->rc), bsid(player));
 	}
 	return false;
 }
 
-static bool if_explored(const void* object) {
-	if(is_room(object)) {
-		auto p = (roomi*)object;
+static bool if_explored(const void* drawobject) {
+	if(is_room(drawobject)) {
+		auto p = (roomi*)drawobject;
 		return area->is(p->center(), Explored);
 	}
 	return false;
 }
 
-static bool this_room(const void* object) {
-	return player->getroom() == (roomi*)object;
+static bool this_room(const void* drawobject) {
+	return player->getroom() == (roomi*)drawobject;
 }
 
-static bool if_human(const void* object) {
-	auto p = (creature*)object;
+static bool if_human(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	return p->ishuman();
 }
 
-static bool if_charmed(const void* object) {
-	auto p = (creature*)object;
+static bool if_charmed(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	return p->getcharmer() != 0;
 }
 
-static bool if_mindless(const void* object) {
-	auto p = (creature*)object;
+static bool if_mindless(const void* drawobject) {
+	auto p = (creature*)drawobject;
 	return p->get(Wits) <= 5;
 }
 
-static bool if_identified(const void* object) {
-	auto p = (item*)object;
+static bool if_identified(const void* drawobject) {
+	auto p = (item*)drawobject;
 	return p->isidentified();
 }
 
-static bool filter_animal(const void* object) {
-	if(bsdata<creature>::have(object)) {
-		auto p = (creature*)object;
+static bool filter_animal(const void* drawobject) {
+	if(bsdata<creature>::have(drawobject)) {
+		auto p = (creature*)drawobject;
 		auto v = p->get(Wits);
 		return v == 3 || v == 4;
 	}
@@ -3247,11 +3247,11 @@ static void select_your_room() {
 	}
 }
 
-static void* group_position(const void* object) {
-	if(bsdata<creature>::have(object))
-		return &area->tiles[((creature*)object)->getposition()];
-	else if(haveitem(object))
-		return &area->tiles[((itemground*)object)->position];
+static void* group_position(const void* drawobject) {
+	if(bsdata<creature>::have(drawobject))
+		return &area->tiles[((creature*)drawobject)->getposition()];
+	else if(haveitem(drawobject))
+		return &area->tiles[((itemground*)drawobject)->position];
 	return 0;
 }
 
