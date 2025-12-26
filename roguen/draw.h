@@ -269,7 +269,6 @@ void					updatewindow();
 void					write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
 void					vertical(fnevent proc);
 }
-namespace draw {
 void breakmodal(long result);
 bool button(const char* title, unsigned key, fnbutton proc, bool vertical = true, unsigned* keybinds = 0);
 void buttoncancel();
@@ -288,5 +287,4 @@ void* scene(fnevent proc);
 void scene();
 void setneedupdate();
 void setnext(fnevent v);
-void start();
-}
+void start_scene();

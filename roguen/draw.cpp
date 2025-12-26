@@ -2477,7 +2477,7 @@ static void beforemodal() {
 	tips_size.clear();
 }
 
-bool draw::ismodal() {
+bool ismodal() {
 	beforemodal();
 	if(pbeforemodal)
 		pbeforemodal();
@@ -2489,38 +2489,38 @@ bool draw::ismodal() {
 	return break_modal;
 }
 
-void draw::breakmodal(long result) {
+void breakmodal(long result) {
 	break_modal = true;
 	break_result = result;
 }
 
-void draw::buttoncancel() {
+void buttoncancel() {
 	breakmodal(0);
 }
 
-void draw::buttonok() {
+void buttonok() {
 	breakmodal(1);
 }
 
-void draw::buttonparam() {
+void buttonparam() {
 	breakmodal(hot.param);
 }
 
-long draw::getresult() {
+long getresult() {
 	return break_result;
 }
 
-void draw::cbsetint() {
+void cbsetint() {
 	auto p = (int*)hot.object;
 	*p = hot.param;
 }
 
-void draw::cbsetsht() {
+void cbsetsht() {
 	auto p = (short*)hot.object;
 	*p = (short)hot.param;
 }
 
-void draw::cbsetptr() {
+void cbsetptr() {
 	auto p = (void**)hot.object;
 	*p = (void*)hot.param;
 }
@@ -2601,28 +2601,28 @@ void draw::vertical(fnevent proc) {
 	width = push_width;
 }
 
-bool draw::isnext() {
+bool isnext() {
 	return next_proc != 0;
 }
 
-void draw::setnext(fnevent v) {
+void setnext(fnevent v) {
 	next_proc = v;
 }
 
-void draw::start() {
+void start_scene() {
 	while(next_proc) {
 		auto p = next_proc;
 		next_proc = 0; p();
 	}
 }
 
-void draw::setneedupdate() {
+void setneedupdate() {
 	hot.key = InputNeedUpdate;
 }
 
 extern void create_platform_window();
 
-void draw::initialize(const char* title) {
+void initialize(const char* title) {
 	font = metrics::font;
 	fore = colors::text;
 	fore_stroke = colors::text.mix(colors::form, 96);
@@ -2640,7 +2640,7 @@ void draw::paintfinish() {
 		pfinish();
 }
 
-void* draw::scene(fnevent proc) {
+void* scene(fnevent proc) {
 	while(ismodal()) {
 		paintstart();
 		if(proc)
@@ -2649,10 +2649,6 @@ void* draw::scene(fnevent proc) {
 		domodal();
 	}
 	return (void*)getresult();
-}
-
-void draw::scene() {
-	scene(0);
 }
 
 static bool iskeybinds(unsigned key, unsigned hot_key, unsigned* p) {
@@ -2666,7 +2662,7 @@ static bool iskeybinds(unsigned key, unsigned hot_key, unsigned* p) {
 	return false;
 }
 
-bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical, unsigned* keybinds) {
+bool button(const char* title, unsigned key, fnbutton proc, bool vertical, unsigned* keybinds) {
 	static point pressed_caret;
 	auto push_width = width;
 	auto push_height = height;
@@ -2700,10 +2696,8 @@ bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical,
 	return need_execute;
 }
 
-void draw::fire(bool run, fnevent proc, long value, long value2, const void* object) {
-	if(!proc)
-		return;
-	if(run)
+void fire(bool run, fnevent proc, long value, long value2, const void* object) {
+	if(proc && run)
 		execute(proc, value, value2, object);
 }
 

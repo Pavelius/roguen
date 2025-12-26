@@ -245,7 +245,7 @@ void draw::paintobjects() {
 }
 
 void* draw::chooseobject() {
-	draw::scene(paintobjects);
+	scene(paintobjects);
 	return (void*)getresult();
 }
 
@@ -258,7 +258,7 @@ static void paintobjectsshowmode() {
 }
 
 void draw::showobjects() {
-	draw::scene(paintobjectsshowmode);
+	scene(paintobjectsshowmode);
 }
 
 object*	draw::addobject(point pt, fnevent proc, void* data, unsigned char param, unsigned char priority, unsigned char alpha, unsigned char flags) {

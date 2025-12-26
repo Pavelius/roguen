@@ -256,7 +256,7 @@ static unsigned handle_event(unsigned m) {
 	return m;
 }
 
-void draw::doredraw() {
+void doredraw() {
 	MSG	msg;
 	updatewindow();
 	if(!hwnd)

@@ -17,6 +17,7 @@ void check_time_passed();
 void end_game();
 void enter_area(point m, int level, const featurei* entry, directionn appear_side);
 void main_menu();
+bool isnext();
 void next_phase(fnevent proc);
 void new_game();
 bool present_game(const char* name);

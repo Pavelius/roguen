@@ -11,10 +11,6 @@
 #include "creature.h"
 #include "zcopy.h"
 
-namespace draw {
-bool			isnext();
-}
-
 static char		console_text[4096];
 stringbuilder	console(console_text);
 gamei			game;
@@ -44,7 +40,7 @@ static void all(fnevent proc) {
 static void allnext(fnevent proc) {
 	auto push_player = player;
 	for(auto& e : bsdata<creature>()) {
-		if(draw::isnext())
+		if(isnext())
 			break;
 		if(e.isvalid()) {
 			player = &e;
@@ -244,7 +240,7 @@ static void play_minute() {
 		for(auto i = 0; i < moves_per_minute; i++) {
 			update_los();
 			allnext(make_move);
-			if(!game.getowner() || draw::isnext()) {
+			if(!game.getowner() || isnext()) {
 				need_continue = false;
 				break;
 			}
@@ -255,7 +251,7 @@ static void play_minute() {
 }
 
 void play_game() {
-	while(checkalive() && !draw::isnext())
+	while(checkalive() && !isnext())
 		play_minute();
 }
 

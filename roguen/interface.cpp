@@ -680,7 +680,7 @@ bool button(unsigned key, int format_width) {
 	if(format_width == -1)
 		format_width = textw(temp) + metrics::padding * 2;
 	width = format_width;
-	auto result = draw::button(temp, key, draw::pbutton, false);
+	auto result = button(temp, key, draw::pbutton, false);
 	width = push_width;
 	return result;
 }
@@ -1035,7 +1035,7 @@ static void answer_after_paint() {
 	caret = answer_end;
 	auto push_width = width; width = -1;
 	if(answers::cancel_text) {
-		if(draw::button(answers::cancel_text, KeyEscape, draw::pbutton, false))
+		if(button(answers::cancel_text, KeyEscape, draw::pbutton, false))
 			execute(buttoncancel);
 	}
 	width = push_width;
@@ -1563,7 +1563,7 @@ int start_application(fnevent proc) {
 	draw::height = 360;
 	initialize(getnm("AppTitle"));
 	setnext(proc);
-	start();
+	start_scene();
 	return 0;
 }
 
