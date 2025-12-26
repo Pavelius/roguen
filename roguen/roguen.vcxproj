@@ -171,9 +171,6 @@
     <ClCompile Include="direction_req.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_answers.cpp" />
-    <ClCompile Include="draw_form.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="draw_manual.cpp" />
     <ClCompile Include="draw_message.cpp" />
     <ClCompile Include="draw_object.cpp" />

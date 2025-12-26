@@ -1595,7 +1595,7 @@ int draw::textw(const char* string, int count) {
 	return x1;
 }
 
-void draw::textrp(const char* string, int count, unsigned flags) {
+void draw::text(const char* string, int count, unsigned flags) {
 	if(!font)
 		return;
 	auto dy = texth();
@@ -1603,6 +1603,7 @@ void draw::textrp(const char* string, int count, unsigned flags) {
 		return;
 	if(count == -1)
 		count = zlen(string);
+	auto push_caret = caret;
 	const char *s1 = string;
 	const char *s2 = string + count;
 	unsigned char s0 = 0x0;
@@ -1612,11 +1613,6 @@ void draw::textrp(const char* string, int count, unsigned flags) {
 			glyph(sm, flags);
 		caret.x += textw(sm);
 	}
-}
-
-void draw::text(const char* string, int count, unsigned flags) {
-	auto push_caret = caret;
-	textrp(string, count, flags);
 	caret = push_caret;
 }
 

@@ -309,9 +309,6 @@
     <ClCompile Include="race.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="draw_form.cpp">
-      <Filter>Interface</Filter>
-    </ClCompile>
     <ClCompile Include="textscript.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
