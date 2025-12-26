@@ -664,7 +664,7 @@ static void paint_button(const char* format, bool pressed) {
 		strokeup();
 	caret.y -= 1;
 	fore = push_fore;
-	caret.x += 1 + (width - textw(format) + 1) / 2;
+	caret.x += (width - textw(format) + 1) / 2;
 	if(pressed)
 		caret.y += 1;
 	text(format);
