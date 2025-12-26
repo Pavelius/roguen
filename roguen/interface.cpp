@@ -1330,7 +1330,7 @@ static void show_font() {
 	setoffset(metrics::padding, metrics::padding);
 	rectpush push; width = 16; height = 16;
 	point origin = caret;
-	for(auto y = 0; y < 12; y++) {
+	for(auto y = 0; y < 14; y++) {
 		for(auto x = 0; x < 16; x++) {
 			unsigned char sym = y * 16 + x + glyph_start;
 			caret.x = origin.x + x * 16;
@@ -1344,6 +1344,7 @@ static void show_font() {
 			}
 		}
 	}
+	fore = colors::yellow;
 	caret.x = 16; caret.y = 15 * 16;
 	text("Приклад тексту де можна побачити її вживу та єнергію отримати.");
 	caret.y += texth();

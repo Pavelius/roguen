@@ -9,12 +9,12 @@ void draw::glyph(int n, unsigned flags) {
 	auto push_fore = fore;
 	image(font, n - glyph_start, 0);
 	if(flags & TextBold) {
-		fore.a = 64;
-		image(caret.x - 1, caret.y - 1, font, n - glyph_start + glyph_count * 1, 0);
+		fore = fore_stroke;
+		image(font, n - glyph_start + glyph_count * 1, 0);
 	}
 	if(flags & TextItalic) {
-		fore.a = 128;
-		image(caret.x - 1, caret.y - 1, font, n - glyph_start + glyph_count * 2, 0);
+		fore = fore_stroke;
+		image(font, n - glyph_start + glyph_count * 2, 0);
 	}
 	fore = push_fore;
 }

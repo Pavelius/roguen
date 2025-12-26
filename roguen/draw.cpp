@@ -2625,7 +2625,7 @@ extern void create_platform_window();
 void draw::initialize(const char* title) {
 	font = metrics::font;
 	fore = colors::text;
-	fore_stroke = colors::border;
+	fore_stroke = colors::text.mix(colors::form, 96);
 	create_platform_window();
 	setcaption(title);
 }
