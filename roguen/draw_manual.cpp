@@ -140,4 +140,3 @@ void open_manual(const char* manual_header, const char* manual_content) {
 	content = push_content;
 	header = push_header;
 }
-

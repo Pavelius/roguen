@@ -7,7 +7,7 @@
 typedef void(*fnevent)();
 typedef void(*fnbutton)(const char* title, bool pressed);
 
-enum draw_event_s : unsigned {
+enum dweventn : unsigned {
 	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 0x7F,
 	// input events
 	InputSymbol = 0x80, InputTimer, InputKeyUp, InputIdle, InputNeedUpdate, InputUpdate, InputNoUpdate,
@@ -22,7 +22,7 @@ enum draw_event_s : unsigned {
 	Alt = 0x00000200,
 	Shift = 0x00000400,
 };
-enum image_flag_s {
+enum imagefn {
 	ImageMirrorV = 0x0001,
 	ImageMirrorH = 0x0002,
 	ImageGrayscale = 0x0004,
@@ -47,7 +47,7 @@ enum image_flag_s {
 	AlignWidth = 0xE000,
 	AlignMask = 0xF000,
 };
-enum window_flag_s {
+enum windowfn {
 	WFResize = 0x0010,
 	WFMinmax = 0x0020,
 	WFMaximized = 0x0040,
@@ -289,11 +289,4 @@ void scene();
 void setneedupdate();
 void setnext(fnevent v);
 void start();
-}
-namespace draw {
-bool isclipped(int size);
-void setposct();
-void setposld();
-void setposlu();
-void setposru();
 }
