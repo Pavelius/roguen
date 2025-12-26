@@ -24,6 +24,7 @@ BSDATA(abilityi) = {
 	{"Alchemy", 0, 30, 1, Wits},
 	{"Thievery", 0, 30, 1, Dexterity},
 	{"Literacy", 0, 30, 1, Wits, 3},
+	{"Metallurgy", 0, 30, 1, Wits, 3},
 	{"Mining", 0, 30, 1, Strenght, 3},
 	{"Stealth", 0, 30, 1, Dexterity, 3},
 	{"Survival", 0, 30, 1, Wits, 3},

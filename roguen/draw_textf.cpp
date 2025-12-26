@@ -84,7 +84,7 @@ static void border_color(fnevent proc) {
 }
 
 static void paint_image(const char* name, int id, const char* folder) {
-	//auto ps = draw::gres(name, folder);
+	//auto ps = gres(name, folder);
 	//if(!ps)
 	//	return;
 	//width = ps->get(id).sx;
