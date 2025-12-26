@@ -1623,19 +1623,6 @@ void draw::textcj(const char* string) {
 	caret = push_caret;
 }
 
-void draw::textc(const char* string, int count, unsigned flags) {
-	auto push_clip = clipping;
-	setclip({caret.x, caret.y, caret.x + width, caret.y + texth()});
-	auto w = textw(string, count);
-	text_clipped = w > width;
-	auto push_caret = caret;
-	caret.x = aligned(caret.x, width, flags, w);
-	text(string, count, flags);
-	caret = push_caret;
-	clipping = push_clip;
-	caret.y += texth();
-}
-
 int draw::textbc(const char* string, int width) {
 	if(!font)
 		return 0;

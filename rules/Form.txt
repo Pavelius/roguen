@@ -1,5 +1,0 @@
-#Dialog
-
-TestDialog
- buttons id(Keymart) key("Ctrl+F")
- buttons id(Lingvo) key("Ctrl+D")

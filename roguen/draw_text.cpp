@@ -22,7 +22,7 @@ void draw::glyph(int n, unsigned flags) {
 int draw::textw(int n) {
 	if(n <= glyph_start)
 		n = 'l';
-	auto widths = (short*)font->ptr(font->size - glyph_count * 2);
+	auto widths = (short int*)font->ptr(font->size - glyph_count * sizeof(short int));
 	return widths[n - glyph_start];
 }
 
