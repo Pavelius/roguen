@@ -3,8 +3,6 @@
 #include "io_stream.h"
 #include "resource.h"
 
-using namespace draw;
-
 const sprite* resource::get() {
 	if(notfound)
 		return 0;

@@ -4,8 +4,6 @@
 
 #define ZOOM 2
 
-using namespace draw;
-
 #pragma pack(push)
 #pragma pack(1)
 static struct video_8t {

@@ -2,8 +2,6 @@
 #include "draw.h"
 #include "pushvalue.h"
 
-using namespace draw;
-
 static bool allow(const answers& an, size_t max_width) {
 	for(auto& e : an) {
 		if(zlen(e.text) > max_width)

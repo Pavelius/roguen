@@ -7,8 +7,6 @@
 // $left 64 image Bitmap 0 'art/images'
 // $right 64 tips !-'$centered 'Central Header' Some tips with fully featured tips'-! image AnotherBitmap 0 'art/images'
 
-using namespace draw;
-
 int tab_pixels = 0;
 static const char* text_start_string;
 static int text_start_horiz;

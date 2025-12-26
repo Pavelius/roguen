@@ -4,8 +4,6 @@
 #include "visualeffect.h"
 #include "resid.h"
 
-using namespace draw;
-
 BSDATA(visualeffect) = {
 	{"AcidSplash", res::Splash, 2},
 	{"BloodingVisual", res::Conditions, 1, 0, 15, -32},

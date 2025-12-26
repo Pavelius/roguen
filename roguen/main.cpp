@@ -11,8 +11,6 @@
 #include "textscript.h"
 #include "timer.h"
 
-using namespace draw;
-
 static void add_item(const char* id, int count = 1, bool identified = false) {
 	item it;
 	it.create(bsdata<itemi>::find(id), count);

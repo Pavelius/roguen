@@ -3,8 +3,6 @@
 #include "shortcut.h"
 #include "slice.h"
 
-using namespace draw;
-
 static const char* header;
 static const char* content;
 static int content_origin, content_maximum, content_page, cash_string;

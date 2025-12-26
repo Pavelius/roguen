@@ -172,14 +172,12 @@ extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pfinish, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
 extern fnbutton			pbutton;
-namespace draw {
 struct pushrect {
 	point				caret;
 	int					width, height;
 	pushrect() : caret(::caret), width(::width), height(::height) {}
 	~pushrect() { ::caret = caret; ::width = width; ::height = height; }
 };
-}
 
 const sprite* gres(res id);
 unsigned char* ptr(int x, int y);

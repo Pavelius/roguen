@@ -13,8 +13,6 @@ extern "C" void* malloc(unsigned long size);
 extern "C" void* realloc(void *ptr, unsigned long size);
 extern "C" void	free(void* pointer);
 
-using namespace draw;
-
 // Default theme colors
 color				colors::active;
 color				colors::button;
