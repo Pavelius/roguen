@@ -173,8 +173,6 @@ PotionOfWisdow cost(1000) weight(25) unidentified(YellowPotion) wear(Potion) ava
  use GainExperience+10
 PotionOfCurePoison cost(800) weight(25) unidentified(YellowPotion) wear(Potion) avatar(169) cursed(PotionOfPoison)
  use Poison-20 FixAbility
-PotionOfLearning cost(3000) weight(25) unidentified(BluePotion) wear(Potion) avatar(167) cursed(PotionOfDumbness)
- use SkillPoints+5 FixAbility
 
 BrassRing cost(100) weight(1) wear(FingerRight) avatar(75)
 IronRing cost(300) weight(1) wear(FingerRight) avatar(74)

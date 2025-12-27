@@ -1673,37 +1673,6 @@ static int free_objects_count() {
 	return result;
 }
 
-static int get_rate(abilityn a, int v) {
-	if(v > 0 && v < 100) {
-		auto rate = bsdata<abilityi>::elements[a].raise;
-		auto cost = bsdata<abilityi>::elements[a].raise_cost;
-		if(rate)
-			return cost + (v / rate);
-	}
-	return 0;
-}
-
-static void add_raise(abilityn a) {
-	auto pb = bsdata<abilityi>::begin() + a;
-	auto v = player->basic.abilities[a];
-	if(!v)
-		return;
-	auto r = get_rate(a, v);
-	if(player->basic.abilities[SkillPoints] < r)
-		return;
-	an.add(pb, getnm("RaiseSkill"), pb->getname(), v + 1, r);
-}
-
-static void raise_ability_by_skill(abilityn a) {
-	auto v = player->basic.abilities[a];
-	auto r = get_rate(a, v);
-	if(player->basic.abilities[SkillPoints] < r)
-		return;
-	player->basic.abilities[SkillPoints] -= r;
-	player->basic.abilities[a]++;
-	player->update();
-}
-
 static const char* skill_value(const void* drawobject, stringbuilder& sb) {
 	auto i = (abilityn)bsdata<abilityi>::source.indexof(drawobject);
 	auto v = player->basic.abilities[i];
@@ -1711,47 +1680,41 @@ static const char* skill_value(const void* drawobject, stringbuilder& sb) {
 	return sb.begin();
 }
 
-static const char* skill_raise_cost(const void* drawobject, stringbuilder& sb) {
-	auto p = (abilityi*)drawobject;
-	auto i = (abilityn)bsdata<abilityi>::source.indexof(drawobject);
+static const char* skill_raise_cost(const void* object, stringbuilder& sb) {
+	auto p = (abilityi*)object;
+	auto i = (abilityn)bsdata<abilityi>::source.indexof(object);
 	auto v = player->basic.abilities[i];
-	auto r = get_rate(i, v);
-	sb.add(getnm("RaiseSkill"), p->getname(), v + 1, r);
+	auto r = levelup.abilities[i];
+	sb.add(getnm("RaiseSkillValue"), p->getname(), v + r, r);
 	return sb.begin();
 }
 
-static abilityi* choose_skill(listcolumn* columns, const char* header, int dialog_width) {
+static abilityi* choose_skill(listcolumn* columns, const char* header, int dialog_width, int count) {
 	an.clear();
 	for(auto i = Strenght; i <= LastSkill; i = (abilityn)(i + 1)) {
-		if(!get_rate(i, player->basic.abilities[i]))
+		if(!levelup.abilities[i])
 			continue;
-		an.add(bsdata<abilityi>::elements + i, bsdata<abilityi>::elements[i].getname());
+		an.add(bsdata<abilityi>::elements + i, bsdata<abilityi>::elements[i].getname(), levelup.abilities[i]);
 	}
 	char temp[260]; stringbuilder sb(temp);
-	sb.add(getnm(header), player->basic.abilities[SkillPoints]);
+	sb.add(getnm(header), count);
 	pushvalue push_columns(current_columns, columns);
 	pushvalue push_width(window_width, dialog_width);
 	return (abilityi*)choose_answers(temp, getnm("Cancel"));
 }
 
-static void raise_skills(int bonus) {
-	if(player->basic.abilities[SkillPoints] <= 0) {
-		static listcolumn columns[] = {
-			{"Value", 32, skill_value},
-			{}};
-		choose_skill(columns, "Skills", 248);
-	} else {
-		static listcolumn columns[] = {
-			{"Value", 32, skill_value},
-			{"Cost", 90, skill_raise_cost},
-			{}};
-		while(player->basic.abilities[SkillPoints] > 0) {
-			auto p = choose_skill(columns, "RaiseSkillChoose", 280);
-			if(!p)
-				break;
-			auto a = (abilityn)(p - bsdata<abilityi>::elements);
-			raise_ability_by_skill(a);
-		}
+void raise_skills(int bonus) {
+	raise_abilities();
+	static listcolumn columns[] = {
+		{"Value", 32, skill_value},
+		{"Cost", 90, skill_raise_cost},
+		{}};
+	while(bonus > 0) {
+		auto p = choose_skill(columns, "RaiseSkillChoose", 280, bonus);
+		if(!p)
+			break;
+		levelup_ability((abilityn)bsid(p));
+		bonus--;
 	}
 }
 
@@ -1762,7 +1725,7 @@ static void debug_message(int bonus) {
 	//auto f = area->features[m];
 	//if(f)
 	//	console.adds("Feature %1 (%2i).", bsdata<featurei>::elements[f].getname(), f);
-	raise_skills(0);
+	raise_skills(3);
 }
 
 static void open_nearest_door(int bonus) {

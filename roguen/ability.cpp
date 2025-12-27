@@ -5,12 +5,12 @@ abilityn last_ability;
 
 BSDATA(abilityi) = {
 	{"LineOfSight", 0},
-	{"Strenght", 0, 30, 4},
-	{"Dexterity", 0, 30, 3},
-	{"Wits", 0, 30, 3}, // 1 - Insects, 2 - Snakes, 3 - HerdAnimals, 4 - PredatorAnimals,
-	{"WeaponSkill", 0, 30, 1},
-	{"BalisticSkill", 0, 30, 1},
-	{"Dodge", 0, 30, 2, Dexterity},
+	{"Strenght", 0, 3},
+	{"Dexterity", 0, 3},
+	{"Wits", 0, 3}, // 1 - Insects, 2 - Snakes, 3 - HerdAnimals, 4 - PredatorAnimals,
+	{"WeaponSkill", 0, 4},
+	{"BalisticSkill", 0, 4},
+	{"Dodge", 0, 4, Dexterity},
 	{"DamageMelee", -120},
 	{"DamageRanged", -120},
 	{"DamageThrown", -120},
@@ -19,19 +19,19 @@ BSDATA(abilityi) = {
 	{"BlockRanged", 0},
 	{"EnemyAttacks", 0},
 	{"ChanceFailSpell", 0},
-	{"Alertness", 0, 30, 1, Wits, 3},
-	{"Gemcutting", 0, 30, 1, Dexterity},
-	{"Alchemy", 0, 30, 1, Wits},
-	{"Thievery", 0, 30, 1, Dexterity},
-	{"Literacy", 0, 30, 1, Wits, 3},
-	{"Metallurgy", 0, 30, 1, Wits, 3},
-	{"Mining", 0, 30, 1, Strenght, 3},
-	{"Stealth", 0, 30, 1, Dexterity, 3},
-	{"Survival", 0, 30, 1, Wits, 3},
-	{"Haggling", 0, 30, 1, Wits, 3},
-	{"History", 0, 30, 1, Wits},
-	{"Religion", 0, 30, 1, Wits},
-	{"Woodcutting", 0, 30, 1, Dexterity, 3},
+	{"Alertness", 0, 5, Wits, 3},
+	{"Gemcutting", 0, 5, Dexterity},
+	{"Alchemy", 0, 5, Wits},
+	{"Thievery", 0, 5, Dexterity},
+	{"Literacy", 0, 5, Wits, 3},
+	{"Metallurgy", 0, 5, Wits, 3},
+	{"Mining", 0, 5, Strenght, 3},
+	{"Stealth", 0, 5, Dexterity, 3},
+	{"Survival", 0, 5, Wits, 3},
+	{"Haggling", 0, 5, Wits, 3},
+	{"History", 0, 5, Wits},
+	{"Religion", 0, 5, Wits},
+	{"Woodcutting", 0, 5, Dexterity, 3},
 	{"CarryCapacity", 0},
 	{"Level", 0},
 	{"Hits", 0},
@@ -39,7 +39,6 @@ BSDATA(abilityi) = {
 	{"Faith", 0},
 	{"Mood", -120},
 	{"Reputation", -120},
-	{"SkillPoints", 0},
 	{"Poison", -120},
 	{"Illness", -120},
 	{"Corrosion", -120},
@@ -60,6 +59,10 @@ void statable::add(abilityn v, int bonus, int minimum, int maximum) {
 	else if(bonus > maximum)
 		bonus = maximum;
 	abilities[v] = bonus;
+}
+
+void statable::clear() {
+	memset((void*)this, 0, sizeof(*this));
 }
 
 //color_s negative_color(abilityn v) {

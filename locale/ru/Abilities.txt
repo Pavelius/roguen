@@ -16,3 +16,5 @@ Hits: Хиты
 Mana: Мана
 Money: Деньги
 Reputation: Репутация
+
+RaiseSkillValue: %+3i%%

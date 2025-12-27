@@ -1,7 +1,13 @@
 Skills: Навыки
 
+Alchemy: Алхимия
 Alertness: Бдительность
 Gemcutting: Ювелирное дело
+Haggling: Торговля
+Metallurgy: Метталургия
+Survival: Выживание
+Woodcutting: Плотничье дело
+
 History: История
 Literacy: Грамотность
 Mining: Шахтерское дело
@@ -11,7 +17,7 @@ Thievery: Воровство
 
 RaiseSkillCancel: Ничего больше повышать не надо.
 RaiseSkillChoose: Повышение навыков (осталось %1i)
-RaiseSkill: стоит [%3i] очка
+
 YouBrokeItem: %герой сломал%а %-$1.
 YouCantMineHere: Вы не можете копать здесь.
 YouCrashWall: %герой разрушил%а стену %1.

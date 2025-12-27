@@ -12,6 +12,7 @@
 #include "pushvalue.h"
 #include "querry.h"
 #include "rand.h"
+#include "rollrange.h"
 #include "script.h"
 #include "siteskill.h"
 #include "speech.h"
@@ -22,6 +23,8 @@
 static areamap::fitest crush_wall_action_proc;
 
 extern collection<roomi> rooms;
+
+statable levelup;
 
 int last_roll_result;
 bool last_roll_successed;
@@ -527,8 +530,8 @@ void player_levelup() {
 	if(!player->ischaracter())
 		return;
 	if(player->basic.abilities[Level] > 1) {
-		player->basic.abilities[SkillPoints] += additional_skill_points(player->basic.abilities[Wits]);
 		player->actp("LevelUp");
+		raise_abilities();
 	}
 	advance_value(player->getkind(), player->basic.abilities[Level]);
 }
@@ -2161,4 +2164,28 @@ bool make_hostile(creature* player, const creature* opponent) {
 	player->setenemy(leader);
 	calling_help_attack(player, leader);
 	return true;
+}
+
+static void add_raise_abilities() {
+	for(auto& e : bsdata<abilityi>()) {
+		if(!e.raise)
+			continue;
+		auto a = e.getindex();
+		if(!player->abilities[a])
+			continue;
+		rollrange d = {e.raise - 2, e.raise};
+		d.normalize();
+		levelup.abilities[e.getindex()] += d.roll();
+	}
+}
+
+void raise_abilities() {
+	levelup.clear();
+	add_raise_abilities();
+}
+
+void levelup_ability(abilityn a) {
+	player->basic.abilities[a] += levelup.abilities[a];
+	levelup.abilities[a] = 0;
+	player->update();
 }

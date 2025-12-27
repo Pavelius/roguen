@@ -197,6 +197,7 @@
     <ClCompile Include="list.cpp" />
     <ClCompile Include="listcolumn.cpp" />
     <ClCompile Include="querry.cpp" />
+    <ClCompile Include="rollrange.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="site.cpp" />
     <ClCompile Include="log.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="race.h" />
     <ClInclude Include="rand.h" />
     <ClInclude Include="randomizer.h" />
+    <ClInclude Include="rollrange.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resid.h" />
     <ClInclude Include="resource.h" />

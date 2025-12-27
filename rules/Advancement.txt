@@ -12,8 +12,6 @@ DarkElf-1 AdditionalHits
  elements Hits+1
 DarkElf-2 AdditionalMana
  elements Mana+1
-DarkElf-1 AdditionalSkills
- elements SkillPoints+10
 
 Human+1 Ability
  elements Strenght+30 Dexterity+20 Wits+20 Hits+20
@@ -23,8 +21,6 @@ Human+1 Equipment
  elements Staff
 Human-1 AdditionalHits
  elements Hits+1
-Human-1 AdditionalSkills
- elements SkillPoints+11
 
 HightElf+1 Ability
  elements Strenght+25 Dexterity+25 Wits+30 Hits+20 Mana+20 ElfBlood
@@ -38,8 +34,6 @@ HightElf-2 AdditionalHits
  elements Hits+1
 HightElf-1 AdditionalMana
  elements Mana+1
-HightElf-1 AdditionalSkills
- elements SkillPoints+10
 
 Dwarf+1 Ability
  elements Strenght+35 Dexterity+15 Wits+20 Hits+30 Darkvision PoisonResistance DwarfBlood
@@ -49,5 +43,3 @@ Dwarf+1 Equipment
  elements HandAxe HandPick SetBroken+7 LeatherArmor
 Dwarf-1 AdditionalHits
  elements Hits+2
-Dwarf-1 AdditionalSkills
- elements SkillPoints+10

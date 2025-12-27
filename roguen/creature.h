@@ -14,16 +14,13 @@
 #include "spell.h"
 #include "wearable.h"
 
-class creature : public wearable, public statable, public spellable, public ownerable, public crafta {
+struct creature : wearable, statable, spellable, ownerable, crafta {
 	unsigned short	room_id, enemy_id, charmer_id, fear_id;
-	void			cleanup();
-public:
-	typedef void (creature::*fncommand)(); // typical drawobject command
-	int				experience, wait_seconds;
 	statable		basic;
 	featable		feats, feats_active;
 	geoposition		worldpos;
 	point			moveorder, guardorder;
+	int				experience, wait_seconds;
 	operator bool() const { return abilities[Hits] > 0; }
 	bool			act(const char* action, const char* id = 0, ...) const;
 	bool			actp(const char* action, const char* id = 0, ...) const;
@@ -34,6 +31,7 @@ public:
 	bool			canhear(point i) const;
 	bool			canremove(item& it) const;
 	bool			canspeak() const { return abilities[Wits] >= 6; }
+	void			cleanup();
 	void			clear();
 	void			equipi(short unsigned type, int count);
 	void			equip(item& v);
@@ -119,6 +117,7 @@ extern int last_value, last_roll_result;
 extern bool last_roll_successed;
 extern rect last_rect;
 extern int window_width, window_height;
+extern statable levelup;
 
 void attack_melee(int bonus);
 void attack_range(int bonus);
@@ -129,10 +128,13 @@ void damage_backpack_item(wear_s type, int chance, int count = 1);
 void dialog_message(const char* format);
 bool is_ally(const void* drawobject);
 bool is_enemy(const void* drawobject);
+void levelup_ability(abilityn a);
 bool make_hostile(creature* player, const creature* opponent);
 void make_move();
 void move_step(directionn v);
 void pay_action();
+void raise_abilities();
+void raise_skills(int bonus);
 void roll_horror(int bonus);
 bool use_item(item& v);
 

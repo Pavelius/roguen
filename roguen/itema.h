@@ -3,7 +3,7 @@
 
 #pragma once
 
-class creature;
+struct creature;
 
 struct itema : collection<item> {
 	void select(point m);
