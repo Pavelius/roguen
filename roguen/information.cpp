@@ -132,7 +132,7 @@ void creature::getinfo(stringbuilder& sb) const {
 	sb.addn(getname());
 	sb.addn(getrace(getkind(), is(Female)));
 	sb.addn("%1i %-Level", get(Level));
-	sb.addn("$tab -50");
+	sb.addn("/tab 74");
 	sb.addn("---");
 	for(auto i = Strenght; i <= Wits; i = (abilityn)(i + 1))
 		addf(sb, i, abilities[i]);

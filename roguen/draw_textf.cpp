@@ -192,7 +192,6 @@ static const char* citate(const char* p, int x1, int x2, color new_fore, const s
 static const char* textfln(const char* p, int x1, int x2, color new_fore, const sprite* new_font) {
 	pushfore push_fore(new_fore);
 	pushfont push_font(new_font);
-	char temp[4096]; temp[0] = 0;
 	unsigned flags = text_flags;
 	while(true) {
 		if(p[0] == '*' && p[1] == '*') {
@@ -248,13 +247,12 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 				fore = colors::special;
 				break;
 			}
-			p = glink(p, temp, sizeof(temp) / sizeof(temp[0]) - 1);
 		} else if(p[0] == ']') {
-			p++; temp[0] = 0;
+			p++;
 			flags &= ~TextUscope;
 			fore = new_fore;
 		}
-		// ќбработаем пробелы и табул€цию
+		// Tabs and spaces
 		p = textspc(p, x1);
 		auto w = 0;
 		if(p[0] == ':' && p[1] >= '0' && p[1] <= '9') {
@@ -276,8 +274,6 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 			text(p, p2 - p, flags);
 			p = p2;
 		}
-		if(temp[0] && ishilite({caret.x, caret.y, caret.x + w, caret.y + texth()})) {
-		}
 		caret.x += w;
 		p = textspc(p, x1);
 		if(p[0] == 0 || p[0] == 10 || p[0] == 13) {
@@ -288,6 +284,11 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 	}
 	apply_line_feed(caret.x, 0);
 	return p;
+}
+
+static void paint_border_color(fnevent proc) {
+	pushfore push(colors::border);
+	proc();
 }
 
 static const char* parse_widget_command(const char* p) {
@@ -360,7 +361,7 @@ static const char* parse_widget_command(const char* p) {
 			flags = AlignCenterCenter;
 			continue;
 		} else if(equaln(p, "border")) {
-			// paint_border_color(rectb);
+			paint_border_color(rectb);
 			continue;
 		} else if(equaln(p, "fill")) {
 			rectf();
