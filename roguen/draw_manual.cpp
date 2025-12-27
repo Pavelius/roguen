@@ -88,7 +88,7 @@ static void button_line(const slice<shortcuti>& source) {
 			continue;
 		button(e.key, e.proc);
 	}
-	height = getheight() - texth() - metrics::padding * 2 - push.caret.y;
+	push.height = getheight() - texth() - metrics::padding * 2 - push.caret.y;
 }
 
 static void clipped_string(const char* format, int& origin, int& cash_text_offset, int& maximum) {

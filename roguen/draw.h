@@ -172,6 +172,24 @@ extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pfinish, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
 extern fnbutton			pbutton;
+struct pushfore {
+	color fore;
+	pushfore() : fore(::fore) {}
+	pushfore(color v) : fore(::fore) { ::fore = v; }
+	~pushfore() { ::fore = fore; }
+};
+struct pushstroke {
+	color fore;
+	pushstroke() : fore(::fore_stroke) {}
+	pushstroke(color v) : fore(::fore_stroke) { ::fore_stroke = v; }
+	~pushstroke() { ::fore_stroke = fore; }
+};
+struct pushfont {
+	const sprite* font;
+	pushfont() : font(::font) {}
+	pushfont(const sprite* v) : font(::font) { ::font = v; }
+	~pushfont() { ::font = font; }
+};
 struct pushrect {
 	point				caret;
 	int					width, height;

@@ -1,16 +1,19 @@
 #include "draw.h"
 #include "slice.h"
+#include "stringbuilder.h"
 
 ///////////////////////////////////////////////////////////
 // RICH COMMAND FORMAT EXAMPLE
 //
-// $left 64 image Bitmap 0 'art/images'
-// $right 64 tips !-'$centered 'Central Header' Some tips with fully featured tips'-! image AnotherBitmap 0 'art/images'
+// /x 64 image Bitmap 0 'art/images'
+// /lf w 200 h 64
+// /x 10 w 64 h 64 center text Some text centered in rectangle.
 
 int tab_pixels = 0;
 static const char* text_start_string;
 static int text_start_horiz;
 static point maxcaret;
+unsigned text_flags;
 
 static void apply_line_feed(int x1, int dy) {
 	if(maxcaret.x < caret.x)
@@ -38,7 +41,7 @@ static const char* read_special_string(const char* p, stringbuilder& sb) {
 	while(*p) {
 		if(p[0] == '-' && p[1] == '!' && p[2] == '\'')
 			p = read_special_string(p + 3, sb);
-		else if(p[0] == '\'' && p[1] == '-' && p[2] == '!') {
+		else if(p[0] == '\'' && p[1] == '!' && p[2] == '-') {
 			p = skipsp(p + 3);
 			break;
 		}
@@ -61,6 +64,14 @@ static const char* getparam(const char*& p, stringbuilder& sb) {
 	return pb;
 }
 
+static const char* read_lf(const char* p, stringbuilder& sb) {
+	auto pb = sb.get();
+	while(*p && !(*p == 10 || *p == 13))
+		sb.addch(*p++);
+	sb.addsz();
+	return skipsp(p);
+}
+
 static int getparam(const char*& p) {
 	if(isnum(p[0]) || (p[0] == '-' && isnum(p[1]))) {
 		int result = 0;
@@ -76,100 +87,7 @@ static const char* skip_line(const char* p) {
 	return skipcr(p);
 }
 
-static void border_color(fnevent proc) {
-	auto push_fore = fore;
-	fore = colors::border;
-	proc();
-	fore = push_fore;
-}
-
 static void paint_image(const char* name, int id, const char* folder) {
-	//auto ps = gres(name, folder);
-	//if(!ps)
-	//	return;
-	//width = ps->get(id).sx;
-	//height = ps->get(id).sy;
-	//if(!clipping) // Perfomance optimiation
-	//	return;
-	//image(ps, id, ImageNoOffset);
-	//border_color(rectb);
-}
-
-static void paint_centered(const char* name) {
-	auto push_caret = caret;
-	auto push_width = width;
-	auto push_maxcaret = maxcaret;
-	auto push_text_string = text_start_string;
-	auto push_text_origin = text_start_horiz;
-	textfs(name);
-	caret.x += (push_width - width) / 2;
-	textf(name);
-	text_start_horiz = push_text_origin;
-	text_start_string = push_text_string;
-	maxcaret = push_maxcaret;
-	width = push_width;
-	caret = push_caret;
-}
-
-static const char* parse_widget_command(const char* p) {
-	auto next_line = true;
-	auto push_caret = caret;
-	auto push_width = width;
-	auto push_height = height;
-	const char* tips = 0;
-	char temp[8192]; stringbuilder sb(temp);
-	height = 0;
-	while(*p) {
-		if(equaln(p, "left")) {
-			auto widget_width = getparam(p);
-			if(widget_width) {
-				width = widget_width;
-				push_width -= widget_width;
-				push_caret.x += widget_width;
-				next_line = false;
-			}
-			continue;
-		} else if(equaln(p, "right")) {
-			auto widget_width = getparam(p);
-			if(widget_width) {
-				width = widget_width;
-				caret.x = caret.x + push_width - width;
-				push_width -= widget_width;
-				next_line = false;
-			}
-			continue;
-		} else if(equaln(p, "tips")) {
-			tips = getparam(p, sb);
-			continue;
-		} else if(equaln(p, "image")) {
-			auto name = getparam(p, sb);
-			auto id = getparam(p);
-			auto folder = getparam(p, sb);
-			paint_image(name, id, folder);
-		} else if(equaln(p, "centered")) {
-			auto name = getparam(p, sb);
-			paint_centered(name);
-		} else if(equaln(p, "tab"))
-			tab_pixels = getparam(p);
-		if(tips && ishilite())
-			tips_sb.add(tips);
-		p = skip_line(p);
-		break;
-	}
-	if(caret.x + width > maxcaret.x)
-		maxcaret.x = caret.x + width;
-	if(caret.y + height > maxcaret.y)
-		maxcaret.y = caret.y + height;
-	caret = push_caret;
-	width = push_width;
-	if(next_line) {
-		if(height)
-			caret.y += height + metrics::padding;
-		if(caret.y > maxcaret.y)
-			maxcaret.y = caret.y;
-	}
-	height = push_height;
-	return p;
 }
 
 static bool match(const char** string, const char* name) {
@@ -231,10 +149,7 @@ static const char* textspc(const char* p, int x1) {
 		case '\t':
 			p++;
 			tb = gettabwidth();
-			if(tb < 0)
-				caret.x = x1 + width + tb;
-			else
-				caret.x = x1 + ((caret.x - x1 + tb) / tb) * tb;
+			caret.x = x1 + ((caret.x - x1 + tb) / tb) * tb;
 			continue;
 		}
 		break;
@@ -257,10 +172,8 @@ static const char* word(const char* text) {
 }
 
 static const char* citate(const char* p, int x1, int x2, color new_fore, const sprite* new_font) {
-	auto push_fore = fore;
-	auto push_font = font;
-	fore = new_fore;
-	font = new_font;
+	pushfore push_fore(new_fore);
+	pushfont push_font(new_font);
 	caret.x = x1;
 	while(p[0]) {
 		if(p[0] == '-' && p[1] == '#' && p[2] == '-' && (p[3] == 13 || p[3] == 10 || p[3] == 0)) {
@@ -268,24 +181,19 @@ static const char* citate(const char* p, int x1, int x2, color new_fore, const s
 			break;
 		}
 		auto p2 = skipspcr(wholeline(p));
-		auto w = textw(p, p2 - p);
 		text(p, p2 - p);
 		p = p2;
 		apply_line_feed(x1, texth());
 	}
 	apply_line_feed(caret.x, 0);
-	fore = push_fore;
-	font = push_font;
 	return p;
 }
 
 static const char* textfln(const char* p, int x1, int x2, color new_fore, const sprite* new_font) {
-	auto push_fore = fore;
-	auto push_font = font;
+	pushfore push_fore(new_fore);
+	pushfont push_font(new_font);
 	char temp[4096]; temp[0] = 0;
-	unsigned flags = 0;
-	fore = new_fore;
-	font = new_font;
+	unsigned flags = text_flags;
 	while(true) {
 		if(p[0] == '*' && p[1] == '*') {
 			p += 2;
@@ -325,11 +233,15 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 				break;
 			case '!':
 				p++;
-				fore = colors::h3;
+				fore = colors::active;
 				break;
 			case '#':
 				p++;
 				flags |= TextUscope;
+				fore = colors::special;
+				break;
+			case ' ':
+				p++;
 				fore = colors::special;
 				break;
 			default:
@@ -356,6 +268,8 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 			}
 		} else {
 			const char* p2 = word(p);
+			if(p2==p)
+				break;
 			w = textw(p, p2 - p);
 			if(caret.x + w > x2)
 				apply_line_feed(x1, texth());
@@ -363,8 +277,6 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 			p = p2;
 		}
 		if(temp[0] && ishilite({caret.x, caret.y, caret.x + w, caret.y + texth()})) {
-			if(!tips_sb)
-				tips_sb.addv(temp, 0);
 		}
 		caret.x += w;
 		p = textspc(p, x1);
@@ -375,8 +287,126 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 		}
 	}
 	apply_line_feed(caret.x, 0);
-	fore = push_fore;
-	font = push_font;
+	return p;
+}
+
+static const char* parse_widget_command(const char* p) {
+	auto next_line = false;
+	auto push_caret = caret;
+	auto push_width = width;
+	auto push_height = height; height = texth();
+	auto push_alpha = alpha;
+	auto flags = 0;
+	char temp[4096]; stringbuilder sb(temp);
+	while(*p) {
+		if(equaln(p, "ch")) {
+			fore = colors::h1;
+			continue;
+		} else if(equaln(p, "cb")) {
+			fore = colors::button;
+			continue;
+		} else if(equaln(p, "ca")) {
+			fore = colors::active;
+			continue;
+		} else if(equaln(p, "ct")) {
+			fore = colors::text;
+			continue;
+		} else if(equaln(p, "red")) {
+			fore = colors::red;
+			continue;
+		} else if(equaln(p, "green")) {
+			fore = colors::green;
+			continue;
+		} else if(equaln(p, "blue")) {
+			fore = colors::blue;
+			continue;
+		} else if(equaln(p, "disabled")) {
+			fore = fore.mix(colors::form);
+			continue;
+		} else if(equaln(p, "h1")) {
+			font = metrics::h1;
+			continue;
+		} else if(equaln(p, "h2")) {
+			font = metrics::h2;
+			continue;
+		} else if(equaln(p, "h3")) {
+			font = metrics::h3;
+			continue;
+		} else if(equaln(p, "hf")) {
+			font = metrics::font;
+			continue;
+		}else if(equaln(p, "lf")) {
+			next_line = true;
+			continue;
+		} else if(equaln(p, "h")) {
+			height = getparam(p);
+			continue;
+		} else if(equaln(p, "w")) {
+			width = getparam(p);
+			continue;
+		} else if(equaln(p, "x")) {
+			caret.x = push_caret.x + getparam(p);
+			continue;
+		} else if(equaln(p, "y")) {
+			caret.y = push_caret.y + getparam(p);
+			continue;
+		} else if(equaln(p, "a")) {
+			alpha = getparam(p);
+			continue;
+		} else if(equaln(p, "right")) {
+			flags = AlignRightCenter;
+			continue;
+		} else if(equaln(p, "center")) {
+			flags = AlignCenterCenter;
+			continue;
+		} else if(equaln(p, "border")) {
+			// paint_border_color(rectb);
+			continue;
+		} else if(equaln(p, "fill")) {
+			rectf();
+			continue;
+		} else if(equaln(p, "fore")) {
+			fore.r = (unsigned char)getparam(p);
+			fore.g = (unsigned char)getparam(p);
+			fore.b = (unsigned char)getparam(p);
+			continue;
+		} else if(equaln(p, "back")) {
+			fore_stroke.r = (unsigned char)getparam(p);
+			fore_stroke.g = (unsigned char)getparam(p);
+			fore_stroke.b = (unsigned char)getparam(p);
+			continue;
+		} else if(equaln(p, "bold")) {
+			flags |= TextBold | TextItalic;
+			continue;
+		} else if(equaln(p, "image")) {
+			sb.clear();
+			auto name = getparam(p, sb);
+			auto id = getparam(p);
+			auto folder = getparam(p, sb);
+			paint_image(name, id, folder);
+		} else if(equaln(p, "text")) {
+			sb.clear();
+			p = read_lf(p, sb);
+			texta(temp, flags);
+		} else if(equaln(p, "tab"))
+			tab_pixels = getparam(p);
+		p = skip_line(p);
+		break;
+	}
+	if(caret.x + width > maxcaret.x)
+		maxcaret.x = caret.x + width;
+	if(caret.y + height > maxcaret.y)
+		maxcaret.y = caret.y + height;
+	caret = push_caret;
+	width = push_width;
+	text_flags = flags;
+	alpha = push_alpha;
+	if(next_line) {
+		caret.y += height + metrics::padding;
+		if(caret.y > maxcaret.y)
+			maxcaret.y = caret.y;
+	}
+	height = push_height;
 	return p;
 }
 
@@ -408,42 +438,62 @@ static const char* bullet_list(const char* p, int x2) {
 }
 
 void textf(const char* p) {
-	auto push_width = width;
-	auto push_height = height;
-	auto push_tab = tab_pixels;
 	maxcaret.clear();
 	text_start_string = 0;
 	text_start_horiz = 0;
+	if(!p || p[0] == 0)
+		return;
+	pushstroke push_stroke;
+	pushfore push_fore;
+	pushfont push_font;
+	auto push_width = width;
+	auto push_height = height;
+	auto push_tab = tab_pixels;
+	auto push_x = caret.x;
 	int x1 = caret.x, y1 = caret.y, x2 = caret.x + width;
 	while(p[0]) {
 		if(caret.y < clipping.y1) {
 			text_start_string = p;
 			text_start_horiz = caret.y - clipping.y1;
 		}
+		auto p1 = p;
 		if(match(&p, "#--")) // Header small
-			p = textfln(skipsp(p), caret.x, x2, colors::h3, metrics::small);
+			p = textfln(skipsp(p), caret.x, x2, colors::h1, metrics::small);
 		else if(match(&p, "###")) // Header 3
-			p = textfln(skipsp(p), caret.x, x2, colors::h3, metrics::h3);
+			p = textfln(skipsp(p), caret.x, x2, colors::h1, metrics::h3);
 		else if(match(&p, "##")) // Header 2
-			p = textfln(skipsp(p), caret.x, x2, colors::h2, metrics::h2);
+			p = textfln(skipsp(p), caret.x, x2, colors::h1, metrics::h2);
 		else if(match(&p, "#")) // Header 1
 			p = textfln(skipsp(p), caret.x, x2, colors::h1, metrics::h1);
 		else if(match(&p, "-#-")) // Citate
-			p = citate(skipspcr(p), caret.x + metrics::padding * 2, x2, colors::special.mix(colors::window, 192), metrics::font);
+			p = citate(skipspcr(p), caret.x + metrics::padding * 2, x2, colors::special.mix(colors::window, 192), metrics::h3);
 		else if(match(&p, "---")) { // Line
 			p = skipspcr(p);
 			separator(x2);
 		} else if(match(&p, "* "))
 			p = bullet_list(p, x2);
-		else if(match(&p, "$"))
-			p = parse_widget_command(p);
+		else if(p[0] == '/' && ischa(p[1]))
+			p = parse_widget_command(p + 1);
 		else
 			p = textfln(p, caret.x, x2, fore, font);
+		if(p1 == p)
+			break;
 	}
 	maxcaret.x -= x1; maxcaret.y -= y1;
+	if(!maxcaret.y) {
+		maxcaret.y = texth();
+		caret.y += texth();
+	}
 	tab_pixels = push_tab;
+	caret.x = push_x;
 	width = push_width;
 	height = push_height;
+}
+
+void textf(const char* string, const char*& cashe_string, int& cashe_origin) {
+	textf(string);
+	cashe_string = text_start_string;
+	cashe_origin = text_start_horiz;
 }
 
 void textf(const char* string, int& origin, int& maximum, int& cashe_origin, int& cashe_string) {
