@@ -1425,15 +1425,11 @@ static void* choose_answers() {
 		return an.random();
 }
 
-static bool have_targets() {
-	return records.getcount() != 0;
-}
-
 bool apply_targets(const variants& conditions) {
 	pushvalue push_index(last_index, player->getposition());
 	records.clear();
 	script_run(conditions);
-	return have_targets();
+	return records.getcount() != 0;
 }
 
 bool allow_targets(const variants& conditions) {
@@ -2574,7 +2570,7 @@ static void set_magic_effect(magicn v) {
 }
 
 static void check_script_targets() {
-	if(!have_targets()) {
+	if(!records) {
 		script_stop();
 		player->actp("YouDontValidTargets");
 	}

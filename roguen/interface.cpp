@@ -1330,6 +1330,8 @@ static void show_font() {
 	setoffset(metrics::padding, metrics::padding);
 	pushrect push; width = 16; height = 16;
 	point origin = caret;
+	if(current < glyph_start)
+		current = glyph_start;
 	for(auto y = 0; y < 14; y++) {
 		for(auto x = 0; x < 16; x++) {
 			unsigned char sym = y * 16 + x + glyph_start;
@@ -1351,6 +1353,8 @@ static void show_font() {
 	text("Приклад тексту де можна побачити її вживу та єнергію отримати.", -1, TextBold);
 	caret.y += texth();
 	text("Приклад тексту де можна побачити її вживу та єнергію отримати.", -1, TextBold | TextItalic);
+	caret.y += texth();
+	text(str("Symbol = %2i, Width = %1i", textw(current), current));
 	fore = push_fore;
 	navigate_index_keys(current, 16);
 }
@@ -1498,8 +1502,6 @@ void visualize_images(res pid, point size, point offset, int border_dy) {
 		case KeyLeft: current--; break;
 		case KeyUp: current -= d.x; break;
 		case KeyDown: current += d.x; break;
-			//case KeyUp: origin -= d.x; break;
-			//case KeyDown: origin += d.x; break;
 		case KeyPageUp: origin -= per_screen; break;
 		case KeyPageDown: origin += per_screen; break;
 		case 'I': show_index = !show_index; break;
