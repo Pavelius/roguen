@@ -53,9 +53,6 @@ enum windowfn {
 	WFMaximized = 0x0040,
 	WFAbsolutePos = 0x0080,
 };
-enum class cursor : unsigned char {
-	Arrow, Hand, LeftRight, UpDown, All, No, Edit, Wait,
-};
 enum class res;
 struct pma {
 	char				name[4]; // Identifier of current block
@@ -110,7 +107,6 @@ extern sprite*			icons;
 extern int				border, padding;
 }
 struct hoti {
-	enum cursor			cursor; // set this mouse cursor
 	unsigned			key; // if pressed key or mouse this field has key
 	point				mouse; // current mouse coordinates
 	bool				pressed; // flag if any of mouse keys is pressed

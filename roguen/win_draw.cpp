@@ -66,20 +66,6 @@ static int tokey(unsigned key) {
 	return key;
 }
 
-static void set_cursor(cursor e) {
-	static void* data[] = {
-		LoadCursorA(0, (char*)32512),//IDC_ARROW
-		LoadCursorA(0, (char*)32649),//IDC_HAND
-		LoadCursorA(0, (char*)32644),//IDC_SIZEWE
-		LoadCursorA(0, (char*)32645),//IDC_SIZENS
-		LoadCursorA(0, (char*)32646),//IDC_SIZEALL
-		LoadCursorA(0, (char*)32648),//IDC_NO
-		LoadCursorA(0, (char*)32513),//IDC_IBEAM
-		LoadCursorA(0, (char*)32514),//IDC_WAIT
-	};
-	SetCursor(data[static_cast<int>(e)]);
-}
-
 static int handle(MSG& msg) {
 	switch(msg.message) {
 	case WM_MOUSEMOVE:
@@ -165,12 +151,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, unsigned uMsg, WPARAM wParam, LPARAM 
 		((MINMAXINFO*)lParam)->ptMinTrackSize.x = minimum.x;
 		((MINMAXINFO*)lParam)->ptMinTrackSize.y = minimum.y;
 		return 0;
-	case WM_SETCURSOR:
-		if(LOWORD(lParam) == HTCLIENT) {
-			set_cursor(hot.cursor);
-			return 1;
-		}
-		break;
 	}
 	return DefWindowProcA(hwnd, uMsg, wParam, lParam);
 }
@@ -184,6 +164,7 @@ static const char* register_class(const char* class_name) {
 		wc.hInstance = GetModuleHandleA(0);	// Set The Instance
 		wc.hIcon = (void*)LoadIconA(wc.hInstance, (const char*)1); // WndProc Handles Messages
 		wc.lpszClassName = class_name; // Set The Class Name
+		wc.hCursor = LoadCursorA(0, (char*)32512);
 		RegisterClassA(&wc); // Attempt To Register The Window Class
 	}
 	return class_name;

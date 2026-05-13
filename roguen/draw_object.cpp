@@ -161,7 +161,6 @@ static void raw_beforemodal() {
 	caret = {0, 0};
 	width = getwidth();
 	height = getheight();
-	hot.cursor = cursor::Arrow;
 	hot.hilite.clear();
 }
 
